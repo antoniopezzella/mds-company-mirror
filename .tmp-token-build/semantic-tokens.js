@@ -18,7 +18,9 @@ export const semanticColors = {
     interactivePrimary: ref('blue600'),
     interactivePrimaryHover: ref('blue700'),
     statusSuccess: ref('green600'),
-    // Temporary: yellow insufficient contrast on white; using blueGray800 placeholder until accessible warning palette defined.
-    statusWarning: ref('blueGray800'),
+    // Warning expressed as background + text for accessibility and brand alignment
+    statusWarningBg: ref('amber100'),
+    statusWarningText: ref('amber900'),
+    statusWarning: ref('amber700'), // legacy alias (deprecate later)
     statusDanger: ref('crimson600')
 };
