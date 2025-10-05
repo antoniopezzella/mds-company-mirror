@@ -29,6 +29,13 @@ jobs:
       - name: Token governance (build + diff policy)
         run: npm run tokens:check
 
+      - name: Token diff markdown (always generate)
+        run: |
+          npm run tokens:build >/dev/null 2>&1 || true
+          node scripts/diff-tokens.js --markdown > token-diff.md || true
+          echo "\n## Token Diff" >> $GITHUB_STEP_SUMMARY
+          cat token-diff.md >> $GITHUB_STEP_SUMMARY
+
       - name: Unit & interaction tests
         run: npm test
 

@@ -2,7 +2,7 @@
 /**
  * diff-tokens.js
  * Compares current dist/tokens.json with the version in HEAD and reports added/removed/changed.
- * Usage: node scripts/diff-tokens.js [--ci]
+ * Usage: node scripts/diff-tokens.js [--ci] [--markdown]
  */
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -44,22 +44,45 @@ function diffFlat(objPrev, objCur) {
 }
 
 const colorDiff = diffFlat(prev.color || {}, cur.color || {});
+const semanticColorDiff = diffFlat(
+  prev.semantic?.color || {},
+  cur.semantic?.color || {}
+);
 
-const summary = { color: colorDiff };
+const summary = { color: colorDiff, 'semantic.color': semanticColorDiff };
 const hasChanges = Object.values(summary).some(sec => sec.added.length || sec.removed.length || sec.changed.length);
 
+const markdown = process.argv.includes('--markdown');
+
 if (!hasChanges) {
-  console.log('No token changes detected.');
+  if (markdown) {
+    console.log('### Token Diff\n\n_No token changes detected._');
+  } else {
+    console.log('No token changes detected.');
+  }
   process.exit(0);
 }
-
-console.log('Token diff:');
-for (const [section, d] of Object.entries(summary)) {
-  if (!(d.added.length || d.removed.length || d.changed.length)) continue;
-  console.log(`\n[${section}]`);
-  if (d.added.length) console.log('  Added   :', d.added.join(', '));
-  if (d.changed.length) console.log('  Changed :', d.changed.join(', '));
-  if (d.removed.length) console.log('  Removed :', d.removed.join(', '));
+if (markdown) {
+  let md = '### Token Diff\n\n';
+  for (const [section, d] of Object.entries(summary)) {
+    if (!(d.added.length || d.removed.length || d.changed.length)) continue;
+    md += `**${section}**\n\n`;
+    md += '| Type | Tokens |\n|------|--------|\n';
+    if (d.added.length) md += `| Added | ${d.added.join(', ')} |\n`;
+    if (d.changed.length) md += `| Changed | ${d.changed.join(', ')} |\n`;
+    if (d.removed.length) md += `| Removed | ${d.removed.join(', ')} |\n`;
+    md += '\n';
+  }
+  process.stdout.write(md.trimEnd());
+} else {
+  console.log('Token diff:');
+  for (const [section, d] of Object.entries(summary)) {
+    if (!(d.added.length || d.removed.length || d.changed.length)) continue;
+    console.log(`\n[${section}]`);
+    if (d.added.length) console.log('  Added   :', d.added.join(', '));
+    if (d.changed.length) console.log('  Changed :', d.changed.join(', '));
+    if (d.removed.length) console.log('  Removed :', d.removed.join(', '));
+  }
 }
 
 if (process.argv.includes('--ci')) {
