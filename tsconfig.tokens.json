@@ -16,6 +16,7 @@
   "files": [
     "src/tokens.ts",
     "src/spacing.ts",
-    "src/shadows.ts"
+    "src/shadows.ts",
+    "src/semantic-tokens.ts"
   ]
 }

@@ -25,6 +25,8 @@ execSync('npx tsc -p tsconfig.tokens.json', { stdio: 'inherit', cwd: root });
 const tokens = (await import(path.join(tmpOut, 'tokens.js'))).tokens;
 const spacing = (await import(path.join(tmpOut, 'spacing.js'))).spacing;
 const shadows = (await import(path.join(tmpOut, 'shadows.js'))).shadows;
+// Import semantic layer directly from TS (no compile reference needed if we want, but keep consistent)
+const { semanticColors } = await import(path.join(tmpOut, 'semantic-tokens.js'));
 
 const distDir = path.join(root, 'dist');
 mkdirSync(distDir, { recursive: true });
@@ -38,7 +40,10 @@ const artifact = {
   },
   color: tokens,
   spacing,
-  shadows
+  shadows,
+  semantic: {
+    color: semanticColors
+  }
 };
 
 writeFileSync(path.join(distDir, 'tokens.json'), JSON.stringify(artifact, null, 2));
