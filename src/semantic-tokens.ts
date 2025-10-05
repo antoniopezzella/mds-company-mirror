@@ -21,11 +21,15 @@ export const semanticColors = {
   interactivePrimary: ref('blue600'),
   interactivePrimaryHover: ref('blue700'),
   statusSuccess: ref('green600'),
+  statusSuccessBg: ref('green300'),
+  statusSuccessText: ref('green600'),
   // Warning expressed as background + text for accessibility and brand alignment
   statusWarningBg: ref('amber100'),
   statusWarningText: ref('amber900'),
   statusWarning: ref('amber700'), // legacy alias (deprecate later)
   statusDanger: ref('crimson600')
+  ,statusDangerBg: ref('crimson300'),
+  statusDangerText: ref('crimson600')
 } as const;
 
 export type SemanticColorName = keyof typeof semanticColors;
