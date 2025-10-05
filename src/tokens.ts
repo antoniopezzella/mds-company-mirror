@@ -29,5 +29,16 @@ export const tokens = {
   crimson300: '#ffaea6',
   teal500: '#0077a0',
   turquoise500: '#00968f',
+  // Accessible warning palette (amber shades)
+  amber900: '#4a2e00',
+  amber800: '#673d00',
+  amber700: '#8a4e00',
+  amber600: '#b06100',
+  amber500: '#d87900',
+  amber400: '#ff9800',
+  amber300: '#ffb547',
+  amber200: '#ffd27f',
+  amber100: '#ffe5b3',
+  amber50:  '#fff4e0',
   // ...add more as needed
 };
