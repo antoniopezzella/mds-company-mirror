@@ -11,9 +11,11 @@ describe('tokens artifact', () => {
     const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
     const { tokens } = await import('../tokens');
     const { spacing } = await import('../spacing');
-    const { shadows } = await import('../shadows');
+  const { shadows } = await import('../shadows');
+  const { semanticColors } = await import('../semantic-tokens');
     expect(Object.keys(artifact.color).sort()).toEqual(Object.keys(tokens).sort());
     expect(artifact.spacing).toEqual(spacing);
     expect(artifact.shadows.map((s:any)=>s.level)).toEqual(shadows.map(s=>s.level));
+    expect(Object.keys(artifact.semantic.color).sort()).toEqual(Object.keys(semanticColors).sort());
   });
 });

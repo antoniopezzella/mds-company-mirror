@@ -63,6 +63,7 @@ npm run docs:lint
    - Run `npm run tokens:diff` to see added / changed / removed primitives compared with HEAD.
    - CI (future) will run `npm run tokens:check` and fail on changed or removed tokens without review.
    - Additions are allowed to pass automatically (policy: additions are non-breaking, but still review visually).
+ - Semantic layer: define intent-based aliases in `semantic-tokens.ts` (e.g. `surfaceDefault`, `textPrimary`). These must point only to primitives; the build adds them under `semantic.color`.
 
 ### Adding a New Component (Checklist)
 - [ ] Create component in `src/components/ComponentName/`.
