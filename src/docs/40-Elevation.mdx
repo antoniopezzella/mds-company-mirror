@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ElevationGrid } from './_components/ElevationGrid';
+import { ElevationCompare } from './_components/ElevationCompare';
+
+<Meta title="Foundations/Elevation" />
+
+# Elevation
+
+Elevation communicates layering, interactivity and focus. We keep a compact shadow scale to reduce visual noise.
+
+## Scale
+
+<ElevationGrid />
+
+## Light vs Dark Comparison
+
+Visual parity of elevation levels across themes. Future iterations may tune shadow opacity per theme to reduce glow in dark mode.
+
+<ElevationCompare />
+
+## Guidelines
+
+- Prefer the lowest possible level that provides adequate separation.
+- Use level 0 for nested containers and cards on tinted backgrounds.
+- Level 1–2 for standard cards and interactive surfaces.
+- Level 3 for transient layers like menus, popovers.
+- Level 4 for dialogs and blocking UI.
+- Level 5 reserved for critical overlays (rare).
+
+## Accessibility & Theming
+Always ensure sufficient contrast between elevated surface and the background. In dark mode, reduce shadow spread intensity; consider using subtle border + low alpha shadow combination.
+
+---
+_Future: add dark theme preview & motion guidance for elevation transitions._
+_Done: light/dark comparison added. Motion guidance still pending._

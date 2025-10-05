@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { tokens } from '../tokens';
+import { ColorSwatches } from './_components/ColorSwatches';
+import { ContrastMatrix } from './_components/ContrastMatrix';
+
+<Meta title="Foundations/Colors" />
+
+# Colors
+
+Base palette primitives used to construct the theme. Avoid referencing raw hex values in components; use semantic theme roles instead (e.g. `theme.palette.primary.main`).
+
+<ColorSwatches />
+
+## Contrast
+
+Ensuring accessible color pairs is critical. The matrix below evaluates representative foreground/background combinations and flags their WCAG compliance.
+
+<ContrastMatrix />
+
+---
+_Expanded: added contrast evaluation. Future: semantic role mapping & dark mode palette notes._

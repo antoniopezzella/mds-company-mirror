@@ -1,0 +1,33 @@
+// tokens.ts
+// Design system color tokens (primitives) for use in theme and components
+export const tokens = {
+  blue700: '#002c77',
+  blue600: '#0065ac',
+  blue500: '#009de0',
+  blue300: '#76d3ff',
+  blue900: '#001538',
+  white: '#ffffff',
+  black: '#000000',
+  gray900: '#202020',
+  gray700: '#565656',
+  gray600: '#808080',
+  gray500: '#949494',
+  gray400: '#b3b3b3',
+  gray300: '#dadada',
+  gray200: '#e3e3e3',
+  gray100: '#ebebeb',
+  gray50: '#f4f4f4',
+  blueGray900: '#283245',
+  blueGray800: '#35425b',
+  blueGray700: '#4e6287',
+  blueGray75: '#f2f6f9',
+  green600: '#14853d',
+  green300: '#addfb3',
+  yellow500: '#ffbe00',
+  yellow400: '#ffd240',
+  crimson600: '#c53532',
+  crimson300: '#ffaea6',
+  teal500: '#0077a0',
+  turquoise500: '#00968f',
+  // ...add more as needed
+};
