@@ -3,9 +3,10 @@ import { tokens } from '../../tokens';
 
 // Group tokens heuristically by semantic clusters (blue, gray, accent, status)
 const groupOrder: Array<{ title: string; match: (name: string) => boolean }> = [
-  { title: 'Blues', match: n => n.startsWith('blue') },
+  { title: 'Blues', match: n => n.startsWith('blue') && !n.startsWith('blueGray') },
   { title: 'Blue Gray', match: n => n.startsWith('blueGray') },
   { title: 'Grays', match: n => n.startsWith('gray') },
+  { title: 'Amber', match: n => n.startsWith('amber') },
   { title: 'Accents', match: n => /(green|yellow|crimson|teal|turquoise)/.test(n) },
 ];
 
