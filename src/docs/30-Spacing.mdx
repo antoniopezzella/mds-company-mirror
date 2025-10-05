@@ -1,0 +1,41 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { spacing } from '../spacing';
+import { TokenTable } from './_components/TokenTable';
+
+<Meta title="Foundations/Spacing" />
+
+# Spacing
+
+Consistent spacing ensures rhythm and visual clarity. We use a curated scale mixing 4px micro steps and larger 8px multiples.
+
+## Scale
+
+<TokenTable
+  columns={[
+    { key: 'index', label: 'Index', width: 60 },
+    { key: 'value', label: 'Value (px)', width: 90 },
+    { key: 'visual', label: 'Visual' }
+  ]}
+  rows={spacing.map((v,i) => ({
+    index: i,
+    value: v,
+    visual: <div style={{ width: v, height: v, background:'#002c77', borderRadius: 2 }} />
+  }))}
+  caption="Spacing scale derived from design tokens; use theme.spacing(index) in components."
+/>
+
+## Usage Guidelines
+- Prefer container padding of 16 / 24 / 32 depending on breakpoint.
+- Vertical rhythm in dense panels: multiples of 8.
+- Dashboard section gutters: 32–48.
+- Avoid ad‑hoc pixel values; add to the scale before use.
+
+## API Integration
+The theme `spacing` function is overridden. Use:
+
+```tsx
+sx={{ p: 3, gap: 2 }} // maps to spacing indices -> px
+```
+
+---
+_Future: add responsive examples & layout patterns._

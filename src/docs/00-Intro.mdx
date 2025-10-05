@@ -1,0 +1,39 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Docs/Intro" />
+
+# Design System Intro
+
+This is a fresh baseline MDX page to validate Storybook MDX indexing in isolation.
+
+## What This Page Demonstrates
+- MDX v2 syntax with a single <Meta />
+- No custom stories or CSF exports
+- Should appear once in the sidebar under Docs/Intro
+
+## Next Steps
+Once this renders correctly we can reintroduce the foundations pages one at a time:
+1. Colors
+2. Typography
+3. Spacing
+4. Elevation
+5. Accessibility
+
+If a duplication or indexer error reappears after adding a page, that page (or its filename) is the trigger.
+
+---
+_Health note: dynamic timestamp removed temporarily for MDX debug isolation._
+
+## Troubleshooting MDX Docs
+
+If docs fail to build or pages disappear:
+
+1. Ensure each MDX file has exactly one `<Meta />` at the top.
+2. Look for raw HTML tags (e.g. `<button>`) in prose—replace with backticks.
+3. Remove heavy inline logic (large `{array.map(...)}`) and move it into a helper component.
+4. Confirm the Storybook config still points `stories` to `src/docs/**/*.mdx` and component stories.
+5. Verify docs blocks import path (`@storybook/addon-docs/blocks`) resolves (no alias required).
+6. Clear caches: `npm run storybook:clean`.
+7. Add a minimal new test page (e.g. `ZZ-Debug.mdx` with just Meta + heading) to isolate indexing issues.
+
+If still broken, temporarily add a Vite debug plugin logging MDX IDs (see removed `mdx-inspect` pattern in `.storybook/main.ts`).

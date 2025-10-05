@@ -1,0 +1,21 @@
+import { Meta, Controls, Story } from '@storybook/addon-docs/blocks';
+import * as DSButtonStories from '../components/Button/Button.stories';
+
+<Meta title="Debug/Blocks" of={DSButtonStories} />
+
+# Blocks Debug
+
+Minimal verification of core doc blocks (Meta, Story, Controls). Use to isolate addon-docs regressions.
+
+## Interactive Controls (Verification)
+<Controls of={DSButtonStories.Primary} />
+
+## Story Render (Context)
+<Story of={DSButtonStories.Primary} />
+
+---
+If failure persists:
+- Ensure `@storybook/addon-docs` version matches `@storybook/react-vite`.
+- Temporarily remove the alias in `.storybook/main.ts` to test direct import.
+- Clear cache: `npm run storybook:clean`.
+- Remove all but this MDX file from `stories` globs to isolate.

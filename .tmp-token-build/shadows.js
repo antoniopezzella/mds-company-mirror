@@ -1,0 +1,13 @@
+// shadows.ts
+// Canonical elevation (shadow) tokens for the design system.
+// Each level contains a semantic purpose description to guide usage.
+export const shadows = [
+    { level: 0, value: 'none', usage: 'Flat surfaces, nested containers' },
+    { level: 1, value: '0 1px 2px rgba(0,0,0,0.08)', usage: 'Subtle separation, cards on flat bg' },
+    { level: 2, value: '0 2px 4px rgba(0,0,0,0.10)', usage: 'Lifted cards, small pop surfaces' },
+    { level: 3, value: '0 4px 8px rgba(0,0,0,0.12)', usage: 'Menus, popovers, sticky bars' },
+    { level: 4, value: '0 8px 16px rgba(0,0,0,0.16)', usage: 'Dialogs, modal surfaces' },
+    { level: 5, value: '0 12px 24px rgba(0,0,0,0.20)', usage: 'Highest elevation overlays (rare)' },
+];
+// Convenience keyed map if lookups by level become frequent.
+export const shadowByLevel = Object.fromEntries(shadows.map(s => [s.level, s]));
