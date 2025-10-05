@@ -50,6 +50,9 @@ const defaultPairs: Pair[] = [
   { fg: tokens.gray400, bg: tokens.blueGray900, label: 'Gray400 on BlueGray900' },
   { fg: tokens.green300, bg: tokens.blueGray900, label: 'Green300 on BlueGray900' },
   { fg: tokens.crimson600, bg: tokens.white, label: 'Crimson600 on White' },
+  // Warning semantic examples (foreground on background + on white)
+  { fg: tokens.amber900, bg: tokens.amber100, label: 'Warning Text on Warning Bg' },
+  { fg: tokens.amber900, bg: tokens.white, label: 'Warning Text on White' },
 ];
 
 export const ContrastMatrix: React.FC<ContrastMatrixProps> = ({

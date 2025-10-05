@@ -2,6 +2,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 import { tokens } from '../tokens';
 import { ColorSwatches } from './_components/ColorSwatches';
 import { ContrastMatrix } from './_components/ContrastMatrix';
+import { SemanticStatusSwatches } from './_components/SemanticStatusSwatches';
 
 <Meta title="Foundations/Colors" />
 
@@ -16,6 +17,12 @@ Base palette primitives used to construct the theme. Avoid referencing raw hex v
 Ensuring accessible color pairs is critical. The matrix below evaluates representative foreground/background combinations and flags their WCAG compliance.
 
 <ContrastMatrix />
+
+## Status / Feedback Colors
+
+Status colors split foreground and background to guarantee contrast. Prefer the bg/text pair; the single `statusWarning` alias is transitional and will be deprecated.
+
+<SemanticStatusSwatches />
 
 ---
 _Expanded: added contrast evaluation. Future: semantic role mapping & dark mode palette notes._
