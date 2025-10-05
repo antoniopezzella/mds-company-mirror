@@ -2,9 +2,11 @@ import React from 'react';
 import { semanticColors } from '../../semantic-tokens';
 
 const statusKeys = [
+  { bg: 'statusSuccessBg', text: 'statusSuccessText', label: 'Success (Bg/Text)' },
   { bg: 'statusSuccess', label: 'Success (Legacy)', text: 'statusSuccess' },
   { bg: 'statusWarningBg', text: 'statusWarningText', label: 'Warning (Bg/Text)' },
   { bg: 'statusWarning', label: 'Warning (Legacy Single)', text: 'statusWarning' },
+  { bg: 'statusDangerBg', text: 'statusDangerText', label: 'Danger (Bg/Text)' },
   { bg: 'statusDanger', label: 'Danger (Legacy)', text: 'statusDanger' },
 ];
 

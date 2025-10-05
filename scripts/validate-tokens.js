@@ -60,3 +60,18 @@ if (new Set(statusValues).size !== statusValues.length) {
 }
 
 console.log('Token validation passed.');
+
+// Deprecation advisories
+const deprecated = artifact.meta?.deprecated || {};
+for (const [depKey, info] of Object.entries(deprecated)) {
+  if (!(depKey in semanticColor)) continue; // still present; ensure replacements exist
+  const repl = info.replaceWith || [];
+  if (!Array.isArray(repl) || repl.length === 0) {
+    console.warn(`Deprecated token ${depKey} has no replacement guidance.`);
+  } else {
+    const missing = repl.filter(r => !(r in semanticColor));
+    if (missing.length) {
+      console.warn(`Deprecated token ${depKey} replacements missing in semantic layer: ${missing.join(', ')}`);
+    }
+  }
+}

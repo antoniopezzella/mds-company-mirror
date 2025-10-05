@@ -36,7 +36,21 @@ const artifact = {
   meta: {
     generated: new Date().toISOString(),
     version: process.env.npm_package_version || '0.0.0',
-    source: ['src/tokens.ts', 'src/spacing.ts', 'src/shadows.ts']
+    source: ['src/tokens.ts', 'src/spacing.ts', 'src/shadows.ts'],
+    deprecated: {
+      statusWarning: {
+        replaceWith: ['statusWarningBg','statusWarningText'],
+        rationale: 'Use background + text pair for accessible warning states.'
+      },
+      statusSuccess: {
+        replaceWith: ['statusSuccessBg','statusSuccessText'],
+        rationale: 'Adopt background/text pattern for consistency.'
+      },
+      statusDanger: {
+        replaceWith: ['statusDangerBg','statusDangerText'],
+        rationale: 'Adopt background/text pattern for consistency.'
+      }
+    }
   },
   color: tokens,
   spacing,
