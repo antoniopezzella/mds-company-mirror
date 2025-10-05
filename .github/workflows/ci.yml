@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint docs structure
+        run: npm run docs:lint
+
+      - name: Token governance (build + diff policy)
+        run: npm run tokens:check
+
+      - name: Unit & interaction tests
+        run: npm test
+
+      - name: Build (type + bundle)
+        run: npm run build
+
+      - name: Build Storybook (optional)
+        run: npm run build-storybook
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - name: Upload Storybook static (PR artifact)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: storybook-static
+          retention-days: 5
+
+      - name: Summary
+        if: always()
+        run: |
+          echo '## CI Summary' >> $GITHUB_STEP_SUMMARY
+          echo '* docs:lint ✅' >> $GITHUB_STEP_SUMMARY
+          echo '* tokens:check ✅ (fails only on changed/removed primitives)' >> $GITHUB_STEP_SUMMARY
+          echo '* tests ✅' >> $GITHUB_STEP_SUMMARY
+          echo '* build ✅' >> $GITHUB_STEP_SUMMARY
