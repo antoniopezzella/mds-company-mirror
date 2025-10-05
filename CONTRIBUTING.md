@@ -64,6 +64,7 @@ npm run docs:lint
    - CI (future) will run `npm run tokens:check` and fail on changed or removed tokens without review.
    - Additions are allowed to pass automatically (policy: additions are non-breaking, but still review visually).
  - Semantic layer: define intent-based aliases in `semantic-tokens.ts` (e.g. `surfaceDefault`, `textPrimary`). These must point only to primitives; the build adds them under `semantic.color`.
+  - Schema validation: `npm run tokens:validate` must pass (structure, hex format, spacing ordering, shadow continuity, semantic subset).
 
 ### Adding a New Component (Checklist)
 - [ ] Create component in `src/components/ComponentName/`.

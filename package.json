@@ -18,7 +18,8 @@
     "test:coverage": "vitest run --coverage",
   "tokens:build": "node scripts/build-tokens.js",
   "tokens:diff": "node scripts/diff-tokens.js",
-  "tokens:check": "npm run tokens:build && node scripts/diff-tokens.js --ci"
+  "tokens:check": "npm run tokens:build && node scripts/diff-tokens.js --ci && npm run tokens:validate",
+  "tokens:validate": "node scripts/validate-tokens.js"
     ,"prepare": "husky install"
   },
   "dependencies": {
