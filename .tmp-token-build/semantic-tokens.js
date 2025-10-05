@@ -10,13 +10,15 @@ export const semanticColors = {
     textOnAccent: ref('white'),
     surfaceDefault: ref('white'),
     surfaceSubtle: ref('gray50'),
-    surfaceAccent: ref('blue500'),
+    // Darker accent surface for adequate text contrast (was blue500, ratio 3.04)
+    surfaceAccent: ref('blue700'),
     borderDefault: ref('gray300'),
     borderStrong: ref('gray400'),
     focusRing: ref('blue500'),
     interactivePrimary: ref('blue600'),
     interactivePrimaryHover: ref('blue700'),
     statusSuccess: ref('green600'),
-    statusWarning: ref('yellow500'),
+    // Temporary: yellow insufficient contrast on white; using blueGray800 placeholder until accessible warning palette defined.
+    statusWarning: ref('blueGray800'),
     statusDanger: ref('crimson600')
 };

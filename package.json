@@ -19,7 +19,8 @@
   "tokens:build": "node scripts/build-tokens.js",
   "tokens:diff": "node scripts/diff-tokens.js",
   "tokens:check": "npm run tokens:build && node scripts/diff-tokens.js --ci && npm run tokens:validate",
-  "tokens:validate": "node scripts/validate-tokens.js"
+  "tokens:validate": "node scripts/validate-tokens.js",
+  "tokens:contrast": "node scripts/check-contrast.js"
     ,"prepare": "husky install"
   },
   "dependencies": {
