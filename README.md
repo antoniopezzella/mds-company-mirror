@@ -1,3 +1,17 @@
+# MDS Platform Design System
+
+![Contrast Status Badge](./contrast-badge.svg)
+
+Local contrast status badge is generated from the automated WCAG contrast report. Regenerate it after changing color or semantic tokens:
+
+```bash
+npm run tokens:contrast:badge
+```
+
+If the badge shows pass it means all required (non informational) contrast pairs meet or exceed their thresholds in both light and dark modes.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
