@@ -6,7 +6,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import MARSH_LOGO from "../../assets/images/logo-marsh.svg";
-import { tokens } from '../../tokens';
+import { getRoleColor } from '../../theme/roles';
 import styles from './Header.module.scss';
 
 export interface HeaderProps {
@@ -19,7 +19,12 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
   <AppBar
     position="fixed"
     elevation={0}
-    sx={{ backgroundColor: tokens.blue700, zIndex: theme => theme.zIndex.drawer + 1 }}
+    sx={{
+      // Switched from interactive.primary (blue600) to surface.accent (blue700) per brand requirement.
+      backgroundColor: getRoleColor('surface.accent'),
+      color: getRoleColor('text.inverse'),
+      zIndex: theme => theme.zIndex.drawer + 1
+    }}
     className={styles.header}
   >
     <Toolbar className={styles.header}>
@@ -29,7 +34,10 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={onToggleSidebar}
           edge="start"
-          sx={{ mr: 2, '&:hover': { backgroundColor: tokens.blue300 } }}
+          sx={{
+            mr: 2,
+            '&:hover': { backgroundColor: getRoleColor('interactive.primary.hover') }
+          }}
         >
           {sidebarOpen ? <MenuOpenIcon /> : <MenuIcon />}
         </IconButton>
@@ -37,12 +45,18 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar }) => {
           <img src={MARSH_LOGO} alt="Marsh Logo" />
         </Box>
         <Box className={styles.rightNav}>
-          <IconButton color="inherit" sx={{ '&:hover': { backgroundColor: tokens.blue300 } }}>
+          <IconButton color="inherit" sx={{ '&:hover': { backgroundColor: getRoleColor('interactive.primary.hover') } }}>
             <Badge badgeContent={8} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <Avatar sx={{ bgcolor: tokens.white, color: tokens.blue700, width: 32, height: 32, fontWeight: 700 }}>TA</Avatar>
+          <Avatar sx={{
+            bgcolor: getRoleColor('surface.default'),
+            color: getRoleColor('interactive.primary'),
+            width: 32,
+            height: 32,
+            fontWeight: 700
+          }}>TA</Avatar>
           <Box className={styles.profileMeta}>
             <Typography variant="body2" className={styles.profileName}>
               Tolu Adesina
