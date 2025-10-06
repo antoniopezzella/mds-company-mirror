@@ -1,0 +1,105 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { listRoles, getRoleColor } from '../theme/roles';
+
+<Meta title="Foundations/Roles" />
+
+# Roles Layer
+
+Roles are an intent-focused abstraction above semantic tokens. Components should prefer roles instead of referencing `semanticColors` or primitive tokens directly. This improves resilience when refactoring themes, adding new modes, or adjusting accessibility constraints.
+
+## Why Roles?
+- Decouples component styling from raw semantic token names
+- Enables alternative mode mappings (e.g. high-contrast) without component churn
+- Provides a vocabulary aligning design + engineering (text.primary, surface.subtle, status.success)
+- Simplifies validation: we can test role → color resolution instead of every component path
+
+## Role Directory
+
+Below is the current role map. Dark mode values are derived automatically via semantic dark overrides (if defined for the underlying semantic color).
+
+<table>
+  <thead>
+    <tr>
+      <th style={{textAlign:'left'}}>Role</th>
+      <th style={{textAlign:'left'}}>Semantic Token</th>
+      <th style={{textAlign:'left'}}>Description</th>
+      <th style={{textAlign:'center'}}>Light</th>
+      <th style={{textAlign:'center'}}>Dark</th>
+    </tr>
+  </thead>
+  <tbody>
+    {listRoles().map(r => {
+      const light = getRoleColor(r.role, { mode: 'light' });
+      const dark = getRoleColor(r.role, { mode: 'dark' });
+      const swatchStyle = (color) => ({
+        background: color,
+        border: '1px solid #e2e2e4',
+        borderRadius: 4,
+        width: 52,
+        height: 22,
+        fontSize: 10,
+        fontFamily: 'system-ui, sans-serif',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      });
+      return (
+        <tr key={r.role}>
+          <td><code>{r.role}</code></td>
+          <td><code>{r.semantic}</code></td>
+          <td style={{fontSize:12}}>{r.description}</td>
+          <td style={{textAlign:'center'}}>
+            <div style={swatchStyle(light)}>{light}</div>
+          </td>
+          <td style={{textAlign:'center'}}>
+            <div style={swatchStyle(dark)}>{dark}</div>
+          </td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+## Usage Example
+```tsx
+import { getRoleColor } from 'src/theme/roles';
+
+const Chip = ({ children }) => (
+  <span style={{
+    color: getRoleColor('text.secondary'),
+    background: getRoleColor('surface.subtle'),
+    border: `1px solid ${getRoleColor('border.default')}`,
+    padding: '4px 8px',
+    borderRadius: 8,
+    fontSize: 12,
+  }}>{children}</span>
+);
+```
+
+## Guidelines
+- Introduce a new role only when multiple components share the intent and a semantic token name would leak implementation.
+- Avoid duplicating semantic names as roles (e.g. no `textPrimary` role) — prefer `text.primary` pattern.
+- Mark deprecated roles in future via metadata and surface during validation.
+
+## Next Steps
+Planned enhancements:
+1. Snapshot test of role resolutions
+2. Lint rule preventing direct primitive / semantic usage in components
+3. High-contrast / alternative mode mapping demonstration
+
+## Enforcement Ladder
+Governance phases and current status:
+
+| Phase | Mechanism | Status |
+|-------|-----------|--------|
+| 1 | Warn-only script (`npm run roles:check`) | Complete |
+| 2 | Strict mode opt-in (`npm run roles:check:strict`) | Complete |
+| 3 | Full CI gate (`governance:ci` in workflow) | Active |
+| 4 | ESLint rule (auto-fix suggestions) | Planned |
+
+All components now use roles (0 direct primitive/semantic references). CI fails on regressions via `governance:ci`.
+
+## Contrast Governance
+All role foreground/background pairs are enforced in contrast tests. There is no monitored backlog. Introducing a new role pair should include an enforced contrast entry from day one unless there is a clearly documented incremental plan.
+
+_Last updated: full role contrast enforcement & CI gate active._
