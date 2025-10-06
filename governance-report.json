@@ -1,0 +1,118 @@
+{
+  "strict": true,
+  "roleUsage": {
+    "violations": [],
+    "count": 0
+  },
+  "roleContrast": {
+    "enforced": [
+      {
+        "fg": "text.primary",
+        "bg": "surface.default",
+        "required": 4.5,
+        "light": 16.29,
+        "dark": 12.86,
+        "level": "enforced"
+      },
+      {
+        "fg": "text.secondary",
+        "bg": "surface.default",
+        "required": 3,
+        "light": 7.34,
+        "dark": 6.14,
+        "level": "enforced"
+      },
+      {
+        "fg": "text.inverse",
+        "bg": "surface.accent",
+        "required": 4.5,
+        "light": 12.91,
+        "dark": 6.14,
+        "level": "enforced"
+      },
+      {
+        "fg": "text.onAccent",
+        "bg": "interactive.primary",
+        "required": 4.5,
+        "light": 6.07,
+        "dark": 12.91,
+        "level": "enforced"
+      },
+      {
+        "fg": "text.onAccent",
+        "bg": "interactive.primary.hover",
+        "required": 4.5,
+        "light": 12.91,
+        "dark": 18.04,
+        "level": "enforced"
+      },
+      {
+        "fg": "status.success.fg",
+        "bg": "status.success.bg",
+        "required": 3,
+        "light": 3.14,
+        "dark": 3.14,
+        "level": "enforced"
+      },
+      {
+        "fg": "status.warning.fg",
+        "bg": "status.warning.bg",
+        "required": 3,
+        "light": 10.17,
+        "dark": 5.33,
+        "level": "enforced"
+      },
+      {
+        "fg": "status.danger.fg",
+        "bg": "status.danger.bg",
+        "required": 3,
+        "light": 3.02,
+        "dark": 3.02,
+        "level": "enforced"
+      }
+    ],
+    "monitored": [],
+    "enforcedFailures": []
+  },
+  "semanticContrast": {
+    "available": true,
+    "pairs": [
+      {
+        "fg": "textPrimary",
+        "bg": "surfaceDefault",
+        "required": 4.5,
+        "light": 16.29,
+        "dark": 12.86
+      },
+      {
+        "fg": "textSecondary",
+        "bg": "surfaceDefault",
+        "required": 3,
+        "light": 7.34,
+        "dark": 6.14
+      },
+      {
+        "fg": "statusSuccessText",
+        "bg": "statusSuccessBg",
+        "required": 3,
+        "light": 3.14,
+        "dark": 3.14
+      },
+      {
+        "fg": "statusWarningText",
+        "bg": "statusWarningBg",
+        "required": 3,
+        "light": 10.17,
+        "dark": 5.33
+      },
+      {
+        "fg": "statusDangerText",
+        "bg": "statusDangerBg",
+        "required": 3,
+        "light": 3.02,
+        "dark": 3.02
+      }
+    ]
+  },
+  "status": "OK"
+}
