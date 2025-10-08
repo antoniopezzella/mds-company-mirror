@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, darkTheme } from '../src/theme';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 
 export const globalTypes = {
@@ -31,7 +31,7 @@ export const decorators = [
         </div>
       </ThemeProvider>
     );
-  },
+  }
 ];
 
 export const parameters = {
