@@ -135,3 +135,68 @@ If MDX pages fail to load:
 5. Verify no duplicate `preview` files exist.
 
 Chromatic addon is enabled; configure project token via environment variable if visual regression testing is desired.
+
+## CI & Quality Gates
+
+This repository enforces design system integrity through three GitHub Actions workflows located in `.github/workflows/`:
+
+| Workflow | File | Triggers | Purpose |
+|----------|------|----------|---------|
+| CI | `ci.yml` | push & PR to `main` | Install deps, lint docs, token governance (`tokens:check`), tests, build, (PR) build Storybook + upload artifact |
+| Governance | `governance.yml` | push & PR to `main` | Strict governance: naming, deprecated token usage, missing semantic coverage |
+| Contrast | `contrast.yml` | PR (selected paths) | WCAG contrast validation for token foreground/background pairs |
+
+### Local Reproduction
+| Check | Command |
+|-------|---------|
+| Full token build + diff + contrast | `npm run tokens:check` |
+| Strict governance report | `npm run governance:report:strict` |
+| Contrast (all pairs, JSON) | `npm run tokens:contrast:json` |
+| Governance CI bundle | `npm run governance:ci` |
+
+### Artifacts & Summaries
+* Contrast: `contrast-report.json` (download from workflow artifacts). Fails if `totalFailed > 0`.
+* Governance: `governance-report.json` (strict mode) for audit trail.
+* CI: `token-diff.md` appended to the job summary (lists added/removed/changed tokens).
+* Storybook (PR only): `storybook-static` artifact for ephemeral visual review.
+
+### Failure Cheatsheet
+| Failure Type | Likely Cause | What To Do |
+|--------------|-------------|------------|
+| Token diff step fails | Unauthorized primitive removal / changed reference | Add migration note or adjust governance policy | 
+| Governance job fails | Deprecated or disallowed token usage; naming mismatch | Replace usage with suggested semantic token; run `roles:check` locally |
+| Contrast job fails | Foreground/background pair below threshold | Adjust semantic mapping or palette value; re-run `tokens:contrast:all` |
+| Tests fail | Unit or snapshot regression | Update test or component; confirm semantic token changes intentional |
+
+### Adding / Changing Tokens Safely
+1. Add primitive (palette) or semantic token in build script source.
+2. Run `npm run tokens:build` locally.
+3. Run `npm run tokens:contrast:all` to ensure no regressions.
+4. Commit changes with clear description (e.g. `feat(tokens): add surface.button.primary semantic token`).
+5. Open PR; verify CI summary & artifacts.
+
+### Governance Escalation Path
+Level 1 (Current): Informational reporting (token diff, contrast).
+Level 2: Block PRs that remove a token without a `replacement` field.
+Level 3: Block direct palette usage in component code (allowlist exceptions: charts, marketing).
+Level 4: Enforce deprecation deadlines (auto-fail after cutoff date embedded in token meta).
+
+### Concurrency (Planned)
+To avoid redundant runs on rapid pushes, add:
+```
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+```
+to each workflow (not yet applied—kept here for future optimization).
+
+### Troubleshooting Checklist
+| Symptom | Quick Triage |
+|---------|--------------|
+| Storybook artifact missing | Ensure PR build path triggered & no early failure |
+| Governance passes locally but fails in CI | Local not using `npm ci` (version drift) – run `rm -rf node_modules && npm ci` |
+| Contrast false positives | Confirm tokens referencing correct mode values; run JSON output & inspect pair entries |
+| Slow CI | Consider enabling concurrency + caching Storybook build |
+
+---
+*If you contribute: always map new component colors via semantic tokens instead of raw palette values. Direct palette usage may become a governance failure in future levels.*
