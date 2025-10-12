@@ -1,8 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+export const meta = { title: 'Foundations/Documentation-Guidelines' };
 
-<Meta title="Docs/Documentation Guidelines" />
-
-# Documentation Authoring Guidelines
+# Documentation Guidelines
 
 This page defines how we write and structure design system documentation (MDX + Autodocs).
 
@@ -28,7 +26,7 @@ Reference spec: https://github.github.com/gfm/
 - Excessive inline styling; use components or theme tokens.
 
 ## MDX Structure Rules
-- Exactly one `<Meta />` at the top of every MDX page.
+- Each MDX page must export a single `meta` object at the top with a `title`.
 - Heading order: one `#` (title) then `##` level sections. Do not skip levels.
 - Place future work / TODO notes in an italic block at bottom (`_Future: ..._`).
 - Import helper components from `./_components/*` or root tokens (e.g. `../spacing`).
@@ -43,11 +41,11 @@ For components:
 
 ### ApiSection Usage Pattern
 ```mdx
-// import { Meta, Story } from '@storybook/addon-docs/blocks';
+// import { Story } from '@storybook/blocks';
 // import * as ButtonStories from '../../components/Button/Button.stories';
 // import { ApiSection } from '../Components/ApiSection';
 
-{/* <Meta of={ButtonStories} title="Components/Button" /> */}
+// export const meta = { title: 'Components/Button' };
 
 ## Examples
 <Story of={ButtonStories.Primary} />

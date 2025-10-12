@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { tokens } from '../tokens';
 import { useTheme } from '@mui/material/styles';
+import { getRoleColor } from '../theme/roles';
 
 // Expanded assets
 const img1 = "http://localhost:3845/assets/dabf9825dbb5c6224096b90604838f69af7ee82f.png";
@@ -13,10 +13,12 @@ const imgBasicImagePlaceholder = "http://localhost:3845/assets/dabf9825dbb5c6224
 const StickyBanner: React.FC = () => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
-  const primaryColor = theme.palette.primary.main || tokens.blue700;
-  const textColor = theme.palette.text.primary || tokens.blue700;
-  const buttonTextColor = theme.palette.primary.contrastText || tokens.white;
-  const backgroundColor = theme.palette.background.paper || tokens.white;
+  // Fallback to roles instead of raw primitives; theme palette may later map to roles directly.
+  const primaryColor = theme.palette.primary.main || getRoleColor('interactive.primary');
+  const primaryHover = getRoleColor('interactive.primary.hover');
+  const textColor = theme.palette.text.primary || getRoleColor('text.primary');
+  const buttonTextColor = theme.palette.primary.contrastText || getRoleColor('text.onAccent');
+  const backgroundColor = theme.palette.background.paper || getRoleColor('surface.default');
 
   if (!expanded) {
     // Collapsed variant
@@ -47,7 +49,9 @@ const StickyBanner: React.FC = () => {
               Ut enim ad minim veniam, quis nostrud exercitation
             </p>
           </div>
-          <div style={{ background: primaryColor, display: 'flex', gap: 8, height: 48, alignItems: 'center', justifyContent: 'center', padding: '12px 16px', borderRadius: 2 }}>
+          <div style={{ background: primaryColor, display: 'flex', gap: 8, height: 48, alignItems: 'center', justifyContent: 'center', padding: '12px 16px', borderRadius: 2, transition: 'background-color .15s' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryHover; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryColor; }}>
             <p style={{ fontFamily: theme.typography.button.fontFamily, fontWeight: theme.typography.button.fontWeight, fontSize: 16, color: buttonTextColor, textAlign: 'center', margin: 0 }}>
               Find out more
             </p>
@@ -60,7 +64,7 @@ const StickyBanner: React.FC = () => {
           {/* Chevron up for expand (only one arrow) */}
           <button
             style={{
-              background: '#0A2972', // Marsh blue
+              background: primaryColor,
               border: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -72,7 +76,10 @@ const StickyBanner: React.FC = () => {
               width: 48,
               cursor: 'pointer',
               marginLeft: 16,
+              transition: 'background-color .15s'
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = primaryHover; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = primaryColor; }}
             onClick={() => setExpanded(true)}
             aria-label="Expand banner"
           >
@@ -128,7 +135,10 @@ const StickyBanner: React.FC = () => {
               justifyContent: 'center',
               padding: '12px 16px',
               borderRadius: 2,
+              transition: 'background-color .15s'
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryHover; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryColor; }}
             data-name="Button"
             data-node-id="628:66375"
           >
@@ -185,7 +195,7 @@ const StickyBanner: React.FC = () => {
         {/* Chevron down for collapse (only one arrow) */}
         <button
           style={{
-            background: '#0A2972', // Marsh blue
+            background: primaryColor,
             border: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -197,7 +207,10 @@ const StickyBanner: React.FC = () => {
             width: 48,
             cursor: 'pointer',
             marginLeft: 16,
+            transition: 'background-color .15s'
           }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = primaryHover; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = primaryColor; }}
           onClick={() => setExpanded(false)}
           aria-label="Collapse banner"
         >

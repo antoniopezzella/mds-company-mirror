@@ -11,27 +11,37 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/setupTests.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
-    projects: [{
-      extends: true,
-      plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
-      test: {
-        name: 'storybook',
-        browser: {
-          enabled: true,
-          headless: true,
-          provider: 'playwright',
-          instances: [{
-            browser: 'chromium'
-          }]
-        },
-        setupFiles: ['.storybook/vitest.setup.ts']
+    include: ['src/**/*.test.{ts,tsx}', 'src/__tests__/**/*.{test,spec}.{ts,tsx}', 'src/__tests__/**/*.test.{ts,tsx}'],
+    projects: [
+      // Storybook-driven interaction tests
+      {
+        extends: true,
+        plugins: [
+          storybookTest({
+            configDir: path.join(dirname, '.storybook')
+          })
+        ],
+        test: {
+          name: 'storybook',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: 'playwright',
+            instances: [
+              { browser: 'chromium' }
+            ]
+          },
+          setupFiles: ['.storybook/vitest.setup.ts']
+        }
+      },
+      // Pure unit tests (no Storybook plugin filtering)
+      {
+        test: {
+          name: 'unit',
+          include: ['src/__tests__/**/*.{test,spec}.{ts,tsx}', 'src/**/*.unit.{test,spec}.{ts,tsx}'],
+          environment: 'jsdom'
+        }
       }
-    }]
+    ]
   }
 });

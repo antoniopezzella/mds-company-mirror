@@ -31,3 +31,5 @@
 #root {
   min-width: 100vw;
 }
+
+/* Grid utilities are imported via main.tsx */

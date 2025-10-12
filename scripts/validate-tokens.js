@@ -48,6 +48,7 @@ for (let i=0;i<levels.length;i++) {
 // Semantic color subset of primitives
 const primitiveValues = new Set(Object.values(artifact.color||{}));
 const semanticColor = artifact.semantic?.color || {};
+const darkOverrides = artifact.semantic?.modes?.dark || {};
 for (const [k,v] of Object.entries(semanticColor)) {
   if (!primitiveValues.has(v)) fail(`Semantic color ${k} value ${v} not found among primitives`);
 }
@@ -60,6 +61,13 @@ if (new Set(statusValues).size !== statusValues.length) {
 }
 
 console.log('Token validation passed.');
+
+// Dark mode overrides validation
+for (const k of Object.keys(darkOverrides)) {
+  if (!(k in semanticColor)) {
+    console.warn(`Dark override key ${k} does not exist in base semantic.color (will be ignored by consumers).`);
+  }
+}
 
 // Deprecation advisories
 const deprecated = artifact.meta?.deprecated || {};

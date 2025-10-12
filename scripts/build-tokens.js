@@ -26,7 +26,23 @@ const tokens = (await import(path.join(tmpOut, 'tokens.js'))).tokens;
 const spacing = (await import(path.join(tmpOut, 'spacing.js'))).spacing;
 const shadows = (await import(path.join(tmpOut, 'shadows.js'))).shadows;
 // Import semantic layer directly from TS (no compile reference needed if we want, but keep consistent)
-const { semanticColors } = await import(path.join(tmpOut, 'semantic-tokens.js'));
+const { semanticColors, semanticDarkOverrides } = await import(path.join(tmpOut, 'semantic-tokens.js'));
+
+// CSS variable helpers (inline to avoid needing TS import for build step)
+const camelToKebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+function buildCssBlocks() {
+  const primitives = tokens;
+  const light = semanticColors;
+  const dark = { ...semanticColors, ...semanticDarkOverrides };
+  const linesRoot = [':root {'];
+  for (const [k,v] of Object.entries(primitives)) linesRoot.push(`  --primitive-${camelToKebab(k)}: ${v};`);
+  for (const [k,v] of Object.entries(light)) linesRoot.push(`  --color-${camelToKebab(k)}: ${v};`);
+  linesRoot.push('}');
+  const linesDark = ['[data-theme="dark"] {'];
+  for (const [k,v] of Object.entries(dark)) linesDark.push(`  --color-${camelToKebab(k)}: ${v};`);
+  linesDark.push('}');
+  return { root: linesRoot.join('\n'), dark: linesDark.join('\n') };
+}
 
 const distDir = path.join(root, 'dist');
 mkdirSync(distDir, { recursive: true });
@@ -56,9 +72,22 @@ const artifact = {
   spacing,
   shadows,
   semantic: {
-    color: semanticColors
+    color: semanticColors,
+    modes: {
+      dark: semanticDarkOverrides
+    }
   }
 };
 
 writeFileSync(path.join(distDir, 'tokens.json'), JSON.stringify(artifact, null, 2));
 console.log('✔ tokens.json generated');
+
+// Emit theme.css with primitives + semantic light/dark variables
+try {
+  const { root: rootBlock, dark: darkBlock } = buildCssBlocks();
+  const cssOut = `${rootBlock}\n\n${darkBlock}\n`;
+  writeFileSync(path.join(distDir, 'theme.css'), cssOut, 'utf8');
+  console.log('✔ theme.css generated');
+} catch (e) {
+  console.warn('⚠ failed to generate theme.css', e);
+}

@@ -46,7 +46,8 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   borderStrong: tokens.blueGray800,
   focusRing: tokens.blue300,
   // Dark mode interactive controls darkened to raise white (onAccent) contrast ≥4.5
-  interactivePrimary: tokens.blue700,
+  // Base lightened to increase contrast vs dark surface (≥3.0), hover darkened for white text contrast (≥4.5)
+  interactivePrimary: tokens.blue500,
   interactivePrimaryHover: tokens.blue900,
   // Accessibility-driven adjustments for status text on dark surfaces
   statusSuccess: tokens.green300,

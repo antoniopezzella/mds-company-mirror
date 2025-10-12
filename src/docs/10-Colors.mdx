@@ -1,28 +1,39 @@
-import { Meta } from '@storybook/addon-docs/blocks';
-import { tokens } from '../tokens';
-import { ColorSwatches } from './_components/ColorSwatches';
-import { ContrastMatrix } from './_components/ContrastMatrix';
-import { SemanticStatusSwatches } from './_components/SemanticStatusSwatches';
+import { ColorSwatches } from '../components/ColorSwatches';
+import { ContrastStatus } from '../docs/_components/ContrastStatus';
+import { ContrastMatrix } from '../docs/_components/ContrastMatrix';
+import { TokenTable } from '../docs/_components/TokenTable';
+import { listRoles, getRoleColor } from '../theme/roles';
 
-<Meta title="Foundations/Colors" />
+export const meta = { title: 'Foundations/Colors' };
 
 # Colors
 
-Base palette primitives used to construct the theme. Avoid referencing raw hex values in components; use semantic theme roles instead (e.g. `theme.palette.primary.main`).
+## Semantic Role Colors
+
+<TokenTable
+  columns={[
+    { key: 'role', label: 'Role' },
+    { key: 'description', label: 'Intent' },
+    { key: 'light', label: 'Light', width: 110 },
+    { key: 'dark', label: 'Dark', width: 110 }
+  ]}
+  rows={listRoles().map(r => ({
+    role: r.role,
+    description: r.description,
+    light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
+    dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
+  }))}
+  caption="All semantic roles with their mapped color values for light and dark modes."
+/>
+
+## Accessibility Status
+
+<ContrastStatus />
+
+## Marsh Primitive Color Palettes
 
 <ColorSwatches />
 
-## Contrast
-
-Ensuring accessible color pairs is critical. The matrix below evaluates representative foreground/background combinations and flags their WCAG compliance.
+## Color Contrast Matrix
 
 <ContrastMatrix />
-
-## Status / Feedback Colors
-
-Status colors now use background + text pairs for accessibility and thematic flexibility. Legacy single tokens (`statusSuccess`, `statusWarning`, `statusDanger`) are deprecated and will be removed after a migration window. Prefer the *Bg / *Text pair.
-
-<SemanticStatusSwatches />
-
----
-_Expanded: added contrast evaluation. Future: semantic role mapping & dark mode palette notes._
