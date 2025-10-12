@@ -1,0 +1,114 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = `
+[
+  {
+    "dark": "#4e6287",
+    "light": "#dadada",
+    "role": "border.default",
+    "semantic": "borderDefault",
+  },
+  {
+    "dark": "#35425b",
+    "light": "#b3b3b3",
+    "role": "border.strong",
+    "semantic": "borderStrong",
+  },
+  {
+    "dark": "#76d3ff",
+    "light": "#009de0",
+    "role": "focus.ring",
+    "semantic": "focusRing",
+  },
+  {
+    "dark": "#009de0",
+    "light": "#0065ac",
+    "role": "interactive.primary",
+    "semantic": "interactivePrimary",
+  },
+  {
+    "dark": "#001538",
+    "light": "#001e5a",
+    "role": "interactive.primary.hover",
+    "semantic": "interactivePrimaryHover",
+  },
+  {
+    "dark": "#c53532",
+    "light": "#ffaea6",
+    "role": "status.danger.bg",
+    "semantic": "statusDangerBg",
+  },
+  {
+    "dark": "#ffaea6",
+    "light": "#c53532",
+    "role": "status.danger.fg",
+    "semantic": "statusDangerText",
+  },
+  {
+    "dark": "#14853d",
+    "light": "#addfb3",
+    "role": "status.success.bg",
+    "semantic": "statusSuccessBg",
+  },
+  {
+    "dark": "#addfb3",
+    "light": "#14853d",
+    "role": "status.success.fg",
+    "semantic": "statusSuccessText",
+  },
+  {
+    "dark": "#673d00",
+    "light": "#ffe5b3",
+    "role": "status.warning.bg",
+    "semantic": "statusWarningBg",
+  },
+  {
+    "dark": "#ffb547",
+    "light": "#4a2e00",
+    "role": "status.warning.fg",
+    "semantic": "statusWarningText",
+  },
+  {
+    "dark": "#4e6287",
+    "light": "#002c77",
+    "role": "surface.accent",
+    "semantic": "surfaceAccent",
+  },
+  {
+    "dark": "#283245",
+    "light": "#ffffff",
+    "role": "surface.default",
+    "semantic": "surfaceDefault",
+  },
+  {
+    "dark": "#35425b",
+    "light": "#f4f4f4",
+    "role": "surface.subtle",
+    "semantic": "surfaceSubtle",
+  },
+  {
+    "dark": "#ffffff",
+    "light": "#ffffff",
+    "role": "text.inverse",
+    "semantic": "textOnAccent",
+  },
+  {
+    "dark": "#ffffff",
+    "light": "#ffffff",
+    "role": "text.onAccent",
+    "semantic": "textOnAccent",
+  },
+  {
+    "dark": "#ffffff",
+    "light": "#202020",
+    "role": "text.primary",
+    "semantic": "textPrimary",
+  },
+  {
+    "dark": "#b3b3b3",
+    "light": "#565656",
+    "role": "text.secondary",
+    "semantic": "textSecondary",
+  },
+]
+`;

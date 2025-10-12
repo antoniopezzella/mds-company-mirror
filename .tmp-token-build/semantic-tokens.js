@@ -16,7 +16,8 @@ export const semanticColors = {
     borderStrong: ref('gray400'),
     focusRing: ref('blue500'),
     interactivePrimary: ref('blue600'),
-    interactivePrimaryHover: ref('blue700'),
+    // Hover moved to new blue800 for a clearer distinction when surface.accent uses blue700
+    interactivePrimaryHover: ref('blue800'),
     statusSuccess: ref('green600'),
     statusSuccessBg: ref('green300'),
     statusSuccessText: ref('green600'),
@@ -27,4 +28,29 @@ export const semanticColors = {
     statusDanger: ref('crimson600'),
     statusDangerBg: ref('crimson300'),
     statusDangerText: ref('crimson600')
+};
+// Dark mode overrides (only keys that differ from base). Keep minimal at scaffold stage.
+export const semanticDarkOverrides = {
+    surfaceDefault: tokens.blueGray900,
+    surfaceSubtle: tokens.blueGray800,
+    surfaceAccent: tokens.blueGray700,
+    textPrimary: tokens.white,
+    textSecondary: tokens.gray400,
+    borderDefault: tokens.blueGray700,
+    borderStrong: tokens.blueGray800,
+    focusRing: tokens.blue300,
+    // Dark mode interactive controls darkened to raise white (onAccent) contrast ≥4.5
+    // Base lightened to increase contrast vs dark surface (≥3.0), hover darkened for white text contrast (≥4.5)
+    interactivePrimary: tokens.blue500,
+    interactivePrimaryHover: tokens.blue900,
+    // Accessibility-driven adjustments for status text on dark surfaces
+    statusSuccess: tokens.green300,
+    statusSuccessText: tokens.green300,
+    statusSuccessBg: tokens.green600, // darker bg for adequate fg contrast
+    statusWarning: tokens.amber400,
+    statusWarningText: tokens.amber300, // lighter text for contrast
+    statusWarningBg: tokens.amber800, // darker bg
+    statusDanger: tokens.crimson300,
+    statusDangerText: tokens.crimson300,
+    statusDangerBg: tokens.crimson600, // darker bg
 };

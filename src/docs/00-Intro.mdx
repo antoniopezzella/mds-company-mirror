@@ -1,13 +1,28 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { ContrastStatus } from './_components/ContrastStatus';
 
-<Meta title="Docs/Intro" />
+export const meta = { title: 'Foundations/Intro' };
+
+
 
 # Design System Intro
 
 This is a fresh baseline MDX page to validate Storybook MDX indexing in isolation.
 
+## Contrast Status
+
+<ContrastStatus />
+
+Refresh after token changes:
+```bash
+npm run tokens:contrast:badge
+```
+Informational pairs (optional) can be displayed with:
+```bash
+npm run tokens:contrast:info
+```
+
 ## What This Page Demonstrates
-- MDX v2 syntax with a single <Meta />
+- MDX v2 syntax with a single `<Meta />`
 - No custom stories or CSF exports
 - Should appear once in the sidebar under Docs/Intro
 
@@ -25,6 +40,36 @@ If a duplication or indexer error reappears after adding a page, that page (or i
 _Health note: dynamic timestamp removed temporarily for MDX debug isolation._
 
 ## Troubleshooting MDX Docs
+## Storybook Foundations Grouping: Recommendations
+
+To ensure all foundational docs are visually grouped under a "Foundations" section in the Storybook sidebar:
+
+1. **Meta Title Consistency:**
+	- Every foundational MDX doc must export `export const meta = { title: 'Foundations/<Page>' }` at the top.
+	- The prefix must be exactly `Foundations/` (no extra spaces, dashes, or typos).
+
+2. **No Duplicate Meta/Title:**
+	- Only use the `meta` export, not `<Meta title=... />` tags.
+	- Remove any duplicate or conflicting meta/title exports.
+
+3. **Sidebar Ordering:**
+	- In `.storybook/preview.tsx`, use the `storySort.order` array to explicitly order the Foundations section and its children.
+
+4. **Cache and Browser Refresh:**
+	- After making changes, run `npm run storybook:clean` and restart Storybook.
+	- Hard refresh your browser to clear cached sidebar state.
+
+5. **No Stray Stories:**
+	- Check for any stories with similar but not matching prefixes (e.g., "Foundation", "Foundations -", etc.) and correct them.
+
+6. **MDX v2 Syntax:**
+	- Use only one `meta` export per MDX file.
+	- Avoid raw HTML tags in prose; use Markdown or code blocks.
+
+7. **Troubleshooting:**
+	- If grouping still fails, add a minimal test MDX page (e.g., `ZZ-Debug.mdx` with just a meta export and heading) to isolate indexing issues.
+
+Following these steps will ensure your sidebar visually groups all foundational docs under "Foundations" as intended.
 
 If docs fail to build or pages disappear:
 
@@ -32,8 +77,8 @@ If docs fail to build or pages disappear:
 2. Look for raw HTML tags (e.g. `<button>`) in prose—replace with backticks.
 3. Remove heavy inline logic (large `{array.map(...)}`) and move it into a helper component.
 4. Confirm the Storybook config still points `stories` to `src/docs/**/*.mdx` and component stories.
-5. Verify docs blocks import path (`@storybook/addon-docs/blocks`) resolves (no alias required).
+5. Verify docs blocks import path (`@storybook/blocks`) resolves (no alias required).
 6. Clear caches: `npm run storybook:clean`.
-7. Add a minimal new test page (e.g. `ZZ-Debug.mdx` with just Meta + heading) to isolate indexing issues.
+7. Add a minimal new test page (e.g. `ZZ-Debug.mdx` with just `<Meta />` + heading) to isolate indexing issues.
 
 If still broken, temporarily add a Vite debug plugin logging MDX IDs (see removed `mdx-inspect` pattern in `.storybook/main.ts`).

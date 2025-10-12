@@ -1,17 +1,10 @@
-import { Meta, Controls, Story } from '@storybook/addon-docs/blocks';
-import * as DSButtonStories from '../components/Button/Button.stories';
-
-<Meta title="Debug/Blocks" of={DSButtonStories} />
+export const meta = { title: 'Debug/Blocks' };
 
 # Blocks Debug
 
 Minimal verification of core doc blocks (Meta, Story, Controls). Use to isolate addon-docs regressions.
 
-## Interactive Controls (Verification)
-<Controls of={DSButtonStories.Primary} />
-
-## Story Render (Context)
-<Story of={DSButtonStories.Primary} />
+This page intentionally avoids referencing specific component stories to prevent Storybook from indexing it as a component docs page.
 
 ---
 If failure persists:

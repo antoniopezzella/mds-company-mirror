@@ -1,0 +1,281 @@
+export const meta = { title: 'Foundations/Grid' };
+
+# Grid
+
+A lightweight 12-column grid aligned to the 4px base with 8px gutters and responsive breakpoints. Built with CSS Grid and Sass utilities.
+
+Columns: 12 • Base: 4px • Gutters: 8px • Breakpoints: xs, sm 600, md 900, lg 1200, xl 1536 • Container max: sm 580, md 860, lg 1140, xl 1440
+
+import { GridHealth } from './_components/GridHealth';
+
+<GridHealth label="Grid runtime" />
+
+## Usage
+
+Import once (already wired globally in Storybook):
+
+```scss
+@use '../styles/grid' as *;
+```
+
+### Two-column layout
+
+```html
+<div class="container">
+  <div class="row gap-4">
+    <div class="col-12 col-md-8" style="background:#e5edf4; padding:8px">Main</div>
+    <div class="col-12 col-md-4" style="background:#c7edff; padding:8px">Sidebar</div>
+  </div>
+  <div class="row gap-2" style="margin-top:12px">
+    <div class="col-6 col-lg-3" style="background:#f0faff; padding:8px">A</div>
+    <div class="col-6 col-lg-3" style="background:#f0faff; padding:8px">B</div>
+    <div class="col-6 col-lg-3" style="background:#f0faff; padding:8px">C</div>
+    <div class="col-6 col-lg-3" style="background:#f0faff; padding:8px">D</div>
+  </div>
+  <div class="row gap-3" style="margin-top:12px">
+    <div class="col-10 offset-1" style="background:#f4f4f4; padding:8px; text-align:center">Centered</div>
+  </div>
+  <div class="row gap-2 align-center" style="margin-top:12px">
+    <div class="col-4" style="background:#ebebeb; padding:8px">Left</div>
+    <div class="col-8" style="background:#ebebeb; padding:8px">Center aligned items</div>
+  </div>
+</div>
+```
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6 }}>
+  <div className="row gap-4">
+    <div className="col-12 col-md-8" style={{ background:'#e5edf4', padding:8 }}>Main</div>
+    <div className="col-12 col-md-4" style={{ background:'#c7edff', padding:8 }}>Sidebar</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop:12 }}>
+    <div className="col-6 col-lg-3" style={{ background:'#f0faff', padding:8 }}>A</div>
+    <div className="col-6 col-lg-3" style={{ background:'#f0faff', padding:8 }}>B</div>
+    <div className="col-6 col-lg-3" style={{ background:'#f0faff', padding:8 }}>C</div>
+    <div className="col-6 col-lg-3" style={{ background:'#f0faff', padding:8 }}>D</div>
+  </div>
+  <div className="row gap-3" style={{ marginTop:12 }}>
+    <div className="col-10 offset-1" style={{ background:'#f4f4f4', padding:8, textAlign:'center' }}>Centered</div>
+  </div>
+  <div className="row gap-2 align-center" style={{ marginTop:12 }}>
+    <div className="col-4" style={{ background:'#ebebeb', padding:8 }}>Left</div>
+    <div className="col-8" style={{ background:'#ebebeb', padding:8 }}>Center aligned items</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop:12 }}>
+    <div className="col-12" style={{ background:'#ebebeb', padding:8, textAlign:'center' }}>Full width row</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop:12 }}>
+    <div className="col-3" style={{ background:'#e5edf4', padding:8 }}>25%</div>
+    <div className="col-6" style={{ background:'#c7edff', padding:8 }}>50%</div>
+    <div className="col-3" style={{ background:'#e5edf4', padding:8 }}>25%</div>
+  </div>
+</div>
+
+### 12px grid spacing (gap-3)
+
+Use the 12px step via `.gap-3` or `style={{ '--mds-grid-gap': '12px' }}`.
+
+```html
+<div class="row gap-3">
+  <div class="col-4">12px gap</div>
+  <div class="col-4">12px gap</div>
+  <div class="col-4">12px gap</div>
+</div>
+```
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="row gap-3">
+    <div className="col-4" style={{ background:'#eef2ff', padding: 8, textAlign:'center' }}>12px gap</div>
+    <div className="col-4" style={{ background:'#eef2ff', padding: 8, textAlign:'center' }}>12px gap</div>
+    <div className="col-4" style={{ background:'#eef2ff', padding: 8, textAlign:'center' }}>12px gap</div>
+  </div>
+</div>
+
+Or set a custom gap with a CSS variable (still 12px here):
+
+<div className="container" style={{ border: '1px dashed #dbe3ef', padding: 8, borderRadius: 6, marginTop: 8 }}>
+  <div className="row" style={{ '--mds-grid-gap': '12px' }}>
+    <div className="col-6" style={{ background:'#f0f7ff', padding: 8 }}>Left</div>
+    <div className="col-6" style={{ background:'#f0f7ff', padding: 8 }}>Right</div>
+  </div>
+</div>
+
+### Column span variations
+
+Common span patterns across 12 columns.
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="row gap-2">
+    <div className="col-12" style={{ background:'#f4f4f4', padding: 8, textAlign:'center' }}>12</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop: 8 }}>
+    <div className="col-6" style={{ background:'#e5edf4', padding: 8, textAlign:'center' }}>6</div>
+    <div className="col-6" style={{ background:'#e5edf4', padding: 8, textAlign:'center' }}>6</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop: 8 }}>
+    <div className="col-4" style={{ background:'#c7edff', padding: 8, textAlign:'center' }}>4</div>
+    <div className="col-4" style={{ background:'#c7edff', padding: 8, textAlign:'center' }}>4</div>
+    <div className="col-4" style={{ background:'#c7edff', padding: 8, textAlign:'center' }}>4</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop: 8 }}>
+    <div className="col-3" style={{ background:'#f0faff', padding: 8, textAlign:'center' }}>3</div>
+    <div className="col-3" style={{ background:'#f0faff', padding: 8, textAlign:'center' }}>3</div>
+    <div className="col-3" style={{ background:'#f0faff', padding: 8, textAlign:'center' }}>3</div>
+    <div className="col-3" style={{ background:'#f0faff', padding: 8, textAlign:'center' }}>3</div>
+  </div>
+  <div className="row gap-2" style={{ marginTop: 8 }}>
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} className="col-2" style={{ background:'#ebebeb', padding: 8, textAlign:'center' }}>2</div>
+    ))}
+  </div>
+</div>
+
+### Alignment (grid + flex)
+
+Grid item alignment via utilities, and inner-cell flex alignment when needed.
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="row gap-2 align-center justify-center" style={{ minHeight: 120 }}>
+    <div className="col-4" style={{ background:'#e9f3ff', padding: 8 }}>Center items (grid)</div>
+    <div className="col-4" style={{ background:'#e9f3ff', padding: 8, display:'flex', alignItems:'center', justifyContent:'center' }}>Flex center in cell</div>
+  </div>
+  <div className="row gap-2 content-justify-between content-align-center" style={{ minHeight: 120, marginTop: 8 }}>
+    <div className="col-3" style={{ background:'#f9f7fb', padding: 8, textAlign:'center' }}>A</div>
+    <div className="col-3" style={{ background:'#f9f7fb', padding: 8, textAlign:'center' }}>B</div>
+    <div className="col-3" style={{ background:'#f9f7fb', padding: 8, textAlign:'center' }}>C</div>
+  </div>
+</div>
+### Responsive cards
+
+```html
+<div class="container">
+  <div class="row gap-2">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" style="background:#f9f7fb; padding:12px;">Card</div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" style="background:#f9f7fb; padding:12px;">Card</div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" style="background:#f9f7fb; padding:12px;">Card</div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3" style="background:#f9f7fb; padding:12px;">Card</div>
+  </div>
+</div>
+```
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6 }}>
+  <div className="row gap-2">
+    <div className="col-12 col-md-6 col-lg-4 col-xl-3" style={{ background:'#f9f7fb', padding:12 }}>Card</div>
+    <div className="col-12 col-md-6 col-lg-4 col-xl-3" style={{ background:'#f9f7fb', padding:12 }}>Card</div>
+    <div className="col-12 col-md-6 col-lg-4 col-xl-3" style={{ background:'#f9f7fb', padding:12 }}>Card</div>
+    <div className="col-12 col-md-6 col-lg-4 col-xl-3" style={{ background:'#f9f7fb', padding:12 }}>Card</div>
+  </div>
+</div>
+
+### Bootstrap-style helpers (familiarity)
+
+We provide optional aliases inspired by Bootstrap for easier migration:
+
+- Equal-width columns per row: `.row-cols-N` (N=1..6), with responsive variants `.row-cols-sm-N`, `.row-cols-md-N`, etc.
+- Gap aliases: `.g-*`, `.gx-*`, `.gy-*` mirroring our `.gap-*`, `.gap-x-*`, `.gap-y-*`.
+
+Live preview
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="row row-cols-3 g-3">
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} style={{ background:'#f4fbff', padding: 12, textAlign:'center', borderRadius: 4 }}>Col</div>
+    ))}
+  </div>
+  <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-4 gy-2" style={{ marginTop: 8 }}>
+    {Array.from({ length: 8 }).map((_, i) => (
+      <div key={i} style={{ background:'#f7f7ff', padding: 12, textAlign:'center', borderRadius: 4 }}>Col</div>
+    ))}
+  </div>
+</div>
+
+Note: Our canonical API is the `.col-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*` set. The aliases are provided for familiarity and smoother adoption.
+
+## Utilities
+
+- Columns: `.col-1`..`.col-12`, responsive: `.col-sm-6`, `.col-md-4`, `.col-lg-3`, `.col-xl-2`
+- Offsets: `.offset-1`..`.offset-11`, responsive equivalents
+- Gaps: `.gap-1` (4px), `.gap-2` (8px), `.gap-3` (12px), `.gap-4` (16px), `.gap-6` (24px), `.gap-8` (32px)
+- Directional gaps: `.gap-x-*` (column-gap) and `.gap-y-*` (row-gap)
+- Alignment: `.align-{start|center|end}`, `.justify-{start|center|end}` for items, and `.content-justify-*` / `.content-align-*` for grid tracks
+- Start position: `.start-N` to place an item at a specific grid track (with responsive variants)
+- Fluid container: `.container-fluid` uses full width with consistent horizontal padding
+
+### Auto-fit cards grid
+
+When you don’t know how many cards fit per row, use the auto grid:
+
+```html
+<div class="row-auto" style="--mds-grid-col-min: 220px">
+  <div class="card">A</div>
+  <div class="card">B</div>
+  <div class="card">C</div>
+  <div class="card">D</div>
+  <div class="card">E</div>
+  <div class="card">F</div>
+  <!-- more cards -->
+  </div>
+```
+
+Live preview
+
+<div className="row-auto" style={{ '--mds-grid-col-min': '220px', border: '1px solid #e5e7eb', padding: 8, borderRadius: 6 }}>
+  {Array.from({ length: 9 }).map((_, i) => (
+    <div key={i} className="card" style={{ background:'#f9f7fb', padding: 12, textAlign: 'center', borderRadius: 4 }}>Card {i+1}</div>
+  ))}
+</div>
+
+### Fluid container
+
+Use `.container-fluid` for full-width sections that still need consistent side padding.
+
+```html
+<div class="container-fluid">
+  <div class="row gap-x-4 gap-y-3">
+    <div class="col-12 col-md-6" style="background:#eef6ff; padding:8px">Half</div>
+    <div class="col-12 col-md-6" style="background:#eef6ff; padding:8px">Half</div>
+  </div>
+</div>
+```
+
+Live preview
+
+<div className="container-fluid" style={{ border: '1px dashed #cdd6e1', paddingBlock: 8, borderRadius: 6 }}>
+  <div className="row gap-x-4 gap-y-3">
+    <div className="col-12 col-md-6" style={{ background:'#eef6ff', padding:8 }}>Half</div>
+    <div className="col-12 col-md-6" style={{ background:'#eef6ff', padding:8 }}>Half</div>
+  </div>
+</div>
+
+## Customize
+
+Override defaults before importing:
+
+```scss
+$base-unit: 0.25rem; // 4px at 16px root
+$gutter: 0.5rem;     // 8px at 16px root
+$columns: 12;
+@use '../styles/grid' as *;
+```
+
+Adjust `$breakpoints` and `$container-max` for different responsive behavior.
+
+### Runtime tuning via CSS variables
+
+You can tune grid gaps and min column width at runtime per section without recompiling Sass:
+
+```html
+<div class="row" style="--mds-grid-gap: 12px">…</div>
+<div class="row-auto" style="--mds-grid-col-min: 240px">…</div>
+```
+
+This is helpful for special layouts (e.g., tighter gaps on dense dashboards) while keeping defaults aligned to the design tokens.

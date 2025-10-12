@@ -2,7 +2,7 @@
 /**
  * check-contrast.js
  * Computes WCAG contrast ratios for key semantic text/surface & status pairs.
- * Fails on critical violations, warns on soft thresholds.
+ * Supports light/dark modes, JSON output, and optional inclusion of informational pairs.
  */
 import fs from 'fs';
 import path from 'path';
@@ -13,17 +13,14 @@ if (!fs.existsSync(artifactPath)) {
   process.exit(1);
 }
 const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
-const sem = artifact.semantic?.color || {};
+const baseSem = artifact.semantic?.color || {};
+const darkOverrides = artifact.semantic?.modes?.dark || {};
 
 function hexToRgb(hex) {
   const h = hex.replace('#','');
   const full = h.length === 3 ? h.split('').map(c=>c+c).join('') : h;
   const int = parseInt(full,16);
-  return {
-    r: (int >> 16) & 255,
-    g: (int >> 8) & 255,
-    b: int & 255
-  };
+  return { r: (int>>16)&255, g: (int>>8)&255, b: int & 255 };
 }
 function luminanceChannel(c) {
   const v = c/255;
@@ -43,60 +40,77 @@ function contrast(hex1, hex2) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-// Define pairs: foreground vs background
-// required: hard fail threshold; warn: lower bound that triggers warning if below required.
-const pairs = [
+// Define pairs (same set assessed in both modes)
+const PAIRS = [
   { name: 'textPrimary on surfaceDefault', fg: 'textPrimary', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
   { name: 'textSecondary on surfaceDefault', fg: 'textSecondary', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'textOnAccent on surfaceAccent', fg: 'textOnAccent', bg: 'surfaceAccent', required: 4.5, warn: 4.5 },
+  // Informational only unless explicitly included (white on white scenario)
+  { name: 'textOnAccent on surfaceDefault', fg: 'textOnAccent', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
   { name: 'focusRing outline vs surfaceDefault', fg: 'focusRing', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
   { name: 'statusSuccess text vs surfaceDefault', fg: 'statusSuccess', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'statusWarning text vs surfaceDefault', fg: 'statusWarning', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'statusDanger text vs surfaceDefault', fg: 'statusDanger', bg: 'surfaceDefault', required: 3.0, warn: 4.5 }
 ];
 
-let failed = 0;
-let warned = 0;
-const rows = [];
-
-function getColor(name) {
-  if (!(name in sem)) throw new Error(`Semantic token ${name} not found`);
-  return sem[name];
-}
-
-for (const p of pairs) {
-  try {
-    const fg = getColor(p.fg);
-    const bg = getColor(p.bg);
-    const ratio = contrast(fg, bg);
-    const ratioStr = ratio.toFixed(2);
-    let status = 'PASS';
-    if (ratio < p.required) { status = 'FAIL'; failed++; }
-    else if (ratio < p.warn) { status = 'WARN'; warned++; }
-    rows.push({ pair: p.name, ratio: ratioStr, required: p.required, status });
-  } catch (e) {
-    rows.push({ pair: p.name, ratio: 'ERR', required: p.required, status: 'ERROR' });
-    failed++;
+function runMode(mode) {
+  const sem = mode === 'dark' ? { ...baseSem, ...darkOverrides } : baseSem;
+  let failed = 0; let warned = 0; const rows = [];
+  function getColor(name) { if (!(name in sem)) throw new Error(`Semantic token ${name} not found in mode ${mode}`); return sem[name]; }
+  for (const p of PAIRS) {
+    try {
+      const fg = getColor(p.fg);
+      const bg = getColor(p.bg);
+      const ratio = contrast(fg, bg);
+      const ratioStr = ratio.toFixed(2);
+      let status = 'PASS';
+      if (p.informational && !includeInformational) {
+        status = 'INFO';
+      } else {
+        if (ratio < p.required) { status = 'FAIL'; failed++; }
+        else if (ratio < p.warn) { status = 'WARN'; warned++; }
+      }
+      rows.push({ pair: p.name, ratio: ratioStr, required: p.required, status });
+    } catch (e) {
+      rows.push({ pair: p.name, ratio: 'ERR', required: p.required, status: 'ERROR' });
+      failed++;
+    }
   }
+  return { mode, failed, warned, rows };
 }
 
-function printTable() {
-  console.log('\nContrast Checks');
+function printTable(result) {
+  console.log(`\nContrast Checks (${result.mode})`);
   console.log('| Pair | Ratio | Required | Status |');
   console.log('|------|-------|----------|--------|');
-  for (const r of rows) {
+  for (const r of result.rows) {
     console.log(`| ${r.pair} | ${r.ratio} | ${r.required} | ${r.status} |`);
   }
   console.log();
 }
 
-printTable();
+// CLI args
+const args = process.argv.slice(2);
+const modeArg = args.find(a => a.startsWith('--mode='));
+const all = args.includes('--all');
+const json = args.includes('--json') || args.includes('--format=json');
+const includeInformational = args.includes('--include-informational');
+const mode = modeArg ? modeArg.split('=')[1] : 'light';
 
-if (failed) {
-  console.error(`Contrast validation failed: ${failed} failing pair(s).`);
-  process.exit(1);
+const results = [];
+if (all) { results.push(runMode('light')); results.push(runMode('dark')); }
+else { results.push(runMode(mode)); }
+
+let totalFailed = 0; let totalWarned = 0;
+
+if (json) {
+  for (const r of results) { totalFailed += r.failed; totalWarned += r.warned; }
+  const payload = { modes: results, totalFailed, totalWarned, threshold: 'WCAG AA (custom per role)', includeInformational };
+  console.log(JSON.stringify(payload, null, 2));
+  process.exit(totalFailed ? 1 : 0);
+} else {
+  for (const r of results) { printTable(r); totalFailed += r.failed; totalWarned += r.warned; }
+  if (totalFailed) { console.error(`Contrast validation failed: ${totalFailed} failing pair(s) across mode(s).`); process.exit(1); }
+  if (totalWarned) { console.warn(`Contrast warnings: ${totalWarned} pair(s) below recommended ideal but above minimum.`); }
+  console.log('Contrast validation passed.');
 }
-if (warned) {
-  console.warn(`Contrast warnings: ${warned} pair(s) below recommended ideal but above minimum.`);
-}
-console.log('Contrast validation passed.');

@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "generated": "2025-10-08T00:00:00.000Z",
+  "notes": "Proposed refactored Figma color variable structure. Split into primitive scales and semantic roles. Replace any placeholder HEX values with your authoritative brand palette before import.",
+  "collections": [
+    {
+      "name": "Primitives – Brand",
+      "variables": [
+        { "name": "brand/50",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#E6F1FC" }, "Dark": { "value": "#0D2A3E" } } },
+        { "name": "brand/100", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#CCE3F9" }, "Dark": { "value": "#12324A" } } },
+        { "name": "brand/200", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#99C7F3" }, "Dark": { "value": "#1B4260" } } },
+        { "name": "brand/300", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#66ABED" }, "Dark": { "value": "#1F4E6F" } } },
+        { "name": "brand/400", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#338FE7" }, "Dark": { "value": "#256084" } } },
+        { "name": "brand/500", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#0073E0" }, "Dark": { "value": "#2A6D95" } } },
+        { "name": "brand/600", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#005CB3" }, "Dark": { "value": "#3381AE" } } },
+        { "name": "brand/700", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#004681" }, "Dark": { "value": "#3D94C6" } } },
+        { "name": "brand/800", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#003051" }, "Dark": { "value": "#4AABD9" } } },
+        { "name": "brand/900", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#001A29" }, "Dark": { "value": "#94D3F0" } } }
+      ]
+    },
+    {
+      "name": "Primitives – Neutral",
+      "variables": [
+        { "name": "neutral/0",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#FFFFFF" }, "Dark": { "value": "#000000" } } },
+        { "name": "neutral/50",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#F8FAFC" }, "Dark": { "value": "#0F1418" } } },
+        { "name": "neutral/100",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#F1F5F9" }, "Dark": { "value": "#161D22" } } },
+        { "name": "neutral/150",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#E7EDF3" }, "Dark": { "value": "#1D262D" } } },
+        { "name": "neutral/200",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#E2E8F0" }, "Dark": { "value": "#243039" } } },
+        { "name": "neutral/300",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#CBD5E1" }, "Dark": { "value": "#2F3D48" } } },
+        { "name": "neutral/400",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#94A3B8" }, "Dark": { "value": "#3D4C58" } } },
+        { "name": "neutral/500",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#64748B" }, "Dark": { "value": "#506170" } } },
+        { "name": "neutral/600",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#475569" }, "Dark": { "value": "#66798A" } } },
+        { "name": "neutral/700",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#334155" }, "Dark": { "value": "#7C91A4" } } },
+        { "name": "neutral/800",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#1E293B" }, "Dark": { "value": "#96AABD" } } },
+        { "name": "neutral/900",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#0F172A" }, "Dark": { "value": "#CBD6E0" } } },
+        { "name": "neutral/1000", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#020617" }, "Dark": { "value": "#F1F5F9" } } }
+      ]
+    },
+    {
+      "name": "Primitives – Status",
+      "variables": [
+        { "name": "success/50",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#EDFDF5" }, "Dark": { "value": "#0F2F22" } } },
+        { "name": "success/100", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#C6F6D5" }, "Dark": { "value": "#174A30" } } },
+        { "name": "success/400", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#38A169" }, "Dark": { "value": "#3FB97B" } } },
+        { "name": "success/600", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#2F855A" }, "Dark": { "value": "#56D091" } } },
+        { "name": "success/700", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#276749" }, "Dark": { "value": "#6EEAA9" } } },
+        { "name": "warning/50",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#FFFAF0" }, "Dark": { "value": "#332A05" } } },
+        { "name": "warning/100", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#FEEBC8" }, "Dark": { "value": "#5A4508" } } },
+        { "name": "warning/400", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#ED8936" }, "Dark": { "value": "#F7A24D" } } },
+        { "name": "warning/600", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#C05621" }, "Dark": { "value": "#FFB366" } } },
+        { "name": "error/50",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#FEF2F2" }, "Dark": { "value": "#330F11" } } },
+        { "name": "error/100",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#FECACA" }, "Dark": { "value": "#54191C" } } },
+        { "name": "error/400",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#DC2626" }, "Dark": { "value": "#F14F4F" } } },
+        { "name": "error/600",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#B91C1C" }, "Dark": { "value": "#FF6B6B" } } }
+      ]
+    },
+    {
+      "name": "Primitives – Accent",
+      "variables": [
+        { "name": "teal/50",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#E6FFFA" }, "Dark": { "value": "#043B37" } } },
+        { "name": "teal/100", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#B2F5EA" }, "Dark": { "value": "#075F57" } } },
+        { "name": "teal/400", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#319795" }, "Dark": { "value": "#41B5B2" } } },
+        { "name": "teal/600", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "#2C7A7B" }, "Dark": { "value": "#51CCC9" } } }
+      ]
+    },
+    {
+      "name": "Semantics – Surface",
+      "variables": [
+        { "name": "surface/app",                "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/0" },    "Dark": { "aliasOf": "neutral/900" } } },
+        { "name": "surface/layer/1",            "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/50" },  "Dark": { "aliasOf": "neutral/800" } } },
+        { "name": "surface/layer/2",            "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/100" }, "Dark": { "aliasOf": "neutral/700" } } },
+        { "name": "surface/brand",              "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "brand/600" },   "Dark": { "aliasOf": "brand/400" } } },
+  { "name": "surface/button/primary/default",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "brand/600" }, "Dark": { "aliasOf": "brand/500" } } },
+  { "name": "surface/button/primary/hover",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "brand/700" }, "Dark": { "aliasOf": "brand/400" } } },
+  { "name": "surface/button/primary/pressed",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "brand/800" }, "Dark": { "aliasOf": "brand/300" } } },
+        { "name": "surface/button/primary/disabled", "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/200" }, "Dark": { "aliasOf": "neutral/600" } } },
+        { "name": "surface/button/secondary/default",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/100" }, "Dark": { "aliasOf": "neutral/700" } } },
+        { "name": "surface/button/secondary/hover",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/150" }, "Dark": { "aliasOf": "neutral/600" } } },
+        { "name": "surface/button/secondary/pressed",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/200" }, "Dark": { "aliasOf": "neutral/500" } } },
+        { "name": "surface/button/secondary/disabled", "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/200" }, "Dark": { "aliasOf": "neutral/600" } } },
+        { "name": "surface/status/success",      "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "success/100" }, "Dark": { "aliasOf": "success/600" } } },
+        { "name": "surface/status/warning",      "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "warning/100" }, "Dark": { "aliasOf": "warning/600" } } },
+        { "name": "surface/status/error",        "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "error/100" },   "Dark": { "aliasOf": "error/600" } } }
+      ]
+    },
+    {
+      "name": "Semantics – Content",
+      "variables": [
+        { "name": "content/default",              "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/900" },  "Dark": { "aliasOf": "neutral/0" } } },
+        { "name": "content/muted",                "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/600" },  "Dark": { "aliasOf": "neutral/300" } } },
+        { "name": "content/inverse",              "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/0" },    "Dark": { "aliasOf": "neutral/900" } } },
+        { "name": "content/on/button-primary",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/0" },    "Dark": { "aliasOf": "neutral/0" } } },
+        { "name": "content/on/button-secondary",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/900" },  "Dark": { "aliasOf": "neutral/0" } } },
+        { "name": "content/on/status/success",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "success/700" },  "Dark": { "aliasOf": "success/50" } } },
+        { "name": "content/on/status/warning",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "warning/700" },  "Dark": { "aliasOf": "warning/50" } } },
+        { "name": "content/on/status/error",      "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "error/600" },    "Dark": { "aliasOf": "error/50" } } },
+        { "name": "content/disabled",             "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/500" },  "Dark": { "aliasOf": "neutral/400" } } }
+      ]
+    },
+    {
+      "name": "Semantics – Border",
+      "variables": [
+        { "name": "border/default",          "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/300" },  "Dark": { "aliasOf": "neutral/600" } } },
+        { "name": "border/subtle",           "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/200" },  "Dark": { "aliasOf": "neutral/500" } } },
+        { "name": "border/strong",           "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "neutral/400" },  "Dark": { "aliasOf": "neutral/400" } } },
+        { "name": "border/focus",            "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "brand/400" },    "Dark": { "aliasOf": "brand/300" } } },
+        { "name": "border/status/success",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "success/400" },  "Dark": { "aliasOf": "success/600" } } },
+        { "name": "border/status/warning",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "warning/400" },  "Dark": { "aliasOf": "warning/600" } } },
+        { "name": "border/status/error",     "resolvedType": "COLOR", "valuesByMode": { "Light": { "aliasOf": "error/400" },    "Dark": { "aliasOf": "error/600" } } }
+      ]
+    },
+    {
+      "name": "Semantics – Overlay",
+      "variables": [
+        { "name": "overlay/light/hover",   "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "rgba(0,0,0,0.04)" },  "Dark": { "value": "rgba(255,255,255,0.06)" } } },
+        { "name": "overlay/light/pressed", "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "rgba(0,0,0,0.10)" },  "Dark": { "value": "rgba(255,255,255,0.12)" } } },
+        { "name": "overlay/dark/hover",    "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "rgba(255,255,255,0.08)" }, "Dark": { "value": "rgba(0,0,0,0.20)" } } },
+        { "name": "overlay/dark/pressed",  "resolvedType": "COLOR", "valuesByMode": { "Light": { "value": "rgba(255,255,255,0.16)" }, "Dark": { "value": "rgba(0,0,0,0.32)" } } }
+      ]
+    }
+  ]
+}

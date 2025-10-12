@@ -1,6 +1,8 @@
 // tokens.ts
 // Design system color tokens (primitives) for use in theme and components
 export const tokens = {
+    // Newly added midpoint shade to support clearer hover on accent surfaces
+    blue800: '#001e5a',
     blue700: '#002c77',
     blue600: '#0065ac',
     blue500: '#009de0',

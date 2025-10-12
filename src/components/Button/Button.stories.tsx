@@ -2,10 +2,19 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import DSButton from './Button';
 
-const meta: Meta<typeof DSButton> = {
+const meta = {
   title: 'Components/Button',
   component: DSButton,
-  parameters: { layout: 'centered' },
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: 'Design System Button built on MUI. Uses role-based colors and constrained variants/tone.'
+      }
+    }
+  },
+  // Docs: Autodocs disabled to avoid conflict with a separate MDX docs page
+  // tags: ['autodocs'],
   argTypes: {
     variant: { control: 'radio', options: ['primary', 'secondary', 'text'] },
     tone: { control: 'radio', options: ['default', 'danger', 'success'] },
@@ -17,7 +26,7 @@ const meta: Meta<typeof DSButton> = {
     tone: 'default',
     disabled: false,
   },
-};
+} satisfies Meta<typeof DSButton>;
 export default meta;
 
 type Story = StoryObj<typeof DSButton>;
@@ -46,7 +55,7 @@ export const Primary: Story = {
     // Allow React state update
     await new Promise(r => setTimeout(r, 0));
     const countEl = canvasElement.querySelector('[data-testid="click-count"]');
-    if (!countEl || !/Clicks: 1/.test(countEl.textContent || '')) {
+    if (!countEl || !/Clicks: 1/.test((countEl.textContent || ''))) {
       throw new Error('Click count did not increment');
     }
   }

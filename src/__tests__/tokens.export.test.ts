@@ -18,9 +18,9 @@ describe('token export shapes', () => {
     expect(levels).toEqual([0,1,2,3,4,5]);
   });
   test('semantic colors reference existing primitives', () => {
-    const { tokens } = require('../tokens');
+    const primitiveValues = Object.values(tokens);
     for (const v of Object.values(semanticColors)) {
-      expect(Object.values(tokens)).toContain(v);
+      expect(primitiveValues).toContain(v);
     }
   });
 });

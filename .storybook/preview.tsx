@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme, darkTheme } from '../src/theme';
 import React, { useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import '../src/global.scss';
 
 export const globalTypes = {
   colorMode: {
@@ -19,9 +20,10 @@ export const globalTypes = {
   },
 };
 
+// Wrap all stories with MUI theme (light/dark) and a baseline background
 export const decorators = [
   (Story: any, context: any) => {
-    const mode = context.globals.colorMode;
+    const mode = context.globals?.colorMode ?? 'light';
     const activeTheme = mode === 'dark' ? darkTheme : theme;
     return (
       <ThemeProvider theme={activeTheme}>
@@ -43,5 +45,25 @@ export const parameters = {
   },
   a11y: {
     test: 'todo',
+  },
+  options: {
+    storySort: {
+      order: [
+        'Foundations',
+        [
+          'Intro',
+          'Accessibility',
+          'Colors',  
+          'Typography',
+          'Roles',
+          'Spacing',
+          'Grid',
+          'Elevation',
+          
+          'Contrast Quality',
+          'Documentation Guidelines',
+        ],
+      ],
+    },
   },
 };

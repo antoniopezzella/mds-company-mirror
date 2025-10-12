@@ -1,7 +1,4 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
-import * as DSButtonStories from '../components/Button/Button.stories';
-
-<Meta title="Debug/Blocks Canary" of={DSButtonStories} />
+export const meta = { title: 'Debug/Blocks Canary' };
 
 # Blocks Canary
 
@@ -12,19 +9,5 @@ introducing `<Story />` or other advanced blocks (e.g., `<Controls />`).
 If this page fails to load, the issue is unrelated to advanced Doc Blocks usage.
 
 ---
-## Story Block Smoke Test
-
-Below is a single Storybook Doc Blocks `<Story />` reference to the design system Button's primary story. 
-This is Phase 2 of the incremental reintroduction. If this renders, we can proceed to add an interactive `<Controls />` block in the next phase.
-
-<Canvas>
-	<Story of={DSButtonStories.Primary} />
-</Canvas>
-
-If this fails:
-1. Temporarily remove this section (revert to previous commit) to confirm regression source.
-2. Clear Storybook/Vite caches (node_modules/.cache, Storybook cache) and restart.
-3. Verify the story ID matches the CSF story (title: `Components/Button`, export: `Primary`).
-
 ---
-_Next Phase (after success): remove this canary page once stable; rely on component usage pages (e.g. `Button-Usage.mdx`)._
+This page intentionally contains no story references to avoid interfering with the indexer while debugging.

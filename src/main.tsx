@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
 import Router from './Router';
 import './index.css'
+import './styles/_grid.scss'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
