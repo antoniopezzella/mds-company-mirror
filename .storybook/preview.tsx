@@ -59,10 +59,15 @@ export const parameters = {
           'Spacing',
           'Grid',
           'Elevation',
-          
-          'Contrast Quality',
-          'Documentation Guidelines',
+          // Note: titles must match MDX meta exactly
+          'Contrast-Quality',
+          'Documentation-Guidelines',
         ],
+        // Ensure other top-level groups appear after Foundations in this order
+        'Components',
+        'Docs',
+        'Debug',
+        'Archive',
       ],
     },
   },
