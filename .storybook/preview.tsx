@@ -1,8 +1,11 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, darkTheme } from '../src/theme';
-import React, { useEffect } from 'react';
+import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import '../src/global.scss';
+// Load font faces and typography CSS variables for Storybook preview
+import '../src/index.css';
+import '../src/styles/_typography.scss';
+import '../src/styles/_grid.scss';
 
 export const globalTypes = {
   colorMode: {
@@ -63,6 +66,8 @@ export const parameters = {
           'Contrast-Quality',
           'Documentation-Guidelines',
         ],
+        // New reference section for raw MUI component examples before DS customization
+        'MUI Reference',
         // Ensure other top-level groups appear after Foundations in this order
         'Components',
         'Docs',

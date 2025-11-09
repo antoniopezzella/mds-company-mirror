@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import SideNavigation from './components/SideNavigation/SideNavigation';
 import type { SideNavItem } from './components/SideNavigation/SideNavigation';
 import Section from './components/Section/Section';
+import ContentCard from './components/ContentCard/ContentCard';
 import Modal from './components/Modal/Modal';
 import QaSystemAlerts from './components/QaSystemAlerts/QaSystemAlerts';
 import Tabs from './components/Tabs/Tabs';
@@ -96,6 +97,53 @@ function App() {
           <Tabs tabs={[{ id: 'demo', title: 'Demo Tab', content: <div style={{ padding: 12 }}>Demo tab content</div> } as TabItem]} />
           <QaSystemAlerts state="Informative" alertType="Inline" message="Informational" />
           <Section title="Portfolio at a Glance" subtitle="Your top property cards for review" />
+          {/* Content cards demo grid */}
+          <div className="row-auto gap-6" style={{ ['--mds-grid-col-min' as any]: '360px' }}>
+            <ContentCard
+              title="Heading 3"
+              description="The global insurance market index is our proprietary measure of global commercial insurance premium pricing."
+              categoryLabel="Report"
+              readingTime="1 min read"
+              date="MM/DD/YYYY"
+              badges={["Badge", "Badge"]}
+              ctaLabel="Read more"
+              withBorder
+              showBottomDecoration
+            />
+            <ContentCard
+              title="Heading 3"
+              description="The global insurance market index is our proprietary measure of global commercial insurance premium pricing."
+              categoryLabel="Report"
+              readingTime="1 min read"
+              date="MM/DD/YYYY"
+              badges={["Badge", "Badge"]}
+              ctaLabel="Read more"
+              withBorder={false}
+              showBottomDecoration={false}
+            />
+            <ContentCard
+              orientation="horizontal"
+              title="Heading 3"
+              description="The global insurance market index is our proprietary measure of global commercial insurance premium pricing."
+              categoryLabel="Report"
+              readingTime="1 min read"
+              date="MM/DD/YYYY"
+              badges={["Badge", "Badge"]}
+              ctaLabel="Read more"
+              withBorder
+            />
+            <ContentCard
+              orientation="horizontal"
+              title="Heading 3"
+              description="The global insurance market index is our proprietary measure of global commercial insurance premium pricing."
+              categoryLabel="Report"
+              readingTime="1 min read"
+              date="MM/DD/YYYY"
+              badges={["Badge", "Badge"]}
+              ctaLabel="Read more"
+              withBorder={false}
+            />
+          </div>
           <Button variant="contained" sx={{ mt: 4 }} onClick={() => setModalOpen(true)}>
             Open Modal
           </Button>

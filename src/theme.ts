@@ -79,39 +79,108 @@ const darkPalette = {
   divider: tokens.gray500,
 };
 
+// --- Typography via CSS variables ------------------------------------------
+// Typography values are sourced from CSS variables defined in
+// src/styles/_typography.scss. This keeps a single source of truth that is
+// consumable by both CSS Modules and MUI theme consumers.
+
 const typography = {
   fontFamily: [
     'Noto Sans',
     'sans-serif',
   ].join(','),
+  // Headings — MMC Display for brand voice; strong but controlled hierarchy
   h1: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h1-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h1-font-size)',
+    lineHeight: 'var(--typo-h1-line-height)',
+    letterSpacing: 'var(--typo-h1-letter-spacing)',
   },
   h2: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h2-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h2-font-size)',
+    lineHeight: 'var(--typo-h2-line-height)',
+    letterSpacing: 'var(--typo-h2-letter-spacing)',
   },
   h3: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h3-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h3-font-size)',
+    lineHeight: 'var(--typo-h3-line-height)',
+    letterSpacing: 'var(--typo-h3-letter-spacing)',
   },
   h4: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h4-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h4-font-size)',
+    lineHeight: 'var(--typo-h4-line-height)',
+    letterSpacing: 'var(--typo-h4-letter-spacing)',
   },
   h5: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h5-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h5-font-size)',
+    lineHeight: 'var(--typo-h5-line-height)',
+    letterSpacing: 'var(--typo-h5-letter-spacing)',
   },
   h6: {
-    fontFamily: 'MMC Display, sans-serif',
+    fontFamily: 'var(--typo-h6-font-family)',
     fontWeight: 700,
+    fontSize: 'var(--typo-h6-font-size)',
+    lineHeight: 'var(--typo-h6-line-height)',
+    letterSpacing: 'var(--typo-h6-letter-spacing)',
+  },
+  // Body & UI copy — Noto Sans for readability
+  body1: {
+    fontFamily: 'var(--typo-body1-font-family)',
+    fontWeight: 400,
+    fontSize: 'var(--typo-body1-font-size)',
+    lineHeight: 'var(--typo-body1-line-height)',
+    letterSpacing: 'var(--typo-body1-letter-spacing)',
+  },
+  body2: {
+    fontFamily: 'var(--typo-body2-font-family)',
+    fontWeight: 400,
+    fontSize: 'var(--typo-body2-font-size)',
+    lineHeight: 'var(--typo-body2-line-height)',
+    letterSpacing: 'var(--typo-body2-letter-spacing)',
+  },
+  subtitle1: {
+    fontFamily: 'var(--typo-subtitle1-font-family)',
+    fontWeight: 500,
+    fontSize: 'var(--typo-subtitle1-font-size)',
+    lineHeight: 'var(--typo-subtitle1-line-height)',
+    letterSpacing: 'var(--typo-subtitle1-letter-spacing)',
+  },
+  subtitle2: {
+    fontFamily: 'var(--typo-subtitle2-font-family)',
+    fontWeight: 500,
+    fontSize: 'var(--typo-subtitle2-font-size)',
+    lineHeight: 'var(--typo-subtitle2-line-height)',
+    letterSpacing: 'var(--typo-subtitle2-letter-spacing)',
+  },
+  caption: {
+    fontFamily: 'var(--typo-caption-font-family)',
+    fontWeight: 400,
+    fontSize: 'var(--typo-caption-font-size)',
+    lineHeight: 'var(--typo-caption-line-height)',
+    letterSpacing: 'var(--typo-caption-letter-spacing)',
+  },
+  overline: {
+    fontFamily: 'var(--typo-overline-font-family)',
+    fontWeight: 400,
+    fontSize: 'var(--typo-overline-font-size)',
+    lineHeight: 'var(--typo-overline-line-height)',
+    letterSpacing: 'var(--typo-overline-letter-spacing)',
+    textTransform: 'uppercase' as const,
   },
   button: {
-    fontFamily: 'MMC Display, sans-serif',
-    fontWeight: 700,
+    fontFamily: 'var(--typo-button-font-family)',
+    fontWeight: 500,
     textTransform: 'none' as const,
+    letterSpacing: 'var(--typo-button-letter-spacing)',
   },
 };
 
@@ -122,16 +191,14 @@ const spacingFn = (factor: number): string => {
   return `${factor * 4}px`;
 };
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: { mode: 'light', ...lightPalette },
   typography,
   spacing: spacingFn,
 });
-const darkTheme = createTheme({
+
+export const darkTheme = createTheme({
   palette: { mode: 'dark', ...darkPalette },
   typography,
   spacing: spacingFn,
 });
-
-export { theme, darkTheme };
-export default theme;

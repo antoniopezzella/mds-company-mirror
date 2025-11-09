@@ -1,2 +1,2 @@
-// Legacy duplicate preview file intentionally emptied. Prefer .storybook/preview.tsx.
-export {};
+// Re-export from preview.tsx so either filename is honored by Storybook's resolver
+export * from './preview.tsx';

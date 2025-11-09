@@ -1,0 +1,331 @@
+export const meta = {
+  title: 'Components/Button/Docs',
+  parameters: {
+    layout: 'fullscreen',
+    controls: { disable: true },
+    docs: { description: { page: 'Design System Button built on MUI with role-based colors, sizes, and states.' } }
+  }
+};
+
+import { Meta, Story, Canvas, Source, ArgsTable, Description, Subtitle, Stories, Primary } from '@storybook/blocks';
+import DSButton from './Button';
+import SaveIcon from '@mui/icons-material/Save';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { getRoleColor } from '../../theme/roles';
+import DoDont from '../../docs/_components/DoDont';
+
+<Meta of={DSButton} />
+
+# Button
+
+A consistent, accessible button built on MUI, wired to our role-based color system and spacing scale. Typography is sourced from our SCSS variables (`--typo-button-*`).
+
+## Quick reference
+
+- Variants: `primary` (contained), `secondary` (outlined), `text` (no fill)
+- Tones: `default`, `danger`, `success`
+- Sizes and heights: `sm` 32px, `md` 48px (default), `lg` 56px
+- Icon gap: 8px (auto; no gap in icon-only)
+- Corner radius: 2px
+- Icon-only: square buttons (32/48/56) with centered glyph
+
+## When to use
+
+- Primary actions on a page or card
+- Secondary/tertiary actions (outlined or text) when visual weight should be reduced
+- Destructive or success actions via the `tone` prop
+
+## Variants
+
+- `primary` (contained)
+- `secondary` (outlined)
+- `text`
+
+## Tones
+
+- `default` (role-based colors)
+- `danger` (maps to MUI `error` palette)
+- `success` (maps to MUI `success` palette)
+
+## Sizes
+
+- `sm`: 4px y / 12px x (total height 32)
+- `md`: 12px y / 20px x (total height 48)
+- `lg`: 16px y / 24px x (total height 56)
+
+Sizing model
+- Heights are fixed (32/48/56) using box-sizing: border-box so outlined borders don’t increase total size.
+
+Other specs
+- Icon gap: 8px
+- Corner radius: 2px
+
+## Accessibility
+
+- Always provide an accessible name. For icon-only, use `aria-label` to describe the action.
+- Keyboard focus shows a 2px ring using the `focus.ring` role.
+- Use `disabled` to prevent interaction; it also communicates state to assistive tech.
+- Touch target: prefer `md` (48px) or `lg` (56px) for touch surfaces. Use `sm` (32px) only in dense UIs.
+- Contrast: primary uses `text.onAccent` on `interactive.primary`; danger uses `text.onDanger`.
+
+<Canvas>
+  <Story name="Accessibility: icon-only with aria-label">
+    <DSButton aria-label="Save changes" iconOnly startIcon={<SaveIcon />} />
+  </Story>
+  <Story name="Accessibility: full-width">
+    <div style={{ width: 320 }}>
+      <DSButton fullWidth>Continue</DSButton>
+    </div>
+  </Story>
+  
+</Canvas>
+
+## Usage
+
+<Canvas>
+  <Story name="Usage: primary default">
+    <DSButton>Action</DSButton>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Usage: secondary default">
+    <DSButton variant="secondary">Action</DSButton>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Usage: text default">
+    <DSButton variant="text">Action</DSButton>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Tones: danger/success">
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <DSButton tone="danger">Delete</DSButton>
+      <DSButton tone="success">Save</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Sizes: sm/md/lg">
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton size="sm">Small</DSButton>
+      <DSButton size="md">Medium</DSButton>
+      <DSButton size="lg">Large</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="With icons (leading/trailing)">
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton startIcon={<SaveIcon />}>Save</DSButton>
+      <DSButton endIcon={<ArrowForwardIcon />}>Continue</DSButton>
+      <DSButton variant="secondary" startIcon={<SaveIcon />}>Save</DSButton>
+      <DSButton tone="danger" startIcon={<SaveIcon />}>Delete</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Icon-only (square)">
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="sm" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="md" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="lg" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} variant="secondary" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} tone="danger" />
+    </div>
+  </Story>
+</Canvas>
+
+## States (reference)
+
+Visual reference of states using role-based colors. Hover/Active are simulated with style overrides for illustration.
+
+<Canvas>
+  <Story name="States: primary (contained)">
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <DSButton>Default</DSButton>
+      <DSButton sx={{ backgroundColor: getRoleColor('interactive.primary.hover') }}>Hover</DSButton>
+      <DSButton sx={{ backgroundColor: getRoleColor('interactive.primary.active') }}>Active</DSButton>
+      <DSButton disabled>Disabled</DSButton>
+      <DSButton sx={{ outline: `2px solid ${getRoleColor('focus.ring')}`, outlineOffset: '2px' }}>Focus</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="States: secondary (outlined)">
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <DSButton variant="secondary">Default</DSButton>
+      <DSButton variant="secondary" sx={{ color: getRoleColor('interactive.primary.hover'), borderColor: getRoleColor('interactive.primary.hover') }}>Hover</DSButton>
+      <DSButton variant="secondary" sx={{ color: getRoleColor('interactive.primary.active'), borderColor: getRoleColor('interactive.primary.active') }}>Active</DSButton>
+      <DSButton variant="secondary" disabled>Disabled</DSButton>
+      <DSButton variant="secondary" sx={{ outline: `2px solid ${getRoleColor('focus.ring')}`, outlineOffset: '2px' }}>Focus</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="States: text">
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <DSButton variant="text">Default</DSButton>
+      <DSButton variant="text" sx={{ color: getRoleColor('interactive.primary.hover') }}>Hover</DSButton>
+      <DSButton variant="text" sx={{ color: getRoleColor('interactive.primary.active') }}>Active</DSButton>
+      <DSButton variant="text" disabled>Disabled</DSButton>
+      <DSButton variant="text" sx={{ outline: `2px solid ${getRoleColor('focus.ring')}`, outlineOffset: '2px' }}>Focus</DSButton>
+    </div>
+  </Story>
+</Canvas>
+
+## Do / Don’t
+
+<DoDont
+  do={[
+    { title: 'Use clear, action-oriented labels', body: 'Prefer concise verbs like “Save”, “Continue”, “Invite”.' },
+    { title: 'Pick the right emphasis', body: 'Use primary for the main action; secondary/text for lower emphasis actions.' },
+    { title: 'Ensure accessible names', body: 'Icon-only buttons must include aria-label describing the action.' },
+  ]}
+  dont={[
+    { title: 'Don’t overuse icon-only', body: 'Avoid icon-only when space allows for a clear text label.' },
+    { title: 'Don’t stack primaries', body: 'Limit to one primary action per surface to avoid choice paralysis.' },
+    { title: 'Don’t hardcode colors', body: 'Never use brand hex directly; use role colors via the API.' },
+  ]}
+/>
+
+## Engineering notes
+
+- Colors: use getRoleColor() indirectly via the component; don’t import primitives/semantic tokens in feature code.
+- Sizing: fixed heights 32/48/56 with border-box; padding driven by theme spacing; icon gap 8px.
+- Icon-only: center the glyph and remove default icon margins; always set aria-label.
+- Theming: typography comes from CSS variables; button text uses Noto Sans Medium (500).
+- Tests: see Storybook play checks in Button.stories.tsx for focus, click, and size assertions.
+
+## Content guidelines
+
+- Keep labels short and action-oriented: “Save,” “Continue,” “Invite.”
+- Sentence case (capitalize first word only) unless brand exception applies.
+- Avoid punctuation and trailing ellipses unless it opens a modal or new flow.
+- Icons should reinforce meaning, not duplicate it. Prefer leading icons for actions; use trailing for navigation (“Next”).
+- Icon-only is for very constrained UI; ensure `aria-label` communicates the action.
+
+## Role-based colors (reference)
+
+- Default primary: `interactive.primary` with `hover`/`active` states; text: `text.onAccent`.
+- Danger tone: `interactive.danger` with `hover`/`active` states; text: `text.onDanger`.
+- Focus ring: `focus.ring`.
+
+## Props
+
+<ArgsTable of={DSButton} />
+
+## Code
+
+> Tip — Click the copy icon in the top‑right of each code block to copy a ready‑to‑run snippet.
+
+<Source
+  language="tsx"
+  dark
+  code={`import DSButton from 'src/components/Button/Button';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+export default function Example() {
+  return (
+    <div style={{ display: 'flex', gap: 12 }}>
+      <DSButton>Primary</DSButton>
+      <DSButton variant="secondary">Secondary</DSButton>
+      <DSButton variant="text">Text</DSButton>
+      <DSButton tone="danger">Delete</DSButton>
+      <DSButton size="lg" endIcon={<ArrowForwardIcon />}>Continue</DSButton>
+    </div>
+  );
+}`}
+/>
+
+<Source
+  language="tsx"
+  dark
+  code={`// Minimal starter
+import DSButton from 'src/components/Button/Button';
+
+export function PrimaryAction() {
+  return <DSButton>Call to action</DSButton>;
+}
+
+export function SecondaryAction() {
+  return <DSButton variant="secondary">Secondary</DSButton>;
+}
+
+export function TextAction() {
+  return <DSButton variant="text">Learn more</DSButton>;
+}`}
+/>
+
+### Copy patterns
+
+<Source
+  language="tsx"
+  dark
+  code={`// Icon-only buttons (remember aria-label)
+import DSButton from 'src/components/Button/Button';
+import SaveIcon from '@mui/icons-material/Save';
+
+export function IconOnlyExamples() {
+  return (
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="sm" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="md" />
+      <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} size="lg" />
+    </div>
+  );
+}
+`}
+/>
+
+<Source
+  language="tsx"
+  dark
+  code={`// Full-width action (mobile-friendly)
+import DSButton from 'src/components/Button/Button';
+
+export function FullWidthExample() {
+  return (
+    <div style={{ width: 320 }}>
+      <DSButton fullWidth>Continue</DSButton>
+    </div>
+  );
+}
+`}
+/>
+
+<Source
+  language="tsx"
+  dark
+  code={`// Leading and trailing icons
+import DSButton from 'src/components/Button/Button';
+import SaveIcon from '@mui/icons-material/Save';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
+export function WithIcons() {
+  return (
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton startIcon={<SaveIcon />}>Save</DSButton>
+      <DSButton endIcon={<ArrowForwardIcon />}>Continue</DSButton>
+      <DSButton variant="secondary" startIcon={<SaveIcon />}>Save</DSButton>
+      <DSButton tone="danger" startIcon={<SaveIcon />}>Delete</DSButton>
+    </div>
+  );
+}
+`}
+/>
+
+## Notes
+
+- Colors must be set via role names; do not use primitives or semantic tokens directly in components.
+- Spacing uses `theme.spacing()` indices; avoid raw pixel values.
+- Typography for buttons is defined in `src/styles/_typography.scss` and consumed by the theme.
+- Active state uses role `interactive.primary.active` (light: #001f52; dark: #001538).

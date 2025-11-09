@@ -1,0 +1,25 @@
+@use '../../styles/_typography.scss';
+
+.header {
+  background: transparent;
+}
+
+.footer {
+  background: transparent;
+  padding: 24px 0; // Use theme spacing via sx where possible; kept minimal here
+}
+
+// Full-viewport sections, content-centered, with safe viewport units
+.section {
+  width: 100%;
+  min-height: 100vh; // fallback for browsers without dynamic viewport units
+  display: grid;
+  align-items: center; // center content vertically within the viewport
+  // Allow vertical overflow for long copy while preventing horizontal scrollbars
+  overflow-x: clip;
+  overflow-y: visible;
+
+  @supports (height: 100dvh) {
+    min-height: 100dvh;
+  }
+}

@@ -21,10 +21,34 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "focusRing",
   },
   {
+    "dark": "#ffaea6",
+    "light": "#c53532",
+    "role": "interactive.danger",
+    "semantic": "interactiveDanger",
+  },
+  {
+    "dark": "#691315",
+    "light": "#691315",
+    "role": "interactive.danger.active",
+    "semantic": "interactiveDangerActive",
+  },
+  {
+    "dark": "#c53532",
+    "light": "#9a1c1f",
+    "role": "interactive.danger.hover",
+    "semantic": "interactiveDangerHover",
+  },
+  {
     "dark": "#009de0",
-    "light": "#0065ac",
+    "light": "#002c77",
     "role": "interactive.primary",
     "semantic": "interactivePrimary",
+  },
+  {
+    "dark": "#001538",
+    "light": "#001f52",
+    "role": "interactive.primary.active",
+    "semantic": "interactivePrimaryActive",
   },
   {
     "dark": "#001538",
@@ -82,9 +106,27 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#35425b",
+    "light": "#e3e3e3",
+    "role": "surface.disabled",
+    "semantic": "surfaceDisabled",
+  },
+  {
+    "dark": "#000945",
+    "light": "#000945",
+    "role": "surface.hero",
+    "semantic": "surfaceHero",
+  },
+  {
+    "dark": "#35425b",
     "light": "#f4f4f4",
     "role": "surface.subtle",
     "semantic": "surfaceSubtle",
+  },
+  {
+    "dark": "#808080",
+    "light": "#808080",
+    "role": "text.disabled",
+    "semantic": "textDisabled",
   },
   {
     "dark": "#ffffff",
@@ -97,6 +139,18 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#ffffff",
     "role": "text.onAccent",
     "semantic": "textOnAccent",
+  },
+  {
+    "dark": "#002c77",
+    "light": "#ffffff",
+    "role": "text.onDanger",
+    "semantic": "textOnDanger",
+  },
+  {
+    "dark": "#ffffff",
+    "light": "#ffffff",
+    "role": "text.onHero",
+    "semantic": "textOnHero",
   },
   {
     "dark": "#ffffff",

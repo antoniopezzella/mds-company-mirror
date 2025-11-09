@@ -28,4 +28,4 @@ jobs:
       - name: Commitlint (commits and PR title)
         uses: wagoid/commitlint-github-action@v6
         with:
-          helpURL: https://www.conventionalcommits.org/en/v1.0.0/
+          helpURL: 'https://www.conventionalcommits.org/en/v1.0.0/'

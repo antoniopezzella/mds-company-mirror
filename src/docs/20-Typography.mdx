@@ -1,6 +1,5 @@
-import { Meta } from '@storybook/addon-docs/blocks';
-import { theme } from '../theme';
 import { TypographyTable } from './_components/TypographyTable';
+import { DoDont } from './_components/DoDont';
 
 export const meta = { title: 'Foundations/Typography' };
 
@@ -20,6 +19,74 @@ System typography leverages `Noto Sans` for body text and `MMC Display` for head
 - Keep display (MMC Display) usage purposeful: section titles, dashboards, key metrics.
 - Avoid inline font overrides—add a variant to the theme if reused.
 - Ensure accessible contrast and sufficient size for readability.
+
+### When to use which variant
+- h1–h3: Page and major section headings. Keep above the fold concise; avoid stacking multiple large headings.
+- h4–h6: Subsections and card titles within a page.
+- subtitle1/2: Section descriptors, list or panel headers, supporting context.
+- body1: Default reading text in dashboards and docs.
+- body2: Dense UI copy: labels, secondary text, table meta (keep legible).
+- caption: Tertiary metadata; avoid for persistent or critical UI text.
+- overline: Short labels/chips; prefer sentence case elsewhere.
+
+### Readability & rhythm
+- Line length: target 60–70ch for reading views.
+- Line height: body around 1.55–1.6; headings between 1.1–1.3.
+- Numeric data: consider `font-variant-numeric: tabular-nums` in tables.
+
+### Responsive behavior
+- Sizes are clamp-based; headings shrink gracefully on small screens.
+- If mobile feels heavy, reduce H1/H2 clamp mins by ~2px.
+
+## Using typography from SCSS (source of truth)
+
+We expose CSS variables and mixins in `src/styles/_typography.scss`. These power both CSS Modules and the MUI theme (which now reads the same variables), so React and SCSS always stay in sync.
+
+- In a CSS Module
+
+```scss
+@use '../../styles/_typography.scss' as typo;
+
+.cardTitle { @include typo.apply-variant(h4); }
+.meta { @include typo.apply-variant(subtitle2); }
+```
+
+- With utility classes
+
+```html
+<h2 className="typography-h2">Section title</h2>
+<p className="typography-body1">Body copy…</p>
+```
+
+- In MUI components (unchanged usage; now backed by CSS vars)
+
+```tsx
+<Typography variant="h4">Title</Typography>
+<Box sx={{ typography: 'body2' }}>Dense label</Box>
+```
+
+Tip: Prefer variants/mixins over raw font-size declarations to keep hierarchy and responsiveness consistent.
+
+## Do & Don’t
+
+<DoDont
+	do={[
+		{ body: <>Use theme variants (e.g., <code>variant="h4"</code> or <code>{"sx={{ typography: 'body2' }}"}</code>) instead of hardcoding sizes.</> },
+		{ body: <>Structure content with semantic headings (one <code>h1</code> per page), then <code>h2</code>–<code>h6</code> in order.</> },
+		{ body: <>Keep body text around <strong>16px</strong> with line-height ~<strong>1.55–1.6</strong> for readability.</> },
+		{ body: <>Use <code>body2</code>/<code>subtitle2</code> for dense UI; consider <code>font-variant-numeric: tabular-nums</code> in tables.</> },
+		{ body: <>Target line length around <strong>60–70ch</strong> in reading views.</> },
+		{ body: <>Rely on clamp-based sizes and verify small-screen typography visually.</> },
+	]}
+	dont={[
+		{ body: <>Hardcode <code>font-size</code> values like <code>0.875rem</code> in components.</> },
+		{ body: <>Use display fonts for long paragraphs or dense tables.</> },
+		{ body: <>Stack multiple large headings above the fold.</> },
+		{ body: <>Rely on color-only emphasis or tighten tracking on small text.</> },
+		{ body: <>Drop persistent UI text below <strong>14px</strong> or use captions for critical information.</> },
+		{ body: <>Break hierarchy with random weights/sizes that bypass the theme.</> },
+	]}
+/>
 
 ---
 _Enhance later with responsive sizing & custom variants demonstration._

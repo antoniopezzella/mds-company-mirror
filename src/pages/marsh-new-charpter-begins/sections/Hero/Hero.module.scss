@@ -1,0 +1,191 @@
+// Hero section styles
+.hero {
+  position: relative;
+  /* Full viewport height with sensible fallbacks */
+  height: 100vh; /* fallback */
+  height: 100svh; /* stable viewport height on mobile */
+  min-height: 560px; /* guard for very short viewports */
+  display: flex;
+  align-items: stretch;
+  isolation: isolate; // create new stacking context for blend/filters
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  /* Figma spec places block near top with 80px top padding and tight bottom (8px) */
+  justify-content: center;
+  padding-top: var(--hero-pt, 80px);
+  padding-bottom: var(--hero-pb, 8px);
+  gap: 24px; /* matches vertical gap between groups in container */
+}
+
+.wordWrap {
+  display: inline-block;
+  overflow: hidden; // masks the vertical reveal
+}
+
+.word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.logo {
+  display: block;
+  height: auto;
+  /* Allow actual spec width (558px) from component without being constrained */
+  max-width: 100%;
+  margin-bottom: 16px;
+}
+
+.gradientLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at 35% 40%, rgba(255,255,255,0.18), rgba(255,255,255,0) 55%),
+              linear-gradient(120deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.overlayNoise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/noise.png'); // placeholder; swap once asset exported
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.kicker {
+  max-width: 840px;
+  font-size: clamp(1rem, 1.05rem + 0.2vw, 1.25rem);
+}
+
+/* Figma hero title/body line (logo tagline) specs:
+   Font size: 40px desktop (responsive down on small screens)
+   Line height: 54px desktop (slightly tighter on small screens)
+   Uses display font family when available.
+*/
+.heroTitle {
+  /* Figma width spec: 786px */
+  max-width: 786px;
+  /* Use DS heading family (MMC Display via CSS var) */
+  font-family: var(--typo-h2-font-family), 'MMC Display', 'Noto Sans', sans-serif;
+  font-weight: 400;
+  /* Explicit spec per request */
+  font-size: 40px;
+  line-height: 64px;
+  letter-spacing: 0;
+  margin: 0 0 0 0;
+  padding: 0;
+}
+
+/* Ensure spacing below logo matches Figma (24px) and between tagline lines is controlled. */
+.logo + .heroTitle {
+  margin-top: 24px; /* Figma spacing between logo and tagline */
+}
+
+/* Tighten layout on very wide displays to avoid excessive vertical whitespace below logo */
+@media (min-width: 1600px) and (min-height: 900px) {
+  .content {
+    padding-top: var(--hero-pt, 96px);
+  }
+}
+
+@supports (height: 100dvh) {
+  .hero { height: 100dvh; }
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding-top: var(--hero-pt, 64px);
+    padding-bottom: var(--hero-pb, 32px);
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word, .gradientLayer, .overlayNoise { transition: none !important; animation: none !important; }
+}
+
+// Pattern layer on the right side (placeholder vector pattern)
+.patternLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: none;
+  /* Use exported Marsh pattern asset; sized to cover and fade in from left */
+  background-image: url('../../../../assets/m-pattern-fade-left.svg');
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: cover;
+  /* Gradient mask to softly reveal pattern toward center (can tune stops) */
+  mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.75) 65%, rgba(0,0,0,1) 85%);
+}
+
+/* Helpers */
+@mixin center-absolute() {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+@mixin hero-intro-size() {
+  /* Responsive size matching Figma 558x121 at desktop, scales down on small screens */
+  width: clamp(280px, 34vw, 558px);
+  height: clamp(60px, 7.5vw, 121px);
+}
+
+/* Intro overlay: two arrows slide from viewport edges, meet in the center to form an M, then crossfade to logo */
+.introOverlay {
+  @include center-absolute();
+  z-index: 2; /* above text */
+  pointer-events: none; /* allow interactions with content/hint beneath */
+}
+
+.introStage {
+  @include hero-intro-size();
+  position: relative;
+  overflow: visible;
+  /* Slight overlap to hide any hairline seam between halves at various DPRs */
+  --arrow-seam-overlap: 2px; /* increased to bury gap without visibly widening M */
+}
+
+.arrow {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: calc(50% + var(--arrow-seam-overlap) / 2);
+  /* cover ensures full bleed; object-position pins seams so no internal padding shows */
+  object-fit: cover;
+  display: block;
+  will-change: transform, opacity;
+  backface-visibility: hidden; /* reduce potential sub-pixel anti-alias shimmer */
+}
+
+.arrowLeft { left: calc(0px - var(--arrow-seam-overlap) / 2); transform-origin: right center; object-position: right center; }
+.arrowRight { right: calc(0px - var(--arrow-seam-overlap) / 2); transform-origin: left center; object-position: left center; }
+
+.logoSwap {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  will-change: opacity, transform;
+}

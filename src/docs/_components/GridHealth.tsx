@@ -6,19 +6,34 @@ export function GridHealth(props: { label?: string }) {
   const [detail, setDetail] = React.useState<string>('');
 
   React.useEffect(() => {
-    const el = testRef.current;
-    if (!el) return;
-    const style = getComputedStyle(el);
-    const display = style.display;
-    const template = style.gridTemplateColumns;
-    const gap = style.gap;
-    if (display.includes('grid') && template && template !== 'none') {
-      setStatus('ok');
-      setDetail(`display=${display}, cols=${template}, gap=${gap}`);
-    } else {
-      setStatus('fail');
-      setDetail(`display=${display || 'n/a'}`);
-    }
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 5;
+
+    const check = () => {
+      if (cancelled) return;
+      const el = testRef.current;
+      if (!el) return;
+      const style = getComputedStyle(el);
+      const display = style.display;
+      const template = style.gridTemplateColumns;
+      const gap = style.gap;
+      if (display.includes('grid') && template && template !== 'none') {
+        setStatus('ok');
+        setDetail(`display=${display}, cols=${template}, gap=${gap}`);
+      } else if (attempts < maxAttempts) {
+        attempts += 1;
+        // Retry on next frame to allow CSS to load/inject in Docs mode
+        requestAnimationFrame(check);
+      } else {
+        setStatus('fail');
+        setDetail(`display=${display || 'n/a'}`);
+      }
+    };
+
+    // Kick off the first check
+    requestAnimationFrame(check);
+    return () => { cancelled = true; };
   }, []);
 
   const color = status === 'ok' ? '#1a7f37' : status === 'fail' ? '#c62828' : '#6b7280';

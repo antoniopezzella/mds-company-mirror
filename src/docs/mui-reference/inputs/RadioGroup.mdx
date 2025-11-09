@@ -1,0 +1,19 @@
+export const meta = { title: 'MUI Reference/Inputs/Radio Group' };
+
+import { useState } from 'react';
+import { RadioGroup, FormControlLabel, Radio } from '@mui/material';
+
+# Radio Group
+
+export function Demo() {
+  const [value, setValue] = useState('a');
+  return (
+    <RadioGroup row value={value} onChange={(_, v) => setValue(v)}>
+      <FormControlLabel value="a" control={<Radio />} label="A" />
+      <FormControlLabel value="b" control={<Radio />} label="B" />
+      <FormControlLabel value="c" control={<Radio />} label="C" />
+    </RadioGroup>
+  );
+}
+
+<Demo />

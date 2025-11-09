@@ -1,0 +1,19 @@
+export const meta = { title: 'MUI Reference/Data Display/Divider' };
+
+import { Divider, List, ListItem, ListItemText } from '@mui/material';
+
+# Divider
+
+export function Demo() {
+  return (
+    <List sx={{ width: 300 }}>
+      <ListItem><ListItemText primary="Item 1" /></ListItem>
+      <Divider />
+      <ListItem><ListItemText primary="Item 2" /></ListItem>
+      <Divider variant="inset" component="li" />
+      <ListItem><ListItemText primary="Item 3" /></ListItem>
+    </List>
+  );
+}
+
+<Demo />
