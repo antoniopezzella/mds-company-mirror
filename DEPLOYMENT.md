@@ -3,43 +3,85 @@
 
 ---
 
-## 🌐 Live URL
+## 🌐 Live URL Options
 
-Once deployed, your Storybook will be available at:
+Choose one of these free hosting options:
+
+**Netlify (Recommended):**
+```
+https://marsh-design-system.netlify.app
+```
+
+**Vercel:**
+```
+https://marsh-design-system.vercel.app
+```
+
+**GitHub Pages (Requires Pro):**
 ```
 https://antoniopezzella.github.io/Marsh-Design-System/
 ```
 
 ---
 
-## 🚀 Automatic Deployment (GitHub Actions)
+## 🆓 Free Deployment Options
 
-### Setup (One-Time)
+### Option 1: Netlify (Recommended - 100% Free)
 
-1. **Enable GitHub Pages in your repository:**
-   - Go to: https://github.com/antoniopezzella/Marsh-Design-System/settings/pages
-   - Under "Source", select: **GitHub Actions**
-   - Click "Save"
+**Setup (5 minutes):**
+1. Go to: https://app.netlify.com/
+2. Click "Add new site" → "Import an existing project"
+3. Connect to GitHub → Select "Marsh-Design-System"
+4. Build settings:
+   - **Build command:** `npm run build-storybook`
+   - **Publish directory:** `storybook-static`
+5. Click "Deploy site"
 
-2. **Push the workflow file** (already done):
-   ```bash
-   git add .github/workflows/deploy-storybook.yml
-   git commit -m "ci: add GitHub Pages deployment for Storybook"
-   git push
-   ```
+**Your URL will be:** `https://marsh-design-system.netlify.app`
+(You can customize the subdomain)
 
-### How It Works
+**✅ Features:**
+- Automatic deploys on push to `main`
+- Branch previews for PRs
+- Custom domains (free)
+- Instant rollbacks
+- Deploy logs
 
-✅ **Automatic Deployment:**
-- Every push to `main` branch triggers deployment
-- GitHub Actions builds Storybook
-- Deploys to GitHub Pages
-- Usually takes 2-5 minutes
+---
 
-✅ **Manual Trigger:**
-- Go to: https://github.com/antoniopezzella/Marsh-Design-System/actions
-- Click "Deploy Storybook to GitHub Pages"
-- Click "Run workflow"
+### Option 2: Vercel (Also 100% Free)
+
+**Setup (5 minutes):**
+1. Go to: https://vercel.com/
+2. Click "Add New" → "Project"
+3. Import "Marsh-Design-System" from GitHub
+4. Build settings:
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build-storybook`
+   - **Output Directory:** `storybook-static`
+5. Click "Deploy"
+
+**Your URL will be:** `https://marsh-design-system.vercel.app`
+
+**✅ Features:**
+- Zero-config deployment
+- Preview deployments for PRs
+- Performance analytics
+- Global CDN
+- Instant rollbacks
+
+---
+
+### Option 3: GitHub Pages (Requires Paid Plan)
+
+**Note:** GitHub Pages for private repositories requires GitHub Pro ($4/month).
+
+If you upgrade to GitHub Pro:
+1. Go to: https://github.com/antoniopezzella/Marsh-Design-System/settings/pages
+2. Under "Source", select: **GitHub Actions**
+3. Push triggers automatic deployment
+
+**Your URL will be:** `https://antoniopezzella.github.io/Marsh-Design-System/`
 
 ---
 

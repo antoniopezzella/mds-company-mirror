@@ -2,7 +2,7 @@
 
 ![Contrast Status Badge](./contrast-badge.svg)
 
-**🌐 Live Storybook:** [https://antoniopezzella.github.io/Marsh-Design-System/](https://antoniopezzella.github.io/Marsh-Design-System/)
+**🌐 Live Storybook:** Deploy for free with [Netlify](https://netlify.com) or [Vercel](https://vercel.com)
 
 > Interactive component library and design system documentation. Auto-deploys on every push to `main`.
 
@@ -10,9 +10,9 @@
 
 ## 🚀 Quick Links
 
-- **Storybook (Staging):** https://antoniopezzella.github.io/Marsh-Design-System/
 - **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
-- **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy to Netlify/Vercel (100% free)
+- **Local Storybook:** `npm run storybook` → http://localhost:6006
 
 ---
 
