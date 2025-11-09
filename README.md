@@ -2,6 +2,22 @@
 
 ![Contrast Status Badge](./contrast-badge.svg)
 
+**🌐 Live Storybook:** [https://antoniopezzella.github.io/Marsh-Design-System/](https://antoniopezzella.github.io/Marsh-Design-System/)
+
+> Interactive component library and design system documentation. Auto-deploys on every push to `main`.
+
+---
+
+## 🚀 Quick Links
+
+- **Storybook (Staging):** https://antoniopezzella.github.io/Marsh-Design-System/
+- **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
+- **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+---
+
+## 📊 Quality Badges
+
 Local contrast status badge is generated from the automated WCAG contrast report. Regenerate it after changing color or semantic tokens:
 
 ```bash
