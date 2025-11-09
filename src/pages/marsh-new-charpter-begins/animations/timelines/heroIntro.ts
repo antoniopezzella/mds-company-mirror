@@ -1,11 +1,15 @@
 import { gsap } from 'gsap';
-import { durations, eases } from '../motion/tokens';
+import { eases } from '../motion/tokens';
 import { registerTimeline } from '../motion/controller';
 
 export interface HeroIntroOptions {
-  root: HTMLElement; // hero section
-  onComplete?: () => void;
+  root: Element;
   reducedMotion?: boolean;
+  mArrowLeft?: HTMLElement | null;
+  mArrowRight?: HTMLElement | null;
+  fullLogo?: HTMLElement | null;
+  headline?: HTMLElement | null;
+  mSymbolFinal?: HTMLElement | null;
 }
 
 /**
@@ -18,104 +22,155 @@ export interface HeroIntroOptions {
  * 1800-2200ms: Crossfade M -> official logo asset; arrows fade out.
  * Then: layout shift: wordmark to left, body copy + scroll hint in.
  */
-export function initHeroIntro({ root, onComplete, reducedMotion }: HeroIntroOptions) {
+export function initHeroIntro({ 
+  root, 
+  reducedMotion,
+  mArrowLeft,
+  mArrowRight,
+  fullLogo,
+  headline,
+  mSymbolFinal
+}: HeroIntroOptions) {
   if (!root) return;
   if (reducedMotion) {
-    // Instantly show logo, skip animation.
-    const logo = root.querySelector('[data-hero-logo]') as HTMLElement | null;
-    const left = root.querySelector('[data-hero-arrow="left"]') as HTMLElement | null;
-    const right = root.querySelector('[data-hero-arrow="right"]') as HTMLElement | null;
-    const tagline = root.querySelector('[data-hero-tagline]') as HTMLElement | null;
-    const wordmarkFinal = root.querySelector('[data-hero-wordmark]') as HTMLElement | null;
-    const paragraphs = Array.from(root.querySelectorAll('[data-hero-body]')) as HTMLElement[];
+    // Instantly show final state with full logo, headline, and blue M symbol
+    const logoElement = fullLogo || root.querySelector('.fullLogo') as HTMLElement | null;
+    const headlineElement = headline || root.querySelector('.headline') as HTMLElement | null;
+    const symbolElement = mSymbolFinal || root.querySelector('.mSymbolFinal') as HTMLElement | null;
     const hint = root.querySelector('[data-hero-hint]') as HTMLElement | null;
-    if (logo) gsap.set(logo, { autoAlpha: 1 });
-    if (left) gsap.set(left, { autoAlpha: 0 });
-    if (right) gsap.set(right, { autoAlpha: 0 });
-    if (tagline) gsap.set(tagline, { autoAlpha: 0 });
-    if (wordmarkFinal) gsap.set(wordmarkFinal, { autoAlpha: 1 });
-    if (paragraphs.length) gsap.set(paragraphs, { autoAlpha: 1, y: 0 });
+    
+    if (logoElement) gsap.set(logoElement, { autoAlpha: 1 });
+    if (headlineElement) gsap.set(headlineElement, { autoAlpha: 1 });
+    if (symbolElement) gsap.set(symbolElement, { autoAlpha: 1 });
     if (hint) gsap.set(hint, { autoAlpha: 1 });
-    onComplete?.();
     return;
   }
 
-  const left = root.querySelector('[data-hero-arrow="left"]') as HTMLElement | null;
-  const right = root.querySelector('[data-hero-arrow="right"]') as HTMLElement | null;
-  const logo = root.querySelector('[data-hero-logo]') as HTMLElement | null;
-  const tagline = root.querySelector('[data-hero-tagline]') as HTMLElement | null;
-  const wordmarkFinal = root.querySelector('[data-hero-wordmark]') as HTMLElement | null;
-  const paragraphs = Array.from(root.querySelectorAll('[data-hero-body]')) as HTMLElement[];
+  // Use provided refs or fallback to class selectors
+  const left = mArrowLeft || root.querySelector('.mArrowLeft') as HTMLElement | null;
+  const right = mArrowRight || root.querySelector('.mArrowRight') as HTMLElement | null;
+  const logoElement = fullLogo || root.querySelector('.fullLogo') as HTMLElement | null;
+  const headlineElement = headline || root.querySelector('.headline') as HTMLElement | null;
+  const symbolElement = mSymbolFinal || root.querySelector('.mSymbolFinal') as HTMLElement | null;
   const hint = root.querySelector('[data-hero-hint]') as HTMLElement | null;
-  const headlineWords = Array.from(root.querySelectorAll('[data-hero-word]')) as HTMLElement[];
-  if (!left || !right || !logo) return;
+  if (!left || !right) return;
 
-  gsap.set([left, right], { autoAlpha: 1 });
-  gsap.set(logo, { autoAlpha: 0, scale: 1 });
-  if (wordmarkFinal) gsap.set(wordmarkFinal, { autoAlpha: 0 });
+  // Initialize elements for animation start
+  gsap.set([left, right], { 
+    autoAlpha: 1,
+    scale: 1,
+    rotation: 0,
+    x: 0,
+    y: 0
+  });
+  
+  if (logoElement) gsap.set(logoElement, { autoAlpha: 0, scale: 1, y: 0 });
+  if (headlineElement) gsap.set(headlineElement, { autoAlpha: 0, y: 20 });
+  if (symbolElement) gsap.set(symbolElement, { autoAlpha: 0, scale: 0.8 });
   if (hint) gsap.set(hint, { autoAlpha: 0 });
-  if (paragraphs.length) gsap.set(paragraphs, { autoAlpha: 0 });
-  if (headlineWords.length) gsap.set(headlineWords, { autoAlpha: 0, yPercent: 40 });
 
-  const tl = gsap.timeline({ id: 'heroIntro', defaults: { ease: eases.emphasized }, onComplete });
+  const tl = gsap.timeline({ 
+    id: 'heroIntro', 
+    defaults: { ease: eases.emphasized }
+  });
 
-  // 1. Arrows slide from edges toward center using percentage-based transforms within the same container.
-  // This avoids viewport math and prevents overshoot or stretching artifacts.
+  // 1. Clean entrance - arrows slide in smoothly
   tl.from(left, {
     xPercent: -100,
-    scale: 1.06,
-    duration: 1.0,
-    ease: 'power3.out'
+    duration: 0.8, // Faster entrance
+    ease: "power2.out" // Simple, clean easing
   }, 0)
     .from(right, {
       xPercent: 100,
-      scale: 1.06,
-      duration: 1.0,
-      ease: 'power3.out'
+      duration: 0.8, // Faster entrance
+      ease: "power2.out" // Simple, clean easing
     }, 0)
-    // 2. Subtle settle & seam-tighten to remove any hairline gap.
+    
+    // 2. Quick settle into M formation
     .to([left, right], {
       xPercent: 0,
-      scale: 1,
-      duration: durations.sm,
-      ease: eases.standard,
-      onComplete: () => {
-        if (left && right) {
-          // Safety snap to ensure perfect join across DPRs
-          gsap.set([left, right], { xPercent: 0 });
-        }
-      }
+      duration: 0.3, // Quick settle
+      ease: "power1.out"
     }, ">-0.1")
-    // 3. Hold moment as formed M (delay before morph) & bring in headline words
-    .to({}, { duration: 1.0 }) // hold combined M before morph
-    // 4. Crossfade arrows (M) to official logo asset
-    .to([left, right], {
-      autoAlpha: 0,
-      duration: durations.sm,
-      ease: eases.standard
-    }, ">-0.1")
-    .to(logo, {
-      autoAlpha: 1,
-      duration: durations.sm,
-      ease: eases.entrance
+    // 3. Brief pause (1 second instead of 2)
+    .to({}, { duration: 1.0 }) // Reduced from 2 seconds
+    
+    // 4. Simple convergence
+    .to(left, {
+      x: 120, // Slightly less movement
+      duration: 0.8, // Faster
+      ease: "power2.out"
+    }, ">")
+    .to(right, {
+      x: -120, // Slightly less movement
+      duration: 0.8, // Faster
+      ease: "power2.out"
     }, "<")
-    // 5. Center logo swell & hold, then reveal headline & tagline
-    .addLabel('wordmarkCenter')
-    .to(logo, { scale: 1.2, duration: 0.7, ease: 'power2.inOut' }, 'wordmarkCenter')
-    .to({}, { duration: 0.3 })
-    .from(headlineWords, { autoAlpha: 0, yPercent: 40, duration: 0.9, stagger: 0.05, ease: 'power3.out' }, 'wordmarkCenter+=0.15')
-    .from(tagline, { autoAlpha: 0, y: 12, duration: 0.5, ease: eases.entrance, id: 'taglineIn' }, 'wordmarkCenter+=0.45')
-    .from(hint, { autoAlpha: 0, y: 12, duration: 0.6, ease: eases.entrance }, 'wordmarkCenter+=0.9')
-    // 6. Hide tagline before layout transition (if we still perform layout shift)
-    .to(tagline, { autoAlpha: 0, duration: durations.xs || 0.2, ease: eases.standard }, '>')
-    // 7. Layout transition: fade center logo, reveal left-aligned wordmark + paragraphs
-    .addLabel('layout')
-    // fade the centered overlay logo as layout wordmark enters
-    .to(logo, { autoAlpha: 0, duration: durations.sm, ease: eases.standard }, 'layout')
-    .from(wordmarkFinal, { autoAlpha: 0, x: '30vw', duration: 0.8, ease: 'power2.inOut', id: 'wordmarkIn' }, 'layout')
-    .from(paragraphs, { autoAlpha: 0, y: 20, duration: durations.sm, stagger: 0.12 }, 'layout+=0.3')
-    // 8. (Scroll hint already revealed earlier; ensure it's visible post layout)
-    .set(hint, { autoAlpha: 1 }, 'layout');
+    
+    // 5. Clean exit
+    .to([left, right], {
+      y: -200, // Less dramatic exit
+      autoAlpha: 0,
+      duration: 1.2, // Faster exit
+      ease: "power2.inOut"
+    }, ">+0.2")
+    // 6. Wait 3000ms then show full logo and headline
+    .to({}, { duration: 3.0 }) // 3000ms delay
+
+  // 6. Quick logo and content reveal (reduced delay)
+  if (logoElement) {
+    tl.set(logoElement, {
+      autoAlpha: 0,
+      y: 20 // Subtle offset
+    }, ">")
+    .to(logoElement, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.8, // Faster
+      ease: "power2.out"
+    }, ">+0.8"); // Much shorter delay (0.8s instead of 3s)
+  }
+
+  // 7. Simple M symbol scaling
+  if (symbolElement) {
+    tl.set(symbolElement, {
+      autoAlpha: 1,
+      scale: 0
+    }, "<")
+    .to(symbolElement, {
+      scale: 1,
+      duration: 0.6, // Faster
+      ease: "back.out(1.2)" // Subtle bounce
+    }, ">+0.2");
+  }
+
+  // 8. Clean headline reveal
+  if (headlineElement) {
+    tl.set(headlineElement, {
+      autoAlpha: 0,
+      y: 15 // Subtle movement
+    }, "<")
+    .to(headlineElement, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, ">+0.2");
+  }
+
+  // 9. Simple scroll hint
+  if (hint) {
+    tl.set(hint, {
+      autoAlpha: 0,
+      y: 10 // Minimal offset
+    }, "<")
+    .to(hint, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.4,
+      ease: "power2.out"
+    }, ">+0.3");
+  }
 
   return registerTimeline('heroIntro', tl);
 }

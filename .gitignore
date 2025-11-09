@@ -28,3 +28,10 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Lighthouse reports
+lighthouse-reports/
+lighthouse-quick-report.html
+.lighthouseci/
+lhci-data/
+.vercel

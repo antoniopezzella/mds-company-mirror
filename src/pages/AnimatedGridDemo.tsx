@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../styles/_grid.scss';
+import { useLenisSmooth } from './marsh-new-charpter-begins/animations/smooth/useLenisSmooth';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -17,6 +18,9 @@ gsap.registerPlugin(ScrollTrigger);
  * - Smooth scroll reveals
  */
 export default function AnimatedGridDemo() {
+  // Enable smooth scrolling
+  useLenisSmooth();
+  
   const heroRef = useRef<HTMLDivElement>(null);
   const cardGridRef = useRef<HTMLDivElement>(null);
   const dashboardRef = useRef<HTMLDivElement>(null);
