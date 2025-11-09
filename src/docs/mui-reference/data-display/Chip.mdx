@@ -1,0 +1,18 @@
+export const meta = { title: 'MUI Reference/Data Display/Chip' };
+
+import { useState } from 'react';
+import { Chip, Stack } from '@mui/material';
+
+# Chip
+
+export function Demo() {
+  const [visible, setVisible] = useState(true);
+  return (
+    <Stack direction="row" spacing={1}>
+      {visible && <Chip label="Deletable" onDelete={() => setVisible(false)} />}
+      <Chip label="Clickable" onClick={() => {}} />
+    </Stack>
+  );
+}
+
+<Demo />

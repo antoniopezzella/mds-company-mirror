@@ -14,6 +14,29 @@
   font-style: normal;
 }
 
+/* Noto Sans font faces (Regular, Medium, Bold) */
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('/fonts/NotoSans/NotoSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('/fonts/NotoSans/NotoSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('/fonts/NotoSans/NotoSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   line-height: 1.5;
   font-weight: 400;
@@ -26,6 +49,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root,
+body {
+  margin: 0; /* remove default UA margins that create white gutters */
 }
 
 #root {

@@ -1,0 +1,34 @@
+/* Removed: Tailwind CSS no longer used. File left intentionally empty. */
+
+/* Bridge role color names to Tailwind color utilities via CSS variables.
+   Variables are provided at runtime by RoleVarsProvider. */
+:root {
+  /* defaults will be injected; keep placeholders to avoid undefined at startup */
+  --role-text-primary: #000000;
+  --role-text-secondary: #333333;
+  --role-text-inverse: #ffffff;
+  --role-text-onAccent: #ffffff;
+  --role-text-onHero: #ffffff;
+  --role-text-onDanger: #ffffff;
+  --role-text-disabled: #808080;
+  --role-surface-default: #ffffff;
+  --role-surface-subtle: #f7f7f7;
+  --role-surface-disabled: #f0f0f0;
+  --role-surface-accent: #e5f0ff;
+  --role-surface-hero: #000F47;
+  --role-border-default: #d0d0d0;
+  --role-border-strong: #a0a0a0;
+  --role-focus-ring: #0a84ff;
+  --role-status-success-fg: #0f5132;
+  --role-status-success-bg: #d1e7dd;
+  --role-status-warning-fg: #664d03;
+  --role-status-warning-bg: #fff3cd;
+  --role-status-danger-fg: #842029;
+  --role-status-danger-bg: #f8d7da;
+  --role-interactive-primary: #0046c0;
+  --role-interactive-primary-hover: #003da8;
+  --role-interactive-primary-active: #003591;
+  --role-interactive-danger: #c92a2a;
+  --role-interactive-danger-hover: #b02525;
+  --role-interactive-danger-active: #9b2121;
+}

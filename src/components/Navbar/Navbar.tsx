@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
             onClick={handleClick}
             sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', borderRadius: 1, p: 0.5, '&:hover': { bgcolor: 'rgba(255,255,255,0.08)'} }}
           >
-            <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 32, height: 32, fontSize: '0.875rem' }}>TA</Avatar>
+            <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 32, height: 32, fontSize: 'var(--typo-body2-font-size)' }}>TA</Avatar>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection: 'column', alignItems: 'flex-start', ml: 1 }}>
               <Typography variant="body2" sx={{ fontWeight: 'bold', lineHeight: 1.2 }}>
                 Tolu Adesina

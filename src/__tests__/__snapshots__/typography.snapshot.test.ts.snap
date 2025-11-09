@@ -1,0 +1,97 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`theme.typography snapshot > has expected public fields for key variants 1`] = `
+{
+  "body1": {
+    "fontFamily": "var(--typo-body1-font-family)",
+    "fontSize": "var(--typo-body1-font-size)",
+    "fontWeight": 400,
+    "letterSpacing": "var(--typo-body1-letter-spacing)",
+    "lineHeight": "var(--typo-body1-line-height)",
+  },
+  "body2": {
+    "fontFamily": "var(--typo-body2-font-family)",
+    "fontSize": "var(--typo-body2-font-size)",
+    "fontWeight": 400,
+    "letterSpacing": "var(--typo-body2-letter-spacing)",
+    "lineHeight": "var(--typo-body2-line-height)",
+  },
+  "button": {
+    "fontFamily": "var(--typo-button-font-family)",
+    "fontSize": "0.875rem",
+    "fontWeight": 500,
+    "letterSpacing": "var(--typo-button-letter-spacing)",
+    "lineHeight": 1.75,
+  },
+  "caption": {
+    "fontFamily": "var(--typo-caption-font-family)",
+    "fontSize": "var(--typo-caption-font-size)",
+    "fontWeight": 400,
+    "letterSpacing": "var(--typo-caption-letter-spacing)",
+    "lineHeight": "var(--typo-caption-line-height)",
+  },
+  "h1": {
+    "fontFamily": "var(--typo-h1-font-family)",
+    "fontSize": "var(--typo-h1-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h1-letter-spacing)",
+    "lineHeight": "var(--typo-h1-line-height)",
+  },
+  "h2": {
+    "fontFamily": "var(--typo-h2-font-family)",
+    "fontSize": "var(--typo-h2-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h2-letter-spacing)",
+    "lineHeight": "var(--typo-h2-line-height)",
+  },
+  "h3": {
+    "fontFamily": "var(--typo-h3-font-family)",
+    "fontSize": "var(--typo-h3-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h3-letter-spacing)",
+    "lineHeight": "var(--typo-h3-line-height)",
+  },
+  "h4": {
+    "fontFamily": "var(--typo-h4-font-family)",
+    "fontSize": "var(--typo-h4-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h4-letter-spacing)",
+    "lineHeight": "var(--typo-h4-line-height)",
+  },
+  "h5": {
+    "fontFamily": "var(--typo-h5-font-family)",
+    "fontSize": "var(--typo-h5-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h5-letter-spacing)",
+    "lineHeight": "var(--typo-h5-line-height)",
+  },
+  "h6": {
+    "fontFamily": "var(--typo-h6-font-family)",
+    "fontSize": "var(--typo-h6-font-size)",
+    "fontWeight": 700,
+    "letterSpacing": "var(--typo-h6-letter-spacing)",
+    "lineHeight": "var(--typo-h6-line-height)",
+  },
+  "overline": {
+    "fontFamily": "var(--typo-overline-font-family)",
+    "fontSize": "var(--typo-overline-font-size)",
+    "fontWeight": 400,
+    "letterSpacing": "var(--typo-overline-letter-spacing)",
+    "lineHeight": "var(--typo-overline-line-height)",
+  },
+  "subtitle1": {
+    "fontFamily": "var(--typo-subtitle1-font-family)",
+    "fontSize": "var(--typo-subtitle1-font-size)",
+    "fontWeight": 500,
+    "letterSpacing": "var(--typo-subtitle1-letter-spacing)",
+    "lineHeight": "var(--typo-subtitle1-line-height)",
+  },
+  "subtitle2": {
+    "fontFamily": "var(--typo-subtitle2-font-family)",
+    "fontSize": "var(--typo-subtitle2-font-size)",
+    "fontWeight": 500,
+    "letterSpacing": "var(--typo-subtitle2-letter-spacing)",
+    "lineHeight": "var(--typo-subtitle2-line-height)",
+  },
+}
+`;

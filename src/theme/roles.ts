@@ -46,9 +46,14 @@ export type RoleName =
   | 'text.secondary'
   | 'text.inverse'
   | 'text.onAccent'
+  | 'text.onHero'
+  | 'text.onDanger'
+  | 'text.disabled'
   | 'surface.default'
   | 'surface.subtle'
+  | 'surface.disabled'
   | 'surface.accent'
+  | 'surface.hero'
   | 'border.default'
   | 'border.strong'
   | 'focus.ring'
@@ -59,7 +64,11 @@ export type RoleName =
   | 'status.danger.fg'
   | 'status.danger.bg'
   | 'interactive.primary'
-  | 'interactive.primary.hover';
+  | 'interactive.primary.hover'
+  | 'interactive.primary.active'
+  | 'interactive.danger'
+  | 'interactive.danger.hover'
+  | 'interactive.danger.active';
 
 interface RoleMapEntry {
   semantic: SemanticColorName;
@@ -74,9 +83,14 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
   'text.inverse': { semantic: 'textOnAccent', description: 'Text on accent or inverse surfaces' },
   'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
+  'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface' },
+  'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
+  'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
   'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
   'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
+  'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
   'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
+  'surface.hero': { semantic: 'surfaceHero', description: 'Hero brand background surface (#000945)' },
   'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
   'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
@@ -87,7 +101,11 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'status.danger.fg': { semantic: 'statusDangerText', description: 'Danger text/icon color' },
   'status.danger.bg': { semantic: 'statusDangerBg', description: 'Danger background' },
   'interactive.primary': { semantic: 'interactivePrimary', description: 'Primary interactive base' },
-  'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' }
+  'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' },
+  'interactive.primary.active': { semantic: 'interactivePrimaryActive', description: 'Primary interactive active' },
+  'interactive.danger': { semantic: 'interactiveDanger', description: 'Destructive interactive base' },
+  'interactive.danger.hover': { semantic: 'interactiveDangerHover', description: 'Destructive hover' },
+  'interactive.danger.active': { semantic: 'interactiveDangerActive', description: 'Destructive active' }
 };
 
 export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }

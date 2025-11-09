@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -14,6 +14,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InsightsIcon from '@mui/icons-material/Insights';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { getRoleColor } from '../../theme/roles';
 
 // Fallback icon if none is provided
 const DefaultMenuIcon = DashboardIcon;
@@ -29,9 +30,14 @@ export interface SideNavigationProps {
   items: SideNavItem[];
   onSupport?: () => void;
   onClose?: () => void;
+  ariaLabel?: string;
 }
 
-const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport }) => {
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaLabel = 'Primary' }) => {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
 
   // Sidebar open by default
@@ -41,10 +47,24 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport }) => 
     setOpen((prevOpen) => ({ ...prevOpen, [label]: !prevOpen[label] }));
   };
 
+  const colors = useMemo(() => ({
+    navBg: getRoleColor('surface.accent'),
+    navText: getRoleColor('text.onAccent'),
+    itemHoverBg: getRoleColor('interactive.primary.hover'),
+    activeBg: getRoleColor('interactive.primary'),
+    activeHoverBg: getRoleColor('interactive.primary.hover'),
+    activeText: getRoleColor('text.onAccent'),
+    divider: getRoleColor('border.default'),
+    ctaBg: getRoleColor('surface.subtle'),
+    ctaText: getRoleColor('text.primary'),
+    ctaBtnBg: getRoleColor('surface.default'),
+    ctaBtnText: getRoleColor('text.primary')
+  }), []);
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: 'primary.dark', color: 'common.white' }}>
-      <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.12)' }} />
-      <List component="nav" sx={{ flexGrow: 1, p: 2 }}>
+    <Box component="nav" aria-label={ariaLabel} sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: colors.navBg, color: colors.navText }}>
+      <Divider sx={{ borderColor: colors.divider, opacity: 0.3 }} />
+      <List role="list" sx={{ flexGrow: 1, p: 2 }}>
         {items.map((item) => {
           let icon;
           switch (item.label) {
@@ -60,39 +80,60 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport }) => 
             default:
               icon = <DefaultMenuIcon />;
           }
+          const headerId = `sn-${slugify(item.label)}-header`;
+          const panelId = `sn-${slugify(item.label)}-panel`;
+          const isGroup = !!item.subItems?.length;
           return (
             <React.Fragment key={item.label}>
               <ListItemButton
+                id={headerId}
                 selected={item.active}
-                onClick={() => item.subItems && handleClick(item.label)}
+                onClick={() => isGroup && handleClick(item.label)}
+                aria-current={item.active ? 'page' : undefined}
+                aria-expanded={isGroup ? !!open[item.label] : undefined}
+                aria-controls={isGroup ? panelId : undefined}
+                aria-haspopup={isGroup ? 'true' : undefined}
+                role="listitem"
+                onKeyDown={(e) => {
+                  if (!isGroup) return;
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleClick(item.label);
+                  }
+                  if (e.key === 'ArrowRight' && !open[item.label]) {
+                    e.preventDefault();
+                    handleClick(item.label);
+                  }
+                  if (e.key === 'ArrowLeft' && open[item.label]) {
+                    e.preventDefault();
+                    handleClick(item.label);
+                  }
+                }}
                 sx={{
                   borderRadius: 1,
                   mb: 1,
                   ...(item.active && {
-                    bgcolor: 'rgba(0, 0, 0, 0.24)',
+                    bgcolor: colors.activeBg,
+                    color: colors.activeText,
                     borderLeft: '4px solid',
-                    borderColor: 'secondary.main',
-                    '&:hover': {
-                      bgcolor: 'rgba(0, 0, 0, 0.3)',
-                    },
+                    borderColor: colors.activeHoverBg,
+                    '&:hover': { bgcolor: colors.activeHoverBg },
                   }),
-                  '&:hover': {
-                    bgcolor: 'rgba(0, 0, 0, 0.16)',
-                  },
+                  '&:hover': { bgcolor: colors.itemHoverBg },
                 }}
               >
-                <ListItemIcon sx={{ color: 'common.white', minWidth: 40 }}>
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
                   {icon}
                 </ListItemIcon>
                 <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: item.active ? 'fontWeightBold' : 'fontWeightRegular' }} />
-                {item.subItems && (open[item.label] ? <ExpandLess /> : <ExpandMore />)}
+                {isGroup && (open[item.label] ? <ExpandLess /> : <ExpandMore />)}
               </ListItemButton>
-              {item.subItems && (
+              {isGroup && (
                 <Collapse in={open[item.label]} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding sx={{ pl: 4 }}>
+                  <List id={panelId} role="group" aria-labelledby={headerId} component="div" disablePadding sx={{ pl: 4 }}>
                     {(item.subItems ?? []).map((sub) => (
-                      <ListItemButton key={sub.label} sx={{ py: 1, borderRadius: 1 }}>
-                        <ListItemText primary={sub.label} primaryTypographyProps={{ fontSize: '0.875rem' }} />
+                      <ListItemButton key={sub.label} role="listitem" sx={{ py: 1, borderRadius: 1, '&:hover': { bgcolor: colors.itemHoverBg } }}>
+                        <ListItemText primary={sub.label} primaryTypographyProps={{ variant: 'body2', color: 'inherit' }} />
                       </ListItemButton>
                     ))}
                   </List>
@@ -102,11 +143,18 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport }) => 
           );
         })}
       </List>
-      <Box sx={{ p: 3, mt: 'auto', bgcolor: '#007a76', borderRadius: 1, m: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Need help?
-        </Typography>
-        <Button variant="contained" onClick={onSupport} fullWidth sx={{ bgcolor: 'common.white', color: 'primary.dark', '&:hover': { bgcolor: 'grey.200' } }}>
+      <Box sx={{ p: 3, mt: 'auto', bgcolor: colors.ctaBg, color: colors.ctaText, borderRadius: 1, m: 2 }}>
+        <Typography variant="h6" gutterBottom>Need help?</Typography>
+        <Button
+          variant="contained"
+          onClick={onSupport}
+          fullWidth
+          sx={{
+            bgcolor: colors.ctaBtnBg,
+            color: colors.ctaBtnText,
+            '&:hover': { bgcolor: getRoleColor('surface.subtle') }
+          }}
+        >
           Contact support
         </Button>
       </Box>

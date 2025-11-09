@@ -1,17 +1,38 @@
 import React from 'react';
-import MuiAlert from '@mui/material/Alert';
-import type { AlertColor, AlertProps as MuiAlertProps } from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
+import Box from '@mui/material/Box';
+import type { SxProps } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
 
-export interface DSAlertProps extends Omit<MuiAlertProps, 'severity' | 'variant'> {
+type AlertColor = 'error' | 'warning' | 'info' | 'success';
+
+export interface DSAlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   severity: AlertColor;
   title?: string;
   outlined?: boolean;
+  onClose?: () => void;
 }
 
 // Role mapping: errors & warnings are disruptive => 'alert'; others polite => 'status'
 const roleFor = (severity: AlertColor) => (severity === 'error' || severity === 'warning' ? 'alert' : 'status');
+
+// Map severities to role colors
+const fgRole = (sev: AlertColor) =>
+  sev === 'success'
+    ? 'status.success.fg'
+    : sev === 'warning'
+      ? 'status.warning.fg'
+      : sev === 'error'
+        ? 'status.danger.fg'
+        : 'text.primary';
+
+const bgRole = (sev: AlertColor) =>
+  sev === 'success'
+    ? 'status.success.bg'
+    : sev === 'warning'
+      ? 'status.warning.bg'
+      : sev === 'error'
+        ? 'status.danger.bg'
+        : 'surface.subtle';
 
 export const Alert: React.FC<DSAlertProps> = ({
   severity,
@@ -19,49 +40,50 @@ export const Alert: React.FC<DSAlertProps> = ({
   outlined,
   children,
   onClose,
+  className = '',
   ...rest
 }) => {
-  // Map severity to roles (foreground/background)
-  const roleFg = severity === 'success'
-    ? 'status.success.fg'
-    : severity === 'warning'
-      ? 'status.warning.fg'
-      : severity === 'error'
-        ? 'status.danger.fg'
-        : 'text.primary';
-  const roleBg = severity === 'success'
-    ? 'status.success.bg'
-    : severity === 'warning'
-      ? 'status.warning.bg'
-      : severity === 'error'
-        ? 'status.danger.bg'
-        : 'surface.subtle';
+  const color = getRoleColor(fgRole(severity) as any);
+  const bg = outlined ? 'transparent' : getRoleColor(bgRole(severity) as any);
+  const border = outlined ? `1px solid ${getRoleColor('border.default')}` : 'none';
 
-  // We let MUI still provide baseline structure but override colors via sx.
-  const fg = getRoleColor(roleFg as any);
-  const bg = getRoleColor(roleBg as any);
-  const border = outlined ? getRoleColor('border.default') : 'transparent';
+  const sx: SxProps = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 1.5, // uses theme.spacing
+    borderRadius: '8px',
+    p: 2,
+    color,
+    bgcolor: bg,
+    border,
+  };
 
   return (
-    <MuiAlert
-      severity={severity}
-      variant={outlined ? 'outlined' : 'standard'}
-      role={roleFor(severity)}
-      elevation={outlined ? 0 : 1}
-      onClose={onClose}
-      {...rest}
-      sx={{
-        '& .MuiAlertTitle-root': { fontWeight: 700 },
-        color: fg,
-        backgroundColor: outlined ? 'transparent' : bg,
-        borderColor: border,
-        ...(outlined && { borderWidth: 1, borderStyle: 'solid' }),
-        ...(rest.sx as any),
-      }}
-    >
-      {title && <AlertTitle>{title}</AlertTitle>}
-      {children}
-    </MuiAlert>
+    <Box role={roleFor(severity)} className={className} sx={sx} {...rest}>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        {title ? (
+          <Box component="div" sx={{ fontWeight: 'bold', mb: 1 }}>{title}</Box>
+        ) : null}
+        <div>{children}</div>
+      </Box>
+      {onClose ? (
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          style={{
+            marginLeft: 8,
+            flexShrink: 0,
+            color: 'inherit',
+            opacity: 0.8,
+            borderRadius: 4,
+          }}
+          className={undefined}
+        >
+          ×
+        </button>
+      ) : null}
+    </Box>
   );
 };
 

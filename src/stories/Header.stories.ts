@@ -1,5 +1,5 @@
 // TODO: Migrate or remove legacy Example/Header story; retained temporarily for layout reference.
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import Header from '../components/Header/Header';
 
 const meta: Meta<typeof Header> = {

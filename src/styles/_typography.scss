@@ -1,0 +1,133 @@
+// SCSS-based fluid typography for the Marsh Design System
+@use 'sass:math';
+// Source of truth moved into CSS variables, plus utility classes for use in CSS Modules.
+// Compatible with our current dual-scale system (headings vs body/UI) and clamp-based responsiveness.
+
+// Fonts
+$font-family-body: 'Noto Sans', sans-serif;
+$font-family-display: 'MMC Display', sans-serif;
+
+// Utility: fluid clamp function derived from viewport bounds
+// fluid(minPx, maxPx, minViewportPx, maxViewportPx)
+@function fluid($min, $max, $vw-min: 360, $vw-max: 1536) {
+  $m: math.div(($max - $min), ($vw-max - $vw-min));
+  $m-vw: $m * 100; // convert to vw units (1vw = width/100)
+  $b: $min - $m * $vw-min;
+  @return clamp(#{$min}px, calc(#{$b}px + #{$m-vw}vw), #{$max}px);
+}
+
+// CSS variables for each variant — aligns with our MUI variants
+:root {
+  /* Headings (Major Third) */
+  --typo-h1-font-family: #{$font-family-display};
+  --typo-h1-font-weight: 700;
+  --typo-h1-font-size: #{fluid(36, 56)}; // min 36, max 56
+  --typo-h1-line-height: 1.1;
+  --typo-h1-letter-spacing: -0.015em;
+
+  --typo-h2-font-family: #{$font-family-display};
+  --typo-h2-font-weight: 700;
+  --typo-h2-font-size: #{fluid(41, 46)};
+  --typo-h2-line-height: 1.15;
+  --typo-h2-letter-spacing: -0.012em;
+
+  --typo-h3-font-family: #{$font-family-display};
+  --typo-h3-font-weight: 700;
+  --typo-h3-font-size: #{fluid(33, 36)};
+  --typo-h3-line-height: 1.2;
+  --typo-h3-letter-spacing: -0.01em;
+
+  --typo-h4-font-family: #{$font-family-display};
+  --typo-h4-font-weight: 700;
+  --typo-h4-font-size: #{fluid(27, 30)};
+  --typo-h4-line-height: 1.2;
+  --typo-h4-letter-spacing: -0.005em;
+
+  --typo-h5-font-family: #{$font-family-display};
+  --typo-h5-font-weight: 700;
+  --typo-h5-font-size: #{fluid(22, 24)};
+  --typo-h5-line-height: 1.25;
+  --typo-h5-letter-spacing: -0.003em;
+
+  --typo-h6-font-family: #{$font-family-display};
+  --typo-h6-font-weight: 700;
+  --typo-h6-font-size: #{fluid(18, 20)};
+  --typo-h6-line-height: 1.3;
+  --typo-h6-letter-spacing: -0.001em;
+
+  /* Body/UI (Major Second) */
+  --typo-body1-font-family: #{$font-family-body};
+  --typo-body1-font-weight: 400;
+  --typo-body1-font-size: #{fluid(15, 16)};
+  --typo-body1-line-height: 1.6;
+  --typo-body1-letter-spacing: 0em;
+
+  --typo-body2-font-family: #{$font-family-body};
+  --typo-body2-font-weight: 400;
+  --typo-body2-font-size: #{fluid(14, 15)};
+  --typo-body2-line-height: 1.55;
+  --typo-body2-letter-spacing: 0em;
+
+  --typo-subtitle1-font-family: #{$font-family-body};
+  --typo-subtitle1-font-weight: 500;
+  --typo-subtitle1-font-size: #{fluid(15, 16)};
+  --typo-subtitle1-line-height: 1.5;
+  --typo-subtitle1-letter-spacing: 0.005em;
+
+  --typo-subtitle2-font-family: #{$font-family-body};
+  --typo-subtitle2-font-weight: 500;
+  --typo-subtitle2-font-size: #{fluid(13, 14)};
+  --typo-subtitle2-line-height: 1.5;
+  --typo-subtitle2-letter-spacing: 0.005em;
+
+  --typo-caption-font-family: #{$font-family-body};
+  --typo-caption-font-weight: 400;
+  --typo-caption-font-size: #{fluid(12, 13)};
+  --typo-caption-line-height: 1.4;
+  --typo-caption-letter-spacing: 0.01em;
+
+  --typo-overline-font-family: #{$font-family-body};
+  --typo-overline-font-weight: 400;
+  --typo-overline-font-size: #{fluid(11, 12)};
+  --typo-overline-line-height: 1.4;
+  --typo-overline-letter-spacing: 0.08em;
+  --typo-overline-text-transform: uppercase;
+
+  --typo-button-font-family: #{$font-family-body};
+  --typo-button-font-weight: 500; // Noto Sans Medium
+  --typo-button-font-size: 16px;
+  --typo-button-line-height: 24px;
+  --typo-button-letter-spacing: 0em;
+  --typo-button-text-transform: none;
+}
+
+// Utility mixin to apply a variant by name
+@mixin apply-variant($name) {
+  font-family: var(--typo-#{$name}-font-family);
+  font-weight: var(--typo-#{$name}-font-weight);
+  font-size: var(--typo-#{$name}-font-size);
+  line-height: var(--typo-#{$name}-line-height);
+  letter-spacing: var(--typo-#{$name}-letter-spacing);
+  @if $name == overline {
+    text-transform: var(--typo-overline-text-transform);
+  }
+  @if $name == button {
+    letter-spacing: var(--typo-button-letter-spacing);
+    text-transform: var(--typo-button-text-transform);
+  }
+}
+
+// Prebuilt utility classes (optional, for quick usage in CSS Modules)
+.typography-h1 { @include apply-variant(h1); }
+.typography-h2 { @include apply-variant(h2); }
+.typography-h3 { @include apply-variant(h3); }
+.typography-h4 { @include apply-variant(h4); }
+.typography-h5 { @include apply-variant(h5); }
+.typography-h6 { @include apply-variant(h6); }
+.typography-body1 { @include apply-variant(body1); }
+.typography-body2 { @include apply-variant(body2); }
+.typography-subtitle1 { @include apply-variant(subtitle1); }
+.typography-subtitle2 { @include apply-variant(subtitle2); }
+.typography-caption { @include apply-variant(caption); }
+.typography-overline { @include apply-variant(overline); }
+.typography-button { font-family: var(--typo-button-font-family); font-weight: var(--typo-button-font-weight); letter-spacing: var(--typo-button-letter-spacing); text-transform: var(--typo-button-text-transform); }

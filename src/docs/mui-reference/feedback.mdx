@@ -1,0 +1,25 @@
+export const meta = { title: 'MUI Reference/Feedback' };
+
+# Feedback (Raw MUI)
+
+## TODO Roadmap
+- Alert severities
+- Backdrop open/close
+- Dialog basic
+- Progress (linear + circular)
+- Skeleton variants
+- Snackbar basic with action
+
+## Examples
+
+import { Alert, CircularProgress } from '@mui/material';
+export function Example() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <Alert severity="success">Success message</Alert>
+      <CircularProgress size={32} />
+    </div>
+  );
+}
+
+<Example />

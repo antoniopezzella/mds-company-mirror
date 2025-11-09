@@ -1,0 +1,1 @@
+// Removed: Tailwind configuration is no longer used in this project.

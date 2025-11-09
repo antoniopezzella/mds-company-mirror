@@ -1,6 +1,4 @@
-import { Story, Canvas } from '@storybook/addon-docs/blocks';
-import { ApiSection } from '../Components/ApiSection';
-import * as DSButtonStories from '../../components/Button/Button.stories';
+import DSButton from '../../components/Button/Button';
 
 export const meta = { title: 'Docs/Components/Button Usage' };
 
@@ -11,36 +9,39 @@ Practical guidance for the primary action component. This page supplements the a
 ## Primary Action
 Use a contained primary button for the dominant action in a view.
 
-<Canvas>
-	<Story of={DSButtonStories.Primary} />
-</Canvas>
+<div style={{ display: 'flex', gap: 12 }}>
+	<DSButton>Primary action</DSButton>
+</div>
 
 ## Variants
 Avoid stacking multiple primary buttons. Use secondary style for less prominent adjacent actions.
 
-<Canvas>
-	<Story of={DSButtonStories.Secondary} />
-</Canvas>
+<div style={{ display: 'flex', gap: 12 }}>
+	<DSButton variant="secondary">Secondary action</DSButton>
+	<DSButton variant="text">Learn more</DSButton>
+	<DSButton tone="danger">Delete</DSButton>
+</div>
 
 ## States & Tones
 Tone communicates semantic intent (e.g., danger for destructive, success for confirmation). Disabled indicates inactionable state.
 
-<Canvas>
-	<Story of={DSButtonStories.Danger} />
-	<Story of={DSButtonStories.Success} />
-	<Story of={DSButtonStories.Disabled} />
-</Canvas>
+<div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+	<DSButton tone="danger">Delete</DSButton>
+	<DSButton tone="success">Save</DSButton>
+	<DSButton disabled>Disabled</DSButton>
+</div>
 
 ## Playground
-<ApiSection primary={DSButtonStories.Primary} variants={[DSButtonStories.Secondary, DSButtonStories.Danger, DSButtonStories.Success, DSButtonStories.Disabled]} />
+Try different `variant`, `tone`, and `size` props in your app code:
+
+```tsx
+<DSButton>Primary</DSButton>
+<DSButton variant="secondary">Secondary</DSButton>
+<DSButton variant="text">Learn more</DSButton>
+<DSButton tone="danger">Delete</DSButton>
+```
 
 ## Accessibility
-- Keyboard: Native `<button>` semantics — activated with Enter or Space; receives focus via Tab order.
-- Focus Ring: Relies on browser + MUI styles; must remain clearly visible (do not remove outline without a replacement). Future tokenization: `focus.ring.color`, `focus.ring.width`.
-- Disabled State: Non-focusable and announces as disabled to assistive tech; avoid using `aria-disabled` on a native button.
-- Tone Usage: `danger` should appear only for destructive / irreversible actions; `success` for confirmations.
-- Color Contrast: Ensure label text passes WCAG AA against contained / outlined backgrounds (primary & danger meet contrast with white text; secondary relies on border + text color contrast).
-- Motion: Keep hover/press transitions subtle (&lt;200ms); respect `prefers-reduced-motion` (future enhancement).
 
 ### A11y Do / Don't
 **Do** keep a visible focus indicator on all button variants.
@@ -49,3 +50,70 @@ Tone communicates semantic intent (e.g., danger for destructive, success for con
 
 ---
 _Future: add loading state pattern + destructive action guidelines._
+
+## Copy & paste starters
+
+```tsx
+import DSButton from 'src/components/Button/Button';
+
+export function Primary() {
+	return <DSButton>Primary action</DSButton>;
+}
+
+export function Secondary() {
+	return <DSButton variant="secondary">Secondary action</DSButton>;
+}
+
+export function Danger() {
+	return <DSButton tone="danger">Delete</DSButton>;
+}
+```
+
+```tsx
+// Icon-only
+import DSButton from 'src/components/Button/Button';
+import SaveIcon from '@mui/icons-material/Save';
+
+export function IconOnly() {
+	return <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} />;
+}
+```
+
+```tsx
+// Full-width
+import DSButton from 'src/components/Button/Button';
+
+export function FullWidth() {
+	return (
+		<div style={{ width: 320 }}>
+			<DSButton fullWidth>Continue</DSButton>
+		</div>
+	);
+}
+```
+<Source
+	language="tsx"
+	dark
+	code={`// Icon-only
+import DSButton from 'src/components/Button/Button';
+import SaveIcon from '@mui/icons-material/Save';
+
+export function IconOnly() {
+	return <DSButton aria-label="Save" iconOnly startIcon={<SaveIcon />} />;
+}`}
+/>
+
+<Source
+	language="tsx"
+	dark
+	code={`// Full-width
+import DSButton from 'src/components/Button/Button';
+
+export function FullWidth() {
+	return (
+		<div style={{ width: 320 }}>
+			<DSButton fullWidth>Continue</DSButton>
+		</div>
+	);
+}`}
+/>

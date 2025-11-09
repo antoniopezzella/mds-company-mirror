@@ -45,14 +45,14 @@ const StickyBanner: React.FC = () => {
             <img alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} src={imgBasicImagePlaceholder} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 }}>
-            <p style={{ fontFamily: theme.typography.h2.fontFamily, fontWeight: theme.typography.h2.fontWeight, color: textColor, fontSize: 32, lineHeight: '32px', margin: 0 }}>
+            <p style={{ fontFamily: 'var(--typo-h4-font-family)', fontWeight: 700, color: textColor, fontSize: 'var(--typo-h4-font-size)', lineHeight: 'var(--typo-h4-line-height)', letterSpacing: 'var(--typo-h4-letter-spacing)', margin: 0 }}>
               Ut enim ad minim veniam, quis nostrud exercitation
             </p>
           </div>
           <div style={{ background: primaryColor, display: 'flex', gap: 8, height: 48, alignItems: 'center', justifyContent: 'center', padding: '12px 16px', borderRadius: 2, transition: 'background-color .15s' }}
             onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryHover; }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = primaryColor; }}>
-            <p style={{ fontFamily: theme.typography.button.fontFamily, fontWeight: theme.typography.button.fontWeight, fontSize: 16, color: buttonTextColor, textAlign: 'center', margin: 0 }}>
+            <p style={{ fontFamily: 'var(--typo-button-font-family)', fontWeight: 700, letterSpacing: 'var(--typo-button-letter-spacing)', fontSize: 'var(--typo-body1-font-size)', color: buttonTextColor, textAlign: 'center', margin: 0 }}>
               Find out more
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20 }}>
@@ -113,13 +113,14 @@ const StickyBanner: React.FC = () => {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              fontFamily: theme.typography.h1.fontFamily,
-              fontWeight: theme.typography.h1.fontWeight,
+              fontFamily: 'var(--typo-h2-font-family)',
+              fontWeight: 700,
               color: textColor,
-              fontSize: 48,
+              fontSize: 'var(--typo-h2-font-size)',
               minWidth: '100%',
               width: 'min-content',
-              lineHeight: '56px',
+              lineHeight: 'var(--typo-h2-line-height)',
+              letterSpacing: 'var(--typo-h2-letter-spacing)'
             }}
             data-node-id="628:56289"
           >
@@ -144,9 +145,11 @@ const StickyBanner: React.FC = () => {
           >
             <p
               style={{
-                fontFamily: theme.typography.button.fontFamily,
-                fontWeight: theme.typography.button.fontWeight,
-                fontSize: 16,
+                fontFamily: 'var(--typo-button-font-family)',
+                fontWeight: 700,
+                letterSpacing: 'var(--typo-button-letter-spacing)',
+                // textTransform handled via class/variant; omit to avoid TS type constraints on CSSProperties
+                fontSize: 'var(--typo-body1-font-size)',
                 color: buttonTextColor,
                 textAlign: 'center',
                 margin: 0,
@@ -186,7 +189,7 @@ const StickyBanner: React.FC = () => {
               </div>
               <div style={{ position: 'absolute', bottom: 0, right: 0, width: 641, minHeight: 29.95, paddingBottom: 7.487, paddingRight: 7.487, zIndex: 1, display: 'flex', alignItems: 'end', justifyContent: 'end' }} data-name="Time Indicator">
                 <div style={{ background: 'rgba(27,34,47,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3.744px 7.487px' }}>
-                  <p style={{ fontFamily: theme.typography.button.fontFamily, fontWeight: 600, fontSize: 16.85, color: buttonTextColor, margin: 0 }}>00:00</p>
+                  <p style={{ fontFamily: 'var(--typo-button-font-family)', fontWeight: 600, fontSize: 'var(--typo-subtitle1-font-size)', color: buttonTextColor, margin: 0 }}>00:00</p>
                 </div>
               </div>
             </div>

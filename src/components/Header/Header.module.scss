@@ -1,4 +1,5 @@
 @use '../../styles/_tokens.scss' as tokens;
+@use '../../styles/_typography.scss' as typo;
 
 header {
   position: sticky;
@@ -47,10 +48,7 @@ header {
 
 .navLink {
   color: rgba(255, 255, 255, 0.95);
-  font-family: "Noto Sans", sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.5;
+  @include typo.apply-variant(subtitle1);
   text-decoration: none;
   padding: 8px 0;
   display: inline-block;
@@ -99,16 +97,12 @@ header {
 
 .profileName {
   color: #fff;
-  font-family: "Noto Sans", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  @include typo.apply-variant(subtitle2);
 }
 
 .profileRole {
   color: rgba(255, 255, 255, 0.9);
-  font-family: "Noto Sans", sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  @include typo.apply-variant(caption);
   opacity: 0.9;
 }
 

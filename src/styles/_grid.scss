@@ -64,12 +64,25 @@ $container-max: (
 }
 
 // Column span utility: .col-1 .. .col-12 and responsive variants .col-md-6 etc.
+// Clamp span to [1, $columns] using Sass logic (avoids emitting CSS min()/max())
 @function span-columns($span) {
-  @return min(#{$columns}, max(1, $span));
+  $clamped: $span;
+  @if ($clamped < 1) {
+    $clamped: 1;
+  } @else if ($clamped > $columns) {
+    $clamped: $columns;
+  }
+  @return $clamped;
 }
 
 @mixin make-col($span) {
   grid-column: span span-columns($span);
+}
+
+// Auto-width column (Bootstrap-style: equal width, flexible)
+.col {
+  grid-column: span $columns;
+  min-width: 0;
 }
 
 // Generate base column classes
@@ -80,6 +93,14 @@ $container-max: (
 // Responsive column classes per breakpoint
 @each $bp, $min in $breakpoints {
   @if $bp != xs { // skip base, already generated
+    // Responsive auto-width column
+    .col-#{$bp} { 
+      @include respond($bp) { 
+        grid-column: span $columns;
+        min-width: 0;
+      } 
+    }
+    
     @for $i from 1 through $columns {
       .col-#{$bp}-#{$i} { @include respond($bp) { @include make-col($i); } }
     }
@@ -111,6 +132,13 @@ $container-max: (
 .gap-4 { gap: calc(#{$base-unit} * 4); }
 .gap-6 { gap: calc(#{$base-unit} * 6); } // 24px
 .gap-8 { gap: calc(#{$base-unit} * 8); } // 32px
+// Extended gap scale for larger layouts
+.gap-9  { gap: calc(#{$base-unit} * 9); }  // 36px
+.gap-10 { gap: calc(#{$base-unit} * 10); } // 40px
+.gap-12 { gap: calc(#{$base-unit} * 12); } // 48px
+.gap-16 { gap: calc(#{$base-unit} * 16); } // 64px
+.gap-20 { gap: calc(#{$base-unit} * 20); } // 80px
+.gap-24 { gap: calc(#{$base-unit} * 24); } // 96px
 .g-0 { gap: 0; }
 .g-1 { gap: $base-unit; }
 .g-2 { gap: calc(#{$base-unit} * 2); }
@@ -118,6 +146,11 @@ $container-max: (
 .g-4 { gap: calc(#{$base-unit} * 4); }
 .g-6 { gap: calc(#{$base-unit} * 6); }
 .g-8 { gap: calc(#{$base-unit} * 8); }
+// Extended Bootstrap-style gap aliases
+.g-9  { gap: calc(#{$base-unit} * 9); }
+.g-10 { gap: calc(#{$base-unit} * 10); }
+.g-12 { gap: calc(#{$base-unit} * 12); }
+.g-16 { gap: calc(#{$base-unit} * 16); }
 
 .gx-0 { column-gap: 0; }
 .gx-1 { column-gap: $base-unit; }
@@ -126,6 +159,8 @@ $container-max: (
 .gx-4 { column-gap: calc(#{$base-unit} * 4); }
 .gx-6 { column-gap: calc(#{$base-unit} * 6); }
 .gx-8 { column-gap: calc(#{$base-unit} * 8); }
+.gx-12 { column-gap: calc(#{$base-unit} * 12); }
+.gx-16 { column-gap: calc(#{$base-unit} * 16); }
 
 .gy-0 { row-gap: 0; }
 .gy-1 { row-gap: $base-unit; }
@@ -134,17 +169,23 @@ $container-max: (
 .gy-4 { row-gap: calc(#{$base-unit} * 4); }
 .gy-6 { row-gap: calc(#{$base-unit} * 6); }
 .gy-8 { row-gap: calc(#{$base-unit} * 8); }
+.gy-12 { row-gap: calc(#{$base-unit} * 12); }
+.gy-16 { row-gap: calc(#{$base-unit} * 16); }
 
 // Row columns (equal-width columns like Bootstrap's row-cols-N)
-// Supports 1..6 to avoid fractional spans on a 12-col grid
+// Supports only divisors of 12 to avoid fractional spans (1, 2, 3, 4, 6)
 @for $n from 1 through 6 {
-  .row-cols-#{$n} > * { grid-column: span math.div($columns, $n); }
+  @if ($columns % $n == 0) {
+    .row-cols-#{$n} > * { grid-column: span math.div($columns, $n); }
+  }
 }
 
 @each $bp, $min in $breakpoints {
   @if $bp != xs {
     @for $n from 1 through 6 {
-      .row-cols-#{$bp}-#{$n} > * { @include respond($bp) { grid-column: span math.div($columns, $n); } }
+      @if ($columns % $n == 0) {
+        .row-cols-#{$bp}-#{$n} > * { @include respond($bp) { grid-column: span math.div($columns, $n); } }
+      }
     }
   }
 }
@@ -156,6 +197,8 @@ $container-max: (
 .gap-x-4 { column-gap: calc(#{$base-unit} * 4); }
 .gap-x-6 { column-gap: calc(#{$base-unit} * 6); }
 .gap-x-8 { column-gap: calc(#{$base-unit} * 8); }
+.gap-x-12 { column-gap: calc(#{$base-unit} * 12); }
+.gap-x-16 { column-gap: calc(#{$base-unit} * 16); }
 
 .gap-y-1 { row-gap: $base-unit; }
 .gap-y-2 { row-gap: calc(#{$base-unit} * 2); }
@@ -163,6 +206,8 @@ $container-max: (
 .gap-y-4 { row-gap: calc(#{$base-unit} * 4); }
 .gap-y-6 { row-gap: calc(#{$base-unit} * 6); }
 .gap-y-8 { row-gap: calc(#{$base-unit} * 8); }
+.gap-y-12 { row-gap: calc(#{$base-unit} * 12); }
+.gap-y-16 { row-gap: calc(#{$base-unit} * 16); }
 
 // Column alignment utilities
 .align-start { align-items: start; }
@@ -206,6 +251,367 @@ $container-max: (
   margin-inline: 0;
   max-width: none;
   padding-inline: calc(#{$gutter} * 2);
+}
+
+// ==============================================================================
+// PHASE 1: SCALABILITY ENHANCEMENTS
+// Added: Column count utilities, row spanning, auto columns, and advanced grid features
+// ==============================================================================
+
+// Grid template column count utilities (.grid-cols-1 through .grid-cols-12)
+// Unlike .col-N which spans N columns in a 12-column grid, these define the grid itself
+@for $i from 1 through 12 {
+  .grid-cols-#{$i} {
+    display: grid;
+    grid-template-columns: repeat($i, minmax(0, 1fr));
+    gap: var(--mds-grid-gap, #{$gutter});
+  }
+}
+
+// Responsive column count variants
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    @for $i from 1 through 12 {
+      .grid-cols-#{$bp}-#{$i} {
+        @include respond($bp) {
+          display: grid;
+          grid-template-columns: repeat($i, minmax(0, 1fr));
+          gap: var(--mds-grid-gap, #{$gutter});
+        }
+      }
+    }
+  }
+}
+
+// Row spanning utilities (.row-span-1 through .row-span-6)
+@for $i from 1 through 6 {
+  .row-span-#{$i} {
+    grid-row: span $i;
+  }
+}
+
+// Full-height row span
+.row-span-full {
+  grid-row: 1 / -1;
+}
+
+// Responsive row span variants
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    @for $i from 1 through 6 {
+      .row-span-#{$bp}-#{$i} {
+        @include respond($bp) {
+          grid-row: span $i;
+        }
+      }
+    }
+  }
+}
+
+// Auto-sized columns (fit content, don't stretch)
+.col-auto {
+  grid-column: auto;
+  width: auto;
+  min-width: 0;
+}
+
+// Responsive auto column variants
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    .col-#{$bp}-auto {
+      @include respond($bp) {
+        grid-column: auto;
+        width: auto;
+        min-width: 0;
+      }
+    }
+  }
+}
+
+// Grid flow utilities (control auto-placement algorithm)
+.grid-flow-row {
+  grid-auto-flow: row;
+}
+
+.grid-flow-col {
+  grid-auto-flow: column;
+}
+
+.grid-flow-dense {
+  grid-auto-flow: dense;
+}
+
+.grid-flow-row-dense {
+  grid-auto-flow: row dense;
+}
+
+.grid-flow-col-dense {
+  grid-auto-flow: column dense;
+}
+
+// Explicit row count utilities (.grid-rows-1 through .grid-rows-6)
+@for $i from 1 through 6 {
+  .grid-rows-#{$i} {
+    grid-template-rows: repeat($i, minmax(0, 1fr));
+  }
+}
+
+// Responsive row count variants
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    @for $i from 1 through 6 {
+      .grid-rows-#{$bp}-#{$i} {
+        @include respond($bp) {
+          grid-template-rows: repeat($i, minmax(0, 1fr));
+        }
+      }
+    }
+  }
+}
+
+// Place items utilities (combined align-items + justify-items)
+.place-items-start {
+  place-items: start;
+}
+
+.place-items-center {
+  place-items: center;
+}
+
+.place-items-end {
+  place-items: end;
+}
+
+.place-items-stretch {
+  place-items: stretch;
+}
+
+.place-items-baseline {
+  place-items: baseline;
+}
+
+// Place content utilities (combined align-content + justify-content)
+.place-content-start {
+  place-content: start;
+}
+
+.place-content-center {
+  place-content: center;
+}
+
+.place-content-end {
+  place-content: end;
+}
+
+.place-content-between {
+  place-content: space-between;
+}
+
+.place-content-around {
+  place-content: space-around;
+}
+
+.place-content-evenly {
+  place-content: space-evenly;
+}
+
+.place-content-stretch {
+  place-content: stretch;
+}
+
+// Auto-fit grid presets with common min widths
+.grid-auto-fit-xs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--mds-grid-gap, #{$gutter});
+}
+
+.grid-auto-fit-sm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--mds-grid-gap, #{$gutter});
+}
+
+.grid-auto-fit-md {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--mds-grid-gap, #{$gutter});
+}
+
+.grid-auto-fit-lg {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--mds-grid-gap, #{$gutter});
+}
+
+// Asymmetric column presets for common layouts
+.grid-cols-sidebar {
+  grid-template-columns: 250px 1fr;
+}
+
+.grid-cols-sidebar-right {
+  grid-template-columns: 1fr 250px;
+}
+
+.grid-cols-sidebar-wide {
+  grid-template-columns: 300px 1fr;
+}
+
+.grid-cols-two-thirds {
+  grid-template-columns: 2fr 1fr;
+}
+
+.grid-cols-thirds {
+  grid-template-columns: 1fr 2fr;
+}
+
+// Responsive asymmetric variants
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    .grid-cols-#{$bp}-sidebar {
+      @include respond($bp) {
+        grid-template-columns: 250px 1fr;
+      }
+    }
+    
+    .grid-cols-#{$bp}-sidebar-right {
+      @include respond($bp) {
+        grid-template-columns: 1fr 250px;
+      }
+    }
+  }
+}
+
+// Responsive gap utilities (apply gap at specific breakpoints)
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    .gap-#{$bp}-0  { @include respond($bp) { gap: 0; } }
+    .gap-#{$bp}-4  { @include respond($bp) { gap: calc(#{$base-unit} * 4); } }
+    .gap-#{$bp}-8  { @include respond($bp) { gap: calc(#{$base-unit} * 8); } }
+    .gap-#{$bp}-12 { @include respond($bp) { gap: calc(#{$base-unit} * 12); } }
+    .gap-#{$bp}-16 { @include respond($bp) { gap: calc(#{$base-unit} * 16); } }
+  }
+}
+
+// Utility modifiers
+.row-flush {
+  margin-left: calc(var(--mds-grid-gap, #{$gutter}) * -1);
+  margin-right: calc(var(--mds-grid-gap, #{$gutter}) * -1);
+}
+
+.row-no-gap {
+  gap: 0;
+}
+
+// Bootstrap-style no gutters (alias)
+.no-gutters {
+  gap: 0;
+}
+
+// Column ordering utilities (Bootstrap-inspired)
+@for $i from 0 through 12 {
+  .order-#{$i} {
+    order: $i;
+  }
+}
+
+.order-first {
+  order: -1;
+}
+
+.order-last {
+  order: 13;
+}
+
+// Responsive order utilities
+@each $bp, $min in $breakpoints {
+  @if $bp != xs {
+    @for $i from 0 through 12 {
+      .order-#{$bp}-#{$i} {
+        @include respond($bp) {
+          order: $i;
+        }
+      }
+    }
+    
+    .order-#{$bp}-first {
+      @include respond($bp) {
+        order: -1;
+      }
+    }
+    
+    .order-#{$bp}-last {
+      @include respond($bp) {
+        order: 13;
+      }
+    }
+  }
+}
+
+// Hidden utilities for responsive visibility control
+.hidden-xs {
+  @media (max-width: 599px) {
+    display: none !important;
+  }
+}
+
+.hidden-sm {
+  @media (min-width: 600px) and (max-width: 899px) {
+    display: none !important;
+  }
+}
+
+.hidden-md {
+  @media (min-width: 900px) and (max-width: 1199px) {
+    display: none !important;
+  }
+}
+
+.hidden-lg {
+  @media (min-width: 1200px) and (max-width: 1535px) {
+    display: none !important;
+  }
+}
+
+.hidden-xl {
+  @media (min-width: 1536px) {
+    display: none !important;
+  }
+}
+
+// Visible utilities (opposite of hidden)
+.visible-xs {
+  @media (min-width: 600px) {
+    display: none !important;
+  }
+}
+
+.visible-sm {
+  display: none !important;
+  @media (min-width: 600px) and (max-width: 899px) {
+    display: block !important;
+  }
+}
+
+.visible-md {
+  display: none !important;
+  @media (min-width: 900px) and (max-width: 1199px) {
+    display: block !important;
+  }
+}
+
+.visible-lg {
+  display: none !important;
+  @media (min-width: 1200px) and (max-width: 1535px) {
+    display: block !important;
+  }
+}
+
+.visible-xl {
+  display: none !important;
+  @media (min-width: 1536px) {
+    display: block !important;
+  }
 }
 
 // Example helper for fixed gutters in rem: set root font-size appropriately

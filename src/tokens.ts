@@ -4,10 +4,14 @@ export const tokens = {
   // Newly added midpoint shade to support clearer hover on accent surfaces
   blue800: '#001e5a',
   blue700: '#002c77',
+  // Precise active shade from Figma for primary on light
+  blue750: '#001f52',
   blue600: '#0065ac',
   blue500: '#009de0',
   blue300: '#76d3ff',
   blue900: '#001538',
+  // Brand hero surface (Marsh primary deep navy spec 000945)
+  brandHero: '#000945',
   white: '#ffffff',
   black: '#000000',
   gray900: '#202020',
@@ -28,6 +32,8 @@ export const tokens = {
   yellow500: '#ffbe00',
   yellow400: '#ffd240',
   crimson600: '#c53532',
+  crimson700: '#9a1c1f',
+  crimson900: '#691315',
   crimson300: '#ffaea6',
   teal500: '#0077a0',
   turquoise500: '#00968f',

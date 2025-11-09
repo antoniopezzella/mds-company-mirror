@@ -1,0 +1,16 @@
+export const meta = { title: 'MUI Reference/Inputs/Slider' };
+import React, { useState } from 'react';
+import { Slider, Box } from '@mui/material';
+
+# Slider
+
+export function Demo() {
+  const [value, setValue] = useState(30);
+  return (
+    <Box sx={{ width: 240 }}>
+      <Slider value={value} onChange={(_, v) => setValue(Array.isArray(v) ? v[0] : v)} aria-label="slider" />
+    </Box>
+  );
+}
+
+<Demo />

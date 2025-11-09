@@ -1,0 +1,32 @@
+export const meta = { title: 'MUI Reference/Data Display/Table' };
+
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+
+# Table
+
+export function Demo() {
+  return (
+    <TableContainer component={Paper} sx={{ maxWidth: 480 }}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Age</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Alice</TableCell>
+            <TableCell align="right">30</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Bob</TableCell>
+            <TableCell align="right">26</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+<Demo />

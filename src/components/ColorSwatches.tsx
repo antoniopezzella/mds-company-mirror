@@ -1,4 +1,4 @@
-import React from "react";
+import { useTheme } from "@mui/material/styles";
 
 // Marsh primitive color palettes
 const palettes = [
@@ -176,30 +176,34 @@ const palettes = [
   }
 ];
 
-export const ColorSwatches = () => (
-  <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-    {palettes.map((palette) => (
-      <div key={palette.label}>
-        <h3 style={{ marginBottom: "0.5rem" }}>{palette.label}</h3>
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          {palette.colors.map((color) => (
-            <div key={color.name} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 8,
-                  background: color.value,
-                  border: "1px solid #eee",
-                  marginBottom: 8
-                }}
-              />
-              <div style={{ fontSize: 12 }}>{color.name}</div>
-              <div style={{ fontSize: 12, color: "#888" }}>{color.value}</div>
-            </div>
-          ))}
+export const ColorSwatches = () => {
+  const theme = useTheme();
+  const small = theme.typography.caption.fontSize as any;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      {palettes.map((palette) => (
+        <div key={palette.label}>
+          <h3 style={{ marginBottom: "0.5rem" }}>{palette.label}</h3>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            {palette.colors.map((color) => (
+              <div key={color.name} style={{ textAlign: "center" }}>
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 8,
+                    background: color.value,
+                    border: "1px solid #eee",
+                    marginBottom: 8
+                  }}
+                />
+                <div style={{ fontSize: small }}>{color.name}</div>
+                <div style={{ fontSize: small, color: "#888" }}>{color.value}</div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};

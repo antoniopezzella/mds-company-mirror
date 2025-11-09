@@ -1,0 +1,142 @@
+export const meta = { title: 'MUI Reference/Overview' };
+
+import { Alert } from '@mui/material';
+
+# MUI Reference
+
+Raw Material UI component examples are collected here as a neutral baseline before applying Marsh Design System role-driven theming.
+
+> Purpose: Provide quick visual + usage parity with upstream MUI docs using our ThemeProvider (light/dark) and typography variables. No role color overrides are applied yet beyond existing global theme.
+
+## Scope (Phase 1)
+
+Included (Core only): Inputs, Data Display, Feedback, Surface, Navigation, Layout, Utils.
+
+Deferred (Future): MUI X (Data Grid, Date/Time Pickers, Charts), Lab (Masonry, Timeline), Pro/Paid components.
+
+## Status Legend
+
+| Icon | Meaning |
+| ---- | ------- |
+| ✅ | Example stub present |
+| 🚧 | Planned stub not yet added |
+| ⏭️ | Deferred to later phase |
+
+## Category Index
+
+- [Inputs](#inputs)
+- [Data Display](#data-display)
+- [Feedback](#feedback)
+- [Surface](#surface)
+- [Navigation](#navigation)
+- [Layout](#layout)
+- [Utils](#utils)
+
+---
+
+## Inputs
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| Button | ✅ | Already DS-migrated (will show raw + DS variants later) |
+| ButtonGroup | 🚧 | Raw example TODO |
+| Autocomplete | 🚧 | Requires basic options stub |
+| Checkbox | 🚧 | Include controlled + indeterminate |
+| FAB | 🚧 | Show primary action variant |
+| RadioGroup | 🚧 | Basic value selection |
+| Rating | 🚧 | Basic usage |
+| Select | 🚧 | Native vs MUI Select |
+| Slider | 🚧 | Min/max/step demo |
+| Switch | 🚧 | Controlled example |
+| TextField | 🚧 | Standard + filled + outlined |
+| TransferList | ⏭️ | Lower priority |
+| ToggleButton | 🚧 | Exclusive vs multiple |
+
+## Data Display
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| Avatar | 🚧 | Image + initials |
+| Badge | 🚧 | Small count |
+| Chip | 🚧 | Clickable + deletable |
+| Divider | 🚧 | Horizontal + inset |
+| Icons | 🚧 | Using @mui/icons-material |
+| List | 🚧 | Basic list + nested |
+| Table | 🚧 | Simple table (no Data Grid) |
+| Tooltip | 🚧 | Placement variants |
+| Typography | ✅ | Default scale already provided |
+
+## Feedback
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| Alert | ✅ | Base example below |
+| Backdrop | 🚧 | Simple open/close |
+| Dialog | 🚧 | Title + actions |
+| Progress | 🚧 | Linear + circular |
+| Skeleton | 🚧 | Text + avatar variant |
+| Snackbar | 🚧 | Auto hide + action |
+
+### Alert (Sample)
+
+<Alert severity="info">Informational alert sample (raw MUI)</Alert>
+
+## Surface
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| Accordion | 🚧 | Basic expand/collapse |
+| AppBar | 🚧 | Primary bar with title |
+| Card | ✅ | Already DS-migrated; raw example TODO |
+| Paper | 🚧 | Elevation levels |
+
+## Navigation
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| BottomNavigation | 🚧 | Simple 3 actions |
+| Breadcrumbs | 🚧 | Hierarchical path |
+| Drawer | 🚧 | Temporary left drawer |
+| Link | 🚧 | Inline link styling |
+| Menu | 🚧 | Anchor + menu items |
+| Pagination | 🚧 | Basic usage |
+| SpeedDial | 🚧 | Action icons |
+| Stepper | 🚧 | Horizontal stepper |
+| Tabs | 🚧 | Basic tabs + controlled |
+
+## Layout
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| Box | ✅ | Already used globally |
+| Container | 🚧 | Max width examples |
+| Grid | 🚧 | Responsive columns |
+| GridLegacy | ⏭️ | Skip unless needed |
+| Stack | ✅ | Already used |
+| ImageList | 🚧 | Standard example |
+
+## Utils
+
+| Component | Status | Notes |
+| --------- | ------ | ----- |
+| ClickAwayListener | 🚧 | Close menu on outside click |
+| CSS Baseline | ✅ | Applied globally in preview |
+| Modal | 🚧 | Basic open/close |
+| No SSR | 🚧 | One example with media query |
+| Popover | 🚧 | Anchor positioning |
+| Popper | 🚧 | Raw positioning (maybe merge with Popover) |
+| Portal | 🚧 | Render outside root |
+| TextareaAutosize | 🚧 | Simple usage |
+| Transitions | 🚧 | Grow/Fade sample |
+| useMediaQuery | 🚧 | Responsive text example |
+
+---
+
+## Next Steps
+
+1. Add minimal raw examples for each component marked 🚧.
+2. Verify rendering under both light and dark themes.
+3. Introduce DS-themed variants (role-based colors, spacing) in a parallel `Components` section (not here) to keep reference pure.
+4. Add tests for a subset (Button, Alert, Dialog, Tabs, Form Controls) for accessibility and governance.
+
+> After all stubs exist, convert the status table entries from 🚧 to ✅ and begin the DS skinning pass.
