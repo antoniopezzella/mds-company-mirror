@@ -1,0 +1,35 @@
+# Vercel build ignore patterns
+node_modules/
+.next/
+.vercel/
+*.log
+.DS_Store
+.env.local
+.env.*.local
+coverage/
+.nyc_output/
+cypress/
+playwright-report/
+test-results/
+
+# Design system specific
+src/__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+.storybook/
+stories/
+vitest.config.ts
+playwright.config.ts
+
+# Development files
+src/pages/ParallaxDemo.tsx
+src/pages/AnimatedGridDemo.tsx
+docs/hero-wireframes/
+scripts/capture-hero-wireframes.js
+
+# Documentation build artifacts
+storybook-static/
+dist/
+build/
