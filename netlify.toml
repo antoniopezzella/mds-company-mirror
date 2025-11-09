@@ -1,0 +1,14 @@
+# Build settings for Netlify
+[build]
+  command = "npm run build-storybook"
+  publish = "storybook-static"
+
+# Node version
+[build.environment]
+  NODE_VERSION = "22"
+
+# Redirects for SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
