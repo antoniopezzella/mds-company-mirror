@@ -1,5 +1,5 @@
 {
-  "buildCommand": "storybook build --config-dir .storybook",
+  "buildCommand": "npm run vercel:build",
   "outputDirectory": "storybook-static",
   "framework": "vite",
   "headers": [
