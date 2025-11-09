@@ -1,6 +1,6 @@
 # Build settings for Netlify
 [build]
-  command = "npm run build-storybook"
+  command = "rm -rf storybook-static && npm run build-storybook"
   publish = "storybook-static"
 
 # Node version
