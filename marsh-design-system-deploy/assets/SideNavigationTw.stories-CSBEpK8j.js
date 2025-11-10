@@ -1,0 +1,1 @@
+const e={title:"Deprecated/Tailwind/SideNavigationTw (removed)",parameters:{docs:{disable:!0},controls:{disable:!0},previewTabs:{"storybook/docs/panel":{hidden:!0}},layout:"fullscreen"}},t=[];export{t as __namedExportsOrder,e as default};
