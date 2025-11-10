@@ -16,6 +16,17 @@ const config: StorybookConfig = {
     options: {}
   },
   docs: {},
-  staticDirs: ['../public']
+  staticDirs: [
+    { from: '../public/fonts', to: '/fonts' },
+    { from: '../public/images', to: '/images' }
+  ],
+  viteFinal: async (config) => {
+    // Prevent Vite from using the root index.html for Storybook
+    if (config.build) {
+      config.build.rollupOptions = config.build.rollupOptions || {};
+      config.build.rollupOptions.input = undefined;
+    }
+    return config;
+  }
 };
 export default config;
