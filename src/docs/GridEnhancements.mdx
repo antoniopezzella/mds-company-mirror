@@ -1,0 +1,409 @@
+# Grid System Enhancements — Complete Guide
+
+The Marsh Design System grid has been enhanced with **XXL breakpoint**, **subgrid utilities**, **aspect ratios**, and **extended spacing**. This guide demonstrates all new capabilities.
+
+## 📊 Enhanced Breakpoint System
+
+### Breakpoint Overview
+
+| Name | Min Width | Container Max | Usage |
+|------|-----------|---------------|-------|
+| `xs` | 0px | — | Mobile (default) |
+| `sm` | 576px | 540px | Large mobile |
+| `md` | 768px | 720px | Tablet |
+| `lg` | 1200px | 1140px | Desktop |
+| `xl` | 1400px | 1320px | Large desktop |
+| **`xxl`** | **1920px** | **1800px** | **Ultra-wide (4K+)** |
+
+### XXL Breakpoint Examples
+
+<div className="demo-section">
+  <h4>Ultra-wide Layout</h4>
+  <div className="container">
+    <div className="row gap-6">
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{background: '#e3f2fd', padding: 16, textAlign: 'center', borderRadius: 8}}>
+        XXL: 3 cols<br/>
+        XL: 4 cols<br/>
+        LG: 6 cols<br/>
+        MD: 12 cols
+      </div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{background: '#e8f5e8', padding: 16, textAlign: 'center', borderRadius: 8}}>
+        XXL: 3 cols<br/>
+        XL: 4 cols<br/>
+        LG: 6 cols<br/>
+        MD: 12 cols
+      </div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{background: '#fff3e0', padding: 16, textAlign: 'center', borderRadius: 8}}>
+        XXL: 3 cols<br/>
+        XL: 4 cols<br/>
+        LG: 6 cols<br/>
+        MD: 12 cols
+      </div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{background: '#fce4ec', padding: 16, textAlign: 'center', borderRadius: 8}}>
+        XXL: 3 cols<br/>
+        XL: 4 cols<br/>
+        LG: 6 cols<br/>
+        MD: 12 cols
+      </div>
+    </div>
+  </div>
+
+  ```html
+  <div className="container">
+    <div className="row gap-6">
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Ultra-wide responsive card</div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Ultra-wide responsive card</div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Ultra-wide responsive card</div>
+      <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Ultra-wide responsive card</div>
+    </div>
+  </div>
+  ```
+</div>
+
+---
+
+## 📏 Extended Spacing System
+
+### New Large Spacing Values
+
+| Class | Value | Use Case |
+|-------|-------|----------|
+| `.gap-28` | 112px | Extra large section spacing |
+| `.gap-32` | 128px | Maximum ultra-wide layouts |
+| `.gap-xxl-*` | Responsive | XXL-specific spacing |
+
+### Extended Spacing Examples
+
+<div className="demo-section">
+  <h4>Progressive Spacing</h4>
+  <div className="container">
+    <div className="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-md-12 gap-8">
+      <div className="col-4" style={{background: '#e1f5fe', padding: 16, textAlign: 'center', borderRadius: 8, minHeight: 120}}>
+        Gap increases<br/>with screen size
+      </div>
+      <div className="col-4" style={{background: '#e8f5e8', padding: 16, textAlign: 'center', borderRadius: 8, minHeight: 120}}>
+        XXL: 128px gap<br/>
+        XL: 96px gap<br/>
+        LG: 64px gap<br/>
+        MD: 48px gap<br/>
+        Default: 32px gap
+      </div>
+      <div className="col-4" style={{background: '#fff3e0', padding: 16, textAlign: 'center', borderRadius: 8, minHeight: 120}}>
+        Perfect for<br/>enterprise dashboards
+      </div>
+    </div>
+  </div>
+
+  ```html
+  <div className="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-md-12 gap-8">
+    <!-- Spacing automatically adjusts based on screen size -->
+  </div>
+  ```
+</div>
+
+---
+
+## 📐 Aspect Ratio Utilities
+
+### Available Ratios
+
+| Class | Ratio | Common Use |
+|-------|-------|------------|
+| `.aspect-square` | 1:1 | Profile images, icons |
+| `.aspect-video` | 16:9 | Videos, hero images |
+| `.aspect-4-3` | 4:3 | Traditional images |
+| `.aspect-3-2` | 3:2 | Photography |
+| `.aspect-21-9` | 21:9 | Ultra-wide content |
+| `.aspect-auto` | auto | Reset to natural ratio |
+
+### Aspect Ratio Examples
+
+<div className="demo-section">
+  <h4>Media Grid with Consistent Ratios</h4>
+  <div className="container">
+    <div className="row gap-4">
+      <div className="col-4">
+        <div className="aspect-video" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
+          16:9 Video
+        </div>
+      </div>
+      <div className="col-4">
+        <div className="aspect-square" style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
+          1:1 Square
+        </div>
+      </div>
+      <div className="col-4">
+        <div className="aspect-4-3" style={{background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold'}}>
+          4:3 Classic
+        </div>
+      </div>
+    </div>
+  </div>
+
+  ```html
+  <div className="row gap-4">
+    <div className="col-4">
+      <div className="aspect-video">16:9 Video Content</div>
+    </div>
+    <div className="col-4">
+      <div className="aspect-square">1:1 Square Content</div>
+    </div>
+    <div className="col-4">
+      <div className="aspect-4-3">4:3 Classic Content</div>
+    </div>
+  </div>
+  ```
+</div>
+
+---
+
+## 🎯 Subgrid Utilities (Future-Ready)
+
+### Perfect Alignment Across Components
+
+Subgrid allows child grids to inherit their parent's grid tracks for perfect alignment. **Note**: Currently supported in Firefox and Safari, coming to Chrome soon.
+
+<div className="demo-section">
+  <h4>Card Grid with Aligned Content</h4>
+  <div className="container">
+    <div className="row gap-6" style={{gridTemplateRows: 'auto 1fr auto'}}>
+      <div className="col-4 subgrid-rows" style={{display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16}}>
+        <h5 style={{margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center'}}>Header</h5>
+        <div style={{background: 'white', padding: 12, borderRadius: 4, flexGrow: 1}}>
+          Variable content length. This content can be short or long, but headers and footers will align perfectly across all cards.
+        </div>
+        <button style={{marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4}}>Action</button>
+      </div>
+      <div className="col-4 subgrid-rows" style={{display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16}}>
+        <h5 style={{margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center'}}>Header</h5>
+        <div style={{background: 'white', padding: 12, borderRadius: 4, flexGrow: 1}}>
+          Short content.
+        </div>
+        <button style={{marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4}}>Action</button>
+      </div>
+      <div className="col-4 subgrid-rows" style={{display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16}}>
+        <h5 style={{margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center'}}>Header</h5>
+        <div style={{background: 'white', padding: 12, borderRadius: 4, flexGrow: 1}}>
+          Medium length content that demonstrates how subgrid keeps headers and footers aligned.
+        </div>
+        <button style={{marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4}}>Action</button>
+      </div>
+    </div>
+  </div>
+
+  ```html
+  <!-- Parent grid with implicit rows -->
+  <div className="row gap-6" style={{gridTemplateRows: 'auto 1fr auto'}}>
+    <!-- Child grids inherit row structure via subgrid -->
+    <div className="col-4 subgrid-rows">
+      <h5>Header</h5>
+      <div>Variable content...</div>
+      <button>Action</button>
+    </div>
+    <div className="col-4 subgrid-rows">
+      <h5>Header</h5>
+      <div>Short content.</div>
+      <button>Action</button>
+    </div>
+    <div className="col-4 subgrid-rows">
+      <h5>Header</h5>
+      <div>Medium content...</div>
+      <button>Action</button>
+    </div>
+  </div>
+  ```
+
+  ### Subgrid Utility Classes
+
+  | Class | Function |
+  |-------|----------|
+  | `.subgrid-cols` | Inherit parent's column tracks |
+  | `.subgrid-rows` | Inherit parent's row tracks |
+  | `.subgrid-both` | Inherit both column and row tracks |
+  | `.subgrid-*-{bp}` | Responsive subgrid utilities |
+</div>
+
+---
+
+## 🏢 Enterprise Dashboard Examples
+
+### Complex Multi-Section Layout
+
+<div className="demo-section">
+  <h4>Enterprise Dashboard Layout</h4>
+  <div className="container">
+    {/* Header Section */}
+    <div className="row gap-4 gap-xxl-6" style={{marginBottom: 24}}>
+      <div className="col-xxl-8 col-xl-7 col-12">
+        <div style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', padding: 24, borderRadius: 12}}>
+          <h3 style={{margin: '0 0 8px 0', fontSize: '1.5rem'}}>Revenue Dashboard</h3>
+          <p style={{margin: 0, opacity: 0.9}}>Q4 2024 Performance Metrics</p>
+        </div>
+      </div>
+      <div className="col-xxl-4 col-xl-5 col-12">
+        <div className="row gap-2 gap-xxl-4" style={{height: '100%'}}>
+          <div className="col-6">
+            <div style={{background: '#e8f5e8', padding: 16, borderRadius: 8, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+              <div style={{fontSize: '1.75rem', fontWeight: 'bold', color: '#2e7d32'}}>$2.4M</div>
+              <div style={{fontSize: '0.875rem', color: '#666'}}>Revenue</div>
+            </div>
+          </div>
+          <div className="col-6">
+            <div style={{background: '#fff3e0', padding: 16, borderRadius: 8, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+              <div style={{fontSize: '1.75rem', fontWeight: 'bold', color: '#f57c00'}}>12%</div>
+              <div style={{fontSize: '0.875rem', color: '#666'}}>Growth</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Main Content */}
+    <div className="row gap-4 gap-xxl-8">
+      <div className="col-xxl-8 col-xl-7 col-12">
+        <div className="aspect-video" style={{background: '#f8f9fa', borderRadius: 8, border: '2px dashed #dee2e6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', color: '#6c757d'}}>
+          📊 Main Chart Area (16:9 Ratio)
+        </div>
+      </div>
+      <div className="col-xxl-4 col-xl-5 col-12">
+        <div className="row gap-xxl-6 gap-4">
+          <div className="col-12">
+            <div className="aspect-square" style={{background: '#e1f5fe', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: '#0277bd'}}>
+              📈 KPI Widget (1:1)
+            </div>
+          </div>
+          <div className="col-12">
+            <div className="aspect-4-3" style={{background: '#fce4ec', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: '#c2185b'}}>
+              📋 Summary (4:3)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  ```html
+  <div className="container">
+    <!-- Header with responsive metrics -->
+    <div className="row gap-4 gap-xxl-6">
+      <div className="col-xxl-8 col-xl-7 col-12">
+        <div>Revenue Dashboard</div>
+      </div>
+      <div className="col-xxl-4 col-xl-5 col-12">
+        <div className="row gap-2 gap-xxl-4">
+          <div className="col-6">$2.4M Revenue</div>
+          <div className="col-6">12% Growth</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main dashboard content -->
+    <div className="row gap-4 gap-xxl-8">
+      <div className="col-xxl-8 col-xl-7 col-12">
+        <div className="aspect-video">Main Chart</div>
+      </div>
+      <div className="col-xxl-4 col-xl-5 col-12">
+        <div className="row gap-xxl-6 gap-4">
+          <div className="col-12">
+            <div className="aspect-square">KPI Widget</div>
+          </div>
+          <div className="col-12">
+            <div className="aspect-4-3">Summary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  ```
+</div>
+
+---
+
+## 🎨 Progressive Enhancement Examples
+
+### Responsive Card Grid with All Features
+
+<div className="demo-section">
+  <h4>Product Showcase Grid</h4>
+  <div className="container">
+    <div className="row gap-xxl-8 gap-xl-6 gap-lg-4 gap-3">
+      {Array.from({length: 6}).map((_, i) => (
+        <div key={i} className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+          <div style={{background: 'white', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', transition: 'transform 0.2s ease'}}>
+            <div className="aspect-4-3" style={{background: `linear-gradient(135deg, hsl(${i * 60}, 70%, 85%) 0%, hsl(${i * 60 + 30}, 70%, 75%) 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'}}>
+              🎯
+            </div>
+            <div style={{padding: 16}}>
+              <h4 style={{margin: '0 0 8px 0', fontSize: '1.1rem'}}>Product {i + 1}</h4>
+              <p style={{margin: '0 0 12px 0', fontSize: '0.9rem', color: '#666', lineHeight: 1.4}}>
+                Responsive product card that adapts beautifully across all screen sizes with perfect aspect ratios.
+              </p>
+              <button style={{background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 6, fontSize: '0.875rem', cursor: 'pointer'}}>
+                Learn More
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  ```html
+  <div className="row gap-xxl-8 gap-xl-6 gap-lg-4 gap-3">
+    <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+      <div className="product-card">
+        <div className="aspect-4-3">Product Image</div>
+        <div className="card-content">
+          <h4>Product Name</h4>
+          <p>Description...</p>
+          <button>Learn More</button>
+        </div>
+      </div>
+    </div>
+    <!-- Repeat for more products -->
+  </div>
+  ```
+</div>
+
+---
+
+## 🚀 Migration Guide
+
+### Upgrading from Previous Version
+
+1. **XXL Breakpoint**: No breaking changes, just additional utilities
+2. **Aspect Ratios**: Replace custom CSS with utility classes
+3. **Subgrid**: Progressive enhancement - add when browser support is ready
+4. **Extended Spacing**: Use new `.gap-28` and `.gap-32` for large layouts
+
+### Browser Support
+
+| Feature | Chrome | Firefox | Safari | Edge |
+|---------|--------|---------|--------|------|
+| XXL Breakpoint | ✅ | ✅ | ✅ | ✅ |
+| Aspect Ratio | ✅ | ✅ | ✅ | ✅ |
+| Extended Spacing | ✅ | ✅ | ✅ | ✅ |
+| **Subgrid** | 🔄 Soon | ✅ | ✅ | 🔄 Soon |
+
+---
+
+## 📚 Best Practices
+
+### Performance Optimization
+- Use XXL breakpoint sparingly for ultra-wide specific layouts
+- Combine aspect-ratio with object-fit for images
+- Prefer CSS Grid over flexbox for main layout structure
+
+### Design Consistency  
+- Use consistent spacing scales across breakpoints
+- Maintain aspect ratios for visual rhythm
+- Plan for subgrid adoption in component libraries
+
+### Enterprise Considerations
+- XXL breakpoint perfect for financial dashboards and data visualization
+- Extended spacing improves readability on large monitors
+- Aspect ratios ensure consistent media presentation
+
+---
+
+*This enhanced grid system positions the Marsh Design System as a leader in enterprise-grade responsive design.* ✨

@@ -1,0 +1,1 @@
+export { RESGAssetListPage, default } from './RESGAssetListPage';

@@ -1,11 +1,13 @@
+import type { Preview, StoryFn, StoryContext } from '@storybook/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, darkTheme } from '../src/theme';
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import RoleVarsProvider from '../src/theme/RoleVarsProvider';
 // Load font faces and typography CSS variables for Storybook preview
 import '../src/index.css';
+import '../src/global.scss';
 import '../src/styles/_typography.scss';
-import '../src/styles/_grid.scss';
 
 export const globalTypes = {
   colorMode: {
@@ -25,21 +27,23 @@ export const globalTypes = {
 
 // Wrap all stories with MUI theme (light/dark) and a baseline background
 export const decorators = [
-  (Story: any, context: any) => {
+  (Story: StoryFn, context: StoryContext) => {
     const mode = context.globals?.colorMode ?? 'light';
     const activeTheme = mode === 'dark' ? darkTheme : theme;
     return (
       <ThemeProvider theme={activeTheme}>
         <CssBaseline />
         <div style={{ background: activeTheme.palette.background.default, minHeight: '100vh', padding: 24 }}>
-          <Story />
+          <RoleVarsProvider>
+            {Story({}, context)}
+          </RoleVarsProvider>
         </div>
       </ThemeProvider>
     );
   }
 ];
 
-export const parameters = {
+export const parameters: Preview['parameters'] = {
   controls: {
     matchers: {
       color: /(background|color)$/i,

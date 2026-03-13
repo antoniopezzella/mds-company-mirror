@@ -11,8 +11,14 @@ const sampleStats = [
 const meta: Meta<typeof Card> = {
   title: 'Components/Card',
   component: Card,
+  tags: ['autodocs'],
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
+    docs: {
+      description: {
+        component: 'Metric card displaying stats with trend indicators and insights. Built with role-based colors for consistent theming.'
+      }
+    }
   },
   args: {
     title: 'Portfolio Performance',

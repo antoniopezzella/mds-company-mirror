@@ -15,7 +15,9 @@ export function useRefreshOnAssetsReady() {
       if (cancelled) return;
       try {
         ScrollTrigger.refresh();
-      } catch {}
+      } catch (error) {
+        console.debug('Error refreshing ScrollTrigger:', error);
+      }
     };
 
     // Refresh after fonts load

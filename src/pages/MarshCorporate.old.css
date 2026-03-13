@@ -1,0 +1,337 @@
+/* Marsh Corporate Landing Page - Pixel Perfect Figma Implementation */
+
+.marsh-corporate {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #ffffff;
+}
+
+/* ========== HERO SECTION ========== */
+
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #001047; /* Figma: Dark blue fallback */
+}
+
+/* Background Video Container */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+/* Gradient Overlay - From Figma background_darkblue_stroke */
+.hero-bg-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 16, 71, 0.75) 0%,
+    rgba(0, 9, 69, 0.88) 100%
+  );
+  z-index: 1;
+}
+
+/* Hero Content - Figma: Frame 1825:52944 (row) and 1825:52946 (col content) */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px; /* From Figma Frame 1825:52946 */
+  max-width: 874px; /* Frame 1010105170 width */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Hero Title - Figma node: 1825:52948 "Marsh McLennan is now Marsh" */
+.hero-title {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-family-display, 'MMC_Display', -apple-system, sans-serif);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  width: 351px; /* From Figma */
+  height: 32px;
+}
+
+/* Hero Description - Figma node: 1825:52950 */
+.hero-description {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-family-body, 'Noto Sans', -apple-system, sans-serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 874px; /* Frame 1010105170 width */
+}
+
+/* Hero CTA Button - Figma node: 1825:52951 */
+.hero-cta {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background-color: #2d6ef3;
+  color: #ffffff;
+  font-family: var(--font-family-body, 'Noto Sans', -apple-system, sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 151px; /* From Figma */
+  height: 48px;
+  align-self: flex-start;
+}
+
+.hero-cta:hover {
+  background-color: #1e5ee3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 110, 243, 0.3);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+/* Marsh Logo - Figma node: 1894:592125 (positioned on right) */
+.marsh-logo {
+  position: absolute;
+  top: 83px; /* From Figma y position */
+  right: 275px; /* Calculated from x=1431 in 1920px viewport */
+  margin: 0;
+  padding: 0;
+  width: 214px;
+  height: 219px;
+}
+
+.marsh-logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Scroll Indicator - Figma node: 1253:15222 (icon) */
+.scroll-indicator {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #2d6ef3; /* Figma blue */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0px 8px 10px -6px rgba(0, 0, 0, 0.1),
+    0px 20px 25px -5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 3;
+  color: #ffffff;
+}
+
+.scroll-indicator:hover {
+  background-color: #1e5ee3;
+  transform: translateX(-50%) scale(1.08);
+  box-shadow:
+    0px 12px 14px -8px rgba(0, 0, 0, 0.15),
+    0px 24px 30px -6px rgba(0, 0, 0, 0.15);
+}
+
+.scroll-indicator:active {
+  transform: translateX(-50%) scale(1.02);
+}
+
+.scroll-indicator svg {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+/* Content Section */
+.content-section {
+  background-color: #f8f9fa;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== RESPONSIVE BREAKPOINTS ========== */
+/* Matching global.css breakpoints: 600px, 900px, 1200px, 1536px */
+
+/* Mobile - Base (< 600px) */
+@media (max-width: 599px) {
+  .hero-content {
+    padding: 24px;
+    max-width: 100%;
+  }
+
+  .hero-title {
+    font-size: 24px;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .marsh-logo {
+    position: static;
+    width: 120px;
+    height: 123px;
+    margin-top: 32px;
+    align-self: center;
+  }
+
+  .scroll-indicator {
+    width: 64px;
+    height: 64px;
+    bottom: 32px;
+  }
+
+  .scroll-indicator svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Small - sm (600px - 899px) */
+@media (min-width: 600px) and (max-width: 899px) {
+  .hero-content {
+    padding: 32px;
+  }
+
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .hero-description {
+    font-size: 17px;
+  }
+
+  .marsh-logo {
+    right: 40px;
+    width: 160px;
+    height: 164px;
+  }
+}
+
+/* Medium - md (900px - 1199px) */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .hero-content {
+    padding: 36px;
+  }
+
+  .hero-title {
+    font-size: 30px;
+  }
+
+  .marsh-logo {
+    right: 120px;
+    width: 180px;
+    height: 184px;
+  }
+}
+
+/* Large - lg (1200px - 1535px) */
+@media (min-width: 1200px) and (max-width: 1535px) {
+  .hero-content {
+    padding: 40px;
+  }
+
+  .marsh-logo {
+    right: 200px;
+  }
+}
+
+/* Extra Large - xl (1536px+) */
+@media (min-width: 1536px) {
+  .hero-content {
+    padding: 40px;
+  }
+
+  .marsh-logo {
+    right: 275px;
+  }
+}
+
+/* ========== ACCESSIBILITY & MOTION ========== */
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-indicator {
+    animation: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .hero-headline {
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+  }
+
+  .scroll-indicator {
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Print styles */
+@media print {
+  .hero-bg-video {
+    display: none;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
+  .hero-section {
+    min-height: auto;
+    page-break-after: always;
+  }
+}

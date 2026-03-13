@@ -1,0 +1,398 @@
+// ComponentGallery.module.scss
+// Live MDS component showcase section for the portfolio
+
+.gallerySection {
+  padding: 120px 0;
+  background: #ffffff;
+}
+
+.galleryInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.sectionEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0b4bff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background: #0b4bff;
+    flex-shrink: 0;
+  }
+}
+
+.sectionTitle {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #000f47;
+  margin: 0 0 16px;
+}
+
+.sectionDesc {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #595959;
+  max-width: 640px;
+  margin-bottom: 60px;
+}
+
+// ── Category tab nav ────────────────────────────────────────────────────
+.tabNav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid rgba(0, 15, 71, 0.1);
+  margin-bottom: 48px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: #767676;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: inherit;
+
+  &:hover {
+    color: #000f47;
+  }
+}
+
+.tabBtnActive {
+  @extend .tabBtn;
+  color: #000f47;
+  font-weight: 700;
+  border-bottom-color: #0b4bff;
+}
+
+.tabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: #f0f4ff;
+  color: #0b4bff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 100px;
+}
+
+// ── Component card wrapper ─────────────────────────────────────────────
+.componentCard {
+  background: #f7f8f8;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 15, 71, 0.06);
+}
+
+.componentCardHeader {
+  padding: 20px 24px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.componentCardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000f47;
+  margin-bottom: 4px;
+}
+
+.componentCardDesc {
+  font-size: 13px;
+  color: #767676;
+  line-height: 1.5;
+}
+
+.componentCardTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: #e8f0fe;
+  color: #0b4bff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.componentCardTagDark {
+  @extend .componentCardTag;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.componentCardBody {
+  padding: 24px;
+}
+
+.componentCardTokens {
+  padding: 12px 24px;
+  background: rgba(0, 15, 71, 0.03);
+  border-top: 1px solid rgba(0, 15, 71, 0.06);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.tokenChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 15, 71, 0.1);
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #595959;
+}
+
+.tokenDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tokensLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #767676;
+  margin-right: 4px;
+}
+
+// ── Tab panels ──────────────────────────────────────────────────────────
+.panelGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.panelGrid2 {
+  @extend .panelGrid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.panelGrid3 {
+  @extend .panelGrid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.panelGridFull {
+  @extend .panelGrid;
+  grid-template-columns: 1fr;
+}
+
+// ── Button demo ─────────────────────────────────────────────────────────
+.btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rowLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #767676;
+  margin-bottom: 10px;
+}
+
+// ── Chip demo ───────────────────────────────────────────────────────────
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ── Badge demo ──────────────────────────────────────────────────────────
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.badgeItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.badgeTarget {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #e8f0fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.badgeLabel {
+  font-size: 11px;
+  color: #767676;
+  text-align: center;
+}
+
+// ── Form demo ───────────────────────────────────────────────────────────
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Alert demo ──────────────────────────────────────────────────────────
+.alertStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ── Stepper wrapper ─────────────────────────────────────────────────────
+.stepperWrap {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+// ── Accordion wrapper ──────────────────────────────────────────────────
+.accordionWrap {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+// ── Dark card variant ──────────────────────────────────────────────────
+.componentCardDark {
+  @extend .componentCard;
+  background: #000f47;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.componentCardTitleLight {
+  @extend .componentCardTitle;
+  color: #ffffff;
+}
+
+.componentCardDescLight {
+  @extend .componentCardDesc;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.componentCardTokensDark {
+  @extend .componentCardTokens;
+  background: rgba(255, 255, 255, 0.04);
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.tokenChipDark {
+  @extend .tokenChip;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tokensLabelDark {
+  @extend .tokensLabel;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+// ── Table count pill ───────────────────────────────────────────────────
+.componentStatRow {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.componentStat {
+  text-align: center;
+}
+
+.componentStatNum {
+  font-size: 28px;
+  font-weight: 800;
+  color: #000f47;
+  letter-spacing: -0.03em;
+}
+
+.componentStatLabel {
+  font-size: 11px;
+  color: #767676;
+  letter-spacing: 0.04em;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────
+@media (max-width: 900px) {
+  .panelGrid2 {
+    grid-template-columns: 1fr;
+  }
+  .panelGrid3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .badgeGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .galleryInner {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .panelGrid3 {
+    grid-template-columns: 1fr;
+  }
+  .gallerySection {
+    padding: 80px 0;
+  }
+}

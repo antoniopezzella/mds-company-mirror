@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import '../styles/_grid.scss';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);

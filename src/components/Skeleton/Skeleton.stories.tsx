@@ -1,15 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSSkeleton from './Skeleton';
 import { Box, Card, CardContent, Stack } from '@mui/material';
 
 const meta = {
   title: 'Components/Skeleton',
   component: DSSkeleton,
+  tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {
       description: {
-        component: 'Design System Skeleton loading placeholder built on MUI. Shows loading states for content.'
+        component: 'Loading placeholder that mimics content structure. Use to indicate content is being fetched.'
       }
     }
   },

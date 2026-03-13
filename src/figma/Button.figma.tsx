@@ -26,8 +26,8 @@ figma.connect(
       type: figma.enum('Type', {
         Primary: 'primary',
         Secondary: 'secondary',
-        Tertiary: 'tertiary',
-        Text: 'text',
+        Outline: 'outline',
+        Ghost: 'ghost',
       }),
       size: figma.enum('Size', {
         Small: 'sm',

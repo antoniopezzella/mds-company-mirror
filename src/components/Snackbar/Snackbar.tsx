@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import MuiSnackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import type { SnackbarProps as MuiSnackbarProps } from '@mui/material/Snackbar';
@@ -122,36 +122,3 @@ const DSSnackbar: React.FC<DSSnackbarProps> = ({
 };
 
 export default DSSnackbar;
-
-// Hook for easier snackbar management
-export interface SnackbarState {
-  open: boolean;
-  message: string;
-  severity: SnackbarSeverity;
-}
-
-export function useSnackbar() {
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    message: '',
-    severity: 'info',
-  });
-
-  const showSnackbar = (message: string, severity: SnackbarSeverity = 'info') => {
-    setSnackbar({ open: true, message, severity });
-  };
-
-  const hideSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
-  };
-
-  return {
-    snackbar,
-    showSnackbar,
-    hideSnackbar,
-    showSuccess: (message: string) => showSnackbar(message, 'success'),
-    showError: (message: string) => showSnackbar(message, 'error'),
-    showWarning: (message: string) => showSnackbar(message, 'warning'),
-    showInfo: (message: string) => showSnackbar(message, 'info'),
-  };
-}

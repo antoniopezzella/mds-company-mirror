@@ -14,9 +14,13 @@ import Announcement from './sections/Announcement/Announcement';
 import TransformationTimeline from './sections/TransformationTimeline/TransformationTimeline';
 import BusinessPillars from './sections/BusinessPillars/BusinessPillars';
 import GlobalStats from './sections/GlobalStats/GlobalStats';
+import OurJourney from './sections/OurJourney/OurJourney';
+import FAQ from './sections/FAQ/FAQ';
+import ForInvestors from './sections/ForInvestors/ForInvestors';
 import LeadershipQuote from './sections/LeadershipQuote/LeadershipQuote';
 import ClientOutcomes from './sections/ClientOutcomes/ClientOutcomes';
 import NewsroomCTA from './sections/NewsroomCTA/NewsroomCTA';
+import Footer from './sections/Footer/Footer';
 import SectionErrorBoundary from './sections/ErrorBoundary';
 import { applyMotionDebugFromQuery } from './animations/motion/controller';
 
@@ -55,24 +59,29 @@ const MarshNewCharpterBeginsPage: React.FC = () => {
         <SectionErrorBoundary label="GlobalStats">
           <GlobalStats />
         </SectionErrorBoundary>
+        <SectionErrorBoundary label="OurJourney">
+          <OurJourney />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary label="FAQ">
+          <FAQ />
+        </SectionErrorBoundary>
         <SectionErrorBoundary label="LeadershipQuote">
           <LeadershipQuote />
         </SectionErrorBoundary>
         <SectionErrorBoundary label="ClientOutcomes">
           <ClientOutcomes />
         </SectionErrorBoundary>
+        <SectionErrorBoundary label="ForInvestors">
+          <ForInvestors />
+        </SectionErrorBoundary>
         <SectionErrorBoundary label="NewsroomCTA">
           <NewsroomCTA />
         </SectionErrorBoundary>
       </main>
 
-      <footer role="contentinfo" className={styles.footer}>
-        <Container maxWidth="xl">
-          <Box component="p" sx={{ m: 0, color: getRoleColor('text.secondary') }}>
-            © {new Date().getFullYear()} Marsh. All rights reserved.
-          </Box>
-        </Container>
-      </footer>
+      <SectionErrorBoundary label="Footer">
+        <Footer />
+      </SectionErrorBoundary>
     </>
   );
 };

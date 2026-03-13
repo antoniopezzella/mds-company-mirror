@@ -1,15 +1,30 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSTextField from './TextField';
-import { Stack } from '@mui/material';
+import { Stack, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const meta = {
   title: 'Components/TextField',
   component: DSTextField,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System TextField built on MUI. Supports all standard input types with role-based colors and validation states.'
+        component: `
+# TextField
+
+Standard text input component for gathering user information.
+
+## Features
+- ✅ **Validation States**: Default, Error, Success, and Warning tones.
+- ✅ **Adornments**: Support for leading and trailing icons via MUI \`InputProps\`.
+- ✅ **Typography**: Automatically syncs with Design System typography variables.
+- ✅ **Tokens**: Strictly uses role-based colors for focused, hovered, and disabled states.
+        `
       }
     }
   },
@@ -98,6 +113,71 @@ export const Disabled: Story = {
   },
 };
 
+export const WithAdornments: Story = {
+  args: {
+    label: 'Search',
+    placeholder: 'Search for assets...',
+    slotProps: {
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon fontSize="small" />
+          </InputAdornment>
+        ),
+      },
+    },
+  },
+};
+
+export const LoginField: Story = {
+  args: {
+    label: 'Email Address',
+    type: 'email',
+    placeholder: 'name@marsh.com',
+    slotProps: {
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+            <AccountCircle fontSize="small" />
+          </InputAdornment>
+        ),
+      },
+    },
+  },
+};
+
+export const PasswordField: Story = {
+  args: {
+    label: 'Password',
+    type: 'password',
+    value: '********',
+    slotProps: {
+      input: {
+        endAdornment: (
+          <InputAdornment position="end">
+            <VisibilityIcon fontSize="small" sx={{ cursor: 'pointer' }} />
+          </InputAdornment>
+        ),
+      },
+    },
+  },
+};
+
+export const FullWidth: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ width: '500px' }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    label: 'Company Name',
+    fullWidth: true,
+    placeholder: 'Enter your company name',
+  },
+};
+
 export const Password: Story = {
   args: {
     label: 'Password',
@@ -124,21 +204,6 @@ export const Multiline: Story = {
     placeholder: 'Enter a detailed description...',
     helperText: 'Maximum 500 characters',
   },
-};
-
-export const FullWidth: Story = {
-  args: {
-    label: 'Full Width Field',
-    fullWidth: true,
-    placeholder: 'This field spans the full width',
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: '400px' }}>
-        <Story />
-      </div>
-    ),
-  ],
 };
 
 export const Small: Story = {

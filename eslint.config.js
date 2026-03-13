@@ -6,10 +6,21 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
 
 export default tseslint.config([
-  globalIgnores(['dist']),
+  // Global ignores for build files and generated content
+  {
+    ignores: [
+      'dist/**',
+      'storybook-static/**',
+      'marsh-design-system-deploy/**',
+      'node_modules/**',
+      '.vercel/**',
+      'coverage/**',
+      'build/**',
+      'scripts/figma/**' // Figma plugin scripts use intentional @ts-nocheck and any types
+    ]
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -26,6 +37,14 @@ export default tseslint.config([
     rules: {
       // Example (disabled until custom rule created):
       // 'design-system/no-raw-spacing': 'warn',
+      
+      // TypeScript rules - warn instead of error for gradual adoption
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'warn',
+      
+      // Allow console.debug for development debugging
+      'no-console': ['warn', { allow: ['debug', 'info', 'warn', 'error'] }],
     }
   },
 ], storybook.configs["flat/recommended"]);

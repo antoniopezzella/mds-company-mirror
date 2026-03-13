@@ -1,0 +1,532 @@
+.marsh-corporate-new {
+  width: 100%;
+  overflow-x: hidden;
+
+  // Hero Section - 890px height per Figma
+  .hero-section {
+    position: relative;
+    height: 890px;
+    overflow: hidden;
+    background: #E3F2FD; // Light blue background
+
+    .hero-container {
+      max-width: 1920px;
+      height: 100%;
+      padding: 0;
+    }
+
+    .hero-row {
+      height: 100%;
+    }
+
+    .hero-text-col {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding-left: 48px;
+      padding-right: 24px;
+
+      @media (max-width: 992px) {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+
+    .hero-content {
+      max-width: 874px;
+      width: 100%;
+    }
+
+    .hero-text-content {
+      margin-bottom: 150px;
+    }
+
+    .hero-eyebrow {
+      font-size: 32px;
+      line-height: 32px;
+      font-weight: 400;
+      color: #1a1a1a;
+      margin-bottom: 48px;
+    }
+
+    .hero-headline {
+      font-size: 64px;
+      line-height: 72px;
+      font-weight: 400;
+      color: #1a1a1a;
+
+      @media (max-width: 1024px) {
+        font-size: 48px;
+        line-height: 56px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 36px;
+        line-height: 44px;
+      }
+    }
+
+    .hero-cta {
+      height: 48px;
+      width: 151px;
+      padding: 0;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: none;
+      border-radius: 4px;
+    }
+
+    .hero-video-col {
+      height: 100%;
+      padding: 0 !important;
+      overflow: hidden;
+      
+      @media (max-width: 960px) {
+        display: none;
+      }
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .scroll-icon {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a1a1a;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Brand Section - 732px height per Figma
+  .brand-section {
+    padding: 63px 0;
+    background: #ffffff;
+
+    .brand-title {
+      padding: 0 40px;
+      margin-bottom: 104px;
+
+      .section-headline {
+        font-size: 44px;
+        line-height: 52px;
+        font-weight: 400;
+        max-width: 1760px;
+        padding-left: 16px;
+      }
+    }
+
+    .brand-cards {
+      display: flex;
+      gap: 0;
+      padding: 0 40px;
+      justify-content: space-between;
+    }
+
+    .brand-card {
+      flex: 1;
+      max-width: 435.25px;
+      display: flex;
+      flex-direction: column;
+
+      .card-content {
+        flex: 1;
+        padding: 0 16px;
+      }
+
+      .card-logo {
+        margin-bottom: 40px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+      }
+
+      .card-text {
+        .card-title {
+          font-size: 24px;
+          line-height: 32px;
+          font-weight: 400;
+          margin-bottom: 24px;
+        }
+
+        .card-description {
+          font-size: 16px;
+          line-height: 24px;
+          color: #666666;
+        }
+      }
+
+      .card-button {
+        margin-top: auto;
+        height: 48px;
+        text-transform: none;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 4px;
+      }
+    }
+
+    .brand-divider {
+      border-color: #e0e0e0;
+      border-width: 1px;
+    }
+
+    @media (max-width: 1200px) {
+      .brand-cards {
+        flex-wrap: wrap;
+        gap: 32px;
+      }
+
+      .brand-card {
+        max-width: 100%;
+        flex: 1 1 calc(50% - 16px);
+      }
+
+      .brand-divider {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .brand-card {
+        flex: 1 1 100%;
+      }
+    }
+  }
+
+  // Map Section - 368px height per Figma
+  .map-section {
+    padding: 0;
+    background: #f5f5f5;
+    height: 368px;
+    display: flex;
+    align-items: center;
+
+    .map-intro {
+      font-size: 18px;
+      line-height: 24px;
+      text-align: center;
+      max-width: 1142px;
+      margin: 0 auto 32px;
+      padding: 0 24px;
+    }
+
+    .map-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 1142px;
+      margin: 0 auto;
+      padding: 0 24px;
+      gap: 140px;
+    }
+
+    .stat-item {
+      text-align: center;
+
+      .stat-number {
+        font-size: 56px;
+        line-height: 56px;
+        font-weight: 700;
+        margin-bottom: 35px;
+      }
+
+      .stat-label {
+        font-size: 16px;
+        line-height: 20px;
+        color: #333333;
+      }
+    }
+
+    @media (max-width: 768px) {
+      height: auto;
+      padding: 64px 0;
+
+      .map-stats {
+        flex-direction: column;
+        gap: 40px;
+      }
+    }
+  }
+
+  // Press Section - 710px height per Figma
+  .press-section {
+    padding: 96px 0;
+    background: #ffffff;
+
+    .press-header {
+      margin-bottom: 102px;
+
+      .section-eyebrow {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 16px;
+        color: #333333;
+      }
+
+      .section-headline {
+        font-size: 44px;
+        line-height: 44px;
+        font-weight: 400;
+        max-width: 384px;
+      }
+    }
+
+    .press-cards {
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+    }
+
+    .press-card {
+      flex: 1;
+      max-width: 380.67px;
+
+      .card-image {
+        width: 100%;
+        height: 321px;
+        border-radius: 0;
+        overflow: hidden;
+        margin-bottom: 16px;
+        background: #e0e0e0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover img {
+          transform: scale(1.05);
+        }
+      }
+
+      .card-title {
+        font-size: 20px;
+        line-height: 20px;
+        font-weight: 400;
+        max-height: 80px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .press-cards {
+        flex-wrap: wrap;
+      }
+
+      .press-card {
+        flex: 1 1 calc(50% - 12px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .press-cards {
+        flex-direction: column;
+      }
+
+      .press-card {
+        max-width: 100%;
+      }
+    }
+  }
+
+  // FAQ Section - 624px height per Figma
+  .faq-section {
+    padding: 56px 0;
+    background: #f5f5f5;
+
+    .faq-header {
+      max-width: 1190px;
+      margin: 0 auto 24px;
+
+      .section-headline {
+        font-size: 40px;
+        line-height: 48px;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+
+      .section-description {
+        font-size: 16px;
+        line-height: 24px;
+        opacity: 0.8;
+      }
+    }
+
+    .faq-list {
+      max-width: 1190px;
+      margin: 0 auto;
+
+      .faq-item {
+        background: #ffffff;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        &:before {
+          display: none;
+        }
+
+        .MuiAccordionSummary-root {
+          padding: 24px 32px;
+        }
+
+        .MuiAccordionDetails-root {
+          padding: 0 32px 32px;
+        }
+      }
+    }
+  }
+
+  // Connect Section - 560px height per Figma
+  .connect-section {
+    padding: 61px 0;
+    background: #f5f5f5;
+
+    .connect-row {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .connect-content {
+      flex: 1;
+      max-width: 583px;
+      padding: 123px 0 123px 34px;
+      position: relative;
+
+      .accent-bar {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        width: 2px;
+        height: 100%;
+        background: #0066cc;
+        display: none; // Hidden per Figma metadata
+      }
+
+      .connect-headline {
+        font-size: 32px;
+        line-height: 32px;
+        font-weight: 400;
+        margin-bottom: 24px;
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -8px;
+          width: 100px;
+          height: 8px;
+          background: #0066cc;
+          border-radius: 4px;
+        }
+      }
+
+      .connect-description {
+        font-size: 16px;
+        line-height: 24px;
+        color: #666666;
+        margin-top: 32px;
+        margin-bottom: 48px;
+        max-width: 398px;
+      }
+
+      .connect-button {
+        height: 48px;
+        padding: 0 32px;
+        text-transform: none;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 4px;
+      }
+    }
+
+    .connect-image {
+      flex: 1;
+      max-width: 583px;
+      height: 438px;
+      border-radius: 0;
+      overflow: hidden;
+      background: #e0e0e0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .connect-row {
+        flex-direction: column;
+      }
+
+      .connect-content {
+        max-width: 100%;
+        padding: 48px 24px;
+      }
+
+      .connect-image {
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .marsh-corporate-new {
+    .hero-section {
+      height: auto;
+      min-height: 600px;
+
+      .hero-col {
+        padding-top: 100px;
+      }
+
+      .hero-background {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .brand-section,
+    .press-section,
+    .faq-section,
+    .connect-section {
+      padding: 64px 0;
+    }
+
+    .brand-section .brand-title .section-headline,
+    .press-section .press-header .section-headline,
+    .faq-section .faq-header .section-headline,
+    .connect-section .connect-content .connect-headline {
+      font-size: 28px;
+      line-height: 36px;
+    }
+  }
+}

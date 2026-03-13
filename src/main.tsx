@@ -2,24 +2,37 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { theme } from './theme';
+import { theme, darkTheme } from './theme';
 import RoleVarsProvider from './theme/RoleVarsProvider';
+import { ThemeModeProvider, useThemeMode } from './theme/ThemeModeContext';
 import Router from './Router';
 import RootErrorBoundary from './RootErrorBoundary';
+import { initRUM } from './utils/rum';
 import './index.css'
-import './styles/_grid.scss'
-import './styles/_typography.scss'
-// Tailwind removed
+import './global.scss'
+import { useEffect } from 'react';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ThemeProvider theme={theme}>
+// Initialize Real User Monitoring
+initRUM();
+
+function ThemedApp() {
+  const { mode } = useThemeMode();
+  return (
+    <ThemeProvider theme={mode === 'dark' ? darkTheme : theme}>
       <CssBaseline />
       <RootErrorBoundary>
-        <RoleVarsProvider>
+        <RoleVarsProvider mode={mode}>
           <Router />
         </RoleVarsProvider>
       </RootErrorBoundary>
     </ThemeProvider>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ThemeModeProvider>
+      <ThemedApp />
+    </ThemeModeProvider>
   </StrictMode>,
 )

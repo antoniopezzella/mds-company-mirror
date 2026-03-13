@@ -4,15 +4,62 @@
 
 **🌐 Live Storybook:** Deploy for free with [Netlify](https://netlify.com) or [Vercel](https://vercel.com)
 
-> Interactive component library and design system documentation. Auto-deploys on every push to `main`.
+> Interactive component library and design system documentation with **AI-powered insurance assistant**. Auto-deploys on every push to `main`.
 
 ---
 
-## 🚀 Quick Links
+## 🤖 NEW: AI Assistant Integration
+
+The MDS Platform now includes a **production-ready AI assistant** for insurance queries! 
+
+**Features:**
+- 🧠 RAG (Retrieval Augmented Generation) with 68,000+ words of insurance content
+- 💬 Conversation memory and context-aware follow-ups
+- 🔒 Enterprise security (input validation, audit logging, rate limiting)
+- 📊 OpenTelemetry/Jaeger tracing for observability
+- ✅ Automated evaluation suite for quality assurance
+
+**Quick Start:**
+```bash
+# 1. Install gateway dependencies
+cd apps/gateway && npm install && cd ../..
+
+# 2. Set up your OpenAI API key
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY
+
+# 3. Run both frontend and AI backend
+npm run dev:all
+```
+
+**Learn more:** [apps/gateway/README.md](./apps/gateway/README.md)
+
+---
+
+## � Documentation
+
+### For Builders
+*   [**Developer Get Started**](./docs/get-started/DEVELOPERS.md): Setup, installation, and component usage.
+*   [**Contributing Guide**](./docs/CONTRIBUTING.md): How to build, test, and submit PRs.
+*   [**Token System**](./docs/foundations/TOKENS.md): Deep dive into Primitives, Semantics, and Roles.
+*   [**Design System Integration**](./docs/DESIGN_SYSTEM_INTEGRATION_GUIDE.md): Connecting components to legacy apps.
+
+### For Designers
+*   [**Designer Get Started**](./docs/get-started/DESIGNERS.md): Figma workflow and Code Connect.
+*   [**Figma Code Connect**](./docs/FIGMA_CODE_CONNECT_GUIDE.md): Detailed setup for Dev Mode.
+
+### Roadmaps & Status
+*   [**Component Coverage**](./COMPONENT_COVERAGE.md): Current status of specific components.
+*   [**Documentation Roadmap**](./docs/ROADMAP_IMPROVEMENTS.md): Our plan for improving these docs.
+
+---
+
+## �🚀 Quick Links
 
 - **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
 - **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy to Netlify/Vercel (100% free)
 - **Local Storybook:** `npm run storybook` → http://localhost:6006
+- **AI Gateway:** [apps/gateway/README.md](./apps/gateway/README.md) - AI Assistant backend
 
 ---
 

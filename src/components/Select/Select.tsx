@@ -49,39 +49,39 @@ const DSSelect: React.FC<DSSelectProps> = ({
   sx,
   ...rest
 }) => {
-  // Determine error state from tone or explicit error prop
+  // Determine validation states
   const isError = error || tone === 'error';
   const isSuccess = tone === 'success';
   const isWarning = tone === 'warning';
 
-  // Get role-based colors
-  const focusBorderColor = getRoleColor('focus.ring');
-  const errorColor = getRoleColor('status.danger.fg');
-  const successColor = getRoleColor('status.success.fg');
-  const warningColor = getRoleColor('status.warning.fg');
-  const borderColor = getRoleColor('border.default');
-  const textColor = getRoleColor('text.primary');
-  const placeholderColor = getRoleColor('text.secondary');
+  // State color for borders and labels
+  const stateColor = isError 
+    ? getRoleColor('status.danger.fg') 
+    : isSuccess 
+      ? getRoleColor('status.success.fg') 
+      : isWarning 
+        ? getRoleColor('status.warning.fg') 
+        : null;
 
-  // Build custom styles
+  // Build custom styles for the select component
   const customSx = {
-    color: textColor,
-    fontFamily: 'var(--typo-body-font-family)',
-    fontSize: 'var(--typo-body-font-size)',
-    lineHeight: 'var(--typo-body-line-height)',
+    color: getRoleColor('text.primary'),
+    fontFamily: 'var(--typo-body1-font-family)',
+    fontSize: 'var(--typo-body1-font-size)',
+    lineHeight: 'var(--typo-body1-line-height)',
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: isError ? errorColor : isSuccess ? successColor : isWarning ? warningColor : borderColor,
+      borderColor: stateColor || getRoleColor('border.default'),
       borderWidth: '1px',
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: isError ? errorColor : isSuccess ? successColor : isWarning ? warningColor : getRoleColor('border.strong'),
+      borderColor: stateColor || getRoleColor('border.strong'),
     },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: isError ? errorColor : focusBorderColor,
+      borderColor: stateColor || getRoleColor('focus.ring'),
       borderWidth: '2px',
     },
     '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-      borderColor: borderColor,
+      borderColor: getRoleColor('border.default'),
       opacity: 0.5,
     },
     ...sx,
@@ -89,16 +89,22 @@ const DSSelect: React.FC<DSSelectProps> = ({
 
   return (
     <FormControl variant={variant} error={isError} fullWidth={fullWidth} size={size}>
-      {label && <InputLabel sx={{
-        color: placeholderColor,
-        fontFamily: 'var(--typo-body-font-family)',
-        '&.Mui-focused': {
-          color: isError ? errorColor : focusBorderColor,
-        },
-        '&.Mui-error': {
-          color: errorColor,
-        },
-      }}>{label}</InputLabel>}
+      {label && (
+        <InputLabel sx={{
+          color: getRoleColor('text.secondary'),
+          fontFamily: 'var(--typo-body1-font-family)',
+          '&.Mui-focused': {
+            color: stateColor || getRoleColor('focus.ring'),
+          },
+          '&.Mui-error, &.Mui-focused.Mui-error': {
+            color: getRoleColor('status.danger.fg'),
+          },
+          ...(isSuccess && { color: `${getRoleColor('status.success.fg')} !important` }),
+          ...(isWarning && { color: `${getRoleColor('status.warning.fg')} !important` }),
+        }}>
+          {label}
+        </InputLabel>
+      )}
       <MuiSelect
         label={label}
         sx={customSx}
@@ -110,13 +116,15 @@ const DSSelect: React.FC<DSSelectProps> = ({
             value={option.value}
             disabled={option.disabled}
             sx={{
-              color: textColor,
-              fontFamily: 'var(--typo-body-font-family)',
+              color: getRoleColor('text.primary'),
+              fontFamily: 'var(--typo-body1-font-family)',
+              fontSize: 'var(--typo-body1-font-size)',
               '&:hover': {
                 backgroundColor: getRoleColor('surface.subtle'),
               },
               '&.Mui-selected': {
                 backgroundColor: getRoleColor('surface.accent'),
+                color: getRoleColor('text.onAccent'),
                 '&:hover': {
                   backgroundColor: getRoleColor('surface.accent'),
                   opacity: 0.9,
@@ -132,7 +140,15 @@ const DSSelect: React.FC<DSSelectProps> = ({
         <FormHelperText sx={{
           fontFamily: 'var(--typo-caption-font-family)',
           fontSize: 'var(--typo-caption-font-size)',
-          color: isError ? errorColor : placeholderColor,
+          lineHeight: 'var(--typo-caption-line-height)',
+          margin: (theme: any) => theme.spacing(1, 0, 0, 0),
+          color: isError 
+            ? getRoleColor('status.danger.fg') 
+            : isSuccess 
+              ? getRoleColor('status.success.fg') 
+              : isWarning 
+                ? getRoleColor('status.warning.fg') 
+                : getRoleColor('text.secondary'),
         }}>
           {helperText}
         </FormHelperText>

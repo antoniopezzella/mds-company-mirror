@@ -1,0 +1,195 @@
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.4;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) rotate(10deg);
+  }
+  70% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes attention {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 20% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  15%, 25% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  30% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bubble-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes label-glow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(255, 191, 13, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 191, 13, 0.6), 0 0 25px rgba(255, 191, 13, 0.3);
+  }
+}
+
+.ai-agent-bot {
+  position: fixed;
+  z-index: 99999;
+  pointer-events: auto;
+  animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  &__trigger {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.03), 
+                0px 3px 3px 0px rgba(0, 0, 0, 0.06), 
+                0px 20px 15px 0px rgba(0, 0, 0, 0.02), 
+                0px 35px 30px 0px rgba(0, 0, 0, 0.07), 
+                0px 100px 80px 0px rgba(0, 0, 0, 0.09);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    svg {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &__logo {
+    width: 32px;
+    height: 33px;
+    filter: invert(1);
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__bubble {
+    position: absolute;
+    right: 76px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ceecff; // Sky Blue / surface-secondary
+    border-radius: 8px;
+    padding: 4px 12px;
+    box-shadow: 0px 10px 5px 0px rgba(0, 0, 0, 0.03), 
+                0px 3px 3px 3px rgba(0, 0, 0, 0.06), 
+                0px 20px 15px 0px rgba(0, 0, 0, 0.02), 
+                0px 35px 30px 0px rgba(0, 0, 0, 0.07), 
+                0px 100px 80px 0px rgba(0, 0, 0, 0.09);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99998;
+    animation: bubble-fade-in 0.5s ease;
+
+    span {
+      color: #000f47; // Midnight Blue / text-primary
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+  &__pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    pointer-events: none;
+  }
+
+  &__tooltip {
+    position: absolute;
+    right: 110px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 500;
+    pointer-events: none;
+    animation: fadeIn 0.2s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid rgba(0, 0, 0, 0.9);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+  }
+
+  &--open {
+    .ai-agent-bot__pulse {
+      display: none;
+    }
+  }
+}

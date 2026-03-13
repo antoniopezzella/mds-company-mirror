@@ -1,0 +1,36 @@
+@use '../styles/grid' as *;
+
+.marsh-corporate-future-state {
+  // Container for the entire page
+  min-height: 100vh;
+
+  // Section spacing
+  section + section {
+    margin-top: 0; // Sections handle their own padding
+  }
+
+  // Talk to experts section
+  .talk-experts-section {
+    min-height: 420px; // From Figma
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      transition: opacity 0.2s ease, transform 0.1s ease;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 64px 24px;
+      min-height: auto;
+    }
+  }
+}

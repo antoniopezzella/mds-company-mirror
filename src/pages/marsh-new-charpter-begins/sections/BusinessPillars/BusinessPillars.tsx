@@ -8,7 +8,6 @@ import { useReducedMotion } from '../../animations/hooks/useReducedMotion';
 import { useScrollTrigger } from '../../animations/hooks/useScrollTrigger';
 import styles from '../../index.module.scss';
 import { content } from '../../data/content';
-import '../../../../styles/_grid.scss';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -31,7 +30,7 @@ const BusinessPillars: React.FC = () => {
           mobile: '(max-width: 899px)',
           desktop: '(min-width: 900px)',
         }, (context) => {
-          const { mobile } = context.conditions as any;
+          const { mobile } = context.conditions as { mobile?: boolean; desktop?: boolean };
           
           // Card reveal with grid-aware stagger
           ScrollTrigger.batch(cards as unknown as Element[], {

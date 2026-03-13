@@ -1,13 +1,17 @@
 import React from 'react';
 import { tokens } from '../../tokens';
 
-// Group tokens heuristically by semantic clusters (blue, gray, accent, status)
+// Group tokens by palette — matches Figma "Primitive Colors" collection
 const groupOrder: Array<{ title: string; match: (name: string) => boolean }> = [
-  { title: 'Blues', match: n => n.startsWith('blue') && !n.startsWith('blueGray') },
-  { title: 'Blue Gray', match: n => n.startsWith('blueGray') },
-  { title: 'Grays', match: n => n.startsWith('gray') },
-  { title: 'Amber', match: n => n.startsWith('amber') },
-  { title: 'Accents', match: n => /(green|yellow|crimson|teal|turquoise)/.test(n) },
+  { title: 'Blue',    match: n => n.startsWith('blue') },
+  { title: 'Gold',    match: n => n.startsWith('gold') },
+  { title: 'Green',   match: n => n.startsWith('green') },
+  { title: 'Red',     match: n => n.startsWith('red') },
+  { title: 'Purple',  match: n => n.startsWith('purple') },
+  { title: 'Gray',    match: n => n.startsWith('gray') },
+  { title: 'Neutral', match: n => n.startsWith('neutral') },
+  { title: 'Status',  match: n => n.startsWith('status') },
+  { title: 'Shades',  match: n => n.startsWith('shades') },
 ];
 
 export const ColorSwatches: React.FC = () => {

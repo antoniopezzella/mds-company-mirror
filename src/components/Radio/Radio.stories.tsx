@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSRadio, { DSRadioGroup } from './Radio';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
@@ -6,11 +6,12 @@ import { useState } from 'react';
 const meta = {
   title: 'Components/Radio',
   component: DSRadio,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Radio button built on MUI. Uses role-based colors for single-choice selection.'
+        component: 'Single selection control for mutually exclusive options. Supports grouping, disabled states, and keyboard navigation.'
       }
     }
   },

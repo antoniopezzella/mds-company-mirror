@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSCheckbox, { DSCheckboxGroup } from './Checkbox';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
@@ -6,11 +6,12 @@ import { useState } from 'react';
 const meta = {
   title: 'Components/Checkbox',
   component: DSCheckbox,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Checkbox built on MUI. Uses role-based colors with support for checked, unchecked, and indeterminate states.'
+        component: 'Selection control for multiple choices. Supports checked, indeterminate, and disabled states with keyboard navigation.'
       }
     }
   },

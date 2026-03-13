@@ -8,6 +8,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { getRoleColor } from '../../theme/roles';
 
 export type ModalSize = 'Small' | 'Medium' | 'Large' | 'FullScreen';
 
@@ -19,6 +20,7 @@ export interface ModalProps {
   hasScrollbar?: boolean;
   size?: ModalSize;
   title?: string;
+  description?: string;
   children?: React.ReactNode;
   footer?: React.ReactNode;
 }
@@ -38,6 +40,7 @@ const Modal: React.FC<ModalProps> = ({
   hasScrollbar = true,
   size = 'Medium',
   title,
+  description,
   children,
   footer,
 }) => {
@@ -49,24 +52,53 @@ const Modal: React.FC<ModalProps> = ({
       maxWidth={sizeMap[size]}
       fullWidth
       scroll={hasScrollbar ? 'paper' : 'body'}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
+      aria-labelledby={title ? 'modal-title' : undefined}
+      aria-describedby={description ? 'modal-description' : undefined}
     >
       {hasHeader && (
-        <DialogTitle id="modal-title" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+        <DialogTitle
+          id="modal-title"
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            p: (theme) => theme.spacing(3),
+            color: getRoleColor('text.primary'),
+          }}
+        >
+          <Typography variant="h6" component="div">
             {title}
           </Typography>
-          <IconButton aria-label="close" onClick={onClose} sx={{ color: (theme) => theme.palette.grey[500] }}>
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              color: getRoleColor('text.secondary'),
+              '&:hover': {
+                color: getRoleColor('interactive.primary.hover'),
+              }
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
       )}
-      <DialogContent dividers={hasHeader}>
+      <DialogContent
+        dividers={hasHeader}
+        sx={{
+          p: (theme) => theme.spacing(3),
+          ...(description && { pt: 0 }), // Adjust padding if description is present as a hidden label
+        }}
+      >
+        {description && (
+          <Typography id="modal-description" sx={{ display: 'none' }}>
+            {description}
+          </Typography>
+        )}
         {children}
       </DialogContent>
       {hasFooter && footer && (
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={{ p: (theme) => theme.spacing(2), px: (theme) => theme.spacing(3) }}>
           {footer}
         </DialogActions>
       )}

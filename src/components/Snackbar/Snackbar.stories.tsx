@@ -1,15 +1,17 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import DSSnackbar, { useSnackbar } from './Snackbar';
+import { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import DSSnackbar from './Snackbar';
 import { Button, Stack } from '@mui/material';
 
 const meta = {
   title: 'Components/Snackbar',
   component: DSSnackbar,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Snackbar/Toast notification built on MUI. Supports auto-dismiss with customizable duration and position.'
+        component: 'Brief notification message that appears at screen edge. Use for non-critical feedback with optional actions.'
       }
     }
   },
@@ -41,8 +43,10 @@ export const Info: Story = {
 
 export const Success: Story = {
   args: {
-    severity: 'success',
+    severity: "info",
     message: 'Operation completed successfully!',
+    horizontal: "right",
+    actionText: "test\n"
   },
 };
 
@@ -106,7 +110,21 @@ export const LongDuration: Story = {
 
 export const InteractiveExample: Story = {
   render: () => {
-    const { snackbar, hideSnackbar, showSuccess, showError, showWarning, showInfo } = useSnackbar();
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const [severity, setSeverity] = useState<'success' | 'error' | 'warning' | 'info'>('info');
+
+    const show = (msg: string, sev: 'success' | 'error' | 'warning' | 'info') => {
+      setSeverity(sev);
+      setMessage(msg);
+      setOpen(true);
+    };
+
+    const showSuccess = (msg: string) => show(msg, 'success');
+    const showError = (msg: string) => show(msg, 'error');
+    const showWarning = (msg: string) => show(msg, 'warning');
+    const showInfo = (msg: string) => show(msg, 'info');
+    const hideSnackbar = () => setOpen(false);
 
     return (
       <Stack spacing={2}>
@@ -124,9 +142,9 @@ export const InteractiveExample: Story = {
         </Button>
 
         <DSSnackbar
-          open={snackbar.open}
-          message={snackbar.message}
-          severity={snackbar.severity}
+          open={open}
+          message={message}
+          severity={severity}
           onClose={hideSnackbar}
         />
       </Stack>
@@ -136,7 +154,19 @@ export const InteractiveExample: Story = {
 
 export const WithActionExample: Story = {
   render: () => {
-    const { snackbar, hideSnackbar, showSnackbar } = useSnackbar();
+    const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: '',
+      severity: 'info' as 'success' | 'error' | 'warning' | 'info',
+    });
+
+    const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
+      setSnackbar({ open: true, message, severity });
+    };
+
+    const hideSnackbar = () => {
+      setSnackbar(prev => ({ ...prev, open: false }));
+    };
 
     const handleUpload = () => {
       showSnackbar('File uploaded successfully', 'success');

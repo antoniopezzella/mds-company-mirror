@@ -8,7 +8,20 @@ export const meta = { title: 'Foundations/Colors' };
 
 # Colors
 
-## Semantic Role Colors
+Color in Marsh is layered:
+- **Primitives** in `tokens.ts` (brand palettes, neutrals, shades)
+- **Semantic colors** in `semantic-tokens.ts` (brand, text, surfaces, status)
+- **Roles** in `theme/roles.ts` (the only API components consume)
+
+This page focuses on how those show up in product UIs.
+
+---
+
+## Role Colors (implementation API)
+
+Roles are the contract components use. They are grouped here by intent.
+
+### Text & Surfaces
 
 <TokenTable
   columns={[
@@ -17,23 +30,69 @@ export const meta = { title: 'Foundations/Colors' };
     { key: 'light', label: 'Light', width: 110 },
     { key: 'dark', label: 'Dark', width: 110 }
   ]}
-  rows={listRoles().map(r => ({
-    role: r.role,
-    description: r.description,
-    light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
-    dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
-  }))}
-  caption="All semantic roles with their mapped color values for light and dark modes."
+  rows={listRoles()
+    .filter(r => r.role.startsWith('text.') || r.role.startsWith('surface.') || r.role.startsWith('border.') || r.role.startsWith('focus.'))
+    .map(r => ({
+      role: r.role,
+      description: r.description,
+      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
+      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
+    }))}
+  caption="Text, surface, border and focus roles with light/dark resolved values."
 />
 
-## Accessibility Status
+### Interactive roles
+
+<TokenTable
+  columns={[
+    { key: 'role', label: 'Role' },
+    { key: 'description', label: 'Intent' },
+    { key: 'light', label: 'Light', width: 110 },
+    { key: 'dark', label: 'Dark', width: 110 }
+  ]}
+  rows={listRoles()
+    .filter(r => r.role.startsWith('interactive.'))
+    .map(r => ({
+      role: r.role,
+      description: r.description,
+      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
+      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
+    }))}
+  caption="Interactive roles for primary, secondary and danger actions."
+/>
+
+### Status roles
+
+<TokenTable
+  columns={[
+    { key: 'role', label: 'Role' },
+    { key: 'description', label: 'Intent' },
+    { key: 'light', label: 'Light', width: 110 },
+    { key: 'dark', label: 'Dark', width: 110 }
+  ]}
+  rows={listRoles()
+    .filter(r => r.role.startsWith('status.'))
+    .map(r => ({
+      role: r.role,
+      description: r.description,
+      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
+      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
+    }))}
+  caption="Status roles for success, warning, danger and info."
+/>
+
+---
+
+## Accessibility & Contrast
 
 <ContrastStatus />
 
-## Marsh Primitive Color Palettes
+<ContrastMatrix />
+
+---
+
+## Primitive Palettes
+
+Primitive tokens are the raw palette values synced from Figma. Components should not consume them directly, but they are useful for brand and theming work.
 
 <ColorSwatches />
-
-## Color Contrast Matrix
-
-<ContrastMatrix />

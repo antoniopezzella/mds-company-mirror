@@ -42,9 +42,21 @@ export function useLenisSmooth() {
     requestAnimationFrame((t) => lenis.raf(t));
 
     return () => {
-      try { lenis.off('scroll', onScroll); } catch {}
-      try { gsap.ticker.remove(ticker); } catch {}
-      try { lenis.destroy(); } catch {}
+      try { 
+        lenis.off('scroll', onScroll); 
+      } catch (error) {
+        console.debug('Error removing scroll listener:', error);
+      }
+      try { 
+        gsap.ticker.remove(ticker); 
+      } catch (error) {
+        console.debug('Error removing GSAP ticker:', error);
+      }
+      try { 
+        lenis.destroy(); 
+      } catch (error) {
+        console.debug('Error destroying Lenis:', error);
+      }
       lenisRef.current = null;
     };
   }, [prefersReduced]);

@@ -7,7 +7,6 @@ import { getRoleColor } from '../../../../theme/roles';
 import { useReducedMotion } from '../../animations/hooks/useReducedMotion';
 import styles from '../../index.module.scss';
 import { content } from '../../data/content';
-import '../../../../styles/_grid.scss';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -29,6 +28,8 @@ const ClientOutcomes: React.FC = () => {
       mm.add("(max-width: 768px)", () => {
         ScrollTrigger.batch(".outcome-card", {
           onEnter: (elements) => {
+            // Set willChange for performance
+            gsap.set(elements, { willChange: 'transform, opacity' });
             gsap.fromTo(elements, 
               {
                 opacity: 0,
@@ -41,7 +42,11 @@ const ClientOutcomes: React.FC = () => {
                 scale: 1,
                 duration: 0.6,
                 stagger: 0.15,
-                ease: "power2.out"
+                ease: "power2.out",
+                onComplete: () => {
+                  // Clear willChange after animation
+                  gsap.set(elements, { willChange: 'auto' });
+                }
               }
             );
           },

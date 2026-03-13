@@ -1,24 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getRoleColor } from '../../../../theme/roles';
 import { useReducedMotion } from '../../animations/hooks/useReducedMotion';
-import { useScrollTrigger } from '../../animations/hooks/useScrollTrigger';
 import styles from '../../index.module.scss';
 import { content } from '../../data/content';
 
 const NewsroomCTA: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReduced = useReducedMotion();
-
-  useScrollTrigger({
-    scope: sectionRef as React.RefObject<HTMLElement>,
-    disabled: prefersReduced,
-    setup: () => {
-      // Skeleton: CTA accent and background change on approach
-    },
-  });
 
   return (
     <section ref={sectionRef} className={styles.section} aria-labelledby="newsroom-heading" style={{ background: getRoleColor('surface.accent') }}>

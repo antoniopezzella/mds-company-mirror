@@ -6,6 +6,7 @@ const path = require('path');
 
 const FONT_FAMILIES = [
   'MMC Display',
+  'Marsh Serif',
   'Noto Sans',
 ];
 const SRC_DIR = path.join(__dirname, '../src/components');

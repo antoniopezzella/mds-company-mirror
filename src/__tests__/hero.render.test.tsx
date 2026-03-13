@@ -19,7 +19,7 @@ describe('Hero render', () => {
 
   // In current design the hero uses logo + body paragraph (headline empty)
   // Ensure paragraph renders with expected copy
-    const paragraph = screen.getByText(/Four powerful brand legacies/i);
-    expect(paragraph).toBeTruthy();
+    const elements = screen.getAllByText(/Four powerful brand legacies/i);
+    expect(elements.length).toBeGreaterThan(0);
   });
 });

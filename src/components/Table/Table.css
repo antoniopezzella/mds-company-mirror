@@ -1,0 +1,378 @@
+/* MDS Table Component Styles */
+
+.mds-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+/* Scroll Progress Indicator */
+.mds-table__scroll-progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary, #000F47), var(--color-primary-light, #4A90E2));
+  z-index: 100;
+  transition: width 0.1s ease-out;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Scroll Shadows */
+.mds-table-wrapper--shadow-left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.mds-table-wrapper--shadow-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.mds-table-wrapper--shadow-top {
+  box-shadow: inset 0 10px 8px -8px rgba(0, 0, 0, 0.1);
+}
+
+.mds-table-wrapper--shadow-bottom {
+  box-shadow: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.1);
+}
+
+.mds-table-wrapper--shadow-top.mds-table-wrapper--shadow-bottom {
+  box-shadow: 
+    inset 0 10px 8px -8px rgba(0, 0, 0, 0.1),
+    inset 0 -10px 8px -8px rgba(0, 0, 0, 0.1);
+}
+
+.mds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-family-primary, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  background-color: var(--color-background, #ffffff);
+  color: var(--color-text, #1B222F);
+}
+
+/* Caption */
+.mds-table__caption {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text, #1B222F);
+  caption-side: top;
+}
+
+/* Header */
+.mds-table__head {
+  background-color: var(--color-gray-50, #F8F9FA);
+  border-bottom: 2px solid var(--color-gray-200, #E9ECEF);
+}
+
+.mds-table__header {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #495057);
+  border-bottom: 2px solid var(--color-gray-200, #E9ECEF);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.mds-table__header-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mds-table__header--sortable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mds-table__header--sortable:hover {
+  background-color: var(--color-gray-100, #F1F3F5);
+}
+
+.mds-table__header--sorted {
+  color: var(--color-primary, #000F47);
+}
+
+.mds-table__sort-icon {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.mds-table__header--sorted .mds-table__sort-icon {
+  opacity: 1;
+}
+
+.mds-table__header--checkbox {
+  width: 48px;
+  text-align: center;
+}
+
+/* Body */
+.mds-table__body {
+  background-color: var(--color-background, #ffffff);
+}
+
+.mds-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.mds-table__cell {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-gray-200, #E9ECEF);
+  font-size: 0.875rem;
+  color: var(--color-text, #1B222F);
+}
+
+.mds-table__cell--checkbox {
+  width: 48px;
+  text-align: center;
+}
+
+.mds-table__cell--loading,
+.mds-table__cell--empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--color-text-secondary, #6C757D);
+  font-style: italic;
+}
+
+/* Variants */
+
+/* Default - already styled above */
+
+/* Striped */
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(odd) {
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+/* Bordered */
+.mds-table--bordered {
+  border: 1px solid var(--color-gray-200, #E9ECEF);
+}
+
+.mds-table--bordered .mds-table__header,
+.mds-table--bordered .mds-table__cell {
+  border: 1px solid var(--color-gray-200, #E9ECEF);
+}
+
+/* Compact */
+.mds-table--compact .mds-table__header,
+.mds-table--compact .mds-table__cell {
+  padding: 8px 12px;
+}
+
+/* Sizes */
+.mds-table--sm .mds-table__header,
+.mds-table--sm .mds-table__cell {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+}
+
+.mds-table--md .mds-table__header,
+.mds-table--md .mds-table__cell {
+  padding: 12px 16px;
+  font-size: 0.875rem;
+}
+
+.mds-table--lg .mds-table__header,
+.mds-table--lg .mds-table__cell {
+  padding: 16px 20px;
+  font-size: 1rem;
+}
+
+/* Hoverable */
+.mds-table--hoverable .mds-table__body .mds-table__row:hover {
+  background-color: var(--color-gray-50, #F8F9FA);
+  cursor: pointer;
+}
+
+/* Selectable */
+.mds-table--selectable .mds-table__row--selected {
+  background-color: var(--color-primary-light, rgba(0, 15, 71, 0.05));
+}
+
+.mds-table--selectable .mds-table__row--selected:hover {
+  background-color: var(--color-primary-light, rgba(0, 15, 71, 0.1));
+}
+
+/* Sticky Header */
+.mds-table--sticky-header .mds-table__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+/* Sticky First Column */
+.mds-table--sticky-first-column .mds-table__header--sticky-left,
+.mds-table--sticky-first-column .mds-table__cell--sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 11;
+  background-color: inherit;
+}
+
+.mds-table--sticky-first-column .mds-table__header--sticky-left {
+  background-color: var(--color-gray-50, #F8F9FA);
+  z-index: 12;
+}
+
+/* Add shadow to sticky column */
+.mds-table--sticky-first-column .mds-table__header--sticky-left::after,
+.mds-table--sticky-first-column .mds-table__cell--sticky-left::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05));
+  pointer-events: none;
+}
+
+/* Ensure sticky cells have proper background */
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(odd) .mds-table__cell--sticky-left {
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(even) .mds-table__cell--sticky-left {
+  background-color: var(--color-background, #ffffff);
+}
+
+/* Focus styles for keyboard navigation */
+.mds-table__cell:focus {
+  outline: 2px solid var(--color-primary, #000F47);
+  outline-offset: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+.mds-table__cell:focus-visible {
+  outline: 3px solid var(--color-primary, #000F47);
+  outline-offset: -3px;
+}
+
+/* Checkbox Styling */
+.mds-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--color-primary, #000F47);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mds-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mds-table__header,
+  .mds-table__cell {
+    padding: 12px 8px;
+    font-size: 0.75rem;
+  }
+
+  .mds-table--lg .mds-table__header,
+  .mds-table--lg .mds-table__cell {
+    padding: 12px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Loading State Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.mds-table__cell--loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Status Badge Styles (for table content) */
+.mds-table-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mds-table-badge--success {
+  background-color: #D4EDDA;
+  color: #155724;
+}
+
+.mds-table-badge--warning {
+  background-color: #FFF3CD;
+  color: #856404;
+}
+
+.mds-table-badge--danger {
+  background-color: #F8D7DA;
+  color: #721C24;
+}
+
+.mds-table-badge--info {
+  background-color: #D1ECF1;
+  color: #0C5460;
+}
+
+.mds-table-badge--neutral {
+  background-color: var(--color-gray-200, #E9ECEF);
+  color: var(--color-text-secondary, #495057);
+}
+
+/* Action Buttons in Table */
+.mds-table-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mds-table-action-btn {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-primary, #000F47);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: opacity 0.2s ease;
+}
+
+.mds-table-action-btn:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.mds-table-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

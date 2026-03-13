@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import { defineConfig } from 'vitest/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,10 +35,13 @@ export default defineConfig({
       },
       // Pure unit tests (no Storybook plugin filtering)
       {
+        extends: true,
         test: {
           name: 'unit',
-          include: ['src/__tests__/**/*.{test,spec}.{ts,tsx}', 'src/**/*.unit.{test,spec}.{ts,tsx}'],
-          environment: 'jsdom'
+          include: ['src/__tests__/**/*.{test,spec}.{ts,tsx}', 'src/**/*.unit.{test,spec}.{ts,tsx}', 'src/components/**/*.test.{ts,tsx}', 'src/utils/**/*.test.{ts,tsx}'],
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: ['./src/setupTests.ts']
         }
       }
     ]

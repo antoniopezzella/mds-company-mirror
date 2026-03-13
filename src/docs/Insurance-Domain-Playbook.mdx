@@ -1,0 +1,768 @@
+# Insurance Domain Patterns Playbook
+
+A practical guide to building insurance B2B features using MDS components.
+
+export const meta = { title: 'Docs/Insurance Domain/Patterns Playbook' };
+
+## Overview
+
+This guide shows how to **combine MDS components** to solve real insurance workflows. Each pattern includes:
+- Problem statement
+- Component combination
+- Code example
+- Accessibility notes
+- Insurance domain context
+
+---
+
+## 1. Policy Management Flow
+
+### Problem
+Users need to:
+1. View their policies in a list
+2. See current status at a glance
+3. Drill down into details
+4. Take actions (renew, modify, cancel)
+
+### Solution: List + Paper + Menu + Badge
+
+```tsx
+import { List } from '@/components/List';
+import { Paper } from '@/components/Paper';
+import { Menu } from '@/components/Menu';
+import { Badge } from '@/components/Badge';
+
+export function PolicyManagement() {
+  const [selectedId, setSelectedId] = useState<string>('');
+
+  const policies = [
+    {
+      id: '1',
+      primary: 'POL-2024-001',
+      secondary: 'Commercial Liability - $2,000,000',
+      icon: <DocumentIcon />
+    },
+    {
+      id: '2',
+      primary: 'POL-2024-002',
+      secondary: 'Professional Indemnity - $1,000,000',
+      icon: <DocumentIcon />
+    }
+  ];
+
+  return (
+    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 3 }}>
+      {/* Policy List */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Your Policies
+        </Typography>
+        <List
+          items={policies}
+          selectable={true}
+          multiSelect={false}
+          onSelectionChange={(selected) =>
+            setSelectedId(selected.values().next().value)
+          }
+        />
+      </Box>
+
+      {/* Policy Detail Card */}
+      {selectedId && (
+        <Paper elevation={4} padding="large">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+            <Box>
+              <Badge
+                variant="dot"
+                tone={policy.status === 'Active' ? 'success' : 'warning'}
+              >
+                <Typography variant="h5">{policy.number}</Typography>
+              </Badge>
+              <Typography variant="body2" color="text.secondary">
+                {policy.type}
+              </Typography>
+            </Box>
+            <Menu
+              items={[
+                { label: 'View Details', icon: <EyeIcon /> },
+                { label: 'Download Documents', icon: <DownloadIcon /> },
+                { label: 'Renew Policy', icon: <RefreshIcon />, tone: 'success' },
+                { divider: true },
+                { label: 'Cancel', icon: <XIcon />, tone: 'danger' }
+              ]}
+            />
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Coverage Limit
+              </Typography>
+              <Typography variant="h6">${policy.limit}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Premium
+              </Typography>
+              <Typography variant="h6">${policy.premium}/month</Typography>
+            </Box>
+          </Box>
+        </Paper>
+      )}
+    </Box>
+  );
+}
+```
+
+### Why This Works
+- **List** for easy scanning and selection
+- **Paper** for detail view (elevated for focus)
+- **Menu** for actions (renew, cancel, etc.)
+- **Badge** for quick status (color-coded)
+- **Divider** separates info sections
+
+### Accessibility
+- Keyboard: Tab to list, Arrow keys to navigate, Tab to Menu button
+- Screen reader: "Listbox with 2 policies, Policy 1 selected, Press Menu button for actions"
+
+---
+
+## 2. Claims Filing Workflow
+
+### Problem
+Users need to file a claim through multiple steps:
+1. Provide basic information
+2. Upload supporting documents
+3. Review submission
+4. Confirm
+
+### Solution: Stepper + Form Fields + Chip + Button
+
+```tsx
+import { Stepper } from '@/components/Stepper';
+import { TextField, Box } from '@mui/material';
+import { Chip } from '@/components/Chip';
+import { Button } from '@/components/Button';
+
+export function ClaimFilingWizard() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({
+    claimType: '',
+    description: '',
+    amount: '',
+    documents: []
+  });
+
+  const steps = [
+    {
+      label: 'Claim Information',
+      status:
+        activeStep > 0 ? 'completed' : activeStep === 0 ? 'active' : 'pending',
+      description: 'Basic details about your claim'
+    },
+    {
+      label: 'Upload Documents',
+      status:
+        activeStep > 1 ? 'completed' : activeStep === 1 ? 'active' : 'pending',
+      description: 'Supporting documentation'
+    },
+    {
+      label: 'Review',
+      status:
+        activeStep > 2 ? 'completed' : activeStep === 2 ? 'active' : 'pending',
+      description: 'Confirm information'
+    },
+    {
+      label: 'Submitted',
+      status: activeStep === 3 ? 'active' : 'pending',
+      description: 'Claim filed successfully'
+    }
+  ];
+
+  return (
+    <Box>
+      {/* Stepper */}
+      <Stepper
+        steps={steps}
+        activeStep={activeStep}
+        orientation="vertical"
+        variant="default"
+      />
+
+      {/* Step Content */}
+      <Box sx={{ mt: 4, mb: 4, p: 3, backgroundColor: 'surface.subtle' }}>
+        {activeStep === 0 && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Tell us about your claim
+            </Typography>
+            <Select label="Claim Type" fullWidth />
+            <TextField label="Description" fullWidth multiline rows={4} sx={{ mt: 2 }} />
+            <TextField
+              label="Claimed Amount"
+              fullWidth
+              type="number"
+              sx={{ mt: 2 }}
+            />
+          </Box>
+        )}
+
+        {activeStep === 1 && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Upload supporting documents
+            </Typography>
+            <Box sx={{ border: '2px dashed', p: 3, textAlign: 'center' }}>
+              <Typography variant="body2">
+                Drag documents here or click to select
+              </Typography>
+            </Box>
+            {formData.documents.length > 0 && (
+              <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                {formData.documents.map(doc => (
+                  <Chip
+                    key={doc.id}
+                    label={doc.name}
+                    icon={<DocumentIcon />}
+                    onDelete={() => removeDocument(doc.id)}
+                  />
+                ))}
+              </Box>
+            )}
+          </Box>
+        )}
+
+        {activeStep === 2 && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Review your claim
+            </Typography>
+            <Paper elevation={2} padding="medium">
+              <Box>
+                <Typography variant="caption">Claim Type</Typography>
+                <Typography variant="body2">{formData.claimType}</Typography>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+              <Box>
+                <Typography variant="caption">Amount</Typography>
+                <Typography variant="h6">${formData.amount}</Typography>
+              </Box>
+              <Divider sx={{ my: 2 }} />
+              <Box>
+                <Typography variant="caption">Documents</Typography>
+                <Typography variant="body2">
+                  {formData.documents.length} files attached
+                </Typography>
+              </Box>
+            </Paper>
+          </Box>
+        )}
+
+        {activeStep === 3 && (
+          <Box sx={{ textAlign: 'center' }}>
+            <Alert type="success" title="Claim Submitted" />
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              Your claim has been filed. Reference: CLM-2024-5432
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+      {/* Navigation */}
+      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
+        <Button
+          variant="secondary"
+          onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
+          disabled={activeStep === 0}
+        >
+          Back
+        </Button>
+        <Box>
+          {activeStep < steps.length - 1 && (
+            <Button
+              variant="contained"
+              onClick={() => setActiveStep(activeStep + 1)}
+            >
+              Next
+            </Button>
+          )}
+          {activeStep === steps.length - 1 && (
+            <Button variant="contained" onClick={() => navigate('/claims')}>
+              View Claims
+            </Button>
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+```
+
+### Why This Works
+- **Stepper** shows progress and current step
+- **Form fields** (TextField, Select) collect information
+- **Paper** for review section (elevated for importance)
+- **Chip** for document management (deletable)
+- **Button** for navigation
+- **Alert** for success confirmation
+
+---
+
+## 3. Claims List with Filters
+
+### Problem
+Users need to:
+1. See all claims in a filterable list
+2. Filter by status, type, amount
+3. See quick actions for each claim
+4. Navigate through many claims
+
+### Solution: Chip (filters) + List + Menu + Pagination
+
+```tsx
+import { Chip } from '@/components/Chip';
+import { List } from '@/components/List';
+import { Menu } from '@/components/Menu';
+import { Pagination } from '@/components/Pagination';
+import { Badge } from '@/components/Badge';
+
+export function ClaimsListWithFilters() {
+  const [filters, setFilters] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 25;
+
+  const allClaims = [/* ... */];
+  const filteredClaims = allClaims.filter(claim => {
+    if (filters.size === 0) return true;
+    return filters.has(claim.status) || filters.has(claim.type);
+  });
+
+  const totalPages = Math.ceil(filteredClaims.length / pageSize);
+  const paginatedClaims = filteredClaims.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  return (
+    <Box>
+      {/* Filters */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="label" sx={{ display: 'block', mb: 1 }}>
+          Filter by Status:
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          {['Pending', 'Approved', 'Denied'].map(status => (
+            <Chip
+              key={status}
+              label={status}
+              variant={filters.has(status) ? 'filled' : 'outlined'}
+              clickable
+              onClick={() => {
+                const newFilters = new Set(filters);
+                newFilters.has(status)
+                  ? newFilters.delete(status)
+                  : newFilters.add(status);
+                setFilters(newFilters);
+                setCurrentPage(1); // Reset to first page
+              }}
+            />
+          ))}
+        </Box>
+      </Box>
+
+      {/* Claims List */}
+      <List
+        items={paginatedClaims.map(claim => ({
+          id: claim.id,
+          primary: `Claim #${claim.number}`,
+          secondary: claim.description,
+          icon: <DescriptionIcon />
+        }))}
+      />
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(_, page) => {
+              setCurrentPage(page);
+              window.scrollTo(0, 0);
+            }}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+}
+```
+
+### Why This Works
+- **Chip** filters are removable and interactive
+- **List** shows filtered claims
+- **Pagination** handles large datasets
+- **Menu** (in each item) provides quick actions
+- **Badge** shows unread/urgent status
+
+---
+
+## 4. Coverage Selection
+
+### Problem
+Users need to:
+1. View coverage options side-by-side
+2. Understand each coverage (details accordion)
+3. Select multiple coverages
+4. See total premium
+
+### Solution: Accordion + Chip (selection) + Paper (cards) + List
+
+```tsx
+import { Accordion } from '@/components/Accordion';
+import { Chip } from '@/components/Chip';
+import { Paper } from '@/components/Paper';
+
+export function CoverageSelection() {
+  const [selectedCoverages, setSelectedCoverages] = useState<Set<string>>(
+    new Set()
+  );
+
+  const coverageOptions = [
+    {
+      id: 'liability',
+      name: 'General Liability',
+      limit: '$2,000,000',
+      premium: 1200,
+      description: 'Covers bodily injury and property damage claims',
+      details: [
+        'Medical expenses coverage',
+        'Legal defense costs',
+        'Damage to third-party property'
+      ]
+    },
+    {
+      id: 'property',
+      name: 'Business Property',
+      limit: '$1,000,000',
+      premium: 800,
+      description: 'Protects your business equipment and property',
+      details: [
+        'Building coverage',
+        'Equipment coverage',
+        'Stock coverage'
+      ]
+    }
+  ];
+
+  return (
+    <Box>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        Select Your Coverage
+      </Typography>
+
+      {/* Coverage Options */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 4 }}>
+        {coverageOptions.map(coverage => (
+          <Paper
+            key={coverage.id}
+            elevation={selectedCoverages.has(coverage.id) ? 8 : 2}
+            padding="large"
+            borderColor={
+              selectedCoverages.has(coverage.id) ? 'primary' : 'default'
+            }
+            hover
+            sx={{ cursor: 'pointer' }}
+            onClick={() => {
+              const newSelected = new Set(selectedCoverages);
+              newSelected.has(coverage.id)
+                ? newSelected.delete(coverage.id)
+                : newSelected.add(coverage.id);
+              setSelectedCoverages(newSelected);
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'start',
+                mb: 1
+              }}
+            >
+              <Box>
+                <Typography variant="h6">{coverage.name}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {coverage.limit}
+                </Typography>
+              </Box>
+              {selectedCoverages.has(coverage.id) && (
+                <Chip label="Selected" icon={<CheckIcon />} tone="success" />
+              )}
+            </Box>
+
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              {coverage.description}
+            </Typography>
+
+            <Typography variant="h5" sx={{ color: 'primary.main', mb: 1 }}>
+              ${coverage.premium}/month
+            </Typography>
+          </Paper>
+        ))}
+      </Box>
+
+      {/* Details Accordion */}
+      <Accordion
+        items={coverageOptions.map(coverage => ({
+          id: coverage.id,
+          title: `${coverage.name} - Details`,
+          content: (
+            <List
+              items={coverage.details.map((detail, i) => ({
+                id: `${coverage.id}-${i}`,
+                primary: detail
+              }))}
+            />
+          )
+        }))}
+        allowMultiple={true}
+      />
+
+      {/* Selected Summary */}
+      {selectedCoverages.size > 0 && (
+        <Paper elevation={2} padding="large" borderColor="success" sx={{ mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="label">
+                Selected Coverage ({selectedCoverages.size})
+              </Typography>
+              <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                {Array.from(selectedCoverages).map(id => {
+                  const coverage = coverageOptions.find(c => c.id === id);
+                  return (
+                    <Chip
+                      key={id}
+                      label={coverage?.name}
+                      onDelete={() => {
+                        const newSelected = new Set(selectedCoverages);
+                        newSelected.delete(id);
+                        setSelectedCoverages(newSelected);
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+            </Box>
+            <Box sx={{ textAlign: 'right' }}>
+              <Typography variant="caption" color="text.secondary">
+                Total Monthly
+              </Typography>
+              <Typography variant="h4">
+                $
+                {Array.from(selectedCoverages).reduce(
+                  (sum, id) =>
+                    sum +
+                    (coverageOptions.find(c => c.id === id)?.premium || 0),
+                  0
+                )}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      )}
+    </Box>
+  );
+}
+```
+
+---
+
+## 5. Team Collaboration & Assignment
+
+### Problem
+Users need to:
+1. See team members
+2. Assign claims to team members
+3. Check availability/status
+4. View member details
+
+### Solution: Avatar + Chip + Menu + Badge
+
+```tsx
+import { Avatar } from '@/components/Avatar';
+import { Chip } from '@/components/Chip';
+import { Menu } from '@/components/Menu';
+import { Badge } from '@/components/Badge';
+
+export function TeamAssignment() {
+  const [assignedMembers, setAssignedMembers] = useState<Set<string>>(
+    new Set()
+  );
+
+  const teamMembers = [
+    {
+      id: '1',
+      name: 'Sarah Johnson',
+      role: 'Claims Manager',
+      photo: '/images/sarah.jpg',
+      initials: 'SJ',
+      isOnline: true,
+      assignedClaims: 12
+    },
+    {
+      id: '2',
+      name: 'Mike Chen',
+      role: 'Claims Adjuster',
+      photo: '/images/mike.jpg',
+      initials: 'MC',
+      isOnline: true,
+      assignedClaims: 8
+    }
+  ];
+
+  return (
+    <Box>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Assign to Team Member
+      </Typography>
+
+      {teamMembers.map(member => (
+        <Paper
+          key={member.id}
+          elevation={2}
+          padding="medium"
+          sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}
+        >
+          <Badge
+            variant="dot"
+            tone={member.isOnline ? 'success' : 'default'}
+          >
+            <Avatar
+              src={member.photo}
+              initials={member.initials}
+              size="medium"
+            />
+          </Badge>
+
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h6">{member.name}</Typography>
+            <Typography variant="body2" color="text.secondary">
+              {member.role}
+            </Typography>
+            <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+              <Chip
+                label={member.isOnline ? 'Online' : 'Offline'}
+                tone={member.isOnline ? 'success' : 'default'}
+                size="small"
+              />
+              <Chip
+                label={`${member.assignedClaims} assigned`}
+                size="small"
+              />
+            </Box>
+          </Box>
+
+          <Menu
+            items={[
+              { label: 'Assign Claim', icon: <CheckIcon /> },
+              { label: 'View Profile', icon: <PersonIcon /> },
+              { label: 'Send Message', icon: <MessageIcon /> }
+            ]}
+          />
+        </Paper>
+      ))}
+    </Box>
+  );
+}
+```
+
+---
+
+## Component Decision Tree
+
+**Choosing the right component:**
+
+### "I need users to pick ONE item from many"
+→ Use **List** with `multiSelect={false}` or **Select** dropdown
+
+### "I need users to pick MULTIPLE items"
+→ Use **List** with `multiSelect={true}` or **Chip** filters
+
+### "I need to show a workflow or process"
+→ Use **Stepper** for step sequence or **Accordion** for expandable sections
+
+### "I need to show status or badges"
+→ Use **Badge** for overlays, **Chip** for removable items
+
+### "I need quick actions on items"
+→ Use **Menu** dropdown or **Breadcrumbs** for navigation
+
+### "I need to organize content visually"
+→ Use **Paper** for cards, **Divider** for sections, **Card** for high-level containers
+
+### "I need to handle lots of items"
+→ Use **Pagination** or **Table** with built-in pagination
+
+---
+
+## Best Practices
+
+### 1. Form Layouts
+```
+TextFields/Selects → Divider → More Fields → Divider → Buttons
+```
+
+### 2. Data Displays
+```
+Filters (Chips) → List/Table → Pagination → Actions (Menu)
+```
+
+### 3. Wizards
+```
+Stepper (vertical) → Form Content → Navigation Buttons
+```
+
+### 4. Cards
+```
+Paper (elevation 2-4) → Header + Badge/Menu → Divider → Content → Buttons
+```
+
+### 5. Team/User Lists
+```
+Avatar + Badge → Name/Role (Box) → Status (Chip) → Actions (Menu)
+```
+
+---
+
+## Accessibility Checklist
+
+When combining components:
+- ✅ All interactive elements are keyboard accessible
+- ✅ Screen readers announce regions and state
+- ✅ Focus indicators visible
+- ✅ Color not used alone to convey meaning
+- ✅ Form fields have labels
+- ✅ Buttons announce actions
+- ✅ Links indicate destination
+
+---
+
+## Quick Reference
+
+| Goal | Components | Pattern |
+|------|-----------|---------|
+| Browse & Select | List + Paper | Sidebar + detail |
+| Filter Data | Chip (filters) + List | Multiple chips, list updates |
+| Multi-step | Stepper + Form | Vertical wizard |
+| Manage Items | Accordion + Menu | Expand for details, actions |
+| Show Status | Badge + Chip | Overlays + tags |
+| Assign Users | Avatar + Menu | Profile + actions |
+| Form Sections | TextField + Divider | Separated sections |
+| Result Set | List + Pagination | 10-25 per page |
+
+---
+
+**Last Updated:** December 23, 2025  
+**Next:** Check out individual component usage guides for detailed examples!

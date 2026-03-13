@@ -30,7 +30,8 @@ function contrast(hex1:string, hex2:string) {
 const ENFORCED_ROLE_CONTRAST: Array<[string, string, number]> = [
   ['text.primary', 'surface.default', 4.5],
   ['text.secondary', 'surface.default', 3.0],
-  ['text.inverse', 'surface.accent', 4.5],
+  // surface.accent is now a light warm surface (#f7f8f8); test dark text on it
+  ['text.primary', 'surface.accent', 4.5],
   // Status pairs now enforced after dark overrides improvement
   ['status.success.fg', 'status.success.bg', 3.0],
   ['status.warning.fg', 'status.warning.bg', 3.0],

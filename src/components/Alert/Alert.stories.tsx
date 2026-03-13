@@ -4,12 +4,18 @@ import { Alert } from './Alert';
 const meta: Meta<typeof Alert> = {
   title: 'Components/Alert',
   component: Alert,
+  tags: ['autodocs'],
   args: {
     severity: 'info',
     children: 'Informational message',
   },
   parameters: {
-    layout: 'padded'
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'Display brief, important messages to users with different severity levels (info, success, warning, error).'
+      }
+    }
   }
 };
 

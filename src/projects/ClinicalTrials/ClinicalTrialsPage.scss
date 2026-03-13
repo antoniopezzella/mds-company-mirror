@@ -1,0 +1,104 @@
+@use '../../styles/grid' as grid;
+
+.clinical-trials-page {
+  min-height: 100vh;
+  background-color: var(--role-surface-subtle);
+  padding: 40px 0;
+
+  .mds-container {
+    @extend .container;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .mds-row {
+    @extend .row;
+  }
+
+  .mds-col-4 { @extend .col-4; }
+  .mds-col-6 { @extend .col-6; }
+  .mds-col-12 { @extend .col-12; }
+  .mds-col-auto { @extend .col-auto; }
+
+  .stepper-wrapper {
+    background-color: var(--role-surface-default);
+    padding: 24px;
+    border-radius: 4px;
+    box-shadow: var(--role-shadow-low);
+    margin-bottom: 32px;
+  }
+
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 16px; }
+  .mb-6 { margin-bottom: 24px; }
+  .mb-8 { margin-bottom: 32px; }
+  .mb-10 { margin-bottom: 40px; }
+  .mt-4 { margin-top: 16px; }
+  .mt-6 { margin-top: 24px; }
+  
+  .flex { display: flex; }
+  .gap-0 { gap: 0; }
+  .gap-2 { gap: 8px; }
+  .gap-4 { gap: 16px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .justify-end { justify-content: flex-end; }
+  .cursor-pointer { cursor: pointer; }
+
+  // Toggle Button Group Styles
+  .sponsor-toggle-group {
+    width: 100%;
+    gap: 0;
+    
+    .MuiToggleButton-root {
+      flex: 1;
+      text-transform: none;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 12px 24px;
+      border: 1px solid var(--role-border-default);
+      color: var(--role-text-primary);
+      background-color: var(--role-surface-default);
+      border-radius: 4px;
+
+      &.Mui-selected {
+        background-color: var(--role-surface-accent);
+        color: var(--role-text-primary);
+        border: 2px solid var(--role-interactive-primary);
+        z-index: 2;
+
+        &:hover {
+          background-color: var(--role-surface-accent);
+        }
+      }
+
+      &:first-of-type {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &:last-of-type {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: none;
+      }
+
+      &:hover {
+        background-color: var(--role-surface-subtle);
+      }
+    }
+  }
+
+  // MDS Section overrides
+  :global(.mds-section) {
+    margin-top: 0;
+    background-color: var(--role-surface-default);
+    border-radius: 4px;
+    box-shadow: var(--role-shadow-low);
+    padding: 48px;
+  }
+
+  .form-actions {
+    padding-top: 24px;
+  }
+}

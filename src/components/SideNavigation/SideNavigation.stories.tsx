@@ -19,6 +19,7 @@ const demoItems: SideNavItem[] = [
 const meta = {
   title: 'Components/Side Navigation',
   component: SideNavigation,
+  tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: 'Vertical navigation for app shells and dashboards. Supports active state and collapsible groups via subItems.' } },
@@ -81,5 +82,23 @@ export const ActiveState: Story = {
     if (!classList.includes('Mui-selected')) {
       throw new Error('Active item is not visually selected (missing Mui-selected)');
     }
+  },
+};
+
+export const ActiveSubItem: Story = {
+  name: 'Active sub-item',
+  args: {
+    items: [
+      { label: 'Overview' },
+      {
+        label: 'Risk & Insights',
+        subItems: [
+          { label: 'Trends', active: true },
+          { label: 'Risk heatmap' },
+          { label: 'Benchmarks' },
+        ],
+      },
+      { label: 'Help' },
+    ],
   },
 };

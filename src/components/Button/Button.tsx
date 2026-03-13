@@ -1,17 +1,20 @@
 import React from 'react';
 import MuiButton from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import type { SxProps } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
 
 export interface DSButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'size'> {
-  /** Visual style of the button aligned to design: primary (contained), secondary (outlined), tertiary (text), or text */
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'text';
+  /** Visual style aligned to Figma: primary (gold fill), secondary (blue fill), outline (bordered), ghost (minimal) */
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   /** Semantic tone adjusts the color intent: default, danger, or success */
   tone?: 'default' | 'danger' | 'success';
   /** Design sizes mapped to spacing scale */
   size?: 'sm' | 'md' | 'lg';
   /** Icon-only button: renders a square button; provide aria-label for accessibility */
   iconOnly?: boolean;
+  /** Whether the button is in a loading state */
+  loading?: boolean;
   /** Optional leading/trailing icon nodes */
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
@@ -19,35 +22,42 @@ export interface DSButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButto
 
 /**
  * Design System Button implemented with MUI while preserving the DS API.
- * - Uses role-based colors via getRoleColor
- * - Restricts variants to design-approved set
+ * Variants match Figma spec:
+ *   - primary:   Gold fill, dark text (CTA)
+ *   - secondary: Dark blue fill, white text
+ *   - outline:   Border only, transparent fill
+ *   - ghost:     No border/fill, inverts on hover
  */
 const DSButton: React.FC<DSButtonProps> = ({
-  variant = 'primary',
+  variant = 'outline',
   tone = 'default',
   size = 'md',
   iconOnly = false,
+  loading = false,
   disabled,
   startIcon,
   endIcon,
   className = '',
-  style,
   children,
   ...rest
 }) => {
   const height = size === 'sm' ? 32 : size === 'lg' ? 56 : 48;
-  const px = iconOnly ? 0 : size === 'sm' ? 12 : size === 'lg' ? 20 : 16; // px values consistent with previous
+  const px = iconOnly ? 0 : size === 'sm' ? 12 : size === 'lg' ? 20 : 16;
 
   // Resolve role colors for tones
-  const interactiveBase = tone === 'danger' ? 'interactive.danger' : 'interactive.primary';
-  const textOnBase = tone === 'danger' ? 'text.onDanger' : 'text.onAccent';
+  const baseRole = tone === 'danger' ? 'interactive.danger' : 'interactive.primary';
+  const baseHoverRole = tone === 'danger' ? 'interactive.danger.hover' : 'interactive.primary.hover';
+  const baseActiveRole = tone === 'danger' ? 'interactive.danger.active' : 'interactive.primary.active';
+  const textRole = tone === 'danger' ? 'text.onDanger' : 'text.onAccent';
+
+  const isDisabled = disabled || loading;
 
   const sxBase: SxProps = {
     borderRadius: '2px',
     textTransform: 'none',
     boxSizing: 'border-box',
     fontFamily: 'var(--typo-button-font-family)',
-    fontWeight: 'var(--typo-button-font-weight)' as any,
+    fontWeight: 'var(--typo-button-font-weight)',
     letterSpacing: 'var(--typo-button-letter-spacing)',
     fontSize: 'var(--typo-button-font-size)',
     lineHeight: 'var(--typo-button-line-height)',
@@ -55,43 +65,77 @@ const DSButton: React.FC<DSButtonProps> = ({
     minWidth: iconOnly ? height : undefined,
     width: iconOnly ? height : undefined,
     px,
+    position: 'relative',
     '&:focus-visible': {
       outline: `2px solid ${getRoleColor('focus.ring')}`,
       outlineOffset: 2,
+    },
+    '&.Mui-disabled': {
+      opacity: loading ? 0.8 : 0.4,
+      backgroundColor: (variant === 'primary' || variant === 'secondary')
+        ? getRoleColor(variant === 'secondary' ? 'surface.hero' : baseRole)
+        : 'transparent',
+      color: (variant === 'primary' || variant === 'secondary')
+        ? (variant === 'secondary' ? getRoleColor('text.onHero') : getRoleColor(textRole))
+        : getRoleColor(baseRole),
+      border: variant === 'outline' ? `1px solid ${getRoleColor(baseRole)}` : 'none',
     },
   };
 
   const sxVariant: SxProps = (() => {
     switch (variant) {
+      // Gold fill — primary CTA
       case 'primary':
         return {
-          backgroundColor: getRoleColor(interactiveBase as any),
-          color: getRoleColor(textOnBase as any),
-          '&:hover': { backgroundColor: getRoleColor((interactiveBase + '.hover') as any) },
-          '&:active': { backgroundColor: getRoleColor((interactiveBase + '.active') as any) },
+          backgroundColor: getRoleColor(baseRole),
+          color: getRoleColor(textRole),
+          '&:hover': { backgroundColor: getRoleColor(baseHoverRole) },
+          '&:active': { backgroundColor: getRoleColor(baseActiveRole) },
         };
+      // Dark blue fill — secondary action
       case 'secondary':
         return {
-          backgroundColor: 'transparent',
-          color: getRoleColor(interactiveBase as any),
-          border: `1px solid ${getRoleColor(interactiveBase as any)}`,
+          backgroundColor: getRoleColor('surface.hero'),      // blue1000
+          color: getRoleColor('text.onHero'),                  // white
           '&:hover': {
-            color: getRoleColor((interactiveBase + '.hover') as any),
-            borderColor: getRoleColor((interactiveBase + '.hover') as any),
-            backgroundColor: 'transparent',
+            backgroundColor: getRoleColor('interactive.primary.hover'),
+            color: getRoleColor('text.onHero'),
           },
           '&:active': {
-            color: getRoleColor((interactiveBase + '.active') as any),
-            borderColor: getRoleColor((interactiveBase + '.active') as any),
+            backgroundColor: getRoleColor('interactive.primary.active'),
+            color: getRoleColor('text.onHero'),
           },
         };
-      case 'tertiary':
-      case 'text':
+      // Border only — outlined
+      case 'outline':
         return {
           backgroundColor: 'transparent',
-          color: getRoleColor(interactiveBase as any),
-          '&:hover': { color: getRoleColor((interactiveBase + '.hover') as any), backgroundColor: 'transparent' },
-          '&:active': { color: getRoleColor((interactiveBase + '.active') as any) },
+          color: getRoleColor('text.primary'),
+          border: `1px solid ${getRoleColor('border.strong')}`,
+          '&:hover': {
+            backgroundColor: getRoleColor('surface.hero'),
+            color: getRoleColor('text.onHero'),
+            borderColor: getRoleColor('surface.hero'),
+          },
+          '&:active': {
+            backgroundColor: getRoleColor('surface.hero'),
+            color: getRoleColor('interactive.primary'),
+            borderColor: getRoleColor('surface.hero'),
+          },
+        };
+      // No border/fill — ghost, inverts on hover
+      case 'ghost':
+        return {
+          backgroundColor: 'transparent',
+          color: getRoleColor('text.primary'),
+          '&:hover': {
+            backgroundColor: getRoleColor('surface.hero'),
+            color: getRoleColor('text.onHero'),
+          },
+          '&:active': {
+            backgroundColor: getRoleColor('interactive.primary'),
+            color: getRoleColor('text.onHero'),
+          },
         };
       default:
         return {};
@@ -101,16 +145,38 @@ const DSButton: React.FC<DSButtonProps> = ({
   return (
     <MuiButton
       disableElevation
-      disabled={disabled}
-      startIcon={iconOnly ? undefined : (startIcon as any)}
-      endIcon={iconOnly ? undefined : (endIcon as any)}
+      disabled={isDisabled}
+      startIcon={loading || iconOnly ? undefined : startIcon}
+      endIcon={loading || iconOnly ? undefined : endIcon}
       className={className}
-      sx={{ ...sxBase, ...sxVariant }}
-      {...rest as any}
+      sx={[sxBase, sxVariant] as SxProps}
+      {...rest}
     >
-      {iconOnly ? (startIcon ?? null) : children}
+      {loading && (
+        <CircularProgress
+          size={height * 0.4}
+          thickness={4}
+          sx={{
+            color: 'inherit',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            marginLeft: `-${(height * 0.4) / 2}px`,
+            marginTop: `-${(height * 0.4) / 2}px`,
+          }}
+        />
+      )}
+      <span style={{ 
+        visibility: loading ? 'hidden' : 'visible',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'inherit'
+      }}>
+        {iconOnly ? (startIcon ?? null) : children}
+      </span>
     </MuiButton>
   );
 };
 
+export const Button = DSButton;
 export default DSButton;
