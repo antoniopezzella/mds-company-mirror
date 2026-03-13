@@ -6,77 +6,77 @@ import { spacing } from './spacing';
 
 const lightPalette = {
   primary: {
-    main: tokens.blue700,
-    light: tokens.blue600,
-    dark: tokens.blue900,
+    main: tokens.blue1000,          // #000f47 — Brand Primary (Midnight)
+    light: tokens.blue750,          // #0b4bff (Active)
+    dark: tokens.blue950,           // #021b6c
     contrastText: tokens.white,
   },
   secondary: {
-    main: tokens.blue500,
-    light: tokens.blueGray700,
-    dark: tokens.blueGray900,
-    contrastText: tokens.white,
+    main: tokens.blue250,           // #ceecff — Sky Blue
+    light: tokens.blue100,          // #ebf7ff
+    dark: tokens.blue500,           // #6fb4ff
+    contrastText: tokens.blue1000,
   },
   error: {
-    main: tokens.crimson600,
+    main: tokens.statusCritical,    // #c53532 — Utilities/Critical
     contrastText: tokens.white,
   },
   warning: {
-    main: tokens.yellow500,
-    contrastText: tokens.gray900,
+    main: tokens.statusWarning,     // #cb7e03 — Utilities/Warning
+    contrastText: tokens.white,
   },
   success: {
-    main: tokens.green600,
+    main: tokens.statusSuccess,     // #14853d — Utilities/Success
     contrastText: tokens.white,
   },
   background: {
-    default: tokens.blueGray75,
-    paper: tokens.white,
+    default: tokens.white,
+    paper: tokens.gray250,          // #f7f8f8 — App background (was blueGray75)
   },
   text: {
-    primary: tokens.blue700,
-    secondary: tokens.gray900,
-    disabled: tokens.gray600,
+    primary: tokens.blue1000,       // #000f47 — Brand-tinted text
+    secondary: tokens.neutral700,   // #595959
+    disabled: tokens.neutral600,    // #767676
   },
-  divider: tokens.gray500,
+  divider: tokens.neutral250,       // #dadada
 };
 
 
 const darkPalette = {
   primary: {
-    main: tokens.blue700,
-    light: tokens.blue600,
-    dark: tokens.blue900,
-    contrastText: tokens.white,
+    main: tokens.blue400,           // #95caff — Lightened for dark bg
+    light: tokens.blue300,          // #bbe1ff
+    dark: tokens.blue750,           // #0b4bff (Active)
+    contrastText: tokens.neutral950, // #101010
   },
   secondary: {
-    main: tokens.blueGray700,
-  light: tokens.blueGray700,
-    dark: tokens.blueGray900,
-    contrastText: tokens.white,
+    main: tokens.blue400,           // #95caff — Lightened Sky Blue
+    light: tokens.blue300,          // #bbe1ff
+    dark: tokens.blue600,           // #478aff
+    contrastText: tokens.neutral950,
   },
   error: {
-    main: tokens.crimson300,
-    contrastText: tokens.blue700,
+    main: tokens.red500,            // #ff6b6b — Lightened red
+    contrastText: tokens.white,
   },
   warning: {
-    main: tokens.yellow400,
-    contrastText: tokens.blue700,
+    main: tokens.gold500,           // #ff994a — Lightened gold
+    contrastText: tokens.neutral950,
   },
   success: {
-    main: tokens.green300,
-    contrastText: tokens.blue700,
+    main: tokens.green500,          // #8dcc92 — Lightened green
+    contrastText: tokens.neutral950,
   },
   background: {
-    default: tokens.blueGray900,
-    paper: tokens.blueGray800,
+    default: tokens.neutral950,     // #101010 — Near black
+    paper: tokens.neutral900,       // #252525 — Elevated dark surface
   },
   text: {
-    primary: tokens.white,
-    secondary: tokens.gray400,
-    disabled: tokens.gray600,
+    primary: tokens.white,          // #ffffff
+    secondary: tokens.neutral250,   // #dadada
+    disabled: tokens.neutral500,    // #878787
   },
-  divider: tokens.gray500,
+  divider: tokens.neutral700,       // #595959
 };
 
 // --- Typography via CSS variables ------------------------------------------
@@ -89,45 +89,45 @@ const typography = {
     'Noto Sans',
     'sans-serif',
   ].join(','),
-  // Headings — MMC Display for brand voice; strong but controlled hierarchy
+  // Headings — MMC Display for brand voice; Marsh Serif used in Marsh One project only
   h1: {
     fontFamily: 'var(--typo-h1-font-family)',
-    fontWeight: 700,
+    fontWeight: 700, // MMC Display Bold
     fontSize: 'var(--typo-h1-font-size)',
     lineHeight: 'var(--typo-h1-line-height)',
     letterSpacing: 'var(--typo-h1-letter-spacing)',
   },
   h2: {
     fontFamily: 'var(--typo-h2-font-family)',
-    fontWeight: 700,
+    fontWeight: 700, // MMC Display Bold
     fontSize: 'var(--typo-h2-font-size)',
     lineHeight: 'var(--typo-h2-line-height)',
     letterSpacing: 'var(--typo-h2-letter-spacing)',
   },
   h3: {
     fontFamily: 'var(--typo-h3-font-family)',
-    fontWeight: 700,
+    fontWeight: 700, // MMC Display Bold
     fontSize: 'var(--typo-h3-font-size)',
     lineHeight: 'var(--typo-h3-line-height)',
     letterSpacing: 'var(--typo-h3-letter-spacing)',
   },
   h4: {
     fontFamily: 'var(--typo-h4-font-family)',
-    fontWeight: 700,
+    fontWeight: 700, // MMC Display Bold
     fontSize: 'var(--typo-h4-font-size)',
     lineHeight: 'var(--typo-h4-line-height)',
     letterSpacing: 'var(--typo-h4-letter-spacing)',
   },
   h5: {
     fontFamily: 'var(--typo-h5-font-family)',
-    fontWeight: 700,
+    fontWeight: 600, // Noto Sans Semibold
     fontSize: 'var(--typo-h5-font-size)',
     lineHeight: 'var(--typo-h5-line-height)',
     letterSpacing: 'var(--typo-h5-letter-spacing)',
   },
   h6: {
     fontFamily: 'var(--typo-h6-font-family)',
-    fontWeight: 700,
+    fontWeight: 600, // Noto Sans Semibold
     fontSize: 'var(--typo-h6-font-size)',
     lineHeight: 'var(--typo-h6-line-height)',
     letterSpacing: 'var(--typo-h6-letter-spacing)',
@@ -195,10 +195,26 @@ export const theme = createTheme({
   palette: { mode: 'light', ...lightPalette },
   typography,
   spacing: spacingFn,
+  components: {
+    MuiButton: {
+      defaultProps: {
+        variant: 'outlined', // Dashboard rule: secondary (outlined) is the default
+        disableElevation: true,
+      },
+    },
+  },
 });
 
 export const darkTheme = createTheme({
   palette: { mode: 'dark', ...darkPalette },
   typography,
   spacing: spacingFn,
+  components: {
+    MuiButton: {
+      defaultProps: {
+        variant: 'outlined', // Dashboard rule: secondary (outlined) is the default
+        disableElevation: true,
+      },
+    },
+  },
 });

@@ -47,10 +47,10 @@ const PAIRS = [
   { name: 'textOnAccent on surfaceAccent', fg: 'textOnAccent', bg: 'surfaceAccent', required: 4.5, warn: 4.5 },
   // Informational only unless explicitly included (white on white scenario)
   { name: 'textOnAccent on surfaceDefault', fg: 'textOnAccent', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
-  { name: 'focusRing outline vs surfaceDefault', fg: 'focusRing', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
-  { name: 'statusSuccess text vs surfaceDefault', fg: 'statusSuccess', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'statusWarning text vs surfaceDefault', fg: 'statusWarning', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'statusDanger text vs surfaceDefault', fg: 'statusDanger', bg: 'surfaceDefault', required: 3.0, warn: 4.5 }
+  { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
+  { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+  { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 }
 ];
 
 function runMode(mode) {

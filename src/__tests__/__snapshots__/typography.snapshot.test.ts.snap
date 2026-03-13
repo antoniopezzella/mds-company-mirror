@@ -61,14 +61,14 @@ exports[`theme.typography snapshot > has expected public fields for key variants
   "h5": {
     "fontFamily": "var(--typo-h5-font-family)",
     "fontSize": "var(--typo-h5-font-size)",
-    "fontWeight": 700,
+    "fontWeight": 600,
     "letterSpacing": "var(--typo-h5-letter-spacing)",
     "lineHeight": "var(--typo-h5-line-height)",
   },
   "h6": {
     "fontFamily": "var(--typo-h6-font-family)",
     "fontSize": "var(--typo-h6-font-size)",
-    "fontWeight": 700,
+    "fontWeight": 600,
     "letterSpacing": "var(--typo-h6-letter-spacing)",
     "lineHeight": "var(--typo-h6-line-height)",
   },

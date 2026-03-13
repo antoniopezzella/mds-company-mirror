@@ -6,8 +6,8 @@ Key specs:
 - Columns: 12
 - Base unit: 4px (overrideable)
 - Gutters: 8px
-- Breakpoints: xs, sm (600px), md (900px), lg (1200px), xl (1536px)
-- Container max widths: sm 580px, md 860px, lg 1140px, xl 1440px
+- Breakpoints: xs, sm (576px), md (768px), lg (992px), xl (1200px), xxl (1400px)
+- Container max widths: sm 540px, md 720px, lg 960px, xl 1140px, xxl 1320px
 
 ### Usage
 1) Import the grid styles once in your app (e.g., in your root or a layout component):

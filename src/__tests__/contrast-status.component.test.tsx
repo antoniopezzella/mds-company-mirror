@@ -3,19 +3,16 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { ContrastStatus } from '../docs/_components/ContrastStatus';
 
 // Simple mock fetch helper
-const mockFetch = (payload: any, ok = true) => {
-  // @ts-ignore
+const mockFetch = (payload: unknown, ok = true) => {
   global.fetch = vi.fn().mockResolvedValue({ ok, json: async () => payload });
 };
 
 describe('ContrastStatus', () => {
   const originalFetch = global.fetch;
   beforeEach(() => {
-    // @ts-ignore
-    global.fetch = undefined;
+    (global.fetch as unknown) = undefined;
   });
   afterEach(() => {
-    // @ts-ignore
     global.fetch = originalFetch;
     vi.restoreAllMocks();
   });
@@ -31,7 +28,6 @@ describe('ContrastStatus', () => {
   });
 
   it('shows error when badge missing', async () => {
-    // @ts-ignore
     global.fetch = vi.fn().mockResolvedValue({ ok: false });
     render(<ContrastStatus />);
     await waitFor(() => {

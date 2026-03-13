@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './LogoutHeader.module.scss';
-
-// Example logo asset from Figma export
-const MARSH_LOGO = 'http://localhost:3845/assets/7f4c6244932047b9869ef078283c24857c95c468.svg';
+import MARSH_LOGO from '../../assets/images/marsh.svg';
 
 const LogoutHeader: React.FC = () => (
   <header className={styles.header}>

@@ -35,3 +35,6 @@ lighthouse-quick-report.html
 .lighthouseci/
 lhci-data/
 .vercel
+
+# Local Netlify folder
+.netlify

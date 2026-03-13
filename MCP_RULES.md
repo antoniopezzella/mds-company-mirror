@@ -25,7 +25,7 @@ These rules define how to translate Figma inputs into code for this project and 
 - No Tailwind. Convert to: MUI + Roles (`src/theme/roles.ts`) + CSS Modules.
 - Components MUST consume colors via Roles, not primitives/semantic tokens directly.
 - Spacing uses `theme.spacing()` and indices from `src/spacing.ts` when possible.
-- Fonts: MMC Display (brand) and Noto Sans (body) loaded in `src/index.css`.
+- Fonts: MMC Display (MDS brand) and Noto Sans (body) loaded in `src/index.css`. Marsh Serif available for Marsh One project.
 
 ## Implementation rules
 - Treat the Figma MCP output (React + Tailwind) as a representation of design and behavior, not as final code style.

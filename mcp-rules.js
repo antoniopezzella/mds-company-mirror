@@ -22,20 +22,20 @@ module.exports = [
       return null;
     },
   },
-  // Enforce approved font families (MMC Display / Noto Sans)
+  // Enforce approved font families (MMC Display / Marsh Serif / Noto Sans)
   {
     id: 'approved-fonts',
-    description: 'Text must use MMC Display or Noto Sans',
+    description: 'Text must use MMC Display, Marsh Serif, or Noto Sans',
     check: (node, _context) => {
       if (node.type !== 'TEXT' || !node.fontName) return null;
-      const allowed = ['MMC Display', 'Noto Sans'];
+      const allowed = ['MMC Display', 'Marsh Serif', 'Noto Sans'];
       const family = node.fontName.family || '';
       if (!allowed.includes(family)) {
         return {
           message: `Font family ${family} is not approved. Allowed: ${allowed.join(', ')}`,
           nodeId: node.id,
           nodeName: node.name || '',
-          suggestion: 'Switch to MMC Display (display) or Noto Sans (body).'
+          suggestion: 'Switch to MMC Display (MDS display), Marsh Serif (Marsh One display), or Noto Sans (body).'
         };
       }
       return null;
@@ -121,6 +121,26 @@ module.exports = [
             nodeId: node.id,
             nodeName: node.name || 'text',
             suggestion: 'Adjust font size and line-height to match hero spec.'
+          };
+        }
+      }
+      return null;
+    },
+  },
+  // Dashboard button rule: outline is the default style
+  {
+    id: 'dashboard-button-variant',
+    description: 'Dashboard buttons should use outline style by default, not primary or secondary (filled)',
+    check: (node, _context) => {
+      // Flag primary/contained buttons in dashboard context
+      if (node.type === 'INSTANCE' && node.name?.toLowerCase().includes('button')) {
+        const variant = node.componentProperties?.variant?.value;
+        if (variant === 'primary' || variant === 'secondary' || variant === 'contained') {
+          return {
+            message: `Dashboard button "${node.name}" uses ${variant} (filled) variant. Dashboard rule: use outline by default.`,
+            nodeId: node.id,
+            nodeName: node.name || '',
+            suggestion: 'Switch to outline variant. Use primary/secondary only for critical CTAs.'
           };
         }
       }

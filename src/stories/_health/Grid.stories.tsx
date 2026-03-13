@@ -1,5 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import '../../styles/_grid.scss';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
   title: '_health/Grid',

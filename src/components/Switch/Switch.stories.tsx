@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSSwitch from './Switch';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
@@ -6,11 +6,12 @@ import { useState } from 'react';
 const meta = {
   title: 'Components/Switch',
   component: DSSwitch,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Switch built on MUI. Toggle control for on/off states with role-based colors.'
+        component: 'Toggle control for binary on/off states. Use for settings or features that take effect immediately.'
       }
     }
   },

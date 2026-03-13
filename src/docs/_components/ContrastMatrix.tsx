@@ -12,6 +12,10 @@ export interface ContrastMatrixProps {
 
 // Utility functions (self‑contained to avoid extra deps)
 const hexToRgb = (hex: string): [number, number, number] => {
+  if (!hex || typeof hex !== 'string') {
+    console.warn('hexToRgb received invalid input:', hex);
+    return [0, 0, 0]; // fallback to black
+  }
   const v = hex.replace('#','');
   const full = v.length === 3 ? v.split('').map(c => c + c).join('') : v;
   const n = parseInt(full, 16);
@@ -37,22 +41,22 @@ const contrastRatio = (hex1: string, hex2: string): number => {
 };
 
 const defaultPairs: Pair[] = [
-  { fg: tokens.blue700, bg: tokens.white, label: 'Blue700 on White' },
-  { fg: tokens.white, bg: tokens.blue700, label: 'White on Blue700' },
-  { fg: tokens.blue700, bg: tokens.blueGray75, label: 'Blue700 on BlueGray75' },
-  { fg: tokens.white, bg: tokens.blueGray900, label: 'White on BlueGray900' },
-  { fg: tokens.gray900, bg: tokens.white, label: 'Gray900 on White' },
-  { fg: tokens.gray700, bg: tokens.white, label: 'Gray700 on White' },
-  { fg: tokens.green600, bg: tokens.white, label: 'Green600 on White' },
-  { fg: tokens.yellow500, bg: tokens.blue700, label: 'Yellow500 on Blue700' },
+  { fg: tokens.blue750, bg: tokens.white, label: 'Blue750 (Active/links) on White' },
+  { fg: tokens.white, bg: tokens.blue750, label: 'White on Blue750' },
+  { fg: tokens.blue1000, bg: tokens.gray250, label: 'Blue1000 (brand) on Gray250' },
+  { fg: tokens.white, bg: tokens.blue1000, label: 'White on Blue1000 (Midnight)' },
+  { fg: tokens.neutral1000, bg: tokens.white, label: 'Neutral1000 on White' },
+  { fg: tokens.neutral700, bg: tokens.white, label: 'Neutral700 on White' },
+  { fg: tokens.statusSuccess, bg: tokens.white, label: 'StatusSuccess on White' },
+  { fg: tokens.gold750, bg: tokens.blue1000, label: 'Gold750 (CTA) on Blue1000' },
   // Dark mode focused pairs
-  { fg: tokens.blue300, bg: tokens.blueGray900, label: 'Blue300 on BlueGray900' },
-  { fg: tokens.gray400, bg: tokens.blueGray900, label: 'Gray400 on BlueGray900' },
-  { fg: tokens.green300, bg: tokens.blueGray900, label: 'Green300 on BlueGray900' },
-  { fg: tokens.crimson600, bg: tokens.white, label: 'Crimson600 on White' },
+  { fg: tokens.blue500, bg: tokens.neutral950, label: 'Blue500 on Neutral950 (dark bg)' },
+  { fg: tokens.neutral500, bg: tokens.neutral950, label: 'Neutral500 on Neutral950' },
+  { fg: tokens.green400, bg: tokens.neutral950, label: 'Green400 on Neutral950' },
+  { fg: tokens.statusCritical, bg: tokens.white, label: 'StatusCritical on White' },
   // Warning semantic examples (foreground on background + on white)
-  { fg: tokens.amber900, bg: tokens.amber100, label: 'Warning Text on Warning Bg' },
-  { fg: tokens.amber900, bg: tokens.white, label: 'Warning Text on White' },
+  { fg: tokens.statusWarning, bg: tokens.gold50, label: 'Warning Text on Warning Bg' },
+  { fg: tokens.statusWarning, bg: tokens.white, label: 'Warning Text on White' },
 ];
 
 export const ContrastMatrix: React.FC<ContrastMatrixProps> = ({

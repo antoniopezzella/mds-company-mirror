@@ -61,7 +61,9 @@ const Tabs: React.FC<TabsProps> = ({
   const [value, setValue] = useState(findInitialIndex());
 
   useEffect(() => {
-    setValue(findInitialIndex());
+    const newIndex = findInitialIndex();
+    setValue(newIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultActiveId, tabs]);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {

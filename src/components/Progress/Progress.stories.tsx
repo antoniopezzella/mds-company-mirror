@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DSCircularProgress, DSLinearProgress } from './Progress';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -6,11 +6,12 @@ import { useState, useEffect } from 'react';
 const circularMeta = {
   title: 'Components/Progress/Circular',
   component: DSCircularProgress,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Circular Progress indicator built on MUI. Supports determinate and indeterminate modes.'
+        component: 'Circular loading indicator for determinate and indeterminate progress. Use for small loading states.'
       }
     }
   },

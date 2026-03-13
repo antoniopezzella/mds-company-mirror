@@ -4,7 +4,15 @@ import ContentCard from './ContentCard';
 const meta: Meta<typeof ContentCard> = {
   title: 'Components/ContentCard',
   component: ContentCard,
-  parameters: { layout: 'padded' },
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'Rich content card for articles, reports, and media. Supports vertical/horizontal orientations, badges, and metadata.'
+      }
+    }
+  },
   args: {
     title: 'Heading 3',
     description: 'The global insurance market index is our proprietary measure of global commercial insurance premium pricing.',

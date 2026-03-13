@@ -5,6 +5,14 @@ import type { HeaderProps } from './Header';
 export default {
   title: 'Dashboard/Header',
   component: Header,
+  tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: 'Application header with branding, navigation, and user actions. Responsive and supports light/dark themes.'
+      }
+    }
+  },
   argTypes: {
     sidebarOpen: { control: 'boolean' },
     onToggleSidebar: { action: 'clicked' },

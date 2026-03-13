@@ -19,14 +19,14 @@ export const ElevationCompare: React.FC = () => {
               mode="light"
               label="Light"
               shadow={s.value}
-              bg={tokens.blueGray75}
-              textColor={tokens.blue700}
+              bg={tokens.gray250}
+              textColor={tokens.blue1000}
             />
             <Surface
               mode="dark"
               label="Dark"
               shadow={s.value}
-              bg={tokens.blueGray900}
+              bg={tokens.neutral950}
               textColor={tokens.white}
             />
           </div>
@@ -61,7 +61,7 @@ const Surface: React.FC<SurfaceProps> = ({ label, shadow, bg, textColor }) => {
       <div style={{ fontSize: 11, fontWeight: 600, color: textColor }}>{label}</div>
       <div
         style={{
-          background: label === 'Dark' ? tokens.blueGray800 : '#ffffff',
+          background: label === 'Dark' ? tokens.neutral950 : '#ffffff',
           borderRadius: 10,
           height: 60,
           display: 'flex',

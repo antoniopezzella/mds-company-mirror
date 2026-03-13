@@ -1,3 +1,22 @@
+# Marsh Design System Platform — Agent Guide
+---
+
+## Advanced Governance & Output Quality (Figma MCP best practices)
+
+- **Custom Rule Enforcement:**
+  - Add or update custom governance rules in `scripts/check-role-usage.js` or MCP config. Validate with `npm run governance:ci`.
+
+- **Accessibility & Contrast:**
+  - All new tokens/components must pass `npm run tokens:contrast:all` and Storybook a11y checks before merging.
+
+- **Deprecation & Migration:**
+  - Mark deprecated tokens in `src/tokens.ts` meta, and provide a `replaceWith` field. Update governance scripts to block usage after cutoff.
+
+- **Design-Dev Parity:**
+  - When updating Figma tokens, ensure changes are reflected in `src/tokens.ts` and semantic/role mappings. Run full governance checks after sync.
+
+- **Custom Output Validation:**
+  - If using MCP or similar, add output validation scripts for generated code (e.g., checking for consistent naming, structure, or accessibility).
 <!-- Workspace-specific instructions for AI coding agents. Keep this concise and factual to this repo. -->
 
 # Marsh Design System Platform — Agent Guide

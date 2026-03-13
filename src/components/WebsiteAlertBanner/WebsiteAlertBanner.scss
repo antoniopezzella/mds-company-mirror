@@ -1,0 +1,158 @@
+// Website Alert Banner - MDS Grid Implementation  
+// Uses Bootstrap-compatible CSS classes from MDS grid system
+@use '../../styles/grid' as grid;
+
+.website-alert-banner {
+  width: 100%;
+  position: relative;
+  z-index: 100; // Below header (1200) but above content
+  
+  // Desktop: horizontal layout, 64px height
+  min-height: 64px;
+  padding: 12px 0; // 12px vertical padding
+
+  // Prominent variant increases heights
+  &.prominent {
+    min-height: 80px;
+  }
+
+  @include grid.media-breakpoint-up(md) {
+    min-height: 72px;
+    
+    &.prominent {
+      min-height: 88px;
+    }
+  }
+
+  @include grid.media-breakpoint-down(sm) {
+    min-height: 148px;
+    
+    &.prominent {
+      min-height: 160px;
+    }
+  }
+
+  // Full width variant removes container constraints
+  &.full-width {
+    .container {
+      max-width: none;
+      padding-left: 48px; // 48px marketing margins
+      padding-right: 48px;
+
+      @include grid.media-breakpoint-down(lg) {
+        padding-left: 24px; // 24px
+        padding-right: 24px;
+      }
+
+      @include grid.media-breakpoint-down(sm) {
+        padding-left: 20px; // 20px
+        padding-right: 20px;
+      }
+    }
+  }
+
+  // Main content layout
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px; // 8px gap to match Figma
+    min-height: inherit;
+
+    // Desktop and tablet: horizontal layout
+    @include grid.media-breakpoint-up(md) {
+      flex-direction: row;
+      gap: 16px; // 16px gap
+    }
+
+    // Mobile: vertical stack
+    @include grid.media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px; // 12px gap
+    }
+  }
+
+  // Text content area (message and CTA button)
+  &__text-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0; // Allow text to wrap
+    gap: 32px; // 32px between message and button on desktop
+
+    // Desktop: horizontal layout
+    @include grid.media-breakpoint-up(md) {
+      flex-direction: row;
+      min-width: 240px; // Figma min width
+    }
+
+    // Mobile: vertical stack
+    @include grid.media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 12px; // 12px
+    }
+  }
+
+  // Message text styling
+  &__message {
+    flex: 1;
+    margin: 0;
+    font-family: var(--font-family-body, 'Noto Sans', sans-serif);
+    font-weight: 400;
+    white-space: pre-wrap;
+
+    // Desktop typography (from Figma)
+    font-size: 20px;
+    line-height: 32px;
+
+    // Tablet typography
+    @include grid.media-breakpoint-between(md, lg) {
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    // Mobile typography
+    @include grid.media-breakpoint-down(md) {
+      font-size: 16px;
+      line-height: 24px;
+      width: 100%;
+    }
+  }
+
+  // CTA Button styling (inherits from MUI but add spacing)
+  &__cta-button {
+    flex-shrink: 0;
+    
+    @include grid.media-breakpoint-down(md) {
+      width: auto; // Don't force full width on mobile
+    }
+  }
+
+  // Close button styling
+  &__close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 12px 8px;
+    border: none;
+    border-radius: 2px;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    // For dark backgrounds (Oliver Wyman, MMA)
+    .brand-oliver-wyman &:hover,
+    .brand-mma &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

@@ -27,67 +27,75 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
   fullWidth = false,
   error,
   sx,
+  helperText,
+  label,
   ...rest
 }) => {
-  // Determine error state from tone or explicit error prop
+  // Determine validation states
   const isError = error || tone === 'error';
   const isSuccess = tone === 'success';
   const isWarning = tone === 'warning';
 
-  // Get role-based colors
-  const focusBorderColor = getRoleColor('focus.ring');
-  const errorColor = getRoleColor('status.danger.fg');
-  const successColor = getRoleColor('status.success.fg');
-  const warningColor = getRoleColor('status.warning.fg');
-  const borderColor = getRoleColor('border.default');
-  const textColor = getRoleColor('text.primary');
-  const placeholderColor = getRoleColor('text.secondary');
+  // Get current state color for borders and labels
+  const stateColor = isError 
+    ? getRoleColor('status.danger.fg') 
+    : isSuccess 
+      ? getRoleColor('status.success.fg') 
+      : isWarning 
+        ? getRoleColor('status.warning.fg') 
+        : null;
 
   // Build custom styles
   const customSx = {
     '& .MuiOutlinedInput-root': {
-      color: textColor,
-      fontFamily: 'var(--typo-body-font-family)',
-      fontSize: 'var(--typo-body-font-size)',
-      lineHeight: 'var(--typo-body-line-height)',
+      color: getRoleColor('text.primary'),
+      fontFamily: 'var(--typo-body1-font-family)',
+      fontSize: 'var(--typo-body1-font-size)',
+      lineHeight: 'var(--typo-body1-line-height)',
       '& fieldset': {
-        borderColor: isError ? errorColor : isSuccess ? successColor : isWarning ? warningColor : borderColor,
+        borderColor: stateColor || getRoleColor('border.default'),
         borderWidth: '1px',
       },
       '&:hover fieldset': {
-        borderColor: isError ? errorColor : isSuccess ? successColor : isWarning ? warningColor : getRoleColor('border.strong'),
+        borderColor: stateColor || getRoleColor('border.strong'),
       },
       '&.Mui-focused fieldset': {
-        borderColor: isError ? errorColor : focusBorderColor,
+        borderColor: stateColor || getRoleColor('focus.ring'),
         borderWidth: '2px',
       },
       '&.Mui-disabled fieldset': {
-        borderColor: borderColor,
+        borderColor: getRoleColor('border.default'),
         opacity: 0.5,
       },
     },
     '& .MuiInputLabel-root': {
-      color: placeholderColor,
-      fontFamily: 'var(--typo-body-font-family)',
-      fontSize: 'var(--typo-body-font-size)',
+      color: getRoleColor('text.secondary'),
+      fontFamily: 'var(--typo-body1-font-family)',
+      fontSize: 'var(--typo-body1-font-size)',
       '&.Mui-focused': {
-        color: isError ? errorColor : focusBorderColor,
+        color: stateColor || getRoleColor('focus.ring'),
       },
-      '&.Mui-error': {
-        color: errorColor,
+      '&.Mui-error, &.Mui-focused.Mui-error': {
+        color: getRoleColor('status.danger.fg'),
       },
+      // Handle success/warning colors for non-error focused states if needed
+      ...(isSuccess && { color: `${getRoleColor('status.success.fg')} !important` }),
+      ...(isWarning && { color: `${getRoleColor('status.warning.fg')} !important` }),
     },
     '& .MuiFormHelperText-root': {
       fontFamily: 'var(--typo-caption-font-family)',
       fontSize: 'var(--typo-caption-font-size)',
       lineHeight: 'var(--typo-caption-line-height)',
+      margin: (theme: any) => theme.spacing(1, 0, 0, 0),
       '&.Mui-error': {
-        color: errorColor,
+        color: getRoleColor('status.danger.fg'),
       },
+      ...(isSuccess && { color: getRoleColor('status.success.fg') }),
+      ...(isWarning && { color: getRoleColor('status.warning.fg') }),
     },
     '& .MuiInputBase-input::placeholder': {
-      color: placeholderColor,
-      opacity: 1,
+      color: getRoleColor('text.secondary'),
+      opacity: 0.7,
     },
     ...sx,
   };
@@ -98,6 +106,8 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       size={size}
       fullWidth={fullWidth}
       error={isError}
+      label={label}
+      helperText={helperText}
       sx={customSx}
       {...rest}
     />

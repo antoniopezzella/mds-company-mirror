@@ -1,0 +1,43 @@
+@use '../../../styles/grid' as *;
+
+.metrics-section {
+  padding: 96px 0;
+  min-height: 980px; // From Figma
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include media-breakpoint-down(md) {
+    padding: 64px 0;
+    min-height: auto;
+  }
+
+  &__header {
+    margin-bottom: 64px;
+    padding: 0 48px;
+
+    @include media-breakpoint-down(md) {
+      margin-bottom: 48px;
+      padding: 0 24px;
+    }
+  }
+
+  &__title {
+    font-weight: 600;
+    line-height: 1.2;
+    max-width: 1824px; // From Figma
+  }
+
+  &__description {
+    line-height: 1.5;
+    max-width: 1824px; // From Figma (64px height = ~2 lines at 32px)
+  }
+
+  &__row {
+    padding: 0 48px;
+
+    @include media-breakpoint-down(md) {
+      padding: 0 24px;
+    }
+  }
+}

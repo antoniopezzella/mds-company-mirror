@@ -1,52 +1,196 @@
 // tokens.ts
-// Design system color tokens (primitives) for use in theme and components
+// Design system color tokens (primitives) — Figma "Primitive Colors" collection
+// Synced from: Figma OneWeb Design Concepts → Primitive Colors (local variables)
+// All palettes: 14 uniform stops (50–1000) with brand anchors at ★250, ★500, ★750, ★1000
+// Palettes: Blue, Gold, Green, Red, Purple, Gray, Neutral + Static + Utilities + Shades
+
 export const tokens = {
-  // Newly added midpoint shade to support clearer hover on accent surfaces
-  blue800: '#001e5a',
-  blue700: '#002c77',
-  // Precise active shade from Figma for primary on light
-  blue750: '#001f52',
-  blue600: '#0065ac',
-  blue500: '#009de0',
-  blue300: '#76d3ff',
-  blue900: '#001538',
-  // Brand hero surface (Marsh primary deep navy spec 000945)
-  brandHero: '#000945',
+  // ── BLUE (14 stops) ───────────────────────────────────────────────────────
+  blue50:   '#f5fbff',   // interpolated
+  blue100:  '#ebf7ff',   // interpolated
+  blue200:  '#d8f0ff',   // interpolated
+  blue250:  '#ceecff',   // ★ Figma anchor — Sky
+  blue300:  '#bbe1ff',   // interpolated
+  blue400:  '#95caff',   // interpolated
+  blue500:  '#6fb4ff',   // ★ Figma anchor
+  blue600:  '#478aff',   // interpolated
+  blue700:  '#1f60ff',   // interpolated
+  blue750:  '#0b4bff',   // ★ Figma anchor — Active
+  blue800:  '#093fda',   // interpolated
+  blue900:  '#042791',   // interpolated
+  blue950:  '#021b6c',   // interpolated
+  blue975:  '#1a2759',   // ~white@10% blended over #000f47 (nav hover)
+  blue990:  '#333f6b',   // ~white@20% blended over #000f47 (nav active)
+  blue1000: '#000f47',   // ★ Figma anchor — Midnight
+
+  // ── GOLD (14 stops) ───────────────────────────────────────────────────────
+  gold50:   '#fffcf8',   // interpolated
+  gold100:  '#fff8ed',   // interpolated
+  gold200:  '#fff5e1',   // interpolated
+  gold250:  '#fff2da',   // ★ Figma anchor
+  gold300:  '#ffe0bd',   // interpolated
+  gold400:  '#ffbd84',   // interpolated
+  gold500:  '#ff994a',   // ★ Figma anchor
+  gold600:  '#ffa02e',   // interpolated
+  gold700:  '#ffab14',   // interpolated
+  gold750:  '#ffb700',   // ★ Figma anchor
+  gold800:  '#f5a907',   // interpolated
+  gold900:  '#e09015',   // interpolated
+  gold950:  '#d5831c',   // interpolated
+  gold1000: '#cb7623',   // ★ Figma anchor
+
+  // ── GREEN (14 stops) ──────────────────────────────────────────────────────
+  green50:   '#f8fcf7',   // interpolated
+  green100:  '#f2faef',   // interpolated
+  green200:  '#e5f5df',   // interpolated
+  green250:  '#def2d7',   // ★ Figma anchor
+  green300:  '#ceeac9',   // interpolated
+  green400:  '#addbae',   // interpolated
+  green500:  '#8dcc92',   // ★ Figma anchor
+  green600:  '#7cc664',   // interpolated
+  green700:  '#6cc044',   // interpolated
+  green750:  '#64bc30',   // ★ Figma anchor
+  green800:  '#54a731',   // interpolated
+  green900:  '#449631',   // interpolated
+  green950:  '#3a8a32',   // interpolated
+  green1000: '#2f7d32',   // ★ Figma anchor
+
+  // ── RED (14 stops) ────────────────────────────────────────────────────────
+  red50:   '#fffafa',   // interpolated
+  red100:  '#fff4f4',   // interpolated
+  red200:  '#ffeded',   // interpolated
+  red250:  '#ffe8e8',   // ★ Figma anchor
+  red300:  '#ffcfcf',   // interpolated
+  red400:  '#ff9d9d',   // interpolated
+  red500:  '#ff6b6b',   // ★ Figma anchor
+  red600:  '#f55555',   // interpolated
+  red700:  '#ec4540',   // interpolated
+  red750:  '#e53935',   // ★ Figma anchor
+  red800:  '#d33330',   // interpolated
+  red900:  '#af2625',   // interpolated
+  red950:  '#9d201f',   // interpolated
+  red1000: '#8b1a1a',   // ★ Figma anchor
+
+  // ── PURPLE (14 stops) ─────────────────────────────────────────────────────
+  purple50:   '#fef8fe',   // interpolated
+  purple100:  '#fcf1fc',   // Figma value
+  purple200:  '#f7ebfe',   // interpolated
+  purple250:  '#f2e6ff',   // ★ Figma anchor
+  purple300:  '#e9d3ff',   // interpolated
+  purple400:  '#dcbaff',   // Figma value
+  purple500:  '#c88fff',   // ★ Figma anchor
+  purple600:  '#b96bf5',   // interpolated
+  purple700:  '#ab5aea',   // Figma value
+  purple750:  '#8f37c6',   // ★ Figma anchor
+  purple800:  '#842daf',   // interpolated
+  purple900:  '#7720b0',   // Figma value
+  purple950:  '#6a18a3',   // interpolated
+  purple1000: '#5e0f95',   // ★ Figma anchor
+
+  // ── GRAY (14 stops — warm/green-tinted neutral) ───────────────────────────
+  gray50:   '#fdfefe',   // interpolated
+  gray100:  '#fbfbfb',   // interpolated
+  gray200:  '#f9f9f9',   // interpolated
+  gray250:  '#f7f8f8',   // ★ Figma anchor
+  gray300:  '#eaebea',   // interpolated
+  gray400:  '#cfd0cd',   // interpolated
+  gray500:  '#b4b6b1',   // ★ Figma anchor
+  gray600:  '#9c9e9a',   // interpolated
+  gray700:  '#8a8c88',   // interpolated
+  gray750:  '#787b78',   // ★ Figma anchor
+  gray800:  '#6a6e6b',   // interpolated
+  gray900:  '#4d5551',   // interpolated
+  gray950:  '#3e4944',   // interpolated
+  gray1000: '#303c37',   // ★ Figma anchor
+
+  // ── NEUTRAL (14 stops — pure R=G=B scale) ─────────────────────────────────
+  neutral50:   '#f8f8f8',   // interpolated
+  neutral100:  '#eeeeee',   // interpolated
+  neutral200:  '#e3e3e3',   // Figma anchor
+  neutral250:  '#dadada',   // ★ brand anchor (= Figma 300)
+  neutral300:  '#c4c4c4',   // interpolated
+  neutral400:  '#a8a8a8',   // interpolated
+  neutral500:  '#878787',   // ★ brand anchor (= Figma 525)
+  neutral600:  '#767676',   // Figma anchor
+  neutral700:  '#595959',   // interpolated
+  neutral750:  '#4a4a4a',   // ★ brand anchor
+  neutral800:  '#3b3b3b',   // Figma anchor
+  neutral900:  '#252525',   // interpolated
+  neutral950:  '#101010',   // Figma anchor
+  neutral1000: '#000000',   // ★ brand anchor — pure black
+
+  // ── STATIC ────────────────────────────────────────────────────────────────
   white: '#ffffff',
   black: '#000000',
-  gray900: '#202020',
-  gray700: '#565656',
-  gray600: '#808080',
-  gray500: '#949494',
-  gray400: '#b3b3b3',
-  gray300: '#dadada',
-  gray200: '#e3e3e3',
-  gray100: '#ebebeb',
-  gray50: '#f4f4f4',
-  blueGray900: '#283245',
-  blueGray800: '#35425b',
-  blueGray700: '#4e6287',
-  blueGray75: '#f2f6f9',
-  green600: '#14853d',
-  green300: '#addfb3',
-  yellow500: '#ffbe00',
-  yellow400: '#ffd240',
-  crimson600: '#c53532',
-  crimson700: '#9a1c1f',
-  crimson900: '#691315',
-  crimson300: '#ffaea6',
-  teal500: '#0077a0',
-  turquoise500: '#00968f',
-  // Accessible warning palette (amber shades)
-  amber900: '#4a2e00',
-  amber800: '#673d00',
-  amber700: '#8a4e00',
-  amber600: '#b06100',
-  amber500: '#d87900',
-  amber400: '#ff9800',
-  amber300: '#ffb547',
-  amber200: '#ffd27f',
-  amber100: '#ffe5b3',
-  amber50:  '#fff4e0',
-  // ...add more as needed
+
+  // ── UTILITIES ─────────────────────────────────────────────────────────────
+  statusCritical: '#c53532',   // Figma Utilities/Critical
+  statusWarning:  '#cb7e03',   // Figma Utilities/Warning
+  statusSuccess:  '#14853d',   // Figma Utilities/Success
+  statusInfo:     '#6fb4ff',   // → blue500
+
+  // ── SHADES — White (alpha) ────────────────────────────────────────────────
+  shadesWhite90: 'rgba(255,255,255,0.90)',
+  shadesWhite85: 'rgba(255,255,255,0.85)',
+  shadesWhite80: 'rgba(255,255,255,0.80)',
+  shadesWhite70: 'rgba(255,255,255,0.70)',
+  shadesWhite65: 'rgba(255,255,255,0.65)',
+  shadesWhite60: 'rgba(255,255,255,0.60)',
+  shadesWhite50: 'rgba(255,255,255,0.50)',
+  shadesWhite40: 'rgba(255,255,255,0.40)',
+  shadesWhite30: 'rgba(255,255,255,0.30)',
+  shadesWhite20: 'rgba(255,255,255,0.20)',
+  shadesWhite10: 'rgba(255,255,255,0.10)',
+  shadesWhite5:  'rgba(255,255,255,0.05)',
+  shadesWhite0:  'rgba(255,255,255,0.00)',
+
+  // ── SHADES — Black (alpha) ────────────────────────────────────────────────
+  shadesBlack90: 'rgba(0,0,0,0.90)',
+  shadesBlack85: 'rgba(0,0,0,0.85)',
+  shadesBlack80: 'rgba(0,0,0,0.80)',
+  shadesBlack75: 'rgba(0,0,0,0.75)',
+  shadesBlack70: 'rgba(0,0,0,0.70)',
+  shadesBlack65: 'rgba(0,0,0,0.65)',
+  shadesBlack60: 'rgba(0,0,0,0.60)',
+  shadesBlack55: 'rgba(0,0,0,0.55)',
+  shadesBlack50: 'rgba(0,0,0,0.50)',
+  shadesBlack45: 'rgba(0,0,0,0.45)',
+  shadesBlack40: 'rgba(0,0,0,0.40)',
+  shadesBlack30: 'rgba(0,0,0,0.30)',
+  shadesBlack20: 'rgba(0,0,0,0.20)',
+  shadesBlack10: 'rgba(0,0,0,0.10)',
+  shadesBlack5:  'rgba(0,0,0,0.05)',
+  shadesBlack0:  'rgba(0,0,0,0.00)',
+
+  // ── SHADES — Midnight Blue (alpha) ────────────────────────────────────────
+  shadesMidnight90: 'rgba(0,15,71,0.90)',
+  shadesMidnight85: 'rgba(0,15,71,0.85)',
+  shadesMidnight80: 'rgba(0,15,71,0.80)',
+  shadesMidnight75: 'rgba(0,15,71,0.75)',
+  shadesMidnight70: 'rgba(0,15,71,0.70)',
+  shadesMidnight65: 'rgba(0,15,71,0.65)',
+  shadesMidnight60: 'rgba(0,15,71,0.60)',
+  shadesMidnight55: 'rgba(0,15,71,0.55)',
+  shadesMidnight50: 'rgba(0,15,71,0.50)',
+  shadesMidnight45: 'rgba(0,15,71,0.45)',
+  shadesMidnight40: 'rgba(0,15,71,0.40)',
+  shadesMidnight30: 'rgba(0,15,71,0.30)',
+  shadesMidnight20: 'rgba(0,15,71,0.20)',
+  shadesMidnight10: 'rgba(0,15,71,0.10)',
+
+  // ── SHADES — Active Blue (alpha) ──────────────────────────────────────────
+  shadesActive90: 'rgba(11,75,255,0.90)',
+  shadesActive85: 'rgba(11,75,255,0.85)',
+  shadesActive80: 'rgba(11,75,255,0.80)',
+  shadesActive75: 'rgba(11,75,255,0.75)',
+  shadesActive70: 'rgba(11,75,255,0.70)',
+  shadesActive65: 'rgba(11,75,255,0.65)',
+  shadesActive60: 'rgba(11,75,255,0.60)',
+  shadesActive55: 'rgba(11,75,255,0.55)',
+  shadesActive50: 'rgba(11,75,255,0.50)',
+  shadesActive45: 'rgba(11,75,255,0.45)',
+  shadesActive40: 'rgba(11,75,255,0.40)',
+  shadesActive30: 'rgba(11,75,255,0.30)',
+  shadesActive20: 'rgba(11,75,255,0.20)',
+  shadesActive10: 'rgba(11,75,255,0.10)',
 };

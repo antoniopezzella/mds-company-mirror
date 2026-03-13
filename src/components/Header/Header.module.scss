@@ -16,7 +16,7 @@ header {
   justify-content: space-between;
   box-sizing: border-box;
   padding: 0 24px;
-  color: tokens.$color-neutral-min;
+  /* color now controlled by MUI inline styles */
   font-family: "Noto Sans", sans-serif;
 }
 
@@ -32,7 +32,7 @@ header {
 }
 
 .mainNav {
-  flex: 1 1 auto;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,29 +40,66 @@ header {
 
 .navList {
   display: flex;
-  gap: 20px;
+  gap: 32px;
   list-style: none;
   margin: 0;
   padding: 0;
+  height: 100%;
+}
+
+.navItemWrapper {
+  display: flex;
+  align-items: center;
+  height: 64px; // Match header height
 }
 
 .navLink {
-  color: rgba(255, 255, 255, 0.95);
+  color: inherit;
   @include typo.apply-variant(subtitle1);
   text-decoration: none;
   padding: 8px 0;
+  cursor: pointer;
   display: inline-block;
-  transition: color 150ms ease;
-  &:hover {
-    color: #fff;
-    text-decoration: none;
+  transition: all 150ms ease;
+  border-bottom: 2px solid transparent;
+  font-weight: 500 !important;
+
+  &:hover, &.active {
+    color: var(--mds-brand-secondary, #ceecff);
+    border-bottom: 2px solid var(--mds-brand-secondary, #ceecff);
   }
 }
 
 .rightNav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+}
+
+.utilityNav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 16px;
+}
+
+.utilityLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: inherit;
+  font-weight: 500;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.ctaButton {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
 }
 
 .divider {
@@ -96,7 +133,7 @@ header {
 }
 
 .profileName {
-  color: #fff;
+  /* color inherited from parent */
   @include typo.apply-variant(subtitle2);
 }
 
@@ -113,15 +150,31 @@ header {
 }
 
 // Responsive adjustments
+
+// Tablet and below: collapse nav and profile text, tighten spacing
+@media (max-width: 1023.98px) {
+  .header {
+    padding: 0 16px;
+  }
+  .mainNav {
+    display: none; // hide main nav on tablet and below (toggle handled elsewhere)
+  }
+  .profileMeta {
+    display: none; // hide profile names to avoid crowding
+  }
+  .utilityNav {
+    gap: 12px;
+    margin-right: 8px;
+  }
+}
+
+// Mobile: slightly shorter header and more compact padding
 @media (max-width: 767.98px) {
   .header {
     padding: 0 12px;
     min-height: 56px;
   }
-  .mainNav {
-    display: none; // hide main nav on small screens (toggle handled elsewhere)
-  }
-  .profileMeta {
-    display: none; // hide profile names on small screens
+  .utilityNav {
+    display: none; // hide location selector on very small screens
   }
 }

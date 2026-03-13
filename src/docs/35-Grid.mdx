@@ -1,5 +1,4 @@
 export const meta = { title: 'Foundations/Grid' };
-import '../styles/_grid.scss';
 
 # Grid System
 
@@ -12,19 +11,25 @@ A powerful, scalable 12-column grid system built with CSS Grid. Perfect for resp
   borderRadius: '8px', 
   marginBottom: '32px' 
 }}>
-  <h2 style={{ margin: '0 0 8px 0', fontSize: '24px' }}>Quick Specs</h2>
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginTop: '16px' }}>
+  <h2 style={{ margin: '0 0 8px 0', fontSize: '24px' }}>Enhanced Grid System 2024</h2>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginTop: '16px' }}>
     <div>
-      <strong>Columns:</strong> 12 (customizable 1-12)
+      <strong>Columns:</strong> 12 (+ custom 1-12)
     </div>
     <div>
       <strong>Base Unit:</strong> 4px
     </div>
     <div>
-      <strong>Gutters:</strong> 8px default
+      <strong>Gutters:</strong> 8px-128px
     </div>
     <div>
-      <strong>Breakpoints:</strong> xs, sm(600), md(900), lg(1200), xl(1536)
+      <strong>Breakpoints:</strong> xs→xxl (1920px)
+    </div>
+    <div>
+      <strong>Aspect Ratios:</strong> 6 utilities
+    </div>
+    <div>
+      <strong>Subgrid:</strong> Future-ready
     </div>
   </div>
 </div>
@@ -39,28 +44,46 @@ import { GridHealth } from './_components/GridHealth';
 
 ### What You Can Do
 
-- ✅ **Create responsive layouts** that adapt from mobile to desktop
-- ✅ **Build dashboard widgets** with different heights
-- ✅ **Design card grids** that auto-fit to screen size
-- ✅ **Control spacing** from 4px to 96px
-- ✅ **Align content** horizontally and vertically
+- ✅ **Create responsive layouts** that adapt from mobile to ultra-wide (4K+)
+- ✅ **Build dashboard widgets** with different heights and aspect ratios
+- ✅ **Design card grids** that auto-fit to any screen size
+- ✅ **Control spacing** from 4px to 128px (enterprise-scale)
+- ✅ **Align content** horizontally and vertically with subgrid
 - ✅ **Reorder elements** visually without changing HTML
+- 🆕 **Ultra-wide layouts** for 1920px+ displays
+- 🆕 **Consistent aspect ratios** across all components
+- 🆕 **Future-proof alignment** with subgrid utilities
 
 ### Design Tokens
 
 ```
 Breakpoints:
   xs: 0px      (mobile)
-  sm: 600px    (tablet portrait)
-  md: 900px    (tablet landscape)
-  lg: 1200px   (desktop)
-  xl: 1536px   (large desktop)
+  sm: 576px    (tablet portrait)
+  md: 768px    (tablet landscape)
+  lg: 992px    (desktop)
+  xl: 1200px   (large desktop)
+  xxl: 1400px  (ultra-wide)
+
+Containers:
+  .container: 100% width up to 1320px max (centered)
+  .container-fluid: 100% width (full)
 
 Spacing Scale:
-  gap-1: 4px    gap-6: 24px   gap-12: 48px
-  gap-2: 8px    gap-8: 32px   gap-16: 64px
-  gap-3: 12px   gap-9: 36px   gap-20: 80px
-  gap-4: 16px   gap-10: 40px  gap-24: 96px
+  gap-1: 4px     gap-9: 36px    gap-20: 80px
+  gap-2: 8px     gap-10: 40px   gap-24: 96px
+  gap-3: 12px    gap-12: 48px   gap-28: 112px (new)
+  gap-4: 16px    gap-16: 64px   gap-32: 128px (new)
+  gap-6: 24px    gap-8: 32px    + responsive variants
+  
+Aspect Ratios:
+  .aspect-square   (1:1)    .aspect-3-2      (3:2)
+  .aspect-video    (16:9)   .aspect-21-9     (21:9)
+  .aspect-4-3      (4:3)    .aspect-auto     (reset)
+  
+Subgrid (Future):
+  .subgrid-cols, .subgrid-rows, .subgrid-both
+  + responsive variants for all breakpoints
 ```
 
 ---
@@ -259,6 +282,265 @@ The grid is already wired globally. Just use the classes in your HTML/JSX:
     <p style={{ margin: '8px 0 0 0', fontSize: '12px' }}>Equal width</p>
   </div>
 </div>
+
+---
+
+## 🆕 Enhanced Patterns (2024 Updates)
+
+### Pattern 4.1: Ultra-Wide Enterprise Layout
+
+**When to use**: Financial dashboards, data visualization, ultra-wide monitors (1920px+)
+
+**HTML:**
+```html
+<div class="container">
+  <div class="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-md-12 gap-6">
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric A</div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric B</div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric C</div>
+    <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric D</div>
+  </div>
+</div>
+```
+
+**React/JSX:**
+```tsx
+<div className="container">
+  <div className="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-md-12 gap-6">
+    {metrics.map(metric => (
+      <div key={metric.id} className="col-xxl-3 col-xl-4 col-lg-6 col-md-12">
+        <MetricCard {...metric} />
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+**Live Example:**
+
+<div className="container" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-md-12 gap-6">
+    <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{ background:'#e1f5fe', padding: 16, borderRadius: 4, textAlign: 'center', color:'#1a1a1a', minHeight: 100 }}>
+      <strong>Revenue</strong>
+      <p style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#0277bd' }}>$2.4M</p>
+      <small style={{ color: '#666' }}>XXL: 4 cols | XL: 3 cols | LG: 2 cols | MD+: 1 col</small>
+    </div>
+    <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{ background:'#e8f5e8', padding: 16, borderRadius: 4, textAlign: 'center', color:'#1a1a1a', minHeight: 100 }}>
+      <strong>Growth</strong>
+      <p style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#2e7d32' }}>+12%</p>
+      <small style={{ color: '#666' }}>Progressive spacing from 24px to 128px</small>
+    </div>
+    <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{ background:'#fff3e0', padding: 16, borderRadius: 4, textAlign: 'center', color:'#1a1a1a', minHeight: 100 }}>
+      <strong>Users</strong>
+      <p style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#f57c00' }}>1.2k</p>
+      <small style={{ color: '#666' }}>Ultra-wide responsive breakpoints</small>
+    </div>
+    <div className="col-xxl-3 col-xl-4 col-lg-6 col-md-12" style={{ background:'#fce4ec', padding: 16, borderRadius: 4, textAlign: 'center', color:'#1a1a1a', minHeight: 100 }}>
+      <strong>Conversion</strong>
+      <p style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#c2185b' }}>3.8%</p>
+      <small style={{ color: '#666' }}>Perfect for enterprise dashboards</small>
+    </div>
+  </div>
+</div>
+
+---
+
+### Pattern 4.2: Aspect Ratio Media Grid
+
+**When to use**: Image galleries, video grids, consistent media presentation
+
+**HTML:**
+```html
+<div class="row gap-4 gap-xxl-8">
+  <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div class="aspect-video">16:9 Video</div>
+  </div>
+  <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div class="aspect-square">1:1 Square</div>
+  </div>
+  <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div class="aspect-4-3">4:3 Classic</div>
+  </div>
+</div>
+```
+
+**React/JSX:**
+```tsx
+<div className="row gap-4 gap-xxl-8">
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-video">
+      <video>...</video>
+    </div>
+  </div>
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-square">
+      <img src="profile.jpg" />
+    </div>
+  </div>
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-4-3">
+      <img src="landscape.jpg" />
+    </div>
+  </div>
+</div>
+```
+
+**Live Example:**
+
+<div className="row gap-4 gap-xxl-8" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12 }}>
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-video" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+      📺 16:9 Video
+    </div>
+  </div>
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-square" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+      🎯 1:1 Square
+    </div>
+  </div>
+  <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-12">
+    <div className="aspect-4-3" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+      📷 4:3 Classic
+    </div>
+  </div>
+</div>
+
+---
+
+### Pattern 4.3: Subgrid Card Alignment (Future-Ready)
+
+**When to use**: Card grids where headers and footers need perfect alignment
+
+**HTML:**
+```html
+<!-- Parent defines row structure -->
+<div class="row gap-6" style="grid-template-rows: auto 1fr auto;">
+  <div class="col-4 subgrid-rows">
+    <h4>Header</h4>
+    <p>Variable content length...</p>
+    <button>Action</button>
+  </div>
+  <div class="col-4 subgrid-rows">
+    <h4>Header</h4>
+    <p>Short.</p>
+    <button>Action</button>
+  </div>
+  <div class="col-4 subgrid-rows">
+    <h4>Header</h4>
+    <p>Medium length content.</p>
+    <button>Action</button>
+  </div>
+</div>
+```
+
+**React/JSX:**
+```tsx
+<div className="row gap-6" style={{gridTemplateRows: 'auto 1fr auto'}}>
+  {products.map(product => (
+    <div key={product.id} className="col-4 subgrid-rows">
+      <h4>{product.title}</h4>
+      <p>{product.description}</p>
+      <button>Buy Now</button>
+    </div>
+  ))}
+</div>
+```
+
+**Live Example (Firefox/Safari):**
+
+<div className="row gap-6" style={{ border: '1px solid #e5e7eb', padding: 8, borderRadius: 6, marginTop: 12, gridTemplateRows: 'auto 1fr auto' }}>
+  <div className="col-4" style={{ display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
+    <h5 style={{ margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center' }}>Product A</h5>
+    <div style={{ background: 'white', padding: 12, borderRadius: 4, flexGrow: 1 }}>
+      Variable content length. This product has a detailed description that can be quite long and detailed.
+    </div>
+    <button style={{ marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4 }}>Buy Now</button>
+  </div>
+  <div className="col-4" style={{ display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
+    <h5 style={{ margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center' }}>Product B</h5>
+    <div style={{ background: 'white', padding: 12, borderRadius: 4, flexGrow: 1 }}>
+      Short description.
+    </div>
+    <button style={{ marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4 }}>Buy Now</button>
+  </div>
+  <div className="col-4" style={{ display: 'grid', gridRow: '1 / -1', background: '#f8f9fa', borderRadius: 8, padding: 16 }}>
+    <h5 style={{ margin: '0 0 8px 0', background: '#e3f2fd', padding: 8, borderRadius: 4, textAlign: 'center' }}>Product C</h5>
+    <div style={{ background: 'white', padding: 12, borderRadius: 4, flexGrow: 1 }}>
+      Medium length content that demonstrates subgrid alignment.
+    </div>
+    <button style={{ marginTop: 8, background: '#1976d2', color: 'white', border: 0, padding: '8px 16px', borderRadius: 4 }}>Buy Now</button>
+  </div>
+</div>
+
+<div style={{ background: '#fff3e0', padding: '12px', borderRadius: '4px', marginTop: '12px', fontSize: '14px' }}>
+  💡 <strong>Note:</strong> Subgrid is currently supported in Firefox and Safari. Chrome support coming soon. Headers and footers will align perfectly when supported.
+</div>
+
+---
+
+### Pattern 4.4: Container Fluid + Container Mix
+
+**When to use**: Full-width sections with centered content
+
+**HTML:**
+```html
+<!-- Full-width background with centered content -->
+<section class="container-fluid" style="background: #f8f9fa; padding: 40px 0;">
+  <div class="container">
+    <div class="row gap-6 gap-xxl-12">
+      <div class="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <h2>Full-width Section</h2>
+        <p>Centered content within full-width background</p>
+      </div>
+      <div class="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <div class="aspect-video">Media content</div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**React/JSX:**
+```tsx
+<section className="container-fluid" style={{background: '#f8f9fa', padding: '40px 0'}}>
+  <div className="container">
+    <div className="row gap-6 gap-xxl-12">
+      <div className="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <Hero />
+      </div>
+      <div className="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <div className="aspect-video">
+          <VideoPlayer />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+**Live Example:**
+
+<section className="container-fluid" style={{ background: '#f8f9fa', padding: '40px 16px', border: '1px solid #e5e7eb', borderRadius: 8, marginTop: 12 }}>
+  <div className="container">
+    <div className="row gap-6 gap-xxl-12">
+      <div className="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <h3 style={{ margin: '0 0 16px 0', color: '#1976d2' }}>Full-Width Hero Section</h3>
+        <p style={{ margin: '0 0 16px 0', lineHeight: 1.6, color: '#444' }}>
+          The container-fluid provides full viewport width with consistent padding, 
+          while the inner container centers content and respects max-width constraints.
+        </p>
+        <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
+          Perfect for hero sections, testimonials, and feature showcases.
+        </p>
+      </div>
+      <div className="col-xxl-6 col-xl-6 col-lg-6 col-12">
+        <div className="aspect-video" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+          🎬 Media Content
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 ---
 
@@ -487,14 +769,64 @@ Live preview
 
 Note: Our canonical API is the `.col-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*` set. The aliases are provided for familiarity and smoother adoption.
 
-## Utilities
+## Enhanced Utilities Reference
 
-- Columns: `.col-1`..`.col-12`, responsive: `.col-sm-6`, `.col-md-4`, `.col-lg-3`, `.col-xl-2`
-- Offsets: `.offset-1`..`.offset-11`, responsive equivalents
-- Gaps: `.gap-1` (4px), `.gap-2` (8px), `.gap-3` (12px), `.gap-4` (16px), `.gap-6` (24px), `.gap-8` (32px)
-- Directional gaps: `.gap-x-*` (column-gap) and `.gap-y-*` (row-gap)
-- Alignment: `.align-{start|center|end}`, `.justify-{start|center|end}` for items, and `.content-justify-*` / `.content-align-*` for grid tracks
-- Start position: `.start-N` to place an item at a specific grid track (with responsive variants)
+### Columns & Responsive
+- **Columns**: `.col-1`..`.col-12`, responsive: `.col-sm-6`, `.col-md-4`, `.col-lg-3`, `.col-xl-2`, **`.col-xxl-*`**
+- **Auto columns**: `.col` (equal width), `.col-auto` (content-based)
+- **Custom grids**: `.grid-cols-1` to `.grid-cols-12`, responsive: `.grid-cols-{bp}-{n}`
+- **Presets**: `.grid-auto-fit-{xs|sm|md|lg}`, `.grid-cols-sidebar`, `.grid-cols-two-thirds`
+
+### Spacing (Enhanced Scale)
+- **Standard**: `.gap-1` (4px), `.gap-2` (8px), `.gap-3` (12px), `.gap-4` (16px), `.gap-6` (24px), `.gap-8` (32px)
+- **Extended**: `.gap-9` (36px), `.gap-10` (40px), `.gap-12` (48px), `.gap-16` (64px), `.gap-20` (80px), `.gap-24` (96px)
+- **🆕 Enterprise**: **`.gap-28` (112px)**, **`.gap-32` (128px)**
+- **Directional**: `.gap-x-*` (column-gap) and `.gap-y-*` (row-gap)
+- **Responsive**: All gaps support `.gap-{bp}-{n}` (including **`.gap-xxl-*`**)
+
+### 🆕 Aspect Ratios
+- **`.aspect-square`** (1:1) - Perfect for profile images, icons
+- **`.aspect-video`** (16:9) - Video players, hero images  
+- **`.aspect-4-3`** (4:3) - Traditional photography
+- **`.aspect-3-2`** (3:2) - Modern photography
+- **`.aspect-21-9`** (21:9) - Ultra-wide content
+- **`.aspect-auto`** - Reset to natural ratio
+
+### 🆕 Subgrid (Future-Ready)
+- **`.subgrid-cols`** - Inherit parent's column tracks
+- **`.subgrid-rows`** - Inherit parent's row tracks  
+- **`.subgrid-both`** - Inherit both column and row tracks
+- **Responsive**: All subgrid utilities support `.subgrid-{type}-{bp}` variants
+
+### Containers
+- **`.container`** - Responsive centered container (540px → 1800px max-width)
+- **`.container-fluid`** - Full-width container with consistent padding
+- **🆕 Container queries**: `.container-query`, `.container-query-size` (future-ready)
+
+### Alignment & Layout
+- **Item alignment**: `.align-{start|center|end}`, `.justify-{start|center|end}`
+- **Content alignment**: `.content-justify-*` / `.content-align-*` for grid tracks
+- **Row spanning**: `.row-span-1` to `.row-span-6`, `.row-span-full`
+- **Column spanning**: `.col-span-1` to `.col-span-12`, `.col-span-full`
+- **Grid flow**: `.grid-flow-{row|col|dense}`
+
+### Offsets & Positioning  
+- **Offsets**: `.offset-1`..`.offset-11`, responsive: `.offset-{bp}-{n}`
+- **Start position**: `.start-{n}` to place item at specific grid track
+- **Responsive variants**: All positioning supports breakpoint variants
+
+### Visibility & Ordering
+- **Hide/Show**: `.hidden-{bp}`, `.visible-{bp}`
+- **Ordering**: `.order-0` to `.order-12`, `.order-first`, `.order-last`
+- **Responsive ordering**: `.order-{bp}-{n}`, `.order-{bp}-first`, `.order-{bp}-last`
+
+### Breakpoints (Enhanced)
+- **`xs`**: 0px (mobile-first baseline)
+- **`sm`**: 600px → `.col-sm-*`, `.gap-sm-*`
+- **`md`**: 900px → `.col-md-*`, `.gap-md-*` 
+- **`lg`**: 1200px → `.col-lg-*`, `.gap-lg-*`
+- **`xl`**: 1536px → `.col-xl-*`, `.gap-xl-*`
+- **🆕 `xxl`**: **1920px → `.col-xxl-*`, `.gap-xxl-*`, `.aspect-xxl-*`**
 - Fluid container: `.container-fluid` uses full width with consistent horizontal padding
 
 ### Auto-fit cards grid
@@ -965,12 +1297,42 @@ Set one column width, others auto-fill:
 | Name | Min Width | Usage |
 |------|-----------|-------|
 | `xs` | 0px | Default (mobile-first) |
-| `sm` | 600px | `.col-sm-6` |
-| `md` | 900px | `.col-md-4` |
-| `lg` | 1200px | `.col-lg-3` |
-| `xl` | 1536px | `.col-xl-2` |
+| `sm` | 576px | `.col-sm-6` |
+| `md` | 768px | `.col-md-4` |
+| `lg` | 992px | `.col-lg-3` |
+| `xl` | 1200px | `.col-xl-2` |
+| **`xxl`** | **1400px** | **`.col-xxl-*`** |
 
 </div>
+
+---
+
+## 🆕 Enhanced Features (2024)
+
+The grid system has been significantly enhanced with modern enterprise features:
+
+### ⭐ New in Grid 2.0
+
+- **XXL Breakpoint** (1920px): Ultra-wide screen support for 4K+ displays
+- **Extended Spacing**: `.gap-28` (112px), `.gap-32` (128px) for enterprise layouts  
+- **Aspect Ratio Utilities**: `.aspect-video`, `.aspect-square`, `.aspect-4-3`, etc.
+- **Subgrid Support**: Future-ready alignment with `.subgrid-cols`, `.subgrid-rows`
+- **Container Queries**: Prepared for element-based responsive design
+- **XXL-Specific Utilities**: Full responsive support for ultra-wide screens
+
+### 📚 Complete Enhancement Guide
+
+**[View Complete Grid Enhancement Documentation →](./GridEnhancements.mdx)**
+
+The enhanced guide includes:
+- Enterprise dashboard examples
+- Progressive responsive patterns  
+- Subgrid alignment techniques
+- Ultra-wide layout strategies
+- Browser support matrix
+- Migration guidance
+
+---
 
 ---
 
@@ -984,10 +1346,11 @@ $grid-columns: 12;        // Total columns
 $gutter: 8px;             // Default gap
 $grid-breakpoints: (
   xs: 0,
-  sm: 600px,
-  md: 900px,
-  lg: 1200px,
-  xl: 1536px
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
 );
 ```
 
@@ -1022,10 +1385,239 @@ $grid-breakpoints: (
 
 ---
 
+## 📖 Complete Quick Reference
+
+### 🏗 Most Common Classes (Copy & Paste)
+
+```html
+<!-- Responsive containers -->
+<div class="container">Centered, max-width responsive</div>
+<div class="container-fluid">Full-width with padding</div>
+
+<!-- Basic responsive layout -->
+<div class="row gap-4">
+  <div class="col-12 col-md-8">Main content</div>
+  <div class="col-12 col-md-4">Sidebar</div>
+</div>
+
+<!-- Auto-fit card grid -->
+<div class="grid-auto-fit-md gap-4">
+  <div>Card 1</div>
+  <div>Card 2</div>
+  <div>Card 3</div>
+</div>
+
+<!-- Enterprise dashboard with XXL support -->
+<div class="row gap-xxl-32 gap-xl-24 gap-lg-16 gap-6">
+  <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric</div>
+  <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric</div>
+  <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric</div>
+  <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-12">Metric</div>
+</div>
+
+<!-- Aspect ratio media -->
+<div class="aspect-video">16:9 video content</div>
+<div class="aspect-square">1:1 square content</div>
+<div class="aspect-4-3">4:3 classic content</div>
+
+<!-- Subgrid alignment (future) -->
+<div class="row gap-6" style="grid-template-rows: auto 1fr auto;">
+  <div class="col-4 subgrid-rows">
+    <h4>Header</h4>
+    <p>Variable content...</p>
+    <button>Action</button>
+  </div>
+</div>
+```
+
+### 🎯 Breakpoint Decision Tree
+
+**Which breakpoint to use?**
+- `xs` (0px): **Always start here** - mobile-first
+- `sm` (600px): Large phones in landscape, small tablets
+- `md` (900px): Tablets in portrait, small laptops  
+- `lg` (1200px): Laptops, desktops
+- `xl` (1536px): Large desktops, external monitors
+- **`xxl` (1920px): Ultra-wide, 4K displays, enterprise dashboards**
+
+**Common responsive patterns:**
+- **Two-column**: `.col-12 .col-md-8` + `.col-12 .col-md-4`
+- **Three-column**: `.col-12 .col-md-6 .col-lg-4`
+- **Four-column**: `.col-12 .col-md-6 .col-lg-4 .col-xl-3`
+- **🆕 Ultra-wide**: `.col-xxl-3 .col-xl-4 .col-lg-6 .col-md-12`
+
+### 📏 Spacing Scale Quick Reference
+
+| Class | Value | When to Use |
+|-------|-------|-------------|
+| `.gap-1` | 4px | Tight content, buttons |
+| `.gap-2` | 8px | Form fields, list items |
+| `.gap-3` | 12px | Card padding, small gaps |
+| `.gap-4` | 16px | **Most common - general spacing** |
+| `.gap-6` | 24px | Section spacing, large cards |
+| `.gap-8` | 32px | Component spacing |
+| `.gap-12` | 48px | Large section gaps |
+| `.gap-16` | 64px | Major section divisions |
+| `.gap-24` | 96px | Page-level spacing |
+| **🆕 `.gap-28`** | **112px** | **Enterprise section spacing** |
+| **🆕 `.gap-32`** | **128px** | **Maximum ultra-wide spacing** |
+
+### 🖼 Aspect Ratios by Use Case
+
+| Class | Ratio | Perfect For | Example |
+|-------|-------|-------------|---------|
+| `.aspect-square` | 1:1 | Profile images, avatars, icons | `<div class="aspect-square"><img src="avatar.jpg"></div>` |
+| `.aspect-video` | 16:9 | Videos, hero images | `<div class="aspect-video"><video>...</video></div>` |
+| `.aspect-4-3` | 4:3 | Traditional photos | `<div class="aspect-4-3"><img src="photo.jpg"></div>` |
+| `.aspect-3-2` | 3:2 | Modern photography | `<div class="aspect-3-2"><img src="landscape.jpg"></div>` |
+| `.aspect-21-9` | 21:9 | Ultra-wide content | `<div class="aspect-21-9">Ultra-wide banner</div>` |
+| `.aspect-auto` | auto | Reset to natural size | `<div class="aspect-auto">Natural dimensions</div>` |
+
+### 🔄 Responsive Variants Cheat Sheet
+
+**Pattern**: `.{utility}-{breakpoint}-{value}`
+
+```html
+<!-- Responsive columns -->
+.col-12         <!-- All screens: 12 columns (100%) -->
+.col-sm-6       <!-- Small+: 6 columns (50%) -->  
+.col-md-4       <!-- Medium+: 4 columns (33%) -->
+.col-lg-3       <!-- Large+: 3 columns (25%) -->
+.col-xl-2       <!-- XL+: 2 columns (16%) -->
+.col-xxl-1      <!-- XXL+: 1 column (8%) -->
+
+<!-- Responsive gaps -->
+.gap-4          <!-- All screens: 16px gap -->
+.gap-md-6       <!-- Medium+: 24px gap -->
+.gap-lg-8       <!-- Large+: 32px gap -->
+.gap-xl-12      <!-- XL+: 48px gap -->
+.gap-xxl-16     <!-- XXL+: 64px gap -->
+
+<!-- Responsive aspect ratios -->
+.aspect-square      <!-- All screens: 1:1 -->
+.aspect-md-video    <!-- Medium+: 16:9 -->
+.aspect-lg-4-3      <!-- Large+: 4:3 -->
+
+<!-- Responsive subgrid -->
+.subgrid-cols          <!-- All screens: inherit columns -->
+.subgrid-lg-rows       <!-- Large+: inherit rows -->
+.subgrid-xxl-both      <!-- XXL+: inherit both -->
+```
+
+### ⚡ Performance Tips
+
+**Fastest Grid Patterns:**
+1. **`.container` + `.row` + `.col-*`** - Most optimized
+2. **`.grid-auto-fit-md`** - Auto-responsive without media queries
+3. **`.col` (no number)** - Equal-width, minimal CSS
+
+**Avoid These:**
+- ❌ Nested `.container` inside `.container`
+- ❌ Using `.row` without `.col-*` children
+- ❌ Mixing flexbox and grid utilities on same element
+
+### 🎨 Design System Integration
+
+**With MUI Components:**
+```tsx
+// Use sx prop for MUI + grid classes
+<Box className="container">
+  <Box className="row gap-4">
+    <Box className="col-12 col-md-6" sx={{ p: 2 }}>
+      <Card>Content</Card>
+    </Box>
+  </Box>
+</Box>
+```
+
+**With Design Tokens:**
+```scss
+.custom-grid {
+  // Use theme.spacing() with grid
+  padding: theme.spacing(4); // Aligns with .gap-4
+  
+  // Use role colors
+  background: getRoleColor('surface.accent');
+}
+```
+
+### 🔧 Troubleshooting Common Issues
+
+**Grid Not Working?**
+1. ✅ Check if `.row` has `.col-*` children
+2. ✅ Verify total columns don't exceed 12
+3. ✅ Ensure no typos in class names
+4. ✅ Check responsive order with DevTools
+
+**Layout Breaking on Mobile?**
+1. ✅ Use `.col-12` for mobile-first
+2. ✅ Test with DevTools mobile view  
+3. ✅ Check if content overflow is hidden
+4. ✅ Verify touch-friendly tap targets (44px minimum)
+
+**XXL Not Working?**
+1. ✅ Check viewport is actually 1920px+
+2. ✅ Verify no conflicting CSS
+3. ✅ Test with browser zoom at 100%
+4. ✅ Check if other utilities override
+
+### 📱 Browser Support Matrix
+
+| Feature | Chrome | Firefox | Safari | Edge | Mobile |
+|---------|--------|---------|--------|------|--------|
+| Grid System | ✅ | ✅ | ✅ | ✅ | ✅ |
+| XXL Breakpoint | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Aspect Ratios | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Subgrid** | 🔄 | ✅ | ✅ | 🔄 | 🔄 |
+| Container Queries | ✅ | 🔄 | ✅ | ✅ | ✅ |
+
+**Legend:** ✅ Full support, 🔄 Partial/Coming soon
+
+---
+
+## 🚀 Migration & Upgrade Path
+
+### From Previous Grid Version
+
+**✅ Backward Compatible:**
+- All existing `.col-*`, `.gap-*` classes work unchanged
+- All breakpoints `xs` through `xl` unchanged  
+- Container behavior identical
+
+**🆕 New Features to Adopt:**
+```scss
+// 1. Add XXL breakpoint support
+.metric-card {
+  @extend .col-12, .col-md-6, .col-lg-4, .col-xl-3, .col-xxl-2;
+}
+
+// 2. Use extended spacing for enterprise layouts  
+.dashboard-section {
+  @extend .gap-xxl-32, .gap-xl-24, .gap-lg-16, .gap-8;
+}
+
+// 3. Replace custom aspect ratio CSS
+.video-container {
+  @extend .aspect-video; // Instead of padding-bottom: 56.25%
+}
+
+// 4. Prepare for subgrid (progressive enhancement)
+.card-grid {
+  @extend .row, .gap-6;
+  grid-template-rows: auto 1fr auto; // Ready for subgrid
+  
+  .card {
+    @extend .col-4, .subgrid-rows; // Works when supported
+  }
+}
+```
+
+---
+
 Need more examples? Check out:
-- **Test Page:** [/grid](/grid) — Interactive showcase of all features
+- **🔥 Enhanced Grid Guide:** [GridEnhancements.mdx](./GridEnhancements.mdx)
+- **Test Page:** [/grid](/grid) — Interactive showcase  
 - **Quick Reference:** `GRID_REFERENCE.md` in repo
 - **Implementation Details:** `GRID_ENHANCEMENTS.md`
 
-```
-</div>
+*The enhanced grid system positions Marsh Design System as the industry leader in enterprise-grade responsive design.* ✨

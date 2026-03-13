@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSSelect from './Select';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
@@ -22,11 +22,22 @@ const priorities = [
 const meta = {
   title: 'Components/Select',
   component: DSSelect,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Design System Select built on MUI. Supports single and multiple selection with role-based colors.'
+        component: `
+# Select
+
+A dropdown control used to provide a list of options to the user.
+
+## Features
+- ✅ **Validation Feedback**: Integrated success, warning, and error tones that affect the border, label, and helper text.
+- ✅ **Selection Types**: Supports both single and multiple selection.
+- ✅ **Role-Based Styling**: Menu items and borders strictly consume design system roles.
+- ✅ **Typography**: Uses standardized Noto Sans variables for all text elements.
+        `
       }
     }
   },
@@ -212,10 +223,10 @@ export const FormExample: Story = {
             { value: 'health', label: 'Healthcare' },
             { value: 'education', label: 'Education' },
           ]}
+          multiple
           value={categories}
           onChange={(e) => setCategories(e.target.value as string[])}
-          multiple
-          helperText="Select one or more categories"
+          helperText="Select multiple categories"
         />
       </Stack>
     );

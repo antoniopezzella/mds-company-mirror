@@ -1,6 +1,6 @@
 // _theme-dark.scss
 // Dark theme mapping for semantic tokens
-@import './_tokens.scss';
+@use './tokens' as *;
 
 // Brand
 $color-brand-primary: $color-primary-light; // #009de0 (lighter blue for dark bg)

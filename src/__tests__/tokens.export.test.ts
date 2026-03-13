@@ -7,7 +7,7 @@ import { semanticColors } from '../semantic-tokens';
 describe('token export shapes', () => {
   test('color tokens non-empty + key sample', () => {
     expect(Object.keys(tokens).length).toBeGreaterThan(5);
-    expect(tokens.blue700).toBe('#002c77');
+    expect(tokens.blue750).toBe('#0b4bff');
   });
   test('spacing ascending', () => {
     const sorted = [...spacing].sort((a,b)=>a-b);
