@@ -1,9 +1,11 @@
+@use '../../../styles/tokens' as t;
+
 .metric-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: t.$spacing-24;
 
   &__value {
     font-variant-numeric: tabular-nums;

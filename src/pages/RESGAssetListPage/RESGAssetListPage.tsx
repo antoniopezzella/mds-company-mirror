@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
 import DSButton from '../../components/Button/Button';
 import { Chip } from '../../components/Chip/Chip';
-import { Table } from '../../components/Table';
+import { MDSDataGrid } from '../../components/DataGrid';
+import type { GridColDef } from '../../components/DataGrid';
 import { DashboardHeader } from '../../components/Header/Header';
 import SideNavigation, { type SideNavItem } from '../../components/SideNavigation/SideNavigation';
 import { AIAgentBot } from '../../components/AIAgentBot';
@@ -141,61 +142,37 @@ export const RESGAssetListPage: React.FC = () => {
     },
   ];
 
-  const tableColumns = [
-    { 
-      key: 'assetName', 
-      header: 'Asset Name',
-      sortable: true,
-      width: '200px'
-    },
-    { 
-      key: 'location', 
-      header: 'Location',
-      sortable: true,
-      width: '150px'
-    },
-    { 
-      key: 'lob', 
-      header: 'Line of Business',
-      sortable: true,
-      width: '160px'
-    },
-    { 
-      key: 'program', 
-      header: 'Program',
-      sortable: true,
-      width: '140px'
-    },
-    { 
-      key: 'status', 
-      header: 'Status',
-      sortable: true,
-      width: '120px',
-      accessor: (row: any) => (
-        <Chip 
-          label={row.status}
+  const tableColumns: GridColDef[] = [
+    { field: 'assetName',     headerName: 'Asset Name',          flex: 1, minWidth: 200 },
+    { field: 'location',      headerName: 'Location',            width: 160 },
+    { field: 'lob',           headerName: 'Line of Business',    flex: 1, minWidth: 160 },
+    { field: 'program',       headerName: 'Program',             width: 150 },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 140,
+      renderCell: (params) => (
+        <Chip
+          label={params.value as string}
           tone={
-            row.status === 'Active' ? 'success' :
-            row.status === 'Pending' ? 'warning' :
-            row.status === 'Under Review' ? 'info' : 'default'
+            params.value === 'Active'       ? 'success' :
+            params.value === 'Pending'      ? 'warning' :
+            params.value === 'Under Review' ? 'info' : 'default'
           }
           size="sm"
         />
-      )
+      ),
     },
-    { 
-      key: 'tiv', 
-      header: 'Total Insured Value',
-      sortable: true,
-      align: 'right' as const,
-      width: '140px'
+    {
+      field: 'tiv',
+      headerName: 'Total Insured Value',
+      width: 170,
+      type: 'number',
+      align: 'right',
+      headerAlign: 'right',
+      valueFormatter: (value: string) => value,
     },
-    { 
-      key: 'effectiveDate', 
-      header: 'Effective Date',
-      sortable: true,
-      width: '120px'
-    },
+    { field: 'effectiveDate', headerName: 'Effective Date', width: 130 },
   ];
 
   const handleFilterToggle = (filterId: string) => {
@@ -403,24 +380,16 @@ export const RESGAssetListPage: React.FC = () => {
                   <Chip label="Status" selectable tone="default" size="sm" />
                   <Chip label="High TIV" selectable tone="default" size="sm" />
                 </div>
-                <Table
+                <MDSDataGrid
                   key={tableStateKey}
                   columns={tableColumns}
-                  data={filteredData}
-                  variant="striped"
-                  size="md"
-                  hoverable={true}
-                  sortable={true}
-                  selectable={true}
-                  stickyHeader={true}
-                  pagination={{
-                    enabled: true,
-                    pageSize: 25,
-                    pageSizeOptions: [10, 25, 50, 100],
-                    variant: 'advanced'
-                  }}
-                  caption="Real estate asset list for Beacon Capital Partners"
-                  className="resg-asset-table"
+                  rows={filteredData}
+                  checkboxSelection
+                  disableRowSelectionOnClick
+                  autoHeight
+                  initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+                  pageSizeOptions={[10, 25, 50, 100]}
+                  aria-label="Real estate asset list for Beacon Capital Partners"
                 />
               </div>
             </div>

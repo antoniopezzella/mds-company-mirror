@@ -1,3 +1,5 @@
+@use '../../styles/tokens' as t;
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -20,12 +22,12 @@
 
 .typing-indicator {
   display: flex;
-  gap: 4px;
-  padding: 12px 16px;
+  gap: t.$spacing-4;
+  padding: t.$spacing-12 t.$spacing-16;
 
   .dot {
-    width: 8px;
-    height: 8px;
+    width: t.$spacing-8;
+    height: t.$spacing-8;
     border-radius: 50%;
     background-color: #021b6c;
     animation: typing 1.4s infinite ease-in-out;

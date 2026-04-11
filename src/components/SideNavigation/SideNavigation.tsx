@@ -9,11 +9,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { useTheme } from '@mui/material/styles';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import InsightsIcon from '@mui/icons-material/Insights';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import PolicyIcon from '@mui/icons-material/Policy';
+import ShieldIcon from '@mui/icons-material/Shield';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import FolderIcon from '@mui/icons-material/Folder';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { getRoleColor } from '../../theme/roles';
 
 // Fallback icon if none is provided
@@ -40,6 +46,8 @@ function slugify(text: string) {
 
 const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaLabel = 'Primary', variant = 'dark' }) => {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
+  const theme = useTheme();
+  const mode = theme.palette.mode;
 
   // Sidebar open by default
   // If sidebarOpen is controlled by parent, ensure default is true in parent
@@ -50,14 +58,36 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
 
   const colors = useMemo(
     () => {
+      // System is in dark mode: Both variants converge to same dark appearance
+      if (mode === 'dark') {
+        return {
+          navBg: getRoleColor('surface.subtle', { mode: 'dark' }),
+          navText: getRoleColor('text.primary', { mode: 'dark' }),
+          sectionHeaderText: getRoleColor('text.primary', { mode: 'dark' }),
+          itemHoverBg: getRoleColor('surface.default', { mode: 'dark' }),
+          activeBg: 'rgba(149, 202, 255, 0.16)', // Light blue tint for dark mode
+          activeHoverBg: 'rgba(149, 202, 255, 0.24)',
+          activeText: getRoleColor('text.primary', { mode: 'dark' }),
+          activeBorder: getRoleColor('interactive.secondary', { mode: 'dark' }),
+          divider: getRoleColor('border.default', { mode: 'dark' }),
+          ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
+          ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+          ctaBtnBg: getRoleColor('interactive.secondary', { mode: 'dark' }),
+          ctaBtnText: getRoleColor('text.onAccent', { mode: 'dark' }),
+          ctaBtnHover: getRoleColor('interactive.secondary.hover', { mode: 'dark' })
+        };
+      }
+
+      // Light mode: variant determines appearance
       if (variant === 'light') {
+        // White sidebar variant
         return {
           navBg: getRoleColor('surface.default'),
           navText: getRoleColor('text.primary'),
           sectionHeaderText: getRoleColor('text.primary'),
           itemHoverBg: getRoleColor('surface.subtle'),
-          activeBg: getRoleColor('surface.navigation.active'),
-          activeHoverBg: getRoleColor('surface.navigation.active'),
+          activeBg: 'rgba(11, 75, 255, 0.08)', // Light blue tint for active state
+          activeHoverBg: 'rgba(11, 75, 255, 0.12)',
           activeText: getRoleColor('text.primary'),
           activeBorder: getRoleColor('interactive.secondary'),
           divider: getRoleColor('border.default'),
@@ -69,6 +99,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
         };
       }
 
+      // Navy blue sidebar variant
       return {
         navBg: getRoleColor('surface.navigation'),
         navText: getRoleColor('text.onHero'),
@@ -86,7 +117,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
         ctaBtnHover: getRoleColor('interactive.secondary.hover')
       };
     },
-    [variant]
+    [variant, mode]
   );
 
   return (
@@ -96,11 +127,28 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
         {items.map((item) => {
           let icon;
           switch (item.label) {
+            case 'Dashboard':
             case 'Overview':
               icon = <DashboardIcon />;
               break;
+            case 'Policies & Coverage':
+              icon = <PolicyIcon />;
+              break;
+            case 'Risk Management':
             case 'Risk & Insights':
-              icon = <InsightsIcon />;
+              icon = <ShieldIcon />;
+              break;
+            case 'Claims':
+              icon = <AssignmentIcon />;
+              break;
+            case 'Analytics':
+              icon = <BarChartIcon />;
+              break;
+            case 'Documents':
+              icon = <FolderIcon />;
+              break;
+            case 'Settings':
+              icon = <SettingsIcon />;
               break;
             case 'Help':
               icon = <HelpOutlineIcon />;

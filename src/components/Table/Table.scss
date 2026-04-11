@@ -1,0 +1,406 @@
+// Table.scss — uses design-system spacing tokens + grid breakpoint mixins.
+// All padding / gap values reference $spacing-N from _tokens.scss
+// (mirrors src/spacing.ts and theme.spacing(n)).
+@use '../../styles/tokens' as t;
+@use '../../styles/grid' as *;
+
+// ── Wrapper ──────────────────────────────────────────────────────────────────
+
+.mds-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+// ── Scroll Progress Indicator ────────────────────────────────────────────────
+
+.mds-table__scroll-progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary, #000F47), var(--color-primary-light, #4A90E2));
+  z-index: 100;
+  transition: width 0.1s ease-out;
+  border-radius: 0 3px 3px 0;
+}
+
+// ── Scroll Shadows ────────────────────────────────────────────────────────────
+
+.mds-table-wrapper--shadow-left::before,
+.mds-table-wrapper--shadow-right::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: t.$spacing-32; // 32px shadow band
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.mds-table-wrapper--shadow-left::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
+}
+
+.mds-table-wrapper--shadow-right::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+}
+
+.mds-table-wrapper--shadow-top {
+  box-shadow: inset 0 t.$spacing-8 t.$spacing-8 calc(t.$spacing-8 * -1) rgba(0, 0, 0, 0.1);
+}
+
+.mds-table-wrapper--shadow-bottom {
+  box-shadow: inset 0 calc(t.$spacing-8 * -1) t.$spacing-8 calc(t.$spacing-8 * -1) rgba(0, 0, 0, 0.1);
+}
+
+.mds-table-wrapper--shadow-top.mds-table-wrapper--shadow-bottom {
+  box-shadow:
+    inset 0 t.$spacing-8 t.$spacing-8 calc(t.$spacing-8 * -1) rgba(0, 0, 0, 0.1),
+    inset 0 calc(t.$spacing-8 * -1) t.$spacing-8 calc(t.$spacing-8 * -1) rgba(0, 0, 0, 0.1);
+}
+
+.mds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-family-primary, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  background-color: var(--color-background, #ffffff);
+  color: var(--color-text, #1B222F);
+}
+
+// ── Caption ───────────────────────────────────────────────────────────────────
+
+.mds-table__caption {
+  padding: t.$spacing-12 t.$spacing-16; // 12px 16px
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text, #1B222F);
+  caption-side: top;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.mds-table__head {
+  background-color: var(--color-gray-50, #F8F9FA);
+  border-bottom: 2px solid var(--color-gray-200, #E9ECEF);
+}
+
+.mds-table__header {
+  padding: t.$spacing-16; // 16px
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #495057);
+  border-bottom: 2px solid var(--color-gray-200, #E9ECEF);
+  white-space: nowrap;
+  user-select: none;
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: t.$spacing-8; // 8px
+  }
+
+  &--sortable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-gray-100, #F1F3F5);
+    }
+  }
+
+  &--sorted {
+    color: var(--color-primary, #000F47);
+
+    .mds-table__sort-icon { opacity: 1; }
+  }
+
+  &--checkbox {
+    width: t.$spacing-48; // 48px
+    text-align: center;
+  }
+}
+
+.mds-table__sort-icon {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+
+.mds-table__body {
+  background-color: var(--color-background, #ffffff);
+}
+
+.mds-table__row {
+  transition: background-color 0.2s ease;
+}
+
+.mds-table__cell {
+  padding: t.$spacing-16; // 16px
+  border-bottom: 1px solid var(--color-gray-200, #E9ECEF);
+  font-size: 0.875rem;
+  color: var(--color-text, #1B222F);
+
+  &--checkbox {
+    width: t.$spacing-48; // 48px
+    text-align: center;
+  }
+
+  &--loading,
+  &--empty {
+    text-align: center;
+    padding: t.$spacing-48 t.$spacing-16; // 48px 16px
+    color: var(--color-text-secondary, #6C757D);
+    font-style: italic;
+  }
+}
+
+/* Variants */
+
+/* Default - already styled above */
+
+/* Striped */
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(odd) {
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+/* Bordered */
+.mds-table--bordered {
+  border: 1px solid var(--color-gray-200, #E9ECEF);
+}
+
+.mds-table--bordered .mds-table__header,
+.mds-table--bordered .mds-table__cell {
+  border: 1px solid var(--color-gray-200, #E9ECEF);
+}
+
+// ── Compact Variant ───────────────────────────────────────────────────────────
+
+.mds-table--compact {
+  .mds-table__header,
+  .mds-table__cell {
+    padding: t.$spacing-8 t.$spacing-12; // 8px 12px
+  }
+}
+
+// ── Size Modifiers ────────────────────────────────────────────────────────────
+
+.mds-table--sm {
+  .mds-table__header,
+  .mds-table__cell {
+    padding: t.$spacing-8 t.$spacing-12; // 8px 12px
+    font-size: 0.75rem;
+  }
+}
+
+.mds-table--md {
+  .mds-table__header,
+  .mds-table__cell {
+    padding: t.$spacing-12 t.$spacing-16; // 12px 16px
+    font-size: 0.875rem;
+  }
+}
+
+.mds-table--lg {
+  .mds-table__header,
+  .mds-table__cell {
+    padding: t.$spacing-16 t.$spacing-20; // 16px 20px
+    font-size: 1rem;
+  }
+}
+
+/* Hoverable */
+.mds-table--hoverable .mds-table__body .mds-table__row:hover {
+  background-color: var(--color-gray-50, #F8F9FA);
+  cursor: pointer;
+}
+
+/* Selectable */
+.mds-table--selectable .mds-table__row--selected {
+  background-color: var(--color-primary-light, rgba(0, 15, 71, 0.05));
+}
+
+.mds-table--selectable .mds-table__row--selected:hover {
+  background-color: var(--color-primary-light, rgba(0, 15, 71, 0.1));
+}
+
+/* Sticky Header */
+.mds-table--sticky-header .mds-table__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+/* Sticky First Column */
+.mds-table--sticky-first-column .mds-table__header--sticky-left,
+.mds-table--sticky-first-column .mds-table__cell--sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 11;
+  background-color: inherit;
+}
+
+.mds-table--sticky-first-column .mds-table__header--sticky-left {
+  background-color: var(--color-gray-50, #F8F9FA);
+  z-index: 12;
+}
+
+// shadow on the sticky column edge
+.mds-table--sticky-first-column .mds-table__header--sticky-left::after,
+.mds-table--sticky-first-column .mds-table__cell--sticky-left::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: t.$spacing-20; // 20px shadow band
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05));
+  pointer-events: none;
+}
+
+/* Ensure sticky cells have proper background */
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(odd) .mds-table__cell--sticky-left {
+  background-color: var(--color-gray-50, #F8F9FA);
+}
+
+.mds-table--striped .mds-table__body .mds-table__row:nth-child(even) .mds-table__cell--sticky-left {
+  background-color: var(--color-background, #ffffff);
+}
+
+/* Focus styles for keyboard navigation */
+.mds-table__cell:focus {
+  outline: 2px solid var(--color-primary, #000F47);
+  outline-offset: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+.mds-table__cell:focus-visible {
+  outline: 3px solid var(--color-primary, #000F47);
+  outline-offset: -3px;
+}
+
+// ── Checkbox ──────────────────────────────────────────────────────────────────
+
+.mds-table input[type="checkbox"] {
+  // 18px: falls between spacing-3 (16px) and spacing-3+spacing-0 (20px);
+  // use rem equivalent for accessibility scaling
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--color-primary, #000F47);
+}
+
+// ── Fill-Height Mode (viewport-relative) ─────────────────────────────────────
+// When active the wrapper fills the remaining viewport height so the page
+// itself does not scroll — only the table body scrolls internally.
+// --mds-table-offset: total fixed chrome height above the table (set via prop).
+// Uses `100dvh` (dynamic viewport height — accounts for mobile browser chrome)
+// with a `100vh` fallback for older browsers.
+
+.mds-table-wrapper--fill-height {
+  height: 100vh; // fallback
+  // stylelint-disable-next-line unit-no-unknown
+  height: calc(100dvh - var(--mds-table-offset, 0px));
+  overflow-y: auto;
+
+  // When the user passes a heightOffset as a calc expression we need this to
+  // be valid CSS — always wrap in calc() on the SCSS side only if it's static;
+  // the inline custom property already takes any value.
+}
+
+// ── Min-Width (responsive defaults) ──────────────────────────────────────────
+// --mds-table-min-width can be set via the `minWidth` prop; the values below
+// are the SCSS fallbacks applied per breakpoint when no prop is given.
+// This keeps columns from collapsing — the wrapper handles horizontal scrolling.
+
+.mds-table {
+  min-width: var(--mds-table-min-width, 320px); // xs / phone default
+
+  @include respond(sm) { min-width: var(--mds-table-min-width, 480px); }
+  @include respond(md) { min-width: var(--mds-table-min-width, 600px); }
+  @include respond(lg) { min-width: var(--mds-table-min-width, 800px); }
+  @include respond(xl) { min-width: var(--mds-table-min-width, 960px); }
+}
+// Below md (768px): step every size down one notch; prioritise data density.
+
+@include media-breakpoint-down(md) {
+  .mds-table-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // Default / md size → compact spacing at mobile
+  .mds-table__header,
+  .mds-table__cell {
+    padding: t.$spacing-12 t.$spacing-8; // 12px 8px
+    font-size: 0.75rem;
+  }
+
+  // lg size → md spacing at mobile
+  .mds-table--lg .mds-table__header,
+  .mds-table--lg .mds-table__cell {
+    padding: t.$spacing-12; // 12px
+    font-size: 0.875rem;
+  }
+}
+
+// ── Animations ────────────────────────────────────────────────────────────────
+
+@keyframes mds-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.mds-table__cell--loading {
+  animation: mds-pulse 1.5s ease-in-out infinite;
+}
+
+// ── Status Badges (rendered inside cells) ────────────────────────────────────
+
+.mds-table-badge {
+  display: inline-block;
+  padding: t.$spacing-4 t.$spacing-12; // 4px 12px
+  border-radius: t.$spacing-12;         // 12px pill
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+
+  &--success { background-color: #D4EDDA; color: #155724; }
+  &--warning { background-color: #FFF3CD; color: #856404; }
+  &--danger  { background-color: #F8D7DA; color: #721C24; }
+  &--info    { background-color: #D1ECF1; color: #0C5460; }
+  &--neutral {
+    background-color: var(--color-gray-200, #E9ECEF);
+    color: var(--color-text-secondary, #495057);
+  }
+}
+
+// ── Action Buttons (rendered inside cells) ───────────────────────────────────
+
+.mds-table-actions {
+  display: flex;
+  align-items: center;
+  gap: t.$spacing-8; // 8px
+}
+
+.mds-table-action-btn {
+  padding: t.$spacing-4 t.$spacing-8; // 4px 8px
+  border: none;
+  background: transparent;
+  color: var(--color-primary, #000F47);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: opacity 0.2s ease;
+
+  &:hover    { opacity: 0.7; text-decoration: underline; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}

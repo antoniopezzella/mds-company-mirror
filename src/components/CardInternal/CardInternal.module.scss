@@ -1,9 +1,11 @@
+@use '../../styles/tokens' as t;
+
 .card {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(32, 32, 32, 0.08);
   border: 1px solid #dadada;
-  padding: 24px;
+  padding: t.$spacing-24;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -11,13 +13,13 @@
 }
 
 .header {
-  margin-bottom: 16px;
+  margin-bottom: t.$spacing-16;
 }
 
 .titleRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: t.$spacing-16;
 }
 
 .title {
@@ -32,7 +34,7 @@
   background: #007a76;
   color: #fff;
   border-radius: 100px;
-  padding: 4px 12px;
+  padding: t.$spacing-4 t.$spacing-12;
   font-size: 14px;
   font-family: 'Noto Sans', sans-serif;
   font-weight: 400;
@@ -43,7 +45,7 @@
   background: #dadada;
   color: #565656;
   border-radius: 100px;
-  padding: 4px 12px;
+  padding: t.$spacing-4 t.$spacing-12;
   font-size: 14px;
   font-family: 'Noto Sans', sans-serif;
   font-weight: 400;
@@ -53,17 +55,17 @@
 .subtitle {
   font-size: 14px;
   color: #949494;
-  margin: 4px 0 0 0;
+  margin: t.$spacing-4 0 0 0;
 }
 
 .content {
   flex: 1;
-  margin-bottom: 16px;
+  margin-bottom: t.$spacing-16;
 }
 
 .limitsRow {
   display: flex;
-  gap: 8px;
+  gap: t.$spacing-8;
   font-size: 16px;
   font-family: 'Noto Sans', sans-serif;
   color: #565656;
@@ -83,15 +85,15 @@
   color: #14853d;
   background: rgba(20, 133, 61, 0.15);
   border-radius: 100px;
-  padding: 4px 12px;
-  margin-top: 8px;
+  padding: t.$spacing-4 t.$spacing-12;
+  margin-top: t.$spacing-8;
   font-family: 'Noto Sans', sans-serif;
   font-weight: 700;
 }
 
 .footer {
   display: flex;
-  gap: 8px;
+  gap: t.$spacing-8;
   align-items: center;
 }
 

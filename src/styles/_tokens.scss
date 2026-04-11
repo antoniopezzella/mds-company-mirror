@@ -146,3 +146,23 @@ $color-purple-300: #ccb3e0;
 $color-purple-200: #dbcae9;
 $color-purple-100: #eae0f2;
 $color-purple-50: #f9f7fb;
+
+// ── Spacing Scale ──────────────────────────────────────────────────────
+// Names reflect the px value at the default 16px root font-size.
+// Values are rem so they scale with the user's root font-size (WCAG compatible).
+// Usage in SCSS:  @use '../../styles/tokens' as t;  padding: t.$spacing-16;
+$spacing-4:   0.25rem;  //   4px — hair gap, inner icon padding
+$spacing-8:   0.5rem;   //   8px — tight gap, badge/button padding
+$spacing-12:  0.75rem;  //  12px — compact cell padding, inner spacing
+$spacing-16:  1rem;     //  16px — default cell padding, base unit
+$spacing-20:  1.25rem;  //  20px — wide cell padding (lg size)
+$spacing-24:  1.5rem;   //  24px — section gap
+$spacing-32:  2rem;     //  32px — card / block gap
+$spacing-40:  2.5rem;   //  40px
+$spacing-48:  3rem;     //  48px — empty/loading state vertical padding
+$spacing-56:  3.5rem;   //  56px
+$spacing-64:  4rem;     //  64px
+$spacing-80:  5rem;     //  80px
+$spacing-96:  6rem;     //  96px
+$spacing-112: 7rem;     // 112px
+$spacing-128: 8rem;     // 128px

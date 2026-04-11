@@ -1,11 +1,11 @@
-@use '../../styles/_tokens.scss' as tokens;
+@use '../../styles/tokens' as t;
 
 .header {
-  background: tokens.$color-blue-700;
+  background: t.$color-blue-700;
   min-height: 64px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 t.$spacing-24;
 }
 
 .container {
@@ -32,10 +32,10 @@
 }
 
 .signInButton {
-  background: tokens.$color-blue-700;
-  color: tokens.$color-neutral-min;
+  background: t.$color-blue-700;
+  color: t.$color-neutral-min;
   border: none;
-  padding: 12px 16px;
+  padding: t.$spacing-12 t.$spacing-16;
   border-radius: 2px;
   font-family: "Noto Sans", sans-serif;
   font-size: 16px;

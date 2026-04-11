@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import './Table.css';
+import './Table.scss';
 import { Pagination } from '../Pagination';
 import type { PaginationVariant } from '../Pagination';
 import DSSkeleton from '../Skeleton/Skeleton';
@@ -72,6 +72,24 @@ export interface TableProps<T = Record<string, unknown>> {
   showScrollProgress?: boolean;
   /** Enable auto-scroll to focused cell */
   scrollToFocus?: boolean;
+  /**
+   * Stretch the table to fill the remaining viewport height so the page
+   * itself does not scroll — the table body scrolls internally instead.
+   * Pair with `stickyHeader` for the best experience.
+   */
+  fillHeight?: boolean;
+  /**
+   * Height of the fixed chrome above the table (e.g. `'64px'` for a nav bar,
+   * or `'64px + 48px'` for nav + toolbar). Used only when `fillHeight` is true.
+   * Accepts any valid CSS length or calc expression.
+   */
+  heightOffset?: string;
+  /**
+   * Minimum width of the inner <table> element. When reached the wrapper
+   * starts horizontal scrolling instead of collapsing columns.
+   * Falls back to responsive SCSS defaults when omitted.
+   */
+  minWidth?: string;
 }
 
 // Using function declaration instead of arrow function to avoid Babel parsing issues
@@ -98,6 +116,9 @@ function TableComponent<T extends Record<string, unknown>>({
   stickyFirstColumn = false,
   showScrollProgress = false,
   scrollToFocus = true,
+  fillHeight = false,
+  heightOffset = '0px',
+  minWidth,
 }: TableProps<T>) {
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const [sortColumn, setSortColumn] = useState<string | null>(defaultSortColumn || null);
@@ -306,16 +327,18 @@ function TableComponent<T extends Record<string, unknown>>({
 
   const wrapperClasses = [
     'mds-table-wrapper',
+    fillHeight && 'mds-table-wrapper--fill-height',
     scrollShadows && scrollState.canScrollLeft && 'mds-table-wrapper--shadow-left',
     scrollShadows && scrollState.canScrollRight && 'mds-table-wrapper--shadow-right',
     scrollShadows && scrollState.canScrollUp && 'mds-table-wrapper--shadow-top',
     scrollShadows && scrollState.canScrollDown && 'mds-table-wrapper--shadow-bottom',
   ].filter(Boolean).join(' ');
 
-  const wrapperStyle: React.CSSProperties = maxHeight ? {
-    maxHeight,
-    overflowY: 'auto',
-  } : {};
+  const wrapperStyle: React.CSSProperties = {
+    ...(maxHeight ? { maxHeight, overflowY: 'auto' } : {}),
+    ...(fillHeight ? { '--mds-table-offset': heightOffset } as React.CSSProperties : {}),
+    ...(minWidth ? { '--mds-table-min-width': minWidth } as React.CSSProperties : {}),
+  };
 
   return (
     <>
