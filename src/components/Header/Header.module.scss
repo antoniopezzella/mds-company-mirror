@@ -1,4 +1,4 @@
-@use '../../styles/_tokens.scss' as tokens;
+@use '../../styles/tokens' as t;
 @use '../../styles/_typography.scss' as typo;
 
 header {
@@ -15,7 +15,7 @@ header {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 0 24px;
+  padding: 0 t.$spacing-24;
   /* color now controlled by MUI inline styles */
   font-family: "Noto Sans", sans-serif;
 }
@@ -40,7 +40,7 @@ header {
 
 .navList {
   display: flex;
-  gap: 32px;
+  gap: t.$spacing-32;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -57,7 +57,7 @@ header {
   color: inherit;
   @include typo.apply-variant(subtitle1);
   text-decoration: none;
-  padding: 8px 0;
+  padding: t.$spacing-8 0;
   cursor: pointer;
   display: inline-block;
   transition: all 150ms ease;
@@ -73,14 +73,14 @@ header {
 .rightNav {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: t.$spacing-12;
 }
 
 .utilityNav {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-right: 16px;
+  gap: t.$spacing-20;
+  margin-right: t.$spacing-16;
 }
 
 .utilityLink {
@@ -111,15 +111,15 @@ header {
 .profile {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: t.$spacing-12;
 }
 
 .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: tokens.$color-neutral-min;
-  color: tokens.$color-blue-700;
+  background: t.$color-neutral-min;
+  color: t.$color-blue-700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,7 +146,7 @@ header {
 .arrow {
   height: 12px;
   width: 12px;
-  margin-left: 4px;
+  margin-left: t.$spacing-4;
 }
 
 // Responsive adjustments
@@ -154,7 +154,7 @@ header {
 // Tablet and below: collapse nav and profile text, tighten spacing
 @media (max-width: 1023.98px) {
   .header {
-    padding: 0 16px;
+    padding: 0 t.$spacing-16;
   }
   .mainNav {
     display: none; // hide main nav on tablet and below (toggle handled elsewhere)
@@ -163,15 +163,15 @@ header {
     display: none; // hide profile names to avoid crowding
   }
   .utilityNav {
-    gap: 12px;
-    margin-right: 8px;
+    gap: t.$spacing-12;
+    margin-right: t.$spacing-8;
   }
 }
 
 // Mobile: slightly shorter header and more compact padding
 @media (max-width: 767.98px) {
   .header {
-    padding: 0 12px;
+    padding: 0 t.$spacing-12;
     min-height: 56px;
   }
   .utilityNav {

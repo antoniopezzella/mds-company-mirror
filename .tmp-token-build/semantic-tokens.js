@@ -12,11 +12,13 @@ import { tokens } from './tokens.js';
 const ref = (name) => tokens[name];
 export const semanticColors = {
     // ── Brand Identity ────────────────────────────────────────────────────────
-    brandPrimary: ref('blue1000'), // #000f47 — Midnight Blue
+    brandPrimary: ref('blue1000'), // #000f47 — Midnight Blue (legacy)
+    brandPrimaryDark: ref('blue1100'), // #002c77 — MODE Primary (Figma future-state)
     brandSecondary: ref('blue250'), // #ceecff — Sky Blue
     brandAccent: ref('gold750'), // #ffb700 — Supporting accent (legacy CTA)
     // ── Typography ────────────────────────────────────────────────────────────
-    textPrimary: ref('blue1000'), // #000f47 — Primary body text
+    textPrimary: ref('blue1000'), // #000f47 — Primary body text (legacy)
+    textPrimaryMode: ref('blue1100'), // #002c77 — MODE Primary (Figma future-state)
     textSecondary: ref('neutral700'), // #595959 — Secondary / muted text
     textTertiary: ref('neutral600'), // #767676 — Tertiary / placeholder
     textOnAccent: ref('white'), // Light text on primary accent surfaces (e.g. Midnight buttons)
@@ -29,7 +31,8 @@ export const semanticColors = {
     surfaceSubtle: ref('neutral50'), // #f8f8f8 — Slight elevation
     surfaceMuted: ref('neutral200'), // #e3e3e3 — Muted backgrounds
     surfaceAccent: ref('gray250'), // #f7f8f8 — Warm accent (was blueGray75)
-    surfaceNavigation: ref('blue1000'), // #000f47 — Midnight Blue header
+    surfaceNavigation: ref('blue1000'), // #000f47 — Midnight Blue header (legacy)
+    surfaceNavigationMode: ref('blue1100'), // #002c77 — MODE Surface Primary (Figma future-state)
     // Approximations of white overlays blended on `#000f47` to produce stable hex values
     surfaceNavigationHover: ref('blue975'), // #1a2759 — ~white@10% over #000f47
     surfaceNavigationActive: ref('blue990'), // #333f6b — ~white@20% over #000f47
@@ -40,7 +43,8 @@ export const semanticColors = {
     borderSubtle: ref('neutral250'), // #dadada — Very light dividers
     borderDefault: ref('neutral500'), // #878787 — Standard borders
     borderStrong: ref('neutral700'), // #595959 — Strong emphasis borders
-    borderFocus: ref('blue750'), // #0b4bff — Active Blue focus rings
+    borderFocus: ref('blue750'), // #0b4bff — Active Blue focus rings (legacy)
+    borderFocusMode: ref('focusCyan'), // #009de0 — MODE/Border/Focus (Figma future-state)
     focusRing: ref('blue750'), // #0b4bff — Alias for borderFocus (roles.ts)
     // ── Interactive — Primary (Midnight / CTA) ────────────────────────────────
     interactivePrimary: ref('blue1000'), // #000f47 — Midnight Blue

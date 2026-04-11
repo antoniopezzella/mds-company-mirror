@@ -1,3 +1,4 @@
+@use '../../styles/tokens' as t;
 
 .megaMenuWrapper {
   position: fixed;
@@ -8,7 +9,7 @@
   box-shadow: none; // Matching hover requirement of no shadows
   border-top: 1px solid var(--mds-border-subtle, #dadada);
   z-index: 1300;
-  padding: 24px 0 40px;
+  padding: t.$spacing-24 0 t.$spacing-40;
   animation: slideDown 0.3s ease-out;
   pointer-events: auto; // Ensure interaction
 }
@@ -50,12 +51,12 @@
 .containerInner {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: t.$spacing-24;
 }
 
 .sectionTitle {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: t.$spacing-12;
   color: var(--mds-text-secondary, #595959);
   font-weight: 600;
   text-transform: none;
@@ -71,13 +72,13 @@
 .mainContent {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: t.$spacing-32;
 }
 
 .solutionsHeader {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: t.$spacing-4;
 }
 
 .solutionsTitle {
@@ -90,7 +91,7 @@
 }
 
 .pillarCard {
-  padding: 16px;
+  padding: t.$spacing-16;
   background-color: var(--mds-surface-accent, #f7f8f8);
   border-radius: 4px;
   display: flex;
@@ -105,7 +106,7 @@
 }
 
 .pillarTitle {
-  margin-bottom: 16px !important;
+  margin-bottom: t.$spacing-16 !important;
   color: var(--mds-text-primary, #000f47);
   
   strong {
@@ -116,8 +117,8 @@
 .pillarTags {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: t.$spacing-8;
+  margin-bottom: t.$spacing-24;
 }
 
 .pillarTag {
@@ -139,11 +140,11 @@
 }
 
 .bottomSection {
-  margin-top: 16px;
+  margin-top: t.$spacing-16;
 }
 
 .listTitle {
-  margin-bottom: 16px !important;
+  margin-bottom: t.$spacing-16 !important;
   color: var(--mds-text-primary, #000f47);
   font-weight: 700 !important;
 }
@@ -151,13 +152,13 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: t.$spacing-12;
 }
 
 .listItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: t.$spacing-8;
   cursor: pointer;
   color: var(--mds-text-primary, #000f47);
 
@@ -179,9 +180,9 @@
 .aiSolutionTop {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: t.$spacing-12;
   background-color: #ffffff;
-  padding: 12px 20px;
+  padding: t.$spacing-12 t.$spacing-20;
   border-radius: 8px;
   border: 1px solid var(--mds-border-subtle, #dadada);
   max-width: 500px;
@@ -226,7 +227,7 @@
 .bannerCta {
   background-color: #d1f7f5; // Teal color from screenshot
   border-radius: 8px;
-  padding: 32px;
+  padding: t.$spacing-32;
   display: flex;
   justify-content: space-between;
   align-items: center;

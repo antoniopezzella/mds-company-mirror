@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Typography, Avatar, Box, IconButton, Tooltip, Badge, Button, Divider } from "@mui/material";
+import { Typography, Avatar, Box, IconButton, Tooltip, Badge, Button, Divider, useTheme } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
@@ -25,6 +25,8 @@ export interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar, variant = 'primary' }) => {
   const { mode, toggleMode } = useThemeMode();
+  const theme = useTheme();
+  const systemMode = theme.palette.mode;
   const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
   const [isNavHovered, setIsNavHovered] = React.useState(false);
 
@@ -38,6 +40,15 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar, variant =
   // NOTE: dashboard header simplified — no L1 navigation here.
 
   const getHeaderStyles = () => {
+    // System is in dark mode: Both variants converge to same dark appearance
+    if (systemMode === 'dark') {
+      return {
+        backgroundColor: getRoleColor('surface.subtle', { mode: 'dark' }),
+        color: getRoleColor('text.primary', { mode: 'dark' })
+      };
+    }
+
+    // Light mode with nav interaction
     const isLightBackground = variant === 'secondary' || isNavHovered || !!activeMenu;
 
     if (isLightBackground) {
@@ -57,6 +68,16 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar, variant =
   };
 
   const getLogoStyles = () => {
+    // Dark mode: always use light logo
+    if (systemMode === 'dark') {
+      return {
+        filter: 'brightness(0) invert(1)',
+        width: 'auto',
+        height: '24px'
+      };
+    }
+
+    // Light mode
     const isLightBackground = variant === 'secondary' || isNavHovered || !!activeMenu;
 
     if (!isLightBackground) {
@@ -76,8 +97,24 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar, variant =
   };
 
   const getHoverColor = () => {
+    if (systemMode === 'dark') {
+      return getRoleColor('surface.default', { mode: 'dark' });
+    }
     // Hover overlay for dashboard controls
     return getRoleColor('surface.navigation.hover');
+  };
+
+  const getAvatarColors = () => {
+    if (systemMode === 'dark') {
+      return {
+        bgcolor: getRoleColor('surface.default', { mode: 'dark' }),
+        color: getRoleColor('text.primary', { mode: 'dark' })
+      };
+    }
+    return {
+      bgcolor: getRoleColor('surface.navigation'),
+      color: getRoleColor('text.onHero')
+    };
   };
 
   return (
@@ -184,8 +221,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, onToggleSidebar, variant =
               </IconButton>
               <Avatar
                 sx={{
-                  bgcolor: getRoleColor('surface.navigation'),
-                  color: getRoleColor('text.onHero'),
+                  ...getAvatarColors(),
                   width: 32,
                   height: 32,
                   fontWeight: 700,

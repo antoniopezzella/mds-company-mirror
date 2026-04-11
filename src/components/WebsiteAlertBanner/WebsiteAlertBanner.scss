@@ -1,6 +1,7 @@
 // Website Alert Banner - MDS Grid Implementation  
 // Uses Bootstrap-compatible CSS classes from MDS grid system
 @use '../../styles/grid' as grid;
+@use '../../styles/tokens' as t;
 
 .website-alert-banner {
   width: 100%;
@@ -9,7 +10,7 @@
   
   // Desktop: horizontal layout, 64px height
   min-height: 64px;
-  padding: 12px 0; // 12px vertical padding
+  padding: t.$spacing-12 0; // 12px vertical padding
 
   // Prominent variant increases heights
   &.prominent {
@@ -36,17 +37,17 @@
   &.full-width {
     .container {
       max-width: none;
-      padding-left: 48px; // 48px marketing margins
-      padding-right: 48px;
+      padding-left: t.$spacing-48; // 48px marketing margins
+      padding-right: t.$spacing-48;
 
       @include grid.media-breakpoint-down(lg) {
-        padding-left: 24px; // 24px
-        padding-right: 24px;
+        padding-left: t.$spacing-24; // 24px
+        padding-right: t.$spacing-24;
       }
 
       @include grid.media-breakpoint-down(sm) {
-        padding-left: 20px; // 20px
-        padding-right: 20px;
+        padding-left: t.$spacing-20; // 20px
+        padding-right: t.$spacing-20;
       }
     }
   }
@@ -56,20 +57,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px; // 8px gap to match Figma
+    gap: t.$spacing-8; // 8px gap to match Figma
     min-height: inherit;
 
     // Desktop and tablet: horizontal layout
     @include grid.media-breakpoint-up(md) {
       flex-direction: row;
-      gap: 16px; // 16px gap
+      gap: t.$spacing-16; // 16px gap
     }
 
     // Mobile: vertical stack
     @include grid.media-breakpoint-down(md) {
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px; // 12px gap
+      gap: t.$spacing-12; // 12px gap
     }
   }
 
@@ -79,7 +80,7 @@
     align-items: center;
     flex: 1;
     min-width: 0; // Allow text to wrap
-    gap: 32px; // 32px between message and button on desktop
+    gap: t.$spacing-32; // 32px between message and button on desktop
 
     // Desktop: horizontal layout
     @include grid.media-breakpoint-up(md) {
@@ -92,7 +93,7 @@
       flex-direction: column;
       align-items: flex-start;
       width: 100%;
-      gap: 12px; // 12px
+      gap: t.$spacing-12; // 12px
     }
   }
 
@@ -138,7 +139,7 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    padding: 12px 8px;
+    padding: t.$spacing-12 t.$spacing-8;
     border: none;
     border-radius: 2px;
     background: transparent;

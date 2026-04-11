@@ -1,10 +1,12 @@
+@use '../../../styles/tokens' as t;
+
 .wireframe-slide {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 80px 48px;
+  padding: t.$spacing-80 t.$spacing-48;
   overflow: hidden;
   min-height: 600px;
   text-align: center;
@@ -16,20 +18,20 @@
   }
 
   &__title {
-    margin-bottom: 24px !important;
+    margin-bottom: t.$spacing-24 !important;
   }
 
   &__description {
-    margin-bottom: 48px !important;
+    margin-bottom: t.$spacing-48 !important;
     opacity: 0.8;
   }
 
   &__visual-container {
     width: 100%;
-    margin-top: 48px;
+    margin-top: t.$spacing-48;
     display: flex;
     justify-content: center;
-    gap: 24px;
+    gap: t.$spacing-24;
     flex-wrap: wrap;
   }
 

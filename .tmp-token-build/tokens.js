@@ -20,7 +20,8 @@ export const tokens = {
     blue950: '#021b6c', // interpolated
     blue975: '#1a2759', // ~white@10% blended over #000f47 (nav hover)
     blue990: '#333f6b', // ~white@20% blended over #000f47 (nav active)
-    blue1000: '#000f47', // ★ Figma anchor — Midnight
+    blue1000: '#000f47', // ★ Figma anchor — Midnight (legacy)
+    blue1100: '#002c77', // ★ Figma anchor — MODE Primary (darker navy)
     // ── GOLD (14 stops) ───────────────────────────────────────────────────────
     gold50: '#fffcf8', // interpolated
     gold100: '#fff8ed', // interpolated
@@ -119,6 +120,7 @@ export const tokens = {
     statusWarning: '#cb7e03', // Figma Utilities/Warning
     statusSuccess: '#14853d', // Figma Utilities/Success
     statusInfo: '#6fb4ff', // → blue500
+    focusCyan: '#009de0', // Figma MODE/Border/Focus (future-state)
     // ── SHADES — White (alpha) ────────────────────────────────────────────────
     shadesWhite90: 'rgba(255,255,255,0.90)',
     shadesWhite85: 'rgba(255,255,255,0.85)',

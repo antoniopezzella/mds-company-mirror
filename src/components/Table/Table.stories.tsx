@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { Table } from './Table';
 import type { TableColumn } from './Table';
 
@@ -269,6 +270,359 @@ const policyColumns: TableColumn<PolicyData>[] = [
     sortable: true,
   },
 ];
+
+// ---------- Shared story helpers ----------
+
+const FeatureHeader = ({
+  label,
+  code,
+  desc,
+}: {
+  label: string;
+  code: string;
+  desc: string;
+}) => (
+  <div style={{ marginBottom: 12 }}>
+    <span
+      style={{
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: '0.07em',
+        textTransform: 'uppercase',
+        color: '#6b7280',
+      }}
+    >
+      {label}
+    </span>
+    <p style={{ margin: '3px 0 5px', fontSize: 13, color: '#6b7280', lineHeight: 1.5 }}>
+      {desc}
+    </p>
+    <code
+      style={{
+        display: 'inline-block',
+        marginBottom: 10,
+        fontSize: 11,
+        fontFamily: 'monospace',
+        color: '#374151',
+        background: '#f3f4f6',
+        border: '1px solid #e5e7eb',
+        borderRadius: 4,
+        padding: '2px 8px',
+      }}
+    >
+      {code}
+    </code>
+  </div>
+);
+
+type ShowcaseTab = 'variants' | 'sizes' | 'features' | 'states' | 'scroll';
+
+const SHOWCASE_TABS: { id: ShowcaseTab; label: string }[] = [
+  { id: 'variants', label: 'Visual Variants' },
+  { id: 'sizes', label: 'Sizes' },
+  { id: 'features', label: 'Features' },
+  { id: 'states', label: 'States' },
+  { id: 'scroll', label: 'Scroll & Pagination' },
+];
+
+// ============= ALL VARIANTS SHOWCASE =============
+export const Showcase: Story = {
+  name: '◈ All Variants',
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Interactive gallery of all Table variants, sizes, and features — use the tabs to explore each category.',
+      },
+    },
+  },
+  render: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [tab, setTab] = useState<ShowcaseTab>('variants');
+
+    const colsShort = policyColumns.slice(0, 4) as unknown as TableColumn<Record<string, unknown>>[];
+    const dataShort = policyData.slice(0, 3) as unknown as Record<string, unknown>[];
+    const dataFull  = policyData as unknown as Record<string, unknown>[];
+    const colsFull  = policyColumns as unknown as TableColumn<Record<string, unknown>>[];
+
+    return (
+      <div style={{ fontFamily: 'inherit' }}>
+
+        {/* ---- Tab Bar ---- */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 4,
+            padding: 4,
+            background: '#f3f4f6',
+            borderRadius: 10,
+            marginBottom: 32,
+            flexWrap: 'wrap',
+          }}
+        >
+          {SHOWCASE_TABS.map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              style={{
+                padding: '7px 18px',
+                border: 'none',
+                borderRadius: 7,
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: tab === id ? 600 : 400,
+                background: tab === id ? '#ffffff' : 'transparent',
+                color: tab === id ? '#111827' : '#6b7280',
+                boxShadow: tab === id ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
+                transition: 'all 0.15s',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* ---- Visual Variants ---- */}
+        {tab === 'variants' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 32 }}>
+            {(['default', 'striped', 'bordered', 'compact'] as const).map((variant) => (
+              <div key={variant}>
+                <FeatureHeader
+                  label={variant}
+                  code={`variant="${variant}"`}
+                  desc={
+                    variant === 'default'
+                      ? 'Clean rows with a subtle bottom border — the baseline style for most tables.'
+                      : variant === 'striped'
+                      ? 'Alternating row backgrounds improve readability in dense, data-heavy views.'
+                      : variant === 'bordered'
+                      ? 'Full cell borders create a structured, spreadsheet-like layout.'
+                      : 'Reduced row padding maximises data density on smaller viewports.'
+                  }
+                />
+                <Table
+                  columns={colsShort}
+                  data={dataShort}
+                  variant={variant}
+                  size={variant === 'compact' ? 'sm' : 'md'}
+                  hoverable
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ---- Sizes ---- */}
+        {tab === 'sizes' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            {(
+              [
+                { size: 'sm' as const, label: 'Small',           desc: 'Compact rows — ideal for dense data dashboards and secondary tables.' },
+                { size: 'md' as const, label: 'Medium (default)', desc: 'Balanced density — recommended for the majority of use cases.' },
+                { size: 'lg' as const, label: 'Large',           desc: 'Spacious rows for touch-friendly or accessibility-focused layouts.' },
+              ]
+            ).map(({ size, label, desc }) => (
+              <div key={size}>
+                <FeatureHeader label={label} code={`size="${size}"`} desc={desc} />
+                <Table
+                  columns={colsShort}
+                  data={dataShort}
+                  variant="default"
+                  size={size}
+                  hoverable
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ---- Features ---- */}
+        {tab === 'features' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+            <div>
+              <FeatureHeader
+                label="Hoverable"
+                code="hoverable"
+                desc="Rows highlight on mouse hover — improves scannability across wide tables."
+              />
+              <Table columns={colsFull} data={dataFull} variant="default" size="md" hoverable />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="Sortable"
+                code="sortable  defaultSortColumn  defaultSortDirection"
+                desc="Click any column header to toggle ascending ↑ / descending ↓. An arrow indicator marks the active column."
+              />
+              <Table
+                columns={colsFull}
+                data={dataFull}
+                variant="default"
+                size="md"
+                sortable
+                hoverable
+                defaultSortColumn="premium"
+                defaultSortDirection="desc"
+              />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="Selectable"
+                code="selectable  onRowSelect"
+                desc="Checkbox column enables row selection. The header checkbox selects or deselects all rows on the current page."
+              />
+              <Table
+                columns={colsFull}
+                data={dataFull}
+                variant="striped"
+                size="md"
+                selectable
+                hoverable
+                onRowSelect={(rows) => console.info('Selected:', rows.length, 'rows')}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ---- States ---- */}
+        {tab === 'states' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+            <div>
+              <FeatureHeader
+                label="Loading State"
+                code="loading"
+                desc="Skeleton rows replace data during async fetch — prevents layout shift and communicates progress."
+              />
+              <Table columns={colsShort} data={[]} variant="default" size="md" loading />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="Empty State"
+                code='emptyMessage="..."'
+                desc="Shown when the dataset is empty. Provide a message that guides users toward their next action."
+              />
+              <Table
+                columns={colsShort}
+                data={[]}
+                variant="default"
+                size="md"
+                emptyMessage="No policies found. Adjust your filters or create a new policy."
+              />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="With Actions Column"
+                code="column.render: (_v, row) => <ActionButtons />"
+                desc="Use the column render prop to inject per-row controls — view, edit, delete, or any custom action."
+              />
+              <Table
+                columns={([
+                  ...policyColumns.slice(0, 4),
+                  {
+                    key: 'actions',
+                    header: 'Actions',
+                    align: 'center' as const,
+                    render: (_v: unknown, row: unknown) => (
+                      <div className="mds-table-actions">
+                        <button
+                          className="mds-table-action-btn"
+                          onClick={() => console.info('View', row)}
+                        >
+                          View
+                        </button>
+                        <button
+                          className="mds-table-action-btn"
+                          onClick={() => console.info('Edit', row)}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    ),
+                  },
+                ] as unknown as TableColumn<Record<string, unknown>>[])}
+                data={dataFull}
+                variant="striped"
+                size="md"
+                hoverable
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ---- Scroll & Pagination ---- */}
+        {tab === 'scroll' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+            <div>
+              <FeatureHeader
+                label="Sticky Header"
+                code='stickyHeader  maxHeight="300px"  scrollShadows'
+                desc="Header row stays fixed at the top while scrolling. Shadow indicators appear when content overflows the container."
+              />
+              <Table
+                columns={colsFull}
+                data={[...policyData, ...policyData, ...policyData] as unknown as Record<string, unknown>[]}
+                variant="striped"
+                size="md"
+                stickyHeader
+                maxHeight="300px"
+                hoverable
+                scrollShadows
+              />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="Pagination — Simple"
+                code='pagination={{ enabled: true, variant: "simple", pageSize: 10 }}'
+                desc="Prev/next navigation for datasets that don't need fine-grained page control."
+              />
+              <Table
+                columns={colsFull}
+                data={largePolicyData as unknown as Record<string, unknown>[]}
+                variant="striped"
+                size="md"
+                hoverable
+                sortable
+                pagination={{ enabled: true, pageSize: 10, variant: 'simple' }}
+              />
+            </div>
+
+            <div>
+              <FeatureHeader
+                label="Pagination — Advanced"
+                code='pagination={{ variant: "advanced", showItemsRange: true, showTotalItems: true }}'
+                desc="Full control: page-size selector, item range, total count, and keyboard-accessible navigation."
+              />
+              <Table
+                columns={colsFull}
+                data={largePolicyData as unknown as Record<string, unknown>[]}
+                variant="striped"
+                size="md"
+                hoverable
+                sortable
+                selectable
+                pagination={{
+                  enabled: true,
+                  pageSize: 10,
+                  pageSizeOptions: [5, 10, 25, 50],
+                  variant: 'advanced',
+                  showItemsRange: true,
+                  showTotalItems: true,
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+      </div>
+    );
+  },
+};
 
 // Basic Table
 export const Default: Story = {

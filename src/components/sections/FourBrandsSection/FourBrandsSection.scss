@@ -1,24 +1,25 @@
 @use '../../../styles/grid' as *;
+@use '../../../styles/tokens' as t;
 
 .four-brands-section {
-  padding: 96px 0;
+  padding: t.$spacing-96 0;
   min-height: 980px; // From Figma
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   @include media-breakpoint-down(md) {
-    padding: 64px 0;
+    padding: t.$spacing-64 0;
     min-height: auto;
   }
 
   &__header {
-    margin-bottom: 64px;
-    padding: 0 48px;
+    margin-bottom: t.$spacing-64;
+    padding: 0 t.$spacing-48;
 
     @include media-breakpoint-down(md) {
-      margin-bottom: 48px;
-      padding: 0 24px;
+      margin-bottom: t.$spacing-48;
+      padding: 0 t.$spacing-24;
     }
   }
 
