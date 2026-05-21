@@ -3,8 +3,101 @@
 @tailwind components;
 @tailwind utilities;
 
-/* shadcn/ui CSS Variables - MDS Token Integration */
-@import './styles/shadcn-variables.css';
+/* ===== shadcn/ui CSS Variables - MDS Token Integration ===== */
+@layer base {
+  :root {
+    /* Core Colors */
+    --background: 0 0% 100%;                    /* white - MDS: surface.default */
+    --foreground: 222 100% 15%;                 /* #000f47 Midnight Blue - MDS: text.primary */
+    
+    /* Card */
+    --card: 0 0% 100%;                          /* white - MDS: surface.default */
+    --card-foreground: 222 100% 15%;            /* #000f47 - MDS: text.primary */
+    
+    /* Popover */
+    --popover: 0 0% 100%;                       /* white - MDS: surface.default */
+    --popover-foreground: 222 100% 15%;         /* #000f47 - MDS: text.primary */
+    
+    /* Primary (Midnight Blue - MODE Primary) */
+    --primary: 215 100% 24%;                    /* #002c77 - MDS: interactive.primary */
+    --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
+    
+    /* Secondary (Outline style) */
+    --secondary: 204 33% 97%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
+    --secondary-foreground: 222 100% 15%;       /* #000f47 - MDS: text.primary */
+    
+    /* Muted (Subtle backgrounds) */
+    --muted: 204 33% 97%;                       /* #f7f8f8 - MDS: surface.subtle */
+    --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
+    
+    /* Accent (Gold - Brand Secondary) */
+    --accent: 45 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
+    --accent-foreground: 215 100% 24%;          /* #002c77 - MDS: interactive.primary */
+    
+    /* Destructive (Error/Danger state) */
+    --destructive: 0 84% 60%;                   /* Red - MDS: status.danger.bg */
+    --destructive-foreground: 0 0% 100%;        /* white - MDS: status.danger.fg */
+    
+    /* UI Elements */
+    --border: 0 0% 85%;                         /* #dadada Neutral 250 - MDS: border.default */
+    --input: 0 0% 85%;                          /* #dadada - MDS: border.default */
+    
+    /* Focus Ring */
+    --ring: 210 100% 50%;                       /* Blue 750 - MDS: focus.ring */
+    
+    /* Border Radius */
+    --radius: 0.125rem;                         /* 2px - Marsh DS standard */
+    
+    /* Chart Colors */
+    --chart-1: 215 100% 24%;                    /* #002c77 Midnight Blue */
+    --chart-2: 45 100% 50%;                     /* #ffb700 Gold */
+    --chart-3: 197 100% 90%;                    /* #ceecff Sky Blue */
+    --chart-4: 0 0% 35%;                        /* #595959 Neutral */
+    --chart-5: 147 61% 39%;                     /* Green (success) */
+  }
+  
+  /* Dark Mode */
+  .dark {
+    --background: 0 0% 6%;                      /* #101010 Neutral 950 */
+    --foreground: 0 0% 100%;                    /* white */
+    
+    --card: 0 0% 15%;                           /* #252525 Neutral 900 */
+    --card-foreground: 0 0% 100%;               /* white */
+    
+    --popover: 0 0% 6%;                         /* #101010 */
+    --popover-foreground: 0 0% 100%;            /* white */
+    
+    --primary: 210 100% 60%;                    /* Blue 400 (lighter) */
+    --primary-foreground: 0 0% 6%;              /* #101010 */
+    
+    --secondary: 0 0% 15%;                      /* #252525 */
+    --secondary-foreground: 0 0% 100%;          /* white */
+    
+    --muted: 0 0% 15%;                          /* #252525 */
+    --muted-foreground: 0 0% 65%;               /* #a6a6a6 */
+    
+    --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
+    --accent-foreground: 0 0% 100%;             /* white */
+    
+    --destructive: 0 84% 65%;                   /* Red (lighter for dark bg) */
+    --destructive-foreground: 0 0% 100%;        /* white */
+    
+    --border: 0 0% 25%;                         /* #404040 */
+    --input: 0 0% 25%;                          /* #404040 */
+    
+    --ring: 210 100% 65%;                       /* Blue (lighter) */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 
 /* Global MDS display font */
 @font-face {
