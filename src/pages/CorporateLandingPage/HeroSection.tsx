@@ -224,24 +224,32 @@ export const HeroSection: React.FC = () => {
                 clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
               }}
             >
-              <Box
-                component="iframe"
-                src="https://player.vimeo.com/video/1146072444?autoplay=1&muted=1&background=1&controls=0&loop=1&playsinline=1&autopause=0&dnt=1&title=0&byline=0&portrait=0"
-                sx={{
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onError={(e) => {
+                  console.error('Hero video error:', e);
+                }}
+                onLoadedData={() => console.debug('Hero video loaded successfully')}
+                style={{
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '100vw',
-                  height: '100vh',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
                   minWidth: '100%',
                   minHeight: '100%',
-                  border: 0,
                   backgroundColor: 'transparent',
                 }}
-                allow="autoplay; fullscreen; picture-in-picture"
-                title="Hero video"
-              />
+              >
+                <source src="/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </Box>
           </div>
         </div>

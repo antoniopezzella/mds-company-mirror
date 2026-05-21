@@ -14,7 +14,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
   userName = 'User',
 }) => {
   return (
-    <Box sx={{ backgroundColor: getRoleColor('surface.default'), minHeight: '100vh', py: 4 }}>
+    <Box className="mds-dashboard" sx={{ backgroundColor: getRoleColor('surface.default'), minHeight: '100vh', py: 4 }}>
       <Container maxWidth="xl">
         {/* Header */}
         <Box sx={{ mb: 4 }}>

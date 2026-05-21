@@ -48,7 +48,7 @@ export const TalkToExpertsSection: React.FC = () => {
           <Typography
             component="h2"
             sx={{
-              fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+              fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
               fontSize: '48px',
               lineHeight: '56px',
               color: 'white',

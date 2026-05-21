@@ -10,7 +10,6 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/setupTests.ts'],
-    include: ['src/**/*.test.{ts,tsx}', 'src/__tests__/**/*.{test,spec}.{ts,tsx}', 'src/__tests__/**/*.test.{ts,tsx}'],
     projects: [
       // Storybook-driven interaction tests
       {
@@ -29,8 +28,7 @@ export default defineConfig({
             instances: [
               { browser: 'chromium' }
             ]
-          },
-          setupFiles: ['.storybook/vitest.setup.ts']
+          }
         }
       },
       // Pure unit tests (no Storybook plugin filtering)

@@ -65,9 +65,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           loop
           muted
           playsInline
+          preload="auto"
           className="hero-section__video"
+          onError={(e) => {
+            console.error('Hero video error:', e);
+            console.error('Video src:', videoSrc);
+          }}
+          onLoadedData={() => console.debug('Hero video loaded successfully')}
         >
           <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
       )}
       <div className="container-fluid">

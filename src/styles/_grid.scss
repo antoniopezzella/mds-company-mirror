@@ -1,5 +1,5 @@
-// Bootstrap 5.3 Grid System - Exact Match
-// Uses Bootstrap 5.3 exact values: 1.5rem gutter, 12 columns, standard breakpoints
+// MDS Grid System
+// Bootstrap-inspired 12-column grid with MDS container sizing and page margins
 // WCAG Compliant: Rem-based spacing scales with user's font-size preferences
 // Bootstrap Compatible: Drop-in replacement for Bootstrap grid classes
 // Usage: @use 'src/styles/_grid' as grid; then include mixins in your component SCSS.
@@ -8,21 +8,21 @@
 @use 'sass:map';
 @use 'sass:math';
 
-// Base unit and sizing (Bootstrap 5.3 exact match)
+// Base unit and sizing
 $base-unit: 0.25rem !default; // 4px at 16px base, scales with user font-size
 $grid-columns: 12 !default; // Bootstrap 5.3 standard
 $grid-gutter-width: 1.5rem !default; // Bootstrap 5.3 standard (24px at 16px base)
 $grid-row-columns: 6 !default; // Bootstrap 5.3 standard
 $columns: $grid-columns !default; // Alias for compatibility
 
-// Container widths and breakpoints (Bootstrap 5.3 exact match)
+// Container widths and breakpoints
 $breakpoints: (
   xs: 0,       // default flow
   sm: 576px,   // Bootstrap 5.3
   md: 768px,   // Bootstrap 5.3
-  lg: 992px,   // Bootstrap 5.3
+  lg: 1024px,
   xl: 1200px,  // Bootstrap 5.3
-  xxl: 1540px, // Bootstrap 5.3
+  xxl: 1540px,
 ) !default;
 
 $container-max: (
@@ -30,7 +30,13 @@ $container-max: (
   md: 720px,   // Bootstrap 5.3
   lg: 960px,   // Bootstrap 5.3
   xl: 1140px,  // Bootstrap 5.3
-  xxl: 1540px, // Bootstrap 5.3
+  xxl: 1540px,
+) !default;
+
+$container-padding: (
+  xs: 16px,
+  md: 24px,
+  lg: 48px,
 ) !default;
 
 // Breakpoint mixins (Bootstrap 5.3 style)
@@ -70,9 +76,11 @@ $container-max: (
 // Container centers content and constrains width
 .container {
   margin-inline: auto;
-  padding-inline: calc(#{$grid-gutter-width} * 0.5); // 0.75rem = 12px at 16px base
+  padding-inline: map.get($container-padding, xs);
   width: 100%;
 
+  @include respond(md) { padding-inline: map.get($container-padding, md); }
+  @include respond(lg) { padding-inline: map.get($container-padding, lg); }
   @include respond(sm) { max-width: map.get($container-max, sm); }
   @include respond(md) { max-width: map.get($container-max, md); }
   @include respond(lg) { max-width: map.get($container-max, lg); }
@@ -287,7 +295,10 @@ $container-max: (
   width: 100%;
   margin-inline: 0;
   max-width: none;
-  padding-inline: calc(#{$grid-gutter-width} * 0.5); // 0.75rem = 12px at 16px base
+  padding-inline: map.get($container-padding, xs);
+
+  @include respond(md) { padding-inline: map.get($container-padding, md); }
+  @include respond(lg) { padding-inline: map.get($container-padding, lg); }
 }
 
 // ==============================================================================

@@ -74,7 +74,7 @@ export const JourneySection: React.FC = () => {
         <Typography
           component="h2"
           sx={{
-            fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+            fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
             fontSize: { xs: '32px', md: '48px' },
             lineHeight: { xs: '40px', md: '52px' },
             color: getRoleColor('text.primary'),
@@ -167,7 +167,7 @@ export const JourneySection: React.FC = () => {
                 {/* Title */}
                 <Typography
                   sx={{
-                    fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+                    fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
                     fontSize: { xs: '28px', md: '40px' },
                     lineHeight: { xs: '36px', md: '48px' },
                     fontWeight: 700,

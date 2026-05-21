@@ -63,12 +63,17 @@ export type RoleName =
   | 'focus.ring'
   | 'status.success.fg'
   | 'status.success.bg'
+  | 'status.success.border'
   | 'status.warning.fg'
   | 'status.warning.bg'
+  | 'status.warning.border'
   | 'status.danger.fg'
   | 'status.danger.bg'
+  | 'status.danger.border'
   | 'status.info.fg'
   | 'status.info.bg'
+  | 'status.info.border'
+  | 'brand.accent'
   | 'interactive.primary'
   | 'interactive.primary.hover'
   | 'interactive.primary.active'
@@ -107,14 +112,19 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
   'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
+  'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },
   'status.success.fg': { semantic: 'statusSuccessText', description: 'Success text/icon color' },
   'status.success.bg': { semantic: 'statusSuccessBg', description: 'Success background' },
+  'status.success.border': { semantic: 'statusSuccessBorder', description: 'Success border color' },
   'status.warning.fg': { semantic: 'statusWarningText', description: 'Warning text/icon color' },
   'status.warning.bg': { semantic: 'statusWarningBg', description: 'Warning background' },
+  'status.warning.border': { semantic: 'statusWarningBorder', description: 'Warning border color' },
   'status.danger.fg': { semantic: 'statusDangerText', description: 'Danger text/icon color' },
   'status.danger.bg': { semantic: 'statusDangerBg', description: 'Danger background' },
+  'status.danger.border': { semantic: 'statusDangerBorder', description: 'Danger border color' },
   'status.info.fg': { semantic: 'statusInfoText', description: 'Informational text/icon color' },
   'status.info.bg': { semantic: 'statusInfoBg', description: 'Informational background' },
+  'status.info.border': { semantic: 'statusInfoBorder', description: 'Informational border color' },
   'interactive.primary': { semantic: 'interactivePrimary', description: 'Primary interactive base' },
   'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' },
   'interactive.primary.active': { semantic: 'interactivePrimaryActive', description: 'Primary interactive active' },

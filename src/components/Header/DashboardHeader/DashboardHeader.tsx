@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Avatar, Box, IconButton, Tooltip, Badge, Button, Divider, useTheme } from "@mui/material";
+import { Typography, Avatar, Box, IconButton, Tooltip, Badge, useTheme } from "@mui/material";
+import type { Theme } from '@mui/material/styles';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
@@ -8,9 +9,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
 import MARSH_LOGO from "../../../assets/images/marsh.svg";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { MegaMenu } from '../../MegaMenu';
 import { getRoleColor } from '../../../theme/roles';
-import { semanticColors } from '../../../semantic-tokens';
 import { useThemeMode } from '../../../theme/ThemeModeContext';
 import styles from '../Header.module.scss';
 import BaseHeader from '../BaseHeader';
@@ -25,13 +24,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
   const { mode, toggleMode } = useThemeMode();
   const theme = useTheme();
   const systemMode = theme.palette.mode;
-  const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setActiveMenu(null); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
 
   const getHeaderStyles = () => {
     // System is in dark mode: Both variants converge to same dark appearance
@@ -104,7 +96,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
       <BaseHeader
         sx={{
           ...getHeaderStyles(),
-          zIndex: (theme: any) => theme.zIndex.drawer + 1,
+          zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
           overflow: 'visible',
           width: '100%'
         }}
@@ -169,9 +161,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
           ),
         }}
       />
-      <Box sx={{ position: 'relative' }}>
-        <MegaMenu isOpen={activeMenu === 'solutions'} onClose={() => setActiveMenu(null)} />
-      </Box>
     </>
   );
 };

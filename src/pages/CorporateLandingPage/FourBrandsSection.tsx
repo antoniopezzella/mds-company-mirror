@@ -238,7 +238,7 @@ export const FourBrandsSection: React.FC = () => {
                   ) : (
                     <Typography
                       sx={{
-                        fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+                        fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
                         fontSize: '20px',
                         color: getRoleColor('text.primary'),
                       }}

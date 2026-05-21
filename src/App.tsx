@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Container, Drawer, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DashboardHeader } from './components/Header/Header';
 import SideNavigation from './components/SideNavigation/SideNavigation';
 import type { SideNavItem } from './components/SideNavigation/SideNavigation';
@@ -15,50 +16,54 @@ import { useWebVitals } from './hooks/useWebVitals';
 import { getRoleColor } from './theme/roles';
 import type { RoleName } from './theme/roles';
 
-const sideNavItems: SideNavItem[] = [
-  { label: 'Dashboard', active: true },
-  { 
-    label: 'Policies & Coverage', 
-    subItems: [
-      { label: 'Active Policies' },
-      { label: 'Renewals' },
-      { label: 'Certificates of Insurance' },
-    ] 
-  },
-  { 
-    label: 'Risk Management', 
-    subItems: [
-      { label: 'Risk Assessment' },
-      { label: 'Loss Control' },
-      { label: 'Safety Programs' },
-    ] 
-  },
-  { 
-    label: 'Claims', 
-    subItems: [
-      { label: 'Open Claims' },
-      { label: 'Claims History' },
-      { label: 'Submit New Claim' },
-    ] 
-  },
-  { 
-    label: 'Analytics', 
-    subItems: [
-      { label: 'Risk Insights' },
-      { label: 'Cost Analysis' },
-      { label: 'Benchmarking' },
-    ] 
-  },
-  { label: 'Documents' },
-  { label: 'Settings' },
-];
-
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const theme = useTheme();
   const mode = theme.palette.mode;
+  const navigate = useNavigate();
+  const location = useLocation();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const [sidebarOpen, setSidebarOpen] = useState(isMdUp);
+
+  const sideNavItems: SideNavItem[] = [
+    { label: 'Dashboard', path: '/', active: location.pathname === '/' || location.pathname === '/app' },
+    { label: 'Clinical Trials', path: '/ClinicalTrials', active: location.pathname === '/ClinicalTrials' },
+    { label: 'RESG Asset List', path: '/resg-asset-list', active: location.pathname === '/resg-asset-list' },
+    {
+      label: 'Policies & Coverage',
+      subItems: [
+        { label: 'Active Policies' },
+        { label: 'Renewals' },
+        { label: 'Certificates of Insurance' },
+      ]
+    },
+    {
+      label: 'Risk Management',
+      subItems: [
+        { label: 'Risk Assessment' },
+        { label: 'Loss Control' },
+        { label: 'Safety Programs' },
+      ]
+    },
+    {
+      label: 'Claims',
+      subItems: [
+        { label: 'Open Claims' },
+        { label: 'Claims History' },
+        { label: 'Submit New Claim' },
+      ]
+    },
+    {
+      label: 'Analytics',
+      subItems: [
+        { label: 'Risk Insights' },
+        { label: 'Cost Analysis' },
+        { label: 'Benchmarking' },
+      ]
+    },
+    { label: 'Documents' },
+    { label: 'Settings' },
+  ];
 
   // Initialize Web Vitals monitoring
   useWebVitals({
@@ -82,7 +87,7 @@ function App() {
   const sidebarWidth = 260;
 
   return (
-    <Box sx={{ 
+    <Box className="mds-dashboard" sx={{ 
       display: 'flex', 
       minHeight: '100vh',
       bgcolor: (theme) => getRoleColor('surface.default', { mode: theme.palette.mode })
@@ -113,6 +118,8 @@ function App() {
           <SideNavigation
             items={sideNavItems}
             onSupport={() => alert('Contact support')}
+            onNavigate={(path) => navigate(path)}
+            currentPath={location.pathname}
             variant="light"
           />
         </Box>
@@ -137,6 +144,8 @@ function App() {
             items={sideNavItems}
             onSupport={() => alert('Contact support')}
             onClose={() => setSidebarOpen(false)}
+            onNavigate={(path) => navigate(path)}
+            currentPath={location.pathname}
             variant="light"
           />
         </Drawer>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StatusCard Component Mockup</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 40px;
+      background: #ffffff;
+    }
+    
+    .container {
+      display: grid;
+      grid-template-columns: repeat(2, 360px);
+      gap: 40px;
+      max-width: 800px;
+    }
+    
+    .status-card {
+      width: 360px;
+      min-height: 110px;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .status-card__header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .status-card__icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    
+    .status-card__title {
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    .status-card__message {
+      font-family: 'Noto Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    
+    /* Success variant */
+    .status-card--success {
+      background-color: rgb(248, 252, 247); /* #f8fcf7 */
+      border-color: rgb(20, 133, 61); /* #14853d */
+    }
+    
+    .status-card--success .status-card__icon {
+      background-color: rgb(47, 125, 50); /* #2f7d32 */
+    }
+    
+    .status-card--success .status-card__title,
+    .status-card--success .status-card__message {
+      color: rgb(47, 125, 50); /* #2f7d32 */
+    }
+    
+    /* Warning variant */
+    .status-card--warning {
+      background-color: rgb(255, 250, 238); /* #fffaee */
+      border-color: rgb(237, 148, 0); /* #ed9400 */
+    }
+    
+    .status-card--warning .status-card__icon {
+      background-color: rgb(237, 148, 0); /* #ed9400 */
+    }
+    
+    .status-card--warning .status-card__title,
+    .status-card--warning .status-card__message {
+      color: rgb(237, 148, 0); /* #ed9400 */
+    }
+    
+    /* Error variant */
+    .status-card--error {
+      background-color: rgb(255, 241, 241); /* #fff1f1 */
+      border-color: rgb(214, 47, 47); /* #d62f2f */
+    }
+    
+    .status-card--error .status-card__icon {
+      background-color: rgb(214, 47, 47); /* #d62f2f */
+    }
+    
+    .status-card--error .status-card__title,
+    .status-card--error .status-card__message {
+      color: rgb(214, 47, 47); /* #d62f2f */
+    }
+    
+    /* Info variant */
+    .status-card--info {
+      background-color: rgb(238, 244, 255); /* #eef4ff */
+      border-color: rgb(28, 94, 183); /* #1c5eb7 */
+    }
+    
+    .status-card--info .status-card__icon {
+      background-color: rgb(28, 94, 183); /* #1c5eb7 */
+    }
+    
+    .status-card--info .status-card__title,
+    .status-card--info .status-card__message {
+      color: rgb(28, 94, 183); /* #1c5eb7 */
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      color: #000f47;
+    }
+  </style>
+</head>
+<body>
+  <h1>StatusCard Component - All Variants</h1>
+  
+  <div class="container">
+    <!-- Success -->
+    <div class="status-card status-card--success">
+      <div class="status-card__header">
+        <div class="status-card__icon"></div>
+        <div class="status-card__title">Success Status</div>
+      </div>
+      <div class="status-card__message">Operation completed successfully!</div>
+    </div>
+    
+    <!-- Warning -->
+    <div class="status-card status-card--warning">
+      <div class="status-card__header">
+        <div class="status-card__icon"></div>
+        <div class="status-card__title">Warning Status</div>
+      </div>
+      <div class="status-card__message">Please review this item carefully.</div>
+    </div>
+    
+    <!-- Error -->
+    <div class="status-card status-card--error">
+      <div class="status-card__header">
+        <div class="status-card__icon"></div>
+        <div class="status-card__title">Error Status</div>
+      </div>
+      <div class="status-card__message">An error occurred during processing.</div>
+    </div>
+    
+    <!-- Info -->
+    <div class="status-card status-card--info">
+      <div class="status-card__header">
+        <div class="status-card__icon"></div>
+        <div class="status-card__title">Info Status</div>
+      </div>
+      <div class="status-card__message">Additional information is available.</div>
+    </div>
+  </div>
+</body>
+</html>

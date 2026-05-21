@@ -17,4 +17,4 @@ for (const cmd of cmds) {
   } catch {}
 }
 
-console.log('[pretest] Ensured no Storybook dev server is running.');
+console.log('[storybook] Ensured no Storybook dev server is running.');

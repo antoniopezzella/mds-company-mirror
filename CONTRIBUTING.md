@@ -54,6 +54,16 @@ npm run docs:lint
 - Do not remove native focus outlines without replacement.
 
 ### Design Tokens
+
+**⚠️ Before adding or modifying tokens, you must submit a token request for approval.**  
+See [Token Request Process](./docs/TOKEN_REQUEST_PROCESS.md) for the full workflow.
+
+Quick links to request templates:
+- [⭐ Brand Token Request](/.github/ISSUE_TEMPLATE/token-request-brand.md) (VP approval)
+- [🎨 Semantic Token Request](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (Design Lead)
+- [🔧 Role Token Request](/.github/ISSUE_TEMPLATE/token-request-role.md) (DS Team)
+
+**Implementation guidelines (post-approval):**
 - Tokens must be rendered dynamically (never hard‑code values into MDX tables).
 - When changing a token name or value in a breaking way, update: token source + narrative + CHANGELOG.
  - Build JSON artifact: `npm run tokens:build` (outputs `dist/tokens.json`).

@@ -1,5 +1,14 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 
+const resolveOptionalDependency = (id: string) => {
+  try {
+    import.meta.resolve(id);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const config: StorybookConfig = {
   stories: [
     '../src/docs/**/*.mdx',
@@ -23,6 +32,17 @@ const config: StorybookConfig = {
     { from: '../public/images', to: '/images' }
   ],
   viteFinal: async (config) => {
+    config.optimizeDeps = config.optimizeDeps || {};
+    const include = [
+      ...(config.optimizeDeps.include || []),
+      'react/jsx-dev-runtime',
+      'react-dom/client',
+      'react-router-dom',
+      'web-vitals',
+      '@mui/icons-material/MailOutline',
+    ];
+    config.optimizeDeps.include = Array.from(new Set(include)).filter(resolveOptionalDependency);
+
     // Prevent Vite from using the root index.html for Storybook
     if (config.build) {
       config.build.rollupOptions = config.build.rollupOptions || {};

@@ -45,13 +45,13 @@ Built following MDS Platform guidelines:
 Following Figma design specs:
 
 ### Eyebrow Text
-- Font: MMC Display
+- Font: Marsh Serif
 - Size: 24px
 - Line Height: 32px
 - Color: #3D3C37 (neutral)
 
 ### Main Headline
-- Font: MMC Display
+- Font: Marsh Serif
 - Size: 56px (desktop), 40px (mobile)
 - Line Height: 72px (desktop), 48px (mobile)
 - Color: Primary blue (via role token)

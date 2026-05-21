@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
+import path from 'path';
 
 // Note: Importing 'path' from 'node:path' requires Node.js v16+ (ESM support)
 // https://vite.dev/config/
@@ -12,6 +13,11 @@ export default defineConfig({
     viteCompression({ algorithm: 'gzip', ext: '.gz' }),
     viteCompression({ algorithm: 'brotliCompress', ext: '.br' })
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     minify: 'esbuild',
     rollupOptions: {

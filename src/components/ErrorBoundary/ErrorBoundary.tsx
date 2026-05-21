@@ -80,7 +80,7 @@ export class ErrorBoundary extends Component<Props, State> {
             sx={{
               color: '#dc3545',
               mb: 2,
-              fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+              fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
             }}
           >
             Something went wrong

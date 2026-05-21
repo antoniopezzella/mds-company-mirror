@@ -17,7 +17,6 @@ const DebugPage = lazy(() => import('./pages/DebugPage'));
 const ParallaxDemo = lazy(() => import('./pages/ParallaxDemo'));
 const MarshCorporate = lazy(() => import('./pages/MarshCorporate'));
 const MarshCorporateNew = lazy(() => import('./pages/MarshCorporateNew'));
-const MarshCorporateFutureState = lazy(() => import('./pages/MarshCorporateFutureState').then(m => ({ default: m.MarshCorporateFutureState })));
 const CorporateLandingPage = lazy(() => import('./pages/CorporateLandingPage/index').then(m => ({ default: m.CorporateLandingPage })));
 const MarshOneHomepage = lazy(() => import('./projects/marsh-one').then(m => ({ default: m.MarshOneHomepageDefault })));
 const InsuranceDashboard = lazy(() => import('./projects/insurance-dashboard').then(m => ({ default: m.InsuranceDashboardDefault })));
@@ -27,6 +26,8 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RESGAssetListPage = lazy(() => import('./pages/RESGAssetListPage'));
 const Portfolio = lazy(() => import('./pages/Portfolio/Portfolio'));
 const ClinicalTrials = lazy(() => import('./projects/ClinicalTrials').then(m => ({ default: m.ClinicalTrialsPage })));
+const TreeTestingToolPage = lazy(() => import('./pages/TreeTestingTool/TreeTestingToolPage'));
+const HeroBannerTest = lazy(() => import('./pages/HeroBannerTest'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -68,7 +69,6 @@ const Router: React.FC = () => (
         <Route path="/marsh-new-charpter-begins" element={<MarshNewCharpterBeginsPage />} />
         <Route path="/marsh-corporate" element={<MarshCorporate />} />
         <Route path="/marsh-corporate-new" element={<MarshCorporateNew />} />
-        <Route path="/marsh-corporate-future" element={<MarshCorporateFutureState />} />
         <Route path="/corporate-landing" element={<CorporateLandingPage />} />
         <Route path="/marsh-one" element={<MarshOneHomepage />} />
         <Route path="/insurance-dashboard" element={<InsuranceDashboard />} />
@@ -78,6 +78,8 @@ const Router: React.FC = () => (
         <Route path="/resg-asset-list" element={<RESGAssetListPage />} />
         <Route path="/ClinicalTrials" element={<ClinicalTrials />} />
         <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/tree-testing" element={<TreeTestingToolPage />} />
+        <Route path="/hero-banner-test" element={<HeroBannerTest />} />
       </Routes>
     </Suspense>
     </RouterWithTracking>

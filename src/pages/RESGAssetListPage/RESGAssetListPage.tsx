@@ -232,7 +232,7 @@ export const RESGAssetListPage: React.FC = () => {
   const sidebarWidth = 260;
 
   return (
-    <Box className="resg-asset-list-page" sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box className="resg-asset-list-page mds-dashboard" sx={{ display: 'flex', minHeight: '100vh' }}>
       <DashboardHeader sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((open) => !open)} />
 
       {isMdUp ? (

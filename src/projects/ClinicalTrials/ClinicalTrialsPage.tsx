@@ -50,7 +50,7 @@ export const ClinicalTrialsPage: React.FC = () => {
   };
 
   return (
-    <div className="clinical-trials-page">
+    <div className="clinical-trials-page mds-dashboard">
       <DashboardHeader sidebarOpen={false} onToggleSidebar={() => {}} />
 
       <div className="mds-container">
@@ -325,4 +325,3 @@ export const ClinicalTrialsPage: React.FC = () => {
   );
 };
 export default ClinicalTrialsPage;
-

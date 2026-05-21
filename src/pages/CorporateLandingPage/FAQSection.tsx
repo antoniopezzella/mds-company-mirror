@@ -85,7 +85,7 @@ export const FAQSection: React.FC = () => {
           <Typography
             component="h2"
             sx={{
-              fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+              fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
               fontSize: '40px',
               lineHeight: '48px',
               color: getRoleColor('text.primary'),

@@ -16,6 +16,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+type ButtonStoryArgs = React.ComponentProps<typeof DSButton> & {
+  leadingIcon?: boolean;
+  trailingIcon?: boolean;
+};
+
 const meta = {
   title: 'Components/Button',
   component: DSButton,
@@ -27,29 +32,58 @@ const meta = {
         component: `
 # Button
 
-The classic button element, in different variants, sizes, and states.
+The classic button element aligned to Figma V3 design system (node-id=7579-138).
 
 ## Overview
 
-The button is an essential element of any design. It's meant to look and behave as an interactive element of your page. 
-The Marsh Design System Button is built on MUI with role-based colors and constrained variants.
+The Marsh Design System Button is built on MUI with role-based colors and Figma-aligned variants.
+
+## Figma V3 Variants
+
+- ✅ **Primary**: Midnight Blue filled (#000f47) with sky text (#ceecff) - For dashboards & standard CTAs
+- ✅ **Primary Alt**: Gold filled (#ffbf00) - For hero banners & marketing CTAs
+- ✅ **Secondary**: Outline with midnight blue border - Secondary actions
+- ✅ **Tertiary**: Transparent/ghost - Minimal actions
 
 ## Features
 
-- ✅ **4 Variants**: primary, secondary, outline, ghost
-- ✅ **3 Tones**: default, danger, success
-- ✅ **3 Sizes**: sm (32px), md (48px), lg (56px)
+- ✅ **3 Figma Sizes**: Small (32px), Default (48px), Large (56px)
+- ✅ **Destructive State**: Red color variant for all button types
 - ✅ **Icon Support**: Start icon, end icon, icon-only
-- ✅ **States**: Normal, hover, focus, active, disabled, loading
+- ✅ **States**: Default, hover, active, focus, disabled, loading
+- ✅ **Inverse Mode**: Adapts colors for dark backgrounds (hero banners)
 - ✅ **Accessibility**: Full keyboard navigation and ARIA support
-- ✅ **Responsive**: Adapts to different screen sizes
+- ✅ **Responsive**: Mobile-first, adapts to screen sizes
+
+## Figma Mapping
+
+| Figma Property | React Prop | Values |
+|----------------|------------|--------|
+| Type | \`variant\` | Primary → primary, Primary Alt → primaryAlt, Secondary → secondary, Tertiary → tertiary |
+| Size | \`size\` | Small → sm, Default → md, Large → lg |
+| Destructive | \`destructive\` | Yes → true, No → false |
+| Has Left Icon | \`startIcon\` | ReactNode |
+| Has Right Icon | \`endIcon\` | ReactNode |
+| Icon Only | \`iconOnly\` + \`icon\` | Boolean + ReactNode |
 
 ## Usage
 
-The \`.button\` class can be used on:
-- \`<button>\` elements (recommended)
-- \`<a>\` anchor links (for navigation)
-- Custom components that accept button props
+\`\`\`tsx
+// Primary - Midnight Blue
+<DSButton variant="primary" size="lg">Save Changes</DSButton>
+
+// Primary Alt - Gold CTA (Hero/Marketing)
+<DSButton variant="primaryAlt" size="lg">Download Report</DSButton>
+
+// Secondary - Outline  
+<DSButton variant="secondary" size="md">Learn More</DSButton>
+
+// Tertiary - Ghost
+<DSButton variant="tertiary" size="md">Cancel</DSButton>
+
+// Destructive
+<DSButton variant="primary" destructive>Delete</DSButton>
+\`\`\`
         `
       }
     }
@@ -57,20 +91,19 @@ The \`.button\` class can be used on:
   argTypes: {
     variant: { 
       control: 'radio', 
-      options: ['primary', 'secondary', 'outline', 'ghost'],
-      description: 'Visual style variant of the button',
+      options: ['primary', 'primaryAlt', 'secondary', 'tertiary'],
+      description: 'Visual style variant. Figma V3: Primary (midnight blue - dashboards), Primary Alt (gold - hero/marketing), Secondary (outline), Tertiary (ghost)',
       table: {
-        type: { summary: 'primary | secondary | outline | ghost' },
-        defaultValue: { summary: 'primary' }
+        type: { summary: 'primary | primaryAlt | secondary | tertiary' },
+        defaultValue: { summary: 'secondary' }
       }
     },
-    tone: { 
-      control: 'radio', 
-      options: ['default', 'danger', 'success'],
-      description: 'Semantic tone/color of the button',
+    destructive: { 
+      control: 'boolean', 
+      description: 'Destructive/danger state - changes colors to red for all variants',
       table: {
-        type: { summary: 'default | danger | success' },
-        defaultValue: { summary: 'default' }
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' }
       }
     },
     disabled: { 
@@ -106,12 +139,34 @@ The \`.button\` class can be used on:
         defaultValue: { summary: 'false' }
       }
     },
+    leadingIcon: {
+      control: 'boolean',
+      description: 'Show a leading icon before the label in Controls',
+      table: {
+        category: 'Story controls',
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' }
+      }
+    },
+    trailingIcon: {
+      control: 'boolean',
+      description: 'Show a trailing icon after the label in Controls',
+      table: {
+        category: 'Story controls',
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' }
+      }
+    },
     startIcon: {
       description: 'Icon element to display before text',
       control: false
     },
     endIcon: {
       description: 'Icon element to display after text',
+      control: false
+    },
+    icon: {
+      description: 'Icon element for icon-only buttons',
       control: false
     },
   },
@@ -121,26 +176,33 @@ The \`.button\` class can be used on:
     tone: 'default',
     disabled: false,
     size: 'md',
+    leadingIcon: false,
+    trailingIcon: false,
   },
-  // Default render: if iconOnly is toggled on via controls, show a default icon and hide text
+  // Controls cannot edit ReactNode props directly, so booleans create representative icons.
   render: (args) => {
-    const { iconOnly, children, startIcon, ...rest } = args as any;
-    const iconNode = startIcon ?? <SaveIcon />;
+    const { iconOnly, leadingIcon, trailingIcon, children, startIcon, endIcon, ...rest } = args;
+    const resolvedStartIcon = leadingIcon ? <SaveIcon /> : startIcon;
+    const resolvedEndIcon = trailingIcon ? <ArrowForwardIcon /> : endIcon;
+    const iconNode = resolvedStartIcon ?? resolvedEndIcon ?? <SaveIcon />;
+
     return (
       <DSButton
         {...rest}
         iconOnly={iconOnly}
-        startIcon={iconOnly ? iconNode : startIcon}
+        icon={iconOnly ? iconNode : undefined}
+        startIcon={iconOnly ? undefined : resolvedStartIcon}
+        endIcon={iconOnly ? undefined : resolvedEndIcon}
         aria-label={iconOnly ? 'Action button' : undefined}
       >
         {iconOnly ? null : children}
       </DSButton>
     );
   },
-} satisfies Meta<typeof DSButton>;
+} satisfies Meta<ButtonStoryArgs>;
 export default meta;
 
-type Story = StoryObj<typeof DSButton>;
+type Story = StoryObj<ButtonStoryArgs>;
 
 // ========================================
 // BASIC EXAMPLES
@@ -181,14 +243,18 @@ export const Primary: Story = {
   // Interaction test: focus + click increments a counter (using a simple wrapper render)
   render: (args) => {
     const [count, setCount] = React.useState(0);
-    const { iconOnly, children, startIcon, ...rest } = args as any;
-    const iconNode = startIcon ?? <SaveIcon />;
+    const { iconOnly, leadingIcon, trailingIcon, children, startIcon, endIcon, ...rest } = args as any;
+    const resolvedStartIcon = leadingIcon ? <SaveIcon /> : startIcon;
+    const resolvedEndIcon = trailingIcon ? <ArrowForwardIcon /> : endIcon;
+    const iconNode = resolvedStartIcon ?? resolvedEndIcon ?? <SaveIcon />;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
         <DSButton
           {...rest}
           iconOnly={iconOnly}
-          startIcon={iconOnly ? iconNode : startIcon}
+          icon={iconOnly ? iconNode : undefined}
+          startIcon={iconOnly ? undefined : resolvedStartIcon}
+          endIcon={iconOnly ? undefined : resolvedEndIcon}
           onClick={() => setCount(c => c + 1)}
           data-testid="ds-button"
           aria-label={iconOnly ? 'Save action' : undefined}
@@ -217,16 +283,16 @@ export const Primary: Story = {
       throw new Error('Click count did not increment');
     }
 
-    // Typography check: verify Medium (500) weight; font-family can be flaky in headless runs
+    // Typography check: verify Figma Body/Base/Bold (700) weight; font-family can be flaky in headless runs
     const readStyles = () => getComputedStyle(btn);
     let cs = readStyles();
-    if (cs.fontWeight !== '500') {
+    if (cs.fontWeight !== '700') {
       // Wait a tick in case CSS variables/fonts apply slightly later
       await new Promise(r => setTimeout(r, 50));
       cs = readStyles();
     }
-    if (cs.fontWeight !== '500') {
-      throw new Error(`Expected font-weight 500 (Medium), got: ${cs.fontWeight}`);
+    if (cs.fontWeight !== '700') {
+      throw new Error(`Expected font-weight 700 (Bold), got: ${cs.fontWeight}`);
     }
     // Non-fatal note on family (helpful for manual debugging in UI)
     const ff = (cs.fontFamily || '').toLowerCase();
@@ -284,22 +350,92 @@ export const Ghost: Story = {
 };
 
 /**
- * All variants side by side for comparison
+ * All Figma V3 variants side by side for comparison
  */
 export const AllVariants: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Comparison of all button variants. Use the right variant for the right hierarchy of actions.',
+        story: 'Comparison of all Figma V3 button variants. Use the right variant for the right hierarchy of actions.',
       },
     },
   },
   render: () => (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
       <DSButton variant="primary">Primary</DSButton>
+      <DSButton variant="primaryAlt">Primary Alt</DSButton>
       <DSButton variant="secondary">Secondary</DSButton>
-      <DSButton variant="outline">Outline</DSButton>
-      <DSButton variant="ghost">Ghost</DSButton>
+      <DSButton variant="tertiary">Tertiary</DSButton>
+    </Box>
+  ),
+};
+
+/**
+ * Complete showcase with all variants, sizes, and states
+ */
+export const CompleteShowcase: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Comprehensive view of all button variants with different sizes and states.',
+      },
+    },
+  },
+  render: () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      {/* Default States */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Default States</Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <DSButton variant="primary">Primary</DSButton>
+          <DSButton variant="primaryAlt">Primary Alt</DSButton>
+          <DSButton variant="secondary">Secondary</DSButton>
+          <DSButton variant="tertiary">Tertiary</DSButton>
+        </Box>
+      </Box>
+
+      {/* Destructive States */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Destructive States</Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <DSButton variant="primary" destructive>Delete</DSButton>
+          <DSButton variant="primaryAlt" destructive>Remove</DSButton>
+          <DSButton variant="secondary" destructive>Cancel</DSButton>
+          <DSButton variant="tertiary" destructive>Clear</DSButton>
+        </Box>
+      </Box>
+
+      {/* Sizes */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Sizes (Primary)</Typography>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          <DSButton variant="primary" size="sm">Small (32px)</DSButton>
+          <DSButton variant="primary" size="md">Default (48px)</DSButton>
+          <DSButton variant="primary" size="lg">Large (56px)</DSButton>
+        </Box>
+      </Box>
+
+      {/* Disabled States */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Disabled States</Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <DSButton variant="primary" disabled>Primary</DSButton>
+          <DSButton variant="primaryAlt" disabled>Primary Alt</DSButton>
+          <DSButton variant="secondary" disabled>Secondary</DSButton>
+          <DSButton variant="tertiary" disabled>Tertiary</DSButton>
+        </Box>
+      </Box>
+
+      {/* Loading States */}
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>Loading States</Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <DSButton variant="primary" loading>Loading...</DSButton>
+          <DSButton variant="primaryAlt" loading>Loading...</DSButton>
+          <DSButton variant="secondary" loading>Loading...</DSButton>
+          <DSButton variant="tertiary" loading>Loading...</DSButton>
+        </Box>
+      </Box>
     </Box>
   ),
 };
@@ -475,14 +611,18 @@ export const Sizes: Story = {
     },
   },
   render: (args) => {
-    const { iconOnly, startIcon, ...rest } = args as any;
-    const iconNode = startIcon ?? <SaveIcon />;
+    const { iconOnly, leadingIcon, trailingIcon, startIcon, endIcon, ...rest } = args as any;
+    const resolvedStartIcon = leadingIcon ? <SaveIcon /> : startIcon;
+    const resolvedEndIcon = trailingIcon ? <ArrowForwardIcon /> : endIcon;
+    const iconNode = resolvedStartIcon ?? resolvedEndIcon ?? <SaveIcon />;
     return (
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <DSButton
           {...rest}
           iconOnly={iconOnly}
-          startIcon={iconOnly ? iconNode : startIcon}
+          icon={iconOnly ? iconNode : undefined}
+          startIcon={iconOnly ? undefined : resolvedStartIcon}
+          endIcon={iconOnly ? undefined : resolvedEndIcon}
           size="sm"
           data-testid="btn-sm"
           aria-label={iconOnly ? 'Small action' : undefined}
@@ -492,7 +632,9 @@ export const Sizes: Story = {
         <DSButton
           {...rest}
           iconOnly={iconOnly}
-          startIcon={iconOnly ? iconNode : startIcon}
+          icon={iconOnly ? iconNode : undefined}
+          startIcon={iconOnly ? undefined : resolvedStartIcon}
+          endIcon={iconOnly ? undefined : resolvedEndIcon}
           size="md"
           data-testid="btn-md"
           aria-label={iconOnly ? 'Medium action' : undefined}
@@ -502,7 +644,9 @@ export const Sizes: Story = {
         <DSButton
           {...rest}
           iconOnly={iconOnly}
-          startIcon={iconOnly ? iconNode : startIcon}
+          icon={iconOnly ? iconNode : undefined}
+          startIcon={iconOnly ? undefined : resolvedStartIcon}
+          endIcon={iconOnly ? undefined : resolvedEndIcon}
           size="lg"
           data-testid="btn-lg"
           aria-label={iconOnly ? 'Large action' : undefined}
@@ -549,16 +693,82 @@ export const IconOnly: Story = {
       },
     },
   },
-  render: (args) => (
+  render: (args) => {
+    const { leadingIcon, trailingIcon, startIcon, endIcon, children, ...rest } = args as any;
+    return (
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+        <DSButton {...rest} aria-label="Primary save" iconOnly icon={<SaveIcon />} variant="primary" size="md" />
+        <DSButton {...rest} aria-label="Primary alt download" iconOnly icon={<DownloadIcon />} variant="primaryAlt" size="md" />
+        <DSButton {...rest} aria-label="Secondary upload" iconOnly icon={<UploadIcon />} variant="secondary" size="md" />
+        <DSButton {...rest} aria-label="Tertiary edit" iconOnly icon={<EditIcon />} variant="tertiary" size="md" />
+        <DSButton {...rest} aria-label="Small add" iconOnly icon={<AddIcon />} variant="tertiary" size="sm" />
+        <DSButton {...rest} aria-label="Large delete" iconOnly icon={<DeleteIcon />} variant="primary" destructive size="lg" />
+      </Box>
+    );
+  }
+};
+
+/**
+ * Leading icons across all Figma V3 variants
+ */
+export const LeadingIcons: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Leading icons appear before the label across all V3 button variants.',
+      },
+    },
+  },
+  render: () => (
     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-      <DSButton {...args} aria-label="Save" iconOnly startIcon={<SaveIcon />} size="sm" />
-      <DSButton {...args} aria-label="Save" iconOnly startIcon={<SaveIcon />} size="md" />
-      <DSButton {...args} aria-label="Save" iconOnly startIcon={<SaveIcon />} size="lg" />
-      <DSButton {...args} aria-label="Save" iconOnly startIcon={<SaveIcon />} variant="outline" />
-      <DSButton {...args} aria-label="Delete" iconOnly startIcon={<DeleteIcon />} tone="danger" />
-      <DSButton {...args} aria-label="Approve" iconOnly startIcon={<CheckIcon />} tone="success" />
+      <DSButton variant="primary" startIcon={<SaveIcon />}>Primary</DSButton>
+      <DSButton variant="primaryAlt" startIcon={<DownloadIcon />}>Primary Alt</DSButton>
+      <DSButton variant="secondary" startIcon={<UploadIcon />}>Secondary</DSButton>
+      <DSButton variant="tertiary" startIcon={<EditIcon />}>Tertiary</DSButton>
     </Box>
-  )
+  ),
+};
+
+/**
+ * Trailing icons across all Figma V3 variants
+ */
+export const TrailingIcons: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Trailing icons appear after the label across all V3 button variants.',
+      },
+    },
+  },
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton variant="primary" endIcon={<ArrowForwardIcon />}>Primary</DSButton>
+      <DSButton variant="primaryAlt" endIcon={<ArrowForwardIcon />}>Primary Alt</DSButton>
+      <DSButton variant="secondary" endIcon={<ArrowForwardIcon />}>Secondary</DSButton>
+      <DSButton variant="tertiary" endIcon={<ArrowForwardIcon />}>Tertiary</DSButton>
+    </Box>
+  ),
+};
+
+/**
+ * Leading and trailing icons across all Figma V3 variants
+ */
+export const LeadingAndTrailingIcons: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Buttons can render both a leading and trailing icon when an action benefits from both context and direction.',
+      },
+    },
+  },
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+      <DSButton variant="primary" startIcon={<ArrowBackIcon />} endIcon={<ArrowForwardIcon />}>Primary</DSButton>
+      <DSButton variant="primaryAlt" startIcon={<ArrowBackIcon />} endIcon={<ArrowForwardIcon />}>Primary Alt</DSButton>
+      <DSButton variant="secondary" startIcon={<ArrowBackIcon />} endIcon={<ArrowForwardIcon />}>Secondary</DSButton>
+      <DSButton variant="tertiary" startIcon={<ArrowBackIcon />} endIcon={<ArrowForwardIcon />}>Tertiary</DSButton>
+    </Box>
+  ),
 };
 
 /**
@@ -573,15 +783,16 @@ export const WithStartIcon: Story = {
     },
   },
   render: () => (
-    <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', maxWidth: 600 }}>
+      <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', maxWidth: 600 }}>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
         <DSButton variant="primary" startIcon={<SaveIcon />}>Save Changes</DSButton>
-        <DSButton variant="outline" startIcon={<DownloadIcon />}>Download</DSButton>
-        <DSButton variant="ghost" startIcon={<EditIcon />}>Edit</DSButton>
+        <DSButton variant="primaryAlt" startIcon={<DownloadIcon />}>Download</DSButton>
+        <DSButton variant="secondary" startIcon={<UploadIcon />}>Upload</DSButton>
+        <DSButton variant="tertiary" startIcon={<EditIcon />}>Edit</DSButton>
       </Box>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-        <DSButton variant="primary" startIcon={<AddIcon />} tone="success">Add New</DSButton>
-        <DSButton variant="primary" startIcon={<DeleteIcon />} tone="danger">Delete</DSButton>
+        <DSButton variant="primary" startIcon={<AddIcon />}>Add New</DSButton>
+        <DSButton variant="primary" startIcon={<DeleteIcon />} destructive>Delete</DSButton>
       </Box>
     </Box>
   ),
@@ -601,9 +812,9 @@ export const WithEndIcon: Story = {
   render: () => (
     <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
       <DSButton variant="primary" endIcon={<ArrowForwardIcon />}>Next Step</DSButton>
-      <DSButton variant="outline" endIcon={<ArrowForwardIcon />}>Continue</DSButton>
-      <DSButton variant="ghost" startIcon={<ArrowBackIcon />}>Go Back</DSButton>
-      <DSButton variant="ghost" endIcon={<UploadIcon />}>Upload File</DSButton>
+      <DSButton variant="primaryAlt" endIcon={<ArrowForwardIcon />}>Continue</DSButton>
+      <DSButton variant="secondary" endIcon={<UploadIcon />}>Upload File</DSButton>
+      <DSButton variant="tertiary" startIcon={<ArrowBackIcon />}>Go Back</DSButton>
     </Box>
   ),
 };
@@ -630,12 +841,12 @@ export const IconToolbar: Story = {
         width: 'fit-content'
       }}
     >
-      <DSButton iconOnly aria-label="Save" startIcon={<SaveIcon />} variant="ghost" size="sm" />
-      <DSButton iconOnly aria-label="Download" startIcon={<DownloadIcon />} variant="ghost" size="sm" />
-      <DSButton iconOnly aria-label="Edit" startIcon={<EditIcon />} variant="ghost" size="sm" />
+      <DSButton iconOnly aria-label="Save" icon={<SaveIcon />} variant="tertiary" size="sm" />
+      <DSButton iconOnly aria-label="Download" icon={<DownloadIcon />} variant="tertiary" size="sm" />
+      <DSButton iconOnly aria-label="Edit" icon={<EditIcon />} variant="tertiary" size="sm" />
       <Box sx={{ width: 1, backgroundColor: 'grey.300', mx: 0.5 }} />
-      <DSButton iconOnly aria-label="Add" startIcon={<AddIcon />} variant="ghost" size="sm" />
-      <DSButton iconOnly aria-label="Delete" startIcon={<DeleteIcon />} variant="ghost" size="sm" tone="danger" />
+      <DSButton iconOnly aria-label="Add" icon={<AddIcon />} variant="tertiary" size="sm" />
+      <DSButton iconOnly aria-label="Delete" icon={<DeleteIcon />} variant="tertiary" size="sm" destructive />
     </Box>
   ),
 };

@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
             >
               <Typography
                 sx={{
-                  fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+                  fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
                   fontSize: '24px',
                   color: 'white',
                 }}

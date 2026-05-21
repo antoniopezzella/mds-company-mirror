@@ -72,7 +72,7 @@
 .hero-title {
   margin: 0;
   color: #ffffff;
-  font-family: var(--font-family-display, 'MMC_Display', -apple-system, sans-serif);
+  font-family: var(--font-family-display, 'Marsh Serif', serif);
   font-size: 32px;
   font-weight: 600;
   line-height: 1;

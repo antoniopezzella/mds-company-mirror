@@ -289,7 +289,7 @@ const Hero: React.FC = () => {
               fontSize: '40px !important',
               lineHeight: '64px !important',
               maxWidth: '786px',
-              fontFamily: 'var(--font/family/display, "MMC_Display:Regular", sans-serif) !important',
+              fontFamily: 'var(--font/family/display, "Marsh Serif", serif) !important',
               fontWeight: '400 !important',
               margin: '0 !important',
               padding: '0 !important'

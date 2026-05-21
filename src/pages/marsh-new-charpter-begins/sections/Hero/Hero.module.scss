@@ -81,8 +81,8 @@
 .heroTitle {
   /* Figma width spec: 786px */
   max-width: 786px;
-  /* Use DS heading family (MMC Display via CSS var) */
-  font-family: var(--typo-h2-font-family), 'MMC Display', 'Noto Sans', sans-serif;
+  /* Use DS heading family (Marsh Serif via CSS var) */
+  font-family: var(--typo-h2-font-family), 'Marsh Serif', serif;
   font-weight: 400;
   /* Explicit spec per request */
   font-size: 40px;
@@ -324,7 +324,7 @@ $arrow-seam-overlap: calculate-arrow-overlap(8px, 1);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--font/family/display, 'MMC_Display:Regular', sans-serif);
+    font-family: var(--font/family/display, 'Marsh Serif', serif);
     font-size: 38px; // Perfect size to complement M formation
     font-weight: 400; // Regular weight for elegance
     line-height: 1.1;
@@ -427,7 +427,7 @@ $arrow-seam-overlap: calculate-arrow-overlap(8px, 1);
     color: #dbf3ff !important; // Light blue text from Figma
     font-size: 40px !important;
     line-height: 64px !important;
-    font-family: var(--font/family/display, 'MMC_Display:Regular', sans-serif) !important;
+    font-family: var(--font/family/display, 'Marsh Serif', serif) !important;
     font-weight: 400 !important;
     margin: 0 !important;
     padding: 0 !important;

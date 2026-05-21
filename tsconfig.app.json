@@ -15,6 +15,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "composite": true,
+    
+    /* Path Aliases for shadcn/ui */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
     /* Linting */
     "strict": true,
