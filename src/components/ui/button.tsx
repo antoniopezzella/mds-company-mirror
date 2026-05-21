@@ -1,93 +1,267 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
 /**
  * Button variants using class-variance-authority
- * Maps MDS design system variants to Tailwind classes
+ * Maps MDS design system variants to Tailwind classes with exact Figma V3 specs
  */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  // Base styles matching MUI Button exactly
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap box-border relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none',
   {
     variants: {
       variant: {
+        // PRIMARY - Midnight Blue (#000f47) - Dashboards & standard CTAs
         primary:
-          'bg-primary text-primary-foreground shadow hover:bg-primary/90 active:bg-primary/80',
+          'bg-[#000f47] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
+        
+        // PRIMARY ALT - Gold (#ffbf00) - Hero/Marketing CTAs
         primaryAlt:
-          'bg-accent text-accent-foreground shadow hover:bg-accent/90 active:bg-accent/80',
+          'bg-[#ffbf00] text-[#000f47] shadow-none hover:bg-[#eaa501] active:bg-[#d58b02] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
+        
+        // SECONDARY - Outline with midnight blue border
         secondary:
-          'bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-primary-foreground active:bg-primary/90',
+          'bg-transparent text-[#000f47] border-2 border-[#000f47] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580]',
+        
+        // TERTIARY - Transparent/Ghost
         tertiary:
-          'bg-transparent text-primary hover:bg-primary/10 active:bg-primary/20',
-        destructive:
-          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
-        outline:
-          'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-transparent text-[#000f47] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580]',
+        
+        // DESTRUCTIVE - Red/Danger (applied when destructive=true)
+        destructivePrimary:
+          'bg-[#c53532] text-white shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
+        
+        destructiveSecondary:
+          'bg-transparent text-[#9a1c1f] border-2 border-[#c53532] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] hover:border-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] active:border-[#691315] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580]',
+        
+        destructiveTertiary:
+          'bg-transparent text-[#9a1c1f] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] disabled:bg-transparent disabled:text-[#878580]',
+        
+        // INVERSE variants (for dark backgrounds)
+        inversePrimary:
+          'bg-white text-[#000f47] shadow-none hover:bg-white/90 active:bg-white/80',
+        
+        inverseSecondary:
+          'bg-transparent text-[#ceecff] border-2 border-[#ceecff] hover:bg-[rgba(206,236,255,0.1)] active:bg-[rgba(206,236,255,0.2)]',
+        
+        inverseTertiary:
+          'bg-transparent text-white border-none hover:bg-[rgba(255,255,255,0.1)] active:bg-[rgba(255,255,255,0.2)] disabled:bg-transparent disabled:text-[#878580]',
       },
       size: {
-        sm: 'h-8 px-3 text-xs',
-        md: 'h-12 px-4',
-        lg: 'h-14 px-5 text-base',
-        icon: 'h-9 w-9',
+        sm: 'h-8 text-base font-bold leading-6',      // 32px height - Figma Small
+        md: 'h-12 text-base font-bold leading-6',     // 48px height - Figma Default
+        lg: 'h-14 text-base font-bold leading-6',     // 56px height - Figma Large
+      },
+      // Icon-only size handled separately
+      iconOnly: {
+        true: '',
+        false: 'px-3 sm:px-4',
+      },
+      fullWidth: {
+        true: 'w-full',
+        false: '',
       },
     },
     defaultVariants: {
-      variant: 'primary',
+      variant: 'secondary',
       size: 'md',
+      iconOnly: false,
+      fullWidth: false,
     },
   }
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
-  iconOnly?: boolean;
-  /** @deprecated Use 'destructive' variant instead */
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'size'> {
+  /** 
+   * Visual style aligned to Figma V3 design system:
+   * - **primary**: Midnight Blue filled (#000f47) - For dashboards & standard CTAs
+   * - **primaryAlt**: Gold filled (#ffbf00) - For hero banners & marketing CTAs
+   * - **secondary**: Outline with midnight blue border - Secondary actions
+   * - **tertiary**: Transparent/minimal - Tertiary actions
+   * 
+   * Legacy aliases (backward compatible):
+   * - **accent** → maps to primaryAlt
+   * - **outline** → maps to secondary
+   * - **ghost** → maps to tertiary
+   */
+  variant?: 'primary' | 'primaryAlt' | 'secondary' | 'tertiary' | 'accent' | 'outline' | 'ghost';
+  
+  /** Destructive/danger state - changes colors to red for ALL variants */
   destructive?: boolean;
+  
+  /** Legacy tone alias. `danger` maps to `destructive` */
+  tone?: 'default' | 'danger' | 'success';
+  
+  /** Design sizes mapped to Figma: sm/small (32px), md/medium (48px), lg/large (56px) */
+  size?: 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large';
+  
+  /** Stretch the button to fill its container */
+  fullWidth?: boolean;
+  
+  /** Icon-only button: renders a square button */
+  iconOnly?: boolean;
+  
+  /** Icon node for icon-only usage */
+  icon?: React.ReactNode;
+  
+  /** Whether the button is in a loading state */
+  loading?: boolean;
+  
+  /** Adjusts styling for use on dark backgrounds (e.g. Hero banners) */
+  inverse?: boolean;
+  
+  /** Optional leading/trailing icon nodes */
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+  
+  /** Radix Slot composition */
+  asChild?: boolean;
 }
 
 /**
- * MDS Button Component
+ * Design System Button — Figma V3 compliant (shadcn/ui version)
  * 
- * Built on shadcn/ui + Radix UI primitives
- * Uses MDS token system via CSS variables
+ * **Exact API match with MUI Button** for seamless migration.
  * 
- * Variants:
- * - primary: Midnight Blue fill (#002c77)
- * - primaryAlt: Gold fill (#ffb700) with blue text
- * - secondary: Transparent with blue border (outline style)
- * - tertiary: Transparent with blue text only
- * - destructive: Red/danger state
+ * **Figma V3 Variants:**
+ * - **Primary**: Midnight Blue filled (#000f47) - Dashboards & standard CTAs
+ * - **Primary Alt**: Gold filled (#ffbf00) - Hero banners & marketing CTAs
+ * - **Secondary**: Outline with midnight blue border - Secondary actions
+ * - **Tertiary**: Transparent/ghost - Minimal actions
  * 
  * @example
- * <Button variant="primary" size="lg">Submit</Button>
- * <Button variant="primaryAlt" size="md">Learn More</Button>
- * <Button variant="secondary">Cancel</Button>
- * <Button loading>Processing...</Button>
+ * ```tsx
+ * // Primary - Midnight Blue filled
+ * <Button variant="primary" size="lg">Save Changes</Button>
+ * 
+ * // Primary Alt - Gold CTA
+ * <Button variant="primaryAlt" size="lg">Download Report</Button>
+ * 
+ * // Secondary - Outline
+ * <Button variant="secondary">Learn More</Button>
+ * 
+ * // Tertiary - Ghost/minimal
+ * <Button variant="tertiary">Cancel</Button>
+ * 
+ * // Destructive state (any variant turns red)
+ * <Button variant="primary" destructive>Delete</Button>
+ * 
+ * // Inverse for dark backgrounds
+ * <Button variant="secondary" inverse>Learn More</Button>
+ * 
+ * // With icons
+ * <Button variant="primary" startIcon={<Plus />}>Add Item</Button>
+ * 
+ * // Icon only
+ * <Button variant="tertiary" iconOnly icon={<X />} />
+ * ```
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, loading, destructive, children, disabled, ...props }, ref) => {
+  ({ 
+    className, 
+    variant = 'secondary', 
+    size = 'md', 
+    destructive = false,
+    tone = 'default',
+    iconOnly = false,
+    icon,
+    loading = false,
+    inverse = false,
+    fullWidth = false,
+    startIcon, 
+    endIcon, 
+    asChild = false, 
+    children, 
+    disabled, 
+    ...props 
+  }, ref) => {
     const Comp = asChild ? Slot : 'button';
     
-    // Handle legacy 'destructive' prop (boolean)
-    const finalVariant = destructive ? 'destructive' : variant;
+    // Map legacy variant names
+    const normalizedVariant = 
+      variant === 'outline' ? 'secondary' 
+      : variant === 'ghost' ? 'tertiary' 
+      : variant === 'accent' ? 'primaryAlt'
+      : variant;
+    
+    // Map legacy size names
+    const normalizedSize = 
+      size === 'small' ? 'sm' 
+      : size === 'large' ? 'lg' 
+      : size === 'medium' ? 'md' 
+      : size;
+    
+    // Determine if destructive
+    const isDestructive = destructive || tone === 'danger';
+    
+    // Resolve final variant based on destructive + inverse state
+    const finalVariant = (() => {
+      if (isDestructive) {
+        if (normalizedVariant === 'primary' || normalizedVariant === 'primaryAlt') {
+          return 'destructivePrimary';
+        } else if (normalizedVariant === 'secondary') {
+          return 'destructiveSecondary';
+        } else {
+          return 'destructiveTertiary';
+        }
+      }
+      
+      if (inverse) {
+        if (normalizedVariant === 'primary' || normalizedVariant === 'primaryAlt') {
+          return 'inversePrimary';
+        } else if (normalizedVariant === 'secondary') {
+          return 'inverseSecondary';
+        } else {
+          return 'inverseTertiary';
+        }
+      }
+      
+      return normalizedVariant as 'primary' | 'primaryAlt' | 'secondary' | 'tertiary';
+    })();
+    
+    // Calculate dimensions for iconOnly mode
+    const height = normalizedSize === 'sm' ? 32 : normalizedSize === 'lg' ? 56 : 48;
+    const iconOnlyNode = icon ?? startIcon ?? endIcon;
+    
+    const isDisabled = disabled || loading;
     
     return (
       <Comp
-        className={cn(buttonVariants({ variant: finalVariant, size, className }))}
         ref={ref}
-        disabled={disabled || loading}
+        className={cn(
+          buttonVariants({ 
+            variant: finalVariant, 
+            size: normalizedSize, 
+            iconOnly,
+            fullWidth,
+          }),
+          // Icon-only square dimensions
+          iconOnly && `w-[${height}px] h-[${height}px] p-0`,
+          // Typography matching MUI exactly
+          'font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
+          'text-base font-bold leading-6 tracking-normal',
+          // Border radius
+          'rounded-[2px]',
+          // Loading opacity
+          loading && 'opacity-80',
+          className
+        )}
+        disabled={isDisabled}
         {...props}
       >
-        {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-        {children}
+        {!iconOnly && startIcon && !loading && (
+          <span className="inline-flex shrink-0">{startIcon}</span>
+        )}
+        {loading && <Loader2 className="h-4 w-4 animate-spin shrink-0" />}
+        {iconOnly ? iconOnlyNode : children}
+        {!iconOnly && endIcon && !loading && (
+          <span className="inline-flex shrink-0">{endIcon}</span>
+        )}
       </Comp>
     );
   }
