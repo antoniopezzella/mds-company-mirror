@@ -224,9 +224,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return normalizedVariant as 'primary' | 'primaryAlt' | 'secondary' | 'tertiary';
     })();
     
-    // Calculate dimensions for iconOnly mode
-    const height = normalizedSize === 'sm' ? 32 : normalizedSize === 'lg' ? 56 : 48;
+    // Icon-only node (for iconOnly mode)
     const iconOnlyNode = icon ?? startIcon ?? endIcon;
+    
+    // Icon-only square dimensions (static classes for Tailwind)
+    const iconOnlyClasses = iconOnly
+      ? normalizedSize === 'sm'
+        ? 'w-8 h-8 p-0'  // 32px
+        : normalizedSize === 'lg'
+        ? 'w-14 h-14 p-0'  // 56px
+        : 'w-12 h-12 p-0'  // 48px (default)
+      : '';
     
     const isDisabled = disabled || loading;
     
@@ -240,8 +248,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             iconOnly,
             fullWidth,
           }),
-          // Icon-only square dimensions
-          iconOnly && `w-[${height}px] h-[${height}px] p-0`,
+          // Icon-only square dimensions (static Tailwind classes)
+          iconOnlyClasses,
           // Typography matching MUI exactly
           'font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
           'text-base font-bold leading-6 tracking-normal',
