@@ -8,7 +8,7 @@ export const meta = { title: 'Foundations/Typography' };
 
 # Typography
 
-System typography leverages `Noto Sans` for body text and `MMC Display` for headings & key UI labels. The Marsh One project uses `Marsh Serif` as its display font.
+System typography leverages `Noto Sans` for body text and UI copy. Marketing website headings (`h1`–`h6`) and display utilities use `Marsh Serif`; dashboard containers use `Noto Sans` Bold for headings.
 
 ## Scale (Preview)
 
@@ -16,13 +16,14 @@ System typography leverages `Noto Sans` for body text and `MMC Display` for head
 
 ## Guidance
 - Use semantic heading levels (`<h1>`…`<h6>`) according to document hierarchy.
-- Keep display (MMC Display / Marsh Serif) usage purposeful: section titles, dashboards, key metrics.
+- Keep display usage purposeful: marketing hero and section titles use `Marsh Serif`; dashboards use `Noto Sans` Bold for dense, scannable headings and key metrics.
 - Avoid inline font overrides—add a variant to the theme if reused.
 - Ensure accessible contrast and sufficient size for readability.
 
 ### When to use which variant
 - h1–h3: Page and major section headings. Keep above the fold concise; avoid stacking multiple large headings.
 - h4–h6: Subsections and card titles within a page.
+- .typography-display: Marketing display text by default; becomes Noto Sans Bold inside `.mds-dashboard` or `[data-typography-context="dashboard"]`.
 - subtitle1/2: Section descriptors, list or panel headers, supporting context.
 - body1: Default reading text in dashboards and docs.
 - body2: Dense UI copy: labels, secondary text, table meta (keep legible).

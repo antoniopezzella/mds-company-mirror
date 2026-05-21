@@ -1,3 +1,11 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn/ui CSS Variables - MDS Token Integration */
+@import './styles/shadcn-variables.css';
+
 /* Global MDS display font */
 @font-face {
   font-family: 'MMC Display';

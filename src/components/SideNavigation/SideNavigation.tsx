@@ -29,6 +29,7 @@ export interface SideNavItem {
   label: string;
   icon?: React.ReactNode;
   active?: boolean;
+  path?: string;
   subItems?: SideNavItem[];
 }
 
@@ -36,6 +37,8 @@ export interface SideNavigationProps {
   items: SideNavItem[];
   onSupport?: () => void;
   onClose?: () => void;
+  onNavigate?: (path: string) => void;
+  currentPath?: string;
   ariaLabel?: string;
   variant?: 'dark' | 'light';
 }
@@ -44,7 +47,7 @@ function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaLabel = 'Primary', variant = 'dark' }) => {
+const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark' }) => {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
   const theme = useTheme();
   const mode = theme.palette.mode;
@@ -54,6 +57,14 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
 
   const handleClick = (label: string) => {
     setOpen((prevOpen) => ({ ...prevOpen, [label]: !prevOpen[label] }));
+  };
+
+  const navigateTo = (path?: string) => {
+    if (!path || !onNavigate) return;
+    onNavigate(path);
+    if (onClose) {
+      onClose();
+    }
   };
 
   const colors = useMemo(
@@ -159,20 +170,33 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
           const headerId = `sn-${slugify(item.label)}-header`;
           const panelId = `sn-${slugify(item.label)}-panel`;
           const isGroup = !!item.subItems?.length;
+          const isItemActive = !!item.active || (item.path ? currentPath === item.path : false);
           const isSectionHeader = ['Client List', 'Beacon Capital Partners', 'Task Center', 'Quick Actions'].includes(item.label);
           return (
             <React.Fragment key={item.label}>
               <ListItemButton
                 id={headerId}
-                selected={item.active}
-                onClick={() => isGroup && handleClick(item.label)}
-                aria-current={item.active ? 'page' : undefined}
+                selected={isItemActive}
+                onClick={() => {
+                  if (isGroup) {
+                    handleClick(item.label);
+                    return;
+                  }
+                  navigateTo(item.path);
+                }}
+                aria-current={isItemActive ? 'page' : undefined}
                 aria-expanded={isGroup ? !!open[item.label] : undefined}
                 aria-controls={isGroup ? panelId : undefined}
                 aria-haspopup={isGroup ? 'true' : undefined}
                 role="listitem"
                 onKeyDown={(e) => {
-                  if (!isGroup) return;
+                  if (!isGroup) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigateTo(item.path);
+                    }
+                    return;
+                  }
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     handleClick(item.label);
@@ -198,7 +222,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                     outlineOffset: '2px'
                   },
                   // Active state with sky blue background
-                  ...(item.active && {
+                  ...(isItemActive && {
                     bgcolor: colors.activeBg,
                     color: colors.activeText,
                     borderLeft: '4px solid',
@@ -216,7 +240,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                     },
                   },
                   // Hover state (only when not active)
-                  '&:hover': !item.active ? {
+                  '&:hover': !isItemActive ? {
                     bgcolor: colors.itemHoverBg,
                     color: colors.navText
                   } : {
@@ -231,7 +255,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                 <ListItemText 
                   primary={item.label} 
                   primaryTypographyProps={{ 
-                    fontWeight: item.active || (variant === 'light' && isSectionHeader) ? 600 : 400,
+                    fontWeight: isItemActive || (variant === 'light' && isSectionHeader) ? 600 : 400,
                     color: 'inherit'
                   }} 
                 />
@@ -245,11 +269,21 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                 <Collapse in={open[item.label]} timeout="auto" unmountOnExit>
                   <List id={panelId} role="group" aria-labelledby={headerId} component="div" disablePadding sx={{ pl: 4 }}>
                     {(item.subItems ?? []).map((sub) => (
+                      (() => {
+                        const isSubActive = !!sub.active || (sub.path ? currentPath === sub.path : false);
+                        return (
                       <ListItemButton 
                         key={sub.label} 
                         role="listitem"
-                        selected={sub.active}
-                        aria-current={sub.active ? 'page' : undefined}
+                        selected={isSubActive}
+                        aria-current={isSubActive ? 'page' : undefined}
+                        onClick={() => navigateTo(sub.path)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            navigateTo(sub.path);
+                          }
+                        }}
                         sx={{ 
                           py: 1, 
                           borderRadius: 1,
@@ -262,7 +296,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                             outlineOffset: '2px'
                           },
                           // Sub-item active state
-                          ...(sub.active && {
+                          ...(isSubActive && {
                             bgcolor: colors.activeBg,
                             color: colors.activeText,
                             borderLeft: '4px solid',
@@ -280,7 +314,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                             },
                           },
                           // Hover state (conditional based on active state)
-                          '&:hover': !sub.active ? {
+                          '&:hover': !isSubActive ? {
                             bgcolor: colors.itemHoverBg,
                             color: colors.navText
                           } : {
@@ -294,10 +328,12 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, ariaL
                           primaryTypographyProps={{ 
                             variant: 'body2', 
                             color: 'inherit',
-                            fontWeight: sub.active ? 600 : 400
+                            fontWeight: isSubActive ? 600 : 400
                           }} 
                         />
                       </ListItemButton>
+                        );
+                      })()
                     ))}
                   </List>
                 </Collapse>

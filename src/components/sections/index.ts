@@ -2,6 +2,9 @@
 export { HeroSection } from './HeroSection';
 export type { HeroSectionProps } from './HeroSection';
 
+export { HeroBanner } from './HeroBanner';
+export type { HeroBannerProps, HeroBannerCTA } from './HeroBanner';
+
 export { FourBrandsSection } from './FourBrandsSection';
 export type { FourBrandsSectionProps } from './FourBrandsSection';
 
@@ -22,3 +25,6 @@ export type { FAQSectionProps, FAQItem } from './FAQSection';
 
 export { WireframeSlide } from './WireframeSlide';
 export type { WireframeSlideProps } from './WireframeSlide';
+
+export { InsuranceDashboard } from './InsuranceDashboard';
+export type { InsuranceDashboardProps } from './InsuranceDashboard';

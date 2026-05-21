@@ -118,7 +118,7 @@ const TitleBlock: React.FC<{ title: string; description?: string }> = ({ title, 
   <Stack spacing={1}>
     <h3
       style={{
-        fontFamily: 'MMC Display, var(--typo-h4-font-family)',
+        fontFamily: 'var(--typo-h4-font-family)',
         fontWeight: 700,
         fontSize: 20,
         lineHeight: '28px',

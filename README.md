@@ -232,11 +232,53 @@ This repository enforces design system integrity through three GitHub Actions wo
 | Tests fail | Unit or snapshot regression | Update test or component; confirm semantic token changes intentional |
 
 ### Adding / Changing Tokens Safely
-1. Add primitive (palette) or semantic token in build script source.
-2. Run `npm run tokens:build` locally.
-3. Run `npm run tokens:contrast:all` to ensure no regressions.
-4. Commit changes with clear description (e.g. `feat(tokens): add surface.button.primary semantic token`).
-5. Open PR; verify CI summary & artifacts.
+
+**🚨 Before adding a token, you must submit a token request for review and approval.**
+
+#### For Designers & Product Owners
+Follow the [Token Request Process](./docs/TOKEN_REQUEST_PROCESS.md):
+1. Check if an existing token can work (search Figma Variables or Storybook)
+2. If no match, submit a GitHub issue using the appropriate template:
+   - [⭐ Brand Token](/.github/ISSUE_TEMPLATE/token-request-brand.md) (requires VP approval)
+   - [🎨 Semantic Token](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (requires Design Lead)
+   - [🔧 Role Token](/.github/ISSUE_TEMPLATE/token-request-role.md) (requires DS Team)
+3. Wait for approval before implementation
+4. Developer will implement and sync to Figma
+
+#### For Developers (Post-Approval Implementation)
+Once a token request is **approved**, follow these steps:
+
+**For Primitive/Brand tokens:**
+1. Add to `src/tokens.ts` with clear comment
+2. Run `npm run tokens:build`
+3. Run `npm run tokens:validate` (schema check)
+4. Update Figma variables (Primitives collection)
+
+**For Semantic tokens:**
+1. Add to `src/semantic-tokens.ts`
+2. Define light mode value (reference primitive)
+3. Add dark mode override in `semanticDarkOverrides`
+4. Run `npm run tokens:build`
+5. Run `npm run tokens:contrast:all` (fix failures if any)
+6. Update Figma variables (Semantic collection with light/dark modes)
+
+**For Role tokens:**
+1. Add to `src/theme/roles.ts`
+2. Update `RoleName` type union
+3. Update `ROLE_MAP` with semantic mapping
+4. Run `npm run roles:check`
+5. Update component to use new role
+
+**For all token types:**
+1. Document in Storybook token browser
+2. Add to `CHANGELOG.md` under `[Unreleased]`
+3. Create PR with appropriate label (`tokens:primitive`, `tokens:semantic`, `tokens:role`)
+4. Link to approved token request issue in PR description
+5. Verify CI checks pass (diff, contrast, governance)
+6. Get 1 approval and merge
+7. Sync Figma variables after merge
+
+**📚 Full governance guide:** [TOKEN_REQUEST_PROCESS.md](./docs/TOKEN_REQUEST_PROCESS.md)
 
 ### Governance Escalation Path
 Level 1 (Current): Informational reporting (token diff, contrast).

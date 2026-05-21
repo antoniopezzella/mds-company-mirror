@@ -24,7 +24,7 @@
 
 .title {
   font-size: 20px;
-  font-family: 'MMC Display', 'Noto Sans', sans-serif;
+  font-family: var(--typo-h3-font-family, 'Marsh Serif', serif);
   font-weight: 700;
   color: #1b222f;
   margin: 0;

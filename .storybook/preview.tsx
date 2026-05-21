@@ -1,4 +1,12 @@
 import type { Preview, StoryFn, StoryContext } from '@storybook/react';
+import {
+  Controls,
+  Description,
+  Primary,
+  Stories,
+  Subtitle,
+  Title,
+} from '@storybook/addon-docs/blocks';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme, darkTheme } from '../src/theme';
 import React from 'react';
@@ -35,7 +43,7 @@ export const decorators = [
         <CssBaseline />
         <div style={{ background: activeTheme.palette.background.default, minHeight: '100vh', padding: 24 }}>
           <RoleVarsProvider>
-            {Story({}, context)}
+            <Story />
           </RoleVarsProvider>
         </div>
       </ThemeProvider>
@@ -45,13 +53,28 @@ export const decorators = [
 
 export const parameters: Preview['parameters'] = {
   controls: {
+    expanded: true,
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/i,
     },
+    sort: 'requiredFirst',
   },
   a11y: {
     test: 'todo',
+  },
+  docs: {
+    page: () => (
+      <>
+        <Title />
+        <Subtitle />
+        <Primary />
+        <h2>Controls</h2>
+        <Controls />
+        <Description />
+        <Stories />
+      </>
+    ),
   },
   options: {
     storySort: {

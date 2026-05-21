@@ -16,14 +16,48 @@ const meta: Meta<typeof Paper> = {
       }
     }
   },
+  argTypes: {
+    elevation: {
+      control: { type: 'number', min: 0, max: 24, step: 1 },
+    },
+    variant: {
+      control: 'radio',
+      options: ['elevation', 'outlined'],
+    },
+    square: {
+      control: 'boolean',
+    },
+    padding: {
+      control: 'radio',
+      options: ['none', 'small', 'medium', 'large'],
+    },
+    borderColor: {
+      control: 'radio',
+      options: ['default', 'primary', 'success', 'warning', 'danger'],
+    },
+    hover: {
+      control: 'boolean',
+    },
+    sx: {
+      control: 'object',
+    },
+  },
+  args: {
+    elevation: 1,
+    variant: 'elevation',
+    square: false,
+    padding: 'medium',
+    borderColor: 'default',
+    hover: false,
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof Paper>;
 
 export const Default: Story = {
-  render: () => (
-    <Paper>
+  render: (args) => (
+    <Paper {...args}>
       <Typography variant="h6">Default Paper</Typography>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
         This is a paper container with default elevation and padding

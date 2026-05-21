@@ -2,53 +2,106 @@ import React from 'react';
 import MuiButton from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import type { SxProps } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
 
 export interface DSButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'size'> {
-  /** Visual style aligned to Figma: primary (gold fill), secondary (blue fill), outline (bordered), ghost (minimal) */
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  /** Semantic tone adjusts the color intent: default, danger, or success */
+  /** 
+   * Visual style aligned to Figma V3 design system:
+   * - **primary**: Midnight Blue filled (#000f47) - For dashboards & standard CTAs
+   * - **primaryAlt**: Gold filled (#ffbf00) - For hero banners & marketing CTAs (Figma: Primary Alt)
+   * - **secondary**: Outline with midnight blue border - Secondary actions
+   * - **tertiary**: Transparent/minimal - Tertiary actions
+   * 
+   * Legacy aliases (backward compatible):
+   * - **accent** → maps to primaryAlt
+   * - **outline** → maps to secondary
+   * - **ghost** → maps to tertiary
+   */
+  variant?: 'primary' | 'primaryAlt' | 'secondary' | 'tertiary' | 'accent' | 'outline' | 'ghost';
+  /** Destructive/danger state - changes colors to red */
+  destructive?: boolean;
+  /** Legacy tone alias. `danger` maps to `destructive`; other tones remain visual defaults. */
   tone?: 'default' | 'danger' | 'success';
-  /** Design sizes mapped to spacing scale */
-  size?: 'sm' | 'md' | 'lg';
+  /** Design sizes mapped to Figma: sm/small (Small 32px), md/medium (Default 48px), lg/large (Large 56px) */
+  size?: 'sm' | 'md' | 'lg' | 'small' | 'medium' | 'large';
+  /** MUI-compatible style escape hatch for existing call sites */
+  sx?: SxProps;
+  /** Stretch the button to fill its container */
+  fullWidth?: boolean;
   /** Icon-only button: renders a square button; provide aria-label for accessibility */
   iconOnly?: boolean;
+  /** Icon node for icon-only usage. Falls back to startIcon/endIcon when omitted. */
+  icon?: React.ReactNode;
   /** Whether the button is in a loading state */
   loading?: boolean;
+  /** Adjusts styling for use on dark backgrounds (e.g. Hero banners) */
+  inverse?: boolean;
   /** Optional leading/trailing icon nodes */
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 }
 
 /**
- * Design System Button implemented with MUI while preserving the DS API.
- * Variants match Figma spec:
- *   - primary:   Gold fill, dark text (CTA)
- *   - secondary: Dark blue fill, white text
- *   - outline:   Border only, transparent fill
- *   - ghost:     No border/fill, inverts on hover
+ * Design System Button — Figma V3 compliant
+ * 
+ * **Figma V3 Variants:**
+ * - **Primary**: Midnight Blue filled (#000f47) - For dashboards & standard CTAs
+ * - **Primary Alt (primaryAlt)**: Gold filled (#ffbf00) - For hero banners & marketing CTAs
+ * - **Secondary**: Outline with midnight blue border - Secondary actions
+ * - **Tertiary**: Transparent/ghost - Minimal actions
+ * 
+ * @example
+ * ```tsx
+ * // Primary - Midnight Blue filled (dashboards)
+ * <DSButton variant="primary" size="lg">Save Changes</DSButton>
+ * 
+ * // Primary Alt - Gold CTA (hero/marketing)
+ * <DSButton variant="primaryAlt" size="lg">Download Report</DSButton>
+ * 
+ * // Secondary - Outline
+ * <DSButton variant="secondary" size="md">Learn More</DSButton>
+ * 
+ * // Tertiary - Ghost/minimal
+ * <DSButton variant="tertiary" size="md">Cancel</DSButton>
+ * 
+ * // Destructive state
+ * <DSButton variant="primary" destructive>Delete</DSButton>
+ * 
+ * // Inverse for dark backgrounds
+ * <DSButton variant="secondary" inverse>Learn More</DSButton>
+ * ```
  */
 const DSButton: React.FC<DSButtonProps> = ({
-  variant = 'outline',
+  variant = 'secondary',
+  destructive = false,
   tone = 'default',
   size = 'md',
   iconOnly = false,
+  icon,
   loading = false,
+  inverse = false,
   disabled,
+  sx,
+  fullWidth,
   startIcon,
   endIcon,
   className = '',
   children,
   ...rest
 }) => {
-  const height = size === 'sm' ? 32 : size === 'lg' ? 56 : 48;
-  const px = iconOnly ? 0 : size === 'sm' ? 12 : size === 'lg' ? 20 : 16;
+  const isDestructive = destructive || tone === 'danger';
 
-  // Resolve role colors for tones
-  const baseRole = tone === 'danger' ? 'interactive.danger' : 'interactive.primary';
-  const baseHoverRole = tone === 'danger' ? 'interactive.danger.hover' : 'interactive.primary.hover';
-  const baseActiveRole = tone === 'danger' ? 'interactive.danger.active' : 'interactive.primary.active';
-  const textRole = tone === 'danger' ? 'text.onDanger' : 'text.onAccent';
+  // Map legacy variant names to new ones
+  const normalizedVariant = 
+    variant === 'outline' ? 'secondary' 
+    : variant === 'ghost' ? 'tertiary' 
+    : variant === 'accent' ? 'primaryAlt' // Legacy alias for gold CTA
+    : variant;
+  const normalizedSize = size === 'small' ? 'sm' : size === 'large' ? 'lg' : size === 'medium' ? 'md' : size;
+  const height = normalizedSize === 'sm' ? 32 : normalizedSize === 'lg' ? 56 : 48;
+  const spacingX = iconOnly ? 0 : normalizedSize === 'sm' ? '12px' : '16px';
+  const iconOnlyNode = icon ?? startIcon ?? endIcon;
 
   const isDisabled = disabled || loading;
 
@@ -57,86 +110,230 @@ const DSButton: React.FC<DSButtonProps> = ({
     textTransform: 'none',
     boxSizing: 'border-box',
     fontFamily: 'var(--typo-button-font-family)',
-    fontWeight: 'var(--typo-button-font-weight)',
-    letterSpacing: 'var(--typo-button-letter-spacing)',
-    fontSize: 'var(--typo-button-font-size)',
-    lineHeight: 'var(--typo-button-line-height)',
+    fontWeight: 700,
+    letterSpacing: 0,
+    fontSize: '16px',
+    lineHeight: '24px',
     height,
     minWidth: iconOnly ? height : undefined,
     width: iconOnly ? height : undefined,
-    px,
+    px: spacingX,
     position: 'relative',
     '&:focus-visible': {
       outline: `2px solid ${getRoleColor('focus.ring')}`,
       outlineOffset: 2,
     },
     '&.Mui-disabled': {
-      opacity: loading ? 0.8 : 0.4,
-      backgroundColor: (variant === 'primary' || variant === 'secondary')
-        ? getRoleColor(variant === 'secondary' ? 'surface.hero' : baseRole)
-        : 'transparent',
-      color: (variant === 'primary' || variant === 'secondary')
-        ? (variant === 'secondary' ? getRoleColor('text.onHero') : getRoleColor(textRole))
-        : getRoleColor(baseRole),
-      border: variant === 'outline' ? `1px solid ${getRoleColor(baseRole)}` : 'none',
+      opacity: loading ? 0.8 : 1,
     },
   };
 
+  const v3ButtonColors = {
+    primarySurface: '#000f47',
+    primarySurfaceHover: '#082d9e',
+    primarySurfaceActive: '#0b4bff',
+    primaryTextInverted: '#ceecff',
+    primaryAltSurface: '#ffbf00',
+    primaryAltSurfaceHover: '#eaa501',
+    primaryAltSurfaceActive: '#d58b02',
+    primaryAltText: '#000f47',
+    secondarySurface: 'transparent',
+    outlineHover: '#082d9e',
+    outlineActive: '#0b4bff',
+    tertiaryHoverSurface: 'rgba(0, 0, 0, 0.08)',
+    tertiaryActiveSurface: 'rgba(0, 0, 0, 0.03)',
+    disabledSurface: '#ebe7e2',
+    disabledText: '#878580',
+    criticalSurface: '#c53532',
+    criticalText: '#9a1c1f',
+    criticalHover: '#9a1c1f',
+    criticalActive: '#691315',
+    criticalInvertedText: '#ffffff',
+  } as const;
+
   const sxVariant: SxProps = (() => {
-    switch (variant) {
-      // Gold fill — primary CTA
+    // Destructive/Danger colors (red)
+    if (isDestructive) {
+      const baseColor = v3ButtonColors.criticalSurface;
+      const textColor = v3ButtonColors.criticalText;
+      const hoverColor = v3ButtonColors.criticalHover;
+      const activeColor = v3ButtonColors.criticalActive;
+      
+      if (normalizedVariant === 'primary' || normalizedVariant === 'primaryAlt') {
+        return {
+          backgroundColor: baseColor,
+          color: v3ButtonColors.criticalInvertedText,
+          '&:hover': { backgroundColor: hoverColor },
+          '&:active': { backgroundColor: activeColor },
+          '&.Mui-disabled': {
+            backgroundColor: v3ButtonColors.disabledSurface,
+            color: v3ButtonColors.disabledText,
+          },
+        };
+      } else if (normalizedVariant === 'secondary') {
+        return {
+          backgroundColor: 'transparent',
+          color: textColor,
+          border: `2px solid ${baseColor}`,
+          '&:hover': {
+            backgroundColor: v3ButtonColors.tertiaryHoverSurface,
+            color: hoverColor,
+            borderColor: hoverColor,
+          },
+          '&:active': {
+            backgroundColor: v3ButtonColors.tertiaryActiveSurface,
+            color: activeColor,
+            borderColor: activeColor,
+          },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: v3ButtonColors.disabledText,
+            borderColor: v3ButtonColors.disabledText,
+          },
+        };
+      } else { // tertiary
+        return {
+          backgroundColor: 'transparent',
+          color: textColor,
+          border: 'none',
+          '&:hover': {
+            backgroundColor: v3ButtonColors.tertiaryHoverSurface,
+            color: hoverColor,
+            border: 'none',
+          },
+          '&:active': {
+            backgroundColor: v3ButtonColors.tertiaryActiveSurface,
+            color: activeColor,
+            border: 'none',
+          },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: v3ButtonColors.disabledText,
+            border: 'none',
+          },
+        };
+      }
+    }
+
+    // Normal variants
+    switch (normalizedVariant) {
+      // PRIMARY - Midnight Blue filled (#000f47)
       case 'primary':
-        return {
-          backgroundColor: getRoleColor(baseRole),
-          color: getRoleColor(textRole),
-          '&:hover': { backgroundColor: getRoleColor(baseHoverRole) },
-          '&:active': { backgroundColor: getRoleColor(baseActiveRole) },
+        return inverse ? {
+          backgroundColor: getRoleColor('surface.default'), // white
+          color: v3ButtonColors.primarySurface,
+          '&:hover': { 
+            backgroundColor: alpha(getRoleColor('surface.default'), 0.9),
+          },
+          '&:active': { 
+            backgroundColor: alpha(getRoleColor('surface.default'), 0.8),
+          },
+        } : {
+          backgroundColor: v3ButtonColors.primarySurface,
+          color: v3ButtonColors.primaryTextInverted,
+          '&:hover': {
+            backgroundColor: v3ButtonColors.primarySurfaceHover,
+          },
+          '&:active': {
+            backgroundColor: v3ButtonColors.primarySurfaceActive,
+          },
+          '&.Mui-disabled': {
+            backgroundColor: v3ButtonColors.disabledSurface,
+            color: v3ButtonColors.disabledText,
+          },
         };
-      // Dark blue fill — secondary action
+      
+      // PRIMARY ALT - Gold filled (#ffbf00) - Hero/Marketing CTAs
+      case 'primaryAlt':
+        return {
+          backgroundColor: v3ButtonColors.primaryAltSurface,
+          color: v3ButtonColors.primaryAltText,
+          '&:hover': { 
+            backgroundColor: v3ButtonColors.primaryAltSurfaceHover,
+          },
+          '&:active': { 
+            backgroundColor: v3ButtonColors.primaryAltSurfaceActive,
+            color: v3ButtonColors.primaryAltText,
+          },
+          '&.Mui-disabled': {
+            backgroundColor: v3ButtonColors.disabledSurface,
+            color: v3ButtonColors.disabledText,
+          },
+        };
+      
+      // SECONDARY - Outline with midnight blue border
       case 'secondary':
-        return {
-          backgroundColor: getRoleColor('surface.hero'),      // blue1000
-          color: getRoleColor('text.onHero'),                  // white
-          '&:hover': {
-            backgroundColor: getRoleColor('interactive.primary.hover'),
-            color: getRoleColor('text.onHero'),
-          },
-          '&:active': {
-            backgroundColor: getRoleColor('interactive.primary.active'),
-            color: getRoleColor('text.onHero'),
-          },
-        };
-      // Border only — outlined
-      case 'outline':
-        return {
+        return inverse ? {
           backgroundColor: 'transparent',
-          color: getRoleColor('text.primary'),
-          border: `1px solid ${getRoleColor('border.strong')}`,
+          color: getRoleColor('surface.secondary'),              // #ceecff (sky blue)
+          border: `2px solid ${getRoleColor('surface.secondary')}`,
           '&:hover': {
-            backgroundColor: getRoleColor('surface.hero'),
-            color: getRoleColor('text.onHero'),
-            borderColor: getRoleColor('surface.hero'),
+            backgroundColor: alpha(getRoleColor('surface.secondary'), 0.1),
           },
           '&:active': {
-            backgroundColor: getRoleColor('surface.hero'),
-            color: getRoleColor('interactive.primary'),
-            borderColor: getRoleColor('surface.hero'),
+            backgroundColor: alpha(getRoleColor('surface.secondary'), 0.2),
+          },
+        } : {
+          backgroundColor: v3ButtonColors.secondarySurface,
+          color: v3ButtonColors.primarySurface,
+          border: `2px solid ${v3ButtonColors.primarySurface}`,
+          '&:hover': {
+            backgroundColor: v3ButtonColors.tertiaryHoverSurface,
+            color: v3ButtonColors.outlineHover,
+            borderColor: v3ButtonColors.outlineHover,
+          },
+          '&:active': {
+            backgroundColor: v3ButtonColors.tertiaryActiveSurface,
+            color: v3ButtonColors.outlineActive,
+            borderColor: v3ButtonColors.outlineActive,
+          },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: v3ButtonColors.disabledText,
+            borderColor: v3ButtonColors.disabledText,
           },
         };
-      // No border/fill — ghost, inverts on hover
-      case 'ghost':
-        return {
+      
+      // TERTIARY - Transparent/Ghost
+      case 'tertiary':
+        return inverse ? {
           backgroundColor: 'transparent',
-          color: getRoleColor('text.primary'),
+          color: getRoleColor('text.inverse'),                   // white
+          border: 'none',
           '&:hover': {
-            backgroundColor: getRoleColor('surface.hero'),
-            color: getRoleColor('text.onHero'),
+            backgroundColor: alpha(getRoleColor('text.inverse'), 0.1),
+            border: 'none',
           },
           '&:active': {
-            backgroundColor: getRoleColor('interactive.primary'),
-            color: getRoleColor('text.onHero'),
+            backgroundColor: alpha(getRoleColor('text.inverse'), 0.2),
+            border: 'none',
+          },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: v3ButtonColors.disabledText,
+            border: 'none',
+          },
+        } : {
+          backgroundColor: 'transparent',
+          color: v3ButtonColors.primarySurface,
+          border: 'none',
+          '&:hover': {
+            backgroundColor: v3ButtonColors.tertiaryHoverSurface,
+            color: v3ButtonColors.outlineHover,
+            border: 'none',
+          },
+          '&:active': {
+            backgroundColor: v3ButtonColors.tertiaryActiveSurface,
+            color: v3ButtonColors.outlineActive,
+            border: 'none',
+          },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: v3ButtonColors.disabledText,
+            border: 'none',
           },
         };
+      
       default:
         return {};
     }
@@ -146,10 +343,11 @@ const DSButton: React.FC<DSButtonProps> = ({
     <MuiButton
       disableElevation
       disabled={isDisabled}
+      fullWidth={fullWidth}
       startIcon={loading || iconOnly ? undefined : startIcon}
       endIcon={loading || iconOnly ? undefined : endIcon}
       className={className}
-      sx={[sxBase, sxVariant] as SxProps}
+      sx={[sxBase, sxVariant, sx] as SxProps}
       {...rest}
     >
       {loading && (
@@ -172,7 +370,7 @@ const DSButton: React.FC<DSButtonProps> = ({
         alignItems: 'center',
         gap: 'inherit'
       }}>
-        {iconOnly ? (startIcon ?? null) : children}
+        {iconOnly ? iconOnlyNode : children}
       </span>
     </MuiButton>
   );
