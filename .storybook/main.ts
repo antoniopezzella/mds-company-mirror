@@ -1,8 +1,11 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
 
 const resolveOptionalDependency = (id: string) => {
   try {
-    import.meta.resolve(id);
+    require.resolve(id);
     return true;
   } catch {
     return false;
