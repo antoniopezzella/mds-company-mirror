@@ -6,6 +6,7 @@ const meta: Meta<typeof MetricCard> = {
   component: MetricCard,
   tags: ['autodocs'],
   parameters: {
+    layout: 'centered', // Center single cards
     docs: {
       description: {
         component: `
@@ -87,6 +88,9 @@ export const SmallNumber: Story = {
 };
 
 export const MultipleMetrics: Story = {
+  parameters: {
+    layout: 'fullscreen', // Multi-card grid needs full width
+  },
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 bg-background">
       <MetricCard value="150" label="Countries" />
@@ -97,6 +101,9 @@ export const MultipleMetrics: Story = {
 };
 
 export const DashboardLayout: Story = {
+  parameters: {
+    layout: 'fullscreen', // Use full canvas for dashboard grid
+  },
   render: () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-background">
       <MetricCard value="98.5%" label="Compliance Rate" />
@@ -116,6 +123,9 @@ export const CustomStyling: Story = {
 };
 
 export const ResponsiveDemo: Story = {
+  parameters: {
+    layout: 'fullscreen', // Use full canvas for responsive demonstration
+  },
   render: () => (
     <div className="space-y-8 p-8 bg-background">
       <div className="border-2 border-dashed border-border p-4 rounded-lg">
@@ -134,6 +144,9 @@ export const ResponsiveDemo: Story = {
 };
 
 export const DarkMode: Story = {
+  parameters: {
+    layout: 'fullscreen', // Dark mode showcase with grid
+  },
   render: () => (
     <div className="dark bg-background p-8 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
