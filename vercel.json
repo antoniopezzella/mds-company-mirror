@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build-storybook 2>&1 | tee build.log",
+  "buildCommand": "npx storybook build --output-dir storybook-static",
   "outputDirectory": "storybook-static",
   "framework": null,
   "headers": [
