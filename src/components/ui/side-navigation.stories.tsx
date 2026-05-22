@@ -50,6 +50,11 @@ This shadcn component maintains full API compatibility with the MUI SideNavigati
       options: ['dark', 'light'],
       description: 'Visual variant of the sidebar',
     },
+    colorScheme: {
+      control: 'select',
+      options: ['primary', 'secondary'],
+      description: 'MDS color scheme: primary (midnight blue) or secondary (sky blue)',
+    },
     currentPath: {
       control: 'text',
       description: 'Current active path for highlighting',
@@ -352,6 +357,177 @@ export const MobileLayout: Story = {
       </div>
     ),
   ],
+};
+
+// New color scheme stories showcasing MDS brand colors
+export const PrimaryColorScheme: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Primary Color Scheme** - Midnight Blue (#000f47)
+
+The primary color scheme uses Marsh's signature midnight blue as the background with sky blue accents for active states and visual connectors.
+
+**Visual Features:**
+- ✨ **Connecting lines** for expanded sub-items (shadcn style)
+- 🎨 Sky blue borders (#ceecff) for active states
+- 📐 Vertical line connecting parent to sub-items
+- 🌙 Dark navy background for professional B2B look
+        `,
+      },
+    },
+  },
+  args: {
+    items: sampleItems,
+    variant: 'dark',
+    colorScheme: 'primary',
+    currentPath: '/policies/renewals',
+    onSupport: () => alert('Support clicked'),
+    onNavigate: (path) => console.log('Navigate to:', path),
+  },
+  decorators: [
+    (Story) => (
+      <div className="h-screen flex">
+        <div className="w-64">
+          <Story />
+        </div>
+        <div className="flex-1 p-8 bg-gray-50">
+          <h1 className="text-2xl font-bold mb-4">Primary Color Scheme</h1>
+          <p className="text-muted-foreground mb-4">
+            Midnight blue background (#000f47) with sky blue accents (#ceecff).
+          </p>
+          <p className="text-muted-foreground">
+            Notice the visual connecting line on the left of expanded sub-items!
+          </p>
+        </div>
+      </div>
+    ),
+  ],
+};
+
+export const SecondaryColorScheme: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Secondary Color Scheme** - Sky Blue (#ceecff)
+
+The secondary color scheme inverts the palette, using sky blue as the background with midnight blue accents.
+
+**Visual Features:**
+- ✨ **Connecting lines** for expanded sub-items (shadcn style)
+- 🎨 Midnight blue borders (#000f47) for active states
+- 📐 Vertical line connecting parent to sub-items
+- ☀️ Lighter background for secondary navigation contexts
+        `,
+      },
+    },
+  },
+  args: {
+    items: sampleItems,
+    variant: 'dark',
+    colorScheme: 'secondary',
+    currentPath: '/policies/renewals',
+    onSupport: () => alert('Support clicked'),
+    onNavigate: (path) => console.log('Navigate to:', path),
+  },
+  decorators: [
+    (Story) => (
+      <div className="h-screen flex">
+        <div className="w-64">
+          <Story />
+        </div>
+        <div className="flex-1 p-8 bg-gray-50">
+          <h1 className="text-2xl font-bold mb-4">Secondary Color Scheme</h1>
+          <p className="text-muted-foreground mb-4">
+            Sky blue background (#ceecff) with midnight blue accents (#000f47).
+          </p>
+          <p className="text-muted-foreground">
+            Notice the inverted color scheme with visual connector lines!
+          </p>
+        </div>
+      </div>
+    ),
+  ],
+};
+
+export const ColorSchemeComparison: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Side-by-Side Color Scheme Comparison**
+
+Compare the two MDS color schemes side by side to see how they work in different contexts.
+
+| Scheme | Background | Text | Active Border | Use Case |
+|--------|------------|------|---------------|----------|
+| **Primary** | Midnight Blue (#000f47) | White | Sky Blue (#ceecff) | Main navigation, B2B dashboards |
+| **Secondary** | Sky Blue (#ceecff) | Midnight Blue (#000f47) | Midnight Blue (#000f47) | Secondary nav, lighter contexts |
+
+Both schemes feature **visual connecting lines** for expanded groups, following shadcn's sidebar design patterns.
+        `,
+      },
+    },
+  },
+  render: () => (
+    <div className="h-screen flex gap-4 p-4 bg-gray-100">
+      <div className="w-64 flex flex-col gap-2">
+        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+          Primary (Midnight Blue)
+        </div>
+        <div className="flex-1 rounded-md overflow-hidden shadow-lg">
+          <SideNavigation
+            items={sampleItems}
+            variant="dark"
+            colorScheme="primary"
+            currentPath="/policies/renewals"
+            onSupport={() => alert('Support clicked')}
+            onNavigate={(path) => console.log('Navigate to:', path)}
+          />
+        </div>
+      </div>
+      <div className="w-64 flex flex-col gap-2">
+        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+          Secondary (Sky Blue)
+        </div>
+        <div className="flex-1 rounded-md overflow-hidden shadow-lg">
+          <SideNavigation
+            items={sampleItems}
+            variant="dark"
+            colorScheme="secondary"
+            currentPath="/policies/renewals"
+            onSupport={() => alert('Support clicked')}
+            onNavigate={(path) => console.log('Navigate to:', path)}
+          />
+        </div>
+      </div>
+      <div className="flex-1 p-8 bg-white rounded-md shadow">
+        <h2 className="text-2xl font-bold mb-4">Color Scheme Guide</h2>
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-semibold mb-2">Primary (Midnight Blue)</h3>
+            <p className="text-muted-foreground text-sm">
+              Professional, authoritative. Best for main navigation in B2B dashboards and enterprise applications.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Secondary (Sky Blue)</h3>
+            <p className="text-muted-foreground text-sm">
+              Lighter, more approachable. Best for secondary navigation, public-facing sections, or lighter UI contexts.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Visual Connectors</h3>
+            <p className="text-muted-foreground text-sm">
+              Both schemes include vertical connecting lines for expanded groups, following shadcn's design patterns.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
 };
 
 export const MUIComparison: Story = {
