@@ -1,9 +1,7 @@
 {
-  "buildCommand": "bash scripts/vercel-build.sh",
+  "buildCommand": "npm run build-storybook 2>&1 | tee build.log",
   "outputDirectory": "storybook-static",
   "framework": null,
-  "installCommand": "npm ci",
-  "devCommand": "npm run storybook",
   "headers": [
     {
       "source": "/(.*)",
