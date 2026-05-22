@@ -19,6 +19,7 @@ export interface SideNavigationProps {
   currentPath?: string;
   ariaLabel?: string;
   variant?: 'dark' | 'light';
+  colorScheme?: 'primary' | 'secondary'; // MDS color schemes
   className?: string;
 }
 
@@ -53,7 +54,7 @@ function getDefaultIcon(label: string): React.ReactNode {
 }
 
 const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
-  ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark', className }, ref) => {
+  ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark', colorScheme = 'primary', className }, ref) => {
     const [openGroups, setOpenGroups] = React.useState<{ [key: string]: boolean }>({});
 
     const handleGroupClick = (label: string) => {
@@ -68,30 +69,56 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       }
     };
 
+    // Color scheme definitions (MDS tokens)
+    const colors = {
+      primary: {
+        main: '#000f47',      // Midnight Blue
+        hover: '#021b6c',     // Darker navy
+        active: 'rgba(206,236,255,0.16)', // Sky blue tint
+        activeHover: 'rgba(206,236,255,0.24)',
+        border: '#ceecff',    // Sky Blue
+      },
+      secondary: {
+        main: '#ceecff',      // Sky Blue
+        hover: '#b8e0ff',     // Lighter sky
+        active: 'rgba(0,15,71,0.08)', // Navy tint
+        activeHover: 'rgba(0,15,71,0.12)',
+        border: '#000f47',    // Midnight Blue
+      },
+    };
+
+    const currentColors = colors[colorScheme];
+
     // Variant styles
     const navBgClass = variant === 'light' 
       ? 'bg-background' 
-      : 'bg-[#000f47]'; // Navy blue from MDS tokens
+      : colorScheme === 'primary'
+        ? 'bg-[#000f47]' // Midnight blue
+        : 'bg-[#ceecff]'; // Sky blue
     
     const navTextClass = variant === 'light'
       ? 'text-foreground'
-      : 'text-white';
+      : colorScheme === 'primary'
+        ? 'text-white'
+        : 'text-[#000f47]'; // Dark text on sky blue
     
     const itemHoverBgClass = variant === 'light'
       ? 'hover:bg-accent'
-      : 'hover:bg-[#021b6c]'; // Darker navy on hover
+      : `hover:bg-[${currentColors.hover}]`;
     
     const activeBgClass = variant === 'light'
       ? 'bg-[rgba(11,75,255,0.08)]' // Light blue tint
-      : 'bg-[rgba(206,236,255,0.16)]'; // Sky blue tint for dark
+      : `bg-[${currentColors.active}]`;
     
     const activeHoverBgClass = variant === 'light'
       ? 'hover:bg-[rgba(11,75,255,0.12)]'
-      : 'hover:bg-[rgba(206,236,255,0.24)]';
+      : `hover:bg-[${currentColors.activeHover}]`;
     
     const ctaBgClass = variant === 'light'
       ? 'bg-accent'
-      : 'bg-[#000f47]';
+      : colorScheme === 'primary'
+        ? 'bg-[#000f47]'
+        : 'bg-[#ceecff]';
 
     return (
       <nav
@@ -163,7 +190,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     // Active state
                     isItemActive && [
                       activeBgClass,
-                      'border-l-4 border-[#ceecff]', // Sky blue border
+                      `border-l-4 border-[${currentColors.border}]`, // Dynamic border color
                       activeHoverBgClass,
                     ],
                     // Non-active hover
@@ -188,13 +215,22 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   )}
                 </button>
 
-                {/* Collapsible sub-items */}
+                {/* Collapsible sub-items with visual connecting lines */}
                 {isGroup && isOpen && (
                   <ul
                     id={panelId}
                     role="group"
                     aria-labelledby={headerId}
-                    className="pl-12 space-y-1 mt-1"
+                    className={cn(
+                      'pl-6 ml-6 space-y-1 mt-1',
+                      // Visual connecting line (shadcn style)
+                      'border-l-2',
+                      variant === 'light' 
+                        ? 'border-border/40'
+                        : `border-[${currentColors.border}]/30`,
+                      // Subtle background for sub-items area
+                      variant === 'dark' && 'bg-black/10'
+                    )}
                   >
                     {(item.subItems ?? []).map((sub) => {
                       const isSubActive = !!sub.active || (sub.path ? currentPath === sub.path : false);
@@ -219,7 +255,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               // Active state
                               isSubActive && [
                                 activeBgClass,
-                                'border-l-4 border-[#ceecff]',
+                                `border-l-4 border-[${currentColors.border}]`,
                                 'font-semibold',
                                 activeHoverBgClass,
                               ],
