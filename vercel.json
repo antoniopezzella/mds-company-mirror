@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build-storybook",
+  "buildCommand": "bash scripts/vercel-build.sh",
   "outputDirectory": "storybook-static",
   "framework": null,
   "installCommand": "npm ci",
