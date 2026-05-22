@@ -8,7 +8,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import DSButton from '../Button/Button';
 import { useTheme } from '@mui/material/styles';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -350,36 +350,14 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
         >
           Need help?
         </Typography>
-        <Button
-          variant="contained"
+        <DSButton
+          variant="primary"
           onClick={onSupport}
           fullWidth
           aria-label="Contact support team"
-          sx={{
-            bgcolor: colors.ctaBtnBg,
-            color: colors.ctaBtnText,
-            minHeight: 44, // Accessibility: minimum touch target
-            fontWeight: 500,
-            textTransform: 'none',
-            // Focus styles for keyboard accessibility
-            '&:focus-visible': {
-              outline: '2px solid',
-              outlineColor: getRoleColor('focus.ring'),
-              outlineOffset: '2px'
-            },
-            '&:hover': { 
-              bgcolor: colors.ctaBtnHover,
-              color: colors.ctaBtnText,
-              transform: 'none' // Prevent default MUI transform
-            },
-            // Ensure proper contrast in all states
-            '&:active': {
-              bgcolor: colors.ctaBtnHover
-            }
-          }}
         >
           Contact support
-        </Button>
+        </DSButton>
       </Box>
     </Box>
   );
