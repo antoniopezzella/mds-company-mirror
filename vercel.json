@@ -1,7 +1,5 @@
 {
-  "buildCommand": "bash build-debug.sh",
-  "outputDirectory": "storybook-static",
-  "framework": null,
+  "framework": "storybook",
   "headers": [
     {
       "source": "/(.*)",
