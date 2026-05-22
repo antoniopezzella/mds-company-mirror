@@ -8,11 +8,12 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-# Keep built token artifact under version control
+# Keep built token artifacts under version control
 # (Storybook static build still ignored separately)
-!dist/tokens.json
 dist
 dist-ssr
+!dist/tokens.json
+!dist/theme.css
 *.local
 
 # Environment variables (secrets)
