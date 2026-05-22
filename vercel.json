@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx storybook build --config-dir .storybook --output-dir storybook-static",
+  "buildCommand": "bash build-debug.sh",
   "outputDirectory": "storybook-static",
   "framework": null,
   "headers": [
