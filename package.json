@@ -75,7 +75,7 @@
     "deploy": "npm run tokens:build && npm run build-storybook && vercel --prod",
     "deploy:preview": "npm run tokens:build && npm run build-storybook && vercel",
     "deploy:tokens": "npm run tokens:build && vercel --prod",
-    "vercel:build": "npm run tokens:build && npm run build-storybook && rm -f storybook-static/video/10394868-uhd_3840_2160_30fps.mp4 storybook-static/video/2818546-uhd_3840_2160_24fps.mp4 storybook-static/images/journey-global-risks.jpg.backup",
+    "vercel:build": "npm run build-storybook",
     "clean": "rm -rf node_modules dist storybook-static .vite coverage",
     "clean:install": "npm run clean && npm install",
     "clean:ci": "npm run clean && npm ci",
