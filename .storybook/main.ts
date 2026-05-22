@@ -17,10 +17,6 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {}
   },
-  docs: {},
-  staticDirs: [
-    { from: '../public/fonts', to: '/fonts' },
-    { from: '../public/images', to: '/images' }
-  ]
+  docs: {}
 };
 export default config;
