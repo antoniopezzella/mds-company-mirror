@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastReconciled": "2026-03-20T12:11:30.679Z",
+  "lastReconciled": "2026-05-22T18:16:27.790Z",
   "stories": {
     "voice-canvas.stories.tsx": {
       "id": "voice-canvas",
@@ -12,29 +12,6 @@
       "updatedAt": "2026-03-20T12:10:28.909Z",
       "conversation": [],
       "metadata": {}
-    },
-    "button-all-variants-comprehensive-03d7562a.stories.tsx": {
-      "id": "button-all-variants-comprehensive-03d7562a",
-      "fileName": "button-all-variants-comprehensive-03d7562a.stories.tsx",
-      "title": "Button All Variants Comprehensive",
-      "source": "panel",
-      "createdAt": "2026-03-20T12:36:12.855Z",
-      "updatedAt": "2026-03-20T12:36:12.870Z",
-      "conversation": [
-        {
-          "role": "user",
-          "content": "Review the existing Button component at src/components/Button/Button.stories.tsx.\n\nAdd a new story called \"AllVariantsComprehensive\" showing:\n- All variants: Primary, Secondary, Ghost, Outline\n- All sizes: small, medium, large\n- All states: default, hover, active, disabled\n- Use getRoleColor() for all colors\n- Use theme.spacing() for spacing\n- Include dark mode example\n\nFollow the MDS governance rules and token system from the documentation."
-        },
-        {
-          "role": "ai",
-          "content": "[SUCCESS] **Created: \"Button All Variants Comprehensive\"**\nBuilt with `Button`, `Box`, `Stack`, `Typography`.\n\n**Layout:** Horizontal Stack - inline element alignment with automatic spacing.\n\n_Storybook will auto-refresh in 2 seconds to register the new story..._\n\n_40.6s_"
-        }
-      ],
-      "metadata": {
-        "provider": "claude",
-        "model": "claude-sonnet-4-6",
-        "prompt": "Review the existing Button component at src/components/Button/Button.stories.tsx.\n\nAdd a new story called \"AllVariantsComprehensive\" showing:\n- All variants: Primary, Secondary, Ghost, Outline\n- All sizes: small, medium, large\n- All states: default, hover, active, disabled\n- Use getRoleColor() for all colors\n- Use theme.spacing() for spacing\n- Include dark mode example\n\nFollow the MDS governance rules and token system from the documentation."
-      }
     },
     "story-review-and-improvements-31603819.stories.tsx": {
       "id": "story-review-and-improvements-31603819",
