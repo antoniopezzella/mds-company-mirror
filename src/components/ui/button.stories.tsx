@@ -29,6 +29,9 @@ const meta: Meta<typeof Button> = {
   title: 'shadcn-ui/Button',
   component: Button,
   tags: ['autodocs'],
+  parameters: {
+    layout: 'centered', // Center buttons to reduce white space
+  },
   argTypes: {
     variant: {
       control: 'select',
@@ -305,6 +308,9 @@ export const FullWidth: Story = {
  * Complete showcase of all button features matching MUI Button exactly
  */
 export const CompleteShowcase: Story = {
+  parameters: {
+    layout: 'fullscreen', // Use full canvas for comprehensive showcase
+  },
   render: () => (
     <div style={{ padding: '24px' }}>
       <h2 style={{ marginBottom: '24px', fontSize: '20px', fontWeight: 'bold' }}>

@@ -6,6 +6,7 @@ const meta: Meta<typeof StatCard> = {
   component: StatCard,
   tags: ['autodocs'],
   parameters: {
+    layout: 'centered', // Center single cards, override with fullscreen for grids
     docs: {
       description: {
         component: `
@@ -114,6 +115,9 @@ export const GrowthRate: Story = {
 };
 
 export const DashboardGrid: Story = {
+  parameters: {
+    layout: 'fullscreen', // Use full canvas for dashboard grid
+  },
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-background">
       <StatCard
@@ -191,6 +195,9 @@ export const LargeNumbers: Story = {
 };
 
 export const Currency: Story = {
+  parameters: {
+    layout: 'fullscreen', // Multi-card layout needs full width
+  },
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 bg-background">
       <StatCard
@@ -222,6 +229,9 @@ export const Currency: Story = {
 };
 
 export const InsuranceMetrics: Story = {
+  parameters: {
+    layout: 'fullscreen', // Use full canvas for dashboard grid
+  },
   render: () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-background">
       <StatCard
@@ -261,6 +271,9 @@ export const InsuranceMetrics: Story = {
 };
 
 export const DarkMode: Story = {
+  parameters: {
+    layout: 'fullscreen', // Dark mode showcase with grid
+  },
   decorators: [
     (Story) => (
       <div className="dark bg-background p-8">
@@ -308,6 +321,7 @@ export const DarkMode: Story = {
 
 export const ResponsiveLayout: Story = {
   parameters: {
+    layout: 'fullscreen', // Use full canvas for responsive grid demonstration
     docs: {
       description: {
         story: `
