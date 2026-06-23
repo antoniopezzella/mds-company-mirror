@@ -41,13 +41,14 @@ export interface SideNavigationProps {
   currentPath?: string;
   ariaLabel?: string;
   variant?: 'dark' | 'light';
+  collapsed?: boolean;
 }
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark' }) => {
+const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark', collapsed = false }) => {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
   const theme = useTheme();
   const mode = theme.palette.mode;
@@ -134,7 +135,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
   return (
     <Box component="nav" aria-label={ariaLabel} sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: colors.navBg, color: colors.navText }}>
       <Divider sx={{ borderColor: colors.divider, opacity: 0.3 }} />
-      <List role="list" sx={{ flexGrow: 1, p: 2 }}>
+      <List role="list" sx={{ flexGrow: 1, p: collapsed ? 1 : 2 }}>
         {items.map((item) => {
           let icon;
           switch (item.label) {
@@ -212,54 +213,47 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
                 }}
                 sx={{
                   borderRadius: 1,
-                  mb: 1,
-                  minHeight: 48, // Accessibility: minimum touch target
+                  mb: 0.5,
+                  minHeight: 44,
+                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  px: collapsed ? 0 : 1,
                   color: isSectionHeader && variant === 'light' ? colors.sectionHeaderText : colors.navText,
-                  // Focus styles for keyboard accessibility
                   '&:focus-visible': {
                     outline: '2px solid',
                     outlineColor: getRoleColor('focus.ring'),
                     outlineOffset: '2px'
                   },
-                  // Active state with sky blue background
                   ...(isItemActive && {
                     bgcolor: colors.activeBg,
                     color: colors.activeText,
-                    borderLeft: '4px solid',
+                    borderLeft: collapsed ? 'none' : '4px solid',
                     borderColor: colors.activeBorder,
                   }),
-                  // MUI selected state compatibility
                   '&.Mui-selected': {
                     bgcolor: colors.activeBg,
                     color: colors.activeText,
-                    borderLeft: '4px solid',
+                    borderLeft: collapsed ? 'none' : '4px solid',
                     borderColor: colors.activeBorder,
-                    '&:hover': {
-                      bgcolor: colors.activeHoverBg,
-                      color: colors.activeText
-                    },
+                    '&:hover': { bgcolor: colors.activeHoverBg, color: colors.activeText },
                   },
-                  // Hover state (only when not active)
-                  '&:hover': !isItemActive ? {
-                    bgcolor: colors.itemHoverBg,
-                    color: colors.navText
-                  } : {
-                    bgcolor: colors.activeHoverBg,
-                    color: colors.activeText
-                  },
+                  '&:hover': !isItemActive
+                    ? { bgcolor: colors.itemHoverBg, color: colors.navText }
+                    : { bgcolor: colors.activeHoverBg, color: colors.activeText },
                 }}
               >
-                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                <ListItemIcon sx={{ color: 'inherit', minWidth: collapsed ? 0 : 40, justifyContent: 'center' }}>
                   {icon}
                 </ListItemIcon>
-                <ListItemText 
-                  primary={item.label} 
-                  primaryTypographyProps={{ 
-                    fontWeight: isItemActive || (variant === 'light' && isSectionHeader) ? 600 : 400,
-                    color: 'inherit'
-                  }} 
-                />
-                {isGroup && (
+                {!collapsed && (
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontWeight: isItemActive || (variant === 'light' && isSectionHeader) ? 600 : 400,
+                      color: 'inherit'
+                    }}
+                  />
+                )}
+                {!collapsed && isGroup && (
                   <Box sx={{ color: 'inherit', display: 'flex', alignItems: 'center' }}>
                     {open[item.label] ? <ExpandLess /> : <ExpandMore />}
                   </Box>
@@ -342,23 +336,32 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
           );
         })}
       </List>
-      <Box sx={{ p: 3, mt: 'auto', bgcolor: colors.ctaBg, color: colors.ctaText, borderRadius: 1, m: 2 }}>
-        <Typography 
-          variant="h6" 
-          gutterBottom
-          sx={{ color: colors.ctaText, fontWeight: 600 }}
-        >
-          Need help?
-        </Typography>
-        <DSButton
-          variant="primary"
-          onClick={onSupport}
-          fullWidth
-          aria-label="Contact support team"
-        >
-          Contact support
-        </DSButton>
-      </Box>
+      {collapsed ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', pb: 2 }}>
+          <Box
+            component="button"
+            onClick={onSupport}
+            aria-label="Contact support"
+            sx={{
+              width: 40, height: 40, borderRadius: 1, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              bgcolor: 'transparent', color: colors.navText,
+              '&:hover': { bgcolor: colors.itemHoverBg },
+            }}
+          >
+            <HelpOutlineIcon sx={{ fontSize: 22 }} />
+          </Box>
+        </Box>
+      ) : (
+        <Box sx={{ p: 3, mt: 'auto', bgcolor: colors.ctaBg, color: colors.ctaText, borderRadius: 1, m: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ color: colors.ctaText, fontWeight: 600 }}>
+            Need help?
+          </Typography>
+          <DSButton variant="primary" onClick={onSupport} fullWidth aria-label="Contact support team">
+            Contact support
+          </DSButton>
+        </Box>
+      )}
     </Box>
   );
 };
