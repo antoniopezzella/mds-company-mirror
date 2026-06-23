@@ -22,8 +22,6 @@ vitest.config.ts
 playwright.config.ts
 
 # Development files
-src/pages/ParallaxDemo.tsx
-src/pages/AnimatedGridDemo.tsx
 docs/hero-wireframes/
 scripts/capture-hero-wireframes.js
 
