@@ -34,6 +34,13 @@ export default defineConfig({
     cors: {
       origin: ['http://localhost:3333'],
       credentials: true
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3333',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chat/, '/api/answer'),
+      }
     }
   }
 });
