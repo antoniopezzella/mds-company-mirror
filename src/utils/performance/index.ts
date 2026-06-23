@@ -27,4 +27,4 @@ export {
 } from './lighthouse';
 
 // React Hooks
-export { useWebVitals, usePerformanceMetrics, type UseWebVitalsOptions } from '../hooks/useWebVitals';
+export { useWebVitals, usePerformanceMetrics, type UseWebVitalsOptions } from '../../hooks/useWebVitals';
