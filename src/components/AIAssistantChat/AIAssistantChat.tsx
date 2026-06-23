@@ -14,8 +14,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
 import { getRoleColor } from '../../theme/roles';
 import './AIAssistantChat.scss';
 
@@ -34,28 +34,38 @@ export interface AIAssistantChatProps {
   apiEndpoint?: string;
 }
 
-const EXAMPLE_QUESTIONS = [
-  'What are my top property risk exposures this quarter?',
-  'How can I reduce my cyber liability premium?',
-  'What coverage gaps exist in my current policies?',
-  'Explain the Property Risk score on my dashboard',
-  'What are emerging risks in my industry?',
-  'How does Marsh help with supply chain resilience?',
+interface Suggestion {
+  label: string;
+  category: string;
+  color: string;
+}
+
+const ALL_SUGGESTIONS: Suggestion[] = [
+  { label: 'What are my top property risk exposures this quarter?', category: 'Property', color: '#1565c0' },
+  { label: 'How can I reduce my cyber liability premium?',          category: 'Cyber',    color: '#6a1b9a' },
+  { label: 'What coverage gaps exist in my current policies?',      category: 'Coverage', color: '#c62828' },
+  { label: 'Explain the Property Risk score on my dashboard',       category: 'Property', color: '#1565c0' },
+  { label: 'What are emerging risks in my industry?',               category: 'Risk',     color: '#e65100' },
+  { label: 'How does Marsh help with supply chain resilience?',     category: 'Risk',     color: '#e65100' },
+  { label: 'What is my estimated maximum loss exposure?',           category: 'Property', color: '#1565c0' },
+  { label: 'When does POL-2024-003 renew and what should I expect?', category: 'Policy', color: '#2e7d32' },
+  { label: 'How does the current market affect my premiums?',       category: 'Market',   color: '#0277bd' },
+  { label: 'What actions should I take on my expired policy?',      category: 'Policy',  color: '#2e7d32' },
+  { label: 'What is the D&O coverage gap and how do I fix it?',     category: 'Coverage', color: '#c62828' },
+  { label: 'What are the wildfire risks to my California facilities?', category: 'Property', color: '#1565c0' },
 ];
 
-const getRandomQuestions = (count = 4) =>
-  [...EXAMPLE_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, count);
+const getRandomSuggestions = (count = 4) =>
+  [...ALL_SUGGESTIONS].sort(() => 0.5 - Math.random()).slice(0, count);
 
 export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }: AIAssistantChatProps) {
-  const resolvedEndpoint = apiEndpoint ?? (import.meta.env.DEV
-    ? 'http://localhost:3333/api/answer'
-    : '/api/chat');
+  const resolvedEndpoint = apiEndpoint ?? '/api/chat';
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [suggestions] = useState<string[]>(getRandomQuestions(4));
+  const [suggestions, setSuggestions] = useState<Suggestion[]>(getRandomSuggestions(4));
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -212,8 +222,8 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
       {/* ── Header ── */}
       <Box
         sx={{
-          px: 2.5,
-          py: 1.75,
+          px: '20px',
+          py: '14px',
           bgcolor: primaryBlue,
           display: 'flex',
           alignItems: 'center',
@@ -221,33 +231,17 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           flexShrink: 0,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
-          <Box
-            sx={{
-              width: 34,
-              height: 34,
-              borderRadius: '8px',
-              bgcolor: 'rgba(255,255,255,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
+        <Box>
+          <Typography
+            sx={{ fontSize: 14, fontWeight: 600, color: textOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
           >
-            <AutoAwesomeIcon sx={{ fontSize: 17, color: textOnAccent }} />
-          </Box>
-          <Box>
-            <Typography
-              sx={{ fontSize: 14, fontWeight: 600, color: textOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
-            >
-              Marsh AI Assistant
+            Marsh AI Assistant
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '3px' }}>
+            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50', flexShrink: 0 }} />
+            <Typography sx={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontFamily: 'Noto Sans, sans-serif' }}>
+              Connected to your dashboard
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.25 }}>
-              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50', flexShrink: 0 }} />
-              <Typography sx={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontFamily: 'Noto Sans, sans-serif' }}>
-                Connected to your dashboard
-              </Typography>
-            </Box>
           </Box>
         </Box>
 
@@ -286,33 +280,58 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
         sx={{
           flex: 1,
           overflowY: 'auto',
-          px: 2.5,
-          pt: 2.5,
-          pb: 1.5,
+          px: '20px',
+          pt: '20px',
+          pb: '12px',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
+          gap: '16px',
           bgcolor: surfaceSubtle,
         }}
       >
         {messages.length === 0 ? (
           /* Empty state */
           <Box sx={{ pt: 1 }}>
-            <Typography sx={{ fontSize: 15, fontWeight: 700, color: textPrimary, mb: 0.75, fontFamily: 'Noto Sans, sans-serif' }}>
+            <Typography sx={{ fontSize: 15, fontWeight: 700, color: textPrimary, mb: 0.5, fontFamily: 'Noto Sans, sans-serif' }}>
               Ask about your policies &amp; risks
             </Typography>
-            <Typography sx={{ fontSize: 13, color: textSecondary, mb: 3, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif' }}>
+            <Typography sx={{ fontSize: 13, color: textSecondary, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif' }}>
               I have context from your dashboard — property risk, active policies, coverage gaps, and market trends.
             </Typography>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {suggestions.map((q, i) => (
+            {/* Suggestions header row */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: '20px', mb: '10px' }}>
+              <Typography sx={{ fontSize: 11, fontWeight: 600, color: textSecondary, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'Noto Sans, sans-serif' }}>
+                Suggested questions
+              </Typography>
+              <Box
+                onClick={() => setSuggestions(getRandomSuggestions(4))}
+                sx={{
+                  display: 'flex', alignItems: 'center', gap: '4px',
+                  px: '10px', py: '4px',
+                  border: `1px solid ${borderDefault}`,
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  bgcolor: surfaceDefault,
+                  transition: 'all 0.15s',
+                  '&:hover': { borderColor: primaryBlue, bgcolor: surfaceSubtle },
+                }}
+              >
+                <ShuffleIcon sx={{ fontSize: 12, color: textSecondary }} />
+                <Typography sx={{ fontSize: 11, color: textSecondary, fontFamily: 'Noto Sans, sans-serif', userSelect: 'none' }}>
+                  Refresh
+                </Typography>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {suggestions.map((s, i) => (
                 <Box
                   key={i}
-                  onClick={() => sendMessage(q)}
+                  onClick={() => sendMessage(s.label)}
                   sx={{
-                    px: 2,
-                    py: 1.5,
+                    px: '16px',
+                    py: '12px',
                     bgcolor: surfaceDefault,
                     border: `1px solid ${borderDefault}`,
                     borderRadius: '8px',
@@ -320,23 +339,38 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: 1,
+                    gap: '12px',
                     transition: 'all 0.15s ease',
                     '&:hover': {
                       borderColor: primaryBlue,
-                      bgcolor: surfaceDefault,
+                      boxShadow: `0 0 0 1px ${primaryBlue}`,
                       transform: 'translateX(2px)',
                       '& .arrow-icon': { opacity: 1, transform: 'translateX(0)' },
                     },
                   }}
                 >
-                  <Typography sx={{ fontSize: 13, color: textPrimary, fontWeight: 500, lineHeight: 1.4, fontFamily: 'Noto Sans, sans-serif' }}>
-                    {q}
-                  </Typography>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        px: '6px', py: '2px',
+                        borderRadius: '4px',
+                        bgcolor: `${s.color}18`,
+                        mb: '5px',
+                      }}
+                    >
+                      <Typography sx={{ fontSize: 10, fontWeight: 600, color: s.color, fontFamily: 'Noto Sans, sans-serif', letterSpacing: '0.04em' }}>
+                        {s.category.toUpperCase()}
+                      </Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: 13, color: textPrimary, fontWeight: 500, lineHeight: 1.4, fontFamily: 'Noto Sans, sans-serif' }}>
+                      {s.label}
+                    </Typography>
+                  </Box>
                   <ArrowForwardIcon
                     className="arrow-icon"
                     sx={{
-                      fontSize: 14,
+                      fontSize: 15,
                       color: primaryBlue,
                       flexShrink: 0,
                       opacity: 0,
@@ -355,107 +389,97 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                 key={msg.id}
                 sx={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                  flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
+                  alignItems: 'flex-end',
+                  gap: '8px',
                   animation: 'slideIn 0.2s ease-out',
                 }}
               >
-                {/* Bubble */}
-                <Box
-                  sx={{
-                    maxWidth: '84%',
-                    px: 2,
-                    py: 1.5,
-                    borderRadius: msg.role === 'user'
-                      ? '12px 12px 2px 12px'
-                      : '12px 12px 12px 2px',
-                    bgcolor: msg.role === 'user' ? primaryBlue : surfaceDefault,
-                    border: msg.role === 'assistant' ? `1px solid ${borderDefault}` : 'none',
-                    boxShadow: msg.role === 'assistant' ? '0 1px 4px rgba(0,0,0,0.06)' : 'none',
-                  }}
-                >
-                  {/* Streaming dots when content is still empty */}
-                  {msg.id === streamingId && msg.content === '' ? (
-                    <Box sx={{ display: 'flex', gap: '5px', alignItems: 'center', py: 0.25, px: 0.5 }}>
-                      {[0, 1, 2].map(i => (
-                        <Box
-                          key={i}
-                          sx={{
-                            width: 7,
-                            height: 7,
-                            borderRadius: '50%',
-                            bgcolor: textSecondary,
-                            animation: 'typingDot 1.3s ease-in-out infinite',
-                            animationDelay: `${i * 0.18}s`,
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  ) : (
-                    <Typography
-                      sx={{
-                        fontSize: 13,
-                        lineHeight: 1.65,
-                        fontFamily: 'Noto Sans, sans-serif',
-                        whiteSpace: 'pre-wrap',
-                        color: msg.role === 'user'
-                          ? textOnAccent
-                          : msg.error ? '#c62828' : textPrimary,
-                        '& strong': { fontWeight: 600 },
-                      }}
-                      dangerouslySetInnerHTML={{
-                        __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
-                      }}
-                    />
-                  )}
+                {/* AI avatar dot */}
+                {msg.role === 'assistant' && (
+                  <Box
+                    sx={{
+                      width: 26,
+                      height: 26,
+                      borderRadius: '50%',
+                      bgcolor: primaryBlue,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mb: '18px',
+                    }}
+                  >
+                    <Typography sx={{ fontSize: 10, fontWeight: 700, color: textOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
+                      M
+                    </Typography>
+                  </Box>
+                )}
 
-                  {msg.citations && msg.citations.length > 0 && (
-                    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${borderDefault}` }}>
-                      <Typography sx={{ fontSize: 11, color: textSecondary, mb: 0.75, fontFamily: 'Noto Sans, sans-serif' }}>
-                        Sources
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {msg.citations.map((c, i) => (
-                          <Chip
-                            key={i}
-                            label={c.title}
-                            size="small"
-                            component="a"
-                            href={c.url}
-                            clickable
-                            sx={{
-                              fontSize: 10,
-                              height: 20,
-                              bgcolor: surfaceAccent,
-                              color: primaryBlue,
-                              border: `1px solid ${borderDefault}`,
-                            }}
-                          />
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '78%' }}>
+                  {/* Bubble */}
+                  <Box
+                    sx={{
+                      px: '14px',
+                      py: '10px',
+                      borderRadius: msg.role === 'user'
+                        ? '18px 18px 4px 18px'
+                        : '18px 18px 18px 4px',
+                      bgcolor: msg.role === 'user' ? primaryBlue : surfaceDefault,
+                      border: msg.role === 'assistant' ? `1px solid ${borderDefault}` : 'none',
+                      boxShadow: msg.role === 'assistant' ? '0 1px 3px rgba(0,0,0,0.07)' : 'none',
+                    }}
+                  >
+                    {msg.id === streamingId && msg.content === '' ? (
+                      <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center', py: '2px' }}>
+                        {[0, 1, 2].map(i => (
+                          <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
                         ))}
                       </Box>
-                    </Box>
-                  )}
-                </Box>
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontSize: '13px',
+                          lineHeight: 1.6,
+                          fontFamily: 'Noto Sans, sans-serif',
+                          whiteSpace: 'pre-wrap',
+                          color: msg.role === 'user' ? textOnAccent : msg.error ? '#c62828' : textPrimary,
+                          '& strong': { fontWeight: 600 },
+                        }}
+                        dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
+                      />
+                    )}
 
-                {/* Timestamp + copy */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 0.5, px: 0.25 }}>
-                  <Typography sx={{ fontSize: 10, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
-                    {formatTime(msg.timestamp)}
-                  </Typography>
-                  {msg.role === 'assistant' && msg.content && (
-                    <Tooltip title={copiedId === msg.id ? 'Copied' : 'Copy'}>
-                      <IconButton
-                        size="small"
-                        onClick={() => copyMessage(msg.id, msg.content)}
-                        sx={{ p: 0.25 }}
-                      >
-                        {copiedId === msg.id
-                          ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
-                          : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
-                        }
-                      </IconButton>
-                    </Tooltip>
-                  )}
+                    {msg.citations && msg.citations.length > 0 && (
+                      <Box sx={{ mt: '10px', pt: '10px', borderTop: `1px solid ${borderDefault}` }}>
+                        <Typography sx={{ fontSize: 10, color: textSecondary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                          {msg.citations.map((c, i) => (
+                            <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
+                              sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
+                            />
+                          ))}
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
+
+                  {/* Timestamp + copy */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px', mt: '4px', px: '2px' }}>
+                    <Typography sx={{ fontSize: 10, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
+                      {formatTime(msg.timestamp)}
+                    </Typography>
+                    {msg.role === 'assistant' && msg.content && (
+                      <Tooltip title={copiedId === msg.id ? 'Copied' : 'Copy'}>
+                        <IconButton size="small" onClick={() => copyMessage(msg.id, msg.content)} sx={{ p: '2px' }}>
+                          {copiedId === msg.id
+                            ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
+                            : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
+                          }
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </Box>
                 </Box>
               </Box>
             ))}
@@ -493,12 +517,12 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
         component="form"
         onSubmit={e => { e.preventDefault(); sendMessage(input); }}
         sx={{
-          px: 2,
-          py: 1.5,
+          px: '16px',
+          py: '12px',
           bgcolor: surfaceDefault,
           display: 'flex',
           alignItems: 'flex-end',
-          gap: 1,
+          gap: '8px',
           flexShrink: 0,
         }}
       >
