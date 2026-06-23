@@ -339,9 +339,9 @@ function App() {
                       />
                     </Box>
 
-                    <Box sx={{ mb: 1.5 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Typography variant="h2">Risk Exposure by Line</Typography>
-                      <Typography variant="body2" color="text.secondary">Breakdown of insured value across coverage lines</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Breakdown of insured value across coverage lines</Typography>
                     </Box>
                     <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                       <MDSDataGrid
@@ -414,9 +414,9 @@ function App() {
                       <ChartMetricCard label="Paid YTD" value="$1.1M" change="+6.2%" trend="neutral" sublabel="claims settled" data={[{v:0.7},{v:0.75},{v:0.8},{v:0.82},{v:0.85},{v:0.88},{v:0.92},{v:0.95},{v:1.0},{v:1.04},{v:1.07},{v:1.1}]} />
                     </Box>
 
-                    <Box sx={{ mb: 1.5 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Typography variant="h2">Claims Register</Typography>
-                      <Typography variant="body2" color="text.secondary">All open and recently settled claims</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>All open and recently settled claims</Typography>
                     </Box>
                     <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                       <MDSDataGrid
@@ -496,9 +496,9 @@ function App() {
                       <ChartMetricCard label="At-Risk Accounts" value="3" change="-1" trend="up" sublabel="may not renew" data={[{v:7},{v:6},{v:6},{v:5},{v:5},{v:5},{v:4},{v:4},{v:4},{v:4},{v:3},{v:3}]} />
                     </Box>
 
-                    <Box sx={{ mb: 1.5 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Typography variant="h2">Upcoming Renewals</Typography>
-                      <Typography variant="body2" color="text.secondary">Policies due for renewal in the next 90 days</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Policies due for renewal in the next 90 days</Typography>
                     </Box>
                     <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                       <MDSDataGrid
@@ -562,9 +562,9 @@ function App() {
                 title: 'Reports',
                 content: (
                   <>
-                    <Box sx={{ mb: 1.5 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Typography variant="h2">Reports &amp; Exports</Typography>
-                      <Typography variant="body2" color="text.secondary">Download portfolio summaries, loss runs and compliance documents</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Download portfolio summaries, loss runs and compliance documents</Typography>
                     </Box>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       {([
