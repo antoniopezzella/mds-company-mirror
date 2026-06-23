@@ -224,9 +224,9 @@ function App() {
                       />
                     </Box>
 
-                    <Box sx={{ mb: 1.5 }}>
+                    <Box sx={{ mb: 3 }}>
                       <Typography variant="h2">Active Policies</Typography>
-                      <Typography variant="body2" color="text.secondary">Current insurance policies and coverage details</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Current insurance policies and coverage details</Typography>
                     </Box>
                     <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                       <MDSDataGrid
