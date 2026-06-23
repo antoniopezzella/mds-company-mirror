@@ -121,6 +121,7 @@ function App() {
             onNavigate={(path) => navigate(path)}
             currentPath={location.pathname}
             variant="light"
+            collapsed={!sidebarOpen}
           />
         </Box>
       ) : (
