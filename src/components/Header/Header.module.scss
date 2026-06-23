@@ -235,8 +235,13 @@ header {
     width: 120px;
     height: 28px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
   }
+}
+
+.websiteHeader__logo {
+  // Sky blue filter (#ceecff)
+  // Using CSS filter to colorize SVG to sky blue
+  filter: brightness(0) saturate(100%) invert(93%) sepia(14%) saturate(1089%) hue-rotate(169deg) brightness(103%) contrast(98%);
 }
 
 .websiteHeader__nav {

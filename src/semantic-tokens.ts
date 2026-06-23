@@ -26,7 +26,7 @@ export const semanticColors = {
   textSecondary: ref('neutral700'),       // #595959 — Secondary / muted text
   textTertiary:  ref('neutral600'),       // #767676 — Tertiary / placeholder
   textOnAccent:  ref('white'),            // Light text on primary accent surfaces (e.g. Midnight buttons)
-  textOnHero:    ref('white'),            // White text on dark surfaces
+  textOnHero:    ref('blue250'),          // #ceecff — Sky Blue text on dark hero surfaces (transparent header)
   textDisabled:  ref('neutral600'),       // #767676 — Disabled text
   textOnLight:   ref('blue1000'),         // Dark text on light backgrounds
   textOnDark:    ref('white'),            // White text on dark backgrounds
@@ -36,13 +36,14 @@ export const semanticColors = {
   surfaceSubtle:          ref('neutral50'),        // #f8f8f8 — Slight elevation
   surfaceMuted:           ref('neutral200'),       // #e3e3e3 — Muted backgrounds
   surfaceAccent:          ref('gray250'),          // #f7f8f8 — Warm accent (was blueGray75)
+  surfaceSecondaryHover:  ref('blue100'),          // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
   surfaceNavigation:      ref('blue1000'),         // #000f47 — Midnight Blue header (legacy)
   surfaceNavigationMode:  ref('blue1100'),         // #002c77 — MODE Surface Primary (Figma future-state)
   // Approximations of white overlays blended on `#000f47` to produce stable hex values
   surfaceNavigationHover:  ref('blue975'),           // #1a2759 — ~white@10% over #000f47
   surfaceNavigationActive: ref('blue990'),           // #333f6b — ~white@20% over #000f47
   surfaceAccentStrong:    ref('gray400'),          // #cfd0cd — Strong accent (was blueGray200)
-  surfaceHero:            ref('gray1000'),         // #303c37 — Dark hero sections (was blueGray900)
+  surfaceHero:            ref('blue1000'),          // #000f47 — Midnight Navy — dark hero sections
   surfaceDisabled:        ref('neutral200'),       // #e3e3e3 — Disabled state
 
   // ── Borders ───────────────────────────────────────────────────────────────

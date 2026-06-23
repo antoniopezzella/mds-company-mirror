@@ -197,11 +197,11 @@ function buildResponsesCsv(args: {
       String(result.backtrackCount),
       result.pathEfficiency.toFixed(3),
       String(result.durationMs),
-      result.confidence ?? '',
+      result.confidence != null ? String(result.confidence) : '',
       String(result.score),
       result.rationale,
       result.moderatorNote,
-      result.moderatorTags
+      Array.isArray(result.moderatorTags) ? result.moderatorTags.join(';') : ''
     ]);
   }
 
@@ -233,7 +233,7 @@ function buildEventsCsv(events: TreeEvent[]): string {
       event.eventType,
       event.nodeId ?? '',
       event.parentId ?? '',
-      event.payload ?? {}
+      event.payload != null ? JSON.stringify(event.payload) : ''
     ]);
   }
 

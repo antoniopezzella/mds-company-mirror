@@ -44,3 +44,6 @@ lhci-data/
 
 # Local Netlify folder
 .netlify
+
+src/stories/generated
+.story-ui-history/

@@ -147,9 +147,9 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
       {/* Header Navigation */}
       {showHeader && (
         <Header
-          variant="application"
-          showSearch={true}
-          showProfile={true}
+          variant="primary"
+          sidebarOpen={false}
+          onToggleSidebar={() => {}}
         />
       )}
 

@@ -19,7 +19,7 @@ Full-width, full-height hero section with content and image/video split layout.
 ### Features
 - ✅ Full viewport height (100vh) section
 - ✅ Two-column responsive layout (50/50 split)
-- ✅ **Video background support** with fallback to static image
+- ✅ **Video background support** (native MP4 or **Vimeo**)
 - ✅ **GSAP entrance animations** (fade up + stagger)
 - ✅ **Parallax scroll effect** on video/image (desktop only)
 - ✅ Supports eyebrow text, headline, subtitle, description
@@ -29,6 +29,17 @@ Full-width, full-height hero section with content and image/video split layout.
 - ✅ Accessibility: \`disableAnimations\` prop
 - ✅ Mobile responsive (stacks vertically)
 - ✅ Role token integration for theming
+
+### Video Support
+**Native Video (MP4):** Use \`videoSrc\` prop with path to .mp4 file  
+**Vimeo:** Use \`vimeoId\` prop with Vimeo video ID (e.g., "123456789")  
+**Priority:** \`vimeoId\` → \`videoSrc\` → \`imageSrc\`
+
+Both video options include:
+- Autoplay + loop + muted (for accessibility compliance)
+- Same gradient overlays for text readability
+- Parallax scroll effect
+- Responsive behavior
 
 ### Animation Details
 - **Entrance**: Content elements fade up with 0.15s stagger (eyebrow → title → subtitle → description → CTAs)
@@ -102,17 +113,33 @@ Based on Marsh Corporate landing page hero section from Figma:
       control: 'text',
       description: 'Body paragraph text',
     },
+    vimeoId: {
+      control: 'text',
+      description: 'Vimeo video ID (e.g., "123456789") - takes priority over videoSrc. Extract from vimeo.com/123456789',
+      table: {
+        category: 'Media',
+      },
+    },
     videoSrc: {
       control: 'text',
       description: 'Hero video URL (takes priority over imageSrc)',
+      table: {
+        category: 'Media',
+      },
     },
     videoPoster: {
       control: 'text',
       description: 'Video poster image (shown before video loads)',
+      table: {
+        category: 'Media',
+      },
     },
     imageSrc: {
       control: 'text',
       description: 'Hero image URL (fallback when no video)',
+      table: {
+        category: 'Media',
+      },
     },
     imageAlt: {
       control: 'text',
@@ -166,6 +193,36 @@ export const CorporateWithVideo: Story = {
     docs: {
       description: {
         story: 'Hero banner with video background. Video autoplays muted with poster image. Falls back to static image if video fails to load. Includes subtle parallax scroll effect.',
+      },
+    },
+  },
+};
+
+// Corporate with Vimeo Background
+export const CorporateWithVimeo: Story = {
+  args: {
+    ...Corporate.args,
+    vimeoId: '1146072483', // Public demo video - replace with your actual video ID
+    imageSrc: '/images/journey-aviation.jpg',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `Hero banner with **Vimeo video background**. Uses Vimeo's background mode for seamless autoplay with no controls. 
+        
+**How to use:**
+1. Upload your video to Vimeo
+2. Extract the video ID from the URL (e.g., \`vimeo.com/123456789\` → \`123456789\`)
+3. Pass the ID to the \`vimeoId\` prop
+
+**Features:**
+- ✅ Autoplay + Loop + Muted (background mode)
+- ✅ No player controls or Vimeo branding
+- ✅ Same gradient overlays as native video
+- ✅ Parallax scroll effect included
+- ✅ Fallback to \`imageSrc\` if needed
+
+**Priority:** \`vimeoId\` → \`videoSrc\` → \`imageSrc\``,
       },
     },
   },

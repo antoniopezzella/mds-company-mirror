@@ -111,17 +111,6 @@
     }
   }
 
-  &__logo {
-    width: 32px;
-    height: 33px;
-    filter: invert(1);
-    display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-
   &__bubble {
     position: absolute;
     right: 76px;

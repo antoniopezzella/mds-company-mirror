@@ -48,9 +48,9 @@ export const WithMixedChanges: Story = {
     stats: [
       { label: 'Quote Volume', value: '5,420', change: '+11%' },
       { label: 'Bound Rate', value: '37%', change: '+1%' },
-      { label: 'Churn', value: '4.2%' }
+      { label: 'Churn', value: '4.2%', change: '-0.3%' }
     ],
-    insight: 'Increased quote volume is converting effectively; churn stable inside target band.'
+    insight: 'Increased quote volume is converting effectively; churn is slightly elevated but within target band.'
   }
 };
 

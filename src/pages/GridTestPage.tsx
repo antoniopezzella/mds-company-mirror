@@ -56,7 +56,7 @@ export default function GridTestPage() {
           </div>
         </Box>
 
-        <Divider sx={{ borderColor: getRoleColor('border.muted'), mb: 6 }} />
+        <Divider sx={{ borderColor: getRoleColor('border.default'), mb: 6 }} />
 
         <Box sx={{ mb: 6 }}>
           <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
@@ -79,7 +79,7 @@ export default function GridTestPage() {
           </div>
         </Box>
 
-        <Divider sx={{ borderColor: getRoleColor('border.muted'), mb: 6 }} />
+        <Divider sx={{ borderColor: getRoleColor('border.default'), mb: 6 }} />
 
         <Box>
           <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>

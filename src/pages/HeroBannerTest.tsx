@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Paper, Typography, FormControlLabel, Radio, RadioGroup, FormControl, FormLabel, Divider, Select, MenuItem, Chip, IconButton } from '@mui/material';
+import { Box, Paper, Typography, FormControlLabel, Radio, RadioGroup, FormControl, FormLabel, Divider, Select, MenuItem, IconButton } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { WebsiteHeader } from '../components/Header/Header';
 import { HeroBanner } from '../components/sections/HeroBanner/HeroBanner';
-import { getContrastRatio, formatContrastRatio, getWCAGLevel } from '../utils/contrastChecker';
 import gsap from 'gsap';
 
 const mockContent = {
@@ -102,7 +101,7 @@ const HeroBannerTest: React.FC = () => {
   const [showDescription, setShowDescription] = useState<boolean>(true);
   const [showCmsHints, setShowCmsHints] = useState<boolean>(true);
   const [language, setLanguage] = useState<Language>('en');
-  const [mediaType, setMediaType] = useState<'video' | 'image' | 'both'>('video');
+  const [mediaType, setMediaType] = useState<'video' | 'vimeo' | 'image' | 'both'>('video');
   const [numBanners, setNumBanners] = useState<1 | 2 | 3>(1);
   const [currentSlide, setCurrentSlide] = useState(0);
   
@@ -149,73 +148,9 @@ const HeroBannerTest: React.FC = () => {
   const nextSlide = () => goToSlide((currentSlide + 1) % bannerConfigs.length);
   const prevSlide = () => goToSlide((currentSlide - 1 + bannerConfigs.length) % bannerConfigs.length);
 
-  // Calculate contrast ratio for current slide
-  const currentConfig = bannerConfigs[currentSlide];
-  const textColor = currentConfig.variant === 'dark' ? '#ceecff' : '#000f47'; // Sky blue or Midnight blue
-  const bgColor = variant === 'dark' ? '#000f47' : '#ffffff'; // Midnight blue or White
-  const contrastRatio = getContrastRatio(textColor, bgColor);
-  const wcagLevel = getWCAGLevel(contrastRatio, true); // true = large text (H1)
-  const isPass = wcagLevel !== 'FAIL';
-
   return (
     <Box sx={{ position: 'relative' }}>
       <WebsiteHeader />
-      
-      {/* Contrast Indicator Badge */}
-      <Paper
-        elevation={4}
-        sx={{
-          position: 'fixed',
-          top: 80,
-          left: 24,
-          zIndex: 1300,
-          p: 1.5,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1,
-          minWidth: '200px',
-          backgroundColor: 'rgba(255, 255, 255, 0.98)',
-          backdropFilter: 'blur(8px)',
-          borderRadius: 2,
-          border: `2px solid ${isPass ? '#2e7d32' : '#d32f2f'}`,
-        }}
-      >
-        <Typography variant="caption" sx={{ fontWeight: 700, fontSize: '11px', color: '#000f47', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          Contrast Check
-        </Typography>
-        <Divider />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ width: 24, height: 24, backgroundColor: textColor, border: '1px solid #ccc', borderRadius: '4px' }} />
-          <Typography variant="caption" sx={{ fontSize: '11px', color: '#666' }}>
-            Text: {textColor}
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ width: 24, height: 24, backgroundColor: bgColor, border: '1px solid #ccc', borderRadius: '4px' }} />
-          <Typography variant="caption" sx={{ fontSize: '11px', color: '#666' }}>
-            BG: {bgColor}
-          </Typography>
-        </Box>
-        <Divider />
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '16px', color: '#000f47' }}>
-            {formatContrastRatio(contrastRatio)}
-          </Typography>
-          <Chip
-            label={wcagLevel}
-            size="small"
-            sx={{
-              backgroundColor: isPass ? '#4caf50' : '#f44336',
-              color: '#fff',
-              fontWeight: 700,
-              fontSize: '11px',
-            }}
-          />
-        </Box>
-        <Typography variant="caption" sx={{ fontSize: '10px', color: '#999', mt: -0.5 }}>
-          {isPass ? '✓ WCAG AA Pass (Large Text)' : '✗ WCAG AA Fail'}
-        </Typography>
-      </Paper>
 
       {/* Carousel Container */}
       <Box 
@@ -228,11 +163,10 @@ const HeroBannerTest: React.FC = () => {
       >
         {/* Slides */}
         {bannerConfigs.map((config, index) => {
-          const slideMediaType = config.mediaType;
           return (
             <Box
               key={index}
-              ref={(el) => { if (el) slidesRef.current[index] = el; }}
+              ref={(el: HTMLDivElement | null) => { if (el) slidesRef.current[index] = el; }}
               sx={{
                 position: index === 0 ? 'relative' : 'absolute',
                 top: 0,
@@ -257,9 +191,10 @@ const HeroBannerTest: React.FC = () => {
                   text: content.secondaryCta,
                   onClick: () => {},
                 }}
-                videoSrc={slideMediaType === 'video' || slideMediaType === 'both' ? "/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" : undefined}
-                videoPoster={slideMediaType === 'video' || slideMediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
-                imageSrc={slideMediaType === 'image' || slideMediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
+                vimeoId={mediaType === 'vimeo' ? "1146072483" : undefined}
+                videoSrc={mediaType === 'video' || mediaType === 'both' ? "/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" : undefined}
+                videoPoster={mediaType === 'video' || mediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
+                imageSrc={mediaType === 'image' || mediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
                 imageAlt="Aerial city intersection view"
                 variant={config.variant}
                 height={bannerSizeHeights[bannerSize]}
@@ -459,8 +394,9 @@ const HeroBannerTest: React.FC = () => {
 
         <FormControl>
           <FormLabel sx={panelLabelSx}>Media Type</FormLabel>
-          <RadioGroup value={mediaType} onChange={(e) => setMediaType(e.target.value as 'video' | 'image' | 'both')}>
+          <RadioGroup value={mediaType} onChange={(e) => setMediaType(e.target.value as 'video' | 'vimeo' | 'image' | 'both')}>
             <FormControlLabel value="video" control={<Radio size="small" />} label={panelOptionLabel('Video Only')} />
+            <FormControlLabel value="vimeo" control={<Radio size="small" />} label={panelOptionLabel('Vimeo')} />
             <FormControlLabel value="image" control={<Radio size="small" />} label={panelOptionLabel('Image Only')} />
             <FormControlLabel value="both" control={<Radio size="small" />} label={panelOptionLabel('Video + Image')} />
           </RadioGroup>
@@ -473,7 +409,7 @@ const HeroBannerTest: React.FC = () => {
               mt: 0.5,
             }}
           >
-            Video: autoplay background · Image: static · Both: video with image overlay
+            Video: MP4 autoplay · Vimeo: embedded player · Image: static · Both: video with image overlay
           </Typography>
         </FormControl>
 

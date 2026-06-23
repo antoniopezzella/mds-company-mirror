@@ -54,6 +54,7 @@ export type RoleName =
   | 'surface.disabled'
   | 'surface.accent'
   | 'surface.secondary'
+  | 'surface.secondary.hover'
   | 'surface.navigation'
   | 'surface.navigation.hover'
   | 'surface.navigation.active'
@@ -105,6 +106,7 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
   'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
   'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
+  'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
   'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
   'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },

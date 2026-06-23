@@ -18,6 +18,18 @@ $font-family-serif: 'Marsh Serif', serif;
   @return clamp(#{$min}px, calc(#{$b}px + #{$m-vw}vw), #{$max}px);
 }
 
+// Utility: fluid clamp with REM output (accessible, scales with user font size)
+// fluid-rem(minPx, maxPx, baseFontSize, minViewportPx, maxViewportPx)
+@function fluid-rem($min, $max, $base: 16, $vw-min: 360, $vw-max: 1536) {
+  $min-rem: math.div($min, $base);
+  $max-rem: math.div($max, $base);
+  $m: math.div(($max - $min), ($vw-max - $vw-min));
+  $m-vw: $m * 100;
+  $b: $min - $m * $vw-min;
+  $b-rem: math.div($b, $base);
+  @return clamp(#{$min-rem}rem, calc(#{$b-rem}rem + #{$m-vw}vw), #{$max-rem}rem);
+}
+
 // CSS variables for each variant — aligns with our MUI variants
 // New Marsh Brand Scale - Marketing Website (Marsh One)
 :root {
@@ -35,7 +47,7 @@ $font-family-serif: 'Marsh Serif', serif;
   /* Marketing Hero (Marsh Serif - Marsh One) */
   --typo-hero-h1-font-family: #{$font-family-serif};
   --typo-hero-h1-font-weight: 400; // Marsh Serif Regular
-  --typo-hero-h1-font-size: #{fluid(28, 44)}; // Responsive size for marketing (Mobile to Desktop)
+  --typo-hero-h1-font-size: #{fluid-rem(40, 56)}; // Responsive: 2.5rem (40px) → 3.5rem (56px) - scales with user font size
   --typo-hero-h1-line-height: 1.2; // Proportional line-height for responsive text
   --typo-hero-h1-letter-spacing: -1px;
 

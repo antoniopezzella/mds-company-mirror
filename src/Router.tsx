@@ -28,6 +28,7 @@ const Portfolio = lazy(() => import('./pages/Portfolio/Portfolio'));
 const ClinicalTrials = lazy(() => import('./projects/ClinicalTrials').then(m => ({ default: m.ClinicalTrialsPage })));
 const TreeTestingToolPage = lazy(() => import('./pages/TreeTestingTool/TreeTestingToolPage'));
 const HeroBannerTest = lazy(() => import('./pages/HeroBannerTest'));
+const CardTestPage = lazy(() => import('./pages/CardTestPage'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -80,6 +81,7 @@ const Router: React.FC = () => (
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/tree-testing" element={<TreeTestingToolPage />} />
         <Route path="/hero-banner-test" element={<HeroBannerTest />} />
+        <Route path="/card-test" element={<CardTestPage />} />
       </Routes>
     </Suspense>
     </RouterWithTracking>

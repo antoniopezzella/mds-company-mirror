@@ -62,13 +62,17 @@ export const AIAgentBot: React.FC<AIAgentBotProps> = ({
     white: tokens.white, // '#ffffff' for close icon
   };
 
-  // Show bot after scroll
+  // Show bot after scroll or after 2 seconds
   useEffect(() => {
+    // Show after 2 seconds even if no scroll
+    const timeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 2000);
+
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsVisible(true);
-      } else {
-        setIsVisible(false);
+        clearTimeout(timeout);
       }
     };
 
@@ -76,7 +80,10 @@ export const AIAgentBot: React.FC<AIAgentBotProps> = ({
     // Run once in case already scrolled
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   // Keyboard shortcuts: Cmd+K to toggle, Escape to close
@@ -112,48 +119,55 @@ export const AIAgentBot: React.FC<AIAgentBotProps> = ({
 
   return (
     <>
-      <div
-        className={`ai-agent-bot ${isOpen ? 'ai-agent-bot--open' : ''}`}
-        style={{
-          ...position
-        }}
-      >
-        <button
-          className="ai-agent-bot__trigger"
-          onClick={handleClick}
-          aria-label="Open AI Assistant"
+      {/* Only show trigger button when chat is closed */}
+      {!isOpen && (
+        <div
+          className={`ai-agent-bot`}
           style={{
-            background: figmaColors.botBlue,
-            color: figmaColors.white,
+            ...position
           }}
         >
-          {isOpen ? (
-            // Close icon
-            <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
-              <path
-                d="M14 14L34 34M14 34L34 14"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
+          <button
+            className="ai-agent-bot__trigger"
+            onClick={handleClick}
+            aria-label="Open AI Assistant"
+            style={{
+              background: figmaColors.botBlue,
+              color: figmaColors.white,
+            }}
+          >
+            {/* AI Sparkle Icon - Exact Figma export (node 94-7949) */}
+            <svg 
+              width="33" 
+              height="33" 
+              viewBox="0 0 33 33" 
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ position: 'relative', zIndex: 2 }}
+            >
+              {/* Main 4-pointed star (33x33) */}
+              <path 
+                d="M16.5 0L21.1319 11.8681L33 16.5L21.1319 21.1319L16.5 33L11.8681 21.1319L0 16.5L11.8681 11.8681L16.5 0Z" 
+                fill="currentColor"
+              />
+              {/* Small accent star (11x11) positioned at top-left offset */}
+              <path 
+                d="M5.5 0L6.39449 4.60551L11 5.5L6.39449 6.39449L5.5 11L4.60551 6.39449L0 5.5L4.60551 4.60551L5.5 0Z" 
+                fill="currentColor"
+                opacity="0.8"
+                transform="translate(5, 6)"
               />
             </svg>
-          ) : (
-            // Figma exact design (node 897:6168): Central M logo (no stars)
-            <img 
-              src="/images/M-logo.svg" 
-              alt="Marsh Logo"
-              className="ai-agent-bot__logo"
-            />
-          )}
-        </button>
+          </button>
 
-        {/* Speech Bubble (Figma node 914:12346) */}
-        {showSpeechBubble && enableBubbles && !isOpen && (
-          <div className="ai-agent-bot__bubble">
-            <span>Ask Marsh AI Chatbot assistant</span>
-          </div>
-        )}
-      </div>
+          {/* Speech Bubble (Figma node 914:12346) */}
+          {showSpeechBubble && enableBubbles && (
+            <div className="ai-agent-bot__bubble">
+              <span>Ask Marsh AI Chatbot assistant</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Full Chat Interface */}
       {isOpen && (

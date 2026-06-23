@@ -171,7 +171,7 @@ const MarshCorporate: React.FC = () => {
 
   // Scroll indicator animation (respects reduced motion)
   useScrollTrigger({
-    scope: heroRef,
+    scope: heroRef as React.RefObject<HTMLElement>,
     disabled: prefersReduced,
     setup: () => {
       if (!scrollIconRef.current) return;

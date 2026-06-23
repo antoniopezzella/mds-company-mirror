@@ -38,6 +38,7 @@ export const CSP_CONFIG = {
     'base-uri': ["'self'"],
     'form-action': ["'self'"],
     'upgrade-insecure-requests': [],
+    'block-all-mixed-content': [],
   },
 
   production: {
