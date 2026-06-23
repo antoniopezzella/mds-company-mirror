@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { marked } from 'marked';
 import {
   Box,
   TextField,
@@ -437,16 +438,22 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                         ))}
                       </Box>
                     ) : (
-                      <Typography
+                      <Box
                         sx={{
                           fontSize: '13px',
                           lineHeight: 1.6,
                           fontFamily: 'Noto Sans, sans-serif',
-                          whiteSpace: 'pre-wrap',
                           color: msg.role === 'user' ? textOnAccent : msg.error ? '#c62828' : textPrimary,
+                          '& p': { m: 0, mb: '6px', '&:last-child': { mb: 0 } },
                           '& strong': { fontWeight: 600 },
+                          '& ul, & ol': { pl: '18px', my: '4px' },
+                          '& li': { mb: '2px' },
+                          '& h1, & h2, & h3, & h4': { fontSize: '13px', fontWeight: 600, mt: '8px', mb: '4px' },
+                          '& code': { fontFamily: 'monospace', fontSize: '12px', bgcolor: 'rgba(0,0,0,0.06)', px: '3px', borderRadius: '2px' },
                         }}
-                        dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
+                        dangerouslySetInnerHTML={{
+                          __html: marked.parse(msg.content, { async: false }) as string,
+                        }}
                       />
                     )}
 
