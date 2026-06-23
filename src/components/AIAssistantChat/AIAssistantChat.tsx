@@ -15,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { getRoleColor } from '../../theme/roles';
 import './AIAssistantChat.scss';
 
@@ -75,7 +76,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -98,25 +99,37 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
     });
   };
 
-  const formatTime = (d: Date) => d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  const formatTime = (d: Date) =>
+    d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
   const sendMessage = async (question: string) => {
     if (!question.trim() || isLoading) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: question, timestamp: new Date() };
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: question,
+      timestamp: new Date(),
+    };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
 
     const assistantId = (Date.now() + 1).toString();
-    setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '', timestamp: new Date() }]);
+    setMessages(prev => [
+      ...prev,
+      { id: assistantId, role: 'assistant', content: '', timestamp: new Date() },
+    ]);
     setStreamingId(assistantId);
 
     try {
       const response = await fetch(`${resolvedEndpoint}-stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, conversationHistory: messages.map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          question,
+          conversationHistory: messages.map(m => ({ role: m.role, content: m.content })),
+        }),
       });
 
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -138,20 +151,27 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
             const parsed = JSON.parse(data);
             if (parsed.token) {
               accumulated += parsed.token;
-              setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m));
+              setMessages(prev =>
+                prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m)
+              );
             }
             if (parsed.citations) citations = parsed.citations;
             if (parsed.done) {
-              setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, citations } : m));
+              setMessages(prev =>
+                prev.map(m => m.id === assistantId ? { ...m, citations } : m)
+              );
             }
           } catch { /* skip */ }
         }
       }
-    } catch (err) {
-      setMessages(prev => prev.map(m => m.id === assistantId
-        ? { ...m, content: 'Unable to reach the assistant. Please check your connection and try again.', error: true }
-        : m
-      ));
+    } catch {
+      setMessages(prev =>
+        prev.map(m =>
+          m.id === assistantId
+            ? { ...m, content: 'Unable to reach the assistant. Please try again.', error: true }
+            : m
+        )
+      );
     } finally {
       setIsLoading(false);
       setStreamingId(null);
@@ -160,15 +180,15 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
 
   if (!isOpen) return null;
 
-  const primaryBlue = getRoleColor('interactive.primary');
-  const primaryHover = getRoleColor('interactive.primary.hover');
+  const primaryBlue   = getRoleColor('interactive.primary');
+  const primaryHover  = getRoleColor('interactive.primary.hover');
   const surfaceDefault = getRoleColor('surface.default');
-  const surfaceSubtle = getRoleColor('surface.subtle');
-  const surfaceAccent = getRoleColor('surface.accent');
-  const textPrimary = getRoleColor('text.primary');
-  const textSecondary = getRoleColor('text.secondary');
-  const borderDefault = getRoleColor('border.default');
-  const textOnAccent = getRoleColor('text.onAccent');
+  const surfaceSubtle  = getRoleColor('surface.subtle');
+  const surfaceAccent  = getRoleColor('surface.accent');
+  const textPrimary    = getRoleColor('text.primary');
+  const textSecondary  = getRoleColor('text.secondary');
+  const borderDefault  = getRoleColor('border.default');
+  const textOnAccent   = getRoleColor('text.onAccent');
 
   return (
     <Box
@@ -176,24 +196,24 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
         position: 'fixed',
         bottom: { xs: 16, sm: 24 },
         right: { xs: 16, sm: 24 },
-        width: { xs: 'calc(100vw - 32px)', sm: 420 },
-        height: { xs: 'calc(100vh - 120px)', sm: 580 },
-        maxHeight: '85vh',
+        width: { xs: 'calc(100vw - 32px)', sm: 400 },
+        height: { xs: 'calc(100vh - 120px)', sm: 600 },
+        maxHeight: '88vh',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: '8px',
+        borderRadius: '12px',
         overflow: 'hidden',
         zIndex: 99999,
         bgcolor: surfaceDefault,
         border: `1px solid ${borderDefault}`,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.16)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
       }}
     >
-      {/* Header */}
+      {/* ── Header ── */}
       <Box
         sx={{
           px: 2.5,
-          py: 2,
+          py: 1.75,
           bgcolor: primaryBlue,
           display: 'flex',
           alignItems: 'center',
@@ -201,56 +221,90 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           flexShrink: 0,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
           <Box
             sx={{
-              width: 32,
-              height: 32,
-              borderRadius: '6px',
+              width: 34,
+              height: 34,
+              borderRadius: '8px',
               bgcolor: 'rgba(255,255,255,0.15)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexShrink: 0,
             }}
           >
-            <AutoAwesomeIcon sx={{ fontSize: 16, color: textOnAccent }} />
+            <AutoAwesomeIcon sx={{ fontSize: 17, color: textOnAccent }} />
           </Box>
           <Box>
-            <Typography variant="subtitle2" fontWeight={600} color={textOnAccent} lineHeight={1.2}>
+            <Typography
+              sx={{ fontSize: 14, fontWeight: 600, color: textOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
+            >
               Marsh AI Assistant
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.25 }}>
-              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50' }} />
-              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.75)', fontSize: 10 }}>
+              <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50', flexShrink: 0 }} />
+              <Typography sx={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontFamily: 'Noto Sans, sans-serif' }}>
                 Connected to your dashboard
               </Typography>
             </Box>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
+
+        <Box sx={{ display: 'flex', gap: 0.25 }}>
           <Tooltip title="Clear conversation">
-            <IconButton size="small" onClick={clearChat} sx={{ color: 'rgba(255,255,255,0.8)', '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton
+              size="small"
+              onClick={clearChat}
+              sx={{
+                color: 'rgba(255,255,255,0.72)',
+                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                borderRadius: '6px',
+              }}
+            >
               <DeleteOutlineIcon sx={{ fontSize: 18 }} />
             </IconButton>
           </Tooltip>
           {onClose && (
-            <IconButton size="small" onClick={onClose} sx={{ color: 'rgba(255,255,255,0.8)', '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.1)' } }}>
+            <IconButton
+              size="small"
+              onClick={onClose}
+              sx={{
+                color: 'rgba(255,255,255,0.72)',
+                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                borderRadius: '6px',
+              }}
+            >
               <CloseIcon sx={{ fontSize: 18 }} />
             </IconButton>
           )}
         </Box>
       </Box>
 
-      {/* Messages */}
-      <Box sx={{ flex: 1, overflowY: 'auto', p: 2.5, display: 'flex', flexDirection: 'column', gap: 2, bgcolor: surfaceSubtle }}>
+      {/* ── Messages ── */}
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: 'auto',
+          px: 2.5,
+          pt: 2.5,
+          pb: 1.5,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          bgcolor: surfaceSubtle,
+        }}
+      >
         {messages.length === 0 ? (
-          <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <Typography variant="body2" fontWeight={600} color={textPrimary} sx={{ mb: 0.5 }}>
+          /* Empty state */
+          <Box sx={{ pt: 1 }}>
+            <Typography sx={{ fontSize: 15, fontWeight: 700, color: textPrimary, mb: 0.75, fontFamily: 'Noto Sans, sans-serif' }}>
               Ask about your policies &amp; risks
             </Typography>
-            <Typography variant="caption" color={textSecondary} sx={{ mb: 2.5, display: 'block' }}>
+            <Typography sx={{ fontSize: 13, color: textSecondary, mb: 3, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif' }}>
               I have context from your dashboard — property risk, active policies, coverage gaps, and market trends.
             </Typography>
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {suggestions.map((q, i) => (
                 <Box
@@ -258,18 +312,38 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                   onClick={() => sendMessage(q)}
                   sx={{
                     px: 2,
-                    py: 1.25,
+                    py: 1.5,
                     bgcolor: surfaceDefault,
                     border: `1px solid ${borderDefault}`,
-                    borderRadius: '6px',
+                    borderRadius: '8px',
                     cursor: 'pointer',
-                    transition: 'all 0.15s',
-                    '&:hover': { borderColor: primaryBlue, bgcolor: surfaceAccent },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 1,
+                    transition: 'all 0.15s ease',
+                    '&:hover': {
+                      borderColor: primaryBlue,
+                      bgcolor: surfaceDefault,
+                      transform: 'translateX(2px)',
+                      '& .arrow-icon': { opacity: 1, transform: 'translateX(0)' },
+                    },
                   }}
                 >
-                  <Typography variant="body2" color={textPrimary} fontWeight={500} fontSize={13}>
+                  <Typography sx={{ fontSize: 13, color: textPrimary, fontWeight: 500, lineHeight: 1.4, fontFamily: 'Noto Sans, sans-serif' }}>
                     {q}
                   </Typography>
+                  <ArrowForwardIcon
+                    className="arrow-icon"
+                    sx={{
+                      fontSize: 14,
+                      color: primaryBlue,
+                      flexShrink: 0,
+                      opacity: 0,
+                      transform: 'translateX(-4px)',
+                      transition: 'all 0.15s ease',
+                    }}
+                  />
                 </Box>
               ))}
             </Box>
@@ -283,50 +357,79 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                  animation: 'slideIn 0.2s ease-out',
                 }}
               >
+                {/* Bubble */}
                 <Box
                   sx={{
-                    maxWidth: '82%',
+                    maxWidth: '84%',
                     px: 2,
                     py: 1.5,
-                    borderRadius: msg.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                    borderRadius: msg.role === 'user'
+                      ? '12px 12px 2px 12px'
+                      : '12px 12px 12px 2px',
                     bgcolor: msg.role === 'user' ? primaryBlue : surfaceDefault,
                     border: msg.role === 'assistant' ? `1px solid ${borderDefault}` : 'none',
-                    position: 'relative',
+                    boxShadow: msg.role === 'assistant' ? '0 1px 4px rgba(0,0,0,0.06)' : 'none',
                   }}
                 >
+                  {/* Streaming dots when content is still empty */}
                   {msg.id === streamingId && msg.content === '' ? (
-                    <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', py: 0.5 }}>
+                    <Box sx={{ display: 'flex', gap: '5px', alignItems: 'center', py: 0.25, px: 0.5 }}>
                       {[0, 1, 2].map(i => (
-                        <Box key={i} className="dot" sx={{
-                          width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary,
-                          animation: 'pulse 1.2s ease-in-out infinite',
-                          animationDelay: `${i * 0.2}s`,
-                        }} />
+                        <Box
+                          key={i}
+                          sx={{
+                            width: 7,
+                            height: 7,
+                            borderRadius: '50%',
+                            bgcolor: textSecondary,
+                            animation: 'typingDot 1.3s ease-in-out infinite',
+                            animationDelay: `${i * 0.18}s`,
+                          }}
+                        />
                       ))}
                     </Box>
                   ) : (
                     <Typography
-                      variant="body2"
                       sx={{
-                        whiteSpace: 'pre-wrap',
-                        color: msg.role === 'user' ? textOnAccent : msg.error ? '#d32f2f' : textPrimary,
                         fontSize: 13,
-                        lineHeight: 1.6,
+                        lineHeight: 1.65,
+                        fontFamily: 'Noto Sans, sans-serif',
+                        whiteSpace: 'pre-wrap',
+                        color: msg.role === 'user'
+                          ? textOnAccent
+                          : msg.error ? '#c62828' : textPrimary,
                         '& strong': { fontWeight: 600 },
                       }}
-                      dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
+                      dangerouslySetInnerHTML={{
+                        __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'),
+                      }}
                     />
                   )}
 
                   {msg.citations && msg.citations.length > 0 && (
                     <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${borderDefault}` }}>
-                      <Typography variant="caption" color={textSecondary} display="block" sx={{ mb: 0.75 }}>Sources</Typography>
+                      <Typography sx={{ fontSize: 11, color: textSecondary, mb: 0.75, fontFamily: 'Noto Sans, sans-serif' }}>
+                        Sources
+                      </Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                         {msg.citations.map((c, i) => (
-                          <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
-                            sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
+                          <Chip
+                            key={i}
+                            label={c.title}
+                            size="small"
+                            component="a"
+                            href={c.url}
+                            clickable
+                            sx={{
+                              fontSize: 10,
+                              height: 20,
+                              bgcolor: surfaceAccent,
+                              color: primaryBlue,
+                              border: `1px solid ${borderDefault}`,
+                            }}
                           />
                         ))}
                       </Box>
@@ -334,16 +437,21 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                   )}
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 0.5, px: 0.5 }}>
-                  <Typography variant="caption" sx={{ color: textSecondary, fontSize: 10 }}>
+                {/* Timestamp + copy */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mt: 0.5, px: 0.25 }}>
+                  <Typography sx={{ fontSize: 10, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
                     {formatTime(msg.timestamp)}
                   </Typography>
                   {msg.role === 'assistant' && msg.content && (
                     <Tooltip title={copiedId === msg.id ? 'Copied' : 'Copy'}>
-                      <IconButton size="small" onClick={() => copyMessage(msg.id, msg.content)} sx={{ p: 0.25 }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => copyMessage(msg.id, msg.content)}
+                        sx={{ p: 0.25 }}
+                      >
                         {copiedId === msg.id
-                          ? <CheckIcon sx={{ fontSize: 12, color: '#4caf50' }} />
-                          : <ContentCopyIcon sx={{ fontSize: 12, color: textSecondary }} />
+                          ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
+                          : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
                         }
                       </IconButton>
                     </Tooltip>
@@ -351,16 +459,39 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                 </Box>
               </Box>
             ))}
+
+            {/* Streaming status bar */}
+            {isLoading && streamingId && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 1,
+                  bgcolor: surfaceAccent,
+                  border: `1px solid ${borderDefault}`,
+                  borderRadius: '8px',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                <CircularProgress size={11} thickness={5} sx={{ color: primaryBlue }} />
+                <Typography sx={{ fontSize: 11, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
+                  Marsh AI is responding…
+                </Typography>
+              </Box>
+            )}
+
             <div ref={messagesEndRef} />
           </>
         )}
       </Box>
 
-      {/* Input */}
+      {/* ── Input ── */}
       <Divider sx={{ borderColor: borderDefault }} />
       <Box
         component="form"
-        onSubmit={(e) => { e.preventDefault(); sendMessage(input); }}
+        onSubmit={e => { e.preventDefault(); sendMessage(input); }}
         sx={{
           px: 2,
           py: 1.5,
@@ -377,38 +508,51 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           maxRows={4}
           value={input}
           onChange={e => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage(input);
+            }
+          }}
           placeholder="Ask about your risks or policies…"
           disabled={isLoading}
           size="small"
           inputRef={inputRef}
           sx={{
             '& .MuiOutlinedInput-root': {
-              borderRadius: '6px',
+              borderRadius: '8px',
               fontSize: 13,
               bgcolor: surfaceSubtle,
+              fontFamily: 'Noto Sans, sans-serif',
               '& fieldset': { borderColor: borderDefault },
               '&:hover fieldset': { borderColor: primaryBlue },
-              '&.Mui-focused fieldset': { borderColor: primaryBlue },
+              '&.Mui-focused fieldset': { borderColor: primaryBlue, borderWidth: 1.5 },
             },
-            '& .MuiInputBase-input': { color: textPrimary },
+            '& .MuiInputBase-input': {
+              color: textPrimary,
+              '&::placeholder': { color: textSecondary, opacity: 1 },
+            },
           }}
         />
         <IconButton
           type="submit"
           disabled={!input.trim() || isLoading}
           sx={{
-            width: 38,
-            height: 38,
+            width: 40,
+            height: 40,
             flexShrink: 0,
-            borderRadius: '6px',
+            borderRadius: '8px',
             bgcolor: primaryBlue,
             color: textOnAccent,
+            transition: 'background-color 0.15s',
             '&:hover': { bgcolor: primaryHover },
             '&.Mui-disabled': { bgcolor: surfaceAccent, color: textSecondary },
           }}
         >
-          {isLoading ? <CircularProgress size={16} sx={{ color: textOnAccent }} /> : <SendIcon sx={{ fontSize: 16 }} />}
+          {isLoading
+            ? <CircularProgress size={15} thickness={4} sx={{ color: textOnAccent }} />
+            : <SendIcon sx={{ fontSize: 16 }} />
+          }
         </IconButton>
       </Box>
     </Box>
