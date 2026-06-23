@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { getRoleColor } from '../../../theme/roles';
 import type { SxProps } from '@mui/material/styles';
@@ -6,6 +6,9 @@ import DSButton from '../../Button/Button';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import styles from './HeroBanner.module.scss';
 
 // Register GSAP plugins
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -36,6 +39,8 @@ export interface HeroBannerProps {
   secondaryCta?: HeroBannerCTA;
   /** Hero video source URL (takes priority over imageSrc) */
   videoSrc?: string;
+  /** Vimeo video ID (e.g., "123456789") - takes priority over videoSrc */
+  vimeoId?: string;
   /** Poster image for video (shown before video loads) */
   videoPoster?: string;
   /** Hero image source URL (fallback when no video) */
@@ -83,8 +88,7 @@ export interface HeroBannerProps {
  *   description="Lorem ipsum dolor sit amet..."
  *   primaryCta={{ text: "Download Report", onClick: handleDownload }}
  *   secondaryCta={{ text: "Talk to Our Experts", onClick: handleContact }}
- *   videoSrc="/video/hero-video.mp4"
- *   videoPoster="/images/hero-poster.jpg"
+ *   vimeoId="123456789"
  *   imageSrc="/hero-image.jpg"
  *   imageAlt="Aerial city view"
  *   variant="dark"
@@ -99,6 +103,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   description,
   primaryCta,
   secondaryCta,
+  vimeoId,
   videoSrc,
   videoPoster,
   imageSrc,
@@ -114,6 +119,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   disableAnimations = false,
 }) => {
   const isDark = variant === 'dark';
+  
+  // State for video play/pause
+  const [isPlaying, setIsPlaying] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Refs for GSAP animations
   const containerRef = useRef<HTMLDivElement>(null);
@@ -123,7 +133,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const ctaGroupRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
+  const splitMediaWrapperRef = useRef<HTMLDivElement>(null);
+  const contentColumnRef = useRef<HTMLDivElement>(null);
   const titleWords = title.split(/(\s+)/);
+
+  // Play/Pause toggle handler
+  const togglePlayPause = () => {
+    if (vimeoId && iframeRef.current) {
+      // For Vimeo iframe, send postMessage commands
+      const iframe = iframeRef.current;
+      const command = isPlaying ? '{"method":"pause"}' : '{"method":"play"}';
+      iframe.contentWindow?.postMessage(command, 'https://player.vimeo.com');
+      setIsPlaying(!isPlaying);
+    } else if (videoSrc && videoRef.current) {
+      // For native video element
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
 
   // GSAP Animations
   useGSAP(
@@ -138,20 +169,55 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         ctaGroupRef.current,
       ].filter(Boolean);
 
-      // Entrance animations: eyebrow, title word-by-word, then supporting content.
+      // Entrance animations timeline
       const entranceTimeline = gsap.timeline({
         defaults: { duration: 0.7, ease: 'power3.out' },
       });
 
+      // For split layout, add mask reveal animation synced with content
+      if (layout === 'split' && splitMediaWrapperRef.current && contentColumnRef.current) {
+        // Set initial state - content hidden, media clipped from the right edge
+        gsap.set(splitMediaWrapperRef.current, {
+          clipPath: 'inset(0 0 0 100%)',
+        });
+        gsap.set(contentColumnRef.current, {
+          opacity: 0,
+        });
+
+        // Media reveal: right to left
+        entranceTimeline.to(
+          splitMediaWrapperRef.current,
+          {
+            clipPath: 'inset(0 0 0 0)',
+            duration: 1.2,
+            ease: 'power2.inOut',
+          },
+          0
+        );
+
+        // Content reveal: sync with media at 50% progress
+        entranceTimeline.to(
+          contentColumnRef.current,
+          {
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+          },
+          0.4 // Start when media is 33% revealed
+        );
+      }
+
+      // Eyebrow animation
       if (eyebrowRef.current) {
         entranceTimeline.fromTo(
           eyebrowRef.current,
           { opacity: 0, y: 24 },
           { opacity: 1, y: 0, clearProps: 'transform,opacity' },
-          0
+          layout === 'split' ? 0.4 : 0
         );
       }
 
+      // Title word-by-word animation
       if (titleWordElements?.length) {
         entranceTimeline.fromTo(
           titleWordElements,
@@ -162,10 +228,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             stagger: 0.045,
             clearProps: 'transform,opacity',
           },
-          eyebrowRef.current ? '-=0.35' : 0
+          eyebrowRef.current ? '-=0.35' : layout === 'split' ? 0.4 : 0
         );
       }
 
+      // Supporting content animation
       if (supportingElements.length > 0) {
         entranceTimeline.fromTo(
           supportingElements,
@@ -182,7 +249,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
       // Parallax scroll effect on media (desktop only)
       mm.add('(min-width: 992px)', () => {
-        if (mediaRef.current) {
+        if (mediaRef.current && layout === 'background') {
           gsap.to(mediaRef.current, {
             yPercent: -13,
             ease: 'none',
@@ -198,7 +265,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
       // Cleanup handled automatically by useGSAP
     },
-    { scope: containerRef, dependencies: [disableAnimations, title] }
+    { scope: containerRef, dependencies: [disableAnimations, title, layout] }
   );
 
   // Container styles
@@ -433,10 +500,34 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           height: { xs: '100%', md: disableAnimations ? '100%' : '115%' },
           minHeight: 'inherit',
           willChange: disableAnimations ? 'auto' : 'transform',
+          overflow: 'hidden',
+          position: 'relative',
         }}
       >
-        {videoSrc ? (
+        {vimeoId ? (
+          <Box className={styles.mediaCover} sx={{ backgroundColor: '#000f47' }}>
+            <iframe
+              ref={iframeRef}
+              src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1`}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '100vw',
+                height: '56.25vw',
+                minHeight: '100%',
+                minWidth: '177.77vh',
+                transform: 'translate(-50%, -50%)',
+                border: 'none',
+              }}
+              allow="autoplay; fullscreen; picture-in-picture"
+              title={imageAlt}
+              frameBorder="0"
+            />
+          </Box>
+        ) : videoSrc ? (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
@@ -479,6 +570,35 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           />
         ) : null}
       </Box>
+      
+      {/* Play/Pause Button - Only for video/vimeo in split layout */}
+      {layout === 'split' && (vimeoId || videoSrc) && (
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 16,
+            right: 16,
+            zIndex: 10,
+          }}
+        >
+          <DSButton
+            variant="primary"
+            size="sm"
+            iconOnly
+            onClick={togglePlayPause}
+            aria-label={isPlaying ? 'Pause video' : 'Play video'}
+            sx={{
+              backgroundColor: 'rgba(0, 15, 71, 0.8)',
+              backdropFilter: 'blur(8px)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 15, 71, 0.95)',
+              },
+            }}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          </DSButton>
+        </Box>
+      )}
     </Box>
   );
 
@@ -519,7 +639,27 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             }
           }}
         >
-          {videoSrc ? (
+          {vimeoId ? (
+            <Box className={styles.mediaCover} sx={{ backgroundColor: '#000f47' }}>
+              <iframe
+                src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1`}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  width: '100vw',
+                  height: '56.25vw',
+                  minHeight: '100%',
+                  minWidth: '177.77vh',
+                  transform: 'translate(-50%, -50%)',
+                  border: 'none',
+                }}
+                allow="autoplay; fullscreen; picture-in-picture"
+                title={imageAlt}
+                frameBorder="0"
+              />
+            </Box>
+          ) : videoSrc ? (
             <video
               autoPlay
               loop
@@ -539,7 +679,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 
       {/* Full-bleed media for split layout */}
       {layout === 'split' && (
-        <Box 
+        <Box
+          ref={splitMediaWrapperRef}
           sx={{
             position: 'relative',
             order: imagePosition === 'left' ? 1 : 2,
@@ -586,6 +727,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           sx={{ width: '100%', m: 0 }}
         >
           <Box
+            ref={contentColumnRef}
             className={contentColumnClassName}
             sx={{
               display: 'flex',

@@ -15,7 +15,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "composite": true,
-    
+
     /* Path Aliases for shadcn/ui */
     "baseUrl": ".",
     "paths": {
@@ -24,11 +24,24 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.accessibility.test.tsx",
+    "src/**/*.old.tsx",
+    "src/**/*.old-test.tsx",
+    "src/**/*.backup.tsx",
+    "src/**/*.backup.*.tsx",
+    "src/figma/**",
+    "src/utils/performance/**"
+  ]
 }

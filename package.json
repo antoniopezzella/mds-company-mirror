@@ -22,7 +22,7 @@
     "gateway:eval": "cd apps/gateway && npm run eval",
     "mcp-validate": "mcp-server validate --config mcp.config.js",
     "storybook": "storybook dev -p 6006",
-    "story-ui": "story-ui start",
+    "story-ui": "story-ui start --port 4002",
     "build-storybook": "storybook build",
     "storybook:clean": "rm -rf node_modules/.cache/storybook node_modules/.vite storybook-static",
     "storybook:deploy": "npm run build-storybook && npx gh-pages -d storybook-static",
@@ -84,7 +84,8 @@
     "deps:update": "npm update && npm audit fix",
     "security": "npm audit && npm audit fix",
     "workflow:local": "npm run clean:install && npm run security && npm test && npm run build",
-    "workflow:ci": "npm ci && npm run security && npm test && npm run build && npm run build-storybook"
+    "workflow:ci": "npm ci && npm run security && npm test && npm run build && npm run build-storybook",
+    "storybook-with-ui": "concurrently \"npm run storybook\" \"npm run story-ui\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -161,5 +162,8 @@
     "vite": "^7.0.0",
     "vite-plugin-compression": "^0.5.1",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "@exodus/bytes": "1.14.1"
   }
 }

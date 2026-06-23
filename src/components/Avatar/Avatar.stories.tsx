@@ -366,7 +366,6 @@ export const Interactive: Story = {
           size="large"
           onClick={() => setClicked(!clicked)}
           status="online"
-          style={{ cursor: 'pointer' }}
         />
         <div style={{ fontSize: '14px', color: '#666' }}>
           {clicked ? '✓ Avatar clicked' : 'Click avatar to interact'}

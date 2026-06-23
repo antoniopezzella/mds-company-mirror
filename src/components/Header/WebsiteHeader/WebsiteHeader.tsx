@@ -3,7 +3,6 @@ import {
   AppBar,
   Box,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -17,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MARSH_LOGO from '../../../assets/images/marsh.svg';
 import DSButton from '../../Button/Button';
+import { getRoleColor } from '../../../theme/roles';
 import styles from '../Header.module.scss';
 
 export interface WebsiteHeaderNavItem {
@@ -97,8 +97,13 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
       >
         <Toolbar disableGutters className={styles.websiteHeader__toolbar}>
           <Box className={styles.websiteHeader__left}>
-            <a className={styles.websiteHeader__brand} href="/" aria-label="Marsh home">
-              <img src={MARSH_LOGO} alt="Marsh Logo" />
+            <a 
+              className={styles.websiteHeader__brand} 
+              href="/" 
+              aria-label="Marsh home"
+              style={{ color: getRoleColor('text.onHero') }}
+            >
+              <img src={MARSH_LOGO} alt="Marsh Logo" className={styles.websiteHeader__logo} />
             </a>
 
             <nav className={styles.websiteHeader__nav} aria-label="Primary navigation">
@@ -111,6 +116,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
                     href={item.href ?? '#'}
                     className={`${styles.websiteHeader__navLink} ${isActive ? styles.websiteHeader__navLinkActive : ''}`}
                     aria-current={isActive ? 'page' : undefined}
+                    style={{ color: getRoleColor('text.onHero') }}
                   >
                     <span>{item.label}</span>
                     {item.hasMenu && <KeyboardArrowDownIcon aria-hidden className={styles.websiteHeader__navIcon} />}
@@ -121,22 +127,38 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
           </Box>
 
           <Box className={styles.websiteHeader__actions}>
-            <IconButton
+            <DSButton
               className={styles.websiteHeader__iconButton}
+              variant="ghost"
+              size="sm"
+              iconOnly
               aria-label="Search"
               onClick={onSearchClick}
+              sx={{
+                color: getRoleColor('text.onHero'),
+                '&:hover': { 
+                  color: getRoleColor('text.onHero'),
+                  backgroundColor: 'rgba(206, 236, 255, 0.1)' 
+                }
+              }}
             >
               <SearchIcon />
-            </IconButton>
+            </DSButton>
 
             <Box className={styles.websiteHeader__desktopOnly}>
               <DSButton
                 variant="ghost"
                 size="sm"
-                inverse
                 startIcon={<LanguageIcon fontSize="small" />}
                 endIcon={<KeyboardArrowDownIcon fontSize="small" />}
                 aria-label={`Language: ${languageLabel}`}
+                sx={{
+                  color: getRoleColor('text.onHero'),
+                  '&:hover': { 
+                    color: getRoleColor('text.onHero'),
+                    backgroundColor: 'rgba(206, 236, 255, 0.1)' 
+                  }
+                }}
               >
                 {languageLabel}
               </DSButton>
@@ -146,29 +168,53 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
               <DSButton
                 variant="ghost"
                 size="sm"
-                inverse
                 onClick={handleSignIn}
+                sx={{
+                  color: getRoleColor('text.onHero'),
+                  '&:hover': { 
+                    color: getRoleColor('text.onHero'),
+                    backgroundColor: 'rgba(206, 236, 255, 0.1)' 
+                  }
+                }}
               >
                 {signInLabel}
               </DSButton>
 
               <DSButton
-                variant="outline"
+                variant="secondary"
                 size="sm"
-                inverse
                 onClick={handleContact}
+                sx={{
+                  color: getRoleColor('text.onHero'),
+                  borderColor: getRoleColor('text.onHero'),
+                  '&:hover': { 
+                    color: getRoleColor('text.onHero'),
+                    borderColor: getRoleColor('text.onHero'),
+                    backgroundColor: 'rgba(206, 236, 255, 0.1)' 
+                  }
+                }}
               >
                 {contactLabel}
               </DSButton>
             </Box>
 
-            <IconButton
+            <DSButton
               className={styles.websiteHeader__menuButton}
+              variant="ghost"
+              size="sm"
+              iconOnly
               aria-label="Open menu"
               onClick={() => setMobileMenuOpen(true)}
+              sx={{
+                color: getRoleColor('text.onHero'),
+                '&:hover': { 
+                  color: getRoleColor('text.onHero'),
+                  backgroundColor: 'rgba(206, 236, 255, 0.1)' 
+                }
+              }}
             >
               <MenuIcon />
-            </IconButton>
+            </DSButton>
           </Box>
         </Toolbar>
       </AppBar>
@@ -182,9 +228,15 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
         <Box className={styles.websiteHeader__drawerContent}>
           <Box className={styles.websiteHeader__drawerTop}>
             <img src={MARSH_LOGO} alt="Marsh Logo" />
-            <IconButton aria-label="Close menu" onClick={closeMobileMenu}>
+            <DSButton
+              variant="ghost"
+              size="sm"
+              iconOnly
+              aria-label="Close menu"
+              onClick={closeMobileMenu}
+            >
               <CloseIcon />
-            </IconButton>
+            </DSButton>
           </Box>
 
           <List className={styles.websiteHeader__drawerNav}>

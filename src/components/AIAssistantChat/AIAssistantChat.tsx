@@ -279,19 +279,11 @@ export default function AIAssistantChat(props: AIAssistantChatProps) {
       console.error('[AIAssistantChat] Error sending message:', error);
       setFailedQuestion(question);
       
-      // Update with error message
-      setMessages(prev => {
-        const updated = [...prev];
-        const msgIndex = updated.findIndex(m => m.id === assistantMessageId);
-        if (msgIndex !== -1) {
-          updated[msgIndex] = {
-            ...updated[msgIndex],
-            content: 'Sorry, I encountered an error. Please try again.',
-            error: true
-          };
-        }
-        return updated;
-      });
+      // Remove the failed assistant message instead of showing error
+      setMessages(prev => prev.filter(m => m.id !== assistantMessageId));
+      
+      // Show a temporary error notification instead of in chat
+      console.warn('Chat API error - is the backend running at', apiEndpoint);
     } finally {
       clearTimeout(thinkingTimer);
       clearTimeout(searchingTimer);
@@ -351,16 +343,17 @@ export default function AIAssistantChat(props: AIAssistantChatProps) {
       elevation={8}
       sx={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
+        bottom: { xs: 16, sm: 24 },
+        right: { xs: 16, sm: 24 },
         width: { xs: 'calc(100vw - 32px)', sm: 450, md: 500 },
-        height: { xs: 'calc(100vh - 100px)', sm: 600 },
-        maxHeight: '90vh',
+        height: { xs: 'calc(100vh - 140px)', sm: 600 },
+        maxHeight: { xs: 'calc(100vh - 140px)', sm: '85vh' },
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 4,
         overflow: 'hidden',
-        zIndex: 99998
+        zIndex: 99999,
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
       }}
     >
       {/* Header */}

@@ -121,7 +121,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
                  </Box>
                  <Box className={styles.aiChipsTop}>
                     {['Financial Institutions', 'Energy & Oil & Gas', 'Manufacturing', 'Healthcare', 'Real Estate', 'Aviation'].slice(0, 6).map(chip => (
-                      <Chip key={chip} label={chip} variant="outlined" size="small" className={styles.aiChipSmall} />
+                      <Chip key={chip} label={chip} variant="outlined" size="sm" className={styles.aiChipSmall} />
                     ))}
                  </Box>
               </Box>
