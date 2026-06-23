@@ -74,7 +74,9 @@ export default function AIAssistantChat(props: AIAssistantChatProps) {
   const {
     isOpen = true,
     onClose,
-    apiEndpoint = 'http://localhost:3333/api/answer',
+    apiEndpoint = import.meta.env.DEV
+      ? 'http://localhost:3333/api/answer'
+      : '/api/chat',
   } = props;
 
   const [messages, setMessages] = useState<Message[]>([]);
