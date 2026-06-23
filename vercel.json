@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run tokens:build && npm run build && storybook build -o dist/storybook-static",
+  "buildCommand": "npm run tokens:build && npm run build && storybook build -o dist/storybook",
   "outputDirectory": "dist",
   "installCommand": "npm ci",
   "headers": [
@@ -72,15 +72,14 @@
       ]
     }
   ],
-  "rewrites": [
+  "redirects": [
     {
       "source": "/storybook",
-      "destination": "/storybook-static/index.html"
-    },
-    {
-      "source": "/storybook/(.*)",
-      "destination": "/storybook-static/$1"
-    },
+      "destination": "/storybook/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
