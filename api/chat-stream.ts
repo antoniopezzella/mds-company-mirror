@@ -1,59 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as fs from 'fs';
-import * as path from 'path';
-
-// ── Knowledge base ────────────────────────────────────────────────────────────
-
-const DATA_DIR = path.join(process.cwd(), 'apps/gateway/data/approved');
-
-interface KnowledgeDoc {
-  name: string;
-  content: string;
-  keywords: string[];
-}
-
-let _docs: KnowledgeDoc[] | null = null;
-
-function loadDocs(): KnowledgeDoc[] {
-  if (_docs) return _docs;
-  try {
-    const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('.md'));
-    _docs = files.map(file => {
-      const content = fs.readFileSync(path.join(DATA_DIR, file), 'utf-8');
-      // Extract keywords from headings and first 500 chars
-      const headings = (content.match(/^#{1,3}\s+(.+)/gm) ?? []).map(h => h.replace(/^#+\s+/, '').toLowerCase());
-      const preview = content.slice(0, 500).toLowerCase();
-      return { name: file.replace('.md', ''), content, keywords: [...headings, ...preview.split(/\W+/).filter(w => w.length > 4)] };
-    });
-    return _docs;
-  } catch {
-    return [];
-  }
-}
-
-function retrieveRelevantDocs(question: string, topK = 3): KnowledgeDoc[] {
-  const docs = loadDocs();
-  if (docs.length === 0) return [];
-
-  const qTokens = question.toLowerCase().split(/\W+/).filter(w => w.length > 3);
-
-  const scored = docs.map(doc => {
-    const score = qTokens.reduce((acc, token) => {
-      const inKeywords = doc.keywords.filter(k => k.includes(token)).length;
-      const inContent = (doc.content.toLowerCase().match(new RegExp(token, 'g')) ?? []).length;
-      return acc + inKeywords * 3 + Math.min(inContent, 10);
-    }, 0);
-    return { doc, score };
-  });
-
-  return scored
-    .sort((a, b) => b.score - a.score)
-    .slice(0, topK)
-    .filter(s => s.score > 0)
-    .map(s => s.doc);
-}
-
-// ── System prompt ─────────────────────────────────────────────────────────────
+export const config = { runtime: 'edge' };
 
 const BASE_PROMPT = `You are a specialized AI risk advisor embedded in Marsh's B2B insurance dashboard. You have direct context from the user's live dashboard data plus Marsh's knowledge base on insurance, risk management, and market conditions.
 
@@ -65,7 +10,7 @@ const BASE_PROMPT = `You are a specialized AI risk advisor embedded in Marsh's B
 - POL-2024-003: Healthcare Partners Group — Professional Liability — $1.2M — Pending
 - POL-2024-004: Metro Construction Ltd. — General Liability — $560K — Active
 - POL-2024-005: Oceanic Shipping Co. — Marine Cargo — $340K — Active
-- POL-2024-006: Retail Ventures LLC — Business Interruption — $780K — **EXPIRED** ⚠️
+- POL-2024-006: Retail Ventures LLC — Business Interruption — $780K — EXPIRED ⚠️
 
 **Property Risk Score: 72/100 (Moderate-High)**
 - Primary exposure: Climate/flood risk, Southeast US (+18% YoY)
@@ -86,114 +31,117 @@ const BASE_PROMPT = `You are a specialized AI risk advisor embedded in Marsh's B
 - General liability: flat to +3%
 - Marine cargo: +5–8% (Red Sea disruption)
 
+## Marsh Knowledge Base
+
+**Cyber Risk:**
+Marsh provides specialized cyber insurance covering data breaches, ransomware, business interruption, and regulatory fines. Key risks: ransomware, BEC, supply chain attacks, DDoS, insider threats. Marsh offers Cyber Risk Quantification (CRQ) assessments and placement across 40+ cyber markets.
+
+**Property Risk:**
+Commercial property rates rising 8–12% driven by catastrophic losses, climate change, and reinsurance costs. Parametric solutions available for nat-cat exposures. Key factors: location, construction, occupancy, fire protection, business interruption values.
+
+**Emerging Risks:**
+Climate change increasing physical risks — more frequent hurricanes, wildfires, floods. Property damage escalating 5–8% annually in high-risk regions. Supply chain risks from geopolitical instability. ESG compliance requirements growing.
+
+**Market Conditions:**
+Hard market continuing in property and specialty lines. Carriers tightening underwriting, requiring more data. Marsh's scale and analytics platform (Marsh Mercer Marketplace) provides competitive advantage in placement.
+
+**Claims:**
+Marsh's Claims Advocacy team supports from first notice through resolution. Average claims resolution: 28 days. Early reporting and documentation critical for complex property claims.
+
+**Employee Benefits:**
+Group health, dental, vision, life, disability. Trends: mental health benefits, fertility coverage, student loan assistance. Cost containment via wellness programs and reference-based pricing.
+
 ## Instructions
-- Reference actual policy numbers and dashboard data in your answers
-- Flag the expired POL-2024-006 when discussing portfolio health
-- Be concise — bullet points preferred over paragraphs
-- Recommend specific Marsh services when actionable`;
+- Reference actual policy numbers and dashboard metrics in your answers
+- Flag the expired POL-2024-006 proactively when relevant
+- Be concise — use bullet points, keep responses under 300 words
+- Recommend specific Marsh services when actionable
+- Tone: professional, direct, like a senior risk advisor`;
 
-// ── Handler ───────────────────────────────────────────────────────────────────
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: Request) {
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'OpenAI API key not configured' });
+    return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), { status: 500 });
   }
 
-  const { question, conversationHistory = [] } = req.body as {
-    question: string;
-    conversationHistory: { role: string; content: string }[];
-  };
+  let body: { question: string; conversationHistory?: { role: string; content: string }[] };
+  try {
+    body = await req.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
+  }
 
+  const { question, conversationHistory = [] } = body;
   if (!question?.trim()) {
-    return res.status(400).json({ error: 'Question is required' });
+    return new Response(JSON.stringify({ error: 'Question is required' }), { status: 400 });
   }
-
-  // Retrieve relevant knowledge docs for this question
-  const relevantDocs = retrieveRelevantDocs(question);
-  const knowledgeSection = relevantDocs.length > 0
-    ? `\n\n## Relevant Knowledge Base\n\n${relevantDocs.map(d => `### ${d.name}\n${d.content.slice(0, 1200)}`).join('\n\n---\n\n')}`
-    : '';
-
-  const systemPrompt = BASE_PROMPT + knowledgeSection;
 
   const messages = [
-    { role: 'system', content: systemPrompt },
-    ...conversationHistory.slice(-12).map(m => ({
-      role: m.role as 'user' | 'assistant',
-      content: m.content,
-    })),
+    { role: 'system', content: BASE_PROMPT },
+    ...conversationHistory.slice(-12).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
     { role: 'user', content: question },
   ];
 
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: 'gpt-4o-mini', messages, stream: true, max_tokens: 600, temperature: 0.4 }),
+  });
 
-  try {
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages,
-        stream: true,
-        max_tokens: 700,
-        temperature: 0.4,
-      }),
-    });
-
-    if (!openaiRes.ok) {
-      const err = await openaiRes.text();
-      res.write(`data: ${JSON.stringify({ error: err })}\n\n`);
-      return res.end();
-    }
-
-    const reader = openaiRes.body?.getReader();
-    const decoder = new TextDecoder();
-
-    if (!reader) {
-      res.write(`data: ${JSON.stringify({ error: 'No response stream' })}\n\n`);
-      return res.end();
-    }
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const lines = decoder.decode(value).split('\n').filter(l => l.startsWith('data: '));
-      for (const line of lines) {
-        const data = line.slice(6).trim();
-        if (data === '[DONE]') {
-          res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-          continue;
-        }
-        try {
-          const parsed = JSON.parse(data);
-          const token = parsed.choices?.[0]?.delta?.content;
-          if (token) res.write(`data: ${JSON.stringify({ token })}\n\n`);
-        } catch { /* skip */ }
-      }
-    }
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    res.write(`data: ${JSON.stringify({ error: message })}\n\n`);
+  if (!openaiRes.ok) {
+    const err = await openaiRes.text();
+    return new Response(JSON.stringify({ error: err }), { status: 502 });
   }
 
-  res.end();
+  // Pass the OpenAI SSE stream straight through to the client
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const reader = openaiRes.body!.getReader();
+      const decoder = new TextDecoder();
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const lines = decoder.decode(value).split('\n').filter(l => l.startsWith('data: '));
+          for (const line of lines) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') {
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
+              continue;
+            }
+            try {
+              const parsed = JSON.parse(data);
+              const token = parsed.choices?.[0]?.delta?.content;
+              if (token) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ token })}\n\n`));
+            } catch { /* skip */ }
+          }
+        }
+      } finally {
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
 }
