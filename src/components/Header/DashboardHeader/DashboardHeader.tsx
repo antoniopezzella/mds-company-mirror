@@ -17,10 +17,12 @@ import BaseHeader from '../BaseHeader';
 export interface DashboardHeaderProps {
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  onNotificationsClick?: () => void;
+  notificationCount?: number;
   variant?: 'primary' | 'secondary';
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggleSidebar, variant = 'primary' }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggleSidebar, onNotificationsClick, notificationCount = 4, variant = 'primary' }) => {
   const { mode, toggleMode } = useThemeMode();
   const theme = useTheme();
   const systemMode = theme.palette.mode;
@@ -133,8 +135,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                   {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                 </IconButton>
               </Tooltip>
-              <IconButton color="inherit" aria-label="Notifications - 8 unread" sx={{ '&:hover': { backgroundColor: getHoverColor() } }}>
-                <Badge badgeContent={8} color="error">
+              <IconButton
+                color="inherit"
+                aria-label={`Notifications - ${notificationCount} unread`}
+                onClick={onNotificationsClick}
+                sx={{ '&:hover': { backgroundColor: getHoverColor() } }}
+              >
+                <Badge badgeContent={notificationCount} color="error">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
