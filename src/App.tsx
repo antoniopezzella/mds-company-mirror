@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import NotificationsDrawer from './components/NotificationsDrawer/NotificationsDrawer';
 import { Box, Button, Container, Drawer, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DashboardHeader } from './components/Header/Header';
@@ -18,6 +19,7 @@ import type { RoleName } from './theme/roles';
 
 function App() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const theme = useTheme();
   const mode = theme.palette.mode;
   const navigate = useNavigate();
@@ -92,7 +94,13 @@ function App() {
       minHeight: '100vh',
       bgcolor: (theme) => getRoleColor('surface.default', { mode: theme.palette.mode })
     }}>
-      <DashboardHeader sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((open) => !open)} />
+      <DashboardHeader
+        sidebarOpen={sidebarOpen}
+        onToggleSidebar={() => setSidebarOpen((open) => !open)}
+        onNotificationsClick={() => setNotificationsOpen(true)}
+        notificationCount={4}
+      />
+      <NotificationsDrawer open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
       
       {/* Fixed Sidebar */}
       {isMdUp ? (
