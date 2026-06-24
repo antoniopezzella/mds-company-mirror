@@ -607,19 +607,21 @@ function App() {
           <Modal
             open={modalOpen}
             onClose={() => setModalOpen(false)}
-            title="Example Modal"
+            title="New Action"
             size="Small"
             hasHeader
             hasFooter
             hasScrollbar
             footer={
               <>
-                <Button variant="outlined" onClick={() => setModalOpen(false)}>Cancel</Button>
-                <Button variant="outlined" onClick={() => setModalOpen(false)}>Confirm</Button>
+                <Button variant="outlined" onClick={() => setModalOpen(false)} sx={{ fontFamily: 'Noto Sans, sans-serif' }}>Cancel</Button>
+                <Button variant="contained" onClick={() => setModalOpen(false)} sx={{ fontFamily: 'Noto Sans, sans-serif', bgcolor: getRoleColor('interactive.primary', { mode }), color: '#fff', '&:hover': { bgcolor: getRoleColor('interactive.primary.hover', { mode }) } }}>Confirm</Button>
               </>
             }
           >
-            <p>This is an example modal from your design system.</p>
+            <Typography sx={{ fontFamily: 'Noto Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: getRoleColor('text.primary', { mode }) }}>
+              This action will be logged and assigned to your account. You can review all actions in the Activity Log under Settings.
+            </Typography>
           </Modal>
         </Container>
 
