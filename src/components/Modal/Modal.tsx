@@ -66,7 +66,7 @@ const Modal: React.FC<ModalProps> = ({
             color: getRoleColor('text.primary'),
           }}
         >
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ fontFamily: 'Noto Sans, sans-serif', fontWeight: 600 }}>
             {title}
           </Typography>
           <IconButton
