@@ -1,4 +1,8 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
@@ -22,6 +26,16 @@ const config: StorybookConfig = {
   docs: {},
   staticDirs: ['../public'],
   viteFinal: async (config) => {
+    // Mirror the '@' -> src alias from vite.config.ts (Storybook builds its own
+    // Vite config and does not inherit the project's vite.config.ts aliases)
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        '@': path.resolve(__dirname, '../src'),
+      },
+    };
+
     // Story UI: Exclude from dependency optimization to handle CSS imports correctly
     config.optimizeDeps = {
       ...config.optimizeDeps,
