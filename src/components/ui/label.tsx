@@ -1,0 +1,25 @@
+import * as React from 'react';
+import * as LabelPrimitive from '@radix-ui/react-label';
+import { cva } from 'class-variance-authority';
+
+import { cn } from '@/lib/utils';
+import { getRoleColor } from '@/theme/roles';
+
+const labelVariants = cva(
+  'font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+);
+
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, style, ...props }, ref) => (
+  <LabelPrimitive.Root
+    ref={ref}
+    className={cn(labelVariants(), className)}
+    style={{ color: getRoleColor('text.secondary'), ...style }}
+    {...props}
+  />
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+export { Label };

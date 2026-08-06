@@ -1,3 +1,5 @@
+import tailwindcssAnimate from 'tailwindcss-animate';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
@@ -45,7 +47,7 @@ export default {
         },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
+        ring: 'var(--ring)', // plain hex custom property now (MDS: focus.ring) — not HSL, no opacity-modifier call sites exist for this utility
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -54,7 +56,31 @@ export default {
           '5': 'hsl(var(--chart-5))',
         },
       },
+      keyframes: {
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
+        },
+        'linear-indeterminate': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(350%)' },
+        },
+        'caret-blink': {
+          '0%,70%,100%': { opacity: '1' },
+          '20%,50%': { opacity: '0' },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 150ms ease-out',
+        'accordion-up': 'accordion-up 150ms ease-out',
+        'linear-indeterminate': 'linear-indeterminate 1.2s ease-in-out infinite',
+        'caret-blink': 'caret-blink 1.25s ease-out infinite',
+      },
     },
   },
-  plugins: [],
+  plugins: [tailwindcssAnimate],
 };

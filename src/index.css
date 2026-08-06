@@ -43,17 +43,26 @@
     --input: 0 0% 85%;                          /* #dadada - MDS: border.default */
     
     /* Focus Ring */
-    --ring: 210 100% 50%;                       /* Blue 750 - MDS: focus.ring */
+    --ring: #3d7aff;                            /* MDS: focus.ring (light) — plain hex, not HSL: the
+                                                    prior HSL triplet (210 100% 50%) had silently
+                                                    drifted to #0080ff via an imprecise hand
+                                                    conversion; kept in sync with focus.ring by
+                                                    src/__tests__/ring-css-var.sync.test.ts */
     
     /* Border Radius */
     --radius: 0.125rem;                         /* 2px - Marsh DS standard */
     
-    /* Chart Colors */
-    --chart-1: 215 100% 24%;                    /* #002c77 Midnight Blue */
-    --chart-2: 45 100% 50%;                     /* #ffb700 Gold */
-    --chart-3: 197 100% 90%;                    /* #ceecff Sky Blue */
-    --chart-4: 0 0% 35%;                        /* #595959 Neutral */
-    --chart-5: 147 61% 39%;                     /* Green (success) */
+    /* Chart Colors — validated categorical palette (dataviz skill:
+       node scripts/validate_palette.js). Order (green, blue, gold, purple,
+       red) is load-bearing: it's the only arrangement of these five brand
+       hues with no adjacent-pair CVD collision at light-mode lightness —
+       reordering will reintroduce a red/green or red/gold confusion pair.
+       Always pair with a legend + direct labels (WARN-band contrast). */
+    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
+    --chart-2: 223 100% 56%;                    /* #1f60ff Blue 700 */
+    --chart-3: 36 83% 48%;                      /* #e09015 Gold 900 */
+    --chart-4: 277 57% 50%;                     /* #8f37c6 Purple 750 */
+    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
   }
   
   /* Dark Mode */
@@ -85,7 +94,16 @@
     --border: 0 0% 25%;                         /* #404040 */
     --input: 0 0% 25%;                          /* #404040 */
     
-    --ring: 210 100% 65%;                       /* Blue (lighter) */
+    --ring: #5e9aff;                             /* MDS: focus.ring (dark) */
+
+    /* Chart Colors — same validated series-to-hue mapping as light mode,
+       independently re-validated against the dark surface (#101010), not
+       an automatic flip: dark mode needs a lighter L band overall. */
+    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
+    --chart-2: 218 100% 64%;                    /* #478aff Blue 600 */
+    --chart-3: 30 71% 47%;                      /* #cb7623 Gold 1000 */
+    --chart-4: 280 59% 43%;                     /* #842daf Purple 800 */
+    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
   }
 }
 
