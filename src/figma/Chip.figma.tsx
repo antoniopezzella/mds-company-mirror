@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Chip } from '../components/Chip/Chip';
+import { Chip } from '../components/ui/chip';
 
 /** Code Connect — Chip (V3 Forms) */
 const NODE_URL = '${LIB}?node-id=7582-8362';
@@ -23,7 +23,8 @@ figma.connect(Chip, NODE_URL, {
   example: (props: any) => (
     <Chip
       label={props.label}
-      variant={props.selected ? 'filled' : 'outlined'}
+      variant="filled"
+      selected={props.selected}
       onDelete={props.isRemovable ? () => {} : undefined}
     />
   ),

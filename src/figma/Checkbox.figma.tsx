@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSCheckbox from '../components/Checkbox/Checkbox';
+import { DSCheckbox } from '../components/ui/checkbox';
 
 /** Code Connect — Checkbox (V3 Forms) */
 const NODE_URL = '${LIB}?node-id=7582-7769';
@@ -18,7 +18,7 @@ figma.connect(DSCheckbox, NODE_URL, {
   example: (props: any) => (
     <DSCheckbox
       checked={props.checked}
-      error={props.invalid}
+      invalid={props.invalid}
       label="Checkbox label"
     />
   ),

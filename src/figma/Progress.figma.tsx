@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSLinearProgress from '../components/Progress/Progress';
+import { LinearProgress as DSLinearProgress } from '../components/ui/progress';
 
 /** Code Connect — Progression Circle (V3 Feedback) */
 const NODE_URL = '${LIB}?node-id=7584-33126';

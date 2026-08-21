@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSSkeleton from '../components/Skeleton/Skeleton';
+import DSSkeleton from '../components/ui/skeleton';
 
 /** Code Connect — Skeleton Loader (V3 Feedback) */
 const NODE_URL = '${LIB}?node-id=7584-34764';

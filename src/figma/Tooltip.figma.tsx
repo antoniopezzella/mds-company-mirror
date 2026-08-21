@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Tooltip } from '../components/Tooltip/Tooltip';
+import { Tooltip } from '../components/ui/tooltip';
 
 /** Code Connect — Tooltip (V3 Feedback) */
 const NODE_URL = '${LIB}?node-id=7584-33036';

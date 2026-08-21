@@ -3,9 +3,9 @@ import { addons } from 'storybook/manager-api';
 const HIDDEN_PREFIXES = [
   'guide-configure',   // Guide/Configure your project
   'debug-',            // Debug/Blocks, Debug/Blocks Canary, Debug/Sandbox Button
-  'shadcn-ui',         // shadcn-ui/* (MUI reference components)
   '_health',           // _health/Environment, _health/Grid
   'health--smoke',     // Health/Smoke
+  'mui-reference',     // MUI Reference/* — raw MUI examples, hidden for now
 ];
 
 addons.setConfig({

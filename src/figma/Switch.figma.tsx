@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSSwitch from '../components/Switch/Switch';
+import { DSSwitch } from '../components/ui/switch';
 
 /** Code Connect — Switch (V3 Forms) */
 const NODE_URL = '${LIB}?node-id=7582-22050';
@@ -12,6 +12,6 @@ figma.connect(DSSwitch, NODE_URL, {
     }),
   },
   example: (props: any) => (
-    <DSSwitch checked={props.active} />
+    <DSSwitch checked={props.active} onCheckedChange={() => {}} />
   ),
 });
