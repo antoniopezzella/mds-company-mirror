@@ -22,6 +22,13 @@
  * 6. Deprecation: Mark a role with a `@deprecated` tag in its description comment (future enhancement
  *    may surface that via governance tooling).
  *
+ * CSS-VAR ACCESS
+ * Contexts that can't call `getRoleColor()` directly (.module.scss files,
+ * :hover/:active/::before selectors) can use `var(--role-<dotted.name>)`
+ * instead — see `RoleVarsProvider.tsx`, mounted once in `main.tsx`. Same
+ * roles-only rule applies either way; there is no CSS-var access to
+ * primitives or semantics.
+ *
  * TESTING & GOVERNANCE
  * - `roles.mapping.test.ts`: basic resolution contract.
  * - `roles.snapshot.test.ts`: snapshot of light/dark resolved values (intentional updates require review).
@@ -147,10 +154,21 @@ export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }
  * @returns Hex color string (e.g. #ffffff)
  * @throws if role is unknown (guards against stale component references)
  */
+function currentDomMode(): 'light' | 'dark' {
+  if (typeof document === 'undefined') return 'light';
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
 export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): string {
   const entry = ROLE_MAP[role];
   if (!entry) throw new Error(`Unknown role: ${role}`);
-  const mode = options.mode || 'light';
+  // Explicit `mode` (the MUI side always passes one, threaded from
+  // ThemeModeContext) wins. Callers that omit it — most of the shadcn/ui
+  // component set — fall back to the `dark` class on <html>, which
+  // ThemeModeProvider keeps in sync with the same shared mode state. This
+  // is what makes dark mode work across the library without having to
+  // thread `mode` through every one of those call sites individually.
+  const mode = options.mode || currentDomMode();
   const base = semanticColors[entry.semantic];
   if (mode === 'dark' && entry.semantic in semanticDarkOverrides) {
     return semanticDarkOverrides[entry.semantic as SemanticColorName] || base;

@@ -45,6 +45,24 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     
     <title>Marsh Design System</title>
+
+    <!--
+      Sets the `dark` class before React mounts (and before first paint).
+      Without this, ThemeModeProvider's own effect only runs after React's
+      first commit — so on a page load where the stored preference is
+      'dark', every getRoleColor() call that falls back to reading this
+      class (see src/theme/roles.ts) would render light-mode colors for
+      that first render, self-correcting only if something happens to
+      trigger a second one. Same script for the same reason as every
+      standard Tailwind dark-mode starter.
+    -->
+    <script>
+      (function () {
+        var stored = localStorage.getItem('mds-theme-mode');
+        var dark = stored === 'dark' || (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -12,6 +12,7 @@ import { theme, darkTheme } from '../src/theme';
 import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import RoleVarsProvider from '../src/theme/RoleVarsProvider';
+import { ThemeModeContext, type ThemeMode } from '../src/theme/ThemeModeContext';
 // Load font faces and typography CSS variables for Storybook preview
 import '../src/index.css';
 import '../src/global.scss';
@@ -37,10 +38,24 @@ export const globalTypes = {
 // Adaptive height: fullscreen layouts get 100vh, centered layouts fit content
 export const decorators = [
   (Story: StoryFn, context: StoryContext) => {
-    const mode = context.globals?.colorMode ?? 'light';
+    const mode: ThemeMode = context.globals?.colorMode === 'dark' ? 'dark' : 'light';
     const activeTheme = mode === 'dark' ? darkTheme : theme;
     const layout = context.parameters?.layout || 'padded';
-    
+
+    // The toolbar toggle used to only drive MUI's ThemeProvider. Every
+    // shadcn/ui component in the library is invisible to that: Tailwind's
+    // `dark:` variants and getRoleColor()'s DOM-mode fallback (see
+    // roles.ts) both key off a `dark` class on <html>, RoleVarsProvider was
+    // being mounted with no `mode` prop at all (silently frozen at its own
+    // 'light' default), and nothing provided ThemeModeContext — so
+    // useThemeMode() (SideNavigation, and any future component) always saw
+    // the light default regardless of this toggle. Fixed by driving all
+    // three from the same `mode` value, the same way the real app's
+    // ThemeModeProvider does.
+    React.useEffect(() => {
+      document.documentElement.classList.toggle('dark', mode === 'dark');
+    }, [mode]);
+
     // Adaptive styling based on layout type:
     // - fullscreen: Full viewport height with padding for dashboards/grids
     // - centered: Minimal padding, no minHeight (fits component)
@@ -50,15 +65,17 @@ export const decorators = [
       minHeight: layout === 'fullscreen' ? '100vh' : undefined,
       padding: layout === 'centered' ? 0 : 24,
     };
-    
+
     return (
       <ThemeProvider theme={activeTheme}>
         <CssBaseline />
-        <div style={containerStyle}>
-          <RoleVarsProvider>
-            <Story />
-          </RoleVarsProvider>
-        </div>
+        <ThemeModeContext.Provider value={{ mode, toggleMode: () => {} }}>
+          <div style={containerStyle}>
+            <RoleVarsProvider mode={mode}>
+              <Story />
+            </RoleVarsProvider>
+          </div>
+        </ThemeModeContext.Provider>
       </ThemeProvider>
     );
   }
@@ -110,6 +127,7 @@ export const parameters: Preview['parameters'] = {
         'MUI Reference',
         // Ensure other top-level groups appear after Foundations in this order
         'Components',
+        'Website',
         'Docs',
         'Debug',
         'Archive',

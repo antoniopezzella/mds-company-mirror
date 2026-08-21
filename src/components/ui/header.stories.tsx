@@ -102,7 +102,7 @@ export const WithDashboardContent: Story = {
   render: (args) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-muted">
         <Header {...args} sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((v) => !v)} />
         <div className="p-8">
           <h1 className="text-2xl font-bold">Dashboard content</h1>

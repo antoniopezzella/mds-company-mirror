@@ -124,7 +124,7 @@ export const DarkVariant: Story = {
         <div className="w-64">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Main Content Area</h1>
           <p className="text-muted-foreground">
             The dark variant features a navy blue background (#000f47) matching the Marsh brand.
@@ -149,7 +149,7 @@ export const LightVariant: Story = {
         <div className="w-64 border-r border-border">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Main Content Area</h1>
           <p className="text-muted-foreground">
             The light variant features a white background with subtle hover states.
@@ -174,7 +174,7 @@ export const WithActiveGroup: Story = {
         <div className="w-64">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Policies / Renewals</h1>
           <p className="text-muted-foreground">
             Notice the "Policies & Coverage" group is expanded and "Renewals" is highlighted.
@@ -280,7 +280,7 @@ export const ComplexHierarchy: Story = {
         <div className="w-72 border-r border-border">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Beacon Capital Partners / Overview</h1>
           <p className="text-muted-foreground">
             Complex hierarchy with client-specific navigation.
@@ -392,7 +392,7 @@ The primary color scheme uses Marsh's signature midnight blue as the background 
         <div className="w-64">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Primary Color Scheme</h1>
           <p className="text-muted-foreground mb-4">
             Midnight blue background (#000f47) with sky blue accents (#ceecff).
@@ -438,7 +438,7 @@ The secondary color scheme inverts the palette, using sky blue as the background
         <div className="w-64">
           <Story />
         </div>
-        <div className="flex-1 p-8 bg-gray-50">
+        <div className="flex-1 p-8 bg-muted">
           <h1 className="text-2xl font-bold mb-4">Secondary Color Scheme</h1>
           <p className="text-muted-foreground mb-4">
             Sky blue background (#ceecff) with midnight blue accents (#000f47).

@@ -2,6 +2,8 @@ import * as React from 'react';
 import { ChevronDown, ChevronRight, LayoutDashboard, FileText, Shield, ClipboardList, BarChart3, Folder, Settings, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { getRoleColor } from '@/theme/roles';
+import { useThemeMode } from '@/theme/ThemeModeContext';
 
 export interface SideNavItem {
   label: string;
@@ -69,71 +71,92 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       }
     };
 
-    // Color scheme definitions (MDS tokens)
-    const colors = {
-      primary: {
-        main: '#000f47',      // Midnight Blue
-        hover: '#021b6c',     // Darker navy
-        active: 'rgba(206,236,255,0.16)', // Sky blue tint
-        activeHover: 'rgba(206,236,255,0.24)',
-        border: '#ceecff',    // Sky Blue
-      },
-      secondary: {
-        main: '#ceecff',      // Sky Blue
-        hover: '#b8e0ff',     // Lighter sky
-        active: 'rgba(0,15,71,0.08)', // Navy tint
-        activeHover: 'rgba(0,15,71,0.12)',
-        border: '#000f47',    // Midnight Blue
-      },
-    };
+    const { mode } = useThemeMode();
 
-    const currentColors = colors[colorScheme];
+    // Resolves entirely through getRoleColor() — no hardcoded hex, no
+    // Tailwind arbitrary-value classes. The previous version built classes
+    // like `border-[${currentColors.border}]` via string interpolation,
+    // which Tailwind's JIT scanner can never generate CSS for (it needs the
+    // literal class text present in source, not a runtime value) — those
+    // active-state borders and hover backgrounds were never actually
+    // rendering, in any mode.
+    //
+    // Three-way resolution mirrors the MUI twin (src/components/
+    // SideNavigation/SideNavigation.tsx) exactly: when the app itself is in
+    // dark mode, `variant` stops mattering — a literal navy or white rail
+    // would clash with an otherwise dark UI, so both converge to the same
+    // neutral dark surface. `variant` only actually diverges in light mode.
+    const colors = React.useMemo(() => {
+      if (mode === 'dark') {
+        return {
+          navBg: getRoleColor('surface.subtle', { mode: 'dark' }),
+          navText: getRoleColor('text.primary', { mode: 'dark' }),
+          itemHoverBg: getRoleColor('surface.default', { mode: 'dark' }),
+          activeBg: 'rgba(149, 202, 255, 0.16)',
+          activeHoverBg: 'rgba(149, 202, 255, 0.24)',
+          activeBorder: getRoleColor('interactive.secondary', { mode: 'dark' }),
+          border: getRoleColor('border.default', { mode: 'dark' }),
+          ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
+          ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+        };
+      }
 
-    // Variant styles
-    const navBgClass = variant === 'light' 
-      ? 'bg-background' 
-      : colorScheme === 'primary'
-        ? 'bg-[#000f47]' // Midnight blue
-        : 'bg-[#ceecff]'; // Sky blue
-    
-    const navTextClass = variant === 'light'
-      ? 'text-foreground'
-      : colorScheme === 'primary'
-        ? 'text-white'
-        : 'text-[#000f47]'; // Dark text on sky blue
-    
-    const itemHoverBgClass = variant === 'light'
-      ? 'hover:bg-accent'
-      : `hover:bg-[${currentColors.hover}]`;
-    
-    const activeBgClass = variant === 'light'
-      ? 'bg-[rgba(11,75,255,0.08)]' // Light blue tint
-      : `bg-[${currentColors.active}]`;
-    
-    const activeHoverBgClass = variant === 'light'
-      ? 'hover:bg-[rgba(11,75,255,0.12)]'
-      : `hover:bg-[${currentColors.activeHover}]`;
-    
-    const ctaBgClass = variant === 'light'
-      ? 'bg-accent'
-      : colorScheme === 'primary'
-        ? 'bg-[#000f47]'
-        : 'bg-[#ceecff]';
+      if (variant === 'light') {
+        return {
+          navBg: getRoleColor('surface.default'),
+          navText: getRoleColor('text.primary'),
+          itemHoverBg: getRoleColor('surface.subtle'),
+          activeBg: 'rgba(11, 75, 255, 0.08)',
+          activeHoverBg: 'rgba(11, 75, 255, 0.12)',
+          activeBorder: getRoleColor('interactive.secondary'),
+          border: getRoleColor('border.default'),
+          ctaBg: getRoleColor('surface.subtle'),
+          ctaText: getRoleColor('text.primary'),
+        };
+      }
+
+      // `variant="dark"` in light mode: the brand-colored rail.
+      // `colorScheme` picks the hue — navy (primary) or sky blue (secondary).
+      const isSecondary = colorScheme === 'secondary';
+      return {
+        navBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
+        navText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
+        itemHoverBg: getRoleColor(isSecondary ? 'surface.secondary.hover' : 'surface.navigation.hover'),
+        activeBg: getRoleColor('surface.navigation.active'),
+        activeHoverBg: getRoleColor('surface.navigation.active'),
+        activeBorder: getRoleColor('interactive.secondary'),
+        border: getRoleColor('border.default'),
+        ctaBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
+        ctaText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
+      };
+    }, [mode, variant, colorScheme]);
+
+    // True whenever the rail is a non-white surface — the true light-mode
+    // "white" variant is the only case that shouldn't get the sub-item
+    // group's subtle darkening tint below.
+    const isDarkSurface = mode === 'dark' || variant === 'dark';
 
     return (
       <nav
         ref={ref}
         aria-label={ariaLabel}
-        className={cn(
-          'flex flex-col h-full',
-          navBgClass,
-          navTextClass,
-          className
-        )}
+        className={cn('flex flex-col h-full', className)}
+        style={{
+          backgroundColor: colors.navBg,
+          color: colors.navText,
+          // Referenced by static (JIT-safe) `var(--sn-*)` Tailwind classes
+          // below — lets `:hover` stay a real CSS pseudo-class instead of
+          // needing manual mouseenter/leave state on every single item.
+          '--sn-hover-bg': colors.itemHoverBg,
+          '--sn-active-bg': colors.activeBg,
+          '--sn-active-hover-bg': colors.activeHoverBg,
+          '--sn-active-border': colors.activeBorder,
+          '--sn-border': colors.border,
+        } as React.CSSProperties}
       >
         {/* Divider */}
-        <div className="border-t border-border opacity-30" />
-        
+        <div className="border-t opacity-30" style={{ borderColor: colors.border }} />
+
         {/* Navigation items */}
         <ul role="list" className="flex-1 p-2 space-y-1">
           {items.map((item) => {
@@ -189,12 +212,12 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                     // Active state
                     isItemActive && [
-                      activeBgClass,
-                      `border-l-4 border-[${currentColors.border}]`, // Dynamic border color
-                      activeHoverBgClass,
+                      'bg-[var(--sn-active-bg)]',
+                      'border-l-4 border-[var(--sn-active-border)]',
+                      'hover:bg-[var(--sn-active-hover-bg)]',
                     ],
                     // Non-active hover
-                    !isItemActive && itemHoverBgClass,
+                    !isItemActive && 'hover:bg-[var(--sn-hover-bg)]',
                     // Section headers in light mode
                     isSectionHeader && variant === 'light' && 'font-semibold'
                   )}
@@ -224,12 +247,9 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     className={cn(
                       'pl-6 ml-6 space-y-1 mt-1',
                       // Visual connecting line (shadcn style)
-                      'border-l-2',
-                      variant === 'light' 
-                        ? 'border-border/40'
-                        : `border-[${currentColors.border}]/30`,
+                      'border-l-2 border-[var(--sn-border)]',
                       // Subtle background for sub-items area
-                      variant === 'dark' && 'bg-black/10'
+                      isDarkSurface && 'bg-black/10'
                     )}
                   >
                     {(item.subItems ?? []).map((sub) => {
@@ -254,13 +274,13 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                               // Active state
                               isSubActive && [
-                                activeBgClass,
-                                `border-l-4 border-[${currentColors.border}]`,
+                                'bg-[var(--sn-active-bg)]',
+                                'border-l-4 border-[var(--sn-active-border)]',
                                 'font-semibold',
-                                activeHoverBgClass,
+                                'hover:bg-[var(--sn-active-hover-bg)]',
                               ],
                               // Non-active hover
-                              !isSubActive && itemHoverBgClass
+                              !isSubActive && 'hover:bg-[var(--sn-hover-bg)]'
                             )}
                           >
                             {sub.label}
@@ -276,10 +296,10 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         </ul>
 
         {/* Support CTA */}
-        <div className={cn(
-          'p-3 m-2 rounded-md',
-          ctaBgClass
-        )}>
+        <div
+          className="p-3 m-2 rounded-md"
+          style={{ backgroundColor: colors.ctaBg, color: colors.ctaText }}
+        >
           <h3 className="text-lg font-semibold mb-2">
             Need help?
           </h3>
