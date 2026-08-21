@@ -20,6 +20,11 @@ All notable changes to this project will be documented in this file. See [standa
 * **components:** add scroll-fade and scrollbar utilities used by chat components ([9d9bb37](https://github.com/antoniopezzella/marsh-design-system/commit/9d9bb373d34894d080bfbf982ac66ca4cd7315c0))
 * **components:** add stories for chat components + fix Bubble color rendering ([da4d946](https://github.com/antoniopezzella/marsh-design-system/commit/da4d9469538958a9819ca82b8b686cc06ee56b69))
 
+
+### Refactoring
+
+* **components:** consolidate MUI components into shadcn/ui equivalents ([a7f78d4](https://github.com/antoniopezzella/marsh-design-system/commit/a7f78d42d4320b8e5881fe347afbdd1500ab425c))
+
 ## 0.0.0 (2025-10-12)
 
 * chore: remove palette experiment stories and revert to pre-experiment state ([244bb82](https://github.com/antoniopezzella/Marsh-Design-System/commit/244bb82))
