@@ -52,9 +52,19 @@ export const decorators = [
     // the light default regardless of this toggle. Fixed by driving all
     // three from the same `mode` value, the same way the real app's
     // ThemeModeProvider does.
-    React.useEffect(() => {
+    //
+    // The class toggle itself runs during render, not in a useEffect —
+    // caught by actually toggling the toolbar and looking, not just
+    // reading this code: a useEffect runs one render after the one that
+    // needs it. Any getRoleColor() call in that first render (e.g.
+    // card.tsx's background) reads the still-stale class and has no
+    // reason to re-render afterward, so it stays permanently wrong —
+    // exactly the same race already fixed in ThemeModeContext.tsx's
+    // toggleMode(), just via a different trigger (Storybook's own toolbar
+    // state instead of a click handler this project owns).
+    if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', mode === 'dark');
-    }, [mode]);
+    }
 
     // Adaptive styling based on layout type:
     // - fullscreen: Full viewport height with padding for dashboards/grids
