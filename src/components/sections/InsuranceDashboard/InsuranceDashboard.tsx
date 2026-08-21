@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Box, Container, Grid, Typography, Stack } from '@mui/material';
 import { getRoleColor } from '../../../theme/roles';
 import Header from '../../Header/Header';
-import Tabs from '../../Tabs/Tabs';
+import Tabs from '../../ui/tabs';
 import { ChartMetricCard } from '../../ChartMetricCard/ChartMetricCard';
-import { Table } from '../../Table/Table';
-import Alert from '../../Alert/Alert';
+import { Table } from '../../ui/table';
+import Alert from '../../ui/alert';
 import Button from '../../Button/Button';
 
 export interface InsuranceDashboardProps {

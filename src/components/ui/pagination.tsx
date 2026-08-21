@@ -87,7 +87,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         </div>
       )}
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         {variant === 'advanced' && onPageSizeChange && (
           <div className="flex items-center gap-1.5 text-sm">
             <label htmlFor="pagination-page-size" style={{ color: mutedColor }}>
