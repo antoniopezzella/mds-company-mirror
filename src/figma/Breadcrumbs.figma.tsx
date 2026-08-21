@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Breadcrumbs } from '../components/Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '../components/ui/breadcrumbs';
 
 /** Code Connect — Breadcrumb (V3 Navigation) */
 const NODE_URL = '${LIB}?node-id=7584-34812';
@@ -15,10 +15,12 @@ figma.connect(Breadcrumbs, NODE_URL, {
     }),
   },
   example: (props: any) => (
-    <Breadcrumbs>
-      <a href="/">Home</a>
-      <a href="/section">Section</a>
-      <span>{props.currentPage}</span>
-    </Breadcrumbs>
+    <Breadcrumbs
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'Section', href: '/section' },
+        { label: props.currentPage, isCurrentPage: true },
+      ]}
+    />
   ),
 });

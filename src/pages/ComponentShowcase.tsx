@@ -1,5 +1,5 @@
 import { Typography, Container, Stack, Card, CardContent } from '@mui/material';
-import DSButton from '../components/Button/Button';
+import { Button as DSButton } from '../components/ui/button';
 
 export default function ComponentShowcase() {
 

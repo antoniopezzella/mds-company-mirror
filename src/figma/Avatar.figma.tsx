@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Avatar } from '../components/Avatar/Avatar';
+import { Avatar } from '../components/ui/avatar';
 
 /** Code Connect — Avatar (V3 Content & Display) */
 const NODE_URL = '${LIB}?node-id=7592-4773';

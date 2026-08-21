@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Alert } from '../components/Alert/Alert';
+import { Alert } from '../components/ui/alert';
 
 /** Code Connect — Alert (V3 Feedback) */
 const NODE_URL = '${LIB}?node-id=7584-25919';
@@ -24,9 +24,10 @@ figma.connect(Alert, NODE_URL, {
     }),
   },
   example: (props: any) => (
+    // Note: shadcn Alert has no banner/toast/inline `variant` concept like the
+    // MUI version did — `props.type` intentionally has no equivalent prop here.
     <Alert
       severity={props.status}
-      variant={props.type}
       title={props.hasTitle ? props.title : undefined}
       onClose={props.hasCloseButton ? () => {} : undefined}
     >

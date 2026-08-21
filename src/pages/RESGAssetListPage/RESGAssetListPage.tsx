@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
-import DSButton from '../../components/Button/Button';
-import { Chip } from '../../components/Chip/Chip';
+import { Button as DSButton } from '../../components/ui/button';
+import { Chip } from '../../components/ui/chip';
 import { MDSDataGrid } from '../../components/DataGrid';
 import type { GridColDef } from '../../components/DataGrid';
 import { DashboardHeader } from '../../components/Header/Header';
 import SideNavigation, { type SideNavItem } from '../../components/SideNavigation/SideNavigation';
 import { AIAgentBot } from '../../components/AIAgentBot';
 import DSTextField from '../../components/TextField/TextField';
-import Tabs, { type TabItem } from '../../components/Tabs/Tabs';
+import Tabs, { type TabItem } from '../../components/ui/tabs';
 import './RESGAssetListPage.scss';
 
 /**

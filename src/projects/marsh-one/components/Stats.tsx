@@ -28,6 +28,8 @@ interface StatsProps {
   insightSubtext?: string;
   insightCards?: InsightCard[];
   backgroundImage?: string;
+  /** Whether the background photo overlay renders behind the solid navy. Default true. Set false for a plain solid #000f47 background (e.g. Figma node 9538:177232's "section-metrics" instance, which has no image). */
+  hasBackgroundImage?: boolean;
 }
 
 /**
@@ -54,7 +56,9 @@ export const Stats: React.FC<StatsProps> = ({
   insightSubtext = 'Expert analysis, applied to the decisions that matter most to your business.',
   insightCards = [],
   backgroundImage = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920',
+  hasBackgroundImage = true,
 }) => {
+  const hasDescription = Boolean(description);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
@@ -84,22 +88,24 @@ export const Stats: React.FC<StatsProps> = ({
         }
       );
 
-      gsap.fromTo(descriptionRef.current, 
-        { 
-          opacity: 0, 
-          y: 40 
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
+      if (descriptionRef.current) {
+        gsap.fromTo(descriptionRef.current,
+          {
+            opacity: 0,
+            y: 40
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 75%",
+            }
           }
-        }
-      );
+        );
+      }
 
       // Animate stats with number counting
       const statElements = statsRef.current?.querySelectorAll('[data-stat-value]');
@@ -206,12 +212,14 @@ export const Stats: React.FC<StatsProps> = ({
       {/* Background */}
       <Box aria-hidden="true" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         <Box sx={{ position: 'absolute', inset: 0, backgroundColor: '#000f47' }} />
-        <Box
-          component="img"
-          src={backgroundImage}
-          alt=""
-          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3 }}
-        />
+        {hasBackgroundImage && (
+          <Box
+            component="img"
+            src={backgroundImage}
+            alt=""
+            sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3 }}
+          />
+        )}
       </Box>
 
       {/* ─── Part 1: Metrics ─── */}
@@ -227,13 +235,20 @@ export const Stats: React.FC<StatsProps> = ({
           gap: '50px',
         }}
       >
-        {/* Two-column header */}
+        {/* Header — two-column (headline + description) when a description is
+            given, or a single centered full-width headline when not (matches
+            Figma node 9538:177232's "section-metrics" instance, which has no
+            description at all). */}
         <Box
-          sx={{
+          sx={hasDescription ? {
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
             gap: '32px',
             alignItems: { md: 'center' },
+            width: '100%',
+          } : {
+            display: 'flex',
+            justifyContent: 'center',
             width: '100%',
           }}
         >
@@ -245,25 +260,29 @@ export const Stats: React.FC<StatsProps> = ({
               fontSize: { xs: '36px', md: '56px' },
               lineHeight: { xs: '44px', md: '80px' },
               color: '#fcfcfc',
-              width: { xs: '100%', md: '722px' },
+              textAlign: hasDescription ? 'left' : 'center',
+              width: hasDescription ? { xs: '100%', md: '722px' } : '100%',
+              maxWidth: hasDescription ? undefined : '1227px',
               flexShrink: 0,
             }}
           >
             {headline}
           </Typography>
-          <Typography
-            ref={descriptionRef}
-            sx={{
-              fontFamily: "'Noto Sans', sans-serif",
-              fontWeight: 400,
-              fontSize: { xs: '18px', md: '22px' },
-              lineHeight: '36px',
-              color: 'white',
-              width: { xs: '100%', md: '584px' },
-            }}
-          >
-            {description}
-          </Typography>
+          {hasDescription && (
+            <Typography
+              ref={descriptionRef}
+              sx={{
+                fontFamily: "'Noto Sans', sans-serif",
+                fontWeight: 400,
+                fontSize: { xs: '18px', md: '22px' },
+                lineHeight: '36px',
+                color: 'white',
+                width: { xs: '100%', md: '584px' },
+              }}
+            >
+              {description}
+            </Typography>
+          )}
         </Box>
 
         {/* Stat Columns with dividers */}

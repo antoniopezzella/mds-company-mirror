@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Container } from '@mui/material';
-import DSButton from '../../components/Button/Button';
+import { Button as DSButton } from '../../components/ui/button';
 
 /**
  * Talk to Experts CTA Section

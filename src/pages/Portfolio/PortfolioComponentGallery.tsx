@@ -7,15 +7,15 @@ import React, { useState } from 'react';
 import styles from './ComponentGallery.module.scss';
 
 // ── Real MDS components ───────────────────────────────────────────────────
-import DSButton from '../../components/Button/Button';
-import { Alert } from '../../components/Alert/Alert';
-import Tabs from '../../components/Tabs/Tabs';
+import { Button as DSButton } from '../../components/ui/button';
+import { Alert } from '../../components/ui/alert';
+import Tabs from '../../components/ui/tabs';
 import { Stepper } from '../../components/Stepper/Stepper';
-import { Accordion } from '../../components/Accordion/Accordion';
+import { Accordion } from '../../components/ui/accordion';
 import { Badge } from '../../components/Badge/Badge';
-import { Chip } from '../../components/Chip/Chip';
-import { Table } from '../../components/Table/Table';
-import type { TableColumn } from '../../components/Table/Table';
+import { Chip } from '../../components/ui/chip';
+import { Table } from '../../components/ui/table';
+import type { TableColumn } from '../../components/ui/table';
 import DSTextField from '../../components/TextField/TextField';
 import DSSelect from '../../components/Select/Select';
 

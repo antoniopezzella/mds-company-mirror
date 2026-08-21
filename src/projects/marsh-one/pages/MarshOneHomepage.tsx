@@ -3,9 +3,9 @@ import { Box, Typography } from '@mui/material';
 import MarshOneHeader from '../components/MarshOneHeader';
 import { WebsiteAlertBanner } from '../../../components/WebsiteAlertBanner';
 import Hero from '../components/Hero';
-import ExpertiseCards from '../components/ExpertiseCards';
+import SolutionsGrid from '../components/SolutionsGrid';
 import Stats from '../components/Stats';
-import { Accordion } from '../../../components/Accordion/Accordion';
+import { Accordion } from '../../../components/ui/accordion';
 import { Footer } from '../../../pages/CorporateLandingPage/Footer';
 import { AIAgentBot } from '../../../components/AIAgentBot';
 
@@ -52,41 +52,41 @@ export const MarshOneHomepage: React.FC = () => {
         />
       </Box>
 
-      {/* Expertise Cards Section (includes AI Chatbot centered) */}
-      <Box component="section" id="expertise" sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-        <ExpertiseCards
-          title="Expertise applied where risk matters most"
-          subtitle="Advisory, risk, insurance, and people solutions."
-          cards={[
+      {/* Solutions Grid Section — Figma node 7071:182332 "section Press" */}
+      <Box component="section" id="solutions-grid" sx={{ display: 'flex', alignItems: 'center' }}>
+        <SolutionsGrid
+          headline="Whatever risk you're managing, we've handled it before."
+          ctaLabel="Find right solution"
+          topics={[
             {
               title: 'Risk & Insurance',
-              description: 'Advisory and placement strategies for complex risk.',
-              image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=800',
-              imageAlt: 'Risk and insurance services',
+              description: 'Property, casualty, cyber and specialty coverage, claims advocacy and risk consulting.',
+              linkLabel: 'Risk & insurance',
             },
             {
-              title: 'People & Workforce',
-              description: 'Health, benefits, wellbeing, and talent risk.',
-              image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800',
-              imageAlt: 'People and workforce solutions',
+              title: 'Workforce & Benefits',
+              description: 'Health and benefits, talent and rewards, and workforce strategy.',
+              linkLabel: 'Workforce & benefits',
             },
             {
-              title: 'Climate & Property',
-              description: 'Physical risk, resilience, and adaptation.',
-              image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800',
-              imageAlt: 'Climate and property risk',
+              title: 'Investments & Retirement',
+              description: 'OCIO, pension investments, portfolio strategy and retirement solutions.',
+              linkLabel: 'Investments & retirement',
             },
             {
-              title: 'Industry Specialties',
-              description: 'Sector-specific insight and solutions.',
-              image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800',
-              imageAlt: 'Industry specialties',
+              title: 'Reinsurance & Capital',
+              description: 'Treaty and facultative reinsurance, catastrophe modelling and capital advisory.',
+              linkLabel: 'Reinsurance & capital',
             },
             {
-              title: 'Industry Specialties',
-              description: 'Sector-specific insight and solutions.',
-              image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800',
-              imageAlt: 'Industry specialties',
+              title: 'Strategy & Transformation',
+              description: 'Corporate strategy, operating model design and organisational performance.',
+              linkLabel: 'Strategy & transformation',
+            },
+            {
+              title: 'SME Products',
+              description: 'Packaged cover for smaller businesses, online quote and bind.',
+              linkLabel: 'SME products',
             },
           ]}
         />
@@ -96,6 +96,7 @@ export const MarshOneHomepage: React.FC = () => {
       <AIAgentBot 
         position={{ bottom: '32px', right: '32px' }}
         apiEndpoint="/api/answer-stream"
+        visitorType="prospect"
         showLabel={true}
         enableBubbles={true}
       />

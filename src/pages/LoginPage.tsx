@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -10,8 +11,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Paper } from '../components/Paper/Paper';
 import DSTextField from '../components/TextField/TextField';
-import DSButton from '../components/Button/Button';
-import DSCheckbox from '../components/Checkbox/Checkbox';
+import { Button as DSButton } from '../components/ui/button';
+import { DSCheckbox } from '../components/ui/checkbox';
 import { useThemeMode } from '../theme/ThemeModeContext';
 import { getRoleColor } from '../theme/roles';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -19,6 +20,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 
 const LoginPage: React.FC = () => {
   const { mode, toggleMode } = useThemeMode();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,7 +58,10 @@ const LoginPage: React.FC = () => {
     if (!validate()) return;
     setLoading(true);
     // Simulate async login
-    setTimeout(() => setLoading(false), 1800);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/insurance-dashboard');
+    }, 1800);
   };
 
   const pageBg = getRoleColor('surface.subtle', { mode });

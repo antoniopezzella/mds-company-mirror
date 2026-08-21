@@ -7,8 +7,8 @@ import SideNavigation from './components/SideNavigation/SideNavigation';
 import type { SideNavItem } from './components/SideNavigation/SideNavigation';
 import Modal from './components/Modal/Modal';
 import QaSystemAlerts from './components/QaSystemAlerts/QaSystemAlerts';
-import Tabs from './components/Tabs/Tabs';
-import type { TabItem } from './components/Tabs/Tabs';
+import Tabs from './components/ui/tabs';
+import type { TabItem } from './components/ui/tabs';
 import { MDSDataGrid } from './components/DataGrid';
 import { ChartMetricCard } from './components/ChartMetricCard';
 import type { GridColDef } from './components/DataGrid';
@@ -625,8 +625,11 @@ function App() {
           </Modal>
         </Container>
 
-      {/* AI Assistant Bot */}
-      <AIAgentBot />
+      {/* AI Assistant Bot — visible immediately here (scrollThreshold=0), unlike
+          the marketing pages: this is the dashboard itself, where the assistant
+          is persistent utility chrome, not something to reveal after a scroll
+          gesture past the hero. */}
+      <AIAgentBot scrollThreshold={0} />
     </Box>
   );
 }

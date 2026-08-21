@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSButton from '../components/Button/Button';
+import { Button as DSButton } from '../components/ui/button';
 
 /** Code Connect — DSButton (V3 Actions) */
 const NODE_URL = '${LIB}?node-id=7579-138';
