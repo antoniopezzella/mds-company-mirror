@@ -12,9 +12,14 @@ node_modules
 # (Storybook static build still ignored separately)
 dist
 dist-ssr
+dist-pkg
 !dist/tokens.json
 !dist/theme.css
 *.local
+
+# Transient, fully-derived DTCG token source Style Dictionary reads from —
+# regenerated fresh every `tokens:build`, nothing else consumes it.
+.tmp-token-build/tokens-dtcg/
 
 # Environment variables (secrets)
 .env

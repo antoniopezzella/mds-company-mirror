@@ -1,0 +1,27 @@
+name: Publish design system package
+
+# Manual trigger only — this is a young, hand-scoped package (see
+# docs/SHADCN_MIGRATION_STATUS.md) and shouldn't auto-publish on every push
+# to main the way the app itself does. Bump "version" in package.json and
+# run this workflow deliberately when a real release is ready.
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@antoniopezzella'
+      - run: npm ci
+      - run: npm run build:package
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

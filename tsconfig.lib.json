@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist-pkg"
+  },
+  "include": ["src/index.ts", "src/components/ui", "src/theme/roles.ts", "src/lib-assets.d.ts"],
+  "exclude": ["src/components/ui/**/*.stories.tsx", "src/components/ui/**/*.test.tsx"]
+}
