@@ -16,30 +16,43 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // PRIMARY - Midnight Blue (#000f47) - Dashboards & standard CTAs
+        // `dark:` values pulled from semanticDarkOverrides.interactivePrimary*
+        // (src/semantic-tokens.ts) — dark mode makes the interactive surface
+        // lighter/brighter, so button text flips to navy for contrast.
         primary:
-          'bg-[#000f47] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
-        
+          'bg-[#000f47] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'dark:bg-[#95caff] dark:text-[#000f47] dark:hover:bg-[#bbe1ff] dark:active:bg-[#d8f0ff] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+
         // PRIMARY ALT - Gold (#ffbf00) - Hero/Marketing CTAs
+        // brandAccent is deliberately unchanged in semanticDarkOverrides
+        // ("unchanged — CTA stays") — no dark: needed for the base color.
         primaryAlt:
-          'bg-[#ffbf00] text-[#000f47] shadow-none hover:bg-[#eaa501] active:bg-[#d58b02] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
-        
+          'bg-[#ffbf00] text-[#000f47] shadow-none hover:bg-[#eaa501] active:bg-[#d58b02] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+
         // SECONDARY - Outline with midnight blue border
         secondary:
-          'bg-transparent text-[#000f47] border-2 border-[#000f47] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580]',
-        
+          'bg-transparent text-[#000f47] border-2 border-[#000f47] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
+          'dark:text-[#95caff] dark:border-[#95caff] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:hover:border-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:active:border-[#d8f0ff] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
+
         // TERTIARY - Transparent/Ghost
         tertiary:
-          'bg-transparent text-[#000f47] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580]',
-        
+          'bg-transparent text-[#000f47] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] ' +
+          'dark:text-[#95caff] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:disabled:text-[#878787]',
+
         // DESTRUCTIVE - Red/Danger (applied when destructive=true)
+        // dark: values from semanticDarkOverrides.interactiveDanger*
         destructivePrimary:
-          'bg-[#c53532] text-white shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580]',
-        
+          'bg-[#c53532] text-white shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'dark:bg-[#ff6b6b] dark:hover:bg-[#ff9d9d] dark:active:bg-[#ffe8e8] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+
         destructiveSecondary:
-          'bg-transparent text-[#9a1c1f] border-2 border-[#c53532] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] hover:border-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] active:border-[#691315] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580]',
-        
+          'bg-transparent text-[#9a1c1f] border-2 border-[#c53532] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] hover:border-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] active:border-[#691315] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
+          'dark:text-[#ff6b6b] dark:border-[#ff6b6b] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#ff9d9d] dark:hover:border-[#ff9d9d] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#ffe8e8] dark:active:border-[#ffe8e8] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
+
         destructiveTertiary:
-          'bg-transparent text-[#9a1c1f] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] disabled:bg-transparent disabled:text-[#878580]',
+          'bg-transparent text-[#9a1c1f] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] disabled:bg-transparent disabled:text-[#878580] ' +
+          'dark:text-[#ff6b6b] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#ff9d9d] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#ffe8e8] dark:disabled:text-[#878787]',
         
         // INVERSE variants (for dark backgrounds)
         inversePrimary:
