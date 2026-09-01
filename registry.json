@@ -1,0 +1,92 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "marsh-design-system",
+  "homepage": "https://github.com/antoniopezzella/marsh-design-system",
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "cn() utility",
+      "description": "Tailwind class merging helper (clsx + tailwind-merge) — every MDS shadcn component depends on this.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        { "path": "src/lib/utils.ts", "type": "registry:lib" }
+      ]
+    },
+    {
+      "name": "mds-tokens",
+      "type": "registry:lib",
+      "title": "MDS design tokens",
+      "description": "The 3-tier token system (primitives -> semantics -> roles) and getRoleColor() — the only color API MDS components use. Required by every component below except button.",
+      "files": [
+        { "path": "src/tokens.ts", "type": "registry:lib" },
+        { "path": "src/semantic-tokens.ts", "type": "registry:lib" },
+        { "path": "src/theme/roles.ts", "type": "registry:lib" }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Primary/secondary/tertiary/accent/outline/ghost variants, sizes, loading state.",
+      "dependencies": ["@radix-ui/react-slot", "class-variance-authority", "lucide-react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        { "path": "src/components/ui/button.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction.",
+      "registryDependencies": ["utils", "mds-tokens"],
+      "files": [
+        { "path": "src/components/ui/card.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Text input with tone-driven validation coloring (default/error/success/warning).",
+      "registryDependencies": ["utils", "mds-tokens"],
+      "files": [
+        { "path": "src/components/ui/input.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Radix Popover primitive, styled with MDS role tokens.",
+      "dependencies": ["@radix-ui/react-popover"],
+      "registryDependencies": ["utils", "mds-tokens"],
+      "files": [
+        { "path": "src/components/ui/popover.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:ui",
+      "title": "Calendar",
+      "description": "react-day-picker v10 wrapper — every day/nav/caption state routed through role tokens, including range-selection styling.",
+      "dependencies": ["react-day-picker", "lucide-react"],
+      "registryDependencies": ["utils", "mds-tokens"],
+      "files": [
+        { "path": "src/components/ui/calendar.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:ui",
+      "title": "Date Picker",
+      "description": "All 7 shadcn/ui date-picker variants: basic, range, date of birth, input field, time picker, natural-language (chrono-node), and RTL.",
+      "dependencies": ["date-fns", "chrono-node", "react-day-picker", "lucide-react"],
+      "registryDependencies": ["utils", "mds-tokens", "button", "calendar", "input", "popover"],
+      "files": [
+        { "path": "src/components/ui/date-picker.tsx", "type": "registry:ui" }
+      ]
+    }
+  ]
+}
