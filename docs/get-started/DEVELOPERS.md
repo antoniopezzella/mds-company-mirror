@@ -189,10 +189,11 @@ shipped as the `mds-tokens` registry item) — so `getRoleColor()` calls
 inside the copied component resolve correctly from day one, rather than
 importing from a path that doesn't exist in your project.
 
-**Pilot scope (as of this writing):** `button`, `card`, `input`,
-`popover`, `calendar`, `date-picker`, plus the two foundation items
-(`utils`, `mds-tokens`) they depend on — **8 items total**, not yet all
-components in `src/components/ui/`. Validate the registry itself with:
+**Coverage:** all 71 components in `src/components/ui/`, plus 5
+foundation items real components depend on (`utils`, `mds-tokens`,
+`theme-mode-context`, `marsh-logo`, `use-toast`) — **76 items total**.
+Each item's `dependencies`/`registryDependencies` were derived from that
+file's actual imports. Validate the registry itself with:
 
 ```bash
 npx shadcn@latest registry validate
