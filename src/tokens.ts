@@ -34,7 +34,7 @@ export const tokens = {
   gold500:  '#ff994a',   // ★ Figma anchor
   gold600:  '#ffa02e',   // interpolated
   gold700:  '#ffab14',   // interpolated
-  gold750:  '#ffb700',   // ★ Figma anchor
+  gold750:  '#ffbf00',   // ★ Figma anchor — verified 2026-08-24 against the live "Primary Alt" Button component (uWlcofRor5Dik8LBnJbIjo node 9749:3234, var V3/Surface/Secondary); corrected from #ffb700
   gold800:  '#f5a907',   // interpolated
   gold900:  '#e09015',   // interpolated
   gold950:  '#d5831c',   // interpolated
@@ -130,6 +130,8 @@ export const tokens = {
   statusSuccess:  '#14853d',   // Figma Utilities/Success
   statusInfo:     '#6fb4ff',   // → blue500
   focusCyan:      '#009de0',   // Figma MODE/Border/Focus (future-state)
+  focusBlue:      '#3d7aff',   // Figma uWlcofRor5Dik8LBnJbIjo node 7582:7847 — Border/Focus (light, "On dark surface")
+  focusBlueDark:  '#5e9aff',   // same node — Border/Focus (dark)
 
   // ── SHADES — White (alpha) ────────────────────────────────────────────────
   shadesWhite90: 'rgba(255,255,255,0.90)',

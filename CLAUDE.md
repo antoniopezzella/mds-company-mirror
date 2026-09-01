@@ -27,7 +27,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 ┌─────────────────────────────────────────────────────────────┐
 │ PRIMITIVES (src/tokens.ts)                                  │
 │ Raw palette values: #000f47, #ceecff, 4px, 8px, etc.       │
-│ 141 tokens across Blue, Gold, Green, Red, Purple, Gray,     │
+│ 167 tokens across Blue, Gold, Green, Red, Purple, Gray,     │
 │ Neutral palettes + Static + Utilities + Shades              │
 └──────────────────────┬──────────────────────────────────────┘
                        │ references
@@ -36,7 +36,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ SEMANTICS (src/semantic-tokens.ts)                          │
 │ Intent-based aliases: brandPrimary, textSecondary,          │
 │ surfaceDefault, interactivePrimaryHover, statusSuccessBg    │
-│ 71 tokens with light + dark mode overrides                  │
+│ 63 tokens with light + dark mode overrides                  │
 └──────────────────────┬──────────────────────────────────────┘
                        │ referenced by
                        ▼
@@ -44,7 +44,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ ROLES (src/theme/roles.ts)                                  │
 │ Component consumption API: text.primary, surface.accent,    │
 │ interactive.primary.hover, status.success.bg                │
-│ 60+ roles — the ONLY API components should use              │
+│ 44 roles — the ONLY API components should use               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -57,7 +57,7 @@ export const tokens = {
   blue1000: '#000f47',        // ★ Figma anchor — Midnight (legacy)
   blue1100: '#002c77',        // ★ Figma anchor — MODE Primary (future)
   neutral250: '#dadada',      // ★ brand anchor
-  gold750: '#ffb700',         // ★ Figma anchor
+  gold750: '#ffbf00',         // ★ Figma anchor
   
   // Alpha shades
   shadesWhite80: 'rgba(255,255,255,0.80)',
@@ -67,7 +67,7 @@ export const tokens = {
 
 **Naming:** `[palette][scale]` where scale = 50, 100, 200, ..., 1000, 1100  
 **Source:** Synced from Figma "Primitive Colors" collection  
-**Count:** 141 color tokens + spacing + shadow primitives
+**Count:** 167 color tokens + spacing + shadow primitives
 
 #### **Semantics (`src/semantic-tokens.ts`)**
 ```typescript
@@ -106,7 +106,7 @@ export const semanticDarkOverrides = {
 
 **Naming:** `[category][Intent][State]` (camelCase)  
 **Categories:** `brand`, `text`, `surface`, `border`, `interactive`, `status`  
-**Count:** 71 semantic tokens  
+**Count:** 63 semantic tokens  
 **Dark Mode:** Defined in `semanticDarkOverrides` object
 
 #### **Roles (`src/theme/roles.ts`)**
@@ -152,7 +152,7 @@ export function getRoleColor(role: RoleName, mode: 'light' | 'dark' = 'light'): 
 
 **Naming:** `[category].[element][.variant][.state]` (kebab-case with dots)  
 **Examples:** `text.primary`, `surface.navigation.hover`, `interactive.danger.active`  
-**Count:** 60+ roles (growing as components need them)  
+**Count:** 44 roles (growing as components need them)  
 **Usage:** Components use `getRoleColor('role.name')` ONLY
 
 ### Critical Rules for Token Usage
@@ -1081,8 +1081,8 @@ MDS-Platform/
 │   │   ├── roles.ts                 # Role token definitions
 │   │   └── index.ts                 # Theme exports
 │   │
-│   ├── tokens.ts                    # Primitive color tokens (141)
-│   ├── semantic-tokens.ts           # Semantic aliases (71)
+│   ├── tokens.ts                    # Primitive color tokens (167)
+│   ├── semantic-tokens.ts           # Semantic aliases (63)
 │   ├── spacing.ts                   # Spacing scale (15 steps)
 │   ├── shadows.ts                   # Shadow elevation tokens (6 levels)
 │   ├── theme.ts                     # MUI light/dark theme creation
