@@ -15,6 +15,7 @@ dist-ssr
 dist-pkg
 !dist/tokens.json
 !dist/theme.css
+!dist/tokens.dtcg.json
 *.local
 
 # Transient, fully-derived DTCG token source Style Dictionary reads from —
