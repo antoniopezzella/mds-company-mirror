@@ -91,7 +91,24 @@ export const decorators = [
   }
 ];
 
+// MDS's own real breakpoints, not Storybook's generic device presets —
+// matches CarouselSection.module.scss's actual media queries (600/768/900/
+// 1024/1200/1540) and the Header/Hero 1540px container max-width. `mobile`
+// sits just below the 600px breakpoint, `desktop` at the 1200px breakpoint,
+// `wideDesktop` above the 1540px container cap so the centered/capped
+// container behavior is visible rather than full-bleed.
+const mdsViewports: Record<string, { name: string; styles: { width: string; height: string }; type: 'mobile' | 'tablet' | 'desktop' }> = {
+  mobile: { name: 'Mobile (390px)', styles: { width: '390px', height: '844px' }, type: 'mobile' },
+  mobileLarge: { name: 'Mobile Large (600px)', styles: { width: '600px', height: '900px' }, type: 'mobile' },
+  tablet: { name: 'Tablet (900px)', styles: { width: '900px', height: '1024px' }, type: 'tablet' },
+  desktop: { name: 'Desktop (1200px)', styles: { width: '1200px', height: '800px' }, type: 'desktop' },
+  wideDesktop: { name: 'Wide Desktop (1600px)', styles: { width: '1600px', height: '900px' }, type: 'desktop' },
+};
+
 export const parameters: Preview['parameters'] = {
+  viewport: {
+    options: mdsViewports,
+  },
   controls: {
     expanded: true,
     matchers: {
