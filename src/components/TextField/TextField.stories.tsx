@@ -9,7 +9,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 const meta = {
   title: 'Components/TextField',
   component: DSTextField,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'centered',
     docs: {

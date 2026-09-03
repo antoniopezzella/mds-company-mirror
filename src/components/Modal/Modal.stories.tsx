@@ -9,7 +9,7 @@ import '../../styles/_typography.scss';
 const meta: Meta<typeof Modal> = {
   title: 'Components/Modal',
   component: Modal,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'centered',
     docs: {

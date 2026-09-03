@@ -6,7 +6,7 @@ import { MDSDataGrid } from './DataGrid';
 const meta = {
   title: 'Components/DataGrid',
   component: MDSDataGrid,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'padded',
     docs: {

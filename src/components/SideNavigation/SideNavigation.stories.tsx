@@ -19,7 +19,7 @@ const demoItems: SideNavItem[] = [
 const meta = {
   title: 'Components/Side Navigation',
   component: SideNavigation,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: 'Vertical navigation for app shells and dashboards. Supports active state and collapsible groups via subItems.' } },

@@ -15,7 +15,7 @@ const meta = {
   parameters: {
     layout: 'padded',
   },
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   argTypes: {
     label: {
       control: 'text',

@@ -5,7 +5,7 @@ import type { HeaderProps } from './Header';
 export default {
   title: 'Dashboard/Header',
   component: Header,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     docs: {
       description: {

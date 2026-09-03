@@ -7,7 +7,7 @@ import PolicyIcon from '@mui/icons-material/Description';
 const meta: Meta<typeof Paper> = {
   title: 'Components/Paper',
   component: Paper,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'centered',
     docs: {
