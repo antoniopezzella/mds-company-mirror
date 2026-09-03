@@ -6,7 +6,7 @@ import { useState } from 'react';
 const meta = {
   title: 'Components/Checkbox',
   component: DSCheckbox,
-  tags: ['autodocs'],
+  tags: ['autodocs', '!dev'],
   parameters: {
     layout: 'centered',
     docs: {
