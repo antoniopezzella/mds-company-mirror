@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Components/Radio',
+  title: 'Legacy MUI/Radio',
   component: DSRadio,
   tags: ['!dev'],
   parameters: {

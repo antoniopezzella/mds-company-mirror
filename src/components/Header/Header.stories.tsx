@@ -3,7 +3,7 @@ import Header, { WebsiteHeader } from './Header';
 import type { HeaderProps } from './Header';
 
 export default {
-  title: 'Dashboard/Header',
+  title: 'Legacy MUI/Header',
   component: Header,
   tags: ['!dev'],
   parameters: {

@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import InsightsIcon from '@mui/icons-material/Insights';
 
 const meta: Meta<typeof CardWebsite> = {
-  title: 'Components/CardWebsite',
+  title: 'Legacy MUI/CardWebsite',
   component: CardWebsite,
   tags: ['!dev'],
   parameters: {

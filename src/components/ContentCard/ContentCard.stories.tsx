@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import ContentCard from './ContentCard';
 
 const meta: Meta<typeof ContentCard> = {
-  title: 'Components/ContentCard',
+  title: 'Legacy MUI/ContentCard',
   component: ContentCard,
   tags: ['!dev'],
   parameters: {

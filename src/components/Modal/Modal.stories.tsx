@@ -7,7 +7,7 @@ import '../../index.css';
 import '../../styles/_typography.scss';
 
 const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
+  title: 'Legacy MUI/Modal',
   component: Modal,
   tags: ['!dev'],
   parameters: {
