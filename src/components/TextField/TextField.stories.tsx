@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const meta = {
-  title: 'Components/TextField',
+  title: 'Legacy MUI/TextField',
   component: DSTextField,
   tags: ['!dev'],
   parameters: {

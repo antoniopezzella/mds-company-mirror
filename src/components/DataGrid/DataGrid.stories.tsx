@@ -4,7 +4,7 @@ import { Chip } from '../Chip/Chip';
 import { MDSDataGrid } from './DataGrid';
 
 const meta = {
-  title: 'Components/DataGrid',
+  title: 'Legacy MUI/DataGrid',
   component: MDSDataGrid,
   tags: ['!dev'],
   parameters: {

@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Legacy MUI/Checkbox',
   component: DSCheckbox,
   tags: ['!dev'],
   parameters: {

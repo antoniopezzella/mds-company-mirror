@@ -17,7 +17,7 @@ const demoItems: SideNavItem[] = [
 ];
 
 const meta = {
-  title: 'Components/Side Navigation',
+  title: 'Legacy MUI/Side Navigation',
   component: SideNavigation,
   tags: ['!dev'],
   parameters: {

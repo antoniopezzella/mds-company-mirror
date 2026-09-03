@@ -10,7 +10,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 
 const meta = {
-  title: 'Components/Chip',
+  title: 'Legacy MUI/Chip',
   component: Chip,
   parameters: {
     layout: 'padded',

@@ -4,7 +4,7 @@ import DSSnackbar from './Snackbar';
 import { Button, Stack } from '@mui/material';
 
 const meta = {
-  title: 'Components/Snackbar',
+  title: 'Legacy MUI/Snackbar',
   component: DSSnackbar,
   tags: ['!dev'],
   parameters: {

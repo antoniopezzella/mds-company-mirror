@@ -12,7 +12,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import RestoreIcon from '@mui/icons-material/Restore';
 
 const meta = {
-  title: 'Components/Menu',
+  title: 'Legacy MUI/Menu',
   component: Menu,
   parameters: {
     layout: 'padded',

@@ -3,7 +3,7 @@ import StatusCard from './StatusCard';
 import { Box } from '@mui/material';
 
 const meta: Meta<typeof StatusCard> = {
-  title: 'Components/StatusCard',
+  title: 'Legacy MUI/StatusCard',
   component: StatusCard,
   tags: ['!dev'],
   argTypes: {
