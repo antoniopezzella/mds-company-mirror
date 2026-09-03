@@ -12,7 +12,7 @@ import { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, Me
  * Storybook story until now.
  */
 const meta: Meta<typeof Message> = {
-  title: 'shadcn-ui/Message',
+  title: 'Components/Message',
   component: Message,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

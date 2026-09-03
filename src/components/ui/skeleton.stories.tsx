@@ -8,7 +8,7 @@ import { Skeleton } from './skeleton';
  * `variant`/`width`/`height`/`animation` API as the MUI twin.
  */
 const meta: Meta<typeof Skeleton> = {
-  title: 'shadcn-ui/Skeleton',
+  title: 'Components/Skeleton',
   component: Skeleton,
   tags: ['autodocs'],
   parameters: {

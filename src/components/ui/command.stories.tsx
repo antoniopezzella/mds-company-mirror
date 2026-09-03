@@ -11,7 +11,7 @@ import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, Comma
  * `getRoleColor()`.
  */
 const meta: Meta<typeof Command> = {
-  title: 'shadcn-ui/Command',
+  title: 'Components/Command',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

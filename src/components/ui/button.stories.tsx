@@ -26,7 +26,7 @@ import { Plus, X, Trash2, ArrowRight, Download } from 'lucide-react';
  * @see [Migration Plan](../../../SHADCN_UI_MIGRATION_PLAN.md)
  */
 const meta: Meta<typeof Button> = {
-  title: 'shadcn-ui/Button',
+  title: 'Components/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {

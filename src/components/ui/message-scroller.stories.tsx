@@ -29,7 +29,7 @@ import { getRoleColor } from '@/theme/roles';
  * no Storybook story until now, so it was effectively invisible here.
  */
 const meta: Meta<typeof MessageScroller> = {
-  title: 'shadcn-ui/MessageScroller',
+  title: 'Components/MessageScroller',
   component: MessageScroller,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

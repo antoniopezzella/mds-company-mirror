@@ -25,7 +25,7 @@ import {
  * row of menus instead of a single trigger.
  */
 const meta: Meta<typeof Menubar> = {
-  title: 'shadcn-ui/Menubar',
+  title: 'Components/Menubar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

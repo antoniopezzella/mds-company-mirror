@@ -13,7 +13,7 @@ import { Tooltip } from './tooltip';
  * mapped internally to Radix's separate `side`/`align` props.
  */
 const meta: Meta<typeof Tooltip> = {
-  title: 'shadcn-ui/Tooltip',
+  title: 'Components/Tooltip',
   component: Tooltip,
   tags: ['autodocs'],
   parameters: {

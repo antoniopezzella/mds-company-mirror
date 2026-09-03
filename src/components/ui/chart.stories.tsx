@@ -17,7 +17,7 @@ import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartToo
  * color-alone) and uses recessive grid/axis lines.
  */
 const meta: Meta = {
-  title: 'shadcn-ui/Chart',
+  title: 'Components/Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

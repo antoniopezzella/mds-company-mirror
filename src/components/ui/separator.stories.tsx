@@ -10,7 +10,7 @@ import { Separator, Divider } from './separator';
  * an optional centered/start/end label the raw Separator doesn't support.
  */
 const meta: Meta<typeof Divider> = {
-  title: 'shadcn-ui/Separator',
+  title: 'Components/Separator',
   component: Divider,
   tags: ['autodocs'],
   parameters: {

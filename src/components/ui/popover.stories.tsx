@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * role tokens.
  */
 const meta: Meta<typeof Popover> = {
-  title: 'shadcn-ui/Popover',
+  title: 'Components/Popover',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

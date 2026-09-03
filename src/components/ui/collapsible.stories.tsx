@@ -11,7 +11,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsib
  * with role-token-driven styles at the call site, as shown below.
  */
 const meta: Meta<typeof Collapsible> = {
-  title: 'shadcn-ui/Collapsible',
+  title: 'Components/Collapsible',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

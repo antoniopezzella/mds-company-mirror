@@ -12,7 +12,7 @@ import { Tabs, type TabItem } from './tabs';
  * — pass an array of `{ id, title, content, disabled? }`.
  */
 const meta: Meta<typeof Tabs> = {
-  title: 'shadcn-ui/Tabs',
+  title: 'Components/Tabs',
   component: Tabs,
   tags: ['autodocs'],
   parameters: {

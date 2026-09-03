@@ -9,7 +9,7 @@ import { MegaMenu, type MegaMenuItem } from './mega-menu';
  * port of the MUI version's hardcoded Marsh marketing content.
  */
 const meta: Meta<typeof MegaMenu> = {
-  title: 'shadcn-ui/MegaMenu',
+  title: 'Components/MegaMenu',
   component: MegaMenu,
   tags: ['autodocs'],
   parameters: {

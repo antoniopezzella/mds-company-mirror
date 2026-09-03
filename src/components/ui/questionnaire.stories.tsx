@@ -23,7 +23,7 @@ import {
  * ChatQuestionnaire), but had no Storybook story until now.
  */
 const meta: Meta<typeof QuestionnaireRoot> = {
-  title: 'shadcn-ui/Questionnaire',
+  title: 'Components/Questionnaire',
   component: QuestionnaireRoot,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

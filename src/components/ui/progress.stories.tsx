@@ -14,7 +14,7 @@ import { CircularProgress, LinearProgress } from './progress';
  * `DSLinearProgress` twins.
  */
 const meta: Meta = {
-  title: 'shadcn-ui/Progress',
+  title: 'Components/Progress',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

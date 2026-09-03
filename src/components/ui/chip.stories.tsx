@@ -11,7 +11,7 @@ import { Chip } from './chip';
  * API as the MUI twin.
  */
 const meta: Meta<typeof Chip> = {
-  title: 'shadcn-ui/Chip',
+  title: 'Components/Chip',
   component: Chip,
   tags: ['autodocs'],
   parameters: {

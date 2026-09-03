@@ -14,7 +14,7 @@ import { Slider } from './slider';
  * expressed as a Tailwind `hover:` class at build time.
  */
 const meta: Meta<typeof Slider> = {
-  title: 'shadcn-ui/Slider',
+  title: 'Components/Slider',
   component: Slider,
   tags: ['autodocs'],
   parameters: {

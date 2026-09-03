@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { StatCard } from './stat-card';
 
 const meta: Meta<typeof StatCard> = {
-  title: 'shadcn-ui/StatCard',
+  title: 'Components/StatCard',
   component: StatCard,
   tags: ['autodocs'],
   parameters: {

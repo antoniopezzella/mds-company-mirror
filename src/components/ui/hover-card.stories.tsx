@@ -11,7 +11,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
  * user's profile summary) without committing to a full modal or popover.
  */
 const meta: Meta<typeof HoverCard> = {
-  title: 'shadcn-ui/HoverCard',
+  title: 'Components/HoverCard',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

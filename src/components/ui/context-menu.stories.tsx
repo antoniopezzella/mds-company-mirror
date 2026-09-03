@@ -22,7 +22,7 @@ import {
  * since both are Radix menu-family primitives.
  */
 const meta: Meta<typeof ContextMenu> = {
-  title: 'shadcn-ui/ContextMenu',
+  title: 'Components/ContextMenu',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

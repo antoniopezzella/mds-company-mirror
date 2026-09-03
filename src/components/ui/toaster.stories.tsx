@@ -20,7 +20,7 @@ import { toast } from './use-toast';
  * mounts its own copy since Storybook stories are isolated.
  */
 const meta: Meta = {
-  title: 'shadcn-ui/Toast',
+  title: 'Components/Toast',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
