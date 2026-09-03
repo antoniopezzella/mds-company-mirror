@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 const meta: Meta<typeof StatusCard> = {
   title: 'Components/StatusCard',
   component: StatusCard,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   argTypes: {
     status: {
       control: 'select',

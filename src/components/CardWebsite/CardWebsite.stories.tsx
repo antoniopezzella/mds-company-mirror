@@ -6,7 +6,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 const meta: Meta<typeof CardWebsite> = {
   title: 'Components/CardWebsite',
   component: CardWebsite,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'padded',
     docs: {

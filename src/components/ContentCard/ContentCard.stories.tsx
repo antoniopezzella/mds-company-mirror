@@ -4,7 +4,7 @@ import ContentCard from './ContentCard';
 const meta: Meta<typeof ContentCard> = {
   title: 'Components/ContentCard',
   component: ContentCard,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'padded',
     docs: {

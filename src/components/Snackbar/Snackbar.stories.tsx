@@ -6,7 +6,7 @@ import { Button, Stack } from '@mui/material';
 const meta = {
   title: 'Components/Snackbar',
   component: DSSnackbar,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   parameters: {
     layout: 'centered',
     docs: {

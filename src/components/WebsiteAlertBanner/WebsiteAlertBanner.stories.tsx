@@ -4,7 +4,7 @@ import { WebsiteAlertBanner } from './WebsiteAlertBanner';
 const meta: Meta<typeof WebsiteAlertBanner> = {
   title: 'Components/WebsiteAlertBanner',
   component: WebsiteAlertBanner,
-  tags: ['autodocs', '!dev'],
+  tags: ['!dev'],
   args: {
     brand: 'marsh',
     title: 'Important update',
