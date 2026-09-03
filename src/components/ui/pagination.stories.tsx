@@ -11,7 +11,7 @@ import { Pagination } from './pagination';
  * page-size selector and jump-to-page input in `variant="advanced"`.
  */
 const meta: Meta<typeof Pagination> = {
-  title: 'shadcn-ui/Pagination',
+  title: 'Components/Pagination',
   component: Pagination,
   tags: ['autodocs'],
   parameters: {

@@ -10,7 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
  * `getRoleColor()`.
  */
 const meta: Meta<typeof Carousel> = {
-  title: 'shadcn-ui/Carousel',
+  title: 'Components/Carousel',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -15,7 +15,7 @@ import { Label } from './label';
  * `type="textarea"` to swap in a `Textarea` under the hood.
  */
 const meta: Meta<typeof DSTextField> = {
-  title: 'shadcn-ui/TextField',
+  title: 'Components/TextField',
   component: DSTextField,
   tags: ['autodocs'],
   parameters: {

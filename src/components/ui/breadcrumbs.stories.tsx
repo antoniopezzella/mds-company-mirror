@@ -9,7 +9,7 @@ import { Breadcrumbs } from './breadcrumbs';
  * including first/last + ellipsis collapse when items exceed `maxItems`.
  */
 const meta: Meta<typeof Breadcrumbs> = {
-  title: 'shadcn-ui/Breadcrumbs',
+  title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
   tags: ['autodocs'],
   parameters: {

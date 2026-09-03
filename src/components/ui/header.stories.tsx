@@ -13,12 +13,12 @@ import { Header } from './header';
  * `notificationCount`/`variant` shape as the MUI twin.
  *
  * ## Deliberate improvement over the MUI original
- * The profile menu uses Radix `DropdownMenu` (see shadcn-ui/DropdownMenu)
+ * The profile menu uses Radix `DropdownMenu` (see Components/DropdownMenu)
  * instead of a `Popover` + hand-styled `MenuItem` list — proper ARIA menu
  * semantics, roving tabindex, and arrow-key navigation for free.
  */
 const meta: Meta<typeof Header> = {
-  title: 'shadcn-ui/Header',
+  title: 'Components/Header',
   component: Header,
   tags: ['autodocs'],
   parameters: {

@@ -15,7 +15,7 @@ import { Checkbox } from './checkbox';
  * - `helperText` / `hasHelper` / `helperIcon` match the MUI helper-row behavior
  */
 const meta: Meta<typeof Checkbox> = {
-  title: 'shadcn-ui/Checkbox',
+  title: 'Components/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
   parameters: {

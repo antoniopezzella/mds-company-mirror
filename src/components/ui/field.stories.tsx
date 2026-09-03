@@ -20,7 +20,7 @@ import { Input } from './input';
  * Wraps this repo's existing Label/Separator; no new dependencies.
  */
 const meta: Meta<typeof Field> = {
-  title: 'shadcn-ui/Field',
+  title: 'Components/Field',
   component: Field,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

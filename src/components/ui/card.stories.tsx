@@ -13,7 +13,7 @@ import { Badge } from './badge';
  * "insight/stats card", already covered by `metric-card`).
  */
 const meta: Meta<typeof Card> = {
-  title: 'shadcn-ui/Card',
+  title: 'Components/Card',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

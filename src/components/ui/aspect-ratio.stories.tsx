@@ -10,7 +10,7 @@ import { AspectRatio } from './aspect-ratio';
  * with fixed ratios, see `ImageWithFallback`'s `aspectRatio` prop instead.
  */
 const meta: Meta<typeof AspectRatio> = {
-  title: 'shadcn-ui/AspectRatio',
+  title: 'Components/AspectRatio',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

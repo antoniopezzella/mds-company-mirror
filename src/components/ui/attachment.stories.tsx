@@ -20,7 +20,7 @@ import {
  * upstream `new-york-v4` registry source.
  */
 const meta: Meta<typeof Attachment> = {
-  title: 'shadcn-ui/Attachment',
+  title: 'Components/Attachment',
   component: Attachment,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

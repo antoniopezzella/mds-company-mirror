@@ -10,7 +10,7 @@ import { ImageWithFallback } from './image-with-fallback';
  * property even though the current MUI component doesn't expose it.
  */
 const meta: Meta<typeof ImageWithFallback> = {
-  title: 'shadcn-ui/ImageWithFallback',
+  title: 'Components/ImageWithFallback',
   component: ImageWithFallback,
   tags: ['autodocs'],
   parameters: {

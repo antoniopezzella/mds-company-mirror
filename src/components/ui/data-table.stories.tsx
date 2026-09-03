@@ -17,7 +17,7 @@ import { Badge } from './badge';
  * pagination.
  */
 const meta: Meta = {
-  title: 'shadcn-ui/DataTable',
+  title: 'Components/DataTable',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

@@ -10,7 +10,7 @@ import { WebsiteAlertBanner } from './website-alert-banner';
  * `onClose`/`fullWidth` API as the MUI twin.
  */
 const meta: Meta<typeof WebsiteAlertBanner> = {
-  title: 'shadcn-ui/WebsiteAlertBanner',
+  title: 'Components/WebsiteAlertBanner',
   component: WebsiteAlertBanner,
   tags: ['autodocs'],
   parameters: {

@@ -12,7 +12,7 @@ import { Badge } from './badge';
  * from the MUI version isn't ported in this first pass.
  */
 const meta: Meta = {
-  title: 'shadcn-ui/Table',
+  title: 'Components/Table',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',

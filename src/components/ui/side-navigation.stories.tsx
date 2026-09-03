@@ -3,7 +3,7 @@ import { SideNavigation, type SideNavItem } from './side-navigation';
 import { LayoutDashboard, FileText, Shield, ClipboardList, BarChart3, Folder, Settings } from 'lucide-react';
 
 const meta: Meta<typeof SideNavigation> = {
-  title: 'shadcn-ui/SideNavigation',
+  title: 'Components/SideNavigation',
   component: SideNavigation,
   tags: ['autodocs'],
   parameters: {

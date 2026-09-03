@@ -17,7 +17,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './resizabl
  * match the classic shadcn/ui recipe.
  */
 const meta: Meta<typeof ResizablePanelGroup> = {
-  title: 'shadcn-ui/Resizable',
+  title: 'Components/Resizable',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

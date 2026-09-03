@@ -12,7 +12,7 @@ import { Badge } from './badge';
  * actual MUI component accepts.
  */
 const meta: Meta<typeof List> = {
-  title: 'shadcn-ui/List',
+  title: 'Components/List',
   component: List,
   tags: ['autodocs'],
   parameters: {

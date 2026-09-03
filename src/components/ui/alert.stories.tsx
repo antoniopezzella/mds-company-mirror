@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from './alert';
  * `AlertDescription` are also exported for fully composable usage.
  */
 const meta: Meta<typeof Alert> = {
-  title: 'shadcn-ui/Alert',
+  title: 'Components/Alert',
   component: Alert,
   tags: ['autodocs'],
   parameters: {

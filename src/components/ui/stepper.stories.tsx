@@ -10,7 +10,7 @@ import { Stepper, type StepConfig } from './stepper';
  * any prop the actual MUI component accepts.
  */
 const meta: Meta<typeof Stepper> = {
-  title: 'shadcn-ui/Stepper',
+  title: 'Components/Stepper',
   component: Stepper,
   tags: ['autodocs'],
   parameters: {

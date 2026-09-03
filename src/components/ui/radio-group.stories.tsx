@@ -14,7 +14,7 @@ import { RadioGroup } from './radio-group';
  * `onChange`, `label`, `helperText`, `error`, `row`, `disabled`, `name`.
  */
 const meta: Meta<typeof RadioGroup> = {
-  title: 'shadcn-ui/RadioGroup',
+  title: 'Components/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs'],
   parameters: {

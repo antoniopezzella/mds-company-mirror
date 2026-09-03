@@ -11,7 +11,7 @@ import { Button } from './button';
  * Fully self-contained, no new dependencies.
  */
 const meta: Meta<typeof Empty> = {
-  title: 'shadcn-ui/Empty',
+  title: 'Components/Empty',
   component: Empty,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

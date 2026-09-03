@@ -13,7 +13,7 @@ import { Avatar } from './avatar';
  * the MUI twin.
  */
 const meta: Meta<typeof Avatar> = {
-  title: 'shadcn-ui/Avatar',
+  title: 'Components/Avatar',
   component: Avatar,
   tags: ['autodocs'],
   parameters: {

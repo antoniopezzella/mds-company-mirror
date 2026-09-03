@@ -8,7 +8,7 @@ import { StatusCard } from './status-card';
  * `status`/`title`/`message`/`icon` API as the MUI twin.
  */
 const meta: Meta<typeof StatusCard> = {
-  title: 'shadcn-ui/StatusCard',
+  title: 'Components/StatusCard',
   component: StatusCard,
   tags: ['autodocs'],
   parameters: {

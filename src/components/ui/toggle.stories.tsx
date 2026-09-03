@@ -9,7 +9,7 @@ import { Toggle } from './toggle';
  * shadcn/ui conventions directly, styled with `getRoleColor()`.
  */
 const meta: Meta<typeof Toggle> = {
-  title: 'shadcn-ui/Toggle',
+  title: 'Components/Toggle',
   component: Toggle,
   tags: ['autodocs'],
   parameters: {

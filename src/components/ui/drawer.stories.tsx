@@ -21,7 +21,7 @@ import { Button } from './button';
  * sourcing note in drawer.tsx for why.
  */
 const meta: Meta<typeof Drawer> = {
-  title: 'shadcn-ui/Drawer',
+  title: 'Components/Drawer',
   component: Drawer,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },

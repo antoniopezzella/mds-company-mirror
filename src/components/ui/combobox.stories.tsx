@@ -11,7 +11,7 @@ import { Combobox } from './combobox';
  * option list rather than scrolling through it.
  */
 const meta: Meta<typeof Combobox> = {
-  title: 'shadcn-ui/Combobox',
+  title: 'Components/Combobox',
   component: Combobox,
   tags: ['autodocs'],
   parameters: {

@@ -9,7 +9,7 @@ import { ToggleGroup, ToggleGroupItem } from './toggle-group';
  * shadcn/ui conventions directly, styled with `getRoleColor()`.
  */
 const meta: Meta<typeof ToggleGroup> = {
-  title: 'shadcn-ui/ToggleGroup',
+  title: 'Components/ToggleGroup',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -9,7 +9,7 @@ import { Badge } from './badge';
  * existing MUI `Badge.tsx` only supporting the overlay-indicator pattern).
  */
 const meta: Meta<typeof Badge> = {
-  title: 'shadcn-ui/Badge',
+  title: 'Components/Badge',
   component: Badge,
   tags: ['autodocs'],
   parameters: {

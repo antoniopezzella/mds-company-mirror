@@ -14,7 +14,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from './inpu
  * reuses the `--tw-ring-color` focus-ring trick from `input.tsx`.
  */
 const meta: Meta<typeof InputOTP> = {
-  title: 'shadcn-ui/InputOTP',
+  title: 'Components/InputOTP',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

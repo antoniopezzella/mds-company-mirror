@@ -15,7 +15,7 @@ import { Switch } from './switch';
  * boolean-first convention, same divergence already established by Checkbox).
  */
 const meta: Meta<typeof Switch> = {
-  title: 'shadcn-ui/Switch',
+  title: 'Components/Switch',
   component: Switch,
   tags: ['autodocs'],
   parameters: {

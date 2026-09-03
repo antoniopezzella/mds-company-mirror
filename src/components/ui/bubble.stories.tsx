@@ -10,7 +10,7 @@ import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from './bubble';
  * Storybook story until now.
  */
 const meta: Meta<typeof Bubble> = {
-  title: 'shadcn-ui/Bubble',
+  title: 'Components/Bubble',
   component: Bubble,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

@@ -10,7 +10,7 @@ import { Marker, MarkerContent, MarkerIcon } from './marker';
  * had no Storybook story until now.
  */
 const meta: Meta<typeof Marker> = {
-  title: 'shadcn-ui/Marker',
+  title: 'Components/Marker',
   component: Marker,
   tags: ['autodocs'],
   parameters: { layout: 'padded' },

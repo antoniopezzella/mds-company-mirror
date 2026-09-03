@@ -24,7 +24,7 @@ import {
  * `options`/`label`/`helperText`/`error`/`tone` prop shape for migration.
  */
 const meta: Meta<typeof Select> = {
-  title: 'shadcn-ui/Select',
+  title: 'Components/Select',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

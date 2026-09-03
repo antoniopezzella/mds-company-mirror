@@ -17,7 +17,7 @@ import {
  * built on, in place of a hand-rolled `Popover` + `MenuItem` list.
  */
 const meta: Meta<typeof DropdownMenu> = {
-  title: 'shadcn-ui/DropdownMenu',
+  title: 'Components/DropdownMenu',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

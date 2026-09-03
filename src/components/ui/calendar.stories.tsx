@@ -13,7 +13,7 @@ import { Calendar } from './calendar';
  * No MDS/Figma spec exists for this component yet.
  */
 const meta: Meta<typeof Calendar> = {
-  title: 'shadcn-ui/Calendar',
+  title: 'Components/Calendar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

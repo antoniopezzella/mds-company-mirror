@@ -18,7 +18,7 @@ import {
  * `@radix-ui/react-dialog` and styled with `getRoleColor()`.
  */
 const meta: Meta<typeof Sheet> = {
-  title: 'shadcn-ui/Sheet',
+  title: 'Components/Sheet',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

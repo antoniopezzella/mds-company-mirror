@@ -25,7 +25,7 @@ import {
  * `open`/`onClose`/`title`/`footer` prop shape.
  */
 const meta: Meta<typeof Dialog> = {
-  title: 'shadcn-ui/Dialog',
+  title: 'Components/Dialog',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

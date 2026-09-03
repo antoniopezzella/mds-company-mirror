@@ -12,7 +12,7 @@ import { Accordion, type AccordionItem } from './accordion';
  * as the MUI twin.
  */
 const meta: Meta<typeof Accordion> = {
-  title: 'shadcn-ui/Accordion',
+  title: 'Components/Accordion',
   component: Accordion,
   tags: ['autodocs'],
   parameters: {

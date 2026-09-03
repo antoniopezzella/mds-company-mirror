@@ -10,7 +10,7 @@ import { Separator } from './separator';
  * `getRoleColor()` for the scrollbar thumb.
  */
 const meta: Meta<typeof ScrollArea> = {
-  title: 'shadcn-ui/ScrollArea',
+  title: 'Components/ScrollArea',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

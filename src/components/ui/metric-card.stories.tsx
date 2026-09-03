@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { MetricCard } from './metric-card';
 
 const meta: Meta<typeof MetricCard> = {
-  title: 'shadcn-ui/MetricCard',
+  title: 'Components/MetricCard',
   component: MetricCard,
   tags: ['autodocs'],
   parameters: {
