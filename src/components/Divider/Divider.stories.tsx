@@ -6,7 +6,7 @@ import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 const meta: Meta<typeof Divider> = {
   title: 'Components/Divider',
   component: Divider,
-  tags: ['autodocs'],
+  tags: ['autodocs', '!dev'],
   parameters: {
     layout: 'padded',
     docs: {

@@ -6,7 +6,7 @@ import { useState } from 'react';
 const meta = {
   title: 'Components/Radio',
   component: DSRadio,
-  tags: ['autodocs'],
+  tags: ['autodocs', '!dev'],
   parameters: {
     layout: 'centered',
     docs: {

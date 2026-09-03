@@ -24,7 +24,7 @@ type ButtonStoryArgs = React.ComponentProps<typeof DSButton> & {
 const meta = {
   title: 'Components/Button',
   component: DSButton,
-  tags: ['autodocs'],
+  tags: ['autodocs', '!dev'],
   parameters: {
     layout: 'padded',
     docs: {
