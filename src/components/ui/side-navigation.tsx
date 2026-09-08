@@ -98,6 +98,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
           border: getRoleColor('border.default', { mode: 'dark' }),
           ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
           ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+          ctaInverse: true,
         };
       }
 
@@ -112,6 +113,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
           border: getRoleColor('border.default'),
           ctaBg: getRoleColor('surface.subtle'),
           ctaText: getRoleColor('text.primary'),
+          ctaInverse: false,
         };
       }
 
@@ -128,6 +130,10 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         border: getRoleColor('border.default'),
         ctaBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
         ctaText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
+        // Sky-blue (secondary) rail is a light surface — same navy button
+        // as the light-mode case reads fine there. Only the navy (primary)
+        // rail is dark enough to need the inverse (light-on-dark) treatment.
+        ctaInverse: !isSecondary,
       };
     }, [mode, variant, colorScheme]);
 
@@ -305,6 +311,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
           </h3>
           <Button
             variant="secondary"
+            inverse={colors.ctaInverse}
             onClick={onSupport}
             className="w-full min-h-[44px] font-medium"
             aria-label="Contact support team"
