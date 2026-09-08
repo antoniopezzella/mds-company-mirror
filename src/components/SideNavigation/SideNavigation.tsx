@@ -189,7 +189,6 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
                 aria-expanded={isGroup ? !!open[item.label] : undefined}
                 aria-controls={isGroup ? panelId : undefined}
                 aria-haspopup={isGroup ? 'true' : undefined}
-                role="listitem"
                 onKeyDown={(e) => {
                   if (!isGroup) {
                     if (e.key === 'Enter' || e.key === ' ') {

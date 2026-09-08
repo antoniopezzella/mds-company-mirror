@@ -365,9 +365,10 @@ export default function AnimatedGridDemo() {
         <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>🎛️ Controls</h4>
         
         <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Performance:</label>
-          <select 
-            value={animationMode} 
+          <label htmlFor="animated-grid-performance" style={{ display: 'block', marginBottom: '0.5rem' }}>Performance:</label>
+          <select
+            id="animated-grid-performance"
+            value={animationMode}
             onChange={(e) => setAnimationMode(e.target.value as 'high' | 'medium' | 'low')}
             style={{ width: '100%', padding: '0.25rem', background: '#333', color: '#fff', border: 'none', borderRadius: '4px' }}
           >

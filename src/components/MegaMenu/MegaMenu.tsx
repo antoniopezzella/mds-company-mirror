@@ -81,6 +81,19 @@ const BOTTOM_LISTS = [
 ];
 
 export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }) => {
+  // Previously the only way to close this dialog was clicking the backdrop
+  // — a keyboard-only user had no way to dismiss it at all. Effect (not a
+  // conditional hook) so it still runs every render per the Rules of
+  // Hooks; the isOpen check lives inside the callback instead.
+  React.useEffect(() => {
+    if (!isOpen || !onClose) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const node = typeof document !== 'undefined' ? document.body : null;
@@ -90,7 +103,10 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
 
   const content = (
     <>
+      {/* Decorative click-to-dismiss backdrop, not the only way to close —
+          Escape (registered above) is the real keyboard path. */}
       <div
+        aria-hidden="true"
         className={styles.overlay}
         onClick={onClose}
         style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)` }}

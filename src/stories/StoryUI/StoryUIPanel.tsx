@@ -2190,6 +2190,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
                           if (e.key === 'Escape') handleCancelRename();
                         }}
                         onClick={e => e.stopPropagation()}
+                        // eslint-disable-next-line jsx-a11y/no-autofocus -- inline rename input just appeared via user action; moving focus into it is correct, not page-load focus theft.
                         autoFocus
                       />
                       <button className="sui-button sui-button-icon sui-button-sm" onClick={e => { e.stopPropagation(); handleConfirmRename(chat.id); }} aria-label="Save">

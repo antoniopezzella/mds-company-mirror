@@ -116,7 +116,22 @@ export const Avatar: React.FC<AvatarProps> = ({
   const { bg, fg } = getToneColors(tone);
 
   return (
-    <div className={cn(avatarWrapperVariants({ clickable: Boolean(onClick) }), className)} onClick={onClick}>
+    <div
+      className={cn(avatarWrapperVariants({ clickable: Boolean(onClick) }), className)}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+    >
       <AvatarPrimitive.Root
         className={avatarRootVariants()}
         style={{

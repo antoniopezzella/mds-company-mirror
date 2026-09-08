@@ -331,10 +331,17 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
       aria-live="polite"
       aria-atomic="false"
     >
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions --
+          click-and-drag-to-scroll on the track itself, not a discrete
+          click-to-activate control — the real interactive elements are the
+          card children, each with their own accessible trigger. Keyboard
+          users already get full scroll access natively (arrow-key/Tab
+          scrolling on the overflow container), so no keyboard equivalent is
+          needed for a mouse-only drag gesture. See the file-top comment for
+          why this is plain pointer math, not a carousel library. */}
       <ul
         ref={trackRef}
         className={cn(styles.cardList, fillAvailableSpace && styles.cardListFill)}
-        role="list"
         onMouseDown={handleTrackMouseDown}
         onClickCapture={handleTrackClickCapture}
       >

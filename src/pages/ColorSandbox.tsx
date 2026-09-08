@@ -50,8 +50,17 @@ const Swatch: React.FC<SwatchProps> = ({ name, value, isAnchor, alias }) => {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={copy}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          copy();
+        }
+      }}
       title={`${name}: ${value}`}
+      aria-label={`Copy ${name} value ${value}`}
       style={{
         cursor: 'pointer',
         borderRadius: 4,
@@ -210,8 +219,17 @@ const SemanticSwatch: React.FC<SemanticSwatchProps> = ({ name, value, darkValue,
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={copy}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          copy();
+        }
+      }}
       title={`${name}: ${displayValue}`}
+      aria-label={`Copy ${name} value ${displayValue}`}
       style={{
         cursor: 'pointer',
         borderRadius: 4,

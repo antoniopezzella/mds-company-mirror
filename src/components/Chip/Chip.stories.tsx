@@ -507,7 +507,16 @@ export const InteractiveSelection: Story = {
             allChips.has(option.id) ? (
               <div
                 key={option.id}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedChips.has(option.id)}
                 onClick={() => toggleChip(option.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleChip(option.id);
+                  }
+                }}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

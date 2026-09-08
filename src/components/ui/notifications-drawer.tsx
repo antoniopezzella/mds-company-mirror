@@ -187,14 +187,13 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                         </p>
 
                         <div className="flex items-center justify-between">
-                          <a
-                            href="#"
-                            onClick={(e) => e.preventDefault()}
+                          <button
+                            type="button"
                             className="text-[13px] font-medium hover:underline"
                             style={{ color: primaryBlue }}
                           >
                             View locations
-                          </a>
+                          </button>
                           <span className="text-[11px]" style={{ color: textSecondary }}>
                             {n.timeAgo}
                           </span>

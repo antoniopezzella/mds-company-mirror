@@ -119,13 +119,27 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         {icon && <span className={cn('flex items-center justify-center', iconSizeClass[size])}>{icon}</span>}
         <span className="truncate">{label}</span>
         {onDelete && (
+          // Nested inside the outer <button> — invalid HTML5 (interactive
+          // content can't nest) that predates this fix; browsers/AT tolerate
+          // it in practice but a real redesign (delete as a true sibling
+          // button, chip body as a non-button wrapper) is the correct
+          // long-term fix. Scoped here to just closing the concrete
+          // keyboard-operability gap: was tabIndex={-1} with no key handler,
+          // meaning the delete action was mouse-only.
           <span
             role="button"
             aria-label="Remove"
-            tabIndex={-1}
+            tabIndex={0}
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete();
+              }
             }}
             className={cn('flex items-center justify-center rounded-full opacity-70 hover:opacity-100', deleteIconSizeClass[size])}
           >

@@ -150,6 +150,7 @@ const LoginPage: React.FC = () => {
             label="Email address"
             type="email"
             autoComplete="email"
+            // eslint-disable-next-line jsx-a11y/no-autofocus -- deliberate: single-purpose login form, first field autofocus is a common, accepted pattern (not an unexpected mid-page context shift).
             autoFocus
             fullWidth
             value={email}

@@ -164,7 +164,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         <div className="border-t opacity-30" style={{ borderColor: colors.border }} />
 
         {/* Navigation items */}
-        <ul role="list" className="flex-1 p-2 space-y-1">
+        <ul className="flex-1 p-2 space-y-1">
           {items.map((item) => {
             const icon = item.icon || getDefaultIcon(item.label);
             const headerId = `sn-${slugify(item.label)}-header`;
@@ -175,7 +175,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
             const isSectionHeader = ['Client List', 'Beacon Capital Partners', 'Task Center', 'Quick Actions'].includes(item.label);
 
             return (
-              <li key={item.label} role="listitem">
+              <li key={item.label}>
                 <button
                   id={headerId}
                   onClick={() => {
@@ -262,7 +262,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                       const isSubActive = !!sub.active || (sub.path ? currentPath === sub.path : false);
                       
                       return (
-                        <li key={sub.label} role="listitem">
+                        <li key={sub.label}>
                           <button
                             aria-current={isSubActive ? 'page' : undefined}
                             onClick={() => navigateTo(sub.path)}

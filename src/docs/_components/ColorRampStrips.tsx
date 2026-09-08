@@ -172,11 +172,20 @@ const StopCell: React.FC<{ stop: Stop; paletteName: string }> = ({ stop, palette
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
       title={`${paletteName} ${stop.scale} — ${stop.hex}`}
+      aria-label={`Copy ${paletteName} ${stop.scale} hex value ${stop.hex}`}
     >
       {/* Swatch */}
       <div
