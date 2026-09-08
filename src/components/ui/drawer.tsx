@@ -45,7 +45,7 @@ function DrawerBackdrop({
     <DrawerPrimitive.Backdrop
       data-slot="drawer-backdrop"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0",
+        "fixed inset-0 z-[1500] bg-black/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0",
         className
       )}
       {...props}
@@ -75,7 +75,7 @@ function DrawerContent({
         <DrawerPrimitive.Popup
           data-slot="drawer-content"
           className={cn(
-            "group/drawer-content fixed z-50 flex h-auto flex-col border-border bg-background text-foreground transition-transform",
+            "group/drawer-content fixed z-[1500] flex h-auto flex-col border-border bg-background text-foreground transition-transform",
             "data-[swipe-direction=up]:inset-x-0 data-[swipe-direction=up]:top-0 data-[swipe-direction=up]:mb-24 data-[swipe-direction=up]:max-h-[80vh] data-[swipe-direction=up]:rounded-b-lg data-[swipe-direction=up]:border-b data-[ending-style]:data-[swipe-direction=up]:-translate-y-full data-[starting-style]:data-[swipe-direction=up]:-translate-y-full",
             "data-[swipe-direction=down]:inset-x-0 data-[swipe-direction=down]:bottom-0 data-[swipe-direction=down]:mt-24 data-[swipe-direction=down]:max-h-[80vh] data-[swipe-direction=down]:rounded-t-lg data-[swipe-direction=down]:border-t data-[ending-style]:data-[swipe-direction=down]:translate-y-full data-[starting-style]:data-[swipe-direction=down]:translate-y-full",
             "data-[swipe-direction=left]:inset-y-0 data-[swipe-direction=left]:left-0 data-[swipe-direction=left]:h-full data-[swipe-direction=left]:w-3/4 data-[swipe-direction=left]:border-r data-[swipe-direction=left]:sm:max-w-sm data-[ending-style]:data-[swipe-direction=left]:-translate-x-full data-[starting-style]:data-[swipe-direction=left]:-translate-x-full",
