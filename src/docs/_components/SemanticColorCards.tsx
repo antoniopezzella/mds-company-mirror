@@ -163,9 +163,18 @@ const TokenCard: React.FC<{ entry: TokenEntry; mode: 'light' | 'dark' }> = ({ en
     }}>
       {/* Swatch */}
       <div
+        role="button"
+        tabIndex={0}
         style={{ background: hex, height: 56, cursor: 'pointer', position: 'relative' }}
         onClick={handleCopyHex}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCopyHex();
+          }
+        }}
         title={`Click to copy ${hex}`}
+        aria-label={`Copy hex value ${hex}`}
       >
         {copiedHex && (
           <div style={{
@@ -200,13 +209,22 @@ const TokenCard: React.FC<{ entry: TokenEntry; mode: 'light' | 'dark' }> = ({ en
       {/* Meta */}
       <div style={{ padding: '8px 10px 10px' }}>
         <div
+          role="button"
+          tabIndex={0}
           style={{
             fontSize: 11, fontFamily: 'monospace', fontWeight: 600,
             color: '#000f47', cursor: 'pointer', marginBottom: 2,
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}
           onClick={handleCopyName}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleCopyName();
+            }
+          }}
           title={`Click to copy token name: ${entry.name}`}
+          aria-label={`Copy token name ${entry.name}`}
         >
           {copiedName ? '✔ copied' : entry.name}
         </div>

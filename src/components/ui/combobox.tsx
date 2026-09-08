@@ -41,6 +41,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const selected = options.find((o) => o.value === value);
+  const listId = React.useId();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,6 +50,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           type="button"
           role="combobox"
           aria-expanded={open}
+          aria-controls={listId}
           disabled={disabled}
           className={cn(
             'flex h-10 w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
@@ -67,7 +69,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+      <PopoverContent id={listId} className="w-[--radix-popover-trigger-width] p-0">
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>

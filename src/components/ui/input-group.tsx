@@ -63,6 +63,8 @@ function InputGroupAddon({
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
+    // Expands the click target onto the already-focusable sibling input/textarea (same convenience as clicking a <label>) — a keyboard user already reaches the input directly via Tab, no redundant "tab to the addon, then activate it" step needed.
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <div
       role="group"
       data-slot="input-group-addon"

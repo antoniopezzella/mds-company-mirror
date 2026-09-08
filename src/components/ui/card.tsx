@@ -43,6 +43,8 @@ CardHeader.displayName = 'CardHeader';
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
+    // Generic wrapper spreading ...props onto a real caller-supplied children — static analysis can't see through the spread, but every real usage passes real heading text.
+    // eslint-disable-next-line jsx-a11y/heading-has-content
     <h3
       ref={ref}
       className={cn('font-[var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-bold leading-tight', className)}
