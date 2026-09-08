@@ -109,7 +109,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
               borderRadius: '6px',
               fontWeight: 500,
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-              zIndex: 50,
+              zIndex: 1500,
               ...SIZE_STYLES[size],
             }}
           >
