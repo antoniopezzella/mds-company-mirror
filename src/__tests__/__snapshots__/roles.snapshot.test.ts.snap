@@ -15,14 +15,20 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "borderStrong",
   },
   {
-    "dark": "#0b4bff",
-    "light": "#0b4bff",
+    "dark": "#ffbf00",
+    "light": "#ffbf00",
+    "role": "brand.accent",
+    "semantic": "brandAccent",
+  },
+  {
+    "dark": "#5e9aff",
+    "light": "#3d7aff",
     "role": "focus.ring",
     "semantic": "focusRing",
   },
   {
     "dark": "#ff6b6b",
-    "light": "#e53935",
+    "light": "#d33330",
     "role": "interactive.danger",
     "semantic": "interactiveDanger",
   },
@@ -81,6 +87,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusDangerBg",
   },
   {
+    "dark": "#ff6b6b",
+    "light": "#c53532",
+    "role": "status.danger.border",
+    "semantic": "statusDangerBorder",
+  },
+  {
     "dark": "#ffe8e8",
     "light": "#8b1a1a",
     "role": "status.danger.fg",
@@ -91,6 +103,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#f5fbff",
     "role": "status.info.bg",
     "semantic": "statusInfoBg",
+  },
+  {
+    "dark": "#95caff",
+    "light": "#6fb4ff",
+    "role": "status.info.border",
+    "semantic": "statusInfoBorder",
   },
   {
     "dark": "#ceecff",
@@ -105,6 +123,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusSuccessBg",
   },
   {
+    "dark": "#8dcc92",
+    "light": "#14853d",
+    "role": "status.success.border",
+    "semantic": "statusSuccessBorder",
+  },
+  {
     "dark": "#def2d7",
     "light": "#2f7d32",
     "role": "status.success.fg",
@@ -115,6 +139,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#fffcf8",
     "role": "status.warning.bg",
     "semantic": "statusWarningBg",
+  },
+  {
+    "dark": "#ff994a",
+    "light": "#cb7e03",
+    "role": "status.warning.border",
+    "semantic": "statusWarningBorder",
   },
   {
     "dark": "#fff2da",
@@ -142,7 +172,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#3e4944",
-    "light": "#303c37",
+    "light": "#000f47",
     "role": "surface.hero",
     "semantic": "surfaceHero",
   },
@@ -169,6 +199,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#ceecff",
     "role": "surface.secondary",
     "semantic": "brandSecondary",
+  },
+  {
+    "dark": "#ebf7ff",
+    "light": "#ebf7ff",
+    "role": "surface.secondary.hover",
+    "semantic": "surfaceSecondaryHover",
   },
   {
     "dark": "#252525",
@@ -201,10 +237,22 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "textOnDanger",
   },
   {
-    "dark": "#ffffff",
-    "light": "#ffffff",
+    "dark": "#ceecff",
+    "light": "#ceecff",
     "role": "text.onHero",
     "semantic": "textOnHero",
+  },
+  {
+    "dark": "#000f47",
+    "light": "#ffffff",
+    "role": "text.onInteractive",
+    "semantic": "textOnInteractive",
+  },
+  {
+    "dark": "#000f47",
+    "light": "#000f47",
+    "role": "text.onLight",
+    "semantic": "textOnLight",
   },
   {
     "dark": "#ffffff",
