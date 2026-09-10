@@ -11,6 +11,12 @@ export interface SideNavItem {
   active?: boolean;
   path?: string;
   subItems?: SideNavItem[];
+  /** Renders a small trailing status dot next to the label. */
+  dot?: boolean;
+  /** Bold, section-header-style label treatment (light mode only) —
+   *  explicit opt-in, replacing a prior hardcoded label-string check that
+   *  only recognized one specific mock client's name. */
+  sectionHeader?: boolean;
 }
 
 export interface SideNavigationProps {
@@ -23,6 +29,12 @@ export interface SideNavigationProps {
   variant?: 'dark' | 'light';
   colorScheme?: 'primary' | 'secondary'; // MDS color schemes
   className?: string;
+  /** Initializes every group with subItems already expanded, instead of collapsed. Default false (today's behavior, unchanged). */
+  defaultOpenAll?: boolean;
+  /** Also navigates to a group header's own `path` (if set) when clicked, instead of only toggling it open/closed. Default false (today's behavior, unchanged). */
+  navigateOnGroupClick?: boolean;
+  /** Hides the "Need help? / Contact support" footer box. Default false (today's behavior, unchanged). */
+  hideSupportCta?: boolean;
 }
 
 function slugify(text: string) {
@@ -56,8 +68,28 @@ function getDefaultIcon(label: string): React.ReactNode {
 }
 
 const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
-  ({ items, onSupport, onClose, onNavigate, currentPath, ariaLabel = 'Primary', variant = 'dark', colorScheme = 'primary', className }, ref) => {
-    const [openGroups, setOpenGroups] = React.useState<{ [key: string]: boolean }>({});
+  (
+    {
+      items,
+      onSupport,
+      onClose,
+      onNavigate,
+      currentPath,
+      ariaLabel = 'Primary',
+      variant = 'dark',
+      colorScheme = 'primary',
+      className,
+      defaultOpenAll = false,
+      navigateOnGroupClick = false,
+      hideSupportCta = false,
+    },
+    ref
+  ) => {
+    const [openGroups, setOpenGroups] = React.useState<{ [key: string]: boolean }>(() =>
+      defaultOpenAll
+        ? Object.fromEntries(items.filter((item) => item.subItems?.length).map((item) => [item.label, true]))
+        : {}
+    );
 
     const handleGroupClick = (label: string) => {
       setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -172,7 +204,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
             const isGroup = !!item.subItems?.length;
             const isItemActive = !!item.active || (item.path ? currentPath === item.path : false);
             const isOpen = openGroups[item.label];
-            const isSectionHeader = ['Client List', 'Beacon Capital Partners', 'Task Center', 'Quick Actions'].includes(item.label);
+            const isSectionHeader = !!item.sectionHeader;
 
             return (
               <li key={item.label}>
@@ -181,6 +213,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   onClick={() => {
                     if (isGroup) {
                       handleGroupClick(item.label);
+                      if (navigateOnGroupClick) navigateTo(item.path);
                       return;
                     }
                     navigateTo(item.path);
@@ -237,6 +270,13 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   )}>
                     {item.label}
                   </span>
+                  {item.dot && (
+                    <span
+                      aria-hidden="true"
+                      className="mr-1 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: getRoleColor('status.warning.fg') }}
+                    />
+                  )}
                   {isGroup && (
                     <span className="flex-shrink-0">
                       {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -289,7 +329,14 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               !isSubActive && 'hover:bg-[var(--sn-hover-bg)]'
                             )}
                           >
-                            {sub.label}
+                            <span className="flex-1">{sub.label}</span>
+                            {sub.dot && (
+                              <span
+                                aria-hidden="true"
+                                className="ml-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                                style={{ backgroundColor: getRoleColor('status.warning.fg') }}
+                              />
+                            )}
                           </button>
                         </li>
                       );
@@ -302,23 +349,25 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         </ul>
 
         {/* Support CTA */}
-        <div
-          className="p-3 m-2 rounded-md"
-          style={{ backgroundColor: colors.ctaBg, color: colors.ctaText }}
-        >
-          <h3 className="text-lg font-semibold mb-2">
-            Need help?
-          </h3>
-          <Button
-            variant="secondary"
-            inverse={colors.ctaInverse}
-            onClick={onSupport}
-            className="w-full min-h-[44px] font-medium"
-            aria-label="Contact support team"
+        {!hideSupportCta && (
+          <div
+            className="p-3 m-2 rounded-md"
+            style={{ backgroundColor: colors.ctaBg, color: colors.ctaText }}
           >
-            Contact support
-          </Button>
-        </div>
+            <h3 className="text-lg font-semibold mb-2">
+              Need help?
+            </h3>
+            <Button
+              variant="secondary"
+              inverse={colors.ctaInverse}
+              onClick={onSupport}
+              className="w-full min-h-[44px] font-medium"
+              aria-label="Contact support team"
+            >
+              Contact support
+            </Button>
+          </div>
+        )}
       </nav>
     );
   }

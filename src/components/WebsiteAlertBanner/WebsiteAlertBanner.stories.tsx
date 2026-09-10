@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WebsiteAlertBanner } from './WebsiteAlertBanner';
 
 const meta: Meta<typeof WebsiteAlertBanner> = {
-  title: 'Legacy MUI/WebsiteAlertBanner',
+  title: 'Components/WebsiteAlertBanner',
   component: WebsiteAlertBanner,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   args: {
     brand: 'marsh',
     title: 'Important update',
