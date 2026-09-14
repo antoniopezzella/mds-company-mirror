@@ -117,7 +117,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
         aria-modal="true"
         sx={{ top: topOffset }}
       >
-        <div className="container">
+        <div className="mds-legacy-container">
           <Box className={styles.containerInner}>
             <Divider className={styles.divider} />
 
@@ -143,9 +143,9 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
               </Box>
             </Box>
 
-            <div className="row g-4">
+            <div className="mds-legacy-row mds-legacy-g-4">
               {SOLUTION_PILLARS.map((pillar, idx) => (
-                <div className="col-12 col-sm-6 col-md-3" key={idx}>
+                <div className="mds-legacy-col-12 mds-legacy-col-sm-6 mds-legacy-col-md-3" key={idx}>
                   <Box className={styles.pillarCard}>
                     <Typography variant="subtitle1" component="h3" className={styles.pillarTitle}>
                       <strong>{pillar.title}</strong> {pillar.subtitle}
@@ -164,9 +164,9 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
             </div>
 
             <Box className={styles.bottomSection}>
-              <div className="row g-4">
+              <div className="mds-legacy-row mds-legacy-g-4">
                 {BOTTOM_LISTS.map((list, idx) => (
-                  <div className="col-12 col-md-2" key={idx}>
+                  <div className="mds-legacy-col-12 mds-legacy-col-md-2" key={idx}>
                     <Typography variant="subtitle2" component="h4" className={styles.listTitle}>{list.title}</Typography>
                     {list.subtitle && (
                       <Typography variant="caption" sx={{ display: 'block', mb: 1.5, color: '#595959', lineHeight: 1.2 }}>
@@ -185,14 +185,14 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
                 ))}
 
                 {/* Banner CTA Section - Teal Box from Screenshot */}
-                <div className="col-12 col-md-6">
+                <div className="mds-legacy-col-12 mds-legacy-col-md-6">
                   <Box className={styles.bannerCta}>
                     <Box className={styles.bannerContent}>
-                      <Typography variant="h6" sx={{ fontWeight: 800, color: '#000f47', mb: 1 }}>Headline</Typography>
-                      <Typography variant="body2" sx={{ color: '#000f47', mb: 2, maxWidth: '200px', fontSize: '13px' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), mb: 1 }}>Headline</Typography>
+                      <Typography variant="body2" sx={{ color: getRoleColor('text.primary'), mb: 2, maxWidth: '200px', fontSize: '13px' }}>
                         Lorem ipsum dolor sit amet consectetur. Viverra nunc pellentesque morbi curabitur purus senectus.
                       </Typography>
-                      <Typography variant="button" sx={{ fontWeight: 800, color: '#000f47', cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
+                      <Typography variant="button" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
                         [Banner CTA]
                       </Typography>
                     </Box>

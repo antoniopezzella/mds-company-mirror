@@ -139,9 +139,9 @@ export const WebsiteAlertBanner: React.FC<WebsiteAlertBannerProps> = ({
       }}
     >
       {/* Use standard MDS container */}
-      <div className="container">
-        <div className="row g-2">
-          <div className="col-12">
+      <div className="mds-legacy-container">
+        <div className="mds-legacy-row mds-legacy-g-2">
+          <div className="mds-legacy-col-12">
             <div className="website-alert-banner__content">
               <div className="website-alert-banner__text-content">
                 <p 

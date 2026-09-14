@@ -46,7 +46,7 @@ export function GridHealth(props: { label?: string }) {
         {props.label ?? 'Grid CSS'}: {status.toUpperCase()} {detail ? `(${detail})` : null}
       </div>
       {/* Hidden test grid */}
-      <div ref={testRef} className="row" style={{ position:'absolute', visibility:'hidden' }} />
+      <div ref={testRef} className="mds-legacy-row" style={{ position:'absolute', visibility:'hidden' }} />
     </div>
   );
 }
