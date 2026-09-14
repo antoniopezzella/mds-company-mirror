@@ -23,6 +23,16 @@ import {
   StepperDemo,
 } from '../demos/forms';
 import { AlertDemo, ToastDemo, TooltipDemo, DialogDemo, ProgressDemo, SpinnerDemo } from '../demos/feedback';
+import {
+  TabsDemo,
+  AccordionDemo,
+  BreadcrumbsDemo,
+  PaginationDemo,
+  HeaderDemo,
+  SideNavigationDemo,
+} from '../demos/navigation';
+import { CardDemo, AvatarDemo, BadgeDemo, ChipDemo, TableDemo, SkeletonDemo } from '../demos/data-display';
+import { ChatDemo, AttachmentDemo } from '../demos/messaging';
 
 /**
  * Single source of truth for the showcase's sidebar, routes, and content.
@@ -234,6 +244,128 @@ export const categories: CategoryEntry[] = [
         summary: 'A lightweight, indeterminate loading indicator.',
         sourcePath: 'src/components/ui/spinner.tsx',
         demo: SpinnerDemo,
+      },
+    ],
+  },
+  {
+    id: 'navigation',
+    label: 'Navigation',
+    path: '/design-system/navigation',
+    description: 'Structural chrome and wayfinding — where you are, and how you get somewhere else.',
+    components: [
+      {
+        id: 'tabs',
+        title: 'Tabs',
+        summary: 'Switch between sibling views without leaving the page.',
+        sourcePath: 'src/components/ui/tabs.tsx',
+        demo: TabsDemo,
+      },
+      {
+        id: 'accordion',
+        title: 'Accordion',
+        summary: 'Expand one section of related content at a time.',
+        sourcePath: 'src/components/ui/accordion.tsx',
+        demo: AccordionDemo,
+      },
+      {
+        id: 'breadcrumbs',
+        title: 'Breadcrumbs',
+        summary: 'Shows the path back up a hierarchy.',
+        sourcePath: 'src/components/ui/breadcrumbs.tsx',
+        demo: BreadcrumbsDemo,
+      },
+      {
+        id: 'pagination',
+        title: 'Pagination',
+        summary: 'Move through a large result set in pages.',
+        sourcePath: 'src/components/ui/pagination.tsx',
+        demo: PaginationDemo,
+      },
+      {
+        id: 'header',
+        title: 'Header',
+        summary: 'The app-wide top bar — brand, utilities, profile menu.',
+        sourcePath: 'src/components/ui/header.tsx',
+        demo: HeaderDemo,
+      },
+      {
+        id: 'side-navigation',
+        title: 'Side navigation',
+        summary: 'The persistent app sidebar — also what this showcase’s own sidebar is built on.',
+        sourcePath: 'src/components/ui/side-navigation.tsx',
+        demo: SideNavigationDemo,
+      },
+    ],
+  },
+  {
+    id: 'data-display',
+    label: 'Data display',
+    path: '/design-system/data-display',
+    description: 'Presenting information — a single record, a status, or a whole table of rows.',
+    components: [
+      {
+        id: 'card',
+        title: 'Card',
+        summary: 'A bounded surface for one grouped unit of content.',
+        sourcePath: 'src/components/ui/card.tsx',
+        demo: CardDemo,
+      },
+      {
+        id: 'avatar',
+        title: 'Avatar',
+        summary: 'Represents a person — photo, initials, or status.',
+        sourcePath: 'src/components/ui/avatar.tsx',
+        demo: AvatarDemo,
+      },
+      {
+        id: 'badge',
+        title: 'Badge',
+        summary: 'A small, tone-colored status label.',
+        sourcePath: 'src/components/ui/badge.tsx',
+        demo: BadgeDemo,
+      },
+      {
+        id: 'chip',
+        title: 'Chip',
+        summary: 'A compact, selectable or removable tag.',
+        sourcePath: 'src/components/ui/chip.tsx',
+        demo: ChipDemo,
+      },
+      {
+        id: 'table',
+        title: 'Table',
+        summary: 'Sortable, selectable, paginated tabular data.',
+        sourcePath: 'src/components/ui/table.tsx',
+        demo: TableDemo,
+      },
+      {
+        id: 'skeleton',
+        title: 'Skeleton',
+        summary: 'A loading placeholder shaped like the content it precedes.',
+        sourcePath: 'src/components/ui/skeleton.tsx',
+        demo: SkeletonDemo,
+      },
+    ],
+  },
+  {
+    id: 'messaging',
+    label: 'Messaging',
+    path: '/design-system/messaging',
+    description: 'AI chat and conversational surfaces.',
+    components: [
+      {
+        id: 'chat',
+        title: 'Chat conversation',
+        summary: 'Message bubbles, avatars, and auto-scroll for an AI or human conversation.',
+        sourcePath: 'src/components/ui/message.tsx',
+        demo: ChatDemo,
+      },
+      {
+        id: 'attachment',
+        title: 'Attachment',
+        summary: 'A file reference with upload/processing/error states.',
+        sourcePath: 'src/components/ui/attachment.tsx',
+        demo: AttachmentDemo,
       },
     ],
   },

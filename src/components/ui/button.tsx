@@ -275,13 +275,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         {...props}
       >
-        {!iconOnly && startIcon && !loading && (
-          <span className="inline-flex shrink-0">{startIcon}</span>
-        )}
-        {loading && <Loader2 className="h-4 w-4 animate-spin shrink-0" />}
-        {iconOnly ? iconOnlyNode : children}
-        {!iconOnly && endIcon && !loading && (
-          <span className="inline-flex shrink-0">{endIcon}</span>
+        {asChild ? (
+          // Radix's Slot requires exactly one React element child — cloning
+          // icon/loading wrapper spans around `children` here (as the
+          // non-asChild branch below does) would pass Slot a children array
+          // instead, which throws "Slot failed to slot onto its children."
+          // asChild delegates entirely to the consumer's own element; icons/
+          // loading aren't composed in for this branch.
+          children
+        ) : (
+          <>
+            {!iconOnly && startIcon && !loading && (
+              <span className="inline-flex shrink-0">{startIcon}</span>
+            )}
+            {loading && <Loader2 className="h-4 w-4 animate-spin shrink-0" />}
+            {iconOnly ? iconOnlyNode : children}
+            {!iconOnly && endIcon && !loading && (
+              <span className="inline-flex shrink-0">{endIcon}</span>
+            )}
+          </>
         )}
       </Comp>
     );
