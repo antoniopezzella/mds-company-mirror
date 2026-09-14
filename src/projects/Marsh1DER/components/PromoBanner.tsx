@@ -87,10 +87,10 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
       }}
     >
       <Box sx={{ maxWidth: 1540, mx: 'auto', px: { xs: '16px', sm: '24px', lg: '48px' }, py: { xs: 6, md: 0 } }}>
-        <div className="row align-items-center">
+        <div className="mds-legacy-row align-items-center">
 
           {/* Content column */}
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <Box ref={contentRef} className="pb__content" sx={{ py: { xs: 0, md: 10 }, pr: { md: 6 }, display: 'flex', flexDirection: 'column', gap: 4 }}>
 
               {/* Optional partner/brand logo (e.g. F1) — replaces the eyebrow row when present */}
@@ -188,7 +188,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
           </div>
 
           {/* Image column */}
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <Box sx={{ position: 'relative', height: { xs: 300, md: 596 } }}>
               <Box
                 ref={imageRef}

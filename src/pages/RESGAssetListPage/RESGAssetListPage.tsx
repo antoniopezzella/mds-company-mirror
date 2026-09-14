@@ -301,9 +301,9 @@ export const RESGAssetListPage: React.FC = () => {
       >
         {/* Header Section (blue client strip + tabs) */}
         <section className="resg-header">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
+          <div className="mds-legacy-container">
+            <div className="mds-legacy-row">
+              <div className="mds-legacy-col-12">
                 <div className="resg-top-nav">
                   <div className="resg-client-info">
                     <h2 className="resg-client-name">Beacon Capital Partners Advisory Group</h2>
@@ -329,9 +329,9 @@ export const RESGAssetListPage: React.FC = () => {
 
         {/* Main Content Section (white card with title + grid) */}
         <section className="resg-content">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <div className="resg-title-section">
                 <h1 className="resg-page-title">Asset List</h1>
               </div>

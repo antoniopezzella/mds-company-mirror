@@ -348,7 +348,7 @@ export default function AnimatedGridDemo() {
   }, [enabledFeatures.bootstrap, enabledFeatures.physics, enabledFeatures.progressive, enabledFeatures.typography]);
 
   return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+    <div className="mds-legacy-container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
       {/* Performance Controls Panel */}
       <div style={{ 
         position: 'fixed', 
@@ -562,8 +562,8 @@ export default function AnimatedGridDemo() {
         <h2 style={{ fontSize: '2rem', marginBottom: '2rem', fontWeight: 600 }}>
           Responsive Column Ordering
         </h2>
-        <div ref={orderingRef} className="row gap-4">
-          <main className="col-12 col-md-8 order-md-2 order-item" style={{
+        <div ref={orderingRef} className="mds-legacy-row gap-4">
+          <main className="mds-legacy-col-12 mds-legacy-col-md-8 mds-legacy-order-md-2 order-item" style={{
             background: '#e5edf4',
             padding: '2rem',
             borderRadius: '8px',
@@ -572,7 +572,7 @@ export default function AnimatedGridDemo() {
             <h3 style={{ marginBottom: '0.5rem', fontSize: '1.5rem' }}>Main Content</h3>
             <p style={{ color: '#666' }}>First on mobile, second on desktop</p>
           </main>
-          <aside className="col-12 col-md-4 order-md-1 order-item" style={{
+          <aside className="mds-legacy-col-12 mds-legacy-col-md-4 mds-legacy-order-md-1 order-item" style={{
             background: '#667eea',
             color: 'white',
             padding: '2rem',
@@ -590,7 +590,7 @@ export default function AnimatedGridDemo() {
           <h2 style={{ fontSize: '2rem', marginBottom: '2rem', fontWeight: 600 }}>
             🎨 Typography Effects
           </h2>
-          <div className="grid-cols-1 grid-cols-md-2 gap-6">
+          <div className="grid-cols-1 mds-legacy-grid-cols-md-2 gap-6">
             <div style={{ 
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               padding: '3rem',
@@ -630,7 +630,7 @@ export default function AnimatedGridDemo() {
           <h2 style={{ fontSize: '2rem', marginBottom: '2rem', fontWeight: 600 }}>
             ⚡ Physics Interactions
           </h2>
-          <div className="grid-cols-1 grid-cols-md-3 gap-6">
+          <div className="grid-cols-1 mds-legacy-grid-cols-md-3 gap-6">
             <div className="physics-card magnetic-field" style={{ 
               background: '#48bb78',
               padding: '2rem',
@@ -687,7 +687,7 @@ export default function AnimatedGridDemo() {
             marginBottom: '2rem'
           }}>
             <h3 style={{ color: '#155724', marginBottom: '1rem' }}>✅ Exact Bootstrap 5.3 Match</h3>
-            <div className="grid-cols-1 grid-cols-md-2 gap-4" style={{ fontSize: '0.875rem', color: '#155724' }}>
+            <div className="grid-cols-1 mds-legacy-grid-cols-md-2 gap-4" style={{ fontSize: '0.875rem', color: '#155724' }}>
               <div>
                 <strong>Breakpoints:</strong><br />
                 xs(0), sm(576px), md(768px), lg(992px), xl(1200px), xxl(1400px)
@@ -699,8 +699,8 @@ export default function AnimatedGridDemo() {
             </div>
           </div>
           
-          <div className="row gap-4">
-            <div className="col-12 col-sm-6 col-md-4" style={{ 
+          <div className="mds-legacy-row gap-4">
+            <div className="mds-legacy-col-12 mds-legacy-col-sm-6 mds-legacy-col-md-4" style={{ 
               background: '#007bff', 
               color: 'white', 
               padding: '1rem', 
@@ -709,7 +709,7 @@ export default function AnimatedGridDemo() {
             }}>
               .col-12 .col-sm-6 .col-md-4
             </div>
-            <div className="col-12 col-sm-6 col-md-4" style={{ 
+            <div className="mds-legacy-col-12 mds-legacy-col-sm-6 mds-legacy-col-md-4" style={{ 
               background: '#28a745', 
               color: 'white', 
               padding: '1rem', 
@@ -718,7 +718,7 @@ export default function AnimatedGridDemo() {
             }}>
               Bootstrap Classes Work
             </div>
-            <div className="col-12 col-sm-12 col-md-4" style={{ 
+            <div className="mds-legacy-col-12 mds-legacy-col-sm-12 mds-legacy-col-md-4" style={{ 
               background: '#dc3545', 
               color: 'white', 
               padding: '1rem', 
@@ -741,7 +741,7 @@ export default function AnimatedGridDemo() {
         <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', fontWeight: 600 }}>
           🏆 Enhanced Animation Features
         </h3>
-        <div className="grid-cols-1 grid-cols-md-2 gap-6">
+        <div className="grid-cols-1 mds-legacy-grid-cols-md-2 gap-6">
           <ul style={{ fontSize: '0.875rem', color: '#4a5568', lineHeight: 1.6 }}>
             <li>✅ <strong>Parallax Hero:</strong> Background moves at different speed</li>
             <li>✅ <strong>Card Stagger:</strong> Cards reveal with intelligent grid stagger</li>

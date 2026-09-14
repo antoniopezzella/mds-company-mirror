@@ -217,11 +217,11 @@ const EnhancedBusinessPillars: React.FC = () => {
         </Box>
         
         {/* Enhanced MDS Grid System with advanced cards */}
-        <div ref={cardsContainerRef} className="row gap-8">
+        <div ref={cardsContainerRef} className="mds-legacy-row gap-8">
           {content.pillars.map((pillar, index) => (
             <div 
               key={pillar.title} 
-              className="col-12 col-md-6 enhanced-pillar-card"
+              className="mds-legacy-col-12 mds-legacy-col-md-6 enhanced-pillar-card"
               style={{
                 position: 'relative',
                 cursor: 'pointer'

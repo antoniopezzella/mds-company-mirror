@@ -316,7 +316,7 @@ export default function SimpleEnhancedGridDemo() {
         <Typography variant="h5" sx={{ mb: 3, fontWeight: 700, color: getRoleColor('text.primary') }}>
           🏆 Enhanced Grid Features
         </Typography>
-        <div className="grid-cols-1 grid-cols-md-2 grid-cols-lg-4 gap-4 text-left">
+        <div className="grid-cols-1 mds-legacy-grid-cols-md-2 mds-legacy-grid-cols-lg-4 gap-4 text-left">
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, color: getRoleColor('text.primary') }}>
               Smooth Animations

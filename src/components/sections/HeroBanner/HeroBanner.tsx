@@ -959,7 +959,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         }}
       >
         <Box
-          className="row align-center"
+          className="mds-legacy-row mds-legacy-align-center"
           sx={{ width: '100%', m: 0 }}
         >
           <Box

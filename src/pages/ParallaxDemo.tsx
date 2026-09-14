@@ -167,7 +167,7 @@ export default function ParallaxDemo() {
   return (
     <div style={{ background: '#0a0a0a', color: 'white' }}>
       {/* Header */}
-      <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <div className="mds-legacy-container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
         <h1 style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '1rem' }}>
           Advanced Parallax Techniques
         </h1>
@@ -198,7 +198,7 @@ export default function ParallaxDemo() {
           }}
         />
         <div 
-          className="parallax-content container"
+          className="parallax-content mds-legacy-container"
           style={{ 
             position: 'relative', 
             zIndex: 1, 
@@ -218,7 +218,7 @@ export default function ParallaxDemo() {
       {/* 2. Multi-Layer Depth */}
       <section 
         ref={layersRef}
-        className="container"
+        className="mds-legacy-container"
         style={{ 
           minHeight: '100vh',
           paddingTop: '8rem',
@@ -302,7 +302,7 @@ export default function ParallaxDemo() {
           padding: '4rem 0',
         }}
       >
-        <div className="container" style={{ marginBottom: '3rem' }}>
+        <div className="mds-legacy-container" style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>
             Horizontal Parallax
           </h2>
@@ -336,7 +336,7 @@ export default function ParallaxDemo() {
       {/* 4. Word-Level Parallax */}
       <section 
         ref={wordsRef}
-        className="container"
+        className="mds-legacy-container"
         style={{ 
           minHeight: '100vh',
           display: 'flex',
@@ -403,7 +403,7 @@ export default function ParallaxDemo() {
 
         {/* Text layer (foreground) */}
         <div 
-          className="parallax-text container"
+          className="parallax-text mds-legacy-container"
           style={{ 
             position: 'relative',
             zIndex: 1,
@@ -416,8 +416,8 @@ export default function ParallaxDemo() {
           <p style={{ fontSize: '1.5rem', opacity: 0.95, marginBottom: '2rem' }}>
             Image moves slower (background), text moves faster (foreground)
           </p>
-          <div className="row gap-4">
-            <div className="col-12 col-md-6">
+          <div className="mds-legacy-row gap-4">
+            <div className="mds-legacy-col-12 mds-legacy-col-md-6">
               <div style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 padding: '2rem',
@@ -428,7 +428,7 @@ export default function ParallaxDemo() {
                 <p style={{ opacity: 0.8 }}>Different speeds create 3D depth effect</p>
               </div>
             </div>
-            <div className="col-12 col-md-6">
+            <div className="mds-legacy-col-12 mds-legacy-col-md-6">
               <div style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 padding: '2rem',
@@ -444,13 +444,13 @@ export default function ParallaxDemo() {
       </section>
 
       {/* Technical Guide */}
-      <section className="container" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+      <section className="mds-legacy-container" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
         <h2 style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '2rem' }}>
           🎬 Parallax Techniques Explained
         </h2>
 
-        <div className="row gap-6">
-          <div className="col-12 col-md-6">
+        <div className="mds-legacy-row gap-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <div style={{
               background: '#1a1a1a',
               padding: '2rem',
@@ -483,7 +483,7 @@ export default function ParallaxDemo() {
             </div>
           </div>
 
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <div style={{
               background: '#1a1a1a',
               padding: '2rem',
@@ -516,7 +516,7 @@ export default function ParallaxDemo() {
             </div>
           </div>
 
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <div style={{
               background: '#1a1a1a',
               padding: '2rem',
@@ -550,7 +550,7 @@ gsap.to(rightText, {
             </div>
           </div>
 
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <div style={{
               background: '#1a1a1a',
               padding: '2rem',
@@ -616,8 +616,8 @@ gsap.to(rightText, {
           <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>
             🔧 Integration with MDS Grid
           </h3>
-          <div className="row gap-4">
-            <div className="col-12 col-md-4">
+          <div className="mds-legacy-row gap-4">
+            <div className="mds-legacy-col-12 mds-legacy-col-md-4">
               <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#667eea' }}>
                 Grid Layouts
               </h4>
@@ -625,7 +625,7 @@ gsap.to(rightText, {
                 Use <code>.row</code> and <code>.col-*</code> with parallax sections for responsive layouts
               </p>
             </div>
-            <div className="col-12 col-md-4">
+            <div className="mds-legacy-col-12 mds-legacy-col-md-4">
               <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#48bb78' }}>
                 Card Grids
               </h4>
@@ -633,7 +633,7 @@ gsap.to(rightText, {
                 Apply parallax to <code>.grid-auto-fit-md</code> backgrounds for depth effect
               </p>
             </div>
-            <div className="col-12 col-md-4">
+            <div className="mds-legacy-col-12 mds-legacy-col-md-4">
               <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#f59e0b' }}>
                 Hero Sections
               </h4>

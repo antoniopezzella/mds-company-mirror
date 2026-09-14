@@ -305,9 +305,9 @@ const MarshCorporate: React.FC = () => {
         </div>
 
         {/* Hero Content - Light Blue Box */}
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <div ref={contentBoxRef} className="hero-content-box">
                 {/* Content Grid */}
                 <div className="hero-content-grid">
@@ -372,9 +372,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* Business Pillars Section */}
       <section ref={businessSectionRef} className="business-pillars-section">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <p className="section-intro">
                 Access the collective expertise of our four businesses.
               </p>
@@ -457,9 +457,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* Global Stats Section */}
       <section className="global-stats-section">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <p className="stats-intro">
                 With more than 90,000 colleagues based all over the world, our shared purpose, to build the confidence to thrive through the power of perspective, has never been more important or more relevant. We are in business to expand what's possible for our clients and for each other.
               </p>
@@ -487,9 +487,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* Our Journey Section */}
       <section className="our-journey-section">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <div className="journey-header">
                 <h2 className="journey-title">Our journey</h2>
                 <p className="journey-subtitle">Thrive through the power of perspective.</p>
@@ -539,9 +539,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* FAQ Section */}
       <section className="faq-section">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <h2 className="faq-title">Frequently asked questions</h2>
               <p className="faq-intro">
                 Find answers to common questions about our services, partnerships, and approach to risk management.
@@ -615,9 +615,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* For Investors Section */}
       <section className="investors-section">
-        <div className="container-fluid">
-          <div className="row align-items-center">
-            <div className="col-12 col-lg-6">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row align-items-center">
+            <div className="mds-legacy-col-12 mds-legacy-col-lg-6">
               <div className="investors-content">
                 <h2 className="investors-title">For investors</h2>
                 <p className="investors-description">
@@ -631,7 +631,7 @@ const MarshCorporate: React.FC = () => {
                 </button>
               </div>
             </div>
-            <div className="col-12 col-lg-6">
+            <div className="mds-legacy-col-12 mds-legacy-col-lg-6">
               <div className="investors-image">
                 <img src="/images/investors.jpg" alt="Investor Relations" />
               </div>
@@ -642,9 +642,9 @@ const MarshCorporate: React.FC = () => {
 
       {/* Footer */}
       <footer className="marsh-footer">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container-fluid">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <div className="footer-main">
                 <div className="footer-brand">
                   <div className="footer-logo">

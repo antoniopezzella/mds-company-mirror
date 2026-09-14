@@ -96,7 +96,7 @@ describe('WebsiteAlertBanner', () => {
   it('uses MDS container by default', () => {
     const { container } = render(<WebsiteAlertBanner {...defaultProps} />);
     
-    expect(container.querySelector('.container')).toBeInTheDocument();
+    expect(container.querySelector('.mds-legacy-container')).toBeInTheDocument();
   });
 
   it('always uses MDS container class', () => {
@@ -105,7 +105,7 @@ describe('WebsiteAlertBanner', () => {
     );
     
     // Should always use standard container, full-width handled via CSS
-    expect(container.querySelector('.container')).toBeInTheDocument();
+    expect(container.querySelector('.mds-legacy-container')).toBeInTheDocument();
   });
 
   it('applies custom className when provided', () => {

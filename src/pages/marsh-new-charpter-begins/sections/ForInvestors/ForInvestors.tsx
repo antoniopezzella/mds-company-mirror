@@ -78,9 +78,9 @@ const ForInvestors: React.FC = () => {
     >
       <Container maxWidth="xl">
         {/* Two-column layout: text on left, image on right */}
-        <div className="row gap-8 align-items-center">
+        <div className="mds-legacy-row gap-8 align-items-center">
           {/* Text Content */}
-          <div className="col-12 col-lg-6 text-content">
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6 text-content">
             <Typography 
               id="investors-heading" 
               variant="h2" 
@@ -131,7 +131,7 @@ const ForInvestors: React.FC = () => {
           </div>
 
           {/* Image Content */}
-          <div className="col-12 col-lg-6 image-content">
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6 image-content">
             {content.forInvestors.image.src ? (
               <Box
                 component="img"

@@ -148,10 +148,10 @@ export const HeroSection: React.FC = () => {
       }}
     >
       {/* Main Content Container */}
-      <div className="container-fluid" style={{ height: '100%', paddingLeft: 0, paddingRight: 0 }}>
-        <div className="row" style={{ height: '100%', alignItems: 'center', marginLeft: 0, marginRight: 0 }}>
+      <div className="mds-legacy-container-fluid" style={{ height: '100%', paddingLeft: 0, paddingRight: 0 }}>
+        <div className="mds-legacy-row" style={{ height: '100%', alignItems: 'center', marginLeft: 0, marginRight: 0 }}>
           {/* Left Column: Content (6 cols) */}
-          <div className="col-12 col-lg-6" style={{ paddingLeft: 0 }}>
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6" style={{ paddingLeft: 0 }}>
             <Box
               ref={contentRef}
               sx={{
@@ -211,7 +211,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Right Column: Hero Video (6 cols) */}
-          <div className="col-12 col-lg-6" style={{ display: 'flex', height: '100%' }}>
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6" style={{ display: 'flex', height: '100%' }}>
             <Box
               ref={videoContainerRef}
               sx={{

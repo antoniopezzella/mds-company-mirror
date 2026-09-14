@@ -214,9 +214,9 @@ const GlobalStats: React.FC = () => {
       }}
     >
       <Container maxWidth="xl">
-        <div className="row">
+        <div className="mds-legacy-row">
           {/* Left column - Heading and description */}
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <Typography 
               id="stats-heading" 
               variant="h2" 
@@ -245,7 +245,7 @@ const GlobalStats: React.FC = () => {
           </div>
 
           {/* Right column - Animated stats */}
-          <div className="col-12 col-md-6">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6">
             <Box
               ref={statsContainerRef}
               sx={{

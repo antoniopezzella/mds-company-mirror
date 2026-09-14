@@ -22,7 +22,7 @@ export default function DebugPage() {
         </CardContent>
       </Card>
 
-      <div className="grid-cols-1 grid-cols-md-2 gap-4">
+      <div className="grid-cols-1 mds-legacy-grid-cols-md-2 gap-4">
         <Card>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2, color: getRoleColor('interactive.primary') }}>

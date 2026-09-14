@@ -86,11 +86,11 @@ const BusinessPillars: React.FC = () => {
         </Typography>
         
         {/* MDS Grid System: 1 col mobile, 2 col desktop */}
-        <div className="row gap-6">
+        <div className="mds-legacy-row gap-6">
           {content.pillars.map((p) => (
             <div 
               key={p.title} 
-              className="col-12 col-md-6 pillar-card"
+              className="mds-legacy-col-12 mds-legacy-col-md-6 pillar-card"
               style={{
                 padding: '2rem',
                 borderRadius: '12px',

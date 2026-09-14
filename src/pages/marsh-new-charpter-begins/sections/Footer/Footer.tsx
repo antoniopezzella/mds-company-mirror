@@ -28,9 +28,9 @@ const Footer: React.FC = () => {
       }}
     >
       <Container maxWidth="xl">
-        <div className="row gap-8">
+        <div className="mds-legacy-row gap-8">
           {/* Logo and Description */}
-          <div className="col-12 col-md-6 col-lg-4">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6 mds-legacy-col-lg-4">
             <Box sx={{ mb: (t) => t.spacing(3) }}>
               <img 
                 src={content.footer.logo.src} 
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Business Links */}
-          <div className="col-12 col-md-6 col-lg-3">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-6 mds-legacy-col-lg-3">
             <Typography 
               variant="h6" 
               component="h3"
@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Legal Links */}
-          <div className="col-12 col-md-12 col-lg-5">
+          <div className="mds-legacy-col-12 mds-legacy-col-md-12 mds-legacy-col-lg-5">
             <Typography 
               variant="h6" 
               component="h3"

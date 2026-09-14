@@ -156,7 +156,7 @@ export const VideoSection: React.FC = () => {
         zIndex: 35, // Between Journey (30) and FAQ (40)
       }}
     >
-      <div className="container">
+      <div className="mds-legacy-container">
         {/* Section Header */}
         <Box sx={{ mb: 6, maxWidth: '800px' }}>
           <Typography
@@ -183,7 +183,7 @@ export const VideoSection: React.FC = () => {
       </div>
 
       {/* Video container with clip-path reveal */}
-      <div className="container">
+      <div className="mds-legacy-container">
         <Box
           ref={videoContainerRef}
           sx={{

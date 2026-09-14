@@ -31,7 +31,7 @@ export const FourBrandsSection: React.FC<FourBrandsSectionProps> = ({
 }) => {
   return (
     <section className="four-brands-section" style={{ backgroundColor }}>
-      <div className="container">
+      <div className="mds-legacy-container">
         <div className="four-brands-section__header">
           <Typography
             variant="h2"
@@ -56,9 +56,9 @@ export const FourBrandsSection: React.FC<FourBrandsSectionProps> = ({
           </Typography>
         </div>
 
-        <div className="row g-0 four-brands-section__row">
+        <div className="mds-legacy-row mds-legacy-g-0 four-brands-section__row">
           {businesses.map((business, index) => (
-            <div key={index} className="col-12 col-lg-3 four-brands-section__col">
+            <div key={index} className="mds-legacy-col-12 mds-legacy-col-lg-3 four-brands-section__col">
               <BusinessCard
                 {...business}
                 showDivider={index < businesses.length - 1}
