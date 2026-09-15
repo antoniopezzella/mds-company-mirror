@@ -21,6 +21,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { getRoleColor } from '../../theme/roles';
+import { getFocusRingSx } from '../../theme/focusRing';
 
 // Fallback icon if none is provided
 const DefaultMenuIcon = DashboardIcon;
@@ -85,7 +86,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
           ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
           ctaText: getRoleColor('text.primary', { mode: 'dark' }),
           ctaBtnBg: getRoleColor('interactive.secondary', { mode: 'dark' }),
-          ctaBtnText: getRoleColor('text.onAccent', { mode: 'dark' }),
+          ctaBtnText: getRoleColor('text.onInteractive', { mode: 'dark' }),
           ctaBtnHover: getRoleColor('interactive.secondary.hover', { mode: 'dark' })
         };
       }
@@ -217,11 +218,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   px: collapsed ? 0 : 1,
                   color: isSectionHeader && variant === 'light' ? colors.sectionHeaderText : colors.navText,
-                  '&:focus-visible': {
-                    outline: '2px solid',
-                    outlineColor: getRoleColor('focus.ring'),
-                    outlineOffset: '2px'
-                  },
+                  '&:focus-visible': getFocusRingSx(theme),
                   ...(isItemActive && {
                     bgcolor: colors.activeBg,
                     color: colors.activeText,
@@ -283,11 +280,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
                           color: colors.navText,
                           minHeight: 44, // Accessibility: minimum touch target
                           // Focus styles for keyboard accessibility
-                          '&:focus-visible': {
-                            outline: '2px solid',
-                            outlineColor: getRoleColor('focus.ring'),
-                            outlineOffset: '2px'
-                          },
+                          '&:focus-visible': getFocusRingSx(theme),
                           // Sub-item active state
                           ...(isSubActive && {
                             bgcolor: colors.activeBg,

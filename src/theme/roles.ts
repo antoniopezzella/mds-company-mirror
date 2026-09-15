@@ -53,8 +53,10 @@ export type RoleName =
   | 'text.secondary'
   | 'text.inverse'
   | 'text.onAccent'
+  | 'text.onInteractive'
   | 'text.onHero'
   | 'text.onDanger'
+  | 'text.onLight'
   | 'text.disabled'
   | 'surface.default'
   | 'surface.subtle'
@@ -105,8 +107,10 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
   'text.inverse': { semantic: 'textOnAccent', description: 'Text on accent or inverse surfaces' },
   'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
+  'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
   'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface' },
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
+  'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
   'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
   'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },

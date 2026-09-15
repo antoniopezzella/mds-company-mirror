@@ -86,11 +86,25 @@ function getControlStyle({
   } as React.CSSProperties;
 
   if (disabled) {
+    // Figma node 7582:7818 (verified via get_variable_defs): checked/
+    // indeterminate disabled mutes the filled glyph itself to text.disabled;
+    // unchecked disabled keeps a normal border and mutes via a filled
+    // surface.disabled background instead — the two states don't share one
+    // treatment.
+    if (checkedVisual) {
+      return {
+        ...style,
+        ...focusVars,
+        backgroundColor: getRoleColor('text.disabled'),
+        borderColor: getRoleColor('text.disabled'),
+        color: getRoleColor('surface.default'),
+      };
+    }
     return {
       ...style,
       ...focusVars,
       backgroundColor: getRoleColor('surface.disabled'),
-      borderColor: getRoleColor('text.disabled'),
+      borderColor: getRoleColor('border.default'),
       color: getRoleColor('text.disabled'),
     };
   }
@@ -99,29 +113,49 @@ function getControlStyle({
     const baseRole = invalid ? 'interactive.danger' : 'interactive.primary';
     const role = getInteractiveRole(baseRole, interaction);
 
+    // text.onInteractive (not text.onAccent): both interactive.primary and
+    // interactive.danger lighten in dark mode instead of staying dark (e.g.
+    // #95caff, #ff6b6b) — a fixed white icon fails contrast there. Light
+    // mode's danger case needed a background fix too (interactiveDanger's
+    // old red750 was too mid-toned for any text color to clear 4.5:1 —
+    // now red800, passes at 4.90:1 with white). See semantic-tokens.ts's
+    // textOnInteractive/interactiveDanger comments.
     return {
       ...style,
       ...focusVars,
       backgroundColor: getRoleColor(role),
       borderColor: getRoleColor(role),
-      color: getRoleColor('text.onAccent'),
+      color: getRoleColor('text.onInteractive'),
     };
   }
 
-  const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
-  const backgroundColor =
-    interaction === 'active'
-      ? `color-mix(in srgb, ${getRoleColor('surface.default')} 80%, ${getRoleColor('interactive.primary')} 20%)`
-      : interaction === 'hover'
-        ? `color-mix(in srgb, ${getRoleColor('surface.default')} 90%, ${getRoleColor('interactive.primary')} 10%)`
-        : getRoleColor('surface.default');
+  // Unchecked hover/active — per Figma (node 7582:7776 / 7582:7784): the
+  // unchecked box's own border turns Active Blue (interactive.secondary)
+  // plus a translucent wash behind it, not a bare background tint against
+  // interactive.primary. Invalid reuses the danger border color at the same
+  // wash opacities (Figma's invalid hover/active wash wasn't independently
+  // verified — extrapolated from the non-invalid pattern, same as the MUI
+  // version this ports from).
+  if (interaction === 'default') {
+    const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
+    return {
+      ...style,
+      ...focusVars,
+      backgroundColor: getRoleColor('surface.default'),
+      borderColor: getRoleColor(borderRole),
+      color: getRoleColor(invalid ? 'interactive.danger' : 'interactive.primary'),
+    };
+  }
+
+  const uncheckedInteractiveColor = invalid ? getRoleColor('status.danger.border') : getRoleColor('interactive.secondary');
+  const washPercent = interaction === 'active' ? 20 : 10; // Figma: ~#..1a (10%) hover, ~#..33 (20%) active
 
   return {
     ...style,
     ...focusVars,
-    backgroundColor,
-    borderColor: getRoleColor(borderRole),
-    color: getRoleColor(invalid ? 'interactive.danger' : 'interactive.primary'),
+    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${getRoleColor('surface.default')} ${100 - washPercent}%)`,
+    borderColor: uncheckedInteractiveColor,
+    color: uncheckedInteractiveColor,
   };
 }
 

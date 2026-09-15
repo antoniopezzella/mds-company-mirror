@@ -48,7 +48,10 @@ interface ToneRoles {
 const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> = {
   info: {
     solidBg: 'interactive.primary',
-    solidFg: 'text.onAccent',
+    // text.onInteractive, not text.onAccent: interactive.primary lightens in
+    // dark mode (#95caff) instead of staying dark, so a fixed white fails
+    // there (1.73:1) — text.onInteractive resolves white/Midnight per mode.
+    solidFg: 'text.onInteractive',
     // TODO(token-request): no existing role represents a light tint of the
     // brand-primary navy Figma uses for "Informative" — surface.accent is
     // the closest already-approved role, not a semantic match.
@@ -58,21 +61,26 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
   },
   success: {
     solidBg: 'status.success.border',
-    solidFg: 'text.onAccent',
+    solidFg: 'text.onInteractive', // same dark-mode-lightens shape as interactive.primary (border dark = #8dcc92)
     softBg: 'status.success.bg',
     softBorder: 'status.success.border',
     softFg: 'text.primary',
   },
   warning: {
     solidBg: 'status.warning.border',
-    solidFg: 'text.primary', // Notice keeps dark text on its solid fill — matches Figma exactly.
+    // text.onLight, not text.primary: text.primary flips to white in dark
+    // mode (for the general dark page background), but warning's border/bg
+    // stay light/mid-toned gold in BOTH modes — white text there fails
+    // (2.12:1 solid, 3.41:1 soft). text.onLight is mode-invariant Midnight,
+    // matching what this tone actually needs in both modes (8.55/5.31:1).
+    solidFg: 'text.onLight',
     softBg: 'status.warning.bg',
     softBorder: 'status.warning.border',
-    softFg: 'text.primary',
+    softFg: 'text.onLight',
   },
   danger: {
     solidBg: 'status.danger.border',
-    solidFg: 'text.onAccent',
+    solidFg: 'text.onInteractive', // same shape as interactive.danger (border dark = interactiveDanger's #ff6b6b)
     softBg: 'status.danger.bg',
     softBorder: 'status.danger.border',
     softFg: 'text.primary',
