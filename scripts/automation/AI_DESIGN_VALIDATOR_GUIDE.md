@@ -482,8 +482,8 @@ jobs:
 **Documentation**:
 - Full workflow: `QUICK_START.md`
 - Extraction guide: `EXTRACTION_GUIDE.md`
-- Sprint plan: `docs/PHASE_3_4_SPRINT_PLAN.md`
-- Competitive analysis: `docs/DESIGN_SYSTEM_COMPETITIVE_ANALYSIS.md`
+- Sprint plan (archived, no longer active): `docs/archive/PHASE_3_4_SPRINT_PLAN.md`
+- Competitive analysis (archived): `docs/archive/DESIGN_SYSTEM_COMPETITIVE_ANALYSIS.md`
 
 **Common Questions**:
 

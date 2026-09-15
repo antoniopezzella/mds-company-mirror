@@ -102,6 +102,34 @@ const colorTokens = {};
 for (const [k, v] of Object.entries(tokens)) colorTokens[k] = { $type: 'color', $value: colorValue(v) };
 writeFileSync(path.join(dtcgOut, 'color.tokens.json'), JSON.stringify({ color: colorTokens }, null, 2));
 
+// ─── Alias resolution for semantic color tokens ──────────────────────────────
+// Every semanticColors/semanticDarkOverrides entry in the TS source is a pure
+// reference to a primitive (`ref('blue1000')` / `tokens.blue1000`) — never a
+// literal. That relationship is real design-system data (it's the whole
+// point of the 3-tier primitive→semantic→role architecture, see CLAUDE.md),
+// so the DTCG export should say so via `{color.blue1000}` reference syntax
+// (https://www.designtokens.org/tr/drafts/format/#aliases-references)
+// instead of silently flattening to a duplicated literal value. Matched by
+// exact resolved value (hex + alpha) against the primitives above; falls
+// back to a literal `colorValue()` only if zero or more-than-one primitive
+// shares that exact value (ambiguous — safer not to guess).
+const primitiveByValue = new Map();
+for (const [k, v] of Object.entries(tokens)) {
+  const cv = colorValue(v);
+  const sig = `${cv.hex}|${cv.alpha ?? 1}`;
+  if (!primitiveByValue.has(sig)) primitiveByValue.set(sig, []);
+  primitiveByValue.get(sig).push(k);
+}
+function semanticColorEntry(raw) {
+  const cv = colorValue(raw);
+  const sig = `${cv.hex}|${cv.alpha ?? 1}`;
+  const matches = primitiveByValue.get(sig);
+  if (matches && matches.length === 1) {
+    return { $type: 'color', $value: `{color.${matches[0]}}` };
+  }
+  return { $type: 'color', $value: cv };
+}
+
 const spacingTokens = {};
 spacing.forEach((v, i) => { spacingTokens[`step${i}`] = { $type: 'dimension', $value: { value: v, unit: 'px' } }; });
 writeFileSync(path.join(dtcgOut, 'spacing.tokens.json'), JSON.stringify({ spacing: spacingTokens }, null, 2));
@@ -136,15 +164,38 @@ const shadowTokens = {};
 shadows.forEach((s) => { shadowTokens[`level${s.level}`] = { $type: 'shadow', $value: shadowValue(s.value), $description: s.usage }; });
 writeFileSync(path.join(dtcgOut, 'shadow.tokens.json'), JSON.stringify({ shadow: shadowTokens }, null, 2));
 
+// Deprecated semantic tokens — single source of truth for both the DTCG
+// $deprecated reserved property (https://www.designtokens.org/tr/drafts/format/#deprecated)
+// on the affected tokens below, and the meta.deprecated block further down.
+const deprecatedTokens = {
+  statusWarning: {
+    replaceWith: ['statusWarningBg', 'statusWarningText'],
+    rationale: 'Use background + text pair for accessible warning states.'
+  },
+  statusSuccess: {
+    replaceWith: ['statusSuccessBg', 'statusSuccessText'],
+    rationale: 'Adopt background/text pattern for consistency.'
+  },
+  statusDanger: {
+    replaceWith: ['statusDangerBg', 'statusDangerText'],
+    rationale: 'Adopt background/text pattern for consistency.'
+  }
+};
+function withDeprecated(key, entry) {
+  const d = deprecatedTokens[key];
+  if (!d) return entry;
+  return { ...entry, $deprecated: `Use ${d.replaceWith.join(' + ')} instead — ${d.rationale}` };
+}
+
 const semanticColorTokens = {};
-for (const [k, v] of Object.entries(semanticColors)) semanticColorTokens[k] = { $type: 'color', $value: colorValue(v) };
+for (const [k, v] of Object.entries(semanticColors)) semanticColorTokens[k] = withDeprecated(k, semanticColorEntry(v));
 writeFileSync(
   path.join(dtcgOut, 'semantic-color.tokens.json'),
   JSON.stringify({ semantic: { color: semanticColorTokens } }, null, 2),
 );
 
 const semanticColorDarkTokens = {};
-for (const [k, v] of Object.entries(semanticDarkOverrides)) semanticColorDarkTokens[k] = { $type: 'color', $value: colorValue(v) };
+for (const [k, v] of Object.entries(semanticDarkOverrides)) semanticColorDarkTokens[k] = withDeprecated(k, semanticColorEntry(v));
 writeFileSync(
   path.join(dtcgOut, 'semantic-color-dark.tokens.json'),
   JSON.stringify({ semanticDark: { color: semanticColorDarkTokens } }, null, 2),
@@ -170,20 +221,7 @@ const meta = {
   generated: new Date().toISOString(),
   version: process.env.npm_package_version || '0.0.0',
   source: ['src/tokens.ts', 'src/spacing.ts', 'src/shadows.ts'],
-  deprecated: {
-    statusWarning: {
-      replaceWith: ['statusWarningBg', 'statusWarningText'],
-      rationale: 'Use background + text pair for accessible warning states.'
-    },
-    statusSuccess: {
-      replaceWith: ['statusSuccessBg', 'statusSuccessText'],
-      rationale: 'Adopt background/text pattern for consistency.'
-    },
-    statusDanger: {
-      replaceWith: ['statusDangerBg', 'statusDangerText'],
-      rationale: 'Adopt background/text pattern for consistency.'
-    }
-  }
+  deprecated: deprecatedTokens
 };
 
 // ─── Build via Style Dictionary ──────────────────────────────────────────────
@@ -197,8 +235,12 @@ const sd = new StyleDictionary(buildConfig(originalValues));
 await sd.hasInitialized;
 await sd.buildAllPlatforms();
 
-writeFileSync(path.join(root, 'dist', 'tokens.dtcg.json'), JSON.stringify(dtcgMerged, null, 2));
+// `.tokens.json` is one of the two file extensions the spec recommends
+// (https://www.designtokens.org/tr/drafts/format/#file-extension) — `dist/tokens.json`
+// already exists as the legacy flat-key export, hence `tokens.tokens.json`
+// (not a typo) rather than a name that collides with it.
+writeFileSync(path.join(root, 'dist', 'tokens.tokens.json'), JSON.stringify(dtcgMerged, null, 2));
 
 console.log('✔ tokens.json generated (via Style Dictionary)');
 console.log('✔ theme.css generated (via Style Dictionary)');
-console.log('✔ tokens.dtcg.json generated (W3C DTCG format)');
+console.log('✔ tokens.tokens.json generated (W3C DTCG format)');

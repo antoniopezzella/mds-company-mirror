@@ -1,5 +1,5 @@
 {
-  "$description": "Live snapshot of Figma's COLOR PRIMITIVES collection (file uWlcofRor5Dik8LBnJbIjo, VariableCollectionId:9695:7), cross-referenced against src/tokens.ts. Regenerate this snapshot periodically via the Figma Desktop Bridge (figma_get_variables) - it does not auto-refresh. Run `node scripts/check-figma-drift.js` to diff current tokens.ts against this snapshot without needing live Figma access.",
+  "$description": "Live snapshot of Figma's COLOR PRIMITIVES collection (file uWlcofRor5Dik8LBnJbIjo, VariableCollectionId:9695:7), cross-referenced against src/tokens.ts. Regenerate this snapshot periodically via the Figma Desktop Bridge (figma_get_variables) - it does not auto-refresh. Run `node scripts/check-figma-drift.js` to diff current tokens.ts against this snapshot without needing live Figma access. [Updated 2026-09-15: relinked 57 Shades/* alpha-blend entries to their existing src/tokens.ts counterparts (shadesWhite*/shadesBlack*/shadesMidnight*/shadesActive*) — these were previously reported as unmapped purely due to a naming-scheme mismatch in the original linking pass, not a real gap. See docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md.] [Updated 2026-09-15 (round 2): corrected 11 drifted primitives (blue500/600/900/950, gold300/400/500/600, green500, purple500/750) to match Figma exactly; linked 6 new Neutral/Gray steps (150/350/450/550/650/850) and gold650/gold850 as new MDS primitives; gold950 already corrected in round 1. See docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md.]",
   "snapshotDate": "2026-09-02",
   "snapshotSource": "figma-console-local MCP (Desktop Bridge), figma_get_variables, collection=COLOR PRIMITIVES, resolveAliases=true",
   "intentionallyUnmapped": {
@@ -52,15 +52,15 @@
       "figmaVariable": "Primary Palette/Blue/500",
       "figmaValue": "#82BAFF",
       "mdsToken": "blue500",
-      "mdsValue": "#6fb4ff",
-      "inSync": false
+      "mdsValue": "#82baff",
+      "inSync": true
     },
     {
       "figmaVariable": "Primary Palette/Blue/600",
       "figmaValue": "#5E9AFF",
       "mdsToken": "blue600",
-      "mdsValue": "#478aff",
-      "inSync": false
+      "mdsValue": "#5e9aff",
+      "inSync": true
     },
     {
       "figmaVariable": "Primary Palette/Blue/650",
@@ -87,15 +87,15 @@
       "figmaVariable": "Primary Palette/Blue/900",
       "figmaValue": "#082D9E",
       "mdsToken": "blue900",
-      "mdsValue": "#042791",
-      "inSync": false
+      "mdsValue": "#082d9e",
+      "inSync": true
     },
     {
       "figmaVariable": "Primary Palette/Blue/950",
       "figmaValue": "#06206E",
       "mdsToken": "blue950",
-      "mdsValue": "#021b6c",
-      "inSync": false
+      "mdsValue": "#06206e",
+      "inSync": true
     },
     {
       "figmaVariable": "Primary Palette/Blue/1000 (Midnight)",
@@ -157,36 +157,36 @@
       "figmaVariable": "Secondary Palette/Gold/300",
       "figmaValue": "#FFEECA",
       "mdsToken": "gold300",
-      "mdsValue": "#ffe0bd",
-      "inSync": false
+      "mdsValue": "#ffeeca",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/400",
       "figmaValue": "#FFE3AA",
       "mdsToken": "gold400",
-      "mdsValue": "#ffbd84",
-      "inSync": false
+      "mdsValue": "#ffe3aa",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/500",
       "figmaValue": "#FFD98A",
       "mdsToken": "gold500",
-      "mdsValue": "#ff994a",
-      "inSync": false
+      "mdsValue": "#ffd98a",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/600",
       "figmaValue": "#FFCF53",
       "mdsToken": "gold600",
-      "mdsValue": "#ffa02e",
-      "inSync": false
+      "mdsValue": "#ffcf53",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/650",
       "figmaValue": "#FFC937",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gold650",
+      "mdsValue": "#ffc937",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/750",
@@ -198,9 +198,9 @@
     {
       "figmaVariable": "Secondary Palette/Gold/850",
       "figmaValue": "#EAA501",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gold850",
+      "mdsValue": "#eaa501",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/900",
@@ -213,8 +213,8 @@
       "figmaVariable": "Secondary Palette/Gold/950",
       "figmaValue": "#D58B02",
       "mdsToken": "gold950",
-      "mdsValue": "#d5831c",
-      "inSync": false
+      "mdsValue": "#d58b02",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Gold/1000",
@@ -234,8 +234,8 @@
       "figmaVariable": "Secondary Palette/Green/500",
       "figmaValue": "#B0DC92",
       "mdsToken": "green500",
-      "mdsValue": "#8dcc92",
-      "inSync": false
+      "mdsValue": "#b0dc92",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Green/750",
@@ -262,15 +262,15 @@
       "figmaVariable": "Secondary Palette/Purple/500",
       "figmaValue": "#DEB1FF",
       "mdsToken": "purple500",
-      "mdsValue": "#c88fff",
-      "inSync": false
+      "mdsValue": "#deb1ff",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Purple/750",
       "figmaValue": "#8F20DE",
       "mdsToken": "purple750",
-      "mdsValue": "#8f37c6",
-      "inSync": false
+      "mdsValue": "#8f20de",
+      "inSync": true
     },
     {
       "figmaVariable": "Secondary Palette/Purple/1000",
@@ -303,9 +303,9 @@
     {
       "figmaVariable": "Neutral/Gray/150",
       "figmaValue": "#FAF7F4",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray150",
+      "mdsValue": "#faf7f4",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/200",
@@ -331,9 +331,9 @@
     {
       "figmaVariable": "Neutral/Gray/350",
       "figmaValue": "#DEDBD6",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray350",
+      "mdsValue": "#dedbd6",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/400",
@@ -345,9 +345,9 @@
     {
       "figmaVariable": "Neutral/Gray/450",
       "figmaValue": "#C5C2BD",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray450",
+      "mdsValue": "#c5c2bd",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/500",
@@ -359,9 +359,9 @@
     {
       "figmaVariable": "Neutral/Gray/550",
       "figmaValue": "#ADAAA5",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray550",
+      "mdsValue": "#adaaa5",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/600",
@@ -373,9 +373,9 @@
     {
       "figmaVariable": "Neutral/Gray/650",
       "figmaValue": "#94918C",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray650",
+      "mdsValue": "#94918c",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/700",
@@ -401,9 +401,9 @@
     {
       "figmaVariable": "Neutral/Gray/850",
       "figmaValue": "#62615C",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "gray850",
+      "mdsValue": "#62615c",
+      "inSync": true
     },
     {
       "figmaVariable": "Neutral/Gray/900",
@@ -506,16 +506,16 @@
     {
       "figmaVariable": "Shades/White/0",
       "figmaValue": "#FFFFFF00",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite0",
+      "mdsValue": "rgba(255,255,255,0.00)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/5",
       "figmaValue": "#FFFFFF0D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite5",
+      "mdsValue": "rgba(255,255,255,0.05)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/8",
@@ -527,9 +527,9 @@
     {
       "figmaVariable": "Shades/White/10",
       "figmaValue": "#FFFFFF1A",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite10",
+      "mdsValue": "rgba(255,255,255,0.10)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/12",
@@ -548,79 +548,79 @@
     {
       "figmaVariable": "Shades/White/20",
       "figmaValue": "#FFFFFF33",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite20",
+      "mdsValue": "rgba(255,255,255,0.20)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/30",
       "figmaValue": "#FFFFFF4D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite30",
+      "mdsValue": "rgba(255,255,255,0.30)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/40",
       "figmaValue": "#FFFFFF66",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite40",
+      "mdsValue": "rgba(255,255,255,0.40)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/50",
       "figmaValue": "#FFFFFF80",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite50",
+      "mdsValue": "rgba(255,255,255,0.50)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/60",
       "figmaValue": "#FFFFFF99",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite60",
+      "mdsValue": "rgba(255,255,255,0.60)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/65",
       "figmaValue": "#FFFFFFA6",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite65",
+      "mdsValue": "rgba(255,255,255,0.65)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/70",
       "figmaValue": "#FFFFFFB2",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite70",
+      "mdsValue": "rgba(255,255,255,0.70)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/80",
       "figmaValue": "#FFFFFFCC",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite80",
+      "mdsValue": "rgba(255,255,255,0.80)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/85",
       "figmaValue": "#FFFFFFD9",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite85",
+      "mdsValue": "rgba(255,255,255,0.85)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/White/90",
       "figmaValue": "#FFFFFFE5",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesWhite90",
+      "mdsValue": "rgba(255,255,255,0.90)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/0",
       "figmaValue": "#00000000",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack0",
+      "mdsValue": "rgba(0,0,0,0.00)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/3",
@@ -632,9 +632,9 @@
     {
       "figmaVariable": "Shades/Black/5",
       "figmaValue": "#0000000D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack5",
+      "mdsValue": "rgba(0,0,0,0.05)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/8",
@@ -646,9 +646,9 @@
     {
       "figmaVariable": "Shades/Black/10",
       "figmaValue": "#0000001A",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack10",
+      "mdsValue": "rgba(0,0,0,0.10)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/12",
@@ -667,289 +667,289 @@
     {
       "figmaVariable": "Shades/Black/20",
       "figmaValue": "#00000033",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack20",
+      "mdsValue": "rgba(0,0,0,0.20)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/30",
       "figmaValue": "#0000004D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack30",
+      "mdsValue": "rgba(0,0,0,0.30)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/40",
       "figmaValue": "#00000066",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack40",
+      "mdsValue": "rgba(0,0,0,0.40)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/45",
       "figmaValue": "#00000073",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack45",
+      "mdsValue": "rgba(0,0,0,0.45)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/50",
       "figmaValue": "#00000080",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack50",
+      "mdsValue": "rgba(0,0,0,0.50)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/55",
       "figmaValue": "#0000008C",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack55",
+      "mdsValue": "rgba(0,0,0,0.55)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/60",
       "figmaValue": "#00000099",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack60",
+      "mdsValue": "rgba(0,0,0,0.60)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/65",
       "figmaValue": "#000000A6",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack65",
+      "mdsValue": "rgba(0,0,0,0.65)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/70",
       "figmaValue": "#000000B2",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack70",
+      "mdsValue": "rgba(0,0,0,0.70)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/75",
       "figmaValue": "#000000BF",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack75",
+      "mdsValue": "rgba(0,0,0,0.75)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/80",
       "figmaValue": "#000000CC",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack80",
+      "mdsValue": "rgba(0,0,0,0.80)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/85",
       "figmaValue": "#000000D9",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack85",
+      "mdsValue": "rgba(0,0,0,0.85)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Black/90",
       "figmaValue": "#000000E5",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesBlack90",
+      "mdsValue": "rgba(0,0,0,0.90)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/10",
       "figmaValue": "#0B4BFF1A",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive10",
+      "mdsValue": "rgba(11,75,255,0.10)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/20",
       "figmaValue": "#0B4BFF33",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive20",
+      "mdsValue": "rgba(11,75,255,0.20)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/30",
       "figmaValue": "#0B4BFF4D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive30",
+      "mdsValue": "rgba(11,75,255,0.30)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/40",
       "figmaValue": "#0B4BFF66",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive40",
+      "mdsValue": "rgba(11,75,255,0.40)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/45",
       "figmaValue": "#0B4BFF73",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive45",
+      "mdsValue": "rgba(11,75,255,0.45)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/50",
       "figmaValue": "#0B4BFF80",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive50",
+      "mdsValue": "rgba(11,75,255,0.50)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/55",
       "figmaValue": "#0B4BFF8C",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive55",
+      "mdsValue": "rgba(11,75,255,0.55)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/60",
       "figmaValue": "#0B4BFF99",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive60",
+      "mdsValue": "rgba(11,75,255,0.60)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/65",
       "figmaValue": "#0B4BFFA6",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive65",
+      "mdsValue": "rgba(11,75,255,0.65)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/70",
       "figmaValue": "#0B4BFFB2",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive70",
+      "mdsValue": "rgba(11,75,255,0.70)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/75",
       "figmaValue": "#0B4BFFBF",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive75",
+      "mdsValue": "rgba(11,75,255,0.75)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/80",
       "figmaValue": "#0B4BFFCC",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive80",
+      "mdsValue": "rgba(11,75,255,0.80)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/85",
       "figmaValue": "#0B4BFFD9",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive85",
+      "mdsValue": "rgba(11,75,255,0.85)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Active blue/90",
       "figmaValue": "#0B4BFFE5",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesActive90",
+      "mdsValue": "rgba(11,75,255,0.90)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/10",
       "figmaValue": "#000F471A",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight10",
+      "mdsValue": "rgba(0,15,71,0.10)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/20",
       "figmaValue": "#000F4733",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight20",
+      "mdsValue": "rgba(0,15,71,0.20)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/30",
       "figmaValue": "#000F474D",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight30",
+      "mdsValue": "rgba(0,15,71,0.30)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/40",
       "figmaValue": "#000F4766",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight40",
+      "mdsValue": "rgba(0,15,71,0.40)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/45",
       "figmaValue": "#000F4773",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight45",
+      "mdsValue": "rgba(0,15,71,0.45)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/50",
       "figmaValue": "#000F4780",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight50",
+      "mdsValue": "rgba(0,15,71,0.50)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/55",
       "figmaValue": "#000F478C",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight55",
+      "mdsValue": "rgba(0,15,71,0.55)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/60",
       "figmaValue": "#000F4799",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight60",
+      "mdsValue": "rgba(0,15,71,0.60)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/65",
       "figmaValue": "#000F47A6",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight65",
+      "mdsValue": "rgba(0,15,71,0.65)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/70",
       "figmaValue": "#000F47B2",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight70",
+      "mdsValue": "rgba(0,15,71,0.70)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/75",
       "figmaValue": "#000F47BF",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight75",
+      "mdsValue": "rgba(0,15,71,0.75)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/80",
       "figmaValue": "#000F47CC",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight80",
+      "mdsValue": "rgba(0,15,71,0.80)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/85",
       "figmaValue": "#000F47D9",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight85",
+      "mdsValue": "rgba(0,15,71,0.85)",
+      "inSync": true
     },
     {
       "figmaVariable": "Shades/Midnight blue/90",
       "figmaValue": "#000F47E5",
-      "mdsToken": null,
-      "mdsValue": null,
-      "inSync": null
+      "mdsToken": "shadesMidnight90",
+      "mdsValue": "rgba(0,15,71,0.90)",
+      "inSync": true
     }
   ]
 }

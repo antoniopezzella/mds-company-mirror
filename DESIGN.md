@@ -1,8 +1,16 @@
 # MDS-Platform — AI Design Creation Guide (DESIGN.md)
 
-**Version:** 1.0  
-**Last Updated:** April 24, 2026  
+**Version:** 2.0  
+**Last Updated:** September 15, 2026  
 **Purpose:** Comprehensive rules for AI agents to CREATE designs in Figma using the Model Context Protocol, complementing CLAUDE.md (design-to-code) with code-to-design capabilities.
+
+> **Note on scope:** this doc covers *creating* Figma designs from code/specs.
+> For *auditing* whether existing Figma variables match the token values
+> actually shipping in code, see the MCP-driven Figma sync workflow instead
+> (`npm run tokens:check-figma` / `tokens:check-figma-semantic`, and
+> `docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md` /
+> `docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md` for two real worked examples) —
+> different capability, not duplicated here.
 
 ---
 
@@ -108,28 +116,40 @@ mcp_figma-console_figma_arrange_component_set({
 ### Library Reference
 
 **File Key:** `uWlcofRor5Dik8LBnJbIjo`  
-**Library Name:** "Marsh Design System"  
+**Library Name (current, in Figma):** "V3 - MDS COMPONENTS"  
 **URL:** `https://www.figma.com/design/uWlcofRor5Dik8LBnJbIjo`
 
-### Component Inventory (30+ components)
+### Component Inventory (71 components, `src/components/ui/*`, 2026-09-15)
 
-**Core UI:**
-- Button (variants: Primary, Secondary, Outline, Ghost | sizes: Small, Default, Large | states: Default, Hover, Active, Disabled)
-- TextField (variants: Outlined, Filled | sizes: Small, Medium)
-- Select, Checkbox, Radio, Switch
-- Card, Paper, Accordion, Tabs
+**This replaces the old ~30-component list this doc previously had** — that
+list only covered the legacy MUI component set (`src/components/ui/`
+didn't exist as the primary stack yet when this doc was first written). If
+a design calls for something and it's not below, check `/design-system`
+(`npm run dev`) for the definitive, browsable, always-current inventory
+before assuming it doesn't exist — this list is a snapshot, that one isn't.
+Groupings below follow `/design-system`'s own categories where one exists
+(Actions, Forms, Feedback, Navigation, Data display, Messaging); a few
+components without an obvious registry category are grouped by best
+judgment, not an authoritative source.
 
-**Navigation:**
-- Header, Navbar, SideNavigation, MegaMenu, Breadcrumbs
+**Actions:** `button`, `toggle`, `toggle-group`
 
-**Data Display:**
-- DataGrid, Table, List, ChartMetricCard
+**Forms:** `text-field`, `textarea`, `select`, `checkbox`, `radio-group`, `switch`, `slider`, `stepper`, `input`, `input-group`, `input-otp`, `label`, `field`, `combobox`, `command`, `date-picker`, `calendar`
 
-**Feedback:**
-- Alert, Badge, Chip, Tooltip, Snackbar, Modal, Progress, Skeleton
+**Feedback:** `alert`, `toast`, `toaster`, `tooltip`, `dialog`, `progress`, `spinner`, `skeleton`, `empty`, `status-card`, `badge`, `badge-anchor`, `chip`
 
-**Specialized:**
-- AIAssistantChat, QaSystemAlerts, NotificationCard
+**Navigation & overlays:** `tabs`, `accordion`, `collapsible`, `breadcrumbs`, `pagination`, `header`, `website-header`, `side-navigation`, `mega-menu`, `menubar`, `drawer`, `sheet`, `popover`, `hover-card`, `context-menu`, `dropdown-menu`
+
+**Data display:** `table`, `data-table`, `list`, `card`, `stat-card`, `metric-card`, `chart`, `avatar`, `marker`, `aspect-ratio`, `carousel`, `image-with-fallback`, `resizable`, `scroll-area`, `separator`
+
+**Messaging:** `message`, `message-scroller`, `bubble`, `questionnaire`, `attachment`, `notifications-drawer`
+
+**Legacy (MUI, `src/components/` — not `src/components/ui/`):** still exists
+for a handful of pre-existing pages; don't design new Figma work against
+this set unless you're specifically matching an existing legacy page. See
+`docs/get-started/DEVELOPERS.md` for the current-vs-legacy distinction in
+code — the same distinction applies here: default to the current-stack list
+above.
 
 ### Component Search Pattern
 
@@ -162,7 +182,7 @@ if (results.length > 0) {
 
 Figma variables map 1:1 to code tokens (see CLAUDE.md Section 1):
 
-**Primitive Colors** (141 tokens)
+**Primitive Colors** (175 tokens as of 2026-09-15 — count with `Object.keys(require('./dist/tokens.json').color).length`, don't hand-copy this number, it moves)
 - Collections: `Blue`, `Gold`, `Green`, `Red`, `Purple`, `Gray`, `Neutral`
 - Naming: `{Palette}.{Stop}` → `Blue.1000` = `blue1000` (#000f47)
 - Example usage:
@@ -174,15 +194,17 @@ Figma variables map 1:1 to code tokens (see CLAUDE.md Section 1):
   fill.color = { r: 0, g: 15/255, b: 71/255 };
   ```
 
-**Semantic Tokens** (71 tokens)
+**Semantic Tokens** (65 tokens as of 2026-09-15, same caveat)
 - Collection: `Semantic Colors`
 - Naming: `{Category}/{Intent}[/State]` → `Interactive/Primary/Hover`
 - Maps to code: `interactivePrimaryHover`
 
-**Role Tokens** (60+ tokens)
+**Role Tokens** (46 tokens as of 2026-09-15, same caveat)
 - Collection: `Component Roles`
-- Naming: `{Category}.{Element}[.Variant][.State]` → `interactive.button.primary.hover`
-- Code equivalent: `getRoleColor('interactive.button.primary.hover')`
+- Naming: `{Category}.{Element}[.Variant][.State]` → `interactive.primary.hover`
+  (there is no `button` level in the real naming — see
+  `docs/foundations/TOKENS.md` → "The naming rule" for the actual grammar)
+- Code equivalent: `getRoleColor('interactive.primary.hover')`
 
 **Spacing Variables** (15 values)
 - Collection: `Spacing`
@@ -528,6 +550,35 @@ const createText = async (variant, content) => {
 - `interactive.primary.hover` → `interactivePrimaryHover`
 - `status.success.bg` → `statusSuccessBg`
 
+### Brand Mark on Coloured Grounds
+
+The logo does **not** follow `--ink` / `text.primary`. It has a colour of its own,
+because on the Primary ground it is Secondary while the copy beside it is white.
+
+| Ground | Token | Logo colour |
+|---|---|---|
+| White | `surface.default` | Midnight Blue `#000F47` |
+| Neutral `#F7F3EE` | `surface.accent` | Midnight Blue `#000F47` |
+| Secondary `#CEECFF` | `surface.secondary` | Midnight Blue `#000F47` |
+| **Primary `#000F47`** | `surface.primary` | **Secondary `#CEECFF`** — never white |
+
+Bind the mark to `brand.mark`, never to a text token and never to a literal:
+
+```javascript
+// ✅ the mark is its own role token
+fill.boundVariables = { color: { type: 'VARIABLE_ALIAS', id: brandMarkVar } };
+
+// ❌ inherits the wrong colour the moment the ground turns navy
+fill.boundVariables = { color: { type: 'VARIABLE_ALIAS', id: textPrimaryVar } };
+
+// ❌ white on Primary — this is the case the rule exists to prevent
+fill.color = { r: 1, g: 1, b: 1 };
+```
+
+Secondary on Primary is 14.72:1, so the mark clears AAA at any size it is set.
+White would also pass contrast, which is exactly why this cannot be left to
+judgement: both are legible and only one is correct.
+
 ### Color Application Pattern
 
 ```javascript
@@ -789,7 +840,7 @@ Code Connect creates a **design-code contract** that ensures:
 }
 ```
 
-**Canonical Library:** `uWlcofRor5Dik8LBnJbIjo` (V2 - MDS COMPONENTS)
+**Canonical Library:** `uWlcofRor5Dik8LBnJbIjo` (**"V3 - MDS COMPONENTS"** — renamed from "V2" at some point after this doc's April 2026 version; confirmed live via `figma_get_status` 2026-09-15. Same file key throughout, only the file's display name changed.)
 
 ### Code Connect File Structure
 
@@ -856,7 +907,8 @@ const codeConnectComponents = {
   metricCard: { nodeId: '7592-8740', file: 'src/figma/ChartMetricCard.figma.tsx' }
 };
 
-// 2. Import from V2 - MDS COMPONENTS library (SINGLE library file)
+// 2. Import from "V3 - MDS COMPONENTS" library (SINGLE library file — same
+//    file key as always, the file was renamed from "V2" at some point)
 const libraryFileKey = 'uWlcofRor5Dik8LBnJbIjo';
 const buttonSet = await figma.importComponentSetByKeyAsync('75ac72fbf5ebf70d6acb5d768407c8f5475ac209');
 const headerSet = await figma.importComponentSetByKeyAsync('0ed9951c47609c466d587bbe2eda4a65cfbbf483');
@@ -900,7 +952,13 @@ _Full list: See all 30 files in `src/figma/*.figma.tsx`_
 
 ### ⚠️ Known Limitation: Component Key Resolution
 
-**CRITICAL ISSUE (Discovered April 24, 2026):**  
+**Originally discovered April 24, 2026 — not re-verified since.** Not
+confirmed still true as of this doc's 2026-09-15 update (the Figma MCP
+toolset has changed since April; nobody has specifically re-tested this
+exact failure mode this session). Treat the workaround below as still the
+safe default until someone confirms one way or the other, not as a
+guaranteed-current bug report.
+
 Component keys in Code Connect files may become **outdated** when library components are updated in Figma.
 
 **Problem:**
@@ -932,8 +990,8 @@ const results = await search_design_system({
   query: 'tabs',
   includeComponents: true
 });
-// Use componentKey from first result matching "V2 - MDS COMPONENTS"
-const freshKey = results.components.find(c => c.libraryName === 'V2 - MDS COMPONENTS').componentKey;
+// Use componentKey from first result matching "V3 - MDS COMPONENTS"
+const freshKey = results.components.find(c => c.libraryName === 'V3 - MDS COMPONENTS').componentKey;
 const tabsSet = await figma.importComponentSetByKeyAsync(freshKey);
 // ✅ Success (if library hasn't changed since search)
 ```
@@ -1067,7 +1125,7 @@ example: (props: any) => (
 **Code → Design (DESIGN.md):**
 1. AI reads component spec or code
 2. AI searches **Code Connect files** for node IDs (NOT random library search)
-3. AI imports from **V2 - MDS COMPONENTS library** using component keys
+3. AI imports from the **"V3 - MDS COMPONENTS" library** using component keys
 4. AI validates against design system rules
 
 **Design → Code (CLAUDE.md):**
@@ -1102,7 +1160,7 @@ const buttonSet = await figma.importComponentSetByKeyAsync('75ac72fbf5ebf70d...'
 
 // ❌ WRONG: Search returns mixed libraries (V1, V2, V3, Marsh.com MVP)
 const results = await search_design_system({ query: "header" });
-// Results include V1 - Navigation, V2 - MDS, V3 - WIP, etc. - INCONSISTENT!
+// Results can include V1 - Navigation, old "V2 - MDS", other stray files, etc. - INCONSISTENT!
 ```
 
 **Why this matters:**

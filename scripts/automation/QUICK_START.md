@@ -85,7 +85,7 @@ node scripts/automation/match-mds-variables.js scripts/automation/system-alert-c
 ## 📖 Detailed Guides
 
 - **Full Instructions**: `scripts/automation/EXTRACTION_GUIDE.md`
-- **Sprint Plan**: `docs/PHASE_3_4_SPRINT_PLAN.md`
+- **Sprint Plan** (archived, no longer active): `docs/archive/PHASE_3_4_SPRINT_PLAN.md`
 - **Test Reference**: `scripts/automation/SYSTEM_ALERT_TEST_REFERENCE.md`
 
 ---
