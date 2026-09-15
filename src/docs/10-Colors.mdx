@@ -1,10 +1,11 @@
+import { Meta } from '@storybook/addon-docs/blocks';
 import { ColorRampStrips } from './_components/ColorRampStrips';
 import { SemanticColorCards } from './_components/SemanticColorCards';
 import { RoleColorTable } from './_components/RoleColorTable';
 import { ContrastStatus } from './_components/ContrastStatus';
 import { ContrastMatrix } from './_components/ContrastMatrix';
 
-export const meta = { title: 'Foundations/Colors' };
+<Meta title="Foundations/Colors" />
 
 # Colors
 
@@ -40,7 +41,7 @@ The four core Marsh brand colors. All palette stops extend from these anchors.
   {[
     {name:'Midnight Blue',hex:'#000f47',token:'blue1000',note:'Brand primary — CTAs, navigation, headings'},
     {name:'Sky Blue',hex:'#ceecff',token:'blue250',note:'Brand secondary — sky tint, on-dark text, hover overlays'},
-    {name:'Gold',hex:'#ffb700',token:'gold750',note:'Supporting accent — eyebrow dashes, decorative moments'},
+    {name:'Gold',hex:'#ffbf00',token:'gold750',note:'Supporting accent — eyebrow dashes, decorative moments'},
     {name:'White',hex:'#ffffff',token:'white',note:'Default page background, text on dark surfaces'},
   ].map(c => (
     <div key={c.hex} style={{borderRadius:8,overflow:'hidden',border:'1px solid #e8e8e8',boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}>
@@ -68,6 +69,22 @@ Semantic tokens express *purpose*, not raw palette values. They define how color
 ## Roles (Component API)
 
 Roles are the stable interface that components consume via `getRoleColor('role.name')`. They resolve through semantic tokens to primitives. Components must never reference primitives or semantics directly.
+
+<div style={{
+  background: '#fff8ed',
+  border: '1px solid #ffb700',
+  borderRadius: 8,
+  padding: '14px 16px',
+  margin: '16px 0 28px',
+  fontFamily: 'system-ui,sans-serif',
+  fontSize: 12.5,
+  color: '#5c4300',
+  lineHeight: 1.6,
+}}>
+  <strong>Two unrelated meanings of "secondary" live on this page — easy to conflate.</strong> "Brand secondary" above (Sky Blue, <code>brandSecondary</code>) names the second color in Marsh's brand identity — an accent, not a text color. <code>text.secondary</code> below is a completely different axis: text-hierarchy secondary, i.e. de-emphasized body text — it resolves to a muted gray (<code>neutral700</code>), not to Sky Blue. Same word, two independent scales (brand-identity position vs. text-emphasis level) that happen to share a name. When you see "secondary" on a role, ask which axis it's on before assuming a color.
+  <br /><br />
+  <strong>Confirmed intentional (2026-09-15):</strong> Figma's own <code>Text &amp; icon/Secondary</code> variable actually resolves to Gold, not Sky Blue — so Figma's "secondary" collapses both axes into one word, and MDS's split naming is the deliberate, correct departure, not a bug to reconcile. See <code>docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md</code> for the full comparison.
+</div>
 
 ### Text, Surface & Border
 

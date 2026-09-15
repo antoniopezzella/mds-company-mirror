@@ -84,6 +84,8 @@ export type RoleName =
   | 'status.info.bg'
   | 'status.info.border'
   | 'brand.accent'
+  | 'interactive.accent.hover'
+  | 'interactive.accent.active'
   | 'interactive.primary'
   | 'interactive.primary.hover'
   | 'interactive.primary.active'
@@ -126,6 +128,8 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
   'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
   'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },
+  'interactive.accent.hover': { semantic: 'interactiveAccentHover', description: 'Gold accent hover (Button primaryAlt variant)' },
+  'interactive.accent.active': { semantic: 'interactiveAccentActive', description: 'Gold accent active (Button primaryAlt variant)' },
   'status.success.fg': { semantic: 'statusSuccessText', description: 'Success text/icon color' },
   'status.success.bg': { semantic: 'statusSuccessBg', description: 'Success background' },
   'status.success.border': { semantic: 'statusSuccessBorder', description: 'Success border color' },

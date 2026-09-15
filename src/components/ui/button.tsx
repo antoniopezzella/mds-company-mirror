@@ -24,11 +24,13 @@ const buttonVariants = cva(
           'bg-[var(--role-interactive-primary)] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
           'dark:text-[#000f47] dark:hover:bg-[#bbe1ff] dark:active:bg-[#d8f0ff] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
-        // PRIMARY ALT - Gold (#ffbf00) - Hero/Marketing CTAs
-        // brandAccent is deliberately unchanged in semanticDarkOverrides
-        // ("unchanged — CTA stays") — no dark: needed for the base color.
+        // PRIMARY ALT - Gold (role: brand.accent) - Hero/Marketing CTAs
+        // brandAccent, interactiveAccentHover, and interactiveAccentActive
+        // are all deliberately unchanged in semanticDarkOverrides ("unchanged
+        // — CTA stays") — no dark: needed for any of the three, so the
+        // CSS-var bridge (RoleVarsProvider) resolves correctly as-is.
         primaryAlt:
-          'bg-[#ffbf00] text-[#000f47] shadow-none hover:bg-[#eaa501] active:bg-[#d58b02] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'bg-[var(--role-brand-accent)] text-[#000f47] shadow-none hover:bg-[var(--role-interactive-accent-hover)] active:bg-[var(--role-interactive-accent-active)] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
           'dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
         // SECONDARY - Outline with midnight blue border (role: interactive.primary)

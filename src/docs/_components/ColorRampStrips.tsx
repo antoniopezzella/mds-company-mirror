@@ -1,145 +1,52 @@
 import React, { useState } from 'react';
+import { tokens } from '../../tokens';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
+// Derived from the real src/tokens.ts at render time, not a hand-copied
+// duplicate — a prior hardcoded version of this file drifted out of sync with
+// several real token corrections (see docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md)
+// without anyone noticing, since nothing re-checked it against the source.
 
 interface Stop { scale: string; hex: string; anchor?: boolean }
 interface Palette { name: string; stops: Stop[] }
 
-const PALETTES: Palette[] = [
-  {
-    name: 'Blue',
-    stops: [
-      { scale: '50',   hex: '#f5fbff' },
-      { scale: '100',  hex: '#ebf7ff' },
-      { scale: '200',  hex: '#d8f0ff' },
-      { scale: '250',  hex: '#ceecff', anchor: true },
-      { scale: '300',  hex: '#bbe1ff' },
-      { scale: '400',  hex: '#95caff' },
-      { scale: '500',  hex: '#6fb4ff' },
-      { scale: '600',  hex: '#478aff' },
-      { scale: '700',  hex: '#1f60ff', anchor: true },
-      { scale: '750',  hex: '#0b4bff' },
-      { scale: '800',  hex: '#093fda' },
-      { scale: '900',  hex: '#042791' },
-      { scale: '950',  hex: '#021b6c' },
-      { scale: '1000', hex: '#000f47', anchor: true },
-    ],
-  },
-  {
-    name: 'Gold',
-    stops: [
-      { scale: '50',   hex: '#fffcf8' },
-      { scale: '100',  hex: '#fff8ed' },
-      { scale: '200',  hex: '#fff5e1' },
-      { scale: '250',  hex: '#fff2da' },
-      { scale: '300',  hex: '#ffe0bd' },
-      { scale: '400',  hex: '#ffbd84' },
-      { scale: '500',  hex: '#ff994a' },
-      { scale: '600',  hex: '#ffa02e' },
-      { scale: '700',  hex: '#ffab14' },
-      { scale: '750',  hex: '#ffb700', anchor: true },
-      { scale: '800',  hex: '#f5a907' },
-      { scale: '900',  hex: '#e09015' },
-      { scale: '950',  hex: '#d5831c' },
-      { scale: '1000', hex: '#cb7623' },
-    ],
-  },
-  {
-    name: 'Green',
-    stops: [
-      { scale: '50',   hex: '#f8fcf7' },
-      { scale: '100',  hex: '#f2faef' },
-      { scale: '200',  hex: '#e5f5df' },
-      { scale: '250',  hex: '#def2d7' },
-      { scale: '300',  hex: '#ceeac9' },
-      { scale: '400',  hex: '#addbae' },
-      { scale: '500',  hex: '#8dcc92', anchor: true },
-      { scale: '600',  hex: '#7cc664' },
-      { scale: '700',  hex: '#6cc044' },
-      { scale: '750',  hex: '#64bc30' },
-      { scale: '800',  hex: '#54a731' },
-      { scale: '900',  hex: '#449631' },
-      { scale: '950',  hex: '#3a8a32' },
-      { scale: '1000', hex: '#2f7d32', anchor: true },
-    ],
-  },
-  {
-    name: 'Red',
-    stops: [
-      { scale: '50',   hex: '#fffafa' },
-      { scale: '100',  hex: '#fff4f4' },
-      { scale: '200',  hex: '#ffeded' },
-      { scale: '250',  hex: '#ffe8e8' },
-      { scale: '300',  hex: '#ffcfcf' },
-      { scale: '400',  hex: '#ff9d9d' },
-      { scale: '500',  hex: '#ff6b6b', anchor: true },
-      { scale: '600',  hex: '#f55555' },
-      { scale: '700',  hex: '#ec4540' },
-      { scale: '750',  hex: '#e53935' },
-      { scale: '800',  hex: '#d33330' },
-      { scale: '900',  hex: '#af2625' },
-      { scale: '950',  hex: '#9d201f' },
-      { scale: '1000', hex: '#8b1a1a', anchor: true },
-    ],
-  },
-  {
-    name: 'Purple',
-    stops: [
-      { scale: '50',   hex: '#fef8fe' },
-      { scale: '100',  hex: '#fcf1fc' },
-      { scale: '200',  hex: '#f7ebfe' },
-      { scale: '250',  hex: '#f2e6ff' },
-      { scale: '300',  hex: '#e9d3ff' },
-      { scale: '400',  hex: '#dcbaff' },
-      { scale: '500',  hex: '#c88fff', anchor: true },
-      { scale: '600',  hex: '#b96bf5' },
-      { scale: '700',  hex: '#ab5aea' },
-      { scale: '750',  hex: '#8f37c6' },
-      { scale: '800',  hex: '#842daf' },
-      { scale: '900',  hex: '#7720b0' },
-      { scale: '950',  hex: '#6a18a3' },
-      { scale: '1000', hex: '#5e0f95', anchor: true },
-    ],
-  },
-  {
-    name: 'Gray',
-    stops: [
-      { scale: '50',   hex: '#fdfefe' },
-      { scale: '100',  hex: '#fbfbfb' },
-      { scale: '200',  hex: '#f9f9f9' },
-      { scale: '250',  hex: '#f7f8f8', anchor: true },
-      { scale: '300',  hex: '#eaebea' },
-      { scale: '400',  hex: '#cfd0cd' },
-      { scale: '500',  hex: '#b4b6b1' },
-      { scale: '600',  hex: '#9c9e9a' },
-      { scale: '700',  hex: '#8a8c88' },
-      { scale: '750',  hex: '#787b78' },
-      { scale: '800',  hex: '#6a6e6b' },
-      { scale: '900',  hex: '#4d5551' },
-      { scale: '950',  hex: '#3e4944' },
-      { scale: '1000', hex: '#303c37' },
-    ],
-  },
-  {
-    name: 'Neutral',
-    stops: [
-      { scale: '50',   hex: '#f8f8f8' },
-      { scale: '100',  hex: '#eeeeee' },
-      { scale: '200',  hex: '#e3e3e3' },
-      { scale: '250',  hex: '#dadada', anchor: true },
-      { scale: '300',  hex: '#c4c4c4' },
-      { scale: '400',  hex: '#a8a8a8' },
-      { scale: '500',  hex: '#878787' },
-      { scale: '600',  hex: '#767676' },
-      { scale: '700',  hex: '#595959', anchor: true },
-      { scale: '750',  hex: '#4a4a4a' },
-      { scale: '800',  hex: '#3b3b3b' },
-      { scale: '900',  hex: '#252525' },
-      { scale: '950',  hex: '#101010' },
-      { scale: '1000', hex: '#000000' },
-    ],
-  },
-];
+const PALETTE_NAMES = ['Blue', 'Gold', 'Green', 'Red', 'Purple', 'Gray', 'Neutral'] as const;
+
+// Which stops are Figma-verified anchors — design metadata, not a color
+// value, so (unlike hex) it's fine for this to be hand-maintained here.
+// Sourced from tokens.ts's own "★ ... anchor" comments; update this if those
+// change. Anything not listed renders as an interpolated stop.
+const ANCHOR_STOPS: Record<(typeof PALETTE_NAMES)[number], string[]> = {
+  Blue: ['250', '500', '600', '750', '900', '950', '1000', '1100'],
+  Gold: ['250', '300', '400', '500', '600', '650', '750', '850', '950', '1000'],
+  Green: ['250', '500', '750', '1000'],
+  Red: ['250', '500', '750', '1000'],
+  Purple: ['250', '500', '750', '1000'],
+  Gray: ['150', '250', '350', '450', '500', '550', '650', '750', '850', '1000'],
+  Neutral: ['200', '250', '500', '600', '750', '800', '950', '1000'],
+};
+
+// Only the canonical "00"/"50"-ending scale steps — excludes one-off derived
+// utilities like blue975/blue990 (alpha-blend approximations for nav hover/
+// active, not primary ramp rungs).
+const SCALE_RE = /^(\d+)(?:00|50)$/;
+
+function buildPalettes(): Palette[] {
+  return PALETTE_NAMES.map((name) => {
+    const prefix = name.toLowerCase();
+    const anchors = ANCHOR_STOPS[name];
+    const stops: Stop[] = Object.entries(tokens)
+      .filter(([key]) => key.startsWith(prefix) && SCALE_RE.test(key.slice(prefix.length)))
+      .map(([key, hex]) => {
+        const scale = key.slice(prefix.length);
+        return { scale, hex: hex as string, anchor: anchors.includes(scale) };
+      })
+      .sort((a, b) => Number(a.scale) - Number(b.scale));
+    return { name, stops };
+  });
+}
+
+const PALETTES: Palette[] = buildPalettes();
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

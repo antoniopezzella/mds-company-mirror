@@ -1443,6 +1443,60 @@ const ENFORCED_PAIRS = [
 **Failure:** Build fails if any enforced pair < minimum ratio  
 **Report:** `contrast-report.json` with all measured pairs
 
+### Documentation Governance
+
+This repo has a real history of documentation sprawl: ~70 one-off build
+summaries, sprint plans, and status reports accumulated at the repo root
+over several months (now moved to `docs/archive/`, see below) because
+nothing told anyone — human or AI agent — where a new doc belonged. The
+rule below exists to stop that recurring, not to describe a one-time
+cleanup.
+
+**Where a new doc goes — work down this list:**
+
+1. **Does an existing doc already cover this topic?** Extend it. A new
+   finding, decision, or status update belongs as a dated addition to the
+   relevant existing file, not a new one — see how
+   `docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md` and
+   `docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md` mark resolved recommendations
+   inline (`~~struck through~~ — Resolved <date>: ...`) instead of a new
+   "resolution summary" doc.
+2. **Is this a one-off report of a task just completed** (a build summary, a
+   sprint plan, an implementation summary, a "done" report)? **Don't write
+   it as a standalone file at all.** That's what commit messages and PR
+   descriptions are for. If the user explicitly asks for a written report,
+   it still needs a real home per steps 3–4 below — it doesn't default to
+   the repo root.
+3. **Is this a living reference** (a process, a guide, a how-to, a status
+   doc that gets updated over time)? It goes under `docs/`, in whichever of
+   these existing categories fits — don't invent a new top-level category
+   for one file:
+   - `docs/get-started/` — onboarding (developer/designer entry points)
+   - `docs/foundations/` — conceptual/design-system foundations
+   - `docs/guides/` — task-specific how-tos
+   - `docs/tasks/` — a specific, scoped, in-progress piece of work
+   - `docs/` itself — cross-cutting reference docs that don't fit the above
+     (token process, Figma Code Connect, migration status)
+4. **Is this genuinely repo-root material?** Only `README.md`, `CLAUDE.md`,
+   `SECURITY.md`, `CHANGELOG.md`, and `DESIGN.md` belong at the repo root —
+   this is a short, closed list, not a default. `CONTRIBUTING.md` lives at
+   `docs/CONTRIBUTING.md` (GitHub recognizes that location too) — it used to
+   be duplicated at root with different, overlapping content; merged
+   2026-09-15, don't recreate the root copy.
+5. **Has this doc stopped being true?** Move it to `docs/archive/` rather
+   than deleting it (unless it's a trivial stub) — don't leave stale docs
+   in an active category where someone will trust them as current. A doc
+   that still describes a renamed/removed API is worse than no doc.
+
+**Enforced by `npm run docs:check-sprawl`** (folded into `docs:lint`) — fails
+if any `.md` file exists at the repo root outside the allowlist in step 4.
+It cannot enforce steps 1–3 or 5 (those need judgment); it only catches the
+literal, mechanical failure mode ("wrote a new file at root") that caused
+the original sprawl.
+
+`docs/README.md` is the map — every doc should be reachable from there,
+categorized by what it's for, not just alphabetically dumped.
+
 ---
 
 ## 10. Critical Constraints & Patterns
@@ -1490,6 +1544,24 @@ import { getRoleColor } from '@/theme/roles';
 ```
 
 ### Component Checklist (for AI code generation)
+
+**Before creating anything — the decision ladder.** Work down this list and
+stop at the first step that satisfies the need; don't skip to "build new"
+by default:
+
+1. **Does it already exist?** Check `/design-system` (run `npm run dev`,
+   browse the live showcase) and `src/components/ui/`. If a component
+   already does this, use it.
+2. **Does an existing component's props cover it?** A new `variant`, `tone`,
+   or `size` value on `Button`/`Card`/etc. is much cheaper than a new
+   component — check the component's `.stories.tsx` before assuming the
+   prop isn't there.
+3. **Can you compose existing primitives?** Two or three existing
+   components (`Card` + `Button` + an icon) often cover a "new" pattern
+   without any new component code.
+4. **Only then, build new** — and only using role tokens + existing
+   primitives, never raw hex/pixel values. This is what the rest of this
+   checklist covers.
 
 When creating a new component:
 
@@ -1749,4 +1821,4 @@ export const semanticDarkOverrides = {
 ---
 
 **END OF CLAUDE.MD**  
-For questions or updates, refer to [CONTRIBUTING.md](./CONTRIBUTING.md) or contact `#design-system` Slack.
+For questions or updates, refer to [CONTRIBUTING.md](./docs/CONTRIBUTING.md) or contact `#design-system` Slack.

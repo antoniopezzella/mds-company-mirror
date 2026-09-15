@@ -38,8 +38,13 @@ npm run dev:all
 
 ## � Documentation
 
+**Start here:** run `npm run dev`, then browse **[/design-system](http://localhost:5173/design-system)** — every component in the current library, live, with guidance on which one to reach for and when.
+
+**Full documentation map:** [`docs/README.md`](./docs/README.md) — every doc in this repo, organized by what it's for.
+
 ### For Builders
 *   [**Developer Get Started**](./docs/get-started/DEVELOPERS.md): Setup, installation, and component usage.
+*   [**Build Your First Page**](./docs/get-started/BUILD_YOUR_FIRST_PAGE.md): End-to-end walkthrough — route, components, grid, tokens.
 *   [**Contributing Guide**](./docs/CONTRIBUTING.md): How to build, test, and submit PRs.
 *   [**Token System**](./docs/foundations/TOKENS.md): Deep dive into Primitives, Semantics, and Roles.
 *   [**Design System Integration**](./docs/DESIGN_SYSTEM_INTEGRATION_GUIDE.md): Connecting components to legacy apps.
@@ -49,16 +54,17 @@ npm run dev:all
 *   [**Figma Code Connect**](./docs/FIGMA_CODE_CONNECT_GUIDE.md): Detailed setup for Dev Mode.
 
 ### Roadmaps & Status
-*   [**Component Coverage**](./COMPONENT_COVERAGE.md): Current status of specific components.
-*   [**Documentation Roadmap**](./docs/ROADMAP_IMPROVEMENTS.md): Our plan for improving these docs.
+*   [**Component Coverage**](./docs/archive/COMPONENT_COVERAGE.md): Archived — stale as of Dec 2025; see [Migration Status](./docs/SHADCN_MIGRATION_STATUS.md) for current component-by-component status.
+*   [**Documentation Roadmap**](./docs/archive/ROADMAP_IMPROVEMENTS.md): Our plan for improving these docs. (archived, historical)
 
 ---
 
 ## �🚀 Quick Links
 
 - **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
-- **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy to Netlify/Vercel (100% free)
+- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Storybook (GitHub Pages, automated) + app (Vercel)
 - **Local Storybook:** `npm run storybook` → http://localhost:6006
+- **Component showcase:** `npm run dev` → http://localhost:5173/design-system
 - **AI Gateway:** [apps/gateway/README.md](./apps/gateway/README.md) - AI Assistant backend
 
 ---
@@ -145,9 +151,11 @@ export default tseslint.config([
 
 ## Scripts
 
+### Everyday dev
+
 | Script | Purpose |
 |--------|---------|
-| `npm run dev` | Vite dev server |
+| `npm run dev` | Vite dev server, plus the AI gateway (`/design-system` lives here) |
 | `npm run build` | Type-check + production build |
 | `npm run preview` | Preview built output |
 | `npm run storybook` | Run Storybook (design system docs) |
@@ -157,6 +165,26 @@ export default tseslint.config([
 | `npm test` | Run unit tests once (Vitest) |
 | `npm run test:watch` | Watch mode tests |
 | `npm run test:coverage` | Coverage report |
+
+### Tokens & role enforcement
+
+`roles:check` is the mechanism that actually enforces the "colors only via
+`getRoleColor()`" rule described in [Tokens](./docs/foundations/TOKENS.md) —
+run it (or its strict/CI variant) any time you touch component styling.
+
+| Script | Purpose |
+|--------|---------|
+| `npm run tokens:build` | Compile `tokens.ts`/`semantic-tokens.ts` → `dist/tokens.json` + `dist/theme.css` + `dist/tokens.tokens.json` (W3C DTCG format) |
+| `npm run tokens:check` | Full pipeline: build → diff → validate → validate-dtcg → contrast |
+| `npm run tokens:validate` | Schema validation (hex format, structure) |
+| `npm run tokens:validate-dtcg` | Structural conformance check for `dist/tokens.tokens.json` against the DTCG spec |
+| `npm run tokens:diff` | Detect token additions/changes/removals vs. HEAD |
+| `npm run tokens:contrast:all` | WCAG AA contrast check, all pairs |
+| `npm run tokens:contrast:badge` | Regenerate `contrast-badge.svg` after a token change |
+| `npm run roles:check` | Detect direct `tokens.*`/`semanticColors.*` usage in components |
+| `npm run roles:check:strict` | Same, fails the build on any violation (what CI runs) |
+| `npm run governance:report:strict` | Full governance report (naming, deprecated tokens, missing coverage) |
+| `npm run governance:ci` | `tokens:build` + strict governance report, as run in CI |
 
 ## Design System Tokens
 
@@ -169,7 +197,14 @@ Example:
 
 ## Testing
 
-Tests use Vitest + jsdom. React Testing Library exercises component behavior & accessibility. Storybook stories are testable via the Storybook Vitest addon (`vitest.config.ts`).
+`vitest.config.ts` defines two Vitest projects, both run by the commands below:
+
+- **`unit`** — Vitest + jsdom + React Testing Library, for component behavior and accessibility (`*.test.tsx`).
+- **`storybook`** — every story in the repo, run as a real rendered test in an actual Chromium browser via Playwright (`@storybook/addon-vitest`, not jsdom). No separate test files to write — every `.stories.tsx` becomes a test automatically. See `.storybook/vitest.setup.ts` for how the Storybook preview (theme, decorators) gets wired in.
+
+Run just one project: `npx vitest run --project unit` or `--project storybook`.
+
+**Cold-cache note:** the first `storybook` project run after clearing `node_modules/.cache/storybook` can show transient "Failed to fetch dynamically imported module" failures from Vite's dependency pre-bundling racing under load — a second run passes cleanly. If this ever runs in CI, plan for a retry or a cache-warming step.
 
 Run all tests:
 ```bash

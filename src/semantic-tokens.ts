@@ -67,6 +67,15 @@ export const semanticColors = {
   interactivePrimaryActive:   ref('blue900'),       // #042791 — Lighter active state
   interactivePrimaryDisabled: ref('neutral250'),    // #dadada
 
+  // ── Interactive — Accent (Gold / primaryAlt Button hover-active) ──────────
+  // Base color is brandAccent (gold750) — these are only the hover/active
+  // states. Matches src/components/ui/button.tsx's primaryAlt variant,
+  // which previously hardcoded these exact hex values with a comment
+  // noting "no token equivalent yet" — Figma has them as named variables
+  // (Interaction/Surface/Hover-selected alt, /Active alt); promoted here.
+  interactiveAccentHover:  ref('gold850'),      // #eaa501
+  interactiveAccentActive: ref('gold950'),      // #d58b02
+
   // ── Interactive — Secondary (Blue / Links) ────────────────────────────────
   interactiveSecondary:        ref('blue750'),      // #0b4bff — Active Blue
   interactiveSecondaryHover:   ref('blue900'),      // #042791

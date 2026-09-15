@@ -27,6 +27,18 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "focusRing",
   },
   {
+    "dark": "#d58b02",
+    "light": "#d58b02",
+    "role": "interactive.accent.active",
+    "semantic": "interactiveAccentActive",
+  },
+  {
+    "dark": "#eaa501",
+    "light": "#eaa501",
+    "role": "interactive.accent.hover",
+    "semantic": "interactiveAccentHover",
+  },
+  {
     "dark": "#ff6b6b",
     "light": "#d33330",
     "role": "interactive.danger",
@@ -52,13 +64,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#d8f0ff",
-    "light": "#042791",
+    "light": "#082d9e",
     "role": "interactive.primary.active",
     "semantic": "interactivePrimaryActive",
   },
   {
     "dark": "#bbe1ff",
-    "light": "#021b6c",
+    "light": "#06206e",
     "role": "interactive.primary.hover",
     "semantic": "interactivePrimaryHover",
   },
@@ -70,13 +82,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#d8f0ff",
-    "light": "#021b6c",
+    "light": "#06206e",
     "role": "interactive.secondary.active",
     "semantic": "interactiveSecondaryActive",
   },
   {
     "dark": "#bbe1ff",
-    "light": "#042791",
+    "light": "#082d9e",
     "role": "interactive.secondary.hover",
     "semantic": "interactiveSecondaryHover",
   },
@@ -99,14 +111,14 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusDangerText",
   },
   {
-    "dark": "#021b6c",
+    "dark": "#06206e",
     "light": "#f5fbff",
     "role": "status.info.bg",
     "semantic": "statusInfoBg",
   },
   {
     "dark": "#95caff",
-    "light": "#6fb4ff",
+    "light": "#82baff",
     "role": "status.info.border",
     "semantic": "statusInfoBorder",
   },
@@ -123,7 +135,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusSuccessBg",
   },
   {
-    "dark": "#8dcc92",
+    "dark": "#b0dc92",
     "light": "#14853d",
     "role": "status.success.border",
     "semantic": "statusSuccessBorder",
@@ -141,7 +153,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusWarningBg",
   },
   {
-    "dark": "#ff994a",
+    "dark": "#ffd98a",
     "light": "#cb7e03",
     "role": "status.warning.border",
     "semantic": "statusWarningBorder",
