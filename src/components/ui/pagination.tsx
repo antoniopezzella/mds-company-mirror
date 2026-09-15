@@ -69,7 +69,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const focusRing = getRoleColor('focus.ring');
   const hoverBg = getRoleColor('surface.subtle');
   const activeBg = getRoleColor('interactive.primary');
-  const activeFg = getRoleColor('text.onAccent');
+  const activeFg = getRoleColor('text.onInteractive');
   const textColor = getRoleColor('text.primary');
   const mutedColor = getRoleColor('text.secondary');
 

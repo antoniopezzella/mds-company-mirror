@@ -45,22 +45,37 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 
+  // react-day-picker sets modifiers.selected=true for every day in a range
+  // (start, middle, end alike — confirmed in DayPicker.js), so range_start/
+  // range_middle/range_end must be checked ahead of the plain `selected`
+  // fallback to give the connected-range look instead of solid-filling every
+  // day in the range like a single selection.
+  const isRangeMiddle = Boolean(modifiers.range_middle);
+  const isSolidSelected = modifiers.selected && !isRangeMiddle;
+
   return (
     <button
       ref={ref}
       type="button"
       className={cn(
-        'inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-normal outline-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed',
+        'inline-flex h-9 w-9 items-center justify-center text-sm font-normal outline-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed',
+        isRangeMiddle ? 'rounded-none' : 'rounded-md',
         className
       )}
       style={
         {
-          color: modifiers.selected
-            ? getRoleColor('text.onAccent')
-            : modifiers.disabled
-              ? getRoleColor('text.disabled')
-              : getRoleColor('text.primary'),
-          backgroundColor: modifiers.selected ? getRoleColor('interactive.primary') : 'transparent',
+          color: isSolidSelected
+            ? getRoleColor('text.onInteractive')
+            : isRangeMiddle
+              ? getRoleColor('text.primary')
+              : modifiers.disabled
+                ? getRoleColor('text.disabled')
+                : getRoleColor('text.primary'),
+          backgroundColor: isSolidSelected
+            ? getRoleColor('interactive.primary')
+            : isRangeMiddle
+              ? getRoleColor('surface.accent')
+              : 'transparent',
           opacity: modifiers.disabled ? 0.5 : modifiers.outside ? 0.6 : 1,
           boxShadow:
             modifiers.today && !modifiers.selected ? `inset 0 0 0 1px ${getRoleColor('border.default')}` : 'none',

@@ -15,13 +15,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // PRIMARY - Midnight Blue (#000f47) - Dashboards & standard CTAs
-        // `dark:` values pulled from semanticDarkOverrides.interactivePrimary*
-        // (src/semantic-tokens.ts) — dark mode makes the interactive surface
-        // lighter/brighter, so button text flips to navy for contrast.
+        // PRIMARY - Midnight Blue (role: interactive.primary) - Dashboards & standard CTAs
+        // bg now reads the CSS-var bridge (RoleVarsProvider), which already
+        // resolves to interactivePrimary's light/dark value — no dark:bg
+        // override needed. text-[#ceecff]/dark:text-[#000f47] stay literal
+        // for now (they pair with the #ceecff fix, batch 3).
         primary:
-          'bg-[#000f47] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
-          'dark:bg-[#95caff] dark:text-[#000f47] dark:hover:bg-[#bbe1ff] dark:active:bg-[#d8f0ff] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+          'bg-[var(--role-interactive-primary)] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'dark:text-[#000f47] dark:hover:bg-[#bbe1ff] dark:active:bg-[#d8f0ff] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
         // PRIMARY ALT - Gold (#ffbf00) - Hero/Marketing CTAs
         // brandAccent is deliberately unchanged in semanticDarkOverrides
@@ -30,20 +31,25 @@ const buttonVariants = cva(
           'bg-[#ffbf00] text-[#000f47] shadow-none hover:bg-[#eaa501] active:bg-[#d58b02] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
           'dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
-        // SECONDARY - Outline with midnight blue border
+        // SECONDARY - Outline with midnight blue border (role: interactive.primary)
         secondary:
-          'bg-transparent text-[#000f47] border-2 border-[#000f47] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
-          'dark:text-[#95caff] dark:border-[#95caff] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:hover:border-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:active:border-[#d8f0ff] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
+          'bg-transparent text-[var(--role-interactive-primary)] border-2 border-[var(--role-interactive-primary)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:hover:border-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:active:border-[#d8f0ff] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
 
-        // TERTIARY - Transparent/Ghost
+        // TERTIARY - Transparent/Ghost (role: interactive.primary)
         tertiary:
-          'bg-transparent text-[#000f47] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] ' +
-          'dark:text-[#95caff] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:disabled:text-[#878787]',
+          'bg-transparent text-[var(--role-interactive-primary)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] ' +
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:disabled:text-[#878787]',
 
         // DESTRUCTIVE - Red/Danger (applied when destructive=true)
-        // dark: values from semanticDarkOverrides.interactiveDanger*
+        // dark: values from semanticDarkOverrides.interactiveDanger*.
+        // text uses the CSS-var bridge (text.onInteractive), not a literal —
+        // statusDanger's dark value (#ff6b6b) is a light red that fails
+        // contrast against a fixed white (2.78:1); the role resolves to
+        // white in light mode, Midnight in dark, correctly for both (5.34/
+        // 6.53:1) with no manual dark: override needed.
         destructivePrimary:
-          'bg-[#c53532] text-white shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'bg-[#c53532] text-[var(--role-text-on-interactive)] shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
           'dark:bg-[#ff6b6b] dark:hover:bg-[#ff9d9d] dark:active:bg-[#ffe8e8] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
         destructiveSecondary:
@@ -55,6 +61,8 @@ const buttonVariants = cva(
           'dark:text-[#ff6b6b] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#ff9d9d] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#ffe8e8] dark:disabled:text-[#878787]',
         
         // INVERSE variants (for dark backgrounds)
+        // text-[#000f47] here stays literal — always-navy-on-white text has
+        // no role yet (textOnLight is orphaned, see semantic-tokens.ts).
         inversePrimary:
           'bg-white text-[#000f47] shadow-none hover:bg-white/90 active:bg-white/80',
         
