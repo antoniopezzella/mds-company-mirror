@@ -137,6 +137,9 @@ These two scripts generalize the one-off comparison code written during the 2026
 
 ## 🛡 Enforcement
 
+Flowchart version of this section, alongside the other two governance
+systems (CI gates, documentation): [`docs/GOVERNANCE.md`](../GOVERNANCE.md).
+
 Direct token/semantic-token usage in components (bypassing `getRoleColor()`)
 is not just discouraged — it's checked in CI:
 

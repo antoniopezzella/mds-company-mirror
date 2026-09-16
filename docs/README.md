@@ -43,6 +43,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 
 | Doc | For |
 |---|---|
+| [`GOVERNANCE.md`](./GOVERNANCE.md) | Visual map of all three governance systems (token/role, CI gates, documentation) with a flowchart for each — start here before the individual detailed docs below |
 | [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Storybook → GitHub Pages (CI-automated) + app → Vercel (dashboard git integration) |
 | [`FIGMA_CODE_CONNECT_GUIDE.md`](./FIGMA_CODE_CONNECT_GUIDE.md) | Real component source shown in Figma Dev Mode |
 | [`CODE_TO_DESIGN_TOKEN_BINDING.md`](./CODE_TO_DESIGN_TOKEN_BINDING.md) | Binding code tokens back to Figma variables |
