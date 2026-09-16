@@ -23,7 +23,7 @@ Created a **bidirectional workflow system** that enables AI agents to seamlessly
 
 ✅ **Code-to-Design:**
 - Figma Documentation Builder agent (`.github/agents/figma-documentation.agent.md`)
-- MCP rules for Figma integration (`MCP_RULES.md`, `DESIGN_SYSTEM_MCP_RULES.md`)
+- MCP rules for Figma integration (now consolidated into `CLAUDE.md` §8; the old `MCP_RULES.md`/`DESIGN_SYSTEM_MCP_RULES.md` duplicates are archived)
 - Custom validation rules (`mcp-rules.js`, `mcp.config.js`)
 
 ✅ **Design-to-Code:**
