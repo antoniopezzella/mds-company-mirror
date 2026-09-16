@@ -5,6 +5,7 @@ import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import { join } from 'node:path';
 import { z } from 'zod';
+import { createUIMessageStream, pipeUIMessageStreamToResponse } from 'ai';
 import { AppConfig } from './config/app';
 import { loadDocs, retrieve } from './rag/retriever';
 import { composeAIAnswer, composeAIAnswerStream } from './tools/ai-answer';
@@ -163,32 +164,54 @@ export function buildServer() {
     }
 
     try {
-      // Set SSE headers
-      reply.raw.setHeader('Content-Type', 'text/event-stream');
-      reply.raw.setHeader('Cache-Control', 'no-cache');
-      reply.raw.setHeader('Connection', 'keep-alive');
-      reply.raw.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
-      reply.raw.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
-
       const hits = retrieve(validation.sanitized, docs, 3);
-      const stream = composeAIAnswerStream(validation.sanitized, hits, conversationHistory);
 
-      for await (const chunk of stream) {
-        const data = JSON.stringify(chunk);
-        reply.raw.write(`data: ${data}\n\n`);
-      }
+      // Re-envelopes composeAIAnswerStream's existing {token?, citations?,
+      // done?} generator into the Vercel AI SDK's UI Message Stream
+      // protocol — the same protocol api/chat-stream.ts (the Vercel Edge
+      // Function) now emits — so AIAssistantChat.tsx's useChat() can talk to
+      // whichever of the two backends actually serves a given page.
+      // composeAIAnswerStream itself, and retrieval above, are untouched.
+      const textId = crypto.randomUUID();
+      const uiStream = createUIMessageStream({
+        execute: async ({ writer }) => {
+          writer.write({ type: 'start' });
+          writer.write({ type: 'text-start', id: textId });
+          try {
+            for await (const chunk of composeAIAnswerStream(validation.sanitized, hits, conversationHistory)) {
+              if (chunk.token) writer.write({ type: 'text-delta', id: textId, delta: chunk.token });
+              if (chunk.citations) writer.write({ type: 'data-citations', data: chunk.citations });
+            }
+          } finally {
+            writer.write({ type: 'text-end', id: textId });
+            writer.write({ type: 'finish' });
+          }
+        },
+      });
 
-      reply.raw.end();
-      
+      await pipeUIMessageStreamToResponse({
+        response: reply.raw,
+        stream: uiStream,
+        headers: { 'Access-Control-Allow-Origin': req.headers.origin || '*' },
+      });
+
       auditLogger.logSuccess(requestId, clientIp, validation.sanitized, 0, hits.length);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       auditLogger.logError(requestId, clientIp, validation.sanitized, errorMessage, 0);
-      
+
       app.log.error({ error, requestId }, 'Error in streaming request');
-      
-      reply.raw.write(`data: ${JSON.stringify({ error: 'Stream error', done: true })}\n\n`);
-      reply.raw.end();
+
+      // pipeUIMessageStreamToResponse sends headers before pulling the
+      // first chunk, so a rejection reaching here after streaming started
+      // has already committed a 200 — just end the connection. Only a
+      // failure before that point (e.g. retrieve() throwing) can still use
+      // a normal Fastify error response.
+      if (!reply.raw.headersSent) {
+        reply.status(500).send({ error: 'Sorry, I encountered an error processing your request. Please try again.' });
+      } else {
+        reply.raw.end();
+      }
     }
   });
 

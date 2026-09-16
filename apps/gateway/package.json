@@ -21,6 +21,7 @@
     "@opentelemetry/resources": "1.28.0",
     "@opentelemetry/sdk-node": "^0.54.0",
     "@opentelemetry/semantic-conventions": "^1.28.0",
+    "ai": "^7.0.68",
     "dotenv": "^17.2.3",
     "fastify": "^4.27.2",
     "langchain": "^1.1.1",
