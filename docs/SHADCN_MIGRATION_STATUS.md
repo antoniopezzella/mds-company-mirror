@@ -1,8 +1,8 @@
 # shadcn/ui migration status
 
-Tracks the MUI → shadcn/Radix migration on `feature/shadcn-ui-migration`, specifically the 20 components that existed in both forms simultaneously. Written as part of assessing production/external-consumption readiness — see the "mainstream reuse" assessment for the business context.
+Tracks the MUI → shadcn/Radix migration on `feature/shadcn-ui-migration`, specifically the 20 components that existed in both forms simultaneously. Written as part of assessing production/external-consumption readiness — see [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md) for the business context.
 
-## Resolved — MUI deleted, shadcn is canonical (12)
+## Resolved — MUI deleted, shadcn is canonical (17)
 
 Confirmed real prop/feature parity, all consumers migrated, Figma Code Connect repointed, `tsc --noEmit` clean, zero remaining references to the old import paths.
 
@@ -18,24 +18,23 @@ Confirmed real prop/feature parity, all consumers migrated, Figma Code Connect r
 - **Table**: `data`/`columns: {key, header}`, not `rows`/`columns: {field, headerName}`.
 - **Tabs**: `tabs: TabItem[]` with `{id, title, content}`, `defaultActiveId`, not `{label, value}` + controlled `value`.
 
-## Deliberately not touched — real uncommitted work in progress (3)
+**Closed in the production-readiness pass** (2026-08-27) — real feature-parity gaps closed, not just import swaps:
+- **Select**: added the missing `size?: 'small' | 'medium'` prop (15 real call sites depended on `size="small"`); widened `value`/`options` to `string | number` (a real consumer passes numeric option values); mapped Radix's empty-string-value restriction to an internal sentinel (a real consumer relies on `value: ''` for an "Unassigned" placeholder). `variant` (outlined/filled/standard) was dropped — no real consumer used it.
+- **Stepper**: added back `activeStep?: number` (2 real consumers depend on it), deriving each step's status by position unless the step sets its own `status` explicitly. Discovered and fixed a real accessibility gap in the same pass: only the tiny status icon was clickable, not the whole step row (MUI's version makes the whole row clickable) — restructured to a single interactive row instead of a nested button-in-div.
+- **Header (WebsiteHeader)**: built from scratch — no shadcn equivalent existed. Reproduces the scroll-triggered transparent→solid background, the full nav/language/auth-actions/mobile-drawer feature set, and (per user decision) uses the existing `Sheet` primitive for the mobile drawer rather than a new one. The scrolled-solid background uses `color-mix()` on the `interactive.primary` role's CSS var instead of the MUI version's hardcoded `rgba(0,15,71,0.92)` literal.
+- **Badge**: the standalone tone-pill (`ui/badge.tsx`) already existed and was correctly scoped to the Figma "Text Badge" node — but the MUI overlay/pin pattern (a badge anchored to a corner of a child element, e.g. a notification-count pin) had no shadcn equivalent. Added `BadgeAnchor`, a positioning wrapper around the existing `Badge` rather than a reimplementation, and migrated both real consumers (a demo gallery page, and `DashboardHeader`'s raw-MUI notification badge).
+- **Card**: no feature work needed — the MUI "insight/stats" Card had zero real consumers, and shadcn's `ContentCard` already matched the Figma node's real shape. Repointed Code Connect and deleted the dead MUI file.
 
-**Button, Checkbox, Chip** — their MUI source files have real, substantial, coordinated uncommitted changes already in the working tree (a shared `getFocusRingSx(theme)` helper, Figma-node-referenced hover/active fixes, a documented stacking-context bug fix). This predates the migration work and wasn't discarded.
+## Deliberately kept alongside shadcn — real uncommitted work, ported rather than replacing MUI (3)
 
-Consumers of these three *were* migrated to the shadcn versions — confirmed the shadcn side already has its own equivalent accessibility handling (Tailwind `focus-visible:ring-*`, Checkbox uses a dedicated CSS-variable focus ring), so nothing accessibility-wise regresses. But the MUI `Button.tsx`/`Checkbox.tsx`/`Chip.tsx` files themselves — uncommitted changes included — are still on disk, unused by app pages now, real work intact.
+**Button, Checkbox, Chip** — per an explicit user decision, the MUI versions stay in the tree for side-by-side comparison rather than being deleted, even though no consumer imports them anymore. Their real, previously-uncommitted fixes were ported into the shadcn versions using shadcn's own mechanisms (Tailwind/CSS vars), not copy-pasted:
 
-**This needs a human decision**: finish and commit that focus-ring work standalone, port the specific fixes into the shadcn versions, or consciously let it go now that nothing imports the MUI versions anymore.
+- **Checkbox**: the shadcn version's `getControlStyle()` didn't reproduce two Figma-verified fixes from the MUI diff — unchecked hover/active now correctly turns the border+wash to `interactive.secondary` (Active Blue, nodes 7582:7776/7582:7784) instead of leaving the border unchanged; checked-disabled vs. unchecked-disabled now get their own distinct treatment (node 7582:7818) instead of one uniform disabled style.
+- **Chip**: found and fixed a real dark-mode bug the MUI diff didn't have an equivalent for — the focus ring set `--tw-ring-color` but never `--tw-ring-offset-color`, so the ring's inner gap defaulted to Tailwind's hardcoded white regardless of theme. Also simplified hover from JS-tracked `useState` to a plain `hover:` Tailwind class (no behavior change, just less code and no re-render on hover).
+- **Button**: audited but **not changed** — its hover/active colors for the `primary` variant are hardcoded hex (`#082d9e`/`#0b4bff` in light mode) that don't match any existing role (`interactive.primary.hover`/`.active` resolve to different colors, `#021b6c`/`#042791`), and `#082d9e` isn't a defined token at all. This isn't a code-level oversight to silently fix — the file's own comments already flag several of these as intentionally deferred pending a token request. Rewiring it either changes the button's visual hover/active color without design sign-off, or requires filing a new token request (see `docs/TOKEN_REQUEST_PROCESS.md`) to formalize the colors already in use. Left as-is; flagged here for whoever owns that decision.
 
-## Real parity gaps — need feature work, not deletion (5)
+A `roles:check` false positive was also fixed in this pass: the governance script's regex matched the substring `tokens.ts` inside a comment mentioning `semantic-tokens.ts`, incorrectly flagging `ui/button.tsx`. The script now strips comments before scanning.
 
-Not cosmetic differences — the shadcn version is missing something the MUI version's real consumers actually depend on.
+## Real parity gaps — none remaining
 
-| Component | Gap |
-|---|---|
-| **Badge** | MUI's is an overlay/pin indicator anchored to a child (`variant: dot/number/text`, `overlap`, `anchorOrigin`). Shadcn's is a standalone tone-colored pill — a different pattern entirely, not a subset. |
-| **Card** | MUI's is a narrow "insight/stats card" (title + stat grid + trend arrows). Shadcn's `card.tsx` deliberately didn't port that pattern (its own comment calls it redundant with `ChartMetricCard`) — no drop-in equivalent exists yet. |
-| **Header** | Shadcn only implements the `DashboardHeader` equivalent. There is no shadcn `WebsiteHeader` or `LoggedOutHeader` at all, and both are in real use (`HeroBannerTest.tsx`, `HeroBannerGridTest.tsx`). |
-| **Select** | Shadcn dropped `variant` (outlined/filled/standard) and `size` (small/medium) entirely. Real consumers actively pass `size="small"` (12 usages across `HeroBannerTestControls.tsx` and `PortfolioComponentGallery.tsx`). |
-| **Stepper** | Shadcn dropped the explicit `activeStep?: number` index prop in favor of implicit per-step `status`. Real consumers pass `activeStep` directly and would fail type-check against the shadcn props as-is. |
-
-Do not delete the MUI versions of these five until the shadcn side actually replicates the missing behavior.
+All 5 previously-open gaps (Badge, Card, Header, Select, Stepper) are resolved as of 2026-08-27 (see above).

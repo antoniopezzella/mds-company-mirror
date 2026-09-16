@@ -21,7 +21,7 @@
    - Ensure `.github/workflows/lighthouse.yml` runs `npm run lighthouse:ci` on PRs touching hero/components.
    - Upload HTML/JSON reports as artifacts and post score summary comment.
 4. **Dev Review Hook**
-   - Update `LANDING_PAGE_GRID_UPGRADE.md` checklist to require Lighthouse ≥ target thresholds before approval.
+   - Update the relevant PR checklist to require Lighthouse ≥ target thresholds before approval (the old `LANDING_PAGE_GRID_UPGRADE.md` checklist this pointed to is archived — see `docs/archive/LANDING_PAGE_GRID_UPGRADE.md`).
    - Capture deltas in `docs/perf-history.md` (new file) for trend tracking.
 5. **Design QA**
    - Create a FigJam note linking to the guide + last report to keep design decisions informed by metrics.
