@@ -368,7 +368,7 @@ function VoiceCanvas({
       setErrorMessage(msg);
       onError?.(msg);
     }
-  }, [apiBase, onSave, onError, clear]);
+  }, [apiBase, onSave, onError]);
 
   // ── Iframe load handler ────────────────────────────────────────
 

@@ -28,7 +28,7 @@ function getThumbColor(interaction: InteractionState): string {
   return getRoleColor('interactive.primary');
 }
 
-export interface SliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {}
+export type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
 
 /**
  * Design System Slider — shadcn/ui/Radix counterpart. No MDS twin exists yet;

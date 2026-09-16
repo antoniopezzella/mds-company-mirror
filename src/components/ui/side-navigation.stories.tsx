@@ -116,7 +116,7 @@ export const DarkVariant: Story = {
     variant: 'dark',
     currentPath: '/dashboard',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -141,7 +141,7 @@ export const LightVariant: Story = {
     variant: 'light',
     currentPath: '/dashboard',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -166,7 +166,7 @@ export const WithActiveGroup: Story = {
     variant: 'dark',
     currentPath: '/policies/renewals',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -227,7 +227,7 @@ export const CustomIcons: Story = {
     ],
     variant: 'dark',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -276,7 +276,7 @@ export const ComplexHierarchy: Story = {
     variant: 'light',
     currentPath: '/beacon/overview',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -346,7 +346,7 @@ export const KeyboardNavigation: Story = {
     variant: 'dark',
     currentPath: '/dashboard',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -363,7 +363,7 @@ export const NoSupportCTA: Story = {
     variant: 'dark',
     currentPath: '/dashboard',
     // No onSupport handler - CTA won't be interactive
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -380,8 +380,8 @@ export const MobileLayout: Story = {
     variant: 'dark',
     currentPath: '/policies/renewals',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
-    onClose: () => console.log('Close sidebar (mobile)'),
+    onNavigate: (path) => console.debug('Navigate to:', path),
+    onClose: () => console.debug('Close sidebar (mobile)'),
   },
   decorators: [
     (Story) => (
@@ -417,7 +417,7 @@ The primary color scheme uses Marsh's signature midnight blue as the background 
     colorScheme: 'primary',
     currentPath: '/policies/renewals',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -463,7 +463,7 @@ The secondary color scheme inverts the palette, using sky blue as the background
     colorScheme: 'secondary',
     currentPath: '/policies/renewals',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (
@@ -517,7 +517,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
             colorScheme="primary"
             currentPath="/policies/renewals"
             onSupport={() => alert('Support clicked')}
-            onNavigate={(path) => console.log('Navigate to:', path)}
+            onNavigate={(path) => console.debug('Navigate to:', path)}
           />
         </div>
       </div>
@@ -532,7 +532,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
             colorScheme="secondary"
             currentPath="/policies/renewals"
             onSupport={() => alert('Support clicked')}
-            onNavigate={(path) => console.log('Navigate to:', path)}
+            onNavigate={(path) => console.debug('Navigate to:', path)}
           />
         </div>
       </div>
@@ -616,7 +616,7 @@ export const MUIComparison: Story = {
     variant: 'dark',
     currentPath: '/dashboard',
     onSupport: () => alert('Support clicked'),
-    onNavigate: (path) => console.log('Navigate to:', path),
+    onNavigate: (path) => console.debug('Navigate to:', path),
   },
   decorators: [
     (Story) => (

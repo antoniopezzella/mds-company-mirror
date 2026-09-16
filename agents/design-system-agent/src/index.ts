@@ -43,7 +43,7 @@ async function main() {
     if (last) {
       const preview =
         typeof last.content === "string" ? last.content : JSON.stringify(last.content);
-      console.log(`\n[${last.getType?.() ?? "message"}] ${preview.slice(0, 2000)}`);
+      console.debug(`\n[${last.getType?.() ?? "message"}] ${preview.slice(0, 2000)}`);
     }
   }
 }

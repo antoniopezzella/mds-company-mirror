@@ -52,7 +52,7 @@ export const GuyCarpenter: Story = {
     title: 'New catastrophe modeling capabilities',
     message: 'Enhanced analytics for better risk assessment and portfolio management.',
     ctaText: 'Learn more',
-    onClose: () => console.log('Closed'),
+    onClose: () => console.debug('Closed'),
   },
 };
 
@@ -72,7 +72,7 @@ export const Mercer: Story = {
     title: 'Benefits enrollment period',
     message: 'Annual benefits enrollment closes on December 15th. Review your options today.',
     ctaText: 'Enroll now',
-    onClose: () => console.log('Dismissed'),
+    onClose: () => console.debug('Dismissed'),
   },
 };
 
@@ -82,7 +82,7 @@ export const WithDismiss: Story = {
     title: 'Cookie preferences',
     message: 'We use cookies to enhance your experience. You can manage your preferences anytime.',
     ctaText: 'Accept all',
-    onClose: () => console.log('Dismissed'),
+    onClose: () => console.debug('Dismissed'),
   },
 };
 
@@ -104,6 +104,6 @@ export const FullWidth: Story = {
     message: 'Important information about our services across all regions.',
     ctaText: 'Read more',
     fullWidth: true,
-    onClose: () => console.log('Closed'),
+    onClose: () => console.debug('Closed'),
   },
 };

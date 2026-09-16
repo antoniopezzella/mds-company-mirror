@@ -66,7 +66,7 @@ export const Selectable: Story = {
     items: basicItems,
     selectable: true,
     multiSelect: true,
-    onSelectionChange: (ids) => console.log('Selected:', ids),
+    onSelectionChange: (ids) => console.debug('Selected:', ids),
   },
   decorators: [(Story) => <div className="w-[360px]"><Story /></div>],
 };

@@ -458,14 +458,14 @@ async function detectStorybookMcp(): Promise<boolean> {
     // Check content-type or read a small portion to verify it's SSE format
     const contentType = response.headers.get('content-type') || '';
     if (contentType.includes('text/event-stream')) {
-      console.log('[StoryUI] Storybook MCP addon detected (SSE endpoint)');
+      console.debug('[StoryUI] Storybook MCP addon detected (SSE endpoint)');
       return true;
     }
 
     // Also check by reading a portion of the response
     const text = await response.text();
     if (text.startsWith('event:') || text.startsWith('data:')) {
-      console.log('[StoryUI] Storybook MCP addon detected (SSE response)');
+      console.debug('[StoryUI] Storybook MCP addon detected (SSE response)');
       return true;
     }
 
@@ -473,7 +473,7 @@ async function detectStorybookMcp(): Promise<boolean> {
     try {
       const data = JSON.parse(text);
       if (data && data.result && Array.isArray(data.result.tools)) {
-        console.log('[StoryUI] Storybook MCP addon detected (JSON response)');
+        console.debug('[StoryUI] Storybook MCP addon detected (JSON response)');
         return true;
       }
     } catch {
@@ -645,7 +645,7 @@ async function migrateLocalStorageToManifest(
       localStorage.setItem(MIGRATION_FLAG_V2, '1');
     }
 
-    if (migrated > 0) console.log(`[story-ui] Migrated ${migrated} chats to manifest`);
+    if (migrated > 0) console.debug(`[story-ui] Migrated ${migrated} chats to manifest`);
 
     // v3: seed synthetic conversations for any manifest entry with metadata.prompt but no conversation.
     // Runs regardless of localStorage — covers MCP-external and voice-saved stories.
@@ -1153,7 +1153,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
         }
       }
       if (Object.keys(reg).length > 0) {
-        console.log(`[VoiceCanvas] Loaded ${Object.keys(reg).length} components from design system`);
+        console.debug(`[VoiceCanvas] Loaded ${Object.keys(reg).length} components from design system`);
         setCanvasRegistry(reg);
       }
     } else {
@@ -1165,7 +1165,11 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     if (configuredProvider) {
       setCanvasProvider(() => configuredProvider);
     }
-  }, [panelMode]);
+    // canvasRegistry is read in the early-return guard above (only load
+    // once); including it here is safe/idempotent, not a trigger for
+    // re-running the load — the guard already short-circuits once it's
+    // non-empty.
+  }, [panelMode, canvasRegistry]);
 
   // Track stories for MCP external generation detection
   // Used to detect when stories are created via MCP remote (Claude Desktop)
@@ -1203,7 +1207,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
         if (!isPollingInitialized.current) {
           knownStoryIds.current = currentStoryIds;
           isPollingInitialized.current = true;
-          console.log('[Story UI] MCP story polling initialized with', currentStoryIds.size, 'stories');
+          console.debug('[Story UI] MCP story polling initialized with', currentStoryIds.size, 'stories');
           return;
         }
 
@@ -1221,8 +1225,8 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
             }
 
             // New story detected that wasn't created by this panel - must be from MCP remote
-            console.log('[Story UI] Detected externally generated story:', storyId);
-            console.log('[Story UI] Triggering refresh to register new story in Vite import map...');
+            console.debug('[Story UI] Detected externally generated story:', storyId);
+            console.debug('[Story UI] Triggering refresh to register new story in Vite import map...');
 
             // Update known stories before refresh
             knownStoryIds.current = currentStoryIds;
@@ -1425,7 +1429,12 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
             const canvasCfg = await canvasCfgRes.json();
             const isReact = !canvasCfg.componentFramework || canvasCfg.componentFramework === 'react';
             setIsReactFramework(isReact);
-            if (!isReact && panelMode === 'canvas') {
+            // Reads canvasModeRef (kept in sync with panelMode at every
+            // setPanelMode call site) rather than panelMode itself — this
+            // effect is mount-only by design (fetches init data once);
+            // depending on panelMode would re-run the whole fetch on every
+            // chat/canvas toggle.
+            if (!isReact && canvasModeRef.current) {
               setPanelMode('chat');
               canvasModeRef.current = false;
               try { localStorage.removeItem('__sui_panel_mode__'); } catch {}
@@ -1511,10 +1520,10 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     dispatch({ type: 'REMOVE_ATTACHED_IMAGE', payload: id });
   };
 
-  const clearAttachedImages = () => {
+  const clearAttachedImages = useCallback(() => {
     state.attachedImages.forEach(img => URL.revokeObjectURL(img.preview));
     dispatch({ type: 'CLEAR_ATTACHED_IMAGES' });
-  };
+  }, [state.attachedImages]);
 
   // Drag and drop handlers
   const handleDragEnter = useCallback((e: React.DragEvent) => {
@@ -1648,20 +1657,20 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
    */
   const triggerStorybookRefresh = useCallback((storyTitle: string, delayMs: number = 2000) => {
     // Only refresh for new stories (not updates) to avoid disrupting workflow
-    console.log(`[Story UI] Scheduling Storybook refresh in ${delayMs}ms for new story: ${storyTitle}`);
+    console.debug(`[Story UI] Scheduling Storybook refresh in ${delayMs}ms for new story: ${storyTitle}`);
 
     setTimeout(() => {
       try {
         // Try to refresh the parent Storybook frame
         if (window.top && window.top !== window) {
-          console.log('[Story UI] Refreshing Storybook to register new story file...');
+          console.debug('[Story UI] Refreshing Storybook to register new story file...');
           window.top.location.reload();
         } else if (window.parent && window.parent !== window) {
-          console.log('[Story UI] Refreshing parent frame...');
+          console.debug('[Story UI] Refreshing parent frame...');
           window.parent.location.reload();
         } else {
           // Fallback: refresh current window
-          console.log('[Story UI] Refreshing current window...');
+          console.debug('[Story UI] Refreshing current window...');
           window.location.reload();
         }
       } catch (_error) {
@@ -1731,7 +1740,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   }, [state.activeChatId, state.activeTitle, state.conversation.length, triggerStorybookRefresh]);
 
   // Handle send
-  const handleSend = async (e?: React.FormEvent) => {
+  const handleSend = useCallback(async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!state.input.trim() && state.attachedImages.length === 0) return;
     const userInput = state.input.trim() || (state.attachedImages.length > 0 ? 'Create a component that matches this design' : '');
@@ -1897,7 +1906,20 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
         abortControllerRef.current = null;
       }
     }
-  };
+  }, [
+    state.input,
+    state.attachedImages,
+    state.activeChatId,
+    state.activeTitle,
+    state.conversation,
+    state.selectedProvider,
+    state.selectedModel,
+    state.considerations,
+    state.storybookMcpAvailable,
+    state.useStorybookMcp,
+    clearAttachedImages,
+    finalizeStreamingConversation,
+  ]);
 
   // Chat management
   const handleSelectChat = (chat: ChatSession) => {

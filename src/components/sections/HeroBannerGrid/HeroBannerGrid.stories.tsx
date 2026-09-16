@@ -98,12 +98,12 @@ export const Corporate: Story = {
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     primaryCta: {
       text: 'Download Report',
-      onClick: () => console.log('Download clicked'),
+      onClick: () => console.debug('Download clicked'),
       icon: <Download size={18} />,
     },
     secondaryCta: {
       text: 'Talk to Our Experts',
-      onClick: () => console.log('Contact clicked'),
+      onClick: () => console.debug('Contact clicked'),
     },
     imageSrc: '/images/journey-aviation.jpg',
     imageAlt: 'Aerial view of city intersection',
@@ -197,12 +197,12 @@ export const LightVariant: Story = {
     description: 'Our comprehensive suite of risk management solutions helps businesses navigate uncertainty with confidence.',
     primaryCta: {
       text: 'Get Started',
-      onClick: () => console.log('Get Started clicked'),
+      onClick: () => console.debug('Get Started clicked'),
       icon: <ArrowRight size={18} />,
     },
     secondaryCta: {
       text: 'Learn More',
-      onClick: () => console.log('Learn More clicked'),
+      onClick: () => console.debug('Learn More clicked'),
     },
     imageSrc: '/journey-aviation.jpg',
     imageAlt: 'Business professionals collaborating',
@@ -237,12 +237,12 @@ export const FiftyFiftySplit: Story = {
     description: 'We bring together the best of Marsh, Guy Carpenter, Mercer, and Oliver Wyman to help organizations navigate an uncertain world with confidence and expertise.',
     primaryCta: {
       text: 'Download Report',
-      onClick: () => console.log('Download clicked'),
+      onClick: () => console.debug('Download clicked'),
       icon: <Download size={18} />,
     },
     secondaryCta: {
       text: 'Talk to Our Experts',
-      onClick: () => console.log('Contact clicked'),
+      onClick: () => console.debug('Contact clicked'),
     },
     imageSrc: '/images/journey-aviation.jpg',
     imageAlt: 'Aerial city view',
@@ -260,7 +260,7 @@ export const AnimationsDisabled: Story = {
     description: 'This variant demonstrates the hero banner with the disableAnimations prop set to true.',
     primaryCta: {
       text: 'Learn More',
-      onClick: () => console.log('Learn More clicked'),
+      onClick: () => console.debug('Learn More clicked'),
       icon: <ArrowRight size={18} />,
     },
     videoSrc: '/video/WebsiteHeaderVideo-960x900_V1 (1).mp4',
