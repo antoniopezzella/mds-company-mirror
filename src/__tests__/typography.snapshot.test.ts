@@ -9,16 +9,16 @@ const KEYS: TypoKey[] = [
   'body1','body2',
   'caption','overline',
   'button'
-] as any;
+];
 
 describe('theme.typography snapshot', () => {
   it('has expected public fields for key variants', () => {
-    const snapshot: Record<string, any> = {};
+    const snapshot: Record<string, unknown> = {};
     for (const k of KEYS) {
-      const t: any = (theme.typography as any)[k];
+      const t = theme.typography[k];
       if (!t) continue;
-      snapshot[k as string] = {
-        fontFamily: t.fontFamily ?? (theme.typography as any).fontFamily,
+      snapshot[k] = {
+        fontFamily: t.fontFamily ?? theme.typography.fontFamily,
         fontSize: t.fontSize,
         lineHeight: t.lineHeight,
         letterSpacing: t.letterSpacing,
