@@ -1,14 +1,14 @@
 {
   "preset": "conventionalcommits",
   "types": [
-    { "type": "feat", "section": "Features" },
-    { "type": "fix", "section": "Bug Fixes" },
-    { "type": "perf", "section": "Performance" },
-    { "type": "refactor", "section": "Refactoring" },
-    { "type": "docs", "section": "Documentation" },
-    { "type": "build", "section": "Build System" },
-    { "type": "ci", "section": "Continuous Integration" },
-    { "type": "test", "section": "Tests" },
-    { "type": "chore", "section": "Chores" }
+    { "type": "feat", "section": "Features", "hidden": false },
+    { "type": "fix", "section": "Bug Fixes", "hidden": false },
+    { "type": "perf", "section": "Performance", "hidden": false },
+    { "type": "refactor", "section": "Refactoring", "hidden": false },
+    { "type": "docs", "section": "Documentation", "hidden": false },
+    { "type": "build", "section": "Build System", "hidden": false },
+    { "type": "ci", "section": "Continuous Integration", "hidden": false },
+    { "type": "test", "section": "Tests", "hidden": false },
+    { "type": "chore", "section": "Chores", "hidden": false }
   ]
 }
