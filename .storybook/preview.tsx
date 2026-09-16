@@ -140,14 +140,15 @@ export const parameters: Preview['parameters'] = {
         [
           'Intro',
           'Accessibility',
-          'Colors',  
+          'Colors',
           'Typography',
           'Roles',
           'Spacing',
           'Grid',
+          '⚠️ Grid Legacy',
           'Elevation',
           // Note: titles must match MDX meta exactly
-          'Contrast-Quality',
+          'Contrast',
           'Documentation-Guidelines',
         ],
         // New reference section for raw MUI component examples before DS customization

@@ -35,9 +35,18 @@ const componentFiles = fs.existsSync(componentsDir) ? listFiles(componentsDir) :
 
 const violations = [];
 
+// Good-enough for this lint heuristic — strips comments so prose that
+// merely *mentions* a token/role name (e.g. "see semantic-tokens.ts") isn't
+// flagged as a real reference. A word-boundary-only check isn't enough:
+// `\btokens\.` matches inside `semantic-tokens.ts` too, since `-` counts as
+// a boundary.
+function stripComments(source) {
+  return source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+}
+
 for (const file of componentFiles) {
   const rel = path.relative(root, file);
-  const text = fs.readFileSync(file, 'utf8');
+  const text = stripComments(fs.readFileSync(file, 'utf8'));
   // Skip if this file imports roles already and does not reference forbidden patterns.
   const hasRolesImport = /from\s+['"].*roles['"]/m.test(text);
 
@@ -64,7 +73,7 @@ if (asJson) {
   if (violations.length === 0) {
     console.log('Role usage check: OK (no direct primitive or semantic references found in components).');
   } else {
-    console.log('Role usage check: WARN — found direct primitive / semantic references.');
+    console.log(`Role usage check: ${strict ? 'FAIL' : 'WARN'} — found direct primitive / semantic references.`);
     for (const v of violations) {
       console.log(`  • ${v.file}: ${v.match} -> ${v.recommendation}`);
     }
