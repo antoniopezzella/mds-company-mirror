@@ -15,6 +15,7 @@
  */
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { parseVoiceCommand } from './voiceCommands.js';
+import type { SpeechRecognitionEvent, SpeechRecognitionErrorEvent, SpeechRecognitionInstance } from './types.js';
 
 // ── Constants ─────────────────────────────────────────────────
 
@@ -86,7 +87,7 @@ function VoiceCanvas({
   // ── Refs ──────────────────────────────────────────────────────
   const abortRef = useRef<AbortController | null>(null);
   const conversationRef = useRef<Array<{ role: string; content: string }>>([]);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const isListeningRef = useRef(false);
   const autoSubmitRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingTranscriptRef = useRef('');
@@ -402,17 +403,17 @@ function VoiceCanvas({
   // ── Voice: start ───────────────────────────────────────────────
 
   const startListening = useCallback(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) return;
 
     if (recognitionRef.current) recognitionRef.current.abort();
 
-    const recognition = new SpeechRecognition();
+    const recognition = new SpeechRecognitionCtor();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       let interim = '';
       let final = '';
 
@@ -465,7 +466,7 @@ function VoiceCanvas({
       }
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       if (event.error === 'aborted' || event.error === 'no-speech') return;
       if (event.error === 'not-allowed') {
         setErrorMessage('Microphone access denied');
@@ -621,7 +622,7 @@ function VoiceCanvas({
   const iframeSrc = `/iframe.html?id=${STORY_ID}&viewMode=story&singleStory=true`;
   const speechSupported = !!(
     typeof window !== 'undefined' &&
-    ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)
+    (window.SpeechRecognition || window.webkitSpeechRecognition)
   );
 
   // ── Imperative handle (for parent "New Canvas" button) ──────────

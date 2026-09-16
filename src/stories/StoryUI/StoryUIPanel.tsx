@@ -317,12 +317,12 @@ const MAX_IMAGE_SIZE_MB = 20;
 // ============================================
 
 function getApiBaseUrl(): string {
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_STORY_UI_EDGE_URL) {
-    return (import.meta as any).env.VITE_STORY_UI_EDGE_URL;
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_STORY_UI_EDGE_URL) {
+    return import.meta.env.VITE_STORY_UI_EDGE_URL;
   }
   if (typeof window !== 'undefined') {
-    if ((window as any).__STORY_UI_EDGE_URL__) {
-      return (window as any).__STORY_UI_EDGE_URL__;
+    if (window.__STORY_UI_EDGE_URL__) {
+      return window.__STORY_UI_EDGE_URL__;
     }
     // Detect cloud deployments: Railway, custom domains, or any non-localhost
     const hostname = window.location.hostname;
@@ -333,13 +333,13 @@ function getApiBaseUrl(): string {
     }
   }
   let port = '4001';
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_STORY_UI_PORT) {
-    port = (import.meta as any).env.VITE_STORY_UI_PORT;
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_STORY_UI_PORT) {
+    port = import.meta.env.VITE_STORY_UI_PORT;
   } else if (typeof window !== 'undefined') {
-    if ((window as any).__STORY_UI_PORT__) {
-      port = (window as any).__STORY_UI_PORT__;
-    } else if ((window as any).STORY_UI_MCP_PORT) {
-      port = (window as any).STORY_UI_MCP_PORT;
+    if (window.__STORY_UI_PORT__) {
+      port = window.__STORY_UI_PORT__;
+    } else if (window.STORY_UI_MCP_PORT) {
+      port = window.STORY_UI_MCP_PORT;
     }
   }
   return `http://localhost:${port}`;
@@ -1144,7 +1144,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   useEffect(() => {
     if (panelMode !== 'canvas' || Object.keys(canvasRegistry).length > 0) return;
 
-    const ds = (window as any).__STORY_UI_DESIGN_SYSTEM__;
+    const ds = window.__STORY_UI_DESIGN_SYSTEM__;
     if (ds && typeof ds === 'object') {
       const reg: Record<string, any> = {};
       for (const [key, value] of Object.entries(ds)) {
@@ -1161,7 +1161,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     }
 
     // Use the pre-configured provider (with theme) from preview.tsx
-    const configuredProvider = (window as any).__STORY_UI_CANVAS_PROVIDER__;
+    const configuredProvider = window.__STORY_UI_CANVAS_PROVIDER__;
     if (configuredProvider) {
       setCanvasProvider(() => configuredProvider);
     }
@@ -1184,7 +1184,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   // Set port override if provided
   useEffect(() => {
     if (mcpPort && typeof window !== 'undefined') {
-      (window as any).STORY_UI_MCP_PORT = String(mcpPort);
+      window.STORY_UI_MCP_PORT = String(mcpPort);
     }
   }, [mcpPort]);
 
