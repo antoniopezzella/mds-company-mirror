@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { ImageWithFallback } from '../components/ImageWithFallback/ImageWithFallback';
 import { useReducedMotion } from './marsh-new-charpter-begins/animations/hooks/useReducedMotion';
 import { useScrollTrigger } from './marsh-new-charpter-begins/animations/hooks/useScrollTrigger';
 import { durations, eases } from './marsh-new-charpter-begins/animations/motion/tokens';
@@ -498,7 +499,7 @@ const MarshCorporate: React.FC = () => {
               <div className="journey-cards">
                 <div className="journey-card">
                   <div className="journey-card-image">
-                    <img src="/images/journey-1.jpg" alt="Business and Client Services" />
+                    <ImageWithFallback src="/images/journey-1.jpg" alt="Business and Client Services" />
                   </div>
                   <div className="journey-card-content">
                     <h3 className="journey-card-title">Business and Client Services</h3>
@@ -510,7 +511,7 @@ const MarshCorporate: React.FC = () => {
 
                 <div className="journey-card">
                   <div className="journey-card-image">
-                    <img src="/images/journey-2.jpg" alt="Bloomberg global knowledge partnership" />
+                    <img src="/images/journey-bloomberg.jpg" alt="Bloomberg global knowledge partnership" />
                   </div>
                   <div className="journey-card-content">
                     <h3 className="journey-card-title">Bloomberg global knowledge partnership</h3>
@@ -522,7 +523,7 @@ const MarshCorporate: React.FC = () => {
 
                 <div className="journey-card">
                   <div className="journey-card-image">
-                    <img src="/images/journey-3.jpg" alt="The new Marsh brand" />
+                    <ImageWithFallback src="/images/journey-3.jpg" alt="The new Marsh brand" />
                   </div>
                   <div className="journey-card-content">
                     <h3 className="journey-card-title">The new Marsh brand</h3>
@@ -633,7 +634,7 @@ const MarshCorporate: React.FC = () => {
             </div>
             <div className="mds-legacy-col-12 mds-legacy-col-lg-6">
               <div className="investors-image">
-                <img src="/images/investors.jpg" alt="Investor Relations" />
+                <ImageWithFallback src="/images/investors.jpg" alt="Investor Relations" />
               </div>
             </div>
           </div>
