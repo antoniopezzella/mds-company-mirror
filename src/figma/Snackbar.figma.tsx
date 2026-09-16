@@ -13,7 +13,7 @@ figma.connect(DSSnackbar, NODE_URL, {
     hasBadge: figma.boolean('Has badge'),
     hasActionCTA: figma.boolean('Has action CTA'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSSnackbar
       open
       message="Notification message"

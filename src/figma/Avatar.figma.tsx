@@ -23,7 +23,7 @@ figma.connect(Avatar, NODE_URL, {
     hasStatus: figma.boolean('Has status'),
     hasBorder: figma.boolean('Has border'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Avatar
       size={props.size}
       alt="User"

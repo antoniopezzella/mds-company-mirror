@@ -15,7 +15,7 @@ figma.connect(DSRadio, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSRadio
       checked={props.checked}
       error={props.invalid}

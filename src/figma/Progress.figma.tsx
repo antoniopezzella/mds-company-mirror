@@ -15,7 +15,7 @@ figma.connect(DSLinearProgress, NODE_URL, {
       '100%': 100,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSLinearProgress value={props.percent} variant="determinate" />
   ),
 });

@@ -11,7 +11,7 @@ figma.connect(DSSwitch, NODE_URL, {
       Off: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSSwitch checked={props.active} onCheckedChange={() => {}} />
   ),
 });

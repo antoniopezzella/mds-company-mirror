@@ -14,7 +14,7 @@ figma.connect(Pagination, NODE_URL, {
       Tiny: 3,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Pagination
       currentPage={1}
       totalItems={props.length * 10}

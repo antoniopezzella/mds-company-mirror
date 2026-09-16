@@ -30,7 +30,7 @@ figma.connect(DSTextField, NODE_URL, {
       Small: 'small',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSTextField
       label={props.label}
       type={props.type}

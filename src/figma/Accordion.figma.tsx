@@ -19,7 +19,7 @@ figma.connect(Accordion, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Accordion
       items={[
         { id: 'item-1', title: 'Accordion title', content: 'Accordion content goes here' },

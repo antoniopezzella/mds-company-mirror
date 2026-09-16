@@ -30,7 +30,7 @@ figma.connect(ContentCard, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <ContentCard
       orientation={props.orientation}
       border={props.border}

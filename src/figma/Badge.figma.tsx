@@ -27,7 +27,7 @@ figma.connect(Badge, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Badge tone={props.tone} soft={props.soft}>
       {props.badgeText}
     </Badge>

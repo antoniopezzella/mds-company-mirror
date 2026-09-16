@@ -23,7 +23,7 @@ figma.connect(WebsiteAlertBanner, NODE_URL, {
       Dark: 'dark',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <WebsiteAlertBanner
       variant={props.type}
       theme={props.background}

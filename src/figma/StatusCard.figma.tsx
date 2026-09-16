@@ -15,7 +15,7 @@ figma.connect(StatusCard, NODE_URL, {
     title: figma.string('Title'),
     message: figma.string('Message'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <StatusCard
       status={props.status}
       title={props.title}

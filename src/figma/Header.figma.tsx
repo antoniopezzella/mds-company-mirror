@@ -22,5 +22,5 @@ figma.connect(WebsiteHeader, NODE_URL, {
   props: {
     showLanguageSelector: figma.boolean('Has Language Button'),
   },
-  example: (props: any) => <WebsiteHeader showLanguageSelector={props.showLanguageSelector} />,
+  example: (props) => <WebsiteHeader showLanguageSelector={props.showLanguageSelector} />,
 });

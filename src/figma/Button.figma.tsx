@@ -25,7 +25,7 @@ figma.connect(DSButton, NODE_URL, {
     hasLeftIcon: figma.boolean('Has Left Icon'),
     hasRightIcon: figma.boolean('Has Right Icon'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSButton
       variant={props.type}
       size={props.size}

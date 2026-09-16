@@ -12,7 +12,7 @@ figma.connect(MegaMenu, NODE_URL, {
     hasFeaturedArticles: figma.boolean('Has Featured Articles'),
     hasTitle: figma.boolean('Has title'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <MegaMenu
       sections={[
         { title: 'Section 1', items: [{ label: 'Item 1', href: '#' }] },

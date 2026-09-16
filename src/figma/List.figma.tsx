@@ -19,7 +19,7 @@ figma.connect(List, NODE_URL, {
   // Note: shadcn List has no granular `spacing` scale like the MUI version's
   // `verticalPadding` enum — only a boolean `dense`, so that prop has no
   // direct equivalent here.
-  example: (props: any) => (
+  example: (props) => (
     <List
       dividers={props.hasDivider}
       items={[
