@@ -243,7 +243,7 @@ export const Primary: Story = {
   // Interaction test: focus + click increments a counter (using a simple wrapper render)
   render: (args) => {
     const [count, setCount] = React.useState(0);
-    const { iconOnly, leadingIcon, trailingIcon, children, startIcon, endIcon, ...rest } = args as any;
+    const { iconOnly, leadingIcon, trailingIcon, children, startIcon, endIcon, ...rest } = args;
     const resolvedStartIcon = leadingIcon ? <SaveIcon /> : startIcon;
     const resolvedEndIcon = trailingIcon ? <ArrowForwardIcon /> : endIcon;
     const iconNode = resolvedStartIcon ?? resolvedEndIcon ?? <SaveIcon />;
@@ -611,7 +611,7 @@ export const Sizes: Story = {
     },
   },
   render: (args) => {
-    const { iconOnly, leadingIcon, trailingIcon, startIcon, endIcon, ...rest } = args as any;
+    const { iconOnly, leadingIcon, trailingIcon, startIcon, endIcon, ...rest } = args;
     const resolvedStartIcon = leadingIcon ? <SaveIcon /> : startIcon;
     const resolvedEndIcon = trailingIcon ? <ArrowForwardIcon /> : endIcon;
     const iconNode = resolvedStartIcon ?? resolvedEndIcon ?? <SaveIcon />;
@@ -694,7 +694,7 @@ export const IconOnly: Story = {
     },
   },
   render: (args) => {
-    const { leadingIcon, trailingIcon, startIcon, endIcon, children, ...rest } = args as any;
+    const { leadingIcon, trailingIcon, startIcon, endIcon, children, ...rest } = args;
     return (
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <DSButton {...rest} aria-label="Primary save" iconOnly icon={<SaveIcon />} variant="primary" size="md" />
@@ -1000,17 +1000,23 @@ export const Responsive: Story = {
       <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
         Resize your browser to see size changes
       </Typography>
-      <DSButton 
-        variant="primary" 
-        startIcon={<SaveIcon />}
-        size={{
-          xs: 'sm',
-          sm: 'md',
-          md: 'lg',
-        } as any}
-      >
-        Responsive Button
-      </DSButton>
+      {/*
+        DSButton's `size` prop is a single fixed value, not a responsive
+        breakpoint object — MUI's sx-style `{xs, sm, md}` shorthand doesn't
+        apply to arbitrary component props. Achieving "small on mobile,
+        medium on tablet, large on desktop" honestly means rendering one
+        button per breakpoint and toggling visibility, not passing an
+        object where a string is expected.
+      */}
+      <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+        <DSButton variant="primary" startIcon={<SaveIcon />} size="sm">Responsive Button</DSButton>
+      </Box>
+      <Box sx={{ display: { xs: 'none', sm: 'block', md: 'none' } }}>
+        <DSButton variant="primary" startIcon={<SaveIcon />} size="md">Responsive Button</DSButton>
+      </Box>
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <DSButton variant="primary" startIcon={<SaveIcon />} size="lg">Responsive Button</DSButton>
+      </Box>
     </Box>
   ),
 };
