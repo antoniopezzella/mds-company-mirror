@@ -2972,5 +2972,429 @@
         "$value": "{color.red250}"
       }
     }
+  },
+  "role": {
+    "color": {
+      "text": {
+        "primary": {
+          "$type": "color",
+          "$value": "{semantic.color.textPrimary}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semantic.color.textSecondary}"
+        },
+        "inverse": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnAccent}"
+        },
+        "onAccent": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnAccent}"
+        },
+        "onInteractive": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnInteractive}"
+        },
+        "onHero": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnHero}"
+        },
+        "onDanger": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnDanger}"
+        },
+        "onLight": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnLight}"
+        },
+        "disabled": {
+          "$type": "color",
+          "$value": "{semantic.color.textDisabled}"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceDefault}"
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceSubtle}"
+        },
+        "disabled": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceDisabled}"
+        },
+        "accent": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceAccent}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semantic.color.brandSecondary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceSecondaryHover}"
+          }
+        },
+        "navigation": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceNavigation}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceNavigationHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceNavigationActive}"
+          }
+        },
+        "hero": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceHero}"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "{semantic.color.borderDefault}"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "{semantic.color.borderStrong}"
+        }
+      },
+      "focus": {
+        "ring": {
+          "$type": "color",
+          "$value": "{semantic.color.focusRing}"
+        }
+      },
+      "brand": {
+        "accent": {
+          "$type": "color",
+          "$value": "{semantic.color.brandAccent}"
+        }
+      },
+      "interactive": {
+        "accent": {
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveAccentHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveAccentActive}"
+          }
+        },
+        "primary": {
+          "$type": "color",
+          "$value": "{semantic.color.interactivePrimary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.interactivePrimaryHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.interactivePrimaryActive}"
+          }
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semantic.color.interactiveSecondary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveSecondaryHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveSecondaryActive}"
+          }
+        },
+        "danger": {
+          "$type": "color",
+          "$value": "{semantic.color.interactiveDanger}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveDangerHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveDangerActive}"
+          }
+        }
+      },
+      "status": {
+        "success": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusSuccessText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusSuccessBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.statusSuccessBorder}"
+          }
+        },
+        "warning": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusWarningText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusWarningBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.statusWarningBorder}"
+          }
+        },
+        "danger": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusDangerText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusDangerBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.statusDangerBorder}"
+          }
+        },
+        "info": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusInfoText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semantic.color.statusInfoBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semantic.color.statusInfoBorder}"
+          }
+        }
+      }
+    }
+  },
+  "roleDark": {
+    "color": {
+      "text": {
+        "primary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textPrimary}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textSecondary}"
+        },
+        "inverse": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnAccent}"
+        },
+        "onAccent": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnAccent}"
+        },
+        "onInteractive": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnInteractive}"
+        },
+        "onHero": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnHero}"
+        },
+        "onDanger": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnDanger}"
+        },
+        "onLight": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnLight}"
+        },
+        "disabled": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textDisabled}"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceDefault}"
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceSubtle}"
+        },
+        "disabled": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceDisabled}"
+        },
+        "accent": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceAccent}"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.brandSecondary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceSecondaryHover}"
+          }
+        },
+        "navigation": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceNavigation}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semanticDark.color.surfaceNavigationHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semanticDark.color.surfaceNavigationActive}"
+          }
+        },
+        "hero": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceHero}"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "{semanticDark.color.borderDefault}"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "{semanticDark.color.borderStrong}"
+        }
+      },
+      "focus": {
+        "ring": {
+          "$type": "color",
+          "$value": "{semanticDark.color.focusRing}"
+        }
+      },
+      "brand": {
+        "accent": {
+          "$type": "color",
+          "$value": "{semanticDark.color.brandAccent}"
+        }
+      },
+      "interactive": {
+        "accent": {
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveAccentHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveAccentActive}"
+          }
+        },
+        "primary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.interactivePrimary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactivePrimaryHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactivePrimaryActive}"
+          }
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.interactiveSecondary}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveSecondaryHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveSecondaryActive}"
+          }
+        },
+        "danger": {
+          "$type": "color",
+          "$value": "{semanticDark.color.interactiveDanger}",
+          "hover": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveDangerHover}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveDangerActive}"
+          }
+        }
+      },
+      "status": {
+        "success": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusSuccessText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusSuccessBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusSuccessBorder}"
+          }
+        },
+        "warning": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusWarningText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusWarningBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusWarningBorder}"
+          }
+        },
+        "danger": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusDangerText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusDangerBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusDangerBorder}"
+          }
+        },
+        "info": {
+          "fg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusInfoText}"
+          },
+          "bg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusInfoBg}"
+          },
+          "border": {
+            "$type": "color",
+            "$value": "{semanticDark.color.statusInfoBorder}"
+          }
+        }
+      }
+    }
   }
 }

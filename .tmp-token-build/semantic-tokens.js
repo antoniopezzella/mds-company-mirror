@@ -15,14 +15,21 @@ export const semanticColors = {
     brandPrimary: ref('blue1000'), // #000f47 — Midnight Blue (legacy)
     brandPrimaryDark: ref('blue1100'), // #002c77 — MODE Primary (Figma future-state)
     brandSecondary: ref('blue250'), // #ceecff — Sky Blue
-    brandAccent: ref('gold750'), // #ffb700 — Supporting accent (legacy CTA)
+    brandAccent: ref('gold750'), // #ffbf00 — Supporting accent (legacy CTA)
     // ── Typography ────────────────────────────────────────────────────────────
     textPrimary: ref('blue1000'), // #000f47 — Primary body text (legacy)
     textPrimaryMode: ref('blue1100'), // #002c77 — MODE Primary (Figma future-state)
     textSecondary: ref('neutral700'), // #595959 — Secondary / muted text
     textTertiary: ref('neutral600'), // #767676 — Tertiary / placeholder
     textOnAccent: ref('white'), // Light text on primary accent surfaces (e.g. Midnight buttons)
-    textOnHero: ref('white'), // White text on dark surfaces
+    // Distinct from textOnAccent: interactive.primary/secondary/danger all
+    // LIGHTEN in dark mode (e.g. interactivePrimary dark = #95caff) instead of
+    // staying dark like status.*.bg does — a fixed white foreground fails
+    // contrast against them there. Use for text/icons on interactive.* roles
+    // specifically, not on status.*.bg (which stays genuinely dark and still
+    // wants textOnAccent).
+    textOnInteractive: ref('white'), // Light mode: interactive.primary/secondary/danger are dark — white works
+    textOnHero: ref('blue250'), // #ceecff — Sky Blue text on dark hero surfaces (transparent header)
     textDisabled: ref('neutral600'), // #767676 — Disabled text
     textOnLight: ref('blue1000'), // Dark text on light backgrounds
     textOnDark: ref('white'), // White text on dark backgrounds
@@ -31,26 +38,35 @@ export const semanticColors = {
     surfaceSubtle: ref('neutral50'), // #f8f8f8 — Slight elevation
     surfaceMuted: ref('neutral200'), // #e3e3e3 — Muted backgrounds
     surfaceAccent: ref('gray250'), // #f7f8f8 — Warm accent (was blueGray75)
+    surfaceSecondaryHover: ref('blue100'), // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
     surfaceNavigation: ref('blue1000'), // #000f47 — Midnight Blue header (legacy)
     surfaceNavigationMode: ref('blue1100'), // #002c77 — MODE Surface Primary (Figma future-state)
     // Approximations of white overlays blended on `#000f47` to produce stable hex values
     surfaceNavigationHover: ref('blue975'), // #1a2759 — ~white@10% over #000f47
     surfaceNavigationActive: ref('blue990'), // #333f6b — ~white@20% over #000f47
     surfaceAccentStrong: ref('gray400'), // #cfd0cd — Strong accent (was blueGray200)
-    surfaceHero: ref('gray1000'), // #303c37 — Dark hero sections (was blueGray900)
+    surfaceHero: ref('blue1000'), // #000f47 — Midnight Navy — dark hero sections
     surfaceDisabled: ref('neutral200'), // #e3e3e3 — Disabled state
     // ── Borders ───────────────────────────────────────────────────────────────
     borderSubtle: ref('neutral250'), // #dadada — Very light dividers
     borderDefault: ref('neutral500'), // #878787 — Standard borders
     borderStrong: ref('neutral700'), // #595959 — Strong emphasis borders
-    borderFocus: ref('blue750'), // #0b4bff — Active Blue focus rings (legacy)
+    borderFocus: ref('focusBlue'), // #3d7aff — Figma-verified: passes 3:1 vs every surface this system uses (light)
     borderFocusMode: ref('focusCyan'), // #009de0 — MODE/Border/Focus (Figma future-state)
-    focusRing: ref('blue750'), // #0b4bff — Alias for borderFocus (roles.ts)
+    focusRing: ref('focusBlue'), // #3d7aff — Alias for borderFocus (roles.ts)
     // ── Interactive — Primary (Midnight / CTA) ────────────────────────────────
     interactivePrimary: ref('blue1000'), // #000f47 — Midnight Blue
     interactivePrimaryHover: ref('blue950'), // #021b6c — Slightly lighter for hover
     interactivePrimaryActive: ref('blue900'), // #042791 — Lighter active state
     interactivePrimaryDisabled: ref('neutral250'), // #dadada
+    // ── Interactive — Accent (Gold / primaryAlt Button hover-active) ──────────
+    // Base color is brandAccent (gold750) — these are only the hover/active
+    // states. Matches src/components/ui/button.tsx's primaryAlt variant,
+    // which previously hardcoded these exact hex values with a comment
+    // noting "no token equivalent yet" — Figma has them as named variables
+    // (Interaction/Surface/Hover-selected alt, /Active alt); promoted here.
+    interactiveAccentHover: ref('gold850'), // #eaa501
+    interactiveAccentActive: ref('gold950'), // #d58b02
     // ── Interactive — Secondary (Blue / Links) ────────────────────────────────
     interactiveSecondary: ref('blue750'), // #0b4bff — Active Blue
     interactiveSecondaryHover: ref('blue900'), // #042791
@@ -81,7 +97,11 @@ export const semanticColors = {
     statusInfoBorder: ref('blue500'), // #6fb4ff
     statusInfoText: ref('blue1000'), // #000f47
     // ── Interactive — Danger (Red) ────────────────────────────────────────────
-    interactiveDanger: ref('red750'), // #e53935
+    // red800, not red750: red750 (#e53935) is too mid-toned for white text to
+    // clear 4.5:1 against (4.23:1 measured) — one step darker passes at 4.90:1
+    // and is a barely-perceptible shift, improving (never regressing) every
+    // other consumer's contrast too (borders, danger-state fills).
+    interactiveDanger: ref('red800'), // #d33330
     interactiveDangerHover: ref('red900'), // #af2625
     interactiveDangerActive: ref('red1000'), // #8b1a1a
     textOnDanger: ref('white'), // White text on red
@@ -92,12 +112,17 @@ export const semanticDarkOverrides = {
     // Brand (inverted)
     brandPrimary: tokens.white, // #ffffff
     brandSecondary: tokens.blue400, // #95caff — Lightened Sky Blue (dark)
-    brandAccent: tokens.gold750, // #ffb700 (unchanged — CTA stays)
+    brandAccent: tokens.gold750, // #ffbf00 (unchanged — CTA stays)
     // Typography (light text on dark backgrounds)
     textPrimary: tokens.white, // #ffffff
     textSecondary: tokens.neutral250, // #dadada
     textTertiary: tokens.neutral300, // #c4c4c4
     textOnAccent: tokens.white, // #ffffff on Midnight / accent buttons
+    // Dark mode: interactivePrimary/Secondary/Danger all lighten instead of
+    // staying dark (e.g. #95caff), so this flips to dark text instead of
+    // following textOnAccent's white. Passes 10.50:1+ against the whole
+    // interactive.primary/secondary/danger dark-mode family.
+    textOnInteractive: tokens.blue1000, // #000f47
     textOnLight: tokens.blue1000, // unchanged (rare context)
     textOnDark: tokens.neutral50, // #f8f8f8
     textDisabled: tokens.neutral500, // #878787
@@ -116,8 +141,8 @@ export const semanticDarkOverrides = {
     borderSubtle: tokens.neutral700, // #595959
     borderDefault: tokens.neutral500, // #878787 (pivot — unchanged)
     borderStrong: tokens.neutral250, // #dadada
-    borderFocus: tokens.blue750, // #0b4bff (Active Blue)
-    focusRing: tokens.blue750, // #0b4bff (mirror borderFocus)
+    borderFocus: tokens.focusBlueDark, // #5e9aff — Figma-verified: passes 3:1 vs every surface this system uses (dark)
+    focusRing: tokens.focusBlueDark, // #5e9aff (mirror borderFocus)
     // Interactive Primary (Blue — bright on dark)
     interactivePrimary: tokens.blue400, // #95caff
     interactivePrimaryHover: tokens.blue300, // #bbe1ff

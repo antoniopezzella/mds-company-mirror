@@ -35,7 +35,11 @@ function checkNames(obj, pathParts) {
 }
 
 // Walk the tree. An object with a `$value` property is a token; everything
-// else nested is a group.
+// else nested is a group. A token can ALSO be a group at the same time
+// (e.g. role tier's `interactive.primary` has its own $value, and nests
+// `hover`/`active` children inside it) — the spec allows this explicitly,
+// so a $value node still needs its non-reserved keys walked as children,
+// not treated as a leaf.
 const allTokenPaths = new Map(); // 'color.blue1000' -> token object
 
 function walk(obj, pathParts) {
@@ -44,6 +48,11 @@ function walk(obj, pathParts) {
     allTokenPaths.set(tokenPath, obj);
     if (!('$type' in obj)) {
       errors.push(`Token "${tokenPath}" has $value but no $type — spec: tools MUST consider it invalid`);
+    }
+    checkNames(obj, pathParts);
+    for (const [key, val] of Object.entries(obj)) {
+      if (key.startsWith('$')) continue;
+      walk(val, [...pathParts, key]);
     }
     return;
   }

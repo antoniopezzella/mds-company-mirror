@@ -11,13 +11,13 @@ export const tokens = {
     blue250: '#ceecff', // ★ Figma anchor — Sky
     blue300: '#bbe1ff', // interpolated
     blue400: '#95caff', // interpolated
-    blue500: '#6fb4ff', // ★ Figma anchor
-    blue600: '#478aff', // interpolated
+    blue500: '#82baff', // ★ Figma anchor — corrected from interpolated #6fb4ff (2026-09-15 Figma re-sync)
+    blue600: '#5e9aff', // ★ Figma anchor — corrected from interpolated #478aff (2026-09-15 Figma re-sync)
     blue700: '#1f60ff', // interpolated
     blue750: '#0b4bff', // ★ Figma anchor — Active
     blue800: '#093fda', // interpolated
-    blue900: '#042791', // interpolated
-    blue950: '#021b6c', // interpolated
+    blue900: '#082d9e', // ★ Figma anchor — corrected from interpolated #042791 (2026-09-15 Figma re-sync)
+    blue950: '#06206e', // ★ Figma anchor — corrected from interpolated #021b6c (2026-09-15 Figma re-sync)
     blue975: '#1a2759', // ~white@10% blended over #000f47 (nav hover)
     blue990: '#333f6b', // ~white@20% blended over #000f47 (nav active)
     blue1000: '#000f47', // ★ Figma anchor — Midnight (legacy)
@@ -27,15 +27,17 @@ export const tokens = {
     gold100: '#fff8ed', // interpolated
     gold200: '#fff5e1', // interpolated
     gold250: '#fff2da', // ★ Figma anchor
-    gold300: '#ffe0bd', // interpolated
-    gold400: '#ffbd84', // interpolated
-    gold500: '#ff994a', // ★ Figma anchor
-    gold600: '#ffa02e', // interpolated
+    gold300: '#ffeeca', // ★ Figma anchor — corrected from interpolated #ffe0bd (2026-09-15 Figma re-sync)
+    gold400: '#ffe3aa', // ★ Figma anchor — corrected from interpolated #ffbd84 (2026-09-15 Figma re-sync)
+    gold500: '#ffd98a', // ★ Figma anchor — corrected from #ff994a (2026-09-15 Figma re-sync)
+    gold600: '#ffcf53', // ★ Figma anchor — corrected from interpolated #ffa02e (2026-09-15 Figma re-sync)
+    gold650: '#ffc937', // ★ Figma anchor
     gold700: '#ffab14', // interpolated
-    gold750: '#ffb700', // ★ Figma anchor
+    gold750: '#ffbf00', // ★ Figma anchor — verified 2026-08-24 against the live "Primary Alt" Button component (uWlcofRor5Dik8LBnJbIjo node 9749:3234, var V3/Surface/Secondary); corrected from #ffb700
     gold800: '#f5a907', // interpolated
+    gold850: '#eaa501', // ★ Figma anchor — matches button.tsx's primaryAlt hover hex exactly
     gold900: '#e09015', // interpolated
-    gold950: '#d5831c', // interpolated
+    gold950: '#d58b02', // ★ Figma anchor — corrected from interpolated #d5831c (unused anywhere in src/, safe to fix); matches button.tsx's primaryAlt active hex exactly
     gold1000: '#cb7623', // ★ Figma anchor
     // ── GREEN (14 stops) ──────────────────────────────────────────────────────
     green50: '#f8fcf7', // interpolated
@@ -44,7 +46,7 @@ export const tokens = {
     green250: '#def2d7', // ★ Figma anchor
     green300: '#ceeac9', // interpolated
     green400: '#addbae', // interpolated
-    green500: '#8dcc92', // ★ Figma anchor
+    green500: '#b0dc92', // ★ Figma anchor — corrected from #8dcc92 (2026-09-15 Figma re-sync)
     green600: '#7cc664', // interpolated
     green700: '#6cc044', // interpolated
     green750: '#64bc30', // ★ Figma anchor
@@ -74,26 +76,32 @@ export const tokens = {
     purple250: '#f2e6ff', // ★ Figma anchor
     purple300: '#e9d3ff', // interpolated
     purple400: '#dcbaff', // Figma value
-    purple500: '#c88fff', // ★ Figma anchor
+    purple500: '#deb1ff', // ★ Figma anchor — corrected from #c88fff (2026-09-15 Figma re-sync)
     purple600: '#b96bf5', // interpolated
     purple700: '#ab5aea', // Figma value
-    purple750: '#8f37c6', // ★ Figma anchor
+    purple750: '#8f20de', // ★ Figma anchor — corrected from #8f37c6 (2026-09-15 Figma re-sync); feeds interactiveSecondaryVisited
     purple800: '#842daf', // interpolated
     purple900: '#7720b0', // Figma value
     purple950: '#6a18a3', // interpolated
     purple1000: '#5e0f95', // ★ Figma anchor
-    // ── GRAY (14 stops — warm/green-tinted neutral) ───────────────────────────
+    // ── GRAY (20 stops — warm/green-tinted neutral) ───────────────────────────
     gray50: '#fdfefe', // interpolated
     gray100: '#fbfbfb', // interpolated
+    gray150: '#faf7f4', // ★ Figma anchor — added 2026-09-15 (finer granularity, Figma has this step; MDS didn't)
     gray200: '#f9f9f9', // interpolated
     gray250: '#f7f8f8', // ★ Figma anchor
     gray300: '#eaebea', // interpolated
+    gray350: '#dedbd6', // ★ Figma anchor — added 2026-09-15
     gray400: '#cfd0cd', // interpolated
+    gray450: '#c5c2bd', // ★ Figma anchor — added 2026-09-15
     gray500: '#b4b6b1', // ★ Figma anchor
+    gray550: '#adaaa5', // ★ Figma anchor — added 2026-09-15
     gray600: '#9c9e9a', // interpolated
+    gray650: '#94918c', // ★ Figma anchor — added 2026-09-15
     gray700: '#8a8c88', // interpolated
     gray750: '#787b78', // ★ Figma anchor
     gray800: '#6a6e6b', // interpolated
+    gray850: '#62615c', // ★ Figma anchor — added 2026-09-15
     gray900: '#4d5551', // interpolated
     gray950: '#3e4944', // interpolated
     gray1000: '#303c37', // ★ Figma anchor
@@ -121,6 +129,8 @@ export const tokens = {
     statusSuccess: '#14853d', // Figma Utilities/Success
     statusInfo: '#6fb4ff', // → blue500
     focusCyan: '#009de0', // Figma MODE/Border/Focus (future-state)
+    focusBlue: '#3d7aff', // Figma uWlcofRor5Dik8LBnJbIjo node 7582:7847 — Border/Focus (light, "On dark surface")
+    focusBlueDark: '#5e9aff', // same node — Border/Focus (dark)
     // ── SHADES — White (alpha) ────────────────────────────────────────────────
     shadesWhite90: 'rgba(255,255,255,0.90)',
     shadesWhite85: 'rgba(255,255,255,0.85)',
