@@ -1,6 +1,7 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import remarkGfm from 'remark-gfm';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,7 +17,21 @@ const config: StorybookConfig = {
     '../src/stories/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
   addons: [
-    '@storybook/addon-docs',
+    {
+      name: '@storybook/addon-docs',
+      // Without remark-gfm, GitHub-style markdown tables in .mdx files
+      // silently render as a single raw-text paragraph instead of a real
+      // <table> — no error, just wrong output. Confirmed missing before
+      // this: every existing Foundations page with a `| a | b |` table
+      // (25-Roles.mdx included) was affected.
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
   ],
