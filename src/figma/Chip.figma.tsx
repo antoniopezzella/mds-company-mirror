@@ -20,7 +20,7 @@ figma.connect(Chip, NODE_URL, {
     hasLeftIcon: figma.boolean('Has Left Icon'),
     hasBadgeNumber: figma.boolean('Has badge number'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Chip
       label={props.label}
       variant="filled"

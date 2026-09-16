@@ -14,7 +14,7 @@ figma.connect(Breadcrumbs, NODE_URL, {
       Default: 'default',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Breadcrumbs
       items={[
         { label: 'Home', href: '/' },

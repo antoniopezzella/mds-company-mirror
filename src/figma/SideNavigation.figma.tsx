@@ -13,7 +13,7 @@ figma.connect(SideNavigation, NODE_URL, {
     hasNeedHelp: figma.boolean('Has Need Help'),
     hasOpenClose: figma.boolean('Has Open/Close'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <SideNavigation
       collapsed={props.state === 'collapsed'}
       items={[

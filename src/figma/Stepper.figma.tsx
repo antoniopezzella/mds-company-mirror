@@ -29,7 +29,7 @@ figma.connect(Stepper, NODE_URL, {
       'Step 5': 4,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Stepper
       activeStep={props.steps}
       orientation={props.orientation}

@@ -17,7 +17,7 @@ figma.connect(Modal, NODE_URL, {
       Fullscreen: 'fullscreen',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Modal
       open
       size={props.size}

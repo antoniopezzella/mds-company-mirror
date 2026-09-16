@@ -15,7 +15,7 @@ figma.connect(DSCheckbox, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSCheckbox
       checked={props.checked}
       invalid={props.invalid}

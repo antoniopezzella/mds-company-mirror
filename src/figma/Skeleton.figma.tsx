@@ -11,7 +11,7 @@ figma.connect(DSSkeleton, NODE_URL, {
       Circle: 'circular',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <DSSkeleton variant={props.shape} width={200} height={40} />
   ),
 });

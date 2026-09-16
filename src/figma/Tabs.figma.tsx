@@ -11,7 +11,7 @@ figma.connect(Tabs, NODE_URL, {
     hasTab4: figma.boolean('Has tab 4'),
     hasTab5: figma.boolean('Has tab 5'),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Tabs
       tabs={[
         { id: 'tab1', title: 'Tab 1', content: 'Tab 1 content' },

@@ -23,7 +23,7 @@ figma.connect(Alert, NODE_URL, {
       Critical: 'error',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     // Note: shadcn Alert has no banner/toast/inline `variant` concept like the
     // MUI version did — `props.type` intentionally has no equivalent prop here.
     <Alert

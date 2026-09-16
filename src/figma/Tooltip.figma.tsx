@@ -22,7 +22,7 @@ figma.connect(Tooltip, NODE_URL, {
       'Right bottom': 'left-end',
     }),
   },
-  example: (props: any) => (
+  example: (props) => (
     <Tooltip title={props.tooltipText} placement={props.arrowPosition}>
       <span>Hover me</span>
     </Tooltip>
