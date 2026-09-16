@@ -57,6 +57,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:storybook": "vitest run --project storybook --coverage",
     "tokens:build": "node scripts/build-tokens.js",
     "kb:build": "node scripts/build-knowledge-base.js",
     "tokens:diff": "node scripts/diff-tokens.js",

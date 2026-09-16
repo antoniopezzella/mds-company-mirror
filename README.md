@@ -197,28 +197,15 @@ Example:
 
 ## Testing
 
-`vitest.config.ts` defines two Vitest projects, both run by the commands below:
+`vitest.config.ts` defines two Vitest projects: `unit` (jsdom, component behavior) and `storybook` (every `.stories.tsx` in the repo, rendered as a real Chromium test via Playwright — no separate test files to write). Full walkthrough, including coverage and the Storybook-UI test widget: **Foundations/Testing** in Storybook (`npm run storybook`, or `src/docs/70-Testing.mdx`).
 
-- **`unit`** — Vitest + jsdom + React Testing Library, for component behavior and accessibility (`*.test.tsx`).
-- **`storybook`** — every story in the repo, run as a real rendered test in an actual Chromium browser via Playwright (`@storybook/addon-vitest`, not jsdom). No separate test files to write — every `.stories.tsx` becomes a test automatically. See `.storybook/vitest.setup.ts` for how the Storybook preview (theme, decorators) gets wired in.
-
-Run just one project: `npx vitest run --project unit` or `--project storybook`.
-
-**Cold-cache note:** the first `storybook` project run after clearing `node_modules/.cache/storybook` can show transient "Failed to fetch dynamically imported module" failures from Vite's dependency pre-bundling racing under load — a second run passes cleanly. If this ever runs in CI, plan for a retry or a cache-warming step.
-
-Run all tests:
 ```bash
-npm test
-```
-
-Watch mode:
-```bash
-npm run test:watch
-```
-
-Coverage:
-```bash
-npm run test:coverage
+npm test                              # both projects
+npm run test:watch                    # both projects, watch mode
+npm run test:coverage                 # combined coverage
+npm run test:coverage:storybook       # coverage from stories only
+npx vitest run --project unit         # just unit
+npx vitest run --project storybook    # just stories
 ```
 
 ## Storybook MDX Status
@@ -240,9 +227,11 @@ This repository enforces design system integrity through three GitHub Actions wo
 
 | Workflow | File | Triggers | Purpose |
 |----------|------|----------|---------|
-| CI | `ci.yml` | push & PR to `main` | Install deps, lint docs, token governance (`tokens:check`), tests, build, (PR) build Storybook + upload artifact |
-| Governance | `governance.yml` | push & PR to `main` | Strict governance: naming, deprecated token usage, missing semantic coverage |
-| Contrast | `contrast.yml` | PR (selected paths) | WCAG contrast validation for token foreground/background pairs |
+| CI | `ci.yml` | push (any branch) & PR to `main` | Install deps, lint docs, lint, token governance (`tokens:check`), tests, build, (PR) build Storybook + upload artifact |
+| Governance | `governance.yml` | push (any branch) & PR to `main` | Strict governance: naming, deprecated token usage, missing semantic coverage |
+| Contrast | `contrast.yml` | push & PR (selected paths, any branch) | WCAG contrast validation for token foreground/background pairs |
+
+Push triggers are intentionally not `main`-only — this repo does substantial work directly on feature branches, so every branch gets real CI signal instead of nothing until merge.
 
 ### Local Reproduction
 | Check | Command |
