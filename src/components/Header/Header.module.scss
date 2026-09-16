@@ -185,9 +185,13 @@ header {
   isolation: isolate;
   min-height: 64px;
   color: #ceecff;
-  background: transparent !important;
+  // Background is set via sx in WebsiteHeader.tsx, not here — see that file's
+  // comment for why (an external CSS Module fighting MUI's own Emotion-based
+  // Paper/AppBar background via !important is a real ordering race, not a
+  // reliable override).
   border-bottom: 1px solid rgba(255, 255, 255, 0.32);
   box-shadow: none;
+  transition: background-color 0.35s ease, backdrop-filter 0.35s ease;
 
   &::before {
     content: "";
@@ -199,6 +203,20 @@ header {
       linear-gradient(180deg, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.08) 100%);
     backdrop-filter: blur(14px) saturate(1.12);
     -webkit-backdrop-filter: blur(14px) saturate(1.12);
+    transition: opacity 0.35s ease;
+  }
+
+  // Applied once the user has scrolled past the trigger point (see
+  // WebsiteHeader.tsx's scroll listener) — primary-blue tint with a light
+  // blur, rather than a fully flat/opaque bar, so it stays visually
+  // continuous with the transparent-over-hero look above instead of hard-cutting.
+  &.websiteHeaderScrolled {
+    backdrop-filter: blur(10px) saturate(1.1);
+    -webkit-backdrop-filter: blur(10px) saturate(1.1);
+
+    &::before {
+      opacity: 0;
+    }
   }
 }
 
@@ -390,14 +408,11 @@ header {
   .websiteHeader__navLink {
     font-size: 16px;
   }
-
-  .websiteHeader__desktopOnly {
-    display: none;
-  }
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 1279.98px) {
   .websiteHeader__nav,
+  .websiteHeader__desktopOnly,
   .websiteHeader__desktopTablet {
     display: none;
   }

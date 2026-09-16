@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { getRoleColor } from '../../theme/roles';
-import { tokens } from '../../tokens';
+import { useState, useEffect, useRef } from 'react';
 import { AIAssistantChat } from '../AIAssistantChat';
 import './AIAgentBot.scss';
 
@@ -18,12 +16,21 @@ export interface AIAgentBotProps {
   isOpen?: boolean;
   /** API endpoint for the chat (optional) */
   apiEndpoint?: string;
+  /** When set to a new (non-empty) value, opens the chat and auto-asks this question. */
+  pendingQuery?: string;
+  /** Which system prompt the backend should use. Defaults to today's customer-dashboard prompt when omitted. */
+  visitorType?: 'customer' | 'prospect';
   /** Show the AI Solution Finder label */
   showLabel?: boolean;
   /** Show the speech bubble above the bot */
   showSpeechBubble?: boolean;
   /** Enable multiple rotating speech bubbles */
   enableBubbles?: boolean;
+  /**
+   * Scroll distance (px) after which the bot appears — i.e. the "first fold".
+   * Defaults to the full viewport height (100vh).
+   */
+  scrollThreshold?: number;
 }
 
 /**
@@ -41,50 +48,73 @@ export interface AIAgentBotProps {
  * - Integrated with Marsh AI Assistant backend
  * - Full-featured chat with conversation memory and streaming responses
  * - Accessibility: Keyboard shortcuts (Cmd+K, Escape), ARIA labels
- * - Performance: Lazy loading after scroll or 2s delay
+ * - Appears once the user scrolls past the first fold (100vh by default)
  */
 export const AIAgentBot: React.FC<AIAgentBotProps> = ({
   isOpen: initialIsOpen = false,
   apiEndpoint,
-  showLabel = false, 
+  showLabel = false,
   showSpeechBubble = true,
   enableBubbles = true,
   position = { bottom: 24, right: 24 },
-  onOpen
+  scrollThreshold,
+  onOpen,
+  pendingQuery,
+  visitorType,
 }) => {
   const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [isVisible, setIsVisible] = useState(false);
+  const lastPendingQuery = useRef<string | undefined>(undefined);
 
-  // Figma MDS Design Tokens
+  // Opens the chat when a new pendingQuery comes in from a caller (e.g. a
+  // hero topic chip) — guarded by a ref (not state) so re-renders with the
+  // same string don't re-open a chat the user has since closed.
+  useEffect(() => {
+    if (pendingQuery && pendingQuery !== lastPendingQuery.current) {
+      lastPendingQuery.current = pendingQuery;
+      setIsOpen(true);
+      onOpen?.();
+    }
+  }, [pendingQuery, onOpen]);
+
+  // Fixed brand color, not role-driven: this widget floats above the page
+  // (like Intercom/Drift) and never branches on light/dark theme, so it
+  // intentionally doesn't shift with it — matches Figma VariableID:75:3351
+  // exactly, same "not yet tokenized" precedent as IntroLoader.tsx.
   const figmaColors = {
-    // Bot circle background - matches Figma VariableID:75:3351
-    botBlue: tokens.blue750, // '#0b4bff' - exact match
-    white: tokens.white, // '#ffffff' for close icon
+    botBlue: '#0b4bff', // blue750 — exact match
+    white: '#ffffff',
   };
 
-  // Show bot after scroll or after 2 seconds
+  // Show the bot only once the user scrolls past the first fold (the initial
+  // viewport height by default), and hide it again if they scroll back up
+  // past that point — no time-based fallback, since showing it regardless of
+  // scroll would defeat that.
   useEffect(() => {
-    // Show after 2 seconds even if no scroll
-    const timeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 2000);
+    const threshold = scrollThreshold ?? window.innerHeight;
+    let ticking = false;
 
+    const update = () => {
+      // >= so scrollThreshold={0} means "visible immediately", not "after the
+      // first pixel of scroll" — the dashboard passes 0 for exactly this.
+      setIsVisible(window.scrollY >= threshold);
+      ticking = false;
+    };
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsVisible(true);
-        clearTimeout(timeout);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     // Run once in case already scrolled
-    handleScroll();
+    update();
 
     return () => {
-      clearTimeout(timeout);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [scrollThreshold]);
 
   // Keyboard shortcuts: Cmd+K to toggle, Escape to close
   useEffect(() => {
@@ -171,10 +201,12 @@ export const AIAgentBot: React.FC<AIAgentBotProps> = ({
 
       {/* Full Chat Interface */}
       {isOpen && (
-        <AIAssistantChat 
-          isOpen={isOpen} 
+        <AIAssistantChat
+          isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           apiEndpoint={apiEndpoint}
+          initialQuery={pendingQuery}
+          visitorType={visitorType}
         />
       )}
     </>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Stepper, type StepConfig } from '../../components/Stepper/Stepper';
+import { Stepper, type StepConfig } from '../../components/ui/stepper';
 import DSTextField from '../../components/TextField/TextField';
 import Section from '../../components/Section/Section';
 import { DashboardHeader } from '../../components/Header/Header';
 import { Button as DSButton } from '../../components/ui/button';
-import DSSelect from '../../components/Select/Select';
+import { DSSelect } from '../../components/ui/select';
 import { DSSwitch } from '../../components/ui/switch';
 import { Typography, Box, Divider, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -111,7 +111,7 @@ export const ClinicalTrialsPage: React.FC = () => {
               <DSSelect
                 label="Country"
                 value={formState.country}
-                onChange={(e) => handleInput('country', e.target.value as string)}
+                onChange={(value) => handleInput('country', value as string)}
                 options={[{ value: 'United States of America', label: 'United States of America' }]}
                 fullWidth
               />
@@ -153,7 +153,7 @@ export const ClinicalTrialsPage: React.FC = () => {
               <DSSelect
                 label="State/Province"
                 value={formState.state}
-                onChange={(e) => handleInput('state', e.target.value as string)}
+                onChange={(value) => handleInput('state', value as string)}
                 options={[{ value: 'AZ', label: 'AZ' }]}
                 fullWidth
               />
@@ -193,10 +193,10 @@ export const ClinicalTrialsPage: React.FC = () => {
           </Box>
 
           <Box sx={{ mb: 6 }}>
-            <DSSwitch 
-              label="Same as Primary Sponsor" 
+            <DSSwitch
+              label="Same as Primary Sponsor"
               checked={usePrimaryAsAdditional}
-              onChange={(e) => setUsePrimaryAsAdditional(e.target.checked)}
+              onCheckedChange={setUsePrimaryAsAdditional}
             />
           </Box>
 
@@ -220,7 +220,7 @@ export const ClinicalTrialsPage: React.FC = () => {
               <DSSelect
                 label="Country"
                 value={formState.additionalCountry}
-                onChange={(e) => handleInput('additionalCountry', e.target.value as string)}
+                onChange={(value) => handleInput('additionalCountry', value as string)}
                 options={[{ value: 'United States of America', label: 'United States of America' }]}
                 fullWidth
               />
@@ -262,7 +262,7 @@ export const ClinicalTrialsPage: React.FC = () => {
               <DSSelect
                 label="State/Province"
                 value={formState.additionalState}
-                onChange={(e) => handleInput('additionalState', e.target.value as string)}
+                onChange={(value) => handleInput('additionalState', value as string)}
                 options={[{ value: 'New Jersey', label: 'New Jersey' }]}
                 fullWidth
               />

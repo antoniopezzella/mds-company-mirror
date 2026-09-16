@@ -31,6 +31,11 @@ export interface HeroBannerProps {
   eyebrow?: string;
   /** Main H1 headline */
   title: string;
+  /** Optional second clause, rendered italic immediately after `title` and
+   * participating in the same per-word entrance stagger — matches the
+   * "signature emphasis" pattern of the brand's newer marketing pages
+   * (regular clause, then an italicized second clause). */
+  titleEmphasis?: string;
   /** Optional H2 subtitle below headline */
   subtitle?: string;
   /** Body paragraph text */
@@ -91,6 +96,17 @@ export interface HeroBannerProps {
   titleLineHeight?: string | number;
   /** Extra content rendered in the content column, after the description and before CTAs — e.g. a search bar or chip row that doesn't fit the eyebrow/title/subtitle/description/CTA slots. */
   children?: React.ReactNode;
+  /** Shows the play/pause control for video/vimeo media even in `layout="background"`
+   * (previously `split`-only, since only split had a natural corner for it). Default `false`
+   * — no behavior change for existing `background`-layout callers. */
+  showPlayButton?: boolean;
+  /** Whether video/vimeo media autoplays on mount. Default `true` (today's behavior,
+   * unchanged for existing callers). Pass `false` for a "click to play" treatment. */
+  autoPlayVideo?: boolean;
+  /** Extra content rendered alongside the play/pause button (only relevant when
+   * that button is shown) — e.g. a duration label, source attribution, or a
+   * "Silent film" badge, without HeroBanner needing to know what those are. */
+  mediaControlsSlot?: React.ReactNode;
 }
 
 /**
@@ -125,6 +141,7 @@ export interface HeroBannerProps {
 export const HeroBanner: React.FC<HeroBannerProps> = ({
   eyebrow,
   title,
+  titleEmphasis,
   subtitle,
   description,
   primaryCta,
@@ -147,11 +164,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   showMLogoOverlay = false,
   titleLineHeight,
   children,
+  showPlayButton = false,
+  autoPlayVideo = true,
+  mediaControlsSlot,
 }) => {
   const isDark = variant === 'dark';
-  
+
   // State for video play/pause
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(autoPlayVideo);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -207,6 +227,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const mLogoRightRef = useRef<SVGPathElement>(null);
   const childrenSlotRef = useRef<HTMLDivElement>(null);
   const titleWords = title.split(/(\s+)/);
+  const titleEmphasisWords = titleEmphasis ? titleEmphasis.split(/(\s+)/) : [];
   const reducedMotion = useReducedMotion();
 
   // Play/Pause toggle handler
@@ -531,10 +552,25 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {titleWords.map((part, index) =>
             part.trim() ? (
               <Box
-                key={`${part}-${index}`}
+                key={`title-${part}-${index}`}
                 component="span"
                 data-hero-title-word
                 sx={{ display: 'inline-block', whiteSpace: 'pre' }}
+              >
+                {part}
+              </Box>
+            ) : (
+              part
+            )
+          )}
+          {titleEmphasis && ' '}
+          {titleEmphasisWords.map((part, index) =>
+            part.trim() ? (
+              <Box
+                key={`emphasis-${part}-${index}`}
+                component="span"
+                data-hero-title-word
+                sx={{ display: 'inline-block', whiteSpace: 'pre', fontStyle: 'italic' }}
               >
                 {part}
               </Box>
@@ -644,6 +680,47 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     </Box>
   );
 
+  // Play/Pause control (+ optional extra content, e.g. duration/source/badge
+  // via mediaControlsSlot) — the real button needs actual video/vimeo to
+  // control, but the slot is independent of that (e.g. BrandFilmSection's
+  // duration/source/badge row should still show over a plain image). So the
+  // cluster renders if EITHER has something to show, and only the button
+  // itself is separately gated.
+  const showRealPlayButton = (layout === 'split' || showPlayButton) && Boolean(vimeoId || videoSrc);
+  const showMediaControls = showRealPlayButton || Boolean(mediaControlsSlot);
+  const mediaControls = showMediaControls ? (
+    <Box
+      sx={{
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        zIndex: 10,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1.5,
+      }}
+    >
+      {mediaControlsSlot}
+      {showRealPlayButton && (
+        <DSButton
+          variant="primary"
+          size="sm"
+          iconOnly
+          icon={isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          onClick={togglePlayPause}
+          aria-label={isPlaying ? 'Pause video' : 'Play video'}
+          sx={{
+            backgroundColor: 'rgba(0, 15, 71, 0.8)',
+            backdropFilter: 'blur(8px)',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 15, 71, 0.95)',
+            },
+          }}
+        />
+      )}
+    </Box>
+  ) : null;
+
   const mediaColumn = (
     <Box sx={imageSx}>
       <Box
@@ -677,7 +754,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('surface.hero'), containerType: 'size' }}>
             <iframe
               ref={iframeRef}
-              src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
+              src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
               style={{
                 position: 'absolute',
                 top: '50%',
@@ -713,7 +790,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         ) : videoSrc ? (
           <video
             ref={videoRef}
-            autoPlay
+            autoPlay={autoPlayVideo}
             loop
             muted
             playsInline
@@ -791,33 +868,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         </Box>
       )}
 
-      {/* Play/Pause Button - Only for video/vimeo in split layout */}
-      {layout === 'split' && (vimeoId || videoSrc) && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16,
-            zIndex: 10,
-          }}
-        >
-          <DSButton
-            variant="primary"
-            size="sm"
-            iconOnly
-            icon={isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-            onClick={togglePlayPause}
-            aria-label={isPlaying ? 'Pause video' : 'Play video'}
-            sx={{
-              backgroundColor: 'rgba(0, 15, 71, 0.8)',
-              backdropFilter: 'blur(8px)',
-              '&:hover': {
-                backgroundColor: 'rgba(0, 15, 71, 0.95)',
-              },
-            }}
-          />
-        </Box>
-      )}
+      {/* Play/Pause Button - split layout always shows it when video/vimeo present */}
+      {layout === 'split' && mediaControls}
     </Box>
   );
 
@@ -867,7 +919,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('surface.hero'), containerType: 'size' }}>
               <iframe
                 ref={iframeRef}
-                src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
+                src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
                 style={{
                   position: 'absolute',
                   top: '50%',
@@ -888,7 +940,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <img src={imageSrc} alt={imageAlt} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: mediaObjectPosition }} />
           ) : videoSrc ? (
             <video
-              autoPlay
+              ref={videoRef}
+              autoPlay={autoPlayVideo}
               loop
               muted
               playsInline
@@ -902,6 +955,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <img src={imageSrc} alt={imageAlt} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: mediaObjectPosition }} />
           ) : null}
           </Box>
+          {mediaControls}
         </Box>
       )}
 

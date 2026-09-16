@@ -111,7 +111,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
                                 {link.badge && (
                                   <span
                                     className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-                                    style={{ backgroundColor: getRoleColor('surface.accent'), color: getRoleColor('text.inverse') }}
+                                    style={{ backgroundColor: getRoleColor('surface.accent'), color: getRoleColor('text.primary') }}
                                   >
                                     {link.badge}
                                   </span>

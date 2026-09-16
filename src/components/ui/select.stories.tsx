@@ -135,6 +135,6 @@ export const FullWidth: StoryObj<typeof DSSelect> = {
 export const ControlledExample: StoryObj = {
   render: () => {
     const [plan, setPlan] = useState('pro');
-    return <DSSelect label="Subscription plan" options={planOptions} value={plan} onChange={setPlan} helperText={`Selected: ${plan}`} />;
+    return <DSSelect label="Subscription plan" options={planOptions} value={plan} onChange={(value) => setPlan(String(value))} helperText={`Selected: ${plan}`} />;
   },
 };

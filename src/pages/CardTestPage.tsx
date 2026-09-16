@@ -15,7 +15,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import gsap from 'gsap';
 import { lightTheme, darkTheme } from '../theme';
 import CardWebsite, { type CardSurface, type CardLayout, type CardAR } from '../components/CardWebsite/CardWebsite';
-import InsightSection from '../components/sections/InsightSection';
+import CarouselSection from '../components/sections/CarouselSection';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,9 +43,9 @@ const CARD_STATES: { value: CardState; label: string }[] = [
 
 const STATE_PROPS: Record<CardState, Partial<React.ComponentProps<typeof CardWebsite>>> = {
   default:  {},
-  hover:    { forceHover: true },
-  active:   { forceActive: true },
-  focus:    { forceFocus: true },
+  hover:    { forceState: 'hover' },
+  active:   { forceState: 'active' },
+  focus:    { forceState: 'focus' },
   skeleton: { skeleton: true },
 };
 
@@ -533,8 +533,8 @@ export default function CardTestPage() {
 
           </Box>
 
-          {/* ── InsightSection — full-bleed inside the scrollable main ─── */}
-          <InsightSection
+          {/* ── CarouselSection — full-bleed inside the scrollable main ─── */}
+          <CarouselSection
             eyebrow="Insights"
             title="Insights shaping what matters most globally"
             description="Our research and analysis on the world's most influential risks and the factors defining the coming landscape."
@@ -622,7 +622,7 @@ export default function CardTestPage() {
                 <ReqBlock isDark={isDark} title="Animations" items={[
                   'GSAP entrance: fromTo opacity 0→1, y 20→0, 0.45s power2.out on animate prop',
                   'Hover image zoom: gsap.quickTo(img, scale, {duration: 0.3}) via callback ref',
-                  'InsightSection scroll reveal: ScrollTrigger start "top 85%", stagger 0.08',
+                  'CarouselSection scroll reveal: ScrollTrigger start "top 85%", stagger 0.08',
                   'Test page config change: stagger 0.03, 0.28s on [data-card] selector',
                 ]} />
 
@@ -643,7 +643,7 @@ export default function CardTestPage() {
                   'CSS &:hover drives real interactions; force props drive test states',
                 ]} />
 
-                <ReqBlock isDark={isDark} title="InsightSection integration" items={[
+                <ReqBlock isDark={isDark} title="CarouselSection integration" items={[
                   'surface prop drives section bg + card surface (matched via SECTION_META map)',
                   'style="top" — heading full-width above carousel',
                   'style="left" — heading fixed 420px left column, carousel fills right',

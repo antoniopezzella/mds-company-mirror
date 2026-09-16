@@ -17,12 +17,16 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & { invalid?: boolean }
->(({ className, children, invalid = false, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    invalid?: boolean;
+    size?: 'small' | 'medium';
+  }
+>(({ className, children, invalid = false, size = 'medium', ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-10 w-full items-center justify-between gap-2 rounded-md border px-3 py-2 font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      'flex w-full items-center justify-between gap-2 rounded-md border font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      size === 'small' ? 'h-8 px-2 py-1 text-xs' : 'h-10 px-3 py-2 text-sm',
       className
     )}
     style={
@@ -176,7 +180,7 @@ export {
 // ── DSSelect: MUI-parity convenience wrapper ────────────────────────────────
 
 export interface DSSelectOption {
-  value: string;
+  value: string | number;
   label: string;
   disabled?: boolean;
 }
@@ -188,11 +192,12 @@ export interface DSSelectProps {
   helperText?: string;
   error?: boolean;
   tone?: 'default' | 'error' | 'success' | 'warning';
+  size?: 'small' | 'medium';
   fullWidth?: boolean;
   disabled?: boolean;
-  value?: string;
-  defaultValue?: string;
-  onChange?: (value: string) => void;
+  value?: string | number;
+  defaultValue?: string | number;
+  onChange?: (value: string | number) => void;
   name?: string;
   className?: string;
 }
@@ -204,11 +209,28 @@ function getToneRoles(tone: NonNullable<DSSelectProps['tone']>, error?: boolean)
   return { border: 'border.default', text: 'text.secondary' };
 }
 
+// Radix's <Select.Item> rejects an empty-string value outright (it's
+// reserved internally for "no selection") — MUI's Select has no such
+// restriction, and at least one real DS consumer relies on `value: ''`
+// for an "Unassigned"-style placeholder option. Map it to a sentinel for
+// Radix and back again rather than dropping the empty-string case.
+const EMPTY_VALUE_SENTINEL = '__ds-select-empty__';
+
+function toRadixValue(value: string | number): string {
+  return value === '' ? EMPTY_VALUE_SENTINEL : String(value);
+}
+
+function fromRadixValue(radixValue: string, options: DSSelectOption[]): string | number {
+  if (radixValue === EMPTY_VALUE_SENTINEL) return '';
+  return options.find((o) => toRadixValue(o.value) === radixValue)?.value ?? radixValue;
+}
+
 /**
  * Design System Select — shadcn/ui/Radix counterpart for the MDS Select.
- * Same `options`/`label`/`helperText`/`error`/`tone`/`fullWidth` API as the
- * MUI twin; `onChange` receives the new value directly (Radix convention),
- * not a change event.
+ * Same `options`/`label`/`helperText`/`error`/`tone`/`fullWidth`/`size` API
+ * as the MUI twin; `onChange` receives the new value directly (Radix
+ * convention), not a change event. `variant` (outlined/filled/standard)
+ * has no shadcn equivalent — no real consumer uses it.
  */
 export const DSSelect: React.FC<DSSelectProps> = ({
   options,
@@ -217,6 +239,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
   helperText,
   error = false,
   tone = 'default',
+  size = 'medium',
   fullWidth = false,
   disabled = false,
   value,
@@ -241,13 +264,19 @@ export const DSSelect: React.FC<DSSelectProps> = ({
           {label}
         </label>
       )}
-      <Select value={value} defaultValue={defaultValue} onValueChange={onChange} disabled={disabled} name={name}>
-        <SelectTrigger id={generatedId} invalid={isError} aria-describedby={helperText ? helperId : undefined}>
+      <Select
+        value={value !== undefined ? toRadixValue(value) : undefined}
+        defaultValue={defaultValue !== undefined ? toRadixValue(defaultValue) : undefined}
+        onValueChange={(radixValue) => onChange?.(fromRadixValue(radixValue, options))}
+        disabled={disabled}
+        name={name}
+      >
+        <SelectTrigger id={generatedId} invalid={isError} size={size} aria-describedby={helperText ? helperId : undefined}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
+            <SelectItem key={toRadixValue(option.value)} value={toRadixValue(option.value)} disabled={option.disabled}>
               {option.label}
             </SelectItem>
           ))}

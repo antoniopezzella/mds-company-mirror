@@ -318,7 +318,7 @@ const MarshCorporateNew: React.FC = () => {
       </main>
 
       {/* AI Assistant Bot */}
-      <AIAgentBot />
+      <AIAgentBot visitorType="prospect" />
     </>
   );
 };

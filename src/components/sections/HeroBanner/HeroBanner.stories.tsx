@@ -4,7 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadIcon from '@mui/icons-material/Download';
 
 const meta: Meta<typeof HeroBanner> = {
-  title: 'Sections/HeroBanner',
+  title: 'Website/HeroBanner',
   component: HeroBanner,
   tags: ['autodocs'],
   parameters: {

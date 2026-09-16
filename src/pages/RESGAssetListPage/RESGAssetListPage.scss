@@ -210,7 +210,7 @@
         // Asset name column - make it bold
         &:first-child {
           font-weight: 600;
-          color: #000f47;
+          color: var(--role-text-primary);
         }
       }
 

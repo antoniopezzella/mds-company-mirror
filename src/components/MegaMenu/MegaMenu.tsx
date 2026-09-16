@@ -3,6 +3,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Box, Typography, Divider } from '@mui/material';
 import { Chip } from '../Chip/Chip';
+import { getRoleColor } from '../../theme/roles';
 import styles from './MegaMenu.module.scss';
 
 const MARSH_M_LOGO = '/images/M-logo.svg';
@@ -130,7 +131,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
 
               <Box className={styles.aiSolutionTop}>
                  <Box className={styles.aiHeaderTop}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#000f47' }}>What right solution</Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: getRoleColor('text.primary') }}>What right solution</Typography>
                     <Box className={styles.aiLogoCircleSmall}>
                       <img src={MARSH_M_LOGO} alt="M" className={styles.aiLogoSmall} />
                     </Box>

@@ -4,9 +4,9 @@ import { Divider } from './Divider';
 import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 
 const meta: Meta<typeof Divider> = {
-  title: 'Legacy MUI/Divider',
+  title: 'Components/Divider',
   component: Divider,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {

@@ -12,12 +12,12 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import RestoreIcon from '@mui/icons-material/Restore';
 
 const meta = {
-  title: 'Legacy MUI/Menu',
+  title: 'Components/Menu',
   component: Menu,
   parameters: {
     layout: 'padded',
   },
-  tags: ['!dev'],
+  tags: ['autodocs'],
   argTypes: {
     size: {
       control: 'select',

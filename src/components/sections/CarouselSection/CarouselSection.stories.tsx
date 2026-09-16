@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import InsuranceIcon from '@mui/icons-material/Business';
-import InsightSection from './InsightSection';
-import type { InsightItem } from './InsightSection';
+import CarouselSection from './CarouselSection';
+import type { InsightItem } from './CarouselSection';
 
-const meta: Meta<typeof InsightSection> = {
-  title: 'Sections/InsightSection',
-  component: InsightSection,
+const meta: Meta<typeof CarouselSection> = {
+  title: 'Website/CarouselSection',
+  component: CarouselSection,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -20,7 +20,7 @@ const meta: Meta<typeof InsightSection> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof InsightSection>;
+type Story = StoryObj<typeof CarouselSection>;
 
 // ── Sample card data ───────────────────────────────────────────────────────────
 
@@ -105,7 +105,97 @@ const ITEMS: InsightItem[] = [
   },
 ];
 
+// Real production content — matches Marsh1DER.tsx's RISK_CARDS exactly, used
+// by the actual "Find the risks that matter to your business" section on
+// /marsh-1der (surface="hero", hideCategories). Kept in sync with that page
+// rather than generic placeholder copy, so this story matches production.
+const RISK_CARDS: InsightItem[] = [
+  {
+    id: 'cyber',
+    title: 'Cyber Risk',
+    description: 'Navigate the evolving threat landscape with tailored cyber insurance and risk advisory.',
+    imageSrc: '/images/journey-bloomberg.jpg',
+    imageAlt: 'Cyber Risk',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Insurance',
+    aspectRatio: '1:1',
+  },
+  {
+    id: 'casualty',
+    title: 'Casualty',
+    description: 'Comprehensive liability solutions designed for the risks your business faces today.',
+    imageSrc: '/images/journey-davos.jpg',
+    imageAlt: 'Casualty',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Insurance',
+    aspectRatio: '1:1',
+  },
+  {
+    id: 'multinacional',
+    title: 'Multinational',
+    description: 'Coordinated global programs that protect your operations across every jurisdiction.',
+    imageSrc: '/images/journey-aviation.jpg',
+    imageAlt: 'Multinational',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Solutions',
+    aspectRatio: '1:1',
+  },
+  {
+    id: 'political-risk',
+    title: 'Political Risk',
+    description: 'Protect your investments and operations against political instability worldwide.',
+    imageSrc: '/images/journey-global-risks.jpg',
+    imageAlt: 'Political Risk',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Insurance',
+    aspectRatio: '1:1',
+  },
+  {
+    id: 'risk-consulting',
+    title: 'Risk Consulting',
+    description: 'Strategic advisory to identify, quantify, and reduce risk across your enterprise.',
+    imageSrc: '/images/journey-bloomberg.jpg',
+    imageAlt: 'Risk Consulting',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Advisory',
+    aspectRatio: '1:1',
+  },
+  {
+    id: 'global-report',
+    title: 'Global Risk Report 2026',
+    description: 'Data and insights from more than 1,300 global experts on the top risks ahead.',
+    imageSrc: '/images/journey-global-risks.jpg',
+    imageAlt: 'Global Risk Report',
+    surface: 'primary',
+    layout: 'vertical',
+    category: 'Report',
+    aspectRatio: '1:1',
+  },
+];
+
 // ── Stories ───────────────────────────────────────────────────────────────────
+
+// Exact replica of the real "Find the risks that matter to your business"
+// card-deck carousel from /marsh-1der (Marsh1DER.tsx) — same data, same props
+// (surface="hero", hideCategories). This is the faithful production reference
+// story; the other stories below use generic placeholder content instead.
+export const RiskAreasCarousel: Story = {
+  name: 'Real production: Risk Areas Carousel',
+  args: {
+    surface: 'hero',
+    style: 'top',
+    title: 'Find the risks that matter to your business',
+    description: 'Explore Marsh solutions by risk area and sector with guidance from our specialists.',
+    ctaLabel: 'Browse all risk areas',
+    items: RISK_CARDS,
+    hideCategories: true,
+  },
+};
 
 export const Default: Story = {
   args: {

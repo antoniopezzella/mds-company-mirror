@@ -5,9 +5,9 @@ import { Box, Typography, Button } from '@mui/material';
 import PolicyIcon from '@mui/icons-material/Description';
 
 const meta: Meta<typeof Paper> = {
-  title: 'Legacy MUI/Paper',
+  title: 'Components/Paper',
   component: Paper,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

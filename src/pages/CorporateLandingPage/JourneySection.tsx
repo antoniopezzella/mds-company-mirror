@@ -217,7 +217,7 @@ export const JourneySection: React.FC = () => {
             onClick={() => handleScroll('left')}
             aria-label="Scroll timeline left"
             sx={{
-              backgroundColor: '#FFBF0D',
+              backgroundColor: getRoleColor('brand.accent'),
               width: 48,
               height: 48,
               pointerEvents: 'auto',
@@ -232,7 +232,7 @@ export const JourneySection: React.FC = () => {
             onClick={() => handleScroll('right')}
             aria-label="Scroll timeline right"
             sx={{
-              backgroundColor: '#FFBF0D',
+              backgroundColor: getRoleColor('brand.accent'),
               width: 48,
               height: 48,
               pointerEvents: 'auto',

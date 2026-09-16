@@ -4,6 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getRoleColor } from '../../../theme/roles';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -332,7 +333,7 @@ export const Stats: React.FC<StatsProps> = ({
                     fontWeight: 400,
                     fontSize: { xs: '60px', md: '104px' },
                     lineHeight: '128px',
-                    color: '#FFBF0D',
+                    color: getRoleColor('brand.accent'),
                   }}
                 >
                   {/* Initial value - will be animated */}
@@ -416,14 +417,14 @@ export const Stats: React.FC<StatsProps> = ({
               <Box sx={{ position: 'absolute', top: '-59px', right: '9px', display: 'flex', gap: '24px', zIndex: 3 }}>
                 <IconButton
                   onClick={() => scrollCards('left')}
-                  sx={{ backgroundColor: '#FFBF0D', width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
+                  sx={{ backgroundColor: getRoleColor('brand.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
                   aria-label="Scroll insights left"
                 >
                   <ArrowBackIcon sx={{ fontSize: '20px', color: '#000f47' }} />
                 </IconButton>
                 <IconButton
                   onClick={() => scrollCards('right')}
-                  sx={{ backgroundColor: '#FFBF0D', width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
+                  sx={{ backgroundColor: getRoleColor('brand.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
                   aria-label="Scroll insights right"
                 >
                   <ArrowForwardIcon sx={{ fontSize: '20px', color: '#000f47' }} />

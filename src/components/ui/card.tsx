@@ -36,10 +36,34 @@ Card.displayName = 'Card';
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col gap-1.5 p-6', className)} {...props} />
+    <div
+      ref={ref}
+      data-slot="card-header"
+      className={cn(
+        'grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 p-6 has-[[data-slot=card-action]]:grid-cols-[1fr_auto]',
+        className
+      )}
+      {...props}
+    />
   )
 );
 CardHeader.displayName = 'CardHeader';
+
+/**
+ * Slot for a header-corner action (e.g. an icon button) — pairs with
+ * CardHeader's grid layout.
+ */
+const CardAction = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-slot="card-action"
+      className={cn('col-start-2 row-span-2 row-start-1 self-start justify-self-end', className)}
+      {...props}
+    />
+  )
+);
+CardAction.displayName = 'CardAction';
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
@@ -84,7 +108,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = 'CardFooter';
 
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
+export { Card, CardHeader, CardAction, CardTitle, CardDescription, CardContent, CardFooter };
 
 // ── ContentCard: convenience wrapper matching the actual Figma spec ────────
 

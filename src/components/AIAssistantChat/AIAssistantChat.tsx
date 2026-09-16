@@ -11,83 +11,150 @@ import {
   CircularProgress,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import StopIcon from '@mui/icons-material/Stop';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ShuffleIcon from '@mui/icons-material/Shuffle';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport, type UIMessage } from 'ai';
+import {
+  MessageScrollerProvider,
+  MessageScroller,
+  MessageScrollerViewport,
+  MessageScrollerContent,
+  MessageScrollerItem,
+  MessageScrollerButton,
+} from '@/components/ui/message-scroller';
+import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
+import { Bubble, BubbleContent } from '@/components/ui/bubble';
+import { Marker, MarkerIcon, MarkerContent } from '@/components/ui/marker';
+import { ChatQuestionnaire } from './ChatQuestionnaire';
 import { getRoleColor } from '../../theme/roles';
 import './AIAssistantChat.scss';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  citations?: { title: string; url: string }[];
-  timestamp: Date;
-  error?: boolean;
+type Citation = { title: string; url: string };
+/** This component's message shape: plain text parts plus one custom
+ * `data-citations` part per assistant turn — matches what api/chat-stream.ts
+ * now emits via the Vercel AI SDK's UI Message Stream protocol. */
+type ChatUIMessage = UIMessage<never, { citations: Citation[] }>;
+
+function getMessageText(message: ChatUIMessage): string {
+  return message.parts
+    .filter((p): p is Extract<ChatUIMessage['parts'][number], { type: 'text' }> => p.type === 'text')
+    .map(p => p.text)
+    .join('');
 }
+
+function getMessageCitations(message: ChatUIMessage): Citation[] {
+  const part = message.parts.find(p => p.type === 'data-citations');
+  return part && part.type === 'data-citations' ? part.data : [];
+}
+
+const HISTORY_KEY = 'marsh-chat-history';
+const TIMESTAMPS_KEY = 'marsh-chat-timestamps';
 
 export interface AIAssistantChatProps {
   isOpen?: boolean;
   onClose?: () => void;
   apiEndpoint?: string;
+  /** When set (and there's no existing conversation), auto-sends this as the first message on open. */
+  initialQuery?: string;
+  /** Which system prompt the backend should use. Defaults to the customer-dashboard prompt when omitted. */
+  visitorType?: 'customer' | 'prospect';
 }
 
-interface Suggestion {
-  label: string;
-  category: string;
-  color: string;
-}
-
-const ALL_SUGGESTIONS: Suggestion[] = [
-  { label: 'What are my top property risk exposures this quarter?', category: 'Property', color: '#1565c0' },
-  { label: 'How can I reduce my cyber liability premium?',          category: 'Cyber',    color: '#6a1b9a' },
-  { label: 'What coverage gaps exist in my current policies?',      category: 'Coverage', color: '#c62828' },
-  { label: 'Explain the Property Risk score on my dashboard',       category: 'Property', color: '#1565c0' },
-  { label: 'What are emerging risks in my industry?',               category: 'Risk',     color: '#e65100' },
-  { label: 'How does Marsh help with supply chain resilience?',     category: 'Risk',     color: '#e65100' },
-  { label: 'What is my estimated maximum loss exposure?',           category: 'Property', color: '#1565c0' },
-  { label: 'When does POL-2024-003 renew and what should I expect?', category: 'Policy', color: '#2e7d32' },
-  { label: 'How does the current market affect my premiums?',       category: 'Market',   color: '#0277bd' },
-  { label: 'What actions should I take on my expired policy?',      category: 'Policy',  color: '#2e7d32' },
-  { label: 'What is the D&O coverage gap and how do I fix it?',     category: 'Coverage', color: '#c62828' },
-  { label: 'What are the wildfire risks to my California facilities?', category: 'Property', color: '#1565c0' },
-];
-
-const getRandomSuggestions = (count = 4) =>
-  [...ALL_SUGGESTIONS].sort(() => 0.5 - Math.random()).slice(0, count);
-
-export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }: AIAssistantChatProps) {
+export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, initialQuery, visitorType }: AIAssistantChatProps) {
   const resolvedEndpoint = apiEndpoint ?? '/api/chat';
 
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [suggestions, setSuggestions] = useState<Suggestion[]>(getRandomSuggestions(4));
-  const [streamingId, setStreamingId] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Empty state opens on a plain greeting (matching shadcn's chat-components
+  // demo); the guided Questionnaire only appears once the user shows intent
+  // to ask something — focusing the composer — rather than up front.
+  const [hasInteracted, setHasInteracted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sentInitialQuery = useRef<string | undefined>(undefined);
 
-  useEffect(() => {
-    const saved = localStorage.getItem('marsh-chat-history');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setMessages(parsed.map((m: Message) => ({ ...m, timestamp: new Date(m.timestamp) })));
-      } catch { /* ignore */ }
+  // Read once at mount — this component remounts fresh every time the chat
+  // opens (AIAgentBot only renders it while isOpen), so seeding useChat's
+  // initial `messages` here removes the restore-race the old fetch-loop
+  // implementation had to guard against with a separate effect.
+  const restoredMessages = useMemo<ChatUIMessage[]>(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
   }, []);
+  const restoredTimestamps = useMemo<Record<string, Date>>(() => {
+    try {
+      const saved = localStorage.getItem(TIMESTAMPS_KEY);
+      if (!saved) return {};
+      const parsed = JSON.parse(saved) as Record<string, string>;
+      return Object.fromEntries(Object.entries(parsed).map(([id, iso]) => [id, new Date(iso)]));
+    } catch {
+      return {};
+    }
+  }, []);
+  const [timestamps, setTimestamps] = useState<Record<string, Date>>(restoredTimestamps);
 
+  // resolvedEndpoint/visitorType are fixed for this mount (see note above),
+  // so an empty dep array keeps this a stable transport instance rather than
+  // rebuilding it — and the chat it's tied to — on every render.
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport<ChatUIMessage>({
+        api: `${resolvedEndpoint}-stream`,
+        // Keeps api/chat-stream.ts's request shape unchanged — only the
+        // response envelope moved to the AI SDK's protocol, not the request.
+        prepareSendMessagesRequest: ({ messages }) => {
+          const last = messages[messages.length - 1];
+          const question = last ? getMessageText(last) : '';
+          const conversationHistory = messages
+            .slice(0, -1)
+            .map(m => ({ role: m.role, content: getMessageText(m) }));
+          return { body: { question, conversationHistory, visitorType } };
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const {
+    messages,
+    sendMessage: sendChatMessage,
+    status,
+    error,
+    setMessages,
+    stop,
+  } = useChat<ChatUIMessage>({ messages: restoredMessages, transport });
+
+  const isBusy = status === 'submitted' || status === 'streaming';
+
+  // UIMessage carries no Date field, so bubbles track their own
+  // first-seen-in-the-UI timestamp locally instead.
   useEffect(() => {
-    if (messages.length > 0) localStorage.setItem('marsh-chat-history', JSON.stringify(messages));
+    setTimestamps(prev => {
+      let changed = false;
+      const next = { ...prev };
+      for (const m of messages) {
+        if (!next[m.id]) {
+          next[m.id] = new Date();
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
   }, [messages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+    if (messages.length > 0) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(messages));
+      localStorage.setItem(TIMESTAMPS_KEY, JSON.stringify(timestamps));
+    }
+  }, [messages, timestamps]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -100,7 +167,9 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
 
   const clearChat = () => {
     setMessages([]);
-    localStorage.removeItem('marsh-chat-history');
+    setTimestamps({});
+    localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(TIMESTAMPS_KEY);
   };
 
   const copyMessage = (id: string, content: string) => {
@@ -113,81 +182,21 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
   const formatTime = (d: Date) =>
     d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
-  const sendMessage = async (question: string) => {
-    if (!question.trim() || isLoading) return;
-
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: question,
-      timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, userMsg]);
+  const sendMessage = (question: string) => {
+    if (!question.trim() || isBusy) return;
     setInput('');
-    setIsLoading(true);
-
-    const assistantId = (Date.now() + 1).toString();
-    setMessages(prev => [
-      ...prev,
-      { id: assistantId, role: 'assistant', content: '', timestamp: new Date() },
-    ]);
-    setStreamingId(assistantId);
-
-    try {
-      const response = await fetch(`${resolvedEndpoint}-stream`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question,
-          conversationHistory: messages.map(m => ({ role: m.role, content: m.content })),
-        }),
-      });
-
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let accumulated = '';
-      let citations: { title: string; url: string }[] = [];
-
-      while (reader) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const lines = decoder.decode(value).split('\n');
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (!data) continue;
-          try {
-            const parsed = JSON.parse(data);
-            if (parsed.token) {
-              accumulated += parsed.token;
-              setMessages(prev =>
-                prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m)
-              );
-            }
-            if (parsed.citations) citations = parsed.citations;
-            if (parsed.done) {
-              setMessages(prev =>
-                prev.map(m => m.id === assistantId ? { ...m, citations } : m)
-              );
-            }
-          } catch { /* skip */ }
-        }
-      }
-    } catch {
-      setMessages(prev =>
-        prev.map(m =>
-          m.id === assistantId
-            ? { ...m, content: 'Unable to reach the assistant. Please try again.', error: true }
-            : m
-        )
-      );
-    } finally {
-      setIsLoading(false);
-      setStreamingId(null);
-    }
+    sendChatMessage({ text: question });
   };
+
+  // Auto-asks initialQuery (e.g. from a hero topic chip) exactly once per
+  // value — skipped when a restored conversation already exists.
+  useEffect(() => {
+    if (initialQuery && initialQuery !== sentInitialQuery.current && messages.length === 0) {
+      sentInitialQuery.current = initialQuery;
+      sendMessage(initialQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery]);
 
   if (!isOpen) return null;
 
@@ -241,7 +250,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '3px' }}>
             <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50', flexShrink: 0 }} />
             <Typography sx={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontFamily: 'Noto Sans, sans-serif' }}>
-              Connected to your dashboard
+              {visitorType === 'prospect' ? 'Ask about Marsh products & services' : 'Connected to your dashboard'}
             </Typography>
           </Box>
         </Box>
@@ -277,208 +286,107 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
       </Box>
 
       {/* ── Messages ── */}
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          px: '20px',
-          pt: '20px',
-          pb: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          bgcolor: surfaceSubtle,
-        }}
-      >
+      <MessageScrollerProvider autoScroll defaultScrollPosition="end">
+      <MessageScroller className="min-h-0 flex-1" style={{ backgroundColor: surfaceSubtle }}>
         {messages.length === 0 ? (
-          /* Empty state */
-          <Box sx={{ pt: 1 }}>
-            <Typography sx={{ fontSize: 15, fontWeight: 700, color: textPrimary, mb: 0.5, fontFamily: 'Noto Sans, sans-serif' }}>
-              Ask about your policies &amp; risks
-            </Typography>
-            <Typography sx={{ fontSize: 13, color: textSecondary, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif' }}>
-              I have context from your dashboard — property risk, active policies, coverage gaps, and market trends.
-            </Typography>
-
-            {/* Suggestions header row */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: '20px', mb: '10px' }}>
-              <Typography sx={{ fontSize: 11, fontWeight: 600, color: textSecondary, letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: 'Noto Sans, sans-serif' }}>
-                Suggested questions
+          /* Empty state — plain scroll, no scroller items to manage. Opens
+             on a centered greeting alone; focusing the composer below
+             reveals the guided Questionnaire underneath it. */
+          <Box sx={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', px: '20px', pb: '12px' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                flex: hasInteracted ? '0 0 auto' : 1,
+                justifyContent: 'center',
+                pt: hasInteracted ? '20px' : 0,
+                pb: hasInteracted ? '4px' : 0,
+              }}
+            >
+              <Typography sx={{ fontSize: hasInteracted ? 16 : 20, fontWeight: 700, color: textPrimary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>
+                {visitorType === 'prospect' ? 'Hi, welcome to Marsh' : 'Hi, how can I help?'}
               </Typography>
-              <Box
-                onClick={() => setSuggestions(getRandomSuggestions(4))}
-                sx={{
-                  display: 'flex', alignItems: 'center', gap: '4px',
-                  px: '10px', py: '4px',
-                  border: `1px solid ${borderDefault}`,
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  bgcolor: surfaceDefault,
-                  transition: 'all 0.15s',
-                  '&:hover': { borderColor: primaryBlue, bgcolor: surfaceSubtle },
-                }}
-              >
-                <ShuffleIcon sx={{ fontSize: 12, color: textSecondary }} />
-                <Typography sx={{ fontSize: 11, color: textSecondary, fontFamily: 'Noto Sans, sans-serif', userSelect: 'none' }}>
-                  Refresh
-                </Typography>
-              </Box>
+              <Typography sx={{ fontSize: 13, color: textSecondary, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif', maxWidth: hasInteracted ? 'none' : 260 }}>
+                {visitorType === 'prospect'
+                  ? 'Ask about Marsh products, coverage, or risk trends — or press send to start.'
+                  : 'Ask about your policies, risk exposure, or market trends — or press send to start.'}
+              </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {suggestions.map((s, i) => (
-                <Box
-                  key={i}
-                  onClick={() => sendMessage(s.label)}
-                  sx={{
-                    px: '16px',
-                    py: '12px',
-                    bgcolor: surfaceDefault,
-                    border: `1px solid ${borderDefault}`,
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px',
-                    transition: 'all 0.15s ease',
-                    '&:hover': {
-                      borderColor: primaryBlue,
-                      boxShadow: `0 0 0 1px ${primaryBlue}`,
-                      transform: 'translateX(2px)',
-                      '& .arrow-icon': { opacity: 1, transform: 'translateX(0)' },
-                    },
-                  }}
-                >
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Box
-                      sx={{
-                        display: 'inline-block',
-                        px: '6px', py: '2px',
-                        borderRadius: '4px',
-                        bgcolor: `${s.color}18`,
-                        mb: '5px',
-                      }}
-                    >
-                      <Typography sx={{ fontSize: 10, fontWeight: 600, color: s.color, fontFamily: 'Noto Sans, sans-serif', letterSpacing: '0.04em' }}>
-                        {s.category.toUpperCase()}
-                      </Typography>
-                    </Box>
-                    <Typography sx={{ fontSize: 13, color: textPrimary, fontWeight: 500, lineHeight: 1.4, fontFamily: 'Noto Sans, sans-serif' }}>
-                      {s.label}
-                    </Typography>
-                  </Box>
-                  <ArrowForwardIcon
-                    className="arrow-icon"
-                    sx={{
-                      fontSize: 15,
-                      color: primaryBlue,
-                      flexShrink: 0,
-                      opacity: 0,
-                      transform: 'translateX(-4px)',
-                      transition: 'all 0.15s ease',
-                    }}
-                  />
-                </Box>
-              ))}
-            </Box>
+            {hasInteracted && (
+              <Box sx={{ mt: '16px' }}>
+                <ChatQuestionnaire visitorType={visitorType} onSubmitQuestion={sendMessage} />
+              </Box>
+            )}
           </Box>
         ) : (
-          <>
-            {messages.map(msg => (
-              <Box
-                key={msg.id}
-                sx={{
-                  display: 'flex',
-                  flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
-                  alignItems: 'flex-end',
-                  gap: '8px',
-                  animation: 'slideIn 0.2s ease-out',
-                }}
-              >
-                {/* AI avatar dot */}
+          <MessageScrollerViewport style={{ padding: '20px 20px 12px' }}>
+          <MessageScrollerContent className="gap-4">
+            {messages.map((msg, msgIndex) => {
+              const text = getMessageText(msg);
+              const citations = getMessageCitations(msg);
+              const isStreamingThis = status === 'streaming' && msgIndex === messages.length - 1 && msg.role === 'assistant';
+              return (
+              <MessageScrollerItem key={msg.id} messageId={msg.id} scrollAnchor={msg.role === 'user'}>
+              <Message align={msg.role === 'user' ? 'end' : 'start'} className="items-end animate-[slideIn_0.2s_ease-out]">
                 {msg.role === 'assistant' && (
-                  <Box
-                    sx={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: '50%',
-                      bgcolor: primaryBlue,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      mb: '18px',
-                    }}
-                  >
-                    <Typography sx={{ fontSize: 10, fontWeight: 700, color: textOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
+                  <MessageAvatar style={{ width: 26, height: 26, minWidth: 26, backgroundColor: primaryBlue, marginBottom: 18 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: textOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
                       M
-                    </Typography>
-                  </Box>
+                    </span>
+                  </MessageAvatar>
                 )}
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '78%' }}>
-                  {/* Bubble */}
-                  <Box
-                    sx={{
-                      px: '14px',
-                      py: '10px',
-                      borderRadius: msg.role === 'user'
-                        ? '18px 18px 4px 18px'
-                        : '18px 18px 18px 4px',
-                      bgcolor: msg.role === 'user' ? primaryBlue : surfaceDefault,
-                      border: msg.role === 'assistant' ? `1px solid ${borderDefault}` : 'none',
-                      boxShadow: msg.role === 'assistant' ? '0 1px 3px rgba(0,0,0,0.07)' : 'none',
-                    }}
-                  >
-                    {msg.id === streamingId && msg.content === '' ? (
-                      <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center', py: '2px' }}>
-                        {[0, 1, 2].map(i => (
-                          <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
-                        ))}
-                      </Box>
-                    ) : (
-                      <Box
-                        sx={{
-                          fontSize: '13px',
-                          lineHeight: 1.6,
-                          fontFamily: 'Noto Sans, sans-serif',
-                          color: msg.role === 'user' ? textOnAccent : msg.error ? '#c62828' : textPrimary,
-                          '& p': { m: 0, mb: '6px', '&:last-child': { mb: 0 } },
-                          '& strong': { fontWeight: 600 },
-                          '& ul, & ol': { pl: '18px', my: '4px' },
-                          '& li': { mb: '2px' },
-                          '& h1, & h2, & h3, & h4': { fontSize: '13px', fontWeight: 600, mt: '8px', mb: '4px' },
-                          '& code': { fontFamily: 'monospace', fontSize: '12px', bgcolor: 'rgba(0,0,0,0.06)', px: '3px', borderRadius: '2px' },
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: marked.parse(msg.content, { async: false }) as string,
-                        }}
-                      />
-                    )}
-
-                    {msg.citations && msg.citations.length > 0 && (
-                      <Box sx={{ mt: '10px', pt: '10px', borderTop: `1px solid ${borderDefault}` }}>
-                        <Typography sx={{ fontSize: 10, color: textSecondary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                          {msg.citations.map((c, i) => (
-                            <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
-                              sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
-                            />
+                <MessageContent>
+                  <Bubble align={msg.role === 'user' ? 'end' : 'start'} variant={msg.role === 'user' ? 'default' : 'outline'}>
+                    <BubbleContent>
+                      {isStreamingThis && text === '' ? (
+                        <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center', py: '2px' }}>
+                          {[0, 1, 2].map(i => (
+                            <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
                           ))}
                         </Box>
-                      </Box>
-                    )}
-                  </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            fontSize: '13px',
+                            lineHeight: 1.6,
+                            fontFamily: 'Noto Sans, sans-serif',
+                            '& p': { m: 0, mb: '6px', '&:last-child': { mb: 0 } },
+                            '& strong': { fontWeight: 600 },
+                            '& ul, & ol': { pl: '18px', my: '4px' },
+                            '& li': { mb: '2px' },
+                            '& h1, & h2, & h3, & h4': { fontSize: '13px', fontWeight: 600, mt: '8px', mb: '4px' },
+                            '& code': { fontFamily: 'monospace', fontSize: '12px', bgcolor: 'rgba(0,0,0,0.06)', px: '3px', borderRadius: '2px' },
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: marked.parse(text, { async: false }) as string,
+                          }}
+                        />
+                      )}
 
-                  {/* Timestamp + copy */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px', mt: '4px', px: '2px' }}>
-                    <Typography sx={{ fontSize: 10, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
-                      {formatTime(msg.timestamp)}
-                    </Typography>
-                    {msg.role === 'assistant' && msg.content && (
+                      {citations.length > 0 && (
+                        <Box sx={{ mt: '10px', pt: '10px', borderTop: `1px solid ${borderDefault}` }}>
+                          <Typography sx={{ fontSize: 10, color: textSecondary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                            {citations.map((c, i) => (
+                              <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
+                                sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
+                              />
+                            ))}
+                          </Box>
+                        </Box>
+                      )}
+                    </BubbleContent>
+                  </Bubble>
+
+                  <MessageFooter>
+                    <span>{formatTime(timestamps[msg.id] ?? new Date())}</span>
+                    {msg.role === 'assistant' && text && (
                       <Tooltip title={copiedId === msg.id ? 'Copied' : 'Copy'}>
-                        <IconButton size="small" onClick={() => copyMessage(msg.id, msg.content)} sx={{ p: '2px' }}>
+                        <IconButton size="small" onClick={() => copyMessage(msg.id, text)} sx={{ p: '2px', ml: '4px' }}>
                           {copiedId === msg.id
                             ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
                             : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
@@ -486,37 +394,40 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
                         </IconButton>
                       </Tooltip>
                     )}
-                  </Box>
-                </Box>
-              </Box>
-            ))}
+                  </MessageFooter>
+                </MessageContent>
+              </Message>
+              </MessageScrollerItem>
+              );
+            })}
 
             {/* Streaming status bar */}
-            {isLoading && streamingId && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  px: 2,
-                  py: 1,
-                  bgcolor: surfaceAccent,
-                  border: `1px solid ${borderDefault}`,
-                  borderRadius: '8px',
-                  alignSelf: 'flex-start',
-                }}
+            {isBusy && (
+              <Marker
+                className="gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-[11px] text-muted-foreground"
+                style={{ width: 'fit-content', alignSelf: 'flex-start' }}
               >
-                <CircularProgress size={11} thickness={5} sx={{ color: primaryBlue }} />
-                <Typography sx={{ fontSize: 11, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
-                  Marsh AI is responding…
-                </Typography>
-              </Box>
+                <MarkerIcon>
+                  <CircularProgress size={11} thickness={5} sx={{ color: primaryBlue }} />
+                </MarkerIcon>
+                <MarkerContent className="shimmer">Marsh AI is responding…</MarkerContent>
+              </Marker>
             )}
-
-            <div ref={messagesEndRef} />
-          </>
+          </MessageScrollerContent>
+          </MessageScrollerViewport>
         )}
-      </Box>
+        <MessageScrollerButton />
+      </MessageScroller>
+      </MessageScrollerProvider>
+
+      {/* ── Error banner ── */}
+      {status === 'error' && (
+        <Box sx={{ px: '16px', py: '8px', bgcolor: 'rgba(198,40,40,0.08)', borderTop: `1px solid ${borderDefault}` }}>
+          <Typography sx={{ fontSize: 11, color: '#c62828', fontFamily: 'Noto Sans, sans-serif' }}>
+            {error?.message || 'Unable to reach the assistant. Please try again.'}
+          </Typography>
+        </Box>
+      )}
 
       {/* ── Input ── */}
       <Divider sx={{ borderColor: borderDefault }} />
@@ -539,6 +450,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           maxRows={4}
           value={input}
           onChange={e => setInput(e.target.value)}
+          onFocus={() => setHasInteracted(true)}
           onKeyDown={e => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
@@ -546,7 +458,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
             }
           }}
           placeholder="Ask about your risks or policies…"
-          disabled={isLoading}
+          disabled={isBusy}
           size="small"
           inputRef={inputRef}
           sx={{
@@ -566,8 +478,9 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
           }}
         />
         <IconButton
-          type="submit"
-          disabled={!input.trim() || isLoading}
+          type={isBusy ? 'button' : 'submit'}
+          onClick={isBusy ? () => stop() : undefined}
+          disabled={!isBusy && !input.trim()}
           sx={{
             width: 40,
             height: 40,
@@ -580,8 +493,8 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint }:
             '&.Mui-disabled': { bgcolor: surfaceAccent, color: textSecondary },
           }}
         >
-          {isLoading
-            ? <CircularProgress size={15} thickness={4} sx={{ color: textOnAccent }} />
+          {isBusy
+            ? <StopIcon sx={{ fontSize: 16 }} />
             : <SendIcon sx={{ fontSize: 16 }} />
           }
         </IconButton>

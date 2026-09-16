@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getRoleColor } from '../../theme/roles';
 
 // Register GSAP plugin
 if (typeof window !== 'undefined') {
@@ -191,7 +192,7 @@ export const VideoSection: React.FC = () => {
             width: '100%',
             height: '70vh',
             overflow: 'visible',
-            backgroundColor: '#000F47', // Midnight blue - primary brand color
+            backgroundColor: getRoleColor('surface.hero'),
             willChange: 'clip-path',
           }}
         >

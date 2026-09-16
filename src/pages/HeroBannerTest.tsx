@@ -1,10 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Paper, Typography, FormControlLabel, Radio, RadioGroup, FormControl, FormLabel, Divider, Select, MenuItem, IconButton } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, Paper, Typography, IconButton } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { WebsiteHeader } from '../components/Header/Header';
 import { HeroBanner } from '../components/sections/HeroBanner/HeroBanner';
+import { MetricsSection } from '../components/sections/MetricsSection';
+import { HeroBannerTestControls, type HeroBannerTestSettings } from './HeroBannerTestControls';
 import gsap from 'gsap';
+
+const nextSectionMetrics = [
+  { value: '130+', label: 'Countries served worldwide' },
+  { value: '$5.5B', label: 'Global insurance placements' },
+  { value: '25M', label: 'Lives touched every year' },
+];
 
 const mockContent = {
   en: {
@@ -55,60 +63,52 @@ const mockContent = {
 };
 
 type Language = keyof typeof mockContent;
-type BannerSize = 'full' | 'medium' | 'small';
 
-const bannerSizeHeights: Record<BannerSize, string> = {
+const bannerSizeHeights: Record<HeroBannerTestSettings['bannerSize'], string> = {
   full: '100vh',
   medium: '70vh',
   small: '50vh',
 };
 
-const panelTextColor = '#000f47';
-const panelMutedTextColor = '#303c37';
-const panelLabelSx = {
-  color: panelMutedTextColor,
-  fontSize: '13px',
-  fontWeight: 600,
-  lineHeight: '18px',
-  mb: 0.75,
-  '&.Mui-focused': {
-    color: panelTextColor,
-  },
-  '&.Mui-disabled': {
-    color: panelMutedTextColor,
-    opacity: 0.78,
-  },
-};
-const panelOptionLabel = (label: string) => (
-  <Typography
-    variant="body2"
-    sx={{
-      color: panelTextColor,
-      fontSize: '14px',
-      lineHeight: '20px',
-    }}
-  >
-    {label}
-  </Typography>
+const languageOptions = Object.fromEntries(
+  Object.entries(mockContent).map(([code, data]) => [code, { name: data.name }])
 );
 
 const HeroBannerTest: React.FC = () => {
-  const [layout, setLayout] = useState<'split' | 'background'>('split');
-  const [imagePosition, setImagePosition] = useState<'left' | 'right'>('right');
-  const [variant, setVariant] = useState<'dark' | 'light'>('dark');
-  const [bannerSize, setBannerSize] = useState<BannerSize>('full');
+  const [layout, setLayout] = useState<HeroBannerTestSettings['layout']>('split');
+  const [imagePosition, setImagePosition] = useState<HeroBannerTestSettings['imagePosition']>('right');
+  const [variant, setVariant] = useState<HeroBannerTestSettings['variant']>('dark');
+  const [bannerSize, setBannerSize] = useState<HeroBannerTestSettings['bannerSize']>('full');
   const [showSubtitle, setShowSubtitle] = useState<boolean>(true);
   const [showDescription, setShowDescription] = useState<boolean>(true);
-  const [showCmsHints, setShowCmsHints] = useState<boolean>(true);
+  const [showCmsHints, setShowCmsHints] = useState<boolean>(false);
   const [language, setLanguage] = useState<Language>('en');
-  const [mediaType, setMediaType] = useState<'video' | 'vimeo' | 'image' | 'both'>('video');
+  const [mediaType, setMediaType] = useState<HeroBannerTestSettings['mediaType']>('video');
   const [numBanners, setNumBanners] = useState<1 | 2 | 3>(1);
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const carouselRef = useRef<HTMLDivElement>(null);
   const slidesRef = useRef<HTMLDivElement[]>([]);
 
   const content = mockContent[language];
+
+  const settings: HeroBannerTestSettings = {
+    bannerSize, showSubtitle, showDescription, mediaType, numBanners, layout, imagePosition, language, variant, showCmsHints,
+  };
+  const updateSetting = <K extends keyof HeroBannerTestSettings>(key: K, value: HeroBannerTestSettings[K]) => {
+    switch (key) {
+      case 'bannerSize': setBannerSize(value as HeroBannerTestSettings['bannerSize']); break;
+      case 'showSubtitle': setShowSubtitle(value as boolean); break;
+      case 'showDescription': setShowDescription(value as boolean); break;
+      case 'mediaType': setMediaType(value as HeroBannerTestSettings['mediaType']); break;
+      case 'numBanners': setNumBanners(value as 1 | 2 | 3); break;
+      case 'layout': setLayout(value as HeroBannerTestSettings['layout']); break;
+      case 'imagePosition': setImagePosition(value as HeroBannerTestSettings['imagePosition']); break;
+      case 'language': setLanguage(value as Language); break;
+      case 'variant': setVariant(value as HeroBannerTestSettings['variant']); break;
+      case 'showCmsHints': setShowCmsHints(value as boolean); break;
+    }
+  };
 
   // Banner configurations for each slide
   const bannerConfigs = [
@@ -120,7 +120,7 @@ const HeroBannerTest: React.FC = () => {
   // GSAP slide animation
   const goToSlide = (index: number) => {
     if (index < 0 || index >= bannerConfigs.length || index === currentSlide) return;
-    
+
     const direction = index > currentSlide ? -100 : 100;
     const currentElement = slidesRef.current[currentSlide];
     const nextElement = slidesRef.current[index];
@@ -129,17 +129,17 @@ const HeroBannerTest: React.FC = () => {
 
     gsap.timeline()
       .set(nextElement, { xPercent: -direction, opacity: 0 })
-      .to(currentElement, { 
-        xPercent: direction, 
-        opacity: 0, 
-        duration: 0.6, 
-        ease: 'power2.inOut' 
+      .to(currentElement, {
+        xPercent: direction,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.inOut'
       })
-      .to(nextElement, { 
-        xPercent: 0, 
-        opacity: 1, 
-        duration: 0.6, 
-        ease: 'power2.inOut' 
+      .to(nextElement, {
+        xPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.inOut'
       }, '<');
 
     setCurrentSlide(index);
@@ -153,9 +153,9 @@ const HeroBannerTest: React.FC = () => {
       <WebsiteHeader />
 
       {/* Carousel Container */}
-      <Box 
+      <Box
         ref={carouselRef}
-        sx={{ 
+        sx={{
           position: 'relative',
           overflow: 'hidden',
           width: '100%',
@@ -191,14 +191,25 @@ const HeroBannerTest: React.FC = () => {
                   text: content.secondaryCta,
                   onClick: () => {},
                 }}
-                vimeoId={mediaType === 'vimeo' ? "1146072483" : undefined}
-                videoSrc={mediaType === 'video' || mediaType === 'both' ? "/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" : undefined}
-                videoPoster={mediaType === 'video' || mediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
-                imageSrc={mediaType === 'image' || mediaType === 'both' ? "/images/journey-aviation.jpg" : undefined}
+                vimeoId={
+                  mediaType === 'vimeoBroken' ? "999999999999" : // out of range — proves the Player.js error fallback works
+                  mediaType === 'vimeo1080p' ? "863362136" : // Vimeo's own official showcase video — verified 4/4 reliable loads, unlike the free-stock clips tried earlier
+                  mediaType === 'vimeo' ? "1146072483" : undefined
+                }
+                videoSrc={
+                  mediaType === 'video1080p' ? "/video/test-1920x1080.mp4" :
+                  mediaType === 'video' || mediaType === 'both' ? "/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" : undefined
+                }
+                videoPoster={mediaType === 'video' || mediaType === 'both' || mediaType === 'video1080p' ? "/images/journey-aviation.jpg" : undefined}
+                imageSrc={
+                  mediaType === 'image' || mediaType === 'both' ||
+                  mediaType === 'vimeo' || mediaType === 'vimeo1080p' || mediaType === 'vimeoBroken'
+                    ? "/images/journey-aviation.jpg" : undefined
+                }
                 imageAlt="Aerial city intersection view"
-                variant={config.variant}
+                variant={numBanners === 1 ? variant : config.variant}
                 height={bannerSizeHeights[bannerSize]}
-                layout={config.layout}
+                layout={numBanners === 1 ? layout : config.layout}
                 imagePosition={imagePosition}
               />
             </Box>
@@ -311,192 +322,19 @@ const HeroBannerTest: React.FC = () => {
         )}
       </Box>
 
-      {/* Floating Toggle Panel */}
-      <Paper
-        elevation={6}
-        sx={{
-          position: { xs: 'static', lg: 'fixed' },
-          bottom: { lg: 24 },
-          right: { lg: 24 },
-          m: { xs: 2, md: 3, lg: 0 },
-          p: { xs: 2, md: 3 },
-          zIndex: 1200,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: { xs: 1.5, md: 2 },
-          width: { xs: 'auto', lg: '250px' },
-          minWidth: { lg: '250px' },
-          maxHeight: { lg: 'calc(100vh - 48px)' },
-          overflowY: { lg: 'auto' },
-          color: panelTextColor,
-          backgroundColor: 'rgba(255, 255, 255, 0.98)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: 2,
-          border: '1px solid rgba(0, 15, 71, 0.18)',
-          boxShadow: '0 18px 48px rgba(0, 15, 71, 0.22)',
-          '& .MuiFormControlLabel-label': {
-            color: panelTextColor,
-          },
-          '& .Mui-disabled .MuiFormControlLabel-label': {
-            color: panelMutedTextColor,
-            opacity: 0.78,
-          },
-          '& .MuiRadio-root': {
-            color: panelTextColor,
-          },
-          '& .MuiRadio-root.Mui-checked': {
-            color: panelTextColor,
-          },
-          '& .MuiRadio-root.Mui-disabled': {
-            color: panelMutedTextColor,
-            opacity: 0.78,
-          },
-          '& .MuiDivider-root': {
-            borderColor: 'rgba(0, 15, 71, 0.16)',
-          },
-        }}
-      >
-        <Typography variant="subtitle2" sx={{ color: panelTextColor, fontWeight: 700, mb: 1, fontFamily: 'var(--typo-body1-font-family)' }}>
-          Hero Banner Settings
-        </Typography>
-        <Divider sx={{ mb: 1 }} />
+      {/* Next Section - Tests content flow/spacing directly below the hero banner */}
+      <MetricsSection
+        title="Trusted by organizations around the world"
+        description="A quick look at the scale we operate at, placed right under the hero to check spacing, gradient overlap, and scroll handoff."
+        metrics={nextSectionMetrics}
+      />
 
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Banner Size</FormLabel>
-          <RadioGroup row value={bannerSize} onChange={(e) => setBannerSize(e.target.value as BannerSize)}>
-            <FormControlLabel value="full" control={<Radio size="small" />} label={panelOptionLabel('Full')} />
-            <FormControlLabel value="medium" control={<Radio size="small" />} label={panelOptionLabel('Medium')} />
-            <FormControlLabel value="small" control={<Radio size="small" />} label={panelOptionLabel('Small')} />
-          </RadioGroup>
-          <Typography
-            variant="caption"
-            sx={{
-              color: panelMutedTextColor,
-              fontSize: '12px',
-              lineHeight: '16px',
-            }}
-          >
-            Full 100vh · Medium 70vh · Small 50vh
-          </Typography>
-        </FormControl>
-        
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Content</FormLabel>
-          <RadioGroup row value={showSubtitle ? 'show' : 'hide'} onChange={(e) => setShowSubtitle(e.target.value === 'show')}>
-            <FormControlLabel value="show" control={<Radio size="small" />} label={panelOptionLabel('Show H2')} />
-            <FormControlLabel value="hide" control={<Radio size="small" />} label={panelOptionLabel('Hide H2')} />
-          </RadioGroup>
-          <RadioGroup row value={showDescription ? 'show' : 'hide'} onChange={(e) => setShowDescription(e.target.value === 'show')}>
-            <FormControlLabel value="show" control={<Radio size="small" />} label={panelOptionLabel('Show Body')} />
-            <FormControlLabel value="hide" control={<Radio size="small" />} label={panelOptionLabel('Hide Body')} />
-          </RadioGroup>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Media Type</FormLabel>
-          <RadioGroup value={mediaType} onChange={(e) => setMediaType(e.target.value as 'video' | 'vimeo' | 'image' | 'both')}>
-            <FormControlLabel value="video" control={<Radio size="small" />} label={panelOptionLabel('Video Only')} />
-            <FormControlLabel value="vimeo" control={<Radio size="small" />} label={panelOptionLabel('Vimeo')} />
-            <FormControlLabel value="image" control={<Radio size="small" />} label={panelOptionLabel('Image Only')} />
-            <FormControlLabel value="both" control={<Radio size="small" />} label={panelOptionLabel('Video + Image')} />
-          </RadioGroup>
-          <Typography
-            variant="caption"
-            sx={{
-              color: panelMutedTextColor,
-              fontSize: '12px',
-              lineHeight: '16px',
-              mt: 0.5,
-            }}
-          >
-            Video: MP4 autoplay · Vimeo: embedded player · Image: static · Both: video with image overlay
-          </Typography>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Number of Banners</FormLabel>
-          <RadioGroup row value={numBanners} onChange={(e) => setNumBanners(Number(e.target.value) as 1 | 2 | 3)}>
-            <FormControlLabel value={1} control={<Radio size="small" />} label={panelOptionLabel('1')} />
-            <FormControlLabel value={2} control={<Radio size="small" />} label={panelOptionLabel('2')} />
-            <FormControlLabel value={3} control={<Radio size="small" />} label={panelOptionLabel('3')} />
-          </RadioGroup>
-          <Typography
-            variant="caption"
-            sx={{
-              color: panelMutedTextColor,
-              fontSize: '12px',
-              lineHeight: '16px',
-              mt: 0.5,
-            }}
-          >
-            Compare multiple banners side-by-side
-          </Typography>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Layout</FormLabel>
-          <RadioGroup row value={layout} onChange={(e) => setLayout(e.target.value as 'split' | 'background')}>
-            <FormControlLabel value="split" control={<Radio size="small" />} label={panelOptionLabel('50/50 Split')} />
-            <FormControlLabel value="background" control={<Radio size="small" />} label={panelOptionLabel('Full Background')} />
-          </RadioGroup>
-        </FormControl>
-
-        <FormControl disabled={layout === 'background'}>
-          <FormLabel sx={panelLabelSx}>Media Position (Split Only)</FormLabel>
-          <RadioGroup row value={imagePosition} onChange={(e) => setImagePosition(e.target.value as 'left' | 'right')}>
-            <FormControlLabel value="left" control={<Radio size="small" />} label={panelOptionLabel('Left')} />
-            <FormControlLabel value="right" control={<Radio size="small" />} label={panelOptionLabel('Right')} />
-          </RadioGroup>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Language (i18n Test)</FormLabel>
-          <Select
-            size="small"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            sx={{
-              color: panelTextColor,
-              fontSize: '14px',
-              fontFamily: 'var(--typo-body1-font-family)',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'rgba(0, 15, 71, 0.36)',
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: panelTextColor,
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: panelTextColor,
-              },
-              '& .MuiSvgIcon-root': {
-                color: panelTextColor,
-              },
-            }}
-          >
-            {Object.entries(mockContent).map(([code, data]) => (
-              <MenuItem key={code} value={code} sx={{ fontSize: '14px' }}>
-                {data.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>Color Variant Theme</FormLabel>
-          <RadioGroup row value={variant} onChange={(e) => setVariant(e.target.value as 'dark' | 'light')}>
-            <FormControlLabel value="dark" control={<Radio size="small" />} label={panelOptionLabel('Dark')} />
-            <FormControlLabel value="light" control={<Radio size="small" />} label={panelOptionLabel('Light')} />
-          </RadioGroup>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel sx={panelLabelSx}>CMS Helpers</FormLabel>
-          <RadioGroup row value={showCmsHints ? 'show' : 'hide'} onChange={(e) => setShowCmsHints(e.target.value === 'show')}>
-            <FormControlLabel value="show" control={<Radio size="small" />} label={panelOptionLabel('Show Character Counts')} />
-            <FormControlLabel value="hide" control={<Radio size="small" />} label={panelOptionLabel('Hide')} />
-          </RadioGroup>
-        </FormControl>
-      </Paper>
+      <HeroBannerTestControls
+        title="Hero Banner Settings"
+        values={settings}
+        onChange={updateSetting}
+        languageOptions={languageOptions}
+      />
     </Box>
   );
 };

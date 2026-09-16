@@ -46,7 +46,7 @@ const ToggleGroupItem = React.forwardRef<
       className={cn(toggleVariants({ variant: context.variant ?? variant, size: context.size ?? size }), className)}
       style={{
         backgroundColor: pressed ? getRoleColor('surface.accent') : hover ? getRoleColor('surface.subtle') : 'transparent',
-        color: pressed ? getRoleColor('text.inverse') : getRoleColor('text.primary'),
+        color: getRoleColor('text.primary'),
         borderColor: (context.variant ?? variant) === 'outline' ? getRoleColor('border.default') : undefined,
         ...style,
       }}

@@ -3,8 +3,10 @@ import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Main label/title of the metric */
-  label: string;
+  /** Main label/title of the metric. Widened from `string` to `ReactNode`
+   *  (backward compatible — a string is a valid ReactNode) so callers can
+   *  carry an inline icon/tooltip alongside the text. */
+  label: React.ReactNode;
   /** Primary metric value displayed large */
   value: string;
   /** Change percentage/amount (e.g., '+12.5%', '-20%') */
@@ -13,6 +15,10 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   trend?: 'up' | 'down' | 'neutral';
   /** Trend description text */
   trendDescription?: string;
+  /** Label for a secondary comparison value, e.g. "At Renewal" */
+  comparisonLabel?: string;
+  /** Value for the secondary comparison, e.g. "394" */
+  comparisonValue?: string;
   /** Secondary description below trend */
   description?: string;
   /** Custom className for additional styling */
@@ -42,15 +48,17 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
-  ({ 
-    label, 
-    value, 
-    change, 
+  ({
+    label,
+    value,
+    change,
     trend = 'neutral',
     trendDescription,
+    comparisonLabel,
+    comparisonValue,
     description,
     className,
-    ...props 
+    ...props
   }, ref) => {
     // Determine trend icon
     const TrendIcon = trend === 'up' 
@@ -107,6 +115,15 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         <div className="text-3xl font-bold tracking-tight text-foreground tabular-nums">
           {value}
         </div>
+
+        {/* Secondary Comparison Value (e.g. "At Renewal: 394") */}
+        {(comparisonLabel || comparisonValue) && (
+          <div className="text-sm text-muted-foreground">
+            {comparisonLabel}
+            {comparisonLabel && comparisonValue ? ': ' : ''}
+            <span className="font-medium text-foreground">{comparisonValue}</span>
+          </div>
+        )}
 
         {/* Trend Description */}
         {trendDescription && (

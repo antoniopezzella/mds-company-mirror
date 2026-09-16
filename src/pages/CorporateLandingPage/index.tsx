@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getRoleColor } from '../../theme/roles';
 import { CorporateHeader } from './Header';
 import { HeroSection } from './HeroSection';
 import { FourBrandsSection } from './FourBrandsSection';
@@ -59,15 +60,17 @@ const CorporateLandingPage: React.FC = () => {
       if (!backgroundRef.current) return;
 
       // Define section color transitions - GSAP MARK: Adjusted to start fading earlier
+      const heroSurface = getRoleColor('surface.hero');
+      const defaultSurface = getRoleColor('surface.default');
       const colorTransitions = [
-        { trigger: heroRef.current, color: '#000F47', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
-        { trigger: heroRef.current, color: '#F7F3EE', start: 'bottom bottom', end: 'bottom top' }, // GSAP MARK: Starts at hero scroll button position (using heroRef)
-        // Metrics section skipped - stays dark blue (#000F47) with no transition
-        { trigger: journeyRef.current, color: '#FFFFFF', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
-        { trigger: mArrowRef.current, color: '#000F47', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
-        { trigger: videoRef.current, color: '#000F47', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
-        { trigger: faqRef.current, color: '#F2F6F9', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
-        { trigger: expertsRef.current, color: '#002C77', start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
+        { trigger: heroRef.current, color: heroSurface, start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
+        { trigger: heroRef.current, color: '#F7F3EE', start: 'bottom bottom', end: 'bottom top' }, // GSAP MARK: Starts at hero scroll button position (using heroRef) — #F7F3EE has no token yet (see semantic-tokens.ts audit), stays literal
+        // Metrics section skipped - stays dark blue with no transition
+        { trigger: journeyRef.current, color: defaultSurface, start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
+        { trigger: mArrowRef.current, color: heroSurface, start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
+        { trigger: videoRef.current, color: heroSurface, start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
+        { trigger: faqRef.current, color: '#F2F6F9', start: 'top bottom', end: 'center center' }, // GSAP MARK: no matching token exists, stays literal
+        { trigger: expertsRef.current, color: '#002C77', start: 'top bottom', end: 'center center' }, // GSAP MARK: matches brandPrimaryDark, which is orphaned (no role yet) — stays literal
       ];
 
       colorTransitions.forEach((transition, index) => {
@@ -122,7 +125,7 @@ const CorporateLandingPage: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: '#000F47',
+          backgroundColor: getRoleColor('surface.hero'),
           zIndex: 0,
           transition: 'background-color 0.8s ease-in-out',
         }}
@@ -196,7 +199,7 @@ const CorporateLandingPage: React.FC = () => {
 
         {/* AI Assistant Bot */}
         <ErrorBoundary>
-          <AIAgentBot />
+          <AIAgentBot visitorType="prospect" />
         </ErrorBoundary>
       </Box>
     </Box>

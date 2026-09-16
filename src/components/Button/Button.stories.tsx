@@ -22,9 +22,9 @@ type ButtonStoryArgs = React.ComponentProps<typeof DSButton> & {
 };
 
 const meta = {
-  title: 'Legacy MUI/Button',
+  title: 'Components/Button (MUI)',
   component: DSButton,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {

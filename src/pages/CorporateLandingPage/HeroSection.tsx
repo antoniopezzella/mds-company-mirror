@@ -199,8 +199,8 @@ export const HeroSection: React.FC = () => {
                   size="md"
                   endIcon={<span>→</span>}
                   style={{
-                    backgroundColor: '#FFBF0D',
-                    borderColor: '#FFBF0D',
+                    backgroundColor: getRoleColor('brand.accent'),
+                    borderColor: getRoleColor('brand.accent'),
                     color: '#1B222F',
                   }}
                 >
@@ -220,7 +220,7 @@ export const HeroSection: React.FC = () => {
                 display: 'flex',
                 overflow: 'hidden',
                 position: 'relative',
-                backgroundColor: '#000F47', // Match hero background
+                backgroundColor: getRoleColor('surface.hero'),
                 clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
               }}
             >
@@ -272,7 +272,7 @@ export const HeroSection: React.FC = () => {
             width: 48,
             height: 48,
             borderRadius: '50px',
-            backgroundColor: '#FFBF0D', // Gold color
+            backgroundColor: getRoleColor('brand.accent'),
             border: 'none',
             cursor: 'pointer',
             display: 'flex',

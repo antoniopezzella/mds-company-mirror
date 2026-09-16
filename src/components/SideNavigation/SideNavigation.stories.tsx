@@ -17,9 +17,9 @@ const demoItems: SideNavItem[] = [
 ];
 
 const meta = {
-  title: 'Legacy MUI/Side Navigation',
+  title: 'Components/Side Navigation',
   component: SideNavigation,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: { description: { component: 'Vertical navigation for app shells and dashboards. Supports active state and collapsible groups via subItems.' } },

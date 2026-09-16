@@ -23,7 +23,7 @@ import { Plus, X, Trash2, ArrowRight, Download } from 'lucide-react';
  * - ✅ All states implemented
  * - ⏳ Side-by-side testing in progress
  * 
- * @see [Migration Plan](../../../SHADCN_UI_MIGRATION_PLAN.md)
+ * @see [Migration Status](../../../docs/SHADCN_MIGRATION_STATUS.md)
  */
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',

@@ -10,14 +10,14 @@ import styles from './ComponentGallery.module.scss';
 import { Button as DSButton } from '../../components/ui/button';
 import { Alert } from '../../components/ui/alert';
 import Tabs from '../../components/ui/tabs';
-import { Stepper } from '../../components/Stepper/Stepper';
+import { Stepper } from '../../components/ui/stepper';
 import { Accordion } from '../../components/ui/accordion';
-import { Badge } from '../../components/Badge/Badge';
+import { BadgeAnchor as Badge } from '../../components/ui/badge-anchor';
 import { Chip } from '../../components/ui/chip';
 import { Table } from '../../components/ui/table';
 import type { TableColumn } from '../../components/ui/table';
 import DSTextField from '../../components/TextField/TextField';
-import DSSelect from '../../components/Select/Select';
+import { DSSelect } from '../../components/ui/select';
 
 // Inline SVG icons — avoids Vite dep-optimization reload on first load
 import Box from '@mui/material/Box';
@@ -401,7 +401,7 @@ function FormsPanel() {
               size="small"
               fullWidth
               value={selectVal}
-              onChange={e => setSelectVal(e.target.value as string)}
+              onChange={value => setSelectVal(value as string)}
               options={[
                 { value: 'marine', label: 'Marine Cargo' },
                 { value: 'aviation', label: 'Aviation Hull' },
@@ -586,7 +586,10 @@ function NavigationPanel() {
           { name: 'text.primary', color: '#000f47' },
         ]}
       >
-        <Tabs tabs={tabItems} defaultActiveId="overview" variant="standard" enableKeyboardNavigation />
+        {/* enableKeyboardNavigation was an MUI-era opt-in prop; the current
+            Radix-based Tabs (@radix-ui/react-tabs) provides arrow-key/Home/End
+            navigation unconditionally, so there's nothing left to opt into. */}
+        <Tabs tabs={tabItems} defaultActiveId="overview" variant="standard" />
       </DemoCard>
 
       <div className={styles.panelGrid2}>
