@@ -49,6 +49,7 @@ const tokens = (await import(path.join(tmpOut, 'tokens.js'))).tokens;
 const spacing = (await import(path.join(tmpOut, 'spacing.js'))).spacing;
 const shadows = (await import(path.join(tmpOut, 'shadows.js'))).shadows;
 const { semanticColors, semanticDarkOverrides } = await import(path.join(tmpOut, 'semantic-tokens.js'));
+const { __ROLE_MAP: roleMap } = await import(path.join(tmpOut, 'theme', 'roles.js'));
 
 // ─── Serialize a genuine DTCG-format token source ────────────────────────────
 // Transient/derived — nothing else reads this, so it's gitignored rather than
@@ -201,6 +202,51 @@ writeFileSync(
   JSON.stringify({ semanticDark: { color: semanticColorDarkTokens } }, null, 2),
 );
 
+// ─── Role tier — real nested DTCG groups, not flat dotted keys ──────────────
+// src/theme/roles.ts's ROLE_MAP keys (e.g. 'interactive.primary.hover') are
+// single TS strings with literal dots — perfectly valid as object keys in
+// TypeScript, but NOT valid as DTCG token/group names: the spec reserves `.`
+// as the path separator between real nested groups
+// (https://www.designtokens.org/tr/drafts/format/#character-restrictions).
+// This is why roles were never in this export before now — a straight copy
+// of the dotted key would be illegal DTCG. Each role name is split on `.`
+// and built into real nesting instead. Several roles are deliberately both
+// a token AND a group at once (e.g. `interactive.primary` has its own
+// $value, and `interactive.primary.hover`/`.active` nest inside it) — the
+// spec explicitly allows this (a group is just "an object without $value";
+// nothing stops a $value-bearing object from also having child keys).
+//
+// Each role's $value aliases back to its semantic token by name — same
+// aliasing principle as primitives→semantics above, continuing the real
+// dependency chain through to the role tier instead of flattening it.
+function setNested(root, dottedPath, tokenObj) {
+  const parts = dottedPath.split('.');
+  let node = root;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const part = parts[i];
+    if (!node[part]) node[part] = {};
+    node = node[part];
+  }
+  Object.assign(node[parts[parts.length - 1]] || (node[parts[parts.length - 1]] = {}), tokenObj);
+}
+
+function buildRoleGroup(darkMode) {
+  const root = {};
+  for (const [roleName, entry] of Object.entries(roleMap)) {
+    const semanticKey = entry.semantic;
+    const hasDarkOverride = darkMode && Object.prototype.hasOwnProperty.call(semanticDarkOverrides, semanticKey);
+    const aliasGroup = hasDarkOverride ? 'semanticDark' : 'semantic';
+    setNested(root, roleName, { $type: 'color', $value: `{${aliasGroup}.color.${semanticKey}}` });
+  }
+  return root;
+}
+
+const roleColorTokens = buildRoleGroup(false);
+writeFileSync(path.join(dtcgOut, 'role-color.tokens.json'), JSON.stringify({ role: { color: roleColorTokens } }, null, 2));
+
+const roleColorDarkTokens = buildRoleGroup(true);
+writeFileSync(path.join(dtcgOut, 'role-color-dark.tokens.json'), JSON.stringify({ roleDark: { color: roleColorDarkTokens } }, null, 2));
+
 // ─── Also emit the DTCG source as a real, permanent artifact ────────────────
 // The .tmp-token-build/tokens-dtcg/* files above are transient/gitignored —
 // Style Dictionary consumes them and then discards the DTCG shape in favor
@@ -214,6 +260,8 @@ const dtcgMerged = {
   shadow: shadowTokens,
   semantic: { color: semanticColorTokens },
   semanticDark: { color: semanticColorDarkTokens },
+  role: { color: roleColorTokens },
+  roleDark: { color: roleColorDarkTokens },
 };
 
 // ─── Meta block (unchanged from before this migration) ──────────────────────

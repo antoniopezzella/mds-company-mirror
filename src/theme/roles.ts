@@ -46,7 +46,7 @@
  * RELATED DOCS: See Storybook page: Foundations / Roles.
  */
 
-import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens';
+import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens.js';
 
 export type RoleName =
   | 'text.primary'

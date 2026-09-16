@@ -123,7 +123,17 @@ npm run tokens:build
 **Outputs:**
 1.  `dist/tokens.json`: For consumption by other tools/platforms.
 2.  `dist/theme.css`: CSS Variables for web implementation.
-3.  `dist/tokens.tokens.json`: A [W3C Design Tokens (DTCG)](https://www.designtokens.org/tr/drafts/format/)-conformant export — for a Token Studio import, a Figma variable sync, or any tool that speaks the standard format rather than this repo's own flat shape. Unlike `tokens.json`, semantic tokens here are real `{color.blue1000}`-style references back to the primitive that defines them, not a flattened duplicate — the export actually represents the primitive → semantic dependency graph, not just its resolved output. Validated by `npm run tokens:validate-dtcg` (folded into `tokens:check`): every token declares `$type`, no reserved-name violations, every alias resolves.
+3.  `dist/tokens.tokens.json`: A [W3C Design Tokens (DTCG)](https://www.designtokens.org/tr/drafts/format/)-conformant export — for a Token Studio import, a Figma variable sync, or any tool that speaks the standard format rather than this repo's own flat shape. Unlike `tokens.json`, tokens here are real `{color.blue1000}`-style references, not flattened duplicates — the export represents the full primitive → semantic → role dependency chain, not just resolved output. All three tiers are covered: `color`/`spacing`/`shadow` (primitives), `semantic`/`semanticDark` (semantics), `role`/`roleDark` (roles). The role tier is real nested groups, not a copy of `roles.ts`'s dotted string keys — DTCG reserves `.` as the group-path separator, so `interactive.primary.hover` becomes actual nesting (`role.color.interactive.primary.hover`), and several roles (e.g. `interactive.primary`) are deliberately both a token *and* a group at once — the spec allows this explicitly. Validated by `npm run tokens:validate-dtcg` (folded into `tokens:check`): every token declares `$type`, no reserved-name violations, every alias resolves.
+
+### Re-syncing against live Figma
+
+`scripts/check-figma-drift.js` / `check-figma-semantic-drift.js` catch code-side drift against the *last-recorded* snapshot values in `src/figma-variable-map.json` / `src/figma-variable-map-semantic.json` — no live Figma access needed, safe for CI. To check against Figma's **current, live** values instead (an occasional manual sync session, not a CI gate):
+
+1. Pull fresh variable data via the Figma Desktop Bridge MCP (`figma_get_variables`) and save the raw tool result to a file (or several, for paginated collections).
+2. `node scripts/figma-to-dtcg.js <dump1.json> [dump2.json ...] --out figma.dtcg.json` — resolves it into a clean, correctly-aliased DTCG snapshot (walks `valuesByMode` by hand rather than trusting the MCP's own `resolvedValuesByMode`, which flattens incorrectly when a variable's light/dark slots share the same intermediate alias — see `docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md`).
+3. `node scripts/diff-dtcg.js --figma figma.dtcg.json` — diffs it against `dist/tokens.tokens.json`, using the two mapping files above (by default) as the figma-variable ↔ mds-token correspondence table. Add `--ci` to exit 1 on drift.
+
+These two scripts generalize the one-off comparison code written during the 2026-09 semantic assessment into reusable tooling — they don't hardcode a collection or a token layer.
 
 ## 🛡 Enforcement
 

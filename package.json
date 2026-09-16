@@ -72,6 +72,8 @@
     "tokens:compare": "node scripts/compare-figma-tokens.js",
     "tokens:check-figma": "node scripts/check-figma-drift.js",
     "tokens:check-figma-semantic": "node scripts/check-figma-semantic-drift.js",
+    "tokens:figma-to-dtcg": "node scripts/figma-to-dtcg.js",
+    "tokens:diff-dtcg": "node scripts/diff-dtcg.js",
     "roles:check": "node scripts/check-role-usage.js",
     "roles:check:strict": "node scripts/check-role-usage.js --strict",
     "roles:check:json": "node scripts/check-role-usage.js --json",
