@@ -10,7 +10,6 @@ export class RootErrorBoundary extends React.Component<React.PropsWithChildren<{
   }
 
   componentDidCatch(error: unknown, info: unknown) {
-    // eslint-disable-next-line no-console
     console.error('[RootErrorBoundary] App crashed', error, info);
   }
 

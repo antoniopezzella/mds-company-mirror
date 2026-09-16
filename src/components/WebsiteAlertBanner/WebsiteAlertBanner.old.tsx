@@ -1,9 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
 import { getRoleColor } from '../../theme/roles';
 import './WebsiteAlertBanner.scss';
-import clsx from 'clsx';
 
 export type WebsiteAlertBannerVariant = 'standard' | 'prominent';
 export type WebsiteAlertBannerBrand = 'oliver-wyman' | 'guy-carpenter' | 'marsh' | 'mercer' | 'mma';
@@ -79,7 +77,7 @@ const getBrandStyles = (brand: WebsiteAlertBannerBrand) => {
   }
 };
 
-const getContainerSx = (variant: WebsiteAlertBannerVariant, brand: WebsiteAlertBannerBrand): SxProps<Theme> => (theme) => ({
+const getContainerSx = (variant: WebsiteAlertBannerVariant, brand: WebsiteAlertBannerBrand): SxProps<Theme> => (_theme) => ({
   width: '100%',
   borderBottom: `1px solid ${getRoleColor('border.default')}`,
   ...getBrandStyles(brand),

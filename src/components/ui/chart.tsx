@@ -39,8 +39,6 @@ function useChart() {
   return context;
 }
 
-let chartCount = 0;
-
 export interface ChartContainerProps extends React.ComponentProps<'div'> {
   config: ChartConfig;
   children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>['children'];

@@ -79,7 +79,7 @@ export function buildServer() {
       return reply.status(400).send({ error: 'Invalid question format' });
     }
 
-    const { question, conversationHistory, sessionId } = parsed.data;
+    const { question, conversationHistory, sessionId: _sessionId } = parsed.data;
 
     // Validate and sanitize input
     const validation = validateAndSanitizeInput(question);

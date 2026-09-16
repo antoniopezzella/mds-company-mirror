@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SideNavigation, type SideNavItem } from './side-navigation';
 import { LayoutDashboard, FileText, Shield, ClipboardList, BarChart3, Folder, Settings } from 'lucide-react';
 

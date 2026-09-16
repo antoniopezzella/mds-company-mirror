@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { visuallyHidden } from '@mui/utils';
 import styles from './index.module.scss';
-import { getRoleColor } from '../../theme/roles';
 import { useLenisSmooth } from './animations/smooth/useLenisSmooth';
 import { useRefreshOnAssetsReady } from './animations/utils/useRefreshOnAssetsReady';
 

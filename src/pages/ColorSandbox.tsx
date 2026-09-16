@@ -30,11 +30,6 @@ function isAlpha(value: string): boolean {
   return value.startsWith('rgba');
 }
 
-function alphaToHex(rgba: string): string {
-  // Keep rgba as-is for display, but return a checkered pattern hint
-  return rgba;
-}
-
 // ── Swatch ────────────────────────────────────────────────────────────────────
 
 const Swatch: React.FC<SwatchProps> = ({ name, value, isAnchor, alias }) => {
@@ -209,7 +204,6 @@ const SemanticSwatch: React.FC<SemanticSwatchProps> = ({ name, value, darkValue,
   const displayValue = mode === 'dark' && darkValue ? darkValue : value;
   const isOverridden = mode === 'dark' && darkValue !== undefined;
   const alpha = isAlpha(displayValue);
-  const textColor = alpha ? '#000f47' : contrastColor(displayValue);
 
   const copy = () => {
     navigator.clipboard.writeText(displayValue);

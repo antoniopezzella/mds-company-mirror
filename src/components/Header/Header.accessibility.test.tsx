@@ -150,7 +150,6 @@ describe('Header Accessibility', () => {
   describe('Button States Accessibility', () => {
     it('should provide proper hover state contrast for primary variant', () => {
       // Primary variant hover: rgba(255,255,255,0.10) on #000f47
-      const hoverOverlay = 'rgba(255,255,255,0.10)';
       const baseColor = '#000f47';
       
       // Calculate effective hover color (simplified - in reality this would be blended)
@@ -184,12 +183,11 @@ describe('Header Accessibility', () => {
 
       const buttons = screen.getAllByRole('button');
       
-      // MUI IconButtons should meet minimum 44px touch target (WCAG 2.5.5)
+      // MUI IconButtons should meet minimum 44px touch target (WCAG 2.5.5).
+      // NOTE: this doesn't yet actually assert on computed size — most MUI
+      // IconButtons default to 48px, which exceeds the requirement, but
+      // that's an assumption, not a checked one.
       buttons.forEach(button => {
-        const computedStyle = window.getComputedStyle(button);
-        const minSize = 44; // px
-        
-        // Most MUI IconButtons default to 48px, which exceeds the requirement
         expect(button).toBeInTheDocument();
       });
     });

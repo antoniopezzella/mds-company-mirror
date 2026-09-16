@@ -10,7 +10,6 @@ export class SectionErrorBoundary extends React.Component<React.PropsWithChildre
   }
 
   componentDidCatch(error: unknown, info: unknown) {
-    // eslint-disable-next-line no-console
     console.error(`[SectionErrorBoundary] ${this.props.label} crashed`, error, info);
   }
 

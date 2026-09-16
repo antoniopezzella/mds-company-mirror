@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertTitle, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import ErrorIcon from '@mui/icons-material/Error';

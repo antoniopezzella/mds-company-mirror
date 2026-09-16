@@ -155,7 +155,6 @@ export async function runLighthouseAudit(config: LighthouseConfig): Promise<Ligh
     const lhConfig = formFactor === 'desktop' ? desktopConfig : mobileConfig;
 
     // Run Lighthouse
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const runnerResult = await lighthouse(url, {
       port: chrome.port,
       output: ['html', 'json'],

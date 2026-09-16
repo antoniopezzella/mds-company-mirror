@@ -112,9 +112,6 @@ export const Accordion: React.FC<AccordionProps> = ({
   };
 
   const renderItem = (item: AccordionItem) => {
-    const isExpandedByDefault =
-      defaultExpanded.includes(item.id) && (allowMultiple || defaultExpanded[0] === item.id);
-
     return (
       <AccordionPrimitive.Item
         key={item.id}

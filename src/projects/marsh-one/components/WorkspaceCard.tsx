@@ -64,6 +64,8 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
       }}
     >
       <Box
+        role="img"
+        aria-label={imageAlt}
         sx={{
           position: 'relative',
           minHeight: { xs: 240, md: 320 },

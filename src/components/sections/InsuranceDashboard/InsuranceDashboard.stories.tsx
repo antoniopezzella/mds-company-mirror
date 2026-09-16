@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { InsuranceDashboard } from './InsuranceDashboard';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../../../theme';

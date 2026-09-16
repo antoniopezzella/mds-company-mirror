@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
 import { StatCard } from '../../components/ui/stat-card';
 import { Bubble, BubbleContent } from '../../components/ui/bubble';

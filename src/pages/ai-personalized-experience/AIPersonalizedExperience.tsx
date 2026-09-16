@@ -6,7 +6,6 @@ import { useGSAPAnimations } from './hooks/useGSAPAnimations';
 import NavigationBar from './components/NavigationBar';
 import CanvasBackground from './canvas/CanvasBackground';
 import AIAgentPanel from './agents/AIAgentPanel';
-import type { UserPreferences } from './types';
 import './AIPersonalizedExperience.scss';
 
 /**

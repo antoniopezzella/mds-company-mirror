@@ -6,7 +6,6 @@ import { DashboardHeader } from './components/Header/Header';
 import SideNavigation from './components/SideNavigation/SideNavigation';
 import type { SideNavItem } from './components/SideNavigation/SideNavigation';
 import Modal from './components/Modal/Modal';
-import QaSystemAlerts from './components/QaSystemAlerts/QaSystemAlerts';
 import Tabs from './components/ui/tabs';
 import type { TabItem } from './components/ui/tabs';
 import { MDSDataGrid } from './components/DataGrid';

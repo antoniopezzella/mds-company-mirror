@@ -481,7 +481,7 @@ async function detectStorybookMcp(): Promise<boolean> {
     }
 
     return false;
-  } catch (e) {
+  } catch (_e) {
     // Not available - this is normal if addon-mcp isn't installed
     return false;
   }
@@ -510,7 +510,7 @@ async function testMCPConnection(): Promise<{ connected: boolean; error?: string
     const response = await fetch(PROVIDERS_API(), { method: 'GET' });
     if (response.ok) return { connected: true };
     return { connected: false, error: `Server returned ${response.status}` };
-  } catch (e) {
+  } catch (_e) {
     return { connected: false, error: 'Cannot connect to MCP server' };
   }
 }
@@ -700,7 +700,7 @@ async function persistChatToManifest(session: ChatSession): Promise<void> {
   }
 }
 
-async function fetchOrphanStories(): Promise<OrphanStory[]> {
+async function _fetchOrphanStories(): Promise<OrphanStory[]> {
   try {
     // With the manifest, "orphans" are entries the server knows about but have
     // no conversation history (externally generated from Claude Desktop / MCP).
@@ -752,7 +752,7 @@ async function deleteStoryAndChat(chatId: string, fileName?: string): Promise<bo
       return true;
     }
     return false;
-  } catch (e) {
+  } catch (_e) {
     // On network error, still allow removing the chat from localStorage
     // since the story file may not exist anyway
     const chats = loadChats().filter(c => c.id !== chatId);
@@ -761,7 +761,7 @@ async function deleteStoryAndChat(chatId: string, fileName?: string): Promise<bo
   }
 }
 
-function formatTime(timestamp: number): string {
+function _formatTime(timestamp: number): string {
   const now = Date.now();
   const diff = now - timestamp;
   const minutes = Math.floor(diff / 60000);
@@ -1105,7 +1105,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   // avoid flashing the tab away on initial render; corrected after canvas-config loads.
   const [isReactFramework, setIsReactFramework] = useState(true);
   const [canvasRegistry, setCanvasRegistry] = useState<Record<string, any>>({});
-  const [canvasProvider, setCanvasProvider] = useState<React.ComponentType<{ children: React.ReactNode }> | null>(null);
+  const [_canvasProvider, setCanvasProvider] = useState<React.ComponentType<{ children: React.ReactNode }> | null>(null);
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [renamingChatId, setRenamingChatId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
@@ -1237,7 +1237,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
                 } else {
                   window.location.reload();
                 }
-              } catch (error) {
+              } catch (_error) {
                 console.warn('[Story UI] Could not auto-refresh for MCP-generated story');
               }
             }, 1000);
@@ -1247,7 +1247,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
 
         // Update known stories
         knownStoryIds.current = currentStoryIds;
-      } catch (error) {
+      } catch (_error) {
         // Silently ignore polling errors - server may be unavailable temporarily
       }
     };
@@ -1664,7 +1664,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
           console.log('[Story UI] Refreshing current window...');
           window.location.reload();
         }
-      } catch (error) {
+      } catch (_error) {
         // Cross-origin restrictions may prevent programmatic refresh
         console.warn('[Story UI] Could not auto-refresh Storybook. Please refresh manually (Cmd/Ctrl + R).');
       }
@@ -2070,7 +2070,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   };
 
   // Orphan story handlers
-  const toggleSelectAll = () => {
+  const _toggleSelectAll = () => {
     if (state.selectedStoryIds.size === state.orphanStories.length) {
       dispatch({ type: 'SET_SELECTED_STORY_IDS', payload: new Set() });
     } else {
@@ -2078,7 +2078,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     }
   };
 
-  const handleBulkDelete = async () => {
+  const _handleBulkDelete = async () => {
     if (state.selectedStoryIds.size === 0) return;
     const count = state.selectedStoryIds.size;
     if (!confirm(`Delete ${count} selected ${count === 1 ? 'story' : 'stories'}?`)) return;
@@ -2102,7 +2102,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     }
   };
 
-  const handleClearAll = async () => {
+  const _handleClearAll = async () => {
     if (state.orphanStories.length === 0) return;
     if (!confirm(`Delete ALL ${state.orphanStories.length} generated stories?`)) return;
     dispatch({ type: 'SET_BULK_DELETING', payload: true });
@@ -2121,7 +2121,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
     }
   };
 
-  const handleDeleteOrphan = async (storyId: string) => {
+  const _handleDeleteOrphan = async (storyId: string) => {
     try {
       const response = await fetch(`${STORIES_API()}/${storyId}`, { method: 'DELETE' });
       if (response.ok) {

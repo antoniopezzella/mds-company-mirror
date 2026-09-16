@@ -16,7 +16,7 @@ export default function DiagnosticPage() {
     try {
       // Test 1: Material-UI
       results.materialUI = 'pass';
-    } catch (e) {
+    } catch (_e) {
       results.materialUI = 'fail';
     }
 
@@ -24,7 +24,7 @@ export default function DiagnosticPage() {
       // Test 2: Theme
       const theme = await import('../theme');
       results.theme = theme ? 'pass' : 'fail';
-    } catch (e) {
+    } catch (_e) {
       results.theme = 'fail';
     }
 
@@ -32,7 +32,7 @@ export default function DiagnosticPage() {
       // Test 3: Role Colors
       const roles = await import('../theme/roles');
       results.roleColors = typeof roles.getRoleColor === 'function' ? 'pass' : 'fail';
-    } catch (e) {
+    } catch (_e) {
       results.roleColors = 'fail';
     }
 
@@ -40,14 +40,14 @@ export default function DiagnosticPage() {
       // Test 4: GSAP
       const gsap = await import('gsap');
       results.gsap = gsap ? 'pass' : 'fail';
-    } catch (e) {
+    } catch (_e) {
       results.gsap = 'fail';
     }
 
     try {
       // Test 5: Grid CSS
       results.gridCSS = 'pass'; // If we can render this, CSS is working
-    } catch (e) {
+    } catch (_e) {
       results.gridCSS = 'fail';
     }
 

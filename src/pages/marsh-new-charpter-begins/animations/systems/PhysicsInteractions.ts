@@ -196,11 +196,11 @@ export class PhysicsInteractions {
           }, delay);
           break;
           
-        case 'radial':
+        case 'radial': {
           const angle = (index / elements.length) * Math.PI * 2;
           const radiusX = Math.cos(angle) * amplitude;
           const radiusY = Math.sin(angle) * amplitude;
-          
+
           tl.to(element, {
             x: radiusX,
             y: radiusY,
@@ -210,6 +210,7 @@ export class PhysicsInteractions {
             yoyo: true
           }, delay);
           break;
+        }
       }
     });
 

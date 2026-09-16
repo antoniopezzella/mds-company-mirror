@@ -25,7 +25,7 @@ export function cspNoncePlugin(): Plugin {
 
     transformIndexHtml: {
       order: 'pre',
-      handler(html, ctx) {
+      handler(html, _ctx) {
         // In production, use a static nonce (will be replaced by server)
         const nonceValue = process.env.NODE_ENV === 'production' 
           ? '{{CSP_NONCE}}' // Placeholder for server-side replacement

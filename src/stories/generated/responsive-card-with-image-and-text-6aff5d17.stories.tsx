@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Card, CardMedia, CardContent, CardActions, Typography, Button, Box, Stack } from '@mui/material';
 
 const meta: Meta<typeof Card> = {
