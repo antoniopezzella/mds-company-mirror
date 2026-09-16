@@ -44,9 +44,24 @@ function contrast(hex1, hex2) {
 const PAIRS = [
   { name: 'textPrimary on surfaceDefault', fg: 'textPrimary', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
   { name: 'textSecondary on surfaceDefault', fg: 'textSecondary', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'textOnAccent on surfaceAccent', fg: 'textOnAccent', bg: 'surfaceAccent', required: 4.5, warn: 4.5 },
+  { name: 'textOnInteractive on interactivePrimary', fg: 'textOnInteractive', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
+  { name: 'textOnInteractive on interactiveDanger', fg: 'textOnInteractive', bg: 'interactiveDanger', required: 4.5, warn: 4.5 },
+  // Badge's "solid" tone fills (bg reuses the *Border semantic as a solid
+  // fill — see badge.tsx's own TODO about no dedicated solid-fill role yet).
+  { name: 'textOnInteractive on statusSuccessBorder', fg: 'textOnInteractive', bg: 'statusSuccessBorder', required: 4.5, warn: 4.5 },
+  { name: 'textOnInteractive on statusDangerBorder', fg: 'textOnInteractive', bg: 'statusDangerBorder', required: 4.5, warn: 4.5 },
+  // textOnLight (mode-invariant Midnight), not textOnInteractive: warning's
+  // border/bg stay light/mid-toned gold in both modes, so a mode-flipping
+  // token doesn't fit the way it does for success/danger.
+  { name: 'textOnLight on statusWarningBorder', fg: 'textOnLight', bg: 'statusWarningBorder', required: 4.5, warn: 4.5 },
+  { name: 'textOnLight on statusWarningBg', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
   // Informational only unless explicitly included (white on white scenario)
   { name: 'textOnAccent on surfaceDefault', fg: 'textOnAccent', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
+  // Informational: WCAG 1.4.3 exempts disabled/inactive controls from
+  // contrast requirements, so this isn't a hard gate — tracked because it
+  // currently passes (4.54/5.30) but light mode is close enough to the 4.5
+  // line that a future token nudge could silently regress it.
+  { name: 'textDisabled on surfaceDefault', fg: 'textDisabled', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
   { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
   { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },

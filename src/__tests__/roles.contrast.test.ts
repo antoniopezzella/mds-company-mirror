@@ -36,13 +36,29 @@ const ENFORCED_ROLE_CONTRAST: Array<[string, string, number]> = [
   ['status.success.fg', 'status.success.bg', 3.0],
   ['status.warning.fg', 'status.warning.bg', 3.0],
   ['status.danger.fg', 'status.danger.bg', 3.0],
+  // Focus ring must be visible against every surface it can appear on —
+  // previously mode-invariant (#0b4bff in both light/dark) and failed 3:1
+  // against surface.hero (navy) in both modes. Fixed via Figma-verified
+  // mode-aware values; these two pairs are the regression guard.
+  ['focus.ring', 'surface.default', 3.0],
+  ['focus.ring', 'surface.hero', 3.0],
+  // text.onInteractive (not text.onAccent) — interactive.primary's dark-mode
+  // value lightens (#95caff) instead of staying dark, so text.onAccent's
+  // fixed white fails there; text.onInteractive is dark-mode-aware
+  // specifically for interactive.primary/secondary/danger. Was previously
+  // monitored (non-blocking) while this was a known, unfixed gap; now fixed
+  // and enforced so it can't silently regress.
+  ['text.onInteractive', 'interactive.primary', 4.5],
+  ['text.onInteractive', 'interactive.primary.hover', 4.5],
+  ['text.onInteractive', 'interactive.danger', 4.5],
+  ['text.onInteractive', 'status.success.border', 4.5],
+  ['text.onInteractive', 'status.danger.border', 4.5],
+  ['text.onLight', 'status.warning.border', 4.5],
+  ['text.onLight', 'status.warning.bg', 4.5],
 ];
 
-// Remaining monitored set: interactive primary onAccent text in dark below 4.5 but above 3.0 (if still failing)
 const MONITORED_ROLE_CONTRAST: Array<[string, string, number]> = [
-  // Interactive primary text-on-accent in dark may be <4.5 depending on brand shade; monitor but do not fail CI yet.
-  ['text.onAccent', 'interactive.primary', 4.5],
-  ['text.onAccent', 'interactive.primary.hover', 4.5],
+  // none currently — see ENFORCED_ROLE_CONTRAST's history for what graduated here
 ];
 
 type Mode = 'light' | 'dark';

@@ -26,11 +26,16 @@ for (const key of requiredTop) {
   if (!(key in artifact)) fail(`Missing required top-level key: ${key}`);
 }
 
-// Color pattern & hex validity
+// Color pattern & validity — hex, or rgba() for the alpha-shade primitives
+// (shadesWhite*/shadesBlack*, e.g. 'rgba(255,255,255,0.90)') which have no
+// hex equivalent since they carry transparency.
 const hexRegex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+const rgbaRegex = /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(0|1|0?\.\d+)\s*\)$/;
+const invalidColors = [];
 for (const [k,v] of Object.entries(artifact.color || {})) {
-  if (typeof v !== 'string' || !hexRegex.test(v)) fail(`Color token ${k} has invalid hex value: ${v}`);
+  if (typeof v !== 'string' || !(hexRegex.test(v) || rgbaRegex.test(v))) invalidColors.push(`${k}: ${v}`);
 }
+if (invalidColors.length) fail(`${invalidColors.length} color token(s) have invalid values:\n  ${invalidColors.join('\n  ')}`);
 
 // Spacing ascending
 const spacing = artifact.spacing;
