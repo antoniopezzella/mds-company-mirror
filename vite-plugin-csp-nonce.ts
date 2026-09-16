@@ -11,14 +11,10 @@ export function cspNoncePlugin(): Plugin {
     name: 'csp-nonce',
     
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        // Generate a new nonce for each request
+      server.middlewares.use((_req, _res, next) => {
+        // Generate a new nonce for each request — read via the closure
+        // below in transformIndexHtml, not through the response object.
         nonce = crypto.randomBytes(16).toString('base64');
-        
-        // Store nonce in response locals for use in HTML transform
-        (res as any).locals = (res as any).locals || {};
-        (res as any).locals.cspNonce = nonce;
-        
         next();
       });
     },

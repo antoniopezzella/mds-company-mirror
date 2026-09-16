@@ -35,7 +35,7 @@ export default function ParallaxDemo() {
       mobile: '(max-width: 899px)',
       desktop: '(min-width: 900px)',
     }, (context) => {
-      const { desktop } = context.conditions as any;
+      const { desktop } = context.conditions ?? {};
 
       // 1. HERO: Classic Background Parallax
       if (heroRef.current) {
