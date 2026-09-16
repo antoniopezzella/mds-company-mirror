@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSTextField from './TextField';
 import { Stack, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 

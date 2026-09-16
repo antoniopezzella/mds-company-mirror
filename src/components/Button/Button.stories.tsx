@@ -297,7 +297,7 @@ export const Primary: Story = {
     // Non-fatal note on family (helpful for manual debugging in UI)
     const ff = (cs.fontFamily || '').toLowerCase();
     if (!ff.includes('noto sans')) {
-      // eslint-disable-next-line no-console
+       
       console.warn(`Note: expected font-family to include "Noto Sans", got: ${cs.fontFamily}`);
     }
   }

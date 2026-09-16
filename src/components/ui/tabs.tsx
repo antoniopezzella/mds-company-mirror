@@ -56,7 +56,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, var
 
   React.useEffect(() => {
     setValue(findInitialId(tabs, defaultActiveId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [defaultActiveId, tabs]);
 
   const handleChange = (id: string) => {

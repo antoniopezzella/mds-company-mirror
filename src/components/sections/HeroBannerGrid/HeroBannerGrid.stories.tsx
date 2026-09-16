@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight, Download } from 'lucide-react';
 import { HeroBannerGrid } from './HeroBannerGrid';
 

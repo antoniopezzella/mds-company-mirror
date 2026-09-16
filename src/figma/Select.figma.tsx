@@ -11,7 +11,7 @@ figma.connect(DSSelect, NODE_URL, {
       No: false,
     }),
   },
-  example: (props: any) => (
+  example: (_props: any) => (
     <DSSelect
       label="Select option"
       options={[

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FileText, Shield, Users } from 'lucide-react';
 import { List, type ListItemConfig } from './list';
 import { Badge } from './badge';

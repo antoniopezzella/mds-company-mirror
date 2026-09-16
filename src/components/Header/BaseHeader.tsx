@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Box, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Box } from '@mui/material';
 
 export interface BaseHeaderSlots {
   sidebarToggle?: React.ReactNode;

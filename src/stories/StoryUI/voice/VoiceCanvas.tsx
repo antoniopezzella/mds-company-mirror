@@ -65,7 +65,7 @@ function VoiceCanvas({
   const [statusText, setStatusText] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
-  const [lastPrompt, setLastPrompt] = useState('');
+  const [_lastPrompt, setLastPrompt] = useState('');
 
   // ── Prompt tracking ─────────────────────────────────────────
   // firstPromptRef captures the initial creation prompt — used for auto-title
@@ -600,7 +600,7 @@ function VoiceCanvas({
       localStorage.removeItem(LS_KEY);
       localStorage.removeItem(LS_PROMPT_KEY);
     } catch { /* localStorage unavailable */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   // ── Cleanup ────────────────────────────────────────────────────
 

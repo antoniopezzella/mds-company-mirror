@@ -68,8 +68,6 @@ const StopCell: React.FC<{ stop: Stop; paletteName: string }> = ({ stop, palette
   const [hovered, setHovered] = useState(false);
   const [copied, setCopied] = useState(false);
   const light = isLight(stop.hex);
-  const labelColor = light ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.6)';
-  const strongColor = light ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.9)';
 
   const handleClick = () => {
     copyToClipboard(stop.hex);

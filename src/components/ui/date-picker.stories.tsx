@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { DateRange } from 'react-day-picker';
 import { arSA } from 'react-day-picker/locale';
 import { subYears } from 'date-fns';

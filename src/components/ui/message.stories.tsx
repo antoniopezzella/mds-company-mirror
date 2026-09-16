@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from './bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader } from './message';
 

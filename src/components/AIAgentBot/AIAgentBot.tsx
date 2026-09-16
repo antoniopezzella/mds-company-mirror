@@ -53,7 +53,10 @@ export interface AIAgentBotProps {
 export const AIAgentBot: React.FC<AIAgentBotProps> = ({
   isOpen: initialIsOpen = false,
   apiEndpoint,
-  showLabel = false,
+  // Accepted per the public AIAgentBotProps contract but not yet wired into
+  // the render below — the "AI Solution Finder" label itself doesn't exist
+  // in this component yet.
+  showLabel: _showLabel = false,
   showSpeechBubble = true,
   enableBubbles = true,
   position = { bottom: 24, right: 24 },

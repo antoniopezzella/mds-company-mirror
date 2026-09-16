@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run tokens:build && npm run kb:build && npm run build && storybook build -o dist/storybook",
+  "buildCommand": "npm run build && npm run tokens:build && npm run kb:build && storybook build -o dist/storybook",
   "outputDirectory": "dist",
   "installCommand": "npm ci",
   "headers": [
