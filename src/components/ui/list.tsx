@@ -32,6 +32,7 @@ export interface ListProps {
   dividers?: boolean;
   onSelectionChange?: (selectedIds: string[]) => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const List: React.FC<ListProps> = ({
@@ -43,6 +44,7 @@ export const List: React.FC<ListProps> = ({
   dividers = true,
   onSelectionChange,
   className,
+  style,
 }) => {
   const [selected, setSelected] = React.useState<Set<string>>(
     new Set(items.filter((item) => item.selected).map((item) => item.id))
@@ -62,7 +64,7 @@ export const List: React.FC<ListProps> = ({
   };
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.default') }}>
+    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"

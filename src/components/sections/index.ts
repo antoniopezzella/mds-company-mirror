@@ -29,5 +29,5 @@ export type { WireframeSlideProps } from './WireframeSlide';
 export { InsuranceDashboard } from './InsuranceDashboard';
 export type { InsuranceDashboardProps } from './InsuranceDashboard';
 
-export { default as InsightSection } from './InsightSection';
-export type { InsightSectionProps, InsightItem } from './InsightSection';
+export { default as CarouselSection } from './CarouselSection';
+export type { CarouselSectionProps, InsightItem } from './CarouselSection';

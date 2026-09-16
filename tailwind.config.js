@@ -8,7 +8,26 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    // Mirrors the MDS grid system's xxl container (src/styles/_grid.scss —
+    // $container-max.xxl / $container-padding), so Tailwind-based (shadcn)
+    // components line up with the MUI side's `max-width: 1540px` toolbar.
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '16px',
+        md: '24px',
+        lg: '32px',
+      },
+      screens: {
+        '2xl': '1540px',
+      },
+    },
     extend: {
+      maxWidth: {
+        // Named alias for the same 1540px ceiling, for cases that need the
+        // cap without the `container` utility's centering/padding.
+        container: '1540px',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

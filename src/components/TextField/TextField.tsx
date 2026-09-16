@@ -1,6 +1,7 @@
 import React from 'react';
 import MuiTextField from '@mui/material/TextField';
 import type { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
 
 export interface DSTextFieldProps extends Omit<MuiTextFieldProps, 'variant' | 'color'> {
@@ -31,6 +32,8 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
   label,
   ...rest
 }) => {
+  const theme = useTheme();
+  const mode = theme.palette.mode;
   // Determine validation states
   const isError = error || tone === 'error';
   const isSuccess = tone === 'success';
@@ -60,7 +63,7 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
         borderColor: stateColor || getRoleColor('border.strong'),
       },
       '&.Mui-focused fieldset': {
-        borderColor: stateColor || getRoleColor('focus.ring'),
+        borderColor: stateColor || getRoleColor('focus.ring', { mode }),
         borderWidth: '2px',
       },
       '&.Mui-disabled fieldset': {
@@ -73,7 +76,7 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       fontFamily: 'var(--typo-body1-font-family)',
       fontSize: 'var(--typo-body1-font-size)',
       '&.Mui-focused': {
-        color: stateColor || getRoleColor('focus.ring'),
+        color: stateColor || getRoleColor('focus.ring', { mode }),
       },
       '&.Mui-error, &.Mui-focused.Mui-error': {
         color: getRoleColor('status.danger.fg'),

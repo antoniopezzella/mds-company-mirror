@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import DSSelect from '../components/Select/Select';
+import { DSSelect } from '../components/ui/select';
 
 /** Code Connect — Dropdown / Select (V3 Forms) */
 const NODE_URL = '${LIB}?node-id=7582-10463';

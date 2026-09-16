@@ -1,7 +1,7 @@
 import React from 'react';
 import DashboardHeader, { type DashboardHeaderProps } from './DashboardHeader/DashboardHeader';
 import LoggedOutHeader from './LoggedOutHeader/LoggedOutHeader';
-import WebsiteHeader, { type WebsiteHeaderProps, type WebsiteHeaderNavItem } from './WebsiteHeader/WebsiteHeader';
+import WebsiteHeader, { type WebsiteHeaderProps, type WebsiteHeaderNavItem } from '../ui/website-header';
 
 export type HeaderProps =
   | ({ type?: 'dashboard' } & DashboardHeaderProps)

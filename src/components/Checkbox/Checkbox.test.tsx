@@ -30,6 +30,33 @@ describe('DSCheckbox', () => {
     const { container } = render(<DSCheckbox label="Danger" tone="danger" />);
     expect(container.querySelector('input[type="checkbox"]')).toBeInTheDocument();
   });
+
+  it('renders helper text', () => {
+    render(<DSCheckbox label="Email notifications" helperText="We will send updates about your account activity." />);
+    expect(screen.getByText('We will send updates about your account activity.')).toBeInTheDocument();
+  });
+
+  it('links helper text to the input via aria-describedby', () => {
+    render(<DSCheckbox label="Email notifications" helperText="Some hint" />);
+    const checkbox = screen.getByLabelText('Email notifications');
+    const helperTextEl = screen.getByText('Some hint');
+    expect(checkbox.getAttribute('aria-describedby')).toBe(helperTextEl.parentElement?.id);
+  });
+
+  it('renders the helper row when hasHelper is true even without helperText', () => {
+    const { container } = render(<DSCheckbox label="No text yet" hasHelper />);
+    expect(container.querySelector('[id$="-helper-text"]')).toBeInTheDocument();
+  });
+
+  it('does not render a helper row when neither helperText nor hasHelper is set', () => {
+    const { container } = render(<DSCheckbox label="Plain checkbox" />);
+    expect(container.querySelector('[id$="-helper-text"]')).not.toBeInTheDocument();
+  });
+
+  it('renders a custom helperIcon instead of the default indicator', () => {
+    render(<DSCheckbox label="With icon" helperText="Hint" helperIcon={<span data-testid="custom-icon">*</span>} />);
+    expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+  });
 });
 
 describe('DSCheckboxGroup', () => {

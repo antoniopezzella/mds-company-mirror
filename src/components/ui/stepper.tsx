@@ -25,10 +25,24 @@ export interface StepConfig {
 
 export interface StepperProps {
   steps: StepConfig[];
+  /**
+   * Index of the active step (MUI-parity API). When provided, drives each
+   * step's completed/active/pending status by position — a step's own
+   * explicit `status` still wins if set, so both APIs compose.
+   */
+  activeStep?: number;
   orientation?: 'vertical' | 'horizontal';
   variant?: 'default' | 'compact';
   onStepClick?: (stepIndex: number) => void;
   className?: string;
+}
+
+function resolveStatus(step: StepConfig, index: number, activeStep?: number): StepStatus | undefined {
+  if (step.status) return step.status;
+  if (activeStep === undefined) return undefined;
+  if (index < activeStep) return 'completed';
+  if (index === activeStep) return 'active';
+  return 'pending';
 }
 
 function getLabelRole(status?: StepStatus): RoleName {
@@ -60,11 +74,12 @@ function StatusIcon({ status }: { status?: StepStatus }) {
 }
 
 /**
- * Design System Stepper — same `steps`/`orientation`/`variant`/
- * `onStepClick` API as the MUI twin (MUI's `activeStep` index is implicit
- * here — drive it via each step's own `status: 'active'`).
+ * Design System Stepper — same `steps`/`activeStep`/`orientation`/`variant`/
+ * `onStepClick` API as the MUI twin. Status per step resolves from the
+ * step's own `status` first, falling back to `activeStep`-derived position
+ * when set (see `resolveStatus`).
  */
-export const Stepper: React.FC<StepperProps> = ({ steps, orientation = 'vertical', variant = 'default', onStepClick, className }) => {
+export const Stepper: React.FC<StepperProps> = ({ steps, activeStep, orientation = 'vertical', variant = 'default', onStepClick, className }) => {
   const isHorizontal = orientation === 'horizontal';
   const gap = variant === 'compact' ? 'gap-2' : 'gap-4';
 
@@ -72,17 +87,29 @@ export const Stepper: React.FC<StepperProps> = ({ steps, orientation = 'vertical
     <div className={cn(isHorizontal ? cn('flex items-start', gap) : cn('flex flex-col', gap), className)}>
       {steps.map((step, index) => {
         const isLast = index === steps.length - 1;
+        const status = resolveStatus(step, index, activeStep);
         return (
-          <div key={step.id} className={cn('flex', isHorizontal ? 'flex-1 flex-col items-center text-center' : 'gap-3')}>
+          <div
+            key={step.id}
+            className={cn('flex', isHorizontal ? 'flex-1 flex-col items-center text-center' : 'gap-3', onStepClick && 'cursor-pointer')}
+            role={onStepClick ? 'button' : undefined}
+            tabIndex={onStepClick ? 0 : undefined}
+            onClick={onStepClick ? () => onStepClick(index) : undefined}
+            onKeyDown={
+              onStepClick
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onStepClick(index);
+                    }
+                  }
+                : undefined
+            }
+          >
             <div className={cn('flex items-center', isHorizontal ? 'w-full' : 'flex-col')}>
-              <button
-                type="button"
-                disabled={!onStepClick}
-                onClick={() => onStepClick?.(index)}
-                className={cn('flex shrink-0 items-center justify-center rounded-full', onStepClick && 'cursor-pointer')}
-              >
-                <StatusIcon status={step.status} />
-              </button>
+              <span className="flex shrink-0 items-center justify-center rounded-full">
+                <StatusIcon status={status} />
+              </span>
               {!isLast && (
                 <div
                   className={isHorizontal ? 'mx-2 h-[2px] flex-1' : 'my-1 w-[2px] flex-1'}
@@ -94,14 +121,14 @@ export const Stepper: React.FC<StepperProps> = ({ steps, orientation = 'vertical
             <div className={cn(isHorizontal ? 'mt-2' : 'flex-1', variant === 'compact' ? 'pb-2' : 'pb-4')}>
               <div className={cn('flex items-center gap-2', isHorizontal && 'justify-center')}>
                 <span
-                  className={cn('font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)]', variant === 'compact' ? 'text-sm' : 'text-base', step.status === 'active' && 'font-semibold')}
-                  style={{ color: getRoleColor(getLabelRole(step.status)) }}
+                  className={cn('font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)]', variant === 'compact' ? 'text-sm' : 'text-base', status === 'active' && 'font-semibold')}
+                  style={{ color: getRoleColor(getLabelRole(status)) }}
                 >
                   {step.label}
                 </span>
-                {step.status && (
-                  <Badge tone={step.status === 'completed' ? 'success' : step.status === 'error' ? 'danger' : 'default'}>
-                    {step.status}
+                {status && (
+                  <Badge tone={status === 'completed' ? 'success' : status === 'error' ? 'danger' : 'default'}>
+                    {status}
                   </Badge>
                 )}
               </div>

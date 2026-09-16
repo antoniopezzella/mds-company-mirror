@@ -10,12 +10,12 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 
 const meta = {
-  title: 'Legacy MUI/Chip',
+  title: 'Components/Chip (MUI)',
   component: Chip,
   parameters: {
     layout: 'padded',
   },
-  tags: ['!dev'],
+  tags: ['autodocs'],
   argTypes: {
     label: {
       control: 'text',

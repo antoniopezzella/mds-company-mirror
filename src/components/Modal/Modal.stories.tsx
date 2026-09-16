@@ -7,9 +7,9 @@ import '../../index.css';
 import '../../styles/_typography.scss';
 
 const meta: Meta<typeof Modal> = {
-  title: 'Legacy MUI/Modal',
+  title: 'Components/Modal',
   component: Modal,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

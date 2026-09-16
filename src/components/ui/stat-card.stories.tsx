@@ -81,6 +81,17 @@ export const TotalRevenue: Story = {
   },
 };
 
+export const WithComparisonValue: Story = {
+  args: {
+    label: 'Active Assets (Count)',
+    value: '463',
+    comparisonLabel: 'At Renewal',
+    comparisonValue: '394',
+    trend: 'up',
+    trendDescription: '+69',
+  },
+};
+
 export const NewCustomers: Story = {
   args: {
     label: 'New Customers',

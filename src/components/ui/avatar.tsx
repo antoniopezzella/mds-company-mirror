@@ -53,7 +53,7 @@ const RADIUS: Record<AvatarVariant, string> = {
 function getToneColors(tone: AvatarTone): { bg: RoleName; fg: RoleName } {
   switch (tone) {
     case 'primary':
-      return { bg: 'surface.accent', fg: 'text.inverse' };
+      return { bg: 'surface.accent', fg: 'text.primary' };
     case 'secondary':
       return { bg: 'surface.subtle', fg: 'text.primary' };
     case 'success':

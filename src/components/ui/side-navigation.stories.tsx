@@ -244,10 +244,12 @@ export const ComplexHierarchy: Story = {
       {
         label: 'Client List',
         path: '/clients',
+        sectionHeader: true,
       },
       {
         label: 'Beacon Capital Partners',
         path: '/beacon',
+        sectionHeader: true,
         subItems: [
           { label: 'Overview', path: '/beacon/overview', active: true },
           { label: 'Policies', path: '/beacon/policies' },
@@ -258,6 +260,7 @@ export const ComplexHierarchy: Story = {
       {
         label: 'Task Center',
         path: '/tasks',
+        sectionHeader: true,
         subItems: [
           { label: 'My Tasks', path: '/tasks/mine' },
           { label: 'Team Tasks', path: '/tasks/team' },
@@ -267,6 +270,7 @@ export const ComplexHierarchy: Story = {
       {
         label: 'Quick Actions',
         path: '/quick-actions',
+        sectionHeader: true,
       },
     ],
     variant: 'light',
@@ -286,6 +290,35 @@ export const ComplexHierarchy: Story = {
             Complex hierarchy with client-specific navigation.
           </p>
         </div>
+      </div>
+    ),
+  ],
+};
+
+export const WithDotIndicators: Story = {
+  args: {
+    items: [
+      { label: 'Client List', path: '/clients', sectionHeader: true },
+      {
+        label: 'Acme Realty Ltd',
+        path: '/acme',
+        sectionHeader: true,
+        subItems: [
+          { label: 'Summary', path: '/acme/summary', active: true },
+          { label: 'Assets List', path: '/acme/assets' },
+          { label: 'Manage Fees', path: '/acme/fees', dot: true },
+          { label: 'Rate Matrix', path: '/acme/rate-matrix', dot: true },
+          { label: 'Allocations', path: '/acme/allocations', dot: true },
+        ],
+      },
+    ],
+    variant: 'light',
+    currentPath: '/acme/summary',
+  },
+  decorators: [
+    (Story) => (
+      <div className="w-72 border-r border-border h-screen">
+        <Story />
       </div>
     ),
   ],

@@ -91,8 +91,8 @@ describe('CardWebsite', () => {
     );
 
     expect(screen.queryByText('Should not appear')).not.toBeInTheDocument();
-    // MUI Skeleton renders elements with role="progressbar" or generic divs
-    expect(container.querySelector('.MuiSkeleton-root')).toBeInTheDocument();
+    // shadcn Skeleton (src/components/ui/skeleton.tsx) renders pulse-animated placeholders
+    expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
   });
 
   it('applies correct surface variant attribute', () => {

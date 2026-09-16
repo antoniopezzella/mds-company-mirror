@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import ContentCard from './ContentCard';
 
 const meta: Meta<typeof ContentCard> = {
-  title: 'Legacy MUI/ContentCard',
+  title: 'Components/ContentCard',
   component: ContentCard,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {

@@ -428,7 +428,7 @@ export { InsuranceDashboard } from './InsuranceDashboard';
 - [CLAUDE.md](../../../CLAUDE.md) - MDS integration rules
 - [Token Request Process](../../../docs/TOKEN_REQUEST_PROCESS.md)
 - [Figma Code Connect Guide](../../../docs/FIGMA_CODE_CONNECT_GUIDE.md)
-- [Component Library Summary](../../../COMPONENT_LIBRARY_SUMMARY.md)
+- [Component Library Summary](../../../docs/archive/COMPONENT_LIBRARY_SUMMARY.md) (archived, historical)
 
 ---
 

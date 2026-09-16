@@ -4,9 +4,9 @@ import DSSnackbar from './Snackbar';
 import { Button, Stack } from '@mui/material';
 
 const meta = {
-  title: 'Legacy MUI/Snackbar',
+  title: 'Components/Snackbar',
   component: DSSnackbar,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {

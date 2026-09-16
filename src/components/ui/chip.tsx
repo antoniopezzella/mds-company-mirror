@@ -45,7 +45,7 @@ const deleteIconSizeClass: Record<ChipSize, string> = {
 function getToneRoles(tone: ChipTone): { bg: RoleName; fg: RoleName; border: RoleName } {
   switch (tone) {
     case 'primary':
-      return { bg: 'surface.accent', fg: 'text.inverse', border: 'interactive.primary' };
+      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
     case 'secondary':
       return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
     case 'success':
@@ -81,10 +81,9 @@ export interface ChipProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
  */
 export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
   (
-    { label, variant = 'filled', tone = 'default', size = 'md', selectable = false, selected = false, onClick, onDelete, icon, disabled = false, className, ...rest },
+    { label, variant = 'filled', tone = 'default', size = 'md', selectable = false, selected = false, onClick, onDelete, icon, disabled = false, className, style: styleProp, ...rest },
     ref
   ) => {
-    const [hover, setHover] = React.useState(false);
     const { bg, fg, border } = getToneRoles(tone);
     const isFilled = variant === 'filled' || (selectable && selected);
     const isInteractive = Boolean(selectable || onClick);
@@ -99,7 +98,6 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           backgroundColor: isFilled ? getRoleColor(bg) : 'transparent',
           color: isFilled ? getRoleColor(fg) : getRoleColor(border),
           border: variant === 'outlined' ? `1px solid ${getRoleColor(border)}` : 'none',
-          opacity: hover && isInteractive ? 0.85 : 1,
           boxShadow: selectable && selected ? `inset 0 0 0 2px ${getRoleColor('focus.ring')}` : undefined,
         };
 
@@ -109,11 +107,23 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         type="button"
         disabled={disabled}
         onClick={onClick}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
         aria-pressed={selectable ? selected : undefined}
-        className={cn(chipVariants({ size, interactive: isInteractive }), className)}
-        style={{ ...style, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+        className={cn(chipVariants({ size, interactive: isInteractive }), isInteractive && !disabled && 'hover:opacity-[0.85]', className)}
+        style={
+          {
+            ...style,
+            '--tw-ring-color': getRoleColor('focus.ring'),
+            // Tailwind's ring-offset-2 defaults its gap color to white —
+            // wrong against a dark surface. Tying it to surface.default
+            // keeps the ring's inner gap correct in both modes, matching
+            // Checkbox's --checkbox-focus-inner-ring pattern.
+            '--tw-ring-offset-color': getRoleColor('surface.default'),
+            // Caller override last, so it wins over (not replaces) the
+            // tone-based style above — style was destructured out of ...rest
+            // specifically so a plain spread couldn't clobber this object.
+            ...styleProp,
+          } as React.CSSProperties
+        }
         {...rest}
       >
         {icon && <span className={cn('flex items-center justify-center', iconSizeClass[size])}>{icon}</span>}

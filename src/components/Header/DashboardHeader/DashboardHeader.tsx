@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Typography, Avatar, Box, IconButton, Tooltip, Badge, useTheme, Popover, Divider, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Typography, Avatar, Box, IconButton, Tooltip, useTheme, Popover, Divider, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { BadgeAnchor } from "../../ui/badge-anchor";
 import type { Theme } from '@mui/material/styles';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -151,9 +152,9 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                 onClick={onNotificationsClick}
                 sx={{ '&:hover': { backgroundColor: getHoverColor() } }}
               >
-                <Badge badgeContent={notificationCount} color="error">
+                <BadgeAnchor tone="danger" variant="number" content={notificationCount} invisible={!notificationCount}>
                   <NotificationsIcon />
-                </Badge>
+                </BadgeAnchor>
               </IconButton>
               {/* Profile trigger */}
               <Box

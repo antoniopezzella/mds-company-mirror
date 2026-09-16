@@ -1,0 +1,306 @@
+// CarouselSection — carousel scroll layout
+// Colors/spacing are handled via sx; this file owns scroll mechanics and focus ring.
+
+// ── Skip link ─────────────────────────────────────────────────────────────────
+.skipLink {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 999;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-family: 'Noto Sans', sans-serif;
+  background: var(--role-interactive-primary);
+  color: var(--role-text-inverse);
+  border-radius: 0 0 4px 4px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus {
+    top: 0;
+  }
+}
+
+// ── Carousel controls ─────────────────────────────────────────────────────────
+// Tight, apple.com/iphone-style grouped pair rather than a widely-spaced one.
+.carouselControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+// ── Carousel track ────────────────────────────────────────────────────────────
+// .cardList is rendered with NO max-width ancestor (see CarouselSection.tsx —
+// the "top" layout deliberately doesn't wrap the carousel in the same
+// maxWidth:1540 box the heading uses), so the row is genuinely full-
+// viewport-width — no dead space on either side at any viewport, matching
+// apple.com/iphone's actual full-bleed galleries.
+//
+// Alignment with the heading above is done via ::before/::after spacer
+// items, NOT padding-left/right on the container. This isn't stylistic —
+// plain container padding on a flex row with overflow-x:auto/scroll doesn't
+// reliably render as a visible inset at the natural (unscrolled) position
+// in Chromium/WebKit; it can affect the scrollable range without ever
+// showing up visually, which is exactly what happened here (confirmed:
+// computed padding-left measured correctly as 539.5px, but the first card
+// still rendered flush at x≈0). ::before/::after generate real boxes that
+// participate as actual flex items (first/last in source order) when they
+// have `content: ''`, so they scroll and size exactly like any other card —
+// no such start-padding quirk applies to them.
+//
+// Their width is calculated to land exactly where the heading's own
+// centered 1540px column would start: above 1540px viewports,
+// `(100vw - 1540px) / 2` is the empty margin that column would carry on
+// each side; adding the same 16/32px gutter the heading's own container
+// uses (spacing[3]/spacing[6]) lines the first card up with the heading's
+// left edge. Below 1540px the term goes negative and `max(0px, ...)` clamps
+// it to 0, leaving just the plain gutter.
+$gutter-xs: 16px;
+$gutter-md: 32px;
+// The flex `gap` below applies between EVERY adjacent pair of items,
+// including the ::before/::after spacers and their neighboring real card —
+// so the spacer's own width needs to be reduced by one gap to land the
+// first card exactly at the intended offset instead of intended+gap.
+$track-gap: 24px;
+
+.cardList {
+  display: flex;
+  flex-direction: row;
+  gap: $track-gap;
+  list-style: none;
+  margin: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  // mandatory, matching apple.com/iphone's own product carousel (verified
+  // live: apple.com's gallery-item cards use scroll-snap-type:x mandatory,
+  // scroll-snap-align:start on every card — not a spacer-only proximity
+  // setup). A brief detour through `proximity` here turned out to be
+  // solving the wrong problem: mandatory snapping cancelling small,
+  // momentum-less scroll events is inherent to how mandatory snap works at
+  // all, not a bug — apple's own carousel does the exact same thing under
+  // synthetic testing. Real trackpad/touch gestures carry momentum past the
+  // snap threshold in normal use; matching apple's real settings instead of
+  // working around a synthetic-testing artifact is the right call here.
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+
+  // Applied imperatively (classList, not React state) for the duration of a
+  // mouse drag — see CarouselSection.tsx. scroll-behavior:auto overrides the
+  // smooth-scroll below: leaving it smooth during drag would interpolate
+  // every scrollLeft assignment instead of tracking the pointer 1:1, making
+  // the drag feel laggy/rubbery.
+  &.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+    user-select: none;
+  }
+
+  // ::before also needs scroll-snap-align:start. Without it, this spacer
+  // isn't a valid snap point, and `scroll-snap-type:mandatory` forces the
+  // *initial* resting scroll position to the nearest one that is (the first
+  // real card) the moment the page renders — confirmed directly: scrollLeft
+  // measured 564px on load with no user interaction at all, silently
+  // canceling the spacer out before anyone could see it. Deliberately NOT
+  // added to ::after: that would make the trailing spacer its own snap
+  // stop too, letting scroll/arrow-next land one step past the last real
+  // card in what would visually be blank space — the leading edge is the
+  // only one with this load-time auto-jump behavior.
+  &::before {
+    scroll-snap-align: start;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 0 0 auto;
+    // Outer max(0px, ...) matters on its own, separately from the inner
+    // one: below the 1540px breakpoint the inner term is already 0, leaving
+    // just gutter - track-gap, which is negative once gutter < track-gap
+    // (16px xs gutter vs a 24px gap) — an invalid CSS width that would
+    // otherwise silently collapse to 0, dropping the gutter to 0 instead of
+    // shrinking it. Clamping here means the worst case at narrow viewports
+    // is the spacer bottoming out at 0 and the unconditional flex `gap`
+    // alone providing the leading space (24px vs the intended 16px) — a
+    // minor, cosmetic few-px difference, not a collapsed-to-nothing gutter.
+    width: max(0px, calc(max(0px, (100vw - 1540px) / 2) + #{$gutter-xs} - #{$track-gap}));
+
+    @media (min-width: 900px) {
+      width: max(0px, calc(max(0px, (100vw - 1540px) / 2) + #{$gutter-md} - #{$track-gap}));
+    }
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  // No CSS scroll-behavior:smooth here (deliberately) — it used to apply
+  // unconditionally, including to native wheel/trackpad/touch scrolling,
+  // where it makes the browser interpolate every wheel event instead of
+  // tracking the gesture instantly, reading as sluggish/delayed right at
+  // the start of a swipe. The arrow buttons don't need it either: their
+  // scrollBy() call already passes its own behavior: 'smooth' (or 'auto'
+  // under prefers-reduced-motion) as a JS argument — see scrollBy() in
+  // CarouselSection.tsx — which overrides CSS scroll-behavior for that call
+  // regardless of what's set here. So the CSS rule was only ever actually
+  // affecting native scroll input, never the arrow buttons.
+}
+
+// Modifier for fillAvailableSpace: switches the track from a flex row (fixed-
+// width cards, scrolls once they overflow) to a grid row whose implicit
+// columns grow to fill any leftover width. `minmax(min-content, 1fr)` is the
+// key: when there's leftover space, the 1fr ceiling lets tracks expand into
+// it (evenly, since they're all defined the same way — something plain
+// flex-grow on a flex row can't do without also fighting the wrap/shrink
+// behavior needed for the scrolling case below). When there ISN'T leftover
+// space (more cards, or a narrow viewport), the 1fr ceiling has nothing to
+// expand into, so tracks settle back to their min-content floor and the row
+// overflows/scrolls exactly like the default (non-fill) case above — same
+// overflow-x:auto + scroll-snap-type still apply, grid rows scroll exactly
+// like flex rows do. No JS/overflow detection needed to switch between the
+// two behaviors.
+//
+// This is deliberately its own contained layout, NOT the full-bleed
+// edge-peek treatment above: .cardList's ::before/::after spacers exist to
+// align a full-bleed flex row with the heading's implied 1540px column —
+// but as GRID items (this class also sets display:grid) they stop being
+// inert spacers and become their own minmax(min-content,1fr) tracks,
+// competing with the real card tracks for leftover-space growth. That both
+// broke alignment (spacers grew unpredictably) and stole width the cards
+// should've filled. Since fillAvailableSpace's whole point is "a simple grid
+// that fills nicely," not an Apple-style peek carousel, the fix is to give
+// it real containment instead: max-width/margin-inline/padding-inline
+// replicate the heading's own maxWidth:1540/px box directly, so no spacer
+// hack is needed at all — works identically for the "top" and "left" style
+// variants since it's on this shared class, not per-layout JSX.
+.cardListFill {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, 1fr);
+  max-width: 1540px;
+  margin-inline: auto;
+  padding-inline: $gutter-xs;
+
+  @media (min-width: 900px) {
+    padding-inline: $gutter-md;
+  }
+
+  &::before,
+  &::after {
+    content: none;
+  }
+}
+
+// ── Slides ────────────────────────────────────────────────────────────────────
+.slide {
+  flex: 0 0 auto;
+  width: 340px;
+  scroll-snap-align: start;
+
+  @media (max-width: 960px)  { width: 300px; }
+  @media (max-width: 600px)  { width: 280px; }
+}
+
+// Paired with .cardListFill — width:auto lets the slide stretch to fill its
+// grid track's 1fr ceiling; max-width caps growth so a very short row (e.g.
+// only 1-2 cards) doesn't stretch a single card absurdly wide; min-width
+// keeps a reasonable floor once the row does overflow and falls back to
+// scrolling.
+.slideFill {
+  width: auto;
+  min-width: 260px;
+  max-width: 420px;
+}
+
+// ── Control button states ─────────────────────────────────────────────────────
+// aria-disabled keeps button focusable; we visually dim it
+.controlBtn {
+  &[aria-disabled="true"] {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+// ── Left-headline layout ──────────────────────────────────────────────────────
+// Heading + description on the left, carousel filling the right column and
+// bleeding all the way to the real viewport edge — matching the "top"
+// layout's own full-bleed carousel. Can't use the shared .container/.row/
+// .col-lg-* grid classes here (a previous version of this did): they bound
+// BOTH columns to the same centered max-width, and a carousel bounded to a
+// real grid column can never reach past that container's own right edge, no
+// matter what margin trick is applied to it — the same "harsh crop" bug
+// this component has already hit twice. Hand-building a two-column grid
+// instead: the left column's width is computed to match exactly what
+// .col-lg-5 renders as inside the real .container at each breakpoint
+// (verified against _grid.scss's container-max/grid-column math —
+// 5-of-12-columns width at lg/xl/xxl's own max-width+padding: 359px / 434px
+// / 601px), so heading alignment is unchanged from the grid-based version.
+// The right column is a plain 1fr with nothing capping it short of the
+// row's own edge, which — since this row has no max-width of its own — is
+// the actual viewport edge.
+.leftFullBleedRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  padding-left: $gutter-xs;
+
+  @media (min-width: 768px) {
+    padding-left: $gutter-md;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 359px 1fr;
+    padding-left: calc(max(0px, (100vw - 960px) / 2) + 32px);
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 434px 1fr;
+    padding-left: calc(max(0px, (100vw - 1140px) / 2) + 32px);
+  }
+
+  @media (min-width: 1540px) {
+    grid-template-columns: 601px 1fr;
+    padding-left: calc(max(0px, (100vw - 1540px) / 2) + 32px);
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leftCarousel {
+  min-width: 0;
+  // overflow-x intentionally NOT set here — the cardList handles scrolling
+
+  // .cardList's own ::before/::after are sized for the "top" layout's
+  // full-bleed edge-peek case (aligning with a centered 1540px column via
+  // viewport-relative math) — wrong here, since this column's left edge
+  // already lines up with wherever .leftFullBleedRow puts it. No leading
+  // spacer needed; just a small fixed trailing gutter so the last card
+  // doesn't sit perfectly flush against the browser's literal edge.
+  .cardList {
+    &::before {
+      content: none;
+    }
+    &::after {
+      width: $gutter-xs;
+      @media (min-width: 900px) {
+        width: $gutter-md;
+      }
+    }
+
+    // Leaves a deliberate sliver of the previous card visible once scrolled
+    // past the first one — scroll-padding-left shifts WHERE a
+    // scroll-snap-align:start card aligns TO, away from the track's true
+    // left edge, without changing anything about layout/position. The
+    // first card (scrollLeft: 0) is unaffected — there's nothing before it
+    // to peek — this only matters for every card after that.
+    scroll-padding-left: 64px;
+  }
+}

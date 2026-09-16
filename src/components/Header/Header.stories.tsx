@@ -3,9 +3,9 @@ import Header, { WebsiteHeader } from './Header';
 import type { HeaderProps } from './Header';
 
 export default {
-  title: 'Legacy MUI/Header',
+  title: 'Components/Header (MUI)',
   component: Header,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {

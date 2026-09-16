@@ -1,10 +1,16 @@
 import figma from '@figma/code-connect';
-import Card from '../components/Card/Card';
+import { ContentCard } from '../components/ui/card';
 
-/** Code Connect — Insight Card (V3 Content & Display) */
+/**
+ * Code Connect — Insight Card (V3 Content & Display). This node's example
+ * props already matched `ContentCard`'s real shape (title/description/
+ * category/date/image/orientation) — it's the MUI `Card` (a different,
+ * unrelated stat-grid pattern with zero real consumers) that never matched
+ * either the node or `ContentCard`.
+ */
 const NODE_URL = '${LIB}?node-id=7592-8598';
 
-figma.connect(Card, NODE_URL, {
+figma.connect(ContentCard, NODE_URL, {
   props: {
     description: figma.string('Description'),
     categoryLabel: figma.string('Category label'),
@@ -25,13 +31,16 @@ figma.connect(Card, NODE_URL, {
     }),
   },
   example: (props: any) => (
-    <Card
+    <ContentCard
       orientation={props.orientation}
+      border={props.border}
       title={props.hasHeader ? 'Card Title' : undefined}
       description={props.hasDescription ? props.description : undefined}
       category={props.categoryLabel}
       date={props.hasDate ? props.date : undefined}
       image={props.hasImage ? '/card-image.jpg' : undefined}
+      ctaLabel={props.hasCTAButton ? 'Learn more' : undefined}
+      onCtaClick={props.hasCTAButton ? () => {} : undefined}
     />
   ),
 });

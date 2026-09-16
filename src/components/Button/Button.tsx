@@ -2,8 +2,9 @@ import React from 'react';
 import MuiButton from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import type { SxProps } from '@mui/material/styles';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
+import { getFocusRingSx } from '../../theme/focusRing';
 
 export interface DSButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color' | 'size'> {
   /** 
@@ -90,6 +91,7 @@ const DSButton: React.FC<DSButtonProps> = ({
   children,
   ...rest
 }) => {
+  const theme = useTheme();
   const isDestructive = destructive || tone === 'danger';
 
   // Map legacy variant names to new ones
@@ -119,24 +121,21 @@ const DSButton: React.FC<DSButtonProps> = ({
     width: iconOnly ? height : undefined,
     px: spacingX,
     position: 'relative',
-    '&:focus-visible': {
-      outline: `2px solid ${getRoleColor('focus.ring')}`,
-      outlineOffset: 2,
-    },
+    '&:focus-visible': getFocusRingSx(theme),
     '&.Mui-disabled': {
       opacity: loading ? 0.8 : 1,
     },
   };
 
   const v3ButtonColors = {
-    primarySurface: '#000f47',
+    primarySurface: getRoleColor('interactive.primary'),
     primarySurfaceHover: '#082d9e',
     primarySurfaceActive: '#0b4bff',
     primaryTextInverted: '#ceecff',
-    primaryAltSurface: '#ffbf00',
+    primaryAltSurface: getRoleColor('brand.accent'),
     primaryAltSurfaceHover: '#eaa501',
     primaryAltSurfaceActive: '#d58b02',
-    primaryAltText: '#000f47',
+    primaryAltText: '#000f47', // stays literal — always-navy-on-gold text has no role yet (textOnLight is orphaned)
     secondarySurface: 'transparent',
     outlineHover: '#082d9e',
     outlineActive: '#0b4bff',
@@ -273,6 +272,11 @@ const DSButton: React.FC<DSButtonProps> = ({
           '&:active': {
             backgroundColor: alpha(getRoleColor('surface.secondary'), 0.2),
           },
+          '&.Mui-disabled': {
+            backgroundColor: 'transparent',
+            color: alpha(getRoleColor('surface.secondary'), 0.35),
+            borderColor: alpha(getRoleColor('surface.secondary'), 0.35),
+          },
         } : {
           backgroundColor: v3ButtonColors.secondarySurface,
           color: v3ButtonColors.primarySurface,
@@ -341,6 +345,7 @@ const DSButton: React.FC<DSButtonProps> = ({
 
   return (
     <MuiButton
+      variant="text"
       disableElevation
       disabled={isDisabled}
       fullWidth={fullWidth}

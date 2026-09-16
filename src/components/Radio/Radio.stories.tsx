@@ -4,9 +4,9 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Legacy MUI/Radio',
+  title: 'Components/Radio',
   component: DSRadio,
-  tags: ['!dev'],
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
