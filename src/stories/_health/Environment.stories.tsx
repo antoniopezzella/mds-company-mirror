@@ -23,7 +23,7 @@ export const Loaded: Story = {
       <ul style={{ marginTop: 8, paddingLeft: 18 }}>
         <li>Mode: {import.meta.env.MODE}</li>
         <li>Build Time: {new Date().toISOString()}</li>
-        <li>React Version: {(React as any).version}</li>
+        <li>React Version: {React.version}</li>
       </ul>
       <em style={{ display: 'block', marginTop: 12, opacity: 0.7 }}>Remove or simplify dynamic items if you need Chromatic snapshots here.</em>
     </div>

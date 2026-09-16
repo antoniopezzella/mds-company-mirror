@@ -360,7 +360,7 @@ export class EnhancedAnimationController {
    */
   private detectPerformance(): void {
     // Check device capabilities
-    const deviceMemory = (navigator as any).deviceMemory;
+    const deviceMemory = navigator.deviceMemory;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
     
     if (deviceMemory && deviceMemory < 4) {

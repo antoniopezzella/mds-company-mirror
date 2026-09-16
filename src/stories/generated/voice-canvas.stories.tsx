@@ -6,9 +6,9 @@ const meta: Meta = { title: 'Generated/Voice Canvas' };
 export default meta;
 
 // Design system components set by .storybook/preview.tsx via:
-//   (window as any).__STORY_UI_DESIGN_SYSTEM__ = YourDesignSystemModule;
+//   window.__STORY_UI_DESIGN_SYSTEM__ = YourDesignSystemModule;
 // Works with any React component library (Mantine, Chakra, MUI, shadcn, etc.)
-const designSystem = (window as any).__STORY_UI_DESIGN_SYSTEM__ || {};
+const designSystem = window.__STORY_UI_DESIGN_SYSTEM__ || {};
 
 // Module-level scope — created once, never recreated, so react-live
 // does not re-transpile on every parent re-render.
@@ -25,10 +25,10 @@ const scope = {
 };
 
 // Optional themed provider set in preview.tsx via:
-//   (window as any).__STORY_UI_CANVAS_PROVIDER__ = ({ children }) => <Provider>{children}</Provider>;
+//   window.__STORY_UI_CANVAS_PROVIDER__ = ({ children }) => <Provider>{children}</Provider>;
 // Falls back to a passthrough if not configured.
 const CanvasProvider: React.ComponentType<{ children: React.ReactNode }> =
-  (window as any).__STORY_UI_CANVAS_PROVIDER__ ||
+  window.__STORY_UI_CANVAS_PROVIDER__ ||
   (({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children));
 
 const PLACEHOLDER = `const Canvas = () => (
