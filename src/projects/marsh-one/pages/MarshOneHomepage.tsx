@@ -30,7 +30,7 @@ export const MarshOneHomepage: React.FC = () => {
         brand="marsh"
         ctaText="Discover new Marsh"
         ctaUrl="/learn-more"
-        onClose={() => console.log('Banner closed')}
+        onClose={() => console.debug('Banner closed')}
         fullWidth
       />
       

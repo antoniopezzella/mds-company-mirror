@@ -159,12 +159,12 @@ export const Corporate: Story = {
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     primaryCta: {
       text: 'Download Report',
-      onClick: () => console.log('Download clicked'),
+      onClick: () => console.debug('Download clicked'),
       icon: <DownloadIcon />,
     },
     secondaryCta: {
       text: 'Talk to Our Experts',
-      onClick: () => console.log('Contact clicked'),
+      onClick: () => console.debug('Contact clicked'),
     },
     imageSrc: '/images/journey-aviation.jpg',
     imageAlt: 'Aerial view of city intersection',
@@ -285,7 +285,7 @@ export const AnimationsDisabled: Story = {
     description: 'This variant demonstrates the hero banner with the disableAnimations prop set to true. Content appears immediately without fade-up or parallax effects.',
     primaryCta: {
       text: 'Learn More',
-      onClick: () => console.log('Learn More clicked'),
+      onClick: () => console.debug('Learn More clicked'),
       icon: <ArrowForwardIcon />,
     },
     videoSrc: '/video/WebsiteHeaderVideo-960x900_V1 (1).mp4',
@@ -315,7 +315,7 @@ export const HighQualityVideo: Story = {
     description: 'This variant uses a 4K UHD video for maximum visual impact on high-resolution displays.',
     primaryCta: {
       text: 'Watch Demo',
-      onClick: () => console.log('Watch Demo clicked'),
+      onClick: () => console.debug('Watch Demo clicked'),
       icon: <ArrowForwardIcon />,
     },
     videoSrc: '/video/2818546-uhd_3840_2160_24fps.mp4',
@@ -345,12 +345,12 @@ export const LightVariant: Story = {
     description: 'Our comprehensive suite of risk management solutions helps businesses navigate uncertainty with confidence.',
     primaryCta: {
       text: 'Get Started',
-      onClick: () => console.log('Get Started clicked'),
+      onClick: () => console.debug('Get Started clicked'),
       icon: <ArrowForwardIcon />,
     },
     secondaryCta: {
       text: 'Learn More',
-      onClick: () => console.log('Learn More clicked'),
+      onClick: () => console.debug('Learn More clicked'),
     },
     imageSrc: '/journey-aviation.jpg',
     imageAlt: 'Business professionals collaborating',
@@ -368,7 +368,7 @@ export const Minimal: Story = {
     description: 'Everything you need to protect and grow your business, all in one place.',
     primaryCta: {
       text: 'Explore Solutions',
-      onClick: () => console.log('Explore clicked'),
+      onClick: () => console.debug('Explore clicked'),
       icon: <ArrowForwardIcon />,
     },
     imageSrc: '/journey-aviation.jpg',
@@ -388,12 +388,12 @@ export const ImageLeft: Story = {
     description: 'Combining cutting-edge technology with deep industry expertise to deliver exceptional outcomes.',
     primaryCta: {
       text: 'See Our Platform',
-      onClick: () => console.log('Platform clicked'),
+      onClick: () => console.debug('Platform clicked'),
       icon: <ArrowForwardIcon />,
     },
     secondaryCta: {
       text: 'Schedule Demo',
-      onClick: () => console.log('Demo clicked'),
+      onClick: () => console.debug('Demo clicked'),
     },
     imageSrc: '/journey-aviation.jpg',
     imageAlt: 'Technology dashboard interface',
@@ -411,7 +411,7 @@ export const SingleCTA: Story = {
     description: 'Join thousands of businesses who trust Marsh to protect their future.',
     primaryCta: {
       text: 'Request a Quote',
-      onClick: () => console.log('Quote clicked'),
+      onClick: () => console.debug('Quote clicked'),
       icon: <ArrowForwardIcon />,
     },
     imageSrc: '/journey-aviation.jpg',
@@ -431,12 +431,12 @@ export const CustomHeight: Story = {
     description: 'Over 150 years of experience protecting businesses and helping them thrive.',
     primaryCta: {
       text: 'Our Story',
-      onClick: () => console.log('Story clicked'),
+      onClick: () => console.debug('Story clicked'),
       icon: <ArrowForwardIcon />,
     },
     secondaryCta: {
       text: 'Meet the Team',
-      onClick: () => console.log('Team clicked'),
+      onClick: () => console.debug('Team clicked'),
     },
     imageSrc: '/journey-aviation.jpg',
     imageAlt: 'Historic Marsh building',
@@ -470,12 +470,12 @@ export const FiftyFiftySplit: Story = {
     description: 'We bring together the best of Marsh, Guy Carpenter, Mercer, and Oliver Wyman to help organizations navigate an uncertain world with confidence and expertise.',
     primaryCta: {
       text: 'Download Report',
-      onClick: () => console.log('Download clicked'),
+      onClick: () => console.debug('Download clicked'),
       icon: <DownloadIcon />,
     },
     secondaryCta: {
       text: 'Talk to Our Experts',
-      onClick: () => console.log('Contact clicked'),
+      onClick: () => console.debug('Contact clicked'),
     },
     imageSrc: '/images/journey-aviation.jpg',
     imageAlt: 'Aerial city view',
@@ -517,12 +517,12 @@ export const AllProps: Story = {
     description: 'This variant demonstrates eyebrow text, headline, subtitle, description, primary and secondary CTAs, video background, custom height, image positioning, and animation controls.',
     primaryCta: {
       text: 'Primary Action',
-      onClick: () => console.log('Primary clicked'),
+      onClick: () => console.debug('Primary clicked'),
       icon: <DownloadIcon />,
     },
     secondaryCta: {
       text: 'Secondary Action',
-      onClick: () => console.log('Secondary clicked'),
+      onClick: () => console.debug('Secondary clicked'),
       icon: <ArrowForwardIcon />,
     },
     videoSrc: '/video/hero-video.mp4',

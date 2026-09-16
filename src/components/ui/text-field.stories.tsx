@@ -80,7 +80,6 @@ export const Disabled: Story = {
 };
 
 export const Textarea_: Story = {
-  name: 'Textarea',
   args: {
     label: 'Claim description',
     type: 'textarea',

@@ -75,12 +75,18 @@ const Hero: React.FC = () => {
   useEffect(() => {
     if (prefersReduced || isMotionDisabled()) return;
 
+    // Captured once at setup time — sectionRef.current may already be null
+    // by the time the cleanup below runs (React nulls refs before unmount
+    // cleanup), so re-reading it there could fail to match the trigger
+    // that actually needs killing.
+    const section = sectionRef.current;
+
     // Register GSAP plugins
     gsap.registerPlugin(ScrollTrigger);
-    
+
     // Pin the hero section
     const pinTrigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
+      trigger: section,
       start: "top top",
       end: "+=100vh", // Pin for one viewport height (duration of video animation)
       pin: true,
@@ -148,7 +154,7 @@ const Hero: React.FC = () => {
     if (mSymbolPatternRef.current) {
       const mSymbol = mSymbolPatternRef.current;
       symbolTrigger = ScrollTrigger.create({
-        trigger: sectionRef.current,
+        trigger: section,
         start: "top top",
         end: "+=100vh",
         scrub: 0.8,
@@ -169,7 +175,7 @@ const Hero: React.FC = () => {
       pinTrigger.kill();
       if (symbolTrigger) symbolTrigger.kill();
       ScrollTrigger.getAll().forEach(st => {
-        if (st.trigger === sectionRef.current) {
+        if (st.trigger === section) {
           st.kill();
         }
       });

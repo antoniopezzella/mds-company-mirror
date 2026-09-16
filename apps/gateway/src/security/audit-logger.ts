@@ -64,7 +64,7 @@ class AuditLogger {
         
         // Also log to console in development
         if (process.env.NODE_ENV !== 'production') {
-          console.log('[AUDIT]', logEntry);
+          console.debug('[AUDIT]', logEntry);
         }
       } catch (error) {
         console.error('Failed to write audit log:', error);

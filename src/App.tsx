@@ -73,7 +73,7 @@ function App() {
     onMetric: (metric) => {
       // Log in development, send to analytics in production
       if (import.meta.env.DEV) {
-        console.log(`[Web Vital] ${metric.name}:`, metric.value, `(${metric.rating})`);
+        console.debug(`[Web Vital] ${metric.name}:`, metric.value, `(${metric.rating})`);
       } else {
         // TODO: Send to analytics endpoint
         // analytics.track('web-vital', { name: metric.name, value: metric.value });

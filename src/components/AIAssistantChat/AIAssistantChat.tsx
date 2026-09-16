@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { marked } from 'marked';
 import {
   Box,
@@ -156,6 +156,13 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
     }
   }, [messages, timestamps]);
 
+  const clearChat = useCallback(() => {
+    setMessages([]);
+    setTimestamps({});
+    localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(TIMESTAMPS_KEY);
+  }, [setMessages]);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); clearChat(); }
@@ -163,14 +170,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, []);
-
-  const clearChat = () => {
-    setMessages([]);
-    setTimestamps({});
-    localStorage.removeItem(HISTORY_KEY);
-    localStorage.removeItem(TIMESTAMPS_KEY);
-  };
+  }, [clearChat]);
 
   const copyMessage = (id: string, content: string) => {
     navigator.clipboard.writeText(content).then(() => {

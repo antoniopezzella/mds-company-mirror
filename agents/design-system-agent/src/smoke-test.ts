@@ -21,4 +21,4 @@ const result = await agent.invoke({
 });
 
 const last = result.messages[result.messages.length - 1];
-console.log("FINAL:", typeof last.content === "string" ? last.content : JSON.stringify(last.content));
+console.debug("FINAL:", typeof last.content === "string" ? last.content : JSON.stringify(last.content));

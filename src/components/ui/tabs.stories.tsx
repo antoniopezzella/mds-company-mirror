@@ -88,6 +88,6 @@ export const ManyTabsScrollable: Story = {
 export const OnSelectCallback: Story = {
   args: {
     tabs: basicTabs,
-    onSelect: (id: string) => console.log('Selected tab:', id),
+    onSelect: (id: string) => console.debug('Selected tab:', id),
   },
 };

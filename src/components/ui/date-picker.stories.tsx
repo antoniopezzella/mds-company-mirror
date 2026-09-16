@@ -43,7 +43,6 @@ export const WithSelectedDate: Story = {
 };
 
 export const RangePicker: Story = {
-  name: 'Range Picker',
   render: () => {
     const [range, setRange] = React.useState<DateRange | undefined>({
       from: new Date(2026, 8, 5),
@@ -72,7 +71,6 @@ export const DateOfBirth: Story = {
 };
 
 export const InputFieldVariant: Story = {
-  name: 'Input Field Variant',
   render: () => {
     const [date, setDate] = React.useState<Date | undefined>(new Date(2026, 8, 1));
     return <DatePickerInput date={date} onDateChange={setDate} className="w-[220px]" />;
@@ -80,7 +78,6 @@ export const InputFieldVariant: Story = {
 };
 
 export const TimePicker: Story = {
-  name: 'Time Picker',
   render: () => {
     const [date, setDate] = React.useState<Date | undefined>(new Date(2026, 8, 1, 13, 30));
     return <DateTimePicker date={date} onDateChange={setDate} />;
@@ -88,7 +85,6 @@ export const TimePicker: Story = {
 };
 
 export const NaturalLanguagePicker: Story = {
-  name: 'Natural Language Picker',
   render: () => {
     const [date, setDate] = React.useState<Date | undefined>();
     return <SmartDatePicker date={date} onDateChange={setDate} className="w-[280px]" />;
@@ -104,7 +100,6 @@ export const NaturalLanguagePicker: Story = {
 };
 
 export const RTLSupport: Story = {
-  name: 'RTL Support',
   render: () => {
     const [date, setDate] = React.useState<Date | undefined>(new Date(2026, 8, 1));
     return (

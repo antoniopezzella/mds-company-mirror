@@ -26,7 +26,7 @@ export async function loadRegistry(): Promise<Record<string, any>> {
     }
 
     _loaded = true;
-    console.log(`[componentRegistry] Loaded ${Object.keys(registry).length} components from @mui/material`);
+    console.debug(`[componentRegistry] Loaded ${Object.keys(registry).length} components from @mui/material`);
   } catch (err) {
     console.error('[componentRegistry] Failed to load design system:', err);
   }

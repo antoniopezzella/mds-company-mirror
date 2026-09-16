@@ -68,7 +68,7 @@ export const Sortable: StoryObj = {
 
 export const Selectable: StoryObj = {
   render: () => (
-    <Table columns={policyColumns} data={policyData} selectable onRowSelect={(rows) => console.log('Selected:', rows)} />
+    <Table columns={policyColumns} data={policyData} selectable onRowSelect={(rows) => console.debug('Selected:', rows)} />
   ),
 };
 
