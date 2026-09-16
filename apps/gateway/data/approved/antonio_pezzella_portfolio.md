@@ -2,7 +2,7 @@
 
 ## About Antonio
 
-Antonio Pezzella is a Senior Product Designer Specialist with extensive experience in design systems, B2B enterprise applications, and user experience design. He is currently based in Buenos Aires, Argentina, and specializes in creating scalable design systems that unify large product teams.
+Antonio Pezzella is a Senior Product Designer Specialist with extensive experience in design systems, B2B enterprise applications, and user experience design. He is currently based in São Paulo, Brazil, and specializes in creating scalable design systems that unify large product teams.
 
 ## Current Role & Experience
 

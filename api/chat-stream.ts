@@ -1,6 +1,29 @@
+import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+import { retrieve, type Doc } from './_lib/retrieve';
+import kbDocsRaw from './_data/knowledge-base.json';
+
 export const config = { runtime: 'edge' };
 
-const BASE_PROMPT = `You are a specialized AI risk advisor embedded in Marsh's B2B insurance dashboard. You have direct context from the user's live dashboard data plus Marsh's knowledge base on insurance, risk management, and market conditions.
+// Loaded once at module scope, reused across warm Edge invocations.
+const KB_DOCS = kbDocsRaw as Doc[];
+const DOC_CHAR_LIMIT = 1500;
+
+function buildKnowledgeBaseSection(docs: Doc[]): string {
+  if (!docs.length) {
+    return `## Marsh Knowledge Base
+
+No specific knowledge base articles matched this question closely — answer using general Marsh insurance domain expertise, and avoid stating specific statistics or figures you're not confident are accurate.`;
+  }
+  const body = docs
+    .map((d) => {
+      const text = d.text.length > DOC_CHAR_LIMIT ? d.text.slice(0, DOC_CHAR_LIMIT) + '...' : d.text;
+      return `**${d.title}**\n${text}`;
+    })
+    .join('\n\n');
+  return `## Marsh Knowledge Base\n\n${body}`;
+}
+
+const CUSTOMER_PROMPT_PREFIX = `You are a specialized AI risk advisor embedded in Marsh's B2B insurance dashboard. You have direct context from the user's live dashboard data plus Marsh's knowledge base on insurance, risk management, and market conditions.
 
 ## Live Dashboard Data
 
@@ -31,32 +54,31 @@ const BASE_PROMPT = `You are a specialized AI risk advisor embedded in Marsh's B
 - General liability: flat to +3%
 - Marine cargo: +5–8% (Red Sea disruption)
 
-## Marsh Knowledge Base
+`;
 
-**Cyber Risk:**
-Marsh provides specialized cyber insurance covering data breaches, ransomware, business interruption, and regulatory fines. Key risks: ransomware, BEC, supply chain attacks, DDoS, insider threats. Marsh offers Cyber Risk Quantification (CRQ) assessments and placement across 40+ cyber markets.
-
-**Property Risk:**
-Commercial property rates rising 8–12% driven by catastrophic losses, climate change, and reinsurance costs. Parametric solutions available for nat-cat exposures. Key factors: location, construction, occupancy, fire protection, business interruption values.
-
-**Emerging Risks:**
-Climate change increasing physical risks — more frequent hurricanes, wildfires, floods. Property damage escalating 5–8% annually in high-risk regions. Supply chain risks from geopolitical instability. ESG compliance requirements growing.
-
-**Market Conditions:**
-Hard market continuing in property and specialty lines. Carriers tightening underwriting, requiring more data. Marsh's scale and analytics platform (Marsh Mercer Marketplace) provides competitive advantage in placement.
-
-**Claims:**
-Marsh's Claims Advocacy team supports from first notice through resolution. Average claims resolution: 28 days. Early reporting and documentation critical for complex property claims.
-
-**Employee Benefits:**
-Group health, dental, vision, life, disability. Trends: mental health benefits, fertility coverage, student loan assistance. Cost containment via wellness programs and reference-based pricing.
-
+const CUSTOMER_PROMPT_SUFFIX = `
 ## Instructions
 - Reference actual policy numbers and dashboard metrics in your answers
 - Flag the expired POL-2024-006 proactively when relevant
 - Be concise — use bullet points, keep responses under 300 words
 - Recommend specific Marsh services when actionable
 - Tone: professional, direct, like a senior risk advisor`;
+
+// Used on public marketing pages (no logged-in account/policy data exists
+// for these visitors) — kept separate from CUSTOMER_PROMPT rather than
+// branching one string at render time, so neither prompt has to reason
+// about which parts of it apply to the other audience.
+const PROSPECT_PROMPT_PREFIX = `You are a specialized AI risk advisor embedded on Marsh's public marketing site. The person you're talking to is a prospective client browsing marketing pages — not a logged-in customer. You have no account, policy, or portfolio data for this visitor. Answer using Marsh's knowledge base on insurance, risk management, and market conditions below.
+
+`;
+
+const PROSPECT_PROMPT_SUFFIX = `
+## Instructions
+- Never reference or imply specific policy numbers, account data, or portfolio metrics — you have none for this visitor and must not invent any
+- Speak in general terms about risks, market trends, and Marsh's capabilities — not "your" coverage, "your" exposures, or "your" claims
+- Be concise — use bullet points, keep responses under 300 words
+- When the visitor signals real interest — comparing providers, asking about pricing, coverage for their business, or next steps — proactively invite them to use the "Contact us" button to talk with a Marsh advisor. Don't push this on purely educational questions
+- Tone: professional, direct, consultative — like a knowledgeable risk advisor helping someone evaluate their options`;
 
 export default async function handler(req: Request) {
   if (req.method === 'OPTIONS') {
@@ -78,20 +100,31 @@ export default async function handler(req: Request) {
     return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), { status: 500 });
   }
 
-  let body: { question: string; conversationHistory?: { role: string; content: string }[] };
+  let body: {
+    question: string;
+    conversationHistory?: { role: string; content: string }[];
+    visitorType?: 'customer' | 'prospect';
+  };
   try {
     body = await req.json();
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { question, conversationHistory = [] } = body;
+  const { question, conversationHistory = [], visitorType } = body;
   if (!question?.trim()) {
     return new Response(JSON.stringify({ error: 'Question is required' }), { status: 400 });
   }
 
+  const topDocs = retrieve(question, KB_DOCS, 3);
+  const kbSection = buildKnowledgeBaseSection(topDocs);
+  const systemPrompt =
+    visitorType === 'prospect'
+      ? PROSPECT_PROMPT_PREFIX + kbSection + PROSPECT_PROMPT_SUFFIX
+      : CUSTOMER_PROMPT_PREFIX + kbSection + CUSTOMER_PROMPT_SUFFIX;
+
   const messages = [
-    { role: 'system', content: BASE_PROMPT },
+    { role: 'system', content: systemPrompt },
     ...conversationHistory.slice(-12).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
     { role: 'user', content: question },
   ];
@@ -107,10 +140,18 @@ export default async function handler(req: Request) {
     return new Response(JSON.stringify({ error: err }), { status: 502 });
   }
 
-  // Pass the OpenAI SSE stream straight through to the client
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    async start(controller) {
+  // Re-envelopes the OpenAI SSE token stream into the Vercel AI SDK's UI
+  // Message Stream protocol (text-start/text-delta/text-end + a
+  // data-citations part, wrapped in start/finish) so the client can consume
+  // it via `useChat()`. Retrieval and prompt construction above are
+  // untouched — this only changes how the same tokens are packaged.
+  const textId = crypto.randomUUID();
+
+  const uiStream = createUIMessageStream({
+    execute: async ({ writer }) => {
+      writer.write({ type: 'start' });
+      writer.write({ type: 'text-start', id: textId });
+
       const reader = openaiRes.body!.getReader();
       const decoder = new TextDecoder();
       try {
@@ -120,28 +161,27 @@ export default async function handler(req: Request) {
           const lines = decoder.decode(value).split('\n').filter(l => l.startsWith('data: '));
           for (const line of lines) {
             const data = line.slice(6).trim();
-            if (data === '[DONE]') {
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
-              continue;
-            }
+            if (data === '[DONE]') continue;
             try {
               const parsed = JSON.parse(data);
               const token = parsed.choices?.[0]?.delta?.content;
-              if (token) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ token })}\n\n`));
+              if (token) writer.write({ type: 'text-delta', id: textId, delta: token });
             } catch { /* skip */ }
           }
         }
       } finally {
-        controller.close();
+        writer.write({ type: 'text-end', id: textId });
+        if (topDocs.length) {
+          const citations = topDocs.map(d => ({ title: d.title, url: d.url }));
+          writer.write({ type: 'data-citations', data: citations });
+        }
+        writer.write({ type: 'finish' });
       }
     },
   });
 
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Access-Control-Allow-Origin': '*',
-    },
+  return createUIMessageStreamResponse({
+    stream: uiStream,
+    headers: { 'Access-Control-Allow-Origin': '*' },
   });
 }
