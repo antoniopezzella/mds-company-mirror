@@ -117,7 +117,7 @@ export const ContrastMatrix: React.FC<ContrastMatrixProps> = ({
         { key: 'ratio', label: 'Contrast', align: 'right', width: 90 },
         { key: 'status', label: 'Status', width: 80, align: 'center' }
       ]}
-      rows={rows as any}
+      rows={rows}
       caption={`Contrast ratios computed per WCAG 2.1 (AA normal ≥ ${minimumAA}, large text ≥ ${minimumAALarge}).`}
     />
   );

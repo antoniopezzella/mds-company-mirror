@@ -149,7 +149,7 @@ const palettes = [
 
 export const ColorSwatches = () => {
   const theme = useTheme();
-  const small = theme.typography.caption.fontSize as any;
+  const small = theme.typography.caption.fontSize;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {palettes.map((palette) => (

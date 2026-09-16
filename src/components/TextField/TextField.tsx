@@ -1,7 +1,7 @@
 import React from 'react';
 import MuiTextField from '@mui/material/TextField';
 import type { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, type Theme } from '@mui/material/styles';
 import { getRoleColor } from '../../theme/roles';
 
 export interface DSTextFieldProps extends Omit<MuiTextFieldProps, 'variant' | 'color'> {
@@ -89,7 +89,7 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       fontFamily: 'var(--typo-caption-font-family)',
       fontSize: 'var(--typo-caption-font-size)',
       lineHeight: 'var(--typo-caption-line-height)',
-      margin: (theme: any) => theme.spacing(1, 0, 0, 0),
+      margin: (theme: Theme) => theme.spacing(1, 0, 0, 0),
       '&.Mui-error': {
         color: getRoleColor('status.danger.fg'),
       },
