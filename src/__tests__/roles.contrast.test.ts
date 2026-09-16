@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { getRoleColor } from '../theme/roles';
+import { getRoleColor, type RoleName } from '../theme/roles';
 
 // Lightweight contrast utilities (duplicated locally to avoid export churn)
 function hexToRgb(hex: string) {
@@ -27,7 +27,7 @@ function contrast(hex1:string, hex2:string) {
 // enforced: failing any pair fails the test suite.
 // monitored: logged as warnings when below target but do not fail yet.
 // Each entry: [fgRole, bgRole, requiredContrast]
-const ENFORCED_ROLE_CONTRAST: Array<[string, string, number]> = [
+const ENFORCED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
   ['text.primary', 'surface.default', 4.5],
   ['text.secondary', 'surface.default', 3.0],
   // surface.accent is now a light warm surface (#f7f8f8); test dark text on it
@@ -57,7 +57,7 @@ const ENFORCED_ROLE_CONTRAST: Array<[string, string, number]> = [
   ['text.onLight', 'status.warning.bg', 4.5],
 ];
 
-const MONITORED_ROLE_CONTRAST: Array<[string, string, number]> = [
+const MONITORED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
   // none currently — see ENFORCED_ROLE_CONTRAST's history for what graduated here
 ];
 
@@ -69,16 +69,16 @@ function evaluatePairs(mode: Mode) {
   const enforcedFailures: Failure[] = [];
   const monitoredFailures: Failure[] = [];
   for (const [fgRole, bgRole, required] of ENFORCED_ROLE_CONTRAST) {
-    const fg = getRoleColor(fgRole as any, { mode });
-    const bg = getRoleColor(bgRole as any, { mode });
+    const fg = getRoleColor(fgRole, { mode });
+    const bg = getRoleColor(bgRole, { mode });
     const ratio = contrast(fg, bg);
     if (ratio < required) {
       enforcedFailures.push({ mode, fg: fgRole, bg: bgRole, ratio: Number(ratio.toFixed(2)), required, level: 'enforced' });
     }
   }
   for (const [fgRole, bgRole, required] of MONITORED_ROLE_CONTRAST) {
-    const fg = getRoleColor(fgRole as any, { mode });
-    const bg = getRoleColor(bgRole as any, { mode });
+    const fg = getRoleColor(fgRole, { mode });
+    const bg = getRoleColor(bgRole, { mode });
     const ratio = contrast(fg, bg);
     if (ratio < required) {
       monitoredFailures.push({ mode, fg: fgRole, bg: bgRole, ratio: Number(ratio.toFixed(2)), required, level: 'monitored' });
