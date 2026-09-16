@@ -223,6 +223,8 @@ Chromatic addon is enabled; configure project token via environment variable if 
 
 ## CI & Quality Gates
 
+Flowchart of this whole pipeline, alongside token/role and documentation governance: [`docs/GOVERNANCE.md`](./docs/GOVERNANCE.md).
+
 This repository enforces design system integrity through three GitHub Actions workflows located in `.github/workflows/`:
 
 | Workflow | File | Triggers | Purpose |

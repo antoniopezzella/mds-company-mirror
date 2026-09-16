@@ -1450,7 +1450,8 @@ summaries, sprint plans, and status reports accumulated at the repo root
 over several months (now moved to `docs/archive/`, see below) because
 nothing told anyone — human or AI agent — where a new doc belonged. The
 rule below exists to stop that recurring, not to describe a one-time
-cleanup.
+cleanup. Flowchart version of this same ladder, plus the other two
+governance systems (token/role, CI gates): [`docs/GOVERNANCE.md`](./docs/GOVERNANCE.md).
 
 **Where a new doc goes — work down this list:**
 
