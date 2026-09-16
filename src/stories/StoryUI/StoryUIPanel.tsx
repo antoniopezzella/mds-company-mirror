@@ -119,6 +119,23 @@ interface OrphanStory {
   fileName: string;
 }
 
+/** Raw shape of one entry in the manifest server's `stories` map (GET MANIFEST_API()). */
+interface ManifestEntry {
+  id?: string;
+  fileName: string;
+  title: string;
+  source?: string;
+  conversation?: { role: string; content: string }[];
+  metadata?: { prompt?: string };
+  updatedAt?: string;
+  createdAt?: string;
+}
+
+/** One entry in Storybook's own /index.json (only the field this file reads). */
+interface StorybookIndexEntry {
+  title: string;
+}
+
 interface ProviderInfo {
   type: string;
   name: string;
@@ -532,12 +549,12 @@ async function fetchStorybookOrder(): Promise<Map<string, number>> {
     const response = await fetch('/index.json');
     if (!response.ok) return new Map();
     const data = await response.json();
-    const entries: Record<string, any> = data.entries ?? {};
+    const entries: Record<string, StorybookIndexEntry> = data.entries ?? {};
     const seen = new Set<string>();
     const order = new Map<string, number>();
     let i = 0;
     for (const entry of Object.values(entries)) {
-      const fullTitle: string = (entry as any).title ?? '';
+      const fullTitle: string = entry.title ?? '';
       if (fullTitle.startsWith('Generated/') && !seen.has(fullTitle)) {
         seen.add(fullTitle);
         order.set(fullTitle.replace('Generated/', '').toLowerCase(), i++);
@@ -554,13 +571,13 @@ async function syncWithActualStories(): Promise<ChatSession[]> {
     const response = await fetch(MANIFEST_API());
     if (!response.ok) throw new Error('manifest unavailable');
     const data = await response.json();
-    const entries: Record<string, any> = data.stories ?? {};
+    const entries: Record<string, ManifestEntry> = data.stories ?? {};
 
     // Map manifest entries to ChatSession format
     const sessions: ChatSession[] = Object.values(entries)
-      .filter((e: any) => e.source !== 'voice-canvas') // scratchpad excluded from chat list
-      .map((e: any) => {
-        const serverConv = (e.conversation ?? []).map((m: any) => ({ role: m.role as 'user' | 'ai', content: m.content }));
+      .filter((e) => e.source !== 'voice-canvas') // scratchpad excluded from chat list
+      .map((e) => {
+        const serverConv = (e.conversation ?? []).map((m) => ({ role: m.role as 'user' | 'ai', content: m.content }));
         // If no conversation history but the original prompt is known, synthesize one so
         // users can open the story and immediately continue iterating with full context.
         const conversation: Message[] = serverConv.length > 0
@@ -576,7 +593,7 @@ async function syncWithActualStories(): Promise<ChatSession[]> {
           title: e.title,
           fileName: e.fileName,
           conversation,
-          lastUpdated: new Date(e.updatedAt ?? e.createdAt).getTime(),
+          lastUpdated: new Date(e.updatedAt ?? e.createdAt ?? Date.now()).getTime(),
           source: e.source,
         };
       })
@@ -601,7 +618,7 @@ async function syncWithActualStories(): Promise<ChatSession[]> {
  * for existing users who have chat history that the server doesn't know about yet.
  */
 async function migrateLocalStorageToManifest(
-  manifestEntries: Record<string, any>,
+  manifestEntries: Record<string, ManifestEntry>,
 ): Promise<void> {
   try {
     const localChats = loadChats();
@@ -660,7 +677,7 @@ async function migrateLocalStorageToManifest(
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             conversation: [
-              { role: 'user', content: e.metadata.prompt },
+              { role: 'user', content: e.metadata?.prompt },
               { role: 'ai', content: `Story generated: "${e.title}"` },
             ],
           }),
@@ -707,14 +724,14 @@ async function _fetchOrphanStories(): Promise<OrphanStory[]> {
     const response = await fetch(MANIFEST_API());
     if (!response.ok) throw new Error('manifest unavailable');
     const data = await response.json();
-    const entries: Record<string, any> = data.stories ?? {};
+    const entries: Record<string, ManifestEntry> = data.stories ?? {};
 
     return Object.values(entries)
-      .filter((e: any) =>
+      .filter((e) =>
         e.source !== 'voice-canvas' &&
         (!e.conversation || e.conversation.length === 0)
       )
-      .map((e: any) => ({
+      .map((e) => ({
         id: e.id ?? e.fileName.replace(/\.stories\.[a-z]+$/, ''),
         title: e.title,
         fileName: e.fileName,
@@ -725,12 +742,12 @@ async function _fetchOrphanStories(): Promise<OrphanStory[]> {
       const response = await fetch(STORIES_API());
       if (!response.ok) return [];
       const data = await response.json();
-      const serverStories = data.stories || [];
+      const serverStories: OrphanStory[] = data.stories || [];
       const localChats = loadChats();
       const chatIds = new Set(localChats.map(c => c.id));
       return serverStories
-        .filter((s: any) => !chatIds.has(s.id))
-        .map((s: any) => ({ id: s.id, title: s.title, fileName: s.fileName }));
+        .filter((s) => !chatIds.has(s.id))
+        .map((s) => ({ id: s.id, title: s.title, fileName: s.fileName }));
     } catch {
       return [];
     }
@@ -1104,7 +1121,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
   // Tracks whether Voice Canvas is available (React-only feature). Defaults true to
   // avoid flashing the tab away on initial render; corrected after canvas-config loads.
   const [isReactFramework, setIsReactFramework] = useState(true);
-  const [canvasRegistry, setCanvasRegistry] = useState<Record<string, any>>({});
+  const [canvasRegistry, setCanvasRegistry] = useState<Record<string, unknown>>({});
   const [_canvasProvider, setCanvasProvider] = useState<React.ComponentType<{ children: React.ReactNode }> | null>(null);
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
   const [renamingChatId, setRenamingChatId] = useState<string | null>(null);
@@ -1146,7 +1163,7 @@ function StoryUIPanel({ mcpPort }: StoryUIPanelProps) {
 
     const ds = window.__STORY_UI_DESIGN_SYSTEM__;
     if (ds && typeof ds === 'object') {
-      const reg: Record<string, any> = {};
+      const reg: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(ds)) {
         if (/^[A-Z]/.test(key) && (typeof value === 'function' || typeof value === 'object')) {
           reg[key] = value;
