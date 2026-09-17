@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable, createSelectColumn } from './data-table';
@@ -91,4 +92,144 @@ export const FullFeatured: StoryObj = {
       pageSize={5}
     />
   ),
+};
+
+export const Loading: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Data has not arrived yet — renders skeleton rows matching the column count. Mirrors DataGrid\'s LoadingState story for parity.',
+      },
+    },
+  },
+  render: () => <DataTable columns={baseColumns} data={[]} loading pageSize={5} />,
+};
+
+export const Empty: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Data has arrived and there\'s genuinely nothing to show. Mirrors DataGrid\'s EmptyState story for parity.',
+      },
+    },
+  },
+  render: () => <DataTable columns={baseColumns} data={[]} pageSize={5} />,
+};
+
+// ── Large dataset — feature-parity showcase ──────────────────────────────────
+// ~150 generated rows (deterministic, not Math.random — keeps this story
+// reproducible across runs/snapshots) exercising every opt-in feature added
+// in the MUI DataGrid feature-parity pass: column resizing, sticky header
+// (bounded via maxHeight), CSV export, and the density toggle.
+
+const POLICY_TYPES = ['Commercial Auto', 'General Liability', 'Cyber Liability', 'Property', 'Workers Comp', 'Umbrella', 'Marine Cargo', 'Professional Liability'];
+
+function generatePolicies(count: number): Policy[] {
+  return Array.from({ length: count }, (_, i) => {
+    const type = POLICY_TYPES[i % POLICY_TYPES.length];
+    const status = ['Active', 'Active', 'Active', 'Pending', 'Expired'][i % 5]; // weighted toward Active, like real data
+    const premium = 3000 + ((i * 733) % 40000);
+    const month = String((i % 12) + 1).padStart(2, '0');
+    const day = String((i % 27) + 1).padStart(2, '0');
+    return {
+      id: i + 1,
+      name: `${type} #${i + 1}`,
+      status,
+      premium: `$${premium.toLocaleString()}`,
+      renewalDate: `2026-${month}-${day}`,
+    };
+  });
+}
+
+const largePolicyData = generatePolicies(150);
+
+export const LargeDataset: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '150 rows exercising the full MUI-DataGrid feature-parity set at once: drag a column border to resize (keyboard: focus the border, Left/Right, Shift for a bigger step), scroll the body to see the sticky header, switch Density, and Export CSV (exports every filtered row\'s raw values, not just the current page).',
+      },
+    },
+  },
+  render: () => (
+    <DataTable
+      columns={baseColumns}
+      data={largePolicyData}
+      searchKey="name"
+      searchPlaceholder="Search policies..."
+      pageSize={10}
+      enableColumnResizing
+      enableExport
+      exportFilename="policies"
+      enableDensityToggle
+      maxHeight={420}
+    />
+  ),
+};
+
+// ── Server-side (manual) pagination ──────────────────────────────────────────
+// Demonstrates wiring DataTable to a real paginated API: `data` is only ever
+// the current page's rows, `manualPagination`/`pageCount`/`rowCount` come
+// from the "server", and `onPaginationChange` re-fetches. The setTimeout
+// below stands in for a real network call.
+
+const SERVER_PAGE_SIZE = 10;
+const serverDataset = generatePolicies(87); // deliberately not a round multiple of the page size, to exercise a partial last page
+
+function fakeFetchPage(pageIndex: number, pageSize: number): Promise<{ rows: Policy[]; rowCount: number }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const start = pageIndex * pageSize;
+      resolve({ rows: serverDataset.slice(start, start + pageSize), rowCount: serverDataset.length });
+    }, 400);
+  });
+}
+
+function ServerSidePaginationDemo() {
+  const [pageSize, setPageSize] = useState(SERVER_PAGE_SIZE);
+  const [rows, setRows] = useState<Policy[]>([]);
+  const [rowCount, setRowCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPage = (nextPageIndex: number, nextPageSize: number) => {
+    setLoading(true);
+    fakeFetchPage(nextPageIndex, nextPageSize).then(({ rows: newRows, rowCount: newRowCount }) => {
+      setRows(newRows);
+      setRowCount(newRowCount);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    fetchPage(0, SERVER_PAGE_SIZE);
+  }, []);
+
+  return (
+    <DataTable
+      columns={baseColumns}
+      data={rows}
+      loading={loading}
+      pageSize={pageSize}
+      manualPagination
+      pageCount={Math.ceil(rowCount / pageSize)}
+      rowCount={rowCount}
+      onPaginationChange={(nextPageIndex, nextPageSize) => {
+        setPageSize(nextPageSize);
+        fetchPage(nextPageIndex, nextPageSize);
+      }}
+    />
+  );
+}
+
+export const ServerSidePagination: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'DataTable wired to a simulated server API — `data` is only ever the current page (87 total rows, fetched 10 at a time with a 400ms delay standing in for the network round-trip). `manualPagination` + `pageCount` + `rowCount` tell DataTable to trust the server\'s page count rather than slicing `data` itself; `onPaginationChange` is where a real app would call its API.',
+      },
+    },
+  },
+  render: () => <ServerSidePaginationDemo />,
 };

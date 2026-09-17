@@ -18,6 +18,14 @@ export interface PaginationProps {
   showItemsRange?: boolean;
   showTotalItems?: boolean;
   disabled?: boolean;
+  /**
+   * Word appended after the total count, auto-pluralized ('item'/'items').
+   * Defaults to 'item' (current behavior: "1–5 of 8 items"). Pass '' for
+   * MUI TablePagination's bare convention instead: "1–5 of 8".
+   */
+  itemLabel?: string;
+  /** Label before the page-size selector. Defaults to 'Items per page:' — pass 'Rows per page:' to match MUI's TablePagination wording. */
+  rowsLabel?: string;
 }
 
 function getPageNumbers(currentPage: number, totalPages: number): (number | '...')[] {
@@ -55,6 +63,8 @@ export const Pagination: React.FC<PaginationProps> = ({
   showItemsRange = true,
   showTotalItems = true,
   disabled = false,
+  itemLabel = 'item',
+  rowsLabel = 'Items per page:',
 }) => {
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
@@ -73,15 +83,18 @@ export const Pagination: React.FC<PaginationProps> = ({
   const textColor = getRoleColor('text.primary');
   const mutedColor = getRoleColor('text.secondary');
 
+  const pluralizedItemLabel = itemLabel && (totalItems === 1 ? itemLabel : `${itemLabel}s`);
+
   return (
-    <div className={cn('flex flex-wrap items-center justify-between gap-3', className)} style={{ color: textColor }}>
+    <div className={cn('flex flex-wrap items-center gap-x-6 gap-y-2', className)} style={{ color: textColor }}>
       {(showItemsRange || showTotalItems) && (
         <div className="text-sm" style={{ color: mutedColor }}>
           {showItemsRange && totalItems > 0 && <span>{startItem}–{endItem}</span>}
           {showTotalItems && (
             <span>
               {showItemsRange && ' of '}
-              {totalItems} {totalItems === 1 ? 'item' : 'items'}
+              {totalItems}
+              {pluralizedItemLabel && ` ${pluralizedItemLabel}`}
             </span>
           )}
         </div>
@@ -91,7 +104,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         {variant === 'advanced' && onPageSizeChange && (
           <div className="flex items-center gap-1.5 text-sm">
             <label htmlFor="pagination-page-size" style={{ color: mutedColor }}>
-              Items per page:
+              {rowsLabel}
             </label>
             <select
               id="pagination-page-size"
