@@ -26,7 +26,23 @@ import { getRoleColor, type RoleName } from '@/theme/roles';
 export type BadgeTone = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'disabled';
 
 const badgeVariants = cva(
-  'inline-flex h-6 shrink-0 items-center justify-center whitespace-nowrap rounded-lg px-2 font-[var(--typo-body-font-family,_Noto_Sans,_sans-serif)] text-sm font-normal transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2'
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-[var(--typo-body-font-family,_Noto_Sans,_sans-serif)] font-normal transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+  {
+    variants: {
+      size: {
+        /** Figma "Text Badge" spec (node-id 7584:27300): 24px tall, 8px padding, 8px radius, 14px text. */
+        md: 'h-6 rounded-lg px-2 text-sm',
+        /**
+         * Dense contexts where a 24px pill would dominate its row — e.g. the
+         * per-step status pills in `Stepper`'s `showStatusBadge` layout.
+         * NOT in the Figma spec yet (Figma defines only the 24px size);
+         * raise a Figma-side variant request before leaning on this widely.
+         */
+        sm: 'h-5 rounded-md px-1.5 text-xs',
+      },
+    },
+    defaultVariants: { size: 'md' },
+  }
 );
 
 interface ToneRoles {
@@ -92,10 +108,12 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, Varia
   tone?: BadgeTone;
   /** Figma "Soft background" property. Ignored for `default` and `disabled`, which have one fixed treatment. */
   soft?: boolean;
+  /** Pill size. `md` (default) is the Figma spec; `sm` is a non-Figma dense variant. */
+  size?: 'md' | 'sm';
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, tone = 'default', soft = false, style, ...props }, ref) => {
+  ({ className, tone = 'default', soft = false, size = 'md', style, ...props }, ref) => {
     let backgroundColor: string;
     let color: string;
     let borderColor: string | undefined;
@@ -124,7 +142,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         ref={ref}
-        className={cn(badgeVariants(), tone === 'default' || (tone !== 'disabled' && soft) ? 'border' : '', className)}
+        className={cn(badgeVariants({ size }), tone === 'default' || (tone !== 'disabled' && soft) ? 'border' : '', className)}
         style={{ backgroundColor, color, borderColor, ...style }}
         {...props}
       />
