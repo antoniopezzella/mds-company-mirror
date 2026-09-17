@@ -64,6 +64,8 @@ export type RoleName =
   | 'surface.accent'
   | 'surface.secondary'
   | 'surface.secondary.hover'
+  | 'surface.hover'
+  | 'surface.selected'
   | 'surface.navigation'
   | 'surface.navigation.hover'
   | 'surface.navigation.active'
@@ -120,6 +122,8 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
   'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
   'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
+  'surface.hover': { semantic: 'surfaceHover', description: 'Hover state for rows/list items on a default surface — sky tint in light, blue975 in dark' },
+  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — always reads stronger than surface.hover' },
   'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
   'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
