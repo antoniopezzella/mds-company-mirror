@@ -28,10 +28,17 @@ export default {
         // cap without the `container` utility's centering/padding.
         container: '1540px',
       },
+      // These offsets came from shadcn's defaults, which assume
+      // `--radius: 0.5rem` (8px) and yield md=6px / sm=4px. This repo
+      // overrides --radius to the Marsh DS standard of 2px but kept the
+      // offsets, so `md` collapsed to calc(2px - 2px) = 0 and `sm` went
+      // negative — leaving ~110 `rounded-md`/`rounded-sm` usages silently
+      // rendering square. Rescaled around the 2px standard so `md` is the
+      // DS radius and the steps stay monotonic.
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: 'calc(var(--radius) + 2px)',
+        md: 'var(--radius)',
+        sm: 'calc(var(--radius) - 1px)',
       },
       colors: {
         background: 'hsl(var(--background))',
