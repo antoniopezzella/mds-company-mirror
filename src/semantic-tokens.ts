@@ -44,6 +44,14 @@ export const semanticColors = {
   surfaceMuted:           ref('neutral200'),       // #e3e3e3 — Muted backgrounds
   surfaceAccent:          ref('gray250'),          // #f7f8f8 — Warm accent (was blueGray75)
   surfaceSecondaryHover:  ref('blue100'),          // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
+  // Hover / selected states for rows and list items sitting on surfaceDefault
+  // (table rows, list options, menu items). Mirrors the navigation pair below:
+  // a blue tint stepped over the base surface, hover lighter than selected, so
+  // selection always reads stronger than hover. Distinct from
+  // surfaceSecondaryHover, which is the overlay for surfaces that are ALREADY
+  // sky blue and therefore stays light in dark mode.
+  surfaceHover:           ref('blue100'),          // #ebf7ff — Sky tint on a default surface
+  surfaceSelected:        ref('blue250'),          // #ceecff — Sky Blue; selected row/item
   surfaceNavigation:      ref('blue1000'),         // #000f47 — Midnight Blue header (legacy)
   surfaceNavigationMode:  ref('blue1100'),         // #002c77 — MODE Surface Primary (Figma future-state)
   // Approximations of white overlays blended on `#000f47` to produce stable hex values
@@ -154,6 +162,11 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   surfaceNavigation:       tokens.blue1000,                  // #000f47 — Midnight Blue (same as light)
   surfaceNavigationHover:  tokens.blue975,                   // #1a2759 — ~white@10% over #000f47
   surfaceNavigationActive: tokens.blue990,                   // #333f6b — ~white@20% over #000f47
+  // Same stepping as the navigation pair above, reused deliberately so hover
+  // reads identically wherever it appears in dark mode. The light-mode sky
+  // tints would be near-white here and fail against white text (1.09:1).
+  surfaceHover:            tokens.blue975,                   // #1a2759 — white on it: 14.20:1
+  surfaceSelected:         tokens.blue990,                   // #333f6b — white on it: 10.17:1
   surfaceAccentStrong:     tokens.gray700,                   // #8a8c88 (was blueGray700)
   surfaceHero:             tokens.gray950,                   // #3e4944 (was blueGray850)
   surfaceDisabled:         tokens.neutral800,                // #3b3b3b
