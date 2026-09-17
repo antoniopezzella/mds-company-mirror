@@ -19,6 +19,14 @@ const meta: Meta<typeof Pagination> = {
   },
   argTypes: {
     variant: { control: 'select', options: ['simple', 'advanced'] },
+    itemLabel: {
+      control: 'text',
+      description: 'Word appended after the total count, auto-pluralized. Pass \'\' for MUI TablePagination\'s bare "1–5 of 8" convention.',
+    },
+    rowsLabel: {
+      control: 'text',
+      description: 'Label before the page-size selector — pass "Rows per page:" to match MUI\'s wording.',
+    },
   },
 };
 
