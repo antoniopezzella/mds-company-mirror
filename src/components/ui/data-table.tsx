@@ -267,7 +267,15 @@ export function DataTable<TData, TValue>({
       : extra ?? {};
 
   const cellPadding = DENSITY_PADDING[density];
-  const tableStyle: React.CSSProperties | undefined = enableColumnResizing ? { width: table.getTotalSize() } : undefined;
+  // `minWidth: '100%'` matters when resizing is on: the columns' summed
+  // width is often narrower than the container, and without this the table
+  // stops short and leaves dead space (with the header band ending
+  // mid-shell). The explicit width still wins once columns are resized
+  // wider than the container, which is what keeps horizontal scrolling and
+  // the pinned-column offsets working.
+  const tableStyle: React.CSSProperties | undefined = enableColumnResizing
+    ? { width: table.getTotalSize(), minWidth: '100%' }
+    : undefined;
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
