@@ -49,4 +49,12 @@ describe('Badge', () => {
     render(<Badge data-testid="my-badge">Tagged</Badge>);
     expect(screen.getByTestId('my-badge')).toBeInTheDocument();
   });
+
+  it('defaults to the 24px Figma size and shrinks with size="sm"', () => {
+    const { container: md } = render(<Badge>Default</Badge>);
+    const { container: sm } = render(<Badge size="sm">Small</Badge>);
+    expect((md.firstElementChild as HTMLElement).className).toMatch(/\bh-6\b/);
+    expect((sm.firstElementChild as HTMLElement).className).toMatch(/\bh-5\b/);
+    expect((sm.firstElementChild as HTMLElement).className).not.toMatch(/\bh-6\b/);
+  });
 });

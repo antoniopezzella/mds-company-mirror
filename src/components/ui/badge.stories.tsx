@@ -31,6 +31,11 @@ const meta: Meta<typeof Badge> = {
       control: 'boolean',
       description: 'Figma "Soft background" property. No effect on `default` or `disabled`, which have a single fixed treatment.',
     },
+    size: {
+      control: 'select',
+      options: ['md', 'sm'],
+      description: '`md` (default) is the Figma spec (24px). `sm` (20px) is a non-Figma dense variant for tight rows — e.g. Stepper\'s per-step status pills.',
+    },
   },
 };
 
@@ -65,6 +70,33 @@ export const Soft: StoryObj = {
       <Badge tone="warning" soft>Notice</Badge>
       <Badge tone="danger" soft>Negative</Badge>
       <Badge tone="disabled" soft>Disabled</Badge>
+    </div>
+  ),
+};
+
+export const Sizes: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`md` (default) is the Figma spec — 24px tall, 8px padding, 8px radius, 14px text. `sm` is a non-Figma dense variant (20px / 12px text) for tight rows, such as `Stepper`\'s per-step status pills; raise a Figma-side variant request before leaning on it widely.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge tone="info" soft>Informative</Badge>
+        <Badge tone="success" soft>Positive</Badge>
+        <Badge tone="danger" soft>Negative</Badge>
+        <span className="text-xs opacity-60">md (Figma spec)</span>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge tone="info" soft size="sm">Informative</Badge>
+        <Badge tone="success" soft size="sm">Positive</Badge>
+        <Badge tone="danger" soft size="sm">Negative</Badge>
+        <span className="text-xs opacity-60">sm (dense)</span>
+      </div>
     </div>
   ),
 };
