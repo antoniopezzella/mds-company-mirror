@@ -1,7 +1,19 @@
 {
   "files": [],
+  // Solution-style config: `files: []` means these compilerOptions are unused
+  // by `tsc -b` (each referenced project carries its own). They exist for
+  // tools that read only the root tsconfig — notably Vercel, which
+  // type-checks `api/` functions against it and otherwise reports TS2732 on
+  // the handler's `knowledge-base.json` import.
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true
+  },
   "references": [
     { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.api.json" }
   ]
 }

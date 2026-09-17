@@ -1,5 +1,8 @@
 import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
-import { retrieve, type Doc } from './_lib/retrieve';
+// Explicit `.js` extension: Vercel type-checks functions under node16-style
+// ESM resolution, which requires it (TS2835). TypeScript still maps it to
+// the sibling `retrieve.ts`, and it resolves the same under `bundler`.
+import { retrieve, type Doc } from './_lib/retrieve.js';
 import kbDocsRaw from './_data/knowledge-base.json';
 
 export const config = { runtime: 'edge' };
