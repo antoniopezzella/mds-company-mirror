@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import MarshOneHeader from '../components/MarshOneHeader';
-import { WebsiteAlertBanner } from '../../../components/WebsiteAlertBanner';
 import Hero from '../components/Hero';
 import SolutionsGrid from '../components/SolutionsGrid';
 import Stats from '../components/Stats';
@@ -23,19 +22,10 @@ import { AIAgentBot } from '../../../components/AIAgentBot';
 export const MarshOneHomepage: React.FC = () => {
   return (
     <Box component="main" sx={{ backgroundColor: '#fff' }}>
-      {/* Website Alert Banner */}
-      <WebsiteAlertBanner
-        title="Important Announcement"
-        message="We're evolving and building a new, expanded Marsh brand to represent all of our capabilities."
-        brand="marsh"
-        ctaText="Discover new Marsh"
-        ctaUrl="/learn-more"
-        onClose={() => console.debug('Banner closed')}
-        fullWidth
-      />
-      
-      {/* Header — transparent, fixed, overlays hero, offset below banner */}
-      <MarshOneHeader height={96} scrollThreshold={50} offsetTop={96} />
+      {/* Header — transparent, fixed, overlays hero. `offsetTop` used to be
+          96 to clear the alert banner that sat above it; with the banner
+          gone the header sits flush at the top (offsetTop defaults to 0). */}
+      <MarshOneHeader height={96} scrollThreshold={50} />
 
       {/* Hero Section */}
       <Box component="section" id="hero" sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
