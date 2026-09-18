@@ -2537,10 +2537,6 @@
         "$type": "color",
         "$value": "{color.blue100}"
       },
-      "surfaceHover": {
-        "$type": "color",
-        "$value": "{color.blue100}"
-      },
       "surfaceSelected": {
         "$type": "color",
         "$value": "{color.blue250}"
@@ -2808,13 +2804,9 @@
         "$type": "color",
         "$value": "{color.blue990}"
       },
-      "surfaceHover": {
-        "$type": "color",
-        "$value": "{color.blue975}"
-      },
       "surfaceSelected": {
         "$type": "color",
-        "$value": "{color.blue990}"
+        "$value": "{color.blue975}"
       },
       "surfaceAccentStrong": {
         "$type": "color",
@@ -3054,10 +3046,6 @@
             "$value": "{semantic.color.surfaceSecondaryHover}"
           }
         },
-        "hover": {
-          "$type": "color",
-          "$value": "{semantic.color.surfaceHover}"
-        },
         "selected": {
           "$type": "color",
           "$value": "{semantic.color.surfaceSelected}"
@@ -3273,10 +3261,6 @@
             "$type": "color",
             "$value": "{semantic.color.surfaceSecondaryHover}"
           }
-        },
-        "hover": {
-          "$type": "color",
-          "$value": "{semanticDark.color.surfaceHover}"
         },
         "selected": {
           "$type": "color",

@@ -189,12 +189,6 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceHero",
   },
   {
-    "dark": "#1a2759",
-    "light": "#ebf7ff",
-    "role": "surface.hover",
-    "semantic": "surfaceHover",
-  },
-  {
     "dark": "#000f47",
     "light": "#000f47",
     "role": "surface.navigation",
@@ -225,7 +219,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceSecondaryHover",
   },
   {
-    "dark": "#333f6b",
+    "dark": "#1a2759",
     "light": "#ceecff",
     "role": "surface.selected",
     "semantic": "surfaceSelected",

@@ -193,7 +193,6 @@
   --color-surface-muted: #e3e3e3;
   --color-surface-accent: #f7f8f8;
   --color-surface-secondary-hover: #ebf7ff;
-  --color-surface-hover: #ebf7ff;
   --color-surface-selected: #ceecff;
   --color-surface-navigation: #000f47;
   --color-surface-navigation-mode: #002c77;
@@ -263,8 +262,7 @@
   --color-surface-muted: #3b3b3b;
   --color-surface-accent: #6a6e6b;
   --color-surface-secondary-hover: #ebf7ff;
-  --color-surface-hover: #1a2759;
-  --color-surface-selected: #333f6b;
+  --color-surface-selected: #1a2759;
   --color-surface-navigation: #000f47;
   --color-surface-navigation-mode: #002c77;
   --color-surface-navigation-hover: #1a2759;
