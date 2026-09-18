@@ -156,6 +156,35 @@ export const EmptyCustom: StoryObj = {
   ),
 };
 
+export const FullToolbar: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The tablecn toolbar shape: search plus per-column faceted filters on the left, Sort / Density / Export / Columns on the right. Each filter is a multi-select popover with per-value counts derived from the column itself, showing the selected values as chips on the trigger (collapsing to a count past two) and offering Clear. A Reset button appears next to the filters whenever any are active. Sort exposes the multi-column sort as an editable list — the same state shift-clicking headers produces.',
+      },
+    },
+  },
+  render: () => (
+    <DataTable
+      columns={baseColumns}
+      data={largePolicyData}
+      searchKey="name"
+      searchPlaceholder="Search policies..."
+      pageSize={8}
+      facetedFilters={[
+        { columnId: 'status', title: 'Status' },
+        { columnId: 'renewalDate', title: 'Renewal' },
+      ]}
+      enableSortList
+      enableColumnVisibility
+      enableDensityToggle
+      enableExport
+      exportFilename="policies"
+    />
+  ),
+};
+
 function InlineEditDemo() {
   const [rows, setRows] = useState<Policy[]>(policyData);
   const [log, setLog] = useState<string[]>([]);
