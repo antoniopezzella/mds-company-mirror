@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { LogOut, Settings, User } from 'lucide-react';
 import {
   DropdownMenu,
@@ -30,7 +31,7 @@ export const Default: StoryObj = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open menu</button>
+        <Button variant="outline" size="sm">Open menu</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -54,7 +55,7 @@ export const AlignedEnd: StoryObj = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Options</button>
+        <Button variant="outline" size="sm">Options</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem>Edit</DropdownMenuItem>
@@ -71,7 +72,7 @@ export const WithDisabledItem: StoryObj = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Actions</button>
+        <Button variant="outline" size="sm">Actions</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Export CSV</DropdownMenuItem>

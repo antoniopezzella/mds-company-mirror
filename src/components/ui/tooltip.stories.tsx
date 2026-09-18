@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { Tooltip } from './tooltip';
 
 /**
@@ -46,7 +47,7 @@ type Story = StoryObj<typeof Tooltip>;
 export const Default: Story = {
   args: {
     title: 'Save your changes',
-    children: <button className="rounded border px-3 py-1.5 text-sm">Hover me</button>,
+    children: <Button variant="outline" size="sm">Hover me</Button>,
   },
 };
 
@@ -55,7 +56,7 @@ export const DangerTone: Story = {
     title: 'This action cannot be undone',
     tone: 'danger',
     arrow: true,
-    children: <button className="rounded border px-3 py-1.5 text-sm">Delete</button>,
+    children: <Button variant="outline" size="sm">Delete</Button>,
   },
 };
 
@@ -63,7 +64,7 @@ export const SuccessTone: Story = {
   args: {
     title: 'Saved successfully',
     tone: 'success',
-    children: <button className="rounded border px-3 py-1.5 text-sm">Save</button>,
+    children: <Button variant="outline" size="sm">Save</Button>,
   },
 };
 
@@ -71,7 +72,7 @@ export const BottomPlacement: Story = {
   args: {
     title: 'Appears below the trigger',
     placement: 'bottom',
-    children: <button className="rounded border px-3 py-1.5 text-sm">Hover me</button>,
+    children: <Button variant="outline" size="sm">Hover me</Button>,
   },
 };
 
@@ -79,7 +80,7 @@ export const WithoutArrow: Story = {
   args: {
     title: 'No arrow pointer',
     arrow: false,
-    children: <button className="rounded border px-3 py-1.5 text-sm">Hover me</button>,
+    children: <Button variant="outline" size="sm">Hover me</Button>,
   },
 };
 
@@ -87,7 +88,7 @@ export const LargeSize: Story = {
   args: {
     title: 'A larger tooltip for more prominent hints',
     size: 'lg',
-    children: <button className="rounded border px-3 py-1.5 text-sm">Hover me</button>,
+    children: <Button variant="outline" size="sm">Hover me</Button>,
   },
 };
 
@@ -97,7 +98,7 @@ export const AllPlacements: Story = {
       {(['top-start', 'top', 'top-end', 'left', 'right', 'bottom-start', 'bottom', 'bottom-end'] as const).map(
         (placement) => (
           <Tooltip key={placement} title={placement} placement={placement}>
-            <button className="rounded border px-3 py-1.5 text-sm">{placement}</button>
+            <Button variant="outline" size="sm">{placement}</Button>
           </Tooltip>
         )
       )}

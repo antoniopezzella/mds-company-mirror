@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { Toaster, showSnackbar } from './toaster';
 import { toast } from './use-toast';
 
@@ -52,21 +53,21 @@ export const Tones: StoryObj = {
   render: () => (
     <>
       <div className="flex flex-wrap gap-2">
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => toast({ tone: 'default', description: 'Default toast' })}>
+        <Button variant="outline" size="sm" onClick={() => toast({ tone: 'default', description: 'Default toast' })}>
           Default
-        </button>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => toast({ tone: 'success', description: 'Saved successfully' })}>
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => toast({ tone: 'success', description: 'Saved successfully' })}>
           Success
-        </button>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => toast({ tone: 'warning', description: 'Storage almost full' })}>
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => toast({ tone: 'warning', description: 'Storage almost full' })}>
           Warning
-        </button>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => toast({ tone: 'danger', description: 'Failed to save changes' })}>
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => toast({ tone: 'danger', description: 'Failed to save changes' })}>
           Danger
-        </button>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => toast({ tone: 'info', description: 'A new version is available' })}>
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => toast({ tone: 'info', description: 'A new version is available' })}>
           Info
-        </button>
+        </Button>
       </div>
       <Toaster />
     </>
@@ -110,9 +111,9 @@ export const StackingMultiple: StoryObj = {
 export const SnackbarSuccess: StoryObj = {
   render: () => (
     <>
-      <button className="rounded border px-3 py-1.5 text-sm" onClick={() => showSnackbar({ message: 'Policy saved', severity: 'success' })}>
+      <Button variant="outline" size="sm" onClick={() => showSnackbar({ message: 'Policy saved', severity: 'success' })}>
         Save policy
-      </button>
+      </Button>
       <Toaster />
     </>
   ),
@@ -121,9 +122,9 @@ export const SnackbarSuccess: StoryObj = {
 export const SnackbarError: StoryObj = {
   render: () => (
     <>
-      <button className="rounded border px-3 py-1.5 text-sm" onClick={() => showSnackbar({ message: 'Failed to save policy', severity: 'error' })}>
+      <Button variant="outline" size="sm" onClick={() => showSnackbar({ message: 'Failed to save policy', severity: 'error' })}>
         Trigger error
-      </button>
+      </Button>
       <Toaster />
     </>
   ),

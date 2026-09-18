@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import {
   Sheet,
   SheetClose,
@@ -30,7 +31,7 @@ export const Right: StoryObj = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open (right)</button>
+        <Button variant="outline" size="sm">Open (right)</Button>
       </SheetTrigger>
       <SheetContent side="right">
         <SheetHeader>
@@ -40,9 +41,9 @@ export const Right: StoryObj = {
         <p className="text-sm">Sheet body content goes here.</p>
         <SheetFooter>
           <SheetClose asChild>
-            <button className="rounded border px-3 py-1.5 text-sm">Cancel</button>
+            <Button variant="outline" size="sm">Cancel</Button>
           </SheetClose>
-          <button className="rounded bg-[#000f47] px-3 py-1.5 text-sm text-white">Apply</button>
+          <Button variant="primary" size="sm">Apply</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -53,7 +54,7 @@ export const Left: StoryObj = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open (left)</button>
+        <Button variant="outline" size="sm">Open (left)</Button>
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
@@ -69,7 +70,7 @@ export const Top: StoryObj = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open (top)</button>
+        <Button variant="outline" size="sm">Open (top)</Button>
       </SheetTrigger>
       <SheetContent side="top">
         <SheetHeader>
@@ -85,7 +86,7 @@ export const Bottom: StoryObj = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open (bottom)</button>
+        <Button variant="outline" size="sm">Open (bottom)</Button>
       </SheetTrigger>
       <SheetContent side="bottom">
         <SheetHeader>
