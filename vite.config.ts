@@ -24,7 +24,12 @@ export default defineConfig({
       output: {
         manualChunks: {
           'gsap': ['gsap', 'gsap/ScrollTrigger', 'gsap/ScrollToPlugin'],
-          'react-vendor': ['react', 'react-dom', 'react-router-dom']
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Split the heavy vendors out of the entry chunk: they download in
+          // parallel and cache independently of app code across deploys.
+          'mui-datagrid': ['@mui/x-data-grid'],
+          'recharts': ['recharts'],
+          'mui': ['@mui/material', '@mui/icons-material']
         }
       }
     },

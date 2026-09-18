@@ -1,9 +1,12 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from './App';
 import { usePageTracking } from './hooks/usePageTracking';
 
 // Lazy load all page components for better performance
+// App is the dashboard route itself — it pulls in @mui/x-data-grid and
+// recharts, so importing it eagerly put both in the entry chunk and made
+// every other route wait on them before first paint.
+const App = lazy(() => import('./App'));
 const TestPage = lazy(() => import('./pages/TestPage'));
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
 const SimpleApp = lazy(() => import('./pages/SimpleApp'));
