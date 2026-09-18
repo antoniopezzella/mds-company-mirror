@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, Inbox, SearchX } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
@@ -22,6 +22,7 @@ import { Input } from './input';
 import { Pagination } from './pagination';
 import { Skeleton } from './skeleton';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty';
 
 /**
  * DataTable — no MDS/Figma spec exists for this yet; built matching real
@@ -146,6 +147,13 @@ export interface DataTableProps<TData, TValue> {
   pageCount?: number;
   rowCount?: number;
   onPaginationChange?: (pageIndex: number, pageSize: number) => void;
+  /**
+   * Replaces the built-in empty state entirely. Leave unset to get the
+   * default `Empty` block, which already distinguishes "no data at all"
+   * from "the current search matched nothing" and offers to clear the
+   * search in the latter case.
+   */
+  emptyState?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -169,6 +177,7 @@ export function DataTable<TData, TValue>({
   pageCount,
   rowCount,
   onPaginationChange,
+  emptyState,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -235,6 +244,11 @@ export function DataTable<TData, TValue>({
     table.setPageSize(size);
     if (manualPagination) onPaginationChange?.(0, size);
   };
+
+  // Empty because a filter excluded everything, vs. genuinely having no data.
+  // Worth telling apart: the first is recoverable by the user, the second
+  // isn't, and offering "clear search" when nothing was searched is noise.
+  const isFilteredEmpty = columnFilters.some((f) => f.value !== '' && f.value != null) && data.length > 0;
 
   const exportableColumns = React.useMemo(() => table.getAllLeafColumns().filter((c) => c.getCanHide()), [table]);
 
@@ -462,8 +476,36 @@ export function DataTable<TData, TValue>({
               ))
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="px-3 py-6 text-center text-sm" style={{ color: mutedColor }}>
-                  No results.
+                {/* `p-0`: Empty brings its own padding, so the cell must not
+                    add a second layer around it. */}
+                <td colSpan={columns.length} className="p-0">
+                  {emptyState ?? (
+                    // border-0: Empty's default dashed outline would read as a
+                    // second box inside the table's own border.
+                    <Empty className="border-0">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">{isFilteredEmpty ? <SearchX /> : <Inbox />}</EmptyMedia>
+                        <EmptyTitle>{isFilteredEmpty ? 'No matching results' : 'No data yet'}</EmptyTitle>
+                        <EmptyDescription>
+                          {isFilteredEmpty
+                            ? 'No rows match your current search. Try a different term, or clear the search to see everything.'
+                            : 'There is nothing to show here yet.'}
+                        </EmptyDescription>
+                      </EmptyHeader>
+                      {isFilteredEmpty && (
+                        <EmptyContent>
+                          <button
+                            type="button"
+                            onClick={() => table.resetColumnFilters()}
+                            className="rounded-md border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2"
+                            style={{ borderColor, color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                          >
+                            Clear search
+                          </button>
+                        </EmptyContent>
+                      )}
+                    </Empty>
+                  )}
                 </td>
               </tr>
             ) : (
