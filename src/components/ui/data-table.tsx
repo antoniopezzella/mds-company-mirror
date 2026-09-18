@@ -217,7 +217,10 @@ export function DataTable<TData, TValue>({
   });
 
   const borderColor = getRoleColor('border.default');
-  const headerBg = getRoleColor('surface.subtle');
+  // tablecn's header is the page surface with a rule under it, not a
+  // filled band. Kept explicit rather than transparent because a sticky
+  // header has to paint over the rows scrolling beneath it.
+  const headerBg = getRoleColor('surface.default');
   const rowBg = getRoleColor('surface.default');
   // Hover is a neutral lift, selection is the brand tint — the usual split
   // (MUI DataGrid, shadcn) that keeps "passing over" visually distinct from
@@ -394,12 +397,12 @@ export function DataTable<TData, TValue>({
                   return (
                     <th
                       key={header.id}
-                      className={cn('relative px-3 text-left text-sm font-semibold', cellPadding)}
+                      className={cn('relative h-10 px-3 text-left text-sm font-medium')}
                       // aria-sort is what actually announces sort state to a
                       // screen reader; the icon alone conveys nothing to one.
                       aria-sort={canSort ? (sortState === 'asc' ? 'ascending' : sortState === 'desc' ? 'descending' : 'none') : undefined}
                       style={{
-                        color: mutedColor,
+                        color: textColor,
                         width: enableColumnResizing ? header.getSize() : undefined,
                         ...getPinnedCellStyle(header.column, headerBg, maxHeight ? { zIndex: header.column.getIsPinned() ? 3 : 2 } : undefined),
                       }}
@@ -412,8 +415,8 @@ export function DataTable<TData, TValue>({
                                 a mouse — no focus, no keyboard, no ARIA. */}
                             <button
                               type="button"
-                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2"
-                              style={{ color: mutedColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2"
+                              style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                               // Shift-click keeps its meaning as "add to the
                               // multi-sort" rather than opening the menu —
                               // Radix opens on pointerdown, so it has to be
