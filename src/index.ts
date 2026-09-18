@@ -1,15 +1,23 @@
 /**
  * Marsh Design System — public package entry point.
  *
- * Scoped deliberately for v0.1.0: the shadcn/Radix + Tailwind component set
- * (the actively-maintained, canonical half of the system) plus the design-token
- * API. The remaining MUI-only components are not exported here yet — see
+ * The shadcn/Radix + Tailwind component set (the actively-maintained,
+ * canonical half of the system) plus the design-token and theming APIs.
+ * The remaining MUI-only components are not exported here — see
  * docs/SHADCN_MIGRATION_STATUS.md for what's pending and why.
  */
 
 // Design tokens / theme API — the governance layer components consume.
 export { getRoleColor } from './theme/roles';
 export type { RoleName } from './theme/roles';
+
+// Theming providers. RoleVarsProvider publishes `var(--role-*)` for CSS/SCSS
+// contexts that can't call getRoleColor(); ThemeModeProvider gives consumers a
+// controlled light/dark toggle instead of the OS-preference fallback.
+export { RoleVarsProvider } from './theme/RoleVarsProvider';
+export type { RoleVarsProviderProps } from './theme/RoleVarsProvider';
+export { ThemeModeProvider, ThemeModeContext, useThemeMode } from './theme/ThemeModeContext';
+export type { ThemeMode } from './theme/ThemeModeContext';
 
 // Components (shadcn/Radix + Tailwind)
 export * from './components/ui/accordion';
@@ -18,6 +26,7 @@ export * from './components/ui/aspect-ratio';
 export * from './components/ui/attachment';
 export * from './components/ui/avatar';
 export * from './components/ui/badge';
+export * from './components/ui/badge-anchor';
 export * from './components/ui/breadcrumbs';
 export * from './components/ui/bubble';
 export * from './components/ui/button';
@@ -32,6 +41,7 @@ export * from './components/ui/combobox';
 export * from './components/ui/command';
 export * from './components/ui/context-menu';
 export * from './components/ui/data-table';
+export * from './components/ui/date-picker';
 export * from './components/ui/dialog';
 export * from './components/ui/drawer';
 export * from './components/ui/dropdown-menu';
@@ -75,7 +85,10 @@ export * from './components/ui/tabs';
 export * from './components/ui/text-field';
 export * from './components/ui/textarea';
 export * from './components/ui/toast';
+// toast()/useToast() live here — without them Toaster ships with no way to fire it.
+export * from './components/ui/use-toast';
 export * from './components/ui/toaster';
 export * from './components/ui/toggle-group';
 export * from './components/ui/toggle';
 export * from './components/ui/tooltip';
+export * from './components/ui/website-header';
