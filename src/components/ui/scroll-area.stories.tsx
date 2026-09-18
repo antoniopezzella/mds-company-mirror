@@ -3,10 +3,9 @@ import { ScrollArea } from './scroll-area';
 import { Separator } from './separator';
 
 /**
- * # ScrollArea (shadcn/ui)
+ * # ScrollArea
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (Radix ScrollArea), styled with
+ * No MDS/Figma spec exists for this component — built directly on Radix ScrollArea, styled with
  * `getRoleColor()` for the scrollbar thumb.
  */
 const meta: Meta<typeof ScrollArea> = {

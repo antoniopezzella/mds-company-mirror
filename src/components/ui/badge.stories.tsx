@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge } from './badge';
 
 /**
- * # Badge (shadcn/ui)
+ * # Badge
  *
  * A standalone tone-colored label pill — matches what the MDS "Text Badge"
  * Figma node actually describes (see the note in badge.tsx about the

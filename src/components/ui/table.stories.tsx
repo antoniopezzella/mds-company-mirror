@@ -3,11 +3,11 @@ import { Table, type TableColumn } from './table';
 import { Badge } from './badge';
 
 /**
- * # Table (shadcn/ui)
+ * # Table
  *
  * Radix-free, `getRoleColor()`-driven counterpart to the MUI `Table`. Covers
  * the core feature set — columns, sorting, row selection, loading skeletons,
- * pagination (via the shadcn `Pagination`) — matching the MUI twin's API for
+ * pagination (via the `Pagination`) — matching the MUI twin's API for
  * those props. The more exotic scroll-shadow / sticky-first-column polish
  * from the MUI version isn't ported in this first pass.
  */

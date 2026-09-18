@@ -14,7 +14,7 @@ import {
 } from './questionnaire';
 
 /**
- * # Questionnaire (shadcn/ui)
+ * # Questionnaire
  *
  * Multi-step form flow (progress, single/multi-select choices, keyboard
  * shortcuts, prev/next/submit navigation) — used for structured chat

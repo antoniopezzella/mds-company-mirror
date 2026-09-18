@@ -7,10 +7,9 @@ import { Marker } from '../../components/ui/marker';
 /**
  * # Border Contrast — health check
  *
- * The shared shadcn `--border` CSS variable (src/index.css) fails WCAG
+ * The shared `--border` CSS variable (src/index.css) fails WCAG
  * non-text contrast (3:1) in BOTH modes: 1.40:1 light (#dadada on white),
- * 1.84:1 dark (#404040 on #101010). It's the default border color for the
- * whole shadcn primitive layer — at least 6 real components reference it
+ * 1.84:1 dark (#404040 on #101010). It's the default border color for the whole primitive layer — at least 6 real components reference it
  * directly (StatCard, Bubble, Marker, Drawer, MessageScroller,
  * Questionnaire), likely more implicitly.
  *

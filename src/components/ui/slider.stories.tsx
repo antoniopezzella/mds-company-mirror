@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Slider } from './slider';
 
 /**
- * # Slider (shadcn/ui)
+ * # Slider
  *
  * Radix-based `Slider`. No MDS/Figma spec exists for this component yet —
- * built to match shadcn/ui's reference implementation directly, styled with
+ * built to the standard reference implementation directly, styled with
  * `getRoleColor()` role tokens rather than hardcoded hex, following the same
  * pattern established by Switch and Progress. Track fill uses
  * `interactive.primary`; thumb hover/active states are tracked via local

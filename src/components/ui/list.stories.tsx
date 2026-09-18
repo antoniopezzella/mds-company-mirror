@@ -4,7 +4,7 @@ import { List, type ListItemConfig } from './list';
 import { Badge } from './badge';
 
 /**
- * # List (shadcn/ui)
+ * # List
  *
  * `getRoleColor()`-driven counterpart to the MUI `List`. Built against the
  * real `items`-array API — the MDS `List.figma.tsx` mapping's

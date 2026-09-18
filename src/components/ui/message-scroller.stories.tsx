@@ -42,7 +42,7 @@ import { Tooltip } from './tooltip';
 import { getRoleColor } from '@/theme/roles';
 
 /**
- * # MessageScroller (shadcn/ui)
+ * # MessageScroller
  *
  * ```
  * pnpm dlx shadcn@latest add message-scroller

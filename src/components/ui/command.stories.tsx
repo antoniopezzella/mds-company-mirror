@@ -4,10 +4,9 @@ import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-
 import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from './command';
 
 /**
- * # Command (shadcn/ui)
+ * # Command
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (the `cmdk` library), styled with
+ * No MDS/Figma spec exists for this component — built directly on the `cmdk` library, styled with
  * `getRoleColor()`.
  */
 const meta: Meta<typeof Command> = {

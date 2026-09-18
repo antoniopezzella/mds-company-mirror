@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ImageWithFallback } from './image-with-fallback';
 
 /**
- * # ImageWithFallback (shadcn/ui)
+ * # ImageWithFallback
  *
  * `getRoleColor()`-driven counterpart to the MUI `ImageWithFallback`. Same
  * `src`/`fallbackSrc`/`showSkeleton` API as the MUI twin, plus `aspectRatio`

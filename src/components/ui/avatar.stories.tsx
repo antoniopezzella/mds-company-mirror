@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar } from './avatar';
 
 /**
- * # Avatar (shadcn/ui)
+ * # Avatar
  *
  * Radix-based counterpart to the MUI `Avatar`, styled with `getRoleColor()`
  * role tokens rather than hardcoded hex. Uses Radix's automatic

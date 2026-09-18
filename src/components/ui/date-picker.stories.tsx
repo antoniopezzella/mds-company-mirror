@@ -7,7 +7,7 @@ import { DatePicker, DateRangePicker, DatePickerInput, DateTimePicker, SmartDate
 import { getRoleColor } from '@/theme/roles';
 
 /**
- * # Date Picker (shadcn/ui)
+ * # Date Picker
  *
  * No MDS/Figma spec exists for this component — built matching every variant
  * on shadcn/ui's own official docs page

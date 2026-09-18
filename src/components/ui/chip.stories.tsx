@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 import { Chip } from './chip';
 
 /**
- * # Chip (shadcn/ui)
+ * # Chip
  *
  * Radix-free, `getRoleColor()`-driven counterpart to the MUI `Chip`. Same
  * `label`/`variant`/`tone`/`size`/`selectable`/`selected`/`onDelete`/`icon`

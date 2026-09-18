@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from './bubble';
 
 /**
- * # Bubble (shadcn/ui)
+ * # Bubble
  *
  * The message surface itself — 7 tone variants covering the range a real
  * chat needs (the user's own messages, assistant replies, quoted/ghost

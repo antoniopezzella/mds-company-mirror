@@ -12,7 +12,7 @@ import {
 } from './attachment';
 
 /**
- * # Attachment (shadcn/ui)
+ * # Attachment
  *
  * File/image chip for chat compose boxes and message attachments — part of
  * shadcn's chat-components family alongside MessageScroller/Message/Bubble/

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Header } from './header';
 
 /**
- * # Header (shadcn/ui)
+ * # Header
  *
  * Radix-based counterpart to the MUI `DashboardHeader`, styled with
  * `getRoleColor()` role tokens rather than hardcoded hex.

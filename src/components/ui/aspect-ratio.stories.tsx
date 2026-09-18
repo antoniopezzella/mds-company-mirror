@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AspectRatio } from './aspect-ratio';
 
 /**
- * # AspectRatio (shadcn/ui)
+ * # AspectRatio
  *
  * No MDS/Figma spec exists for this component — a thin re-export of Radix
- * AspectRatio (matching shadcn/ui's own convention; it's a layout
+ * AspectRatio (matching the standard convention; it's a layout
  * primitive with no visual styling of its own). For a styled MDS image box
  * with fixed ratios, see `ImageWithFallback`'s `aspectRatio` prop instead.
  */

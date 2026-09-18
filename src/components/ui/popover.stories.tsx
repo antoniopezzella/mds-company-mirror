@@ -2,10 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 /**
- * # Popover (shadcn/ui)
+ * # Popover
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly, styled with this repo's `getRoleColor()`
+ * No MDS/Figma spec exists for this component — built to standard headless-UI conventions, styled with this repo's `getRoleColor()`
  * role tokens.
  */
 const meta: Meta<typeof Popover> = {

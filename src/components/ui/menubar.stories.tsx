@@ -17,7 +17,7 @@ import {
 } from './menubar';
 
 /**
- * # Menubar (shadcn/ui)
+ * # Menubar
  *
  * Radix-based horizontal application menu bar — File/Edit/View style — with
  * the same real menu semantics as `DropdownMenu` (roving tabindex, arrow-key

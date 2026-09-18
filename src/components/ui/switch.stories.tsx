@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Switch } from './switch';
 
 /**
- * # Switch (shadcn/ui)
+ * # Switch
  *
  * Radix-based counterpart to the MUI `DSSwitch`, styled with `getRoleColor()`
  * role tokens rather than hardcoded hex, following the same pattern

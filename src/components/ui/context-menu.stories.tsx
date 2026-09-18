@@ -14,10 +14,9 @@ import {
 } from './context-menu';
 
 /**
- * # ContextMenu (shadcn/ui)
+ * # ContextMenu
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (Radix ContextMenu), styled with this
+ * No MDS/Figma spec exists for this component — built directly on Radix ContextMenu, styled with this
  * repo's `getRoleColor()` role tokens. Mirrors `DropdownMenu`'s API shape
  * since both are Radix menu-family primitives.
  */

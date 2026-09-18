@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Checkbox } from './checkbox';
 
 /**
- * # Checkbox (shadcn/ui)
+ * # Checkbox
  *
  * Radix-based counterpart to the MUI `DSCheckbox`, styled with the same
- * `getRoleColor()` role tokens (not hardcoded hex) — the first shadcn/ui
+ * `getRoleColor()` role tokens (not hardcoded hex) — the first
  * component in this repo to do so.
  *
  * ## API parity with MUI

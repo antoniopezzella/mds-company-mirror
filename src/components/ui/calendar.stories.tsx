@@ -4,7 +4,7 @@ import type { DateRange } from 'react-day-picker';
 import { Calendar } from './calendar';
 
 /**
- * # Calendar (shadcn/ui)
+ * # Calendar
  *
  * `react-day-picker` v10 wrapper re-skinned to pull colors from
  * `getRoleColor()` instead of the library's default `--rdp-*` CSS variables

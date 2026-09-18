@@ -13,7 +13,7 @@ import {
 } from './select';
 
 /**
- * # Select (shadcn/ui)
+ * # Select
  *
  * Radix `Select` renders a real custom-styled listbox — not a native
  * `<select>` — with proper keyboard nav, typeahead, and viewport-aware

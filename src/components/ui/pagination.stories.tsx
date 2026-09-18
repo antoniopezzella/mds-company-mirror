@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pagination } from './pagination';
 
 /**
- * # Pagination (shadcn/ui)
+ * # Pagination
  *
  * Radix-free, `getRoleColor()`-driven counterpart to the MUI `Pagination`.
  * Same `currentPage`/`totalItems`/`pageSize`/`pageSizeOptions`/`variant`/

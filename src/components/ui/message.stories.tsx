@@ -3,7 +3,7 @@ import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from './bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader } from './message';
 
 /**
- * # Message (shadcn/ui)
+ * # Message
  *
  * Row layout for a single chat turn — avatar, alignment (`start`/`end`),
  * header/footer metadata slots, and grouping. Composes with Bubble for the

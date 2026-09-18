@@ -3,10 +3,9 @@ import { useState } from 'react';
 import { Combobox } from './combobox';
 
 /**
- * # Combobox (shadcn/ui)
+ * # Combobox
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (Popover + Command combined), styled with
+ * No MDS/Figma spec exists for this component — built directly on Popover + Command combined, styled with
  * `getRoleColor()`. Unlike `Select`, this lets users type to filter a long
  * option list rather than scrolling through it.
  */
