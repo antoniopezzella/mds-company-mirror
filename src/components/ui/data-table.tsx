@@ -399,7 +399,10 @@ export function DataTable<TData, TValue>({
             {facetedFilters?.map((f) => (
               <DataTableFacetedFilter key={f.columnId} column={table.getColumn(f.columnId)} title={f.title} options={f.options} />
             ))}
-            {columnFilters.length > 0 && (
+            {/* Typing alone doesn't raise Reset — the search input clears
+                itself via its own X. Reset is only for the faceted filters,
+                where it's the one control that clears several at once. */}
+            {columnFilters.some((f) => f.id !== searchKey) && (
               <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
                 Reset
                 <X className="ml-1.5 h-4 w-4" />
