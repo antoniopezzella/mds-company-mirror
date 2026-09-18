@@ -618,7 +618,12 @@ export function DataTable<TData, TValue>({
             pageSize={currentPageSize}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
-            itemLabel=""
+            // Position is stated once, as "Page X of Y" — the old footer said
+            // it four ways at once (range text, numbered buttons, jump-to-page
+            // input, and the totals), which read as clutter.
+            variant="compact"
+            showItemsRange={false}
+            showTotalItems={false}
             rowsLabel="Rows per page:"
           />
         </div>
