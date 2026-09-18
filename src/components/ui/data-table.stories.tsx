@@ -156,6 +156,47 @@ export const EmptyCustom: StoryObj = {
   ),
 };
 
+function InlineEditDemo() {
+  const [rows, setRows] = useState<Policy[]>(policyData);
+  const [log, setLog] = useState<string[]>([]);
+
+  const editableColumns: ColumnDef<Policy>[] = [
+    { accessorKey: 'name', header: 'Policy', enableSorting: true, meta: { editable: true } },
+    baseColumns[1],
+    { accessorKey: 'premium', header: 'Premium', enableSorting: true, meta: { editable: true } },
+    { accessorKey: 'renewalDate', header: 'Renewal Date', enableSorting: true, meta: { editable: true } },
+  ];
+
+  return (
+    <div className="flex flex-col gap-3">
+      <DataTable
+        columns={editableColumns}
+        data={rows}
+        pageSize={5}
+        onCellEdit={({ rowIndex, columnId, value, previousValue }) => {
+          setRows((prev) => prev.map((r, i) => (i === rowIndex ? { ...r, [columnId]: value } : r)));
+          setLog((l) => [`${columnId}: "${previousValue}" → "${value}"`, ...l].slice(0, 4));
+        }}
+      />
+      <div className="text-xs opacity-70">
+        {log.length ? log.map((l, i) => <div key={i}>{l}</div>) : 'Double-click a Policy, Premium or Renewal Date cell — or focus one and press Enter.'}
+      </div>
+    </div>
+  );
+}
+
+export const InlineEditing: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Columns marked `meta: { editable: true }` become editable in place: double-click, or focus the cell and press Enter/F2. Enter or blur commits, Escape discards. `onCellEdit` fires only when the value actually changed — DataTable keeps no copy of your data, so the handler owns persisting it (here, story state). The Status column is left non-editable to show the two side by side.',
+      },
+    },
+  },
+  render: () => <InlineEditDemo />,
+};
+
 // ── Large dataset — feature-parity showcase ──────────────────────────────────
 // ~150 generated rows (deterministic, not Math.random — keeps this story
 // reproducible across runs/snapshots) exercising every opt-in feature added
