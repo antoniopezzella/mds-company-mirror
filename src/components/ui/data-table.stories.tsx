@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent } from 'storybook/test';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable, createSelectColumn } from './data-table';
 import { Badge } from './badge';
@@ -109,11 +110,51 @@ export const Empty: StoryObj = {
   parameters: {
     docs: {
       description: {
-        story: 'Data has arrived and there\'s genuinely nothing to show. Mirrors DataGrid\'s EmptyState story for parity.',
+        story:
+          'Data has arrived and there\'s genuinely nothing to show — rendered with the shared `Empty` component rather than a bare line of text. Mirrors DataGrid\'s EmptyState story for parity.',
       },
     },
   },
   render: () => <DataTable columns={baseColumns} data={[]} pageSize={5} />,
+};
+
+export const EmptyFiltered: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The other empty state: rows exist, but the current search excludes all of them. DataTable tells the two apart, so this one gets a different icon and message plus a "Clear search" action — offering that when nothing was searched would just be noise. The play function types a non-matching term to reach this state.',
+      },
+    },
+  },
+  render: () => <DataTable columns={baseColumns} data={policyData} searchKey="name" searchPlaceholder="Search policies..." pageSize={5} />,
+  play: async ({ canvasElement }) => {
+    const search = canvasElement.querySelector('input') as HTMLInputElement;
+    await userEvent.type(search, 'zzzzz');
+  },
+};
+
+export const EmptyCustom: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Pass `emptyState` to replace the built-in block entirely — for cases where the table sits in a flow with its own call to action.',
+      },
+    },
+  },
+  render: () => (
+    <DataTable
+      columns={baseColumns}
+      data={[]}
+      pageSize={5}
+      emptyState={
+        <div className="flex flex-col items-center gap-2 p-10 text-center">
+          <span className="text-base font-medium">No policies bound yet</span>
+          <span className="text-sm opacity-70">Once a quote is bound it will appear in this table.</span>
+        </div>
+      }
+    />
+  ),
 };
 
 // ── Large dataset — feature-parity showcase ──────────────────────────────────
