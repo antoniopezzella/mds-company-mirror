@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { useEffect, useState } from 'react';
 import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react';
 import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut } from './command';
@@ -64,9 +65,7 @@ export const CommandPalette: StoryObj = {
 
     return (
       <>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => setOpen(true)}>
-          Open command palette (⌘K)
-        </button>
+        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>Open command palette (⌘K)</Button>
         <CommandDialog open={open} onOpenChange={setOpen}>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>

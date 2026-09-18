@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ContentCard } from './card';
 import { Badge } from './badge';
+import { Button } from './button';
 
 /**
  * # Card
@@ -34,8 +35,8 @@ export const Composable: StoryObj = {
           <p className="text-sm">Review your coverage limits before the renewal date to avoid a lapse.</p>
         </CardContent>
         <CardFooter>
-          <button className="rounded bg-[#000f47] px-3 py-1.5 text-sm text-white">Review policy</button>
-          <button className="rounded border px-3 py-1.5 text-sm">Dismiss</button>
+          <Button variant="primary" size="sm">Review policy</Button>
+          <Button variant="outline" size="sm">Dismiss</Button>
         </CardFooter>
       </Card>
     </div>

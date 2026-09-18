@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { CalendarDays } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
 
@@ -72,7 +73,7 @@ export const AlignedStart: StoryObj = {
   render: () => (
     <HoverCard openDelay={100}>
       <HoverCardTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Hover for details</button>
+        <Button variant="outline" size="sm">Hover for details</Button>
       </HoverCardTrigger>
       <HoverCardContent align="start">
         <p className="text-sm">Content aligned to the start of the trigger, with a short open delay.</p>

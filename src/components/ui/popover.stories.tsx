@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 /**
@@ -21,7 +22,7 @@ export const Default: StoryObj = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open popover</button>
+        <Button variant="outline" size="sm">Open popover</Button>
       </PopoverTrigger>
       <PopoverContent>
         <div className="flex flex-col gap-2">
@@ -37,7 +38,7 @@ export const AlignedEnd: StoryObj = {
   render: () => (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Filters</button>
+        <Button variant="outline" size="sm">Filters</Button>
       </PopoverTrigger>
       <PopoverContent align="end">
         <p className="text-sm">Aligned to the end of the trigger.</p>

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './button';
 import { useState } from 'react';
 import {
   Dialog,
@@ -38,7 +39,7 @@ export const Composable: StoryObj = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open dialog</button>
+        <Button variant="outline" size="sm">Open dialog</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -48,9 +49,9 @@ export const Composable: StoryObj = {
         <p className="text-sm">Composable body content goes here — any layout you want.</p>
         <DialogFooter>
           <DialogClose asChild>
-            <button className="rounded border px-3 py-1.5 text-sm">Cancel</button>
+            <Button variant="outline" size="sm">Cancel</Button>
           </DialogClose>
-          <button className="rounded bg-[#000f47] px-3 py-1.5 text-sm text-white">Save changes</button>
+          <Button variant="primary" size="sm">Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -61,7 +62,7 @@ export const NoFooter: StoryObj = {
   render: () => (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="rounded border px-3 py-1.5 text-sm">Open dialog</button>
+        <Button variant="outline" size="sm">Open dialog</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -79,7 +80,7 @@ export const Sizes: StoryObj = {
       {(['sm', 'md', 'lg'] as const).map((size) => (
         <Dialog key={size}>
           <DialogTrigger asChild>
-            <button className="rounded border px-3 py-1.5 text-sm capitalize">{size}</button>
+            <Button variant="outline" size="sm" className="capitalize">{size}</Button>
           </DialogTrigger>
           <DialogContent size={size}>
             <DialogHeader>
@@ -100,9 +101,7 @@ export const ModalDefault: StoryObj<typeof Modal> = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => setOpen(true)}>
-          Open modal
-        </button>
+        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>Open modal</Button>
         <Modal
           open={open}
           onClose={() => setOpen(false)}
@@ -110,12 +109,10 @@ export const ModalDefault: StoryObj<typeof Modal> = {
           description="This action cannot be undone."
           footer={
             <>
-              <button className="rounded border px-3 py-1.5 text-sm" onClick={() => setOpen(false)}>
-                Cancel
-              </button>
-              <button className="rounded bg-[#c53532] px-3 py-1.5 text-sm text-white" onClick={() => setOpen(false)}>
+              <Button variant="outline" size="sm" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button variant="primary" destructive size="sm" onClick={() => setOpen(false)}>
                 Delete
-              </button>
+              </Button>
             </>
           }
         >
@@ -131,9 +128,7 @@ export const ModalFullScreen: StoryObj<typeof Modal> = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => setOpen(true)}>
-          Open fullscreen modal
-        </button>
+        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>Open fullscreen modal</Button>
         <Modal open={open} onClose={() => setOpen(false)} title="Fullscreen review" size="FullScreen">
           <p className="text-sm">Fullscreen modals are useful for document review or complex forms.</p>
         </Modal>
@@ -147,9 +142,7 @@ export const ModalNoHeader: StoryObj<typeof Modal> = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <button className="rounded border px-3 py-1.5 text-sm" onClick={() => setOpen(true)}>
-          Open modal
-        </button>
+        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>Open modal</Button>
         <Modal open={open} onClose={() => setOpen(false)} hasHeader={false}>
           <p className="text-sm">A modal with no header — just body content.</p>
         </Modal>
