@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # Run docs lint (fast fail) and token build to keep artifact aligned
 # Note: unit tests run in CI — local test env has a jsdom/ESM compatibility issue
 npm run docs:lint || exit 1
