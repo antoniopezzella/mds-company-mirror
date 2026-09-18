@@ -1,0 +1,56 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Changelog } from './_components/Changelog';
+
+<Meta title="Foundations/Changelog" />
+
+# Changelog
+
+Every released version of the design system, and what changed in it.
+
+This page renders [`CHANGELOG.md`](https://github.com/antoniopezzella/marsh-design-system/blob/main/CHANGELOG.md)
+directly from the repository — it is not a hand-kept copy, so the two can
+never disagree. Nothing below is written by hand.
+
+## How entries get here
+
+Entries are generated from **conventional commit messages**, so the commit
+you write *is* the changelog entry. There is no separate step to remember,
+and no way for a change to ship undocumented as long as it follows the
+format.
+
+```
+<type>(<scope>): <subject>
+
+feat(components): add a size prop to Badge
+fix(theme): repair the border-radius scale
+```
+
+`commitlint` enforces this at commit time (see **Foundations → Governance**),
+which is why an invalid type, an unknown scope, or a capitalised subject is
+rejected before a commit lands.
+
+The `type` decides which section an entry appears under:
+
+| Commit type | Section |
+| --- | --- |
+| `feat` | Features |
+| `fix` | Bug Fixes |
+| `perf` | Performance |
+| `refactor` | Refactoring |
+| `docs` | Documentation |
+| `build` | Build System |
+| `ci` | Continuous Integration |
+| `test` | Tests |
+| `chore` | Chores |
+
+Cutting a release runs `npm run release` (standard-version), which reads the
+commits since the last tag, works out the next semver number from their
+types, writes them into `CHANGELOG.md`, and tags the result.
+
+**Work that has been merged but not yet released does not appear below** —
+it lands here on the next release. To see what is currently unreleased,
+compare `main` against the latest tag.
+
+## Releases
+
+<Changelog />
