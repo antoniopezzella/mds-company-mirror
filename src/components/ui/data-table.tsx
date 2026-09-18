@@ -3,6 +3,7 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnPinningState,
+  type RowData,
   type RowSelectionState,
   type SortingState,
   type VisibilityState,
@@ -93,6 +94,28 @@ const DENSITY_LABEL: Record<Density, string> = {
   comfortable: 'Comfortable',
 };
 
+/**
+ * Opts a column into inline editing: `meta: { editable: true }` on its
+ * ColumnDef. Declared through TanStack's own ColumnMeta augmentation so it
+ * type-checks at the call site rather than being a loose string prop.
+ */
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- both params are required by the interface being augmented
+  interface ColumnMeta<TData extends RowData, TValue> {
+    editable?: boolean;
+  }
+}
+
+export interface CellEditParams<TData> {
+  rowId: string;
+  rowIndex: number;
+  columnId: string;
+  /** The edited text. Cast/parse it in the handler — the input is always a string. */
+  value: string;
+  previousValue: unknown;
+  row: TData;
+}
+
 /** Quotes a CSV field per RFC 4180 only when it actually needs it. */
 function csvField(value: unknown): string {
   const s = value == null ? '' : String(value);
@@ -154,6 +177,12 @@ export interface DataTableProps<TData, TValue> {
    * search in the latter case.
    */
   emptyState?: React.ReactNode;
+  /**
+   * Enables inline editing for columns marked `meta: { editable: true }`.
+   * Called on commit (Enter or blur), never on cancel (Escape). DataTable
+   * holds no copy of the data, so the handler owns persisting the change.
+   */
+  onCellEdit?: (params: CellEditParams<TData>) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -178,6 +207,7 @@ export function DataTable<TData, TValue>({
   rowCount,
   onPaginationChange,
   emptyState,
+  onCellEdit,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -185,6 +215,8 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [hoveredRow, setHoveredRow] = React.useState<string | null>(null);
   const [density, setDensity] = React.useState<Density>('standard');
+  const [editingCell, setEditingCell] = React.useState<{ rowId: string; columnId: string } | null>(null);
+  const [draft, setDraft] = React.useState('');
 
   const firstColumnId = columns[0]?.id ?? (columns[0] as { accessorKey?: string })?.accessorKey;
   const columnPinning = React.useMemo<ColumnPinningState>(
@@ -574,18 +606,88 @@ export function DataTable<TData, TValue>({
                       color: textColor,
                     }}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className={cn('px-3 text-sm', cellPadding)}
-                        style={{
-                          width: enableColumnResizing ? cell.column.getSize() : undefined,
-                          ...getPinnedCellStyle(cell.column, rowBackground),
-                        }}
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const isEditable = !!onCellEdit && cell.column.columnDef.meta?.editable;
+                      const isEditing = isEditable && editingCell?.rowId === row.id && editingCell?.columnId === cell.column.id;
+
+                      const beginEdit = () => {
+                        const current = cell.getValue();
+                        setDraft(current == null ? '' : String(current));
+                        setEditingCell({ rowId: row.id, columnId: cell.column.id });
+                      };
+                      const commit = () => {
+                        const previousValue = cell.getValue();
+                        setEditingCell(null);
+                        // Skip the callback when nothing actually changed, so
+                        // a stray click into and out of a cell isn't reported
+                        // to the consumer as an edit.
+                        if (draft !== (previousValue == null ? '' : String(previousValue))) {
+                          onCellEdit?.({ rowId: row.id, rowIndex: row.index, columnId: cell.column.id, value: draft, previousValue, row: row.original });
+                        }
+                      };
+
+                      return (
+                        <td
+                          key={cell.id}
+                          className={cn('px-3 text-sm', isEditing ? 'py-0' : cellPadding)}
+                          style={{
+                            width: enableColumnResizing ? cell.column.getSize() : undefined,
+                            ...getPinnedCellStyle(cell.column, rowBackground),
+                          }}
+                        >
+                          {isEditing ? (
+                            <Input
+                              // Focus-on-mount via ref rather than autoFocus:
+                              // entering edit mode must move focus or a
+                              // keyboard user is stranded, but autoFocus is
+                              // the blunt version jsx-a11y rightly rejects.
+                              // Guarded so re-renders while typing don't
+                              // re-steal focus.
+                              ref={(el) => {
+                                if (el && document.activeElement !== el) el.focus();
+                              }}
+                              value={draft}
+                              aria-label={`Edit ${cell.column.id}`}
+                              onChange={(e) => setDraft(e.target.value)}
+                              onBlur={commit}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  commit();
+                                } else if (e.key === 'Escape') {
+                                  e.preventDefault();
+                                  // Discard: clear the cell before React can
+                                  // fire the blur-commit on unmount.
+                                  setEditingCell(null);
+                                }
+                              }}
+                              className="h-8 w-full"
+                            />
+                          ) : isEditable ? (
+                            // A button, not a div with onDoubleClick: editing
+                            // has to be reachable by keyboard too (Enter/F2,
+                            // the convention spreadsheets use).
+                            <button
+                              type="button"
+                              onDoubleClick={beginEdit}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === 'F2') {
+                                  e.preventDefault();
+                                  beginEdit();
+                                }
+                              }}
+                              className="-mx-1 flex h-7 w-full items-center rounded px-1 text-left focus-visible:outline-none focus-visible:ring-2"
+                              style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                              title="Double-click or press Enter to edit"
+                            >
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </button>
+                          ) : (
+                            flexRender(cell.column.columnDef.cell, cell.getContext())
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })
