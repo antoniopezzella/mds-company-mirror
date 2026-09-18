@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.3.0...v0.4.0) (2026-09-18)
+
+
+### Features
+
+* **components:** add a column header menu to DataTable and right-cluster its footer ([84ebd85](https://github.com/antoniopezzella/marsh-design-system/commit/84ebd8510566240506134d02d1f8df554ead172e))
+* **components:** add faceted filters and a sort list to DataTable's toolbar ([de6a015](https://github.com/antoniopezzella/marsh-design-system/commit/de6a015e5850cd61c04d3bc924f79ac270aad28e))
+* **components:** add opt-in inline cell editing to DataTable ([98c62cc](https://github.com/antoniopezzella/marsh-design-system/commit/98c62cc1b040cbd99ede44185af18f20e4b1170a))
+* **components:** icon-only export and an in-field search clear ([7eaffb3](https://github.com/antoniopezzella/marsh-design-system/commit/7eaffb35442cfc10750283a1151a8570f06e05ee))
+* **components:** simplify DataTable's footer to the tablecn shape ([944bbff](https://github.com/antoniopezzella/marsh-design-system/commit/944bbff8cfb9308ab9102f1238257bf477ef53e6))
+
+
+### Bug Fixes
+
+* **components:** don't raise the toolbar Reset for the search filter ([57ed0d7](https://github.com/antoniopezzella/marsh-design-system/commit/57ed0d706b4207c952d72bbeda14d05ab41a2674))
+* **components:** use the DS Button for DataTable's remaining controls ([c450ba5](https://github.com/antoniopezzella/marsh-design-system/commit/c450ba5b2f4a9468dde2a6ee841d84735e28c5a5))
+* **components:** use the DS Button in story demos instead of raw buttons ([3f18b47](https://github.com/antoniopezzella/marsh-design-system/commit/3f18b47f627364f6b1742cc76780ebd4eb6b99c2))
+
+
+### Documentation
+
+* **storybook:** drop stale shadcn/ui labelling from component stories ([1afd730](https://github.com/antoniopezzella/marsh-design-system/commit/1afd730a72cf62d6c72a6293c92c98b1cb18690d))
+
+
+### Styling
+
+* **components:** match DataTable's header to the tablecn reference ([f48beb8](https://github.com/antoniopezzella/marsh-design-system/commit/f48beb83cb3a038ad2a373471a2f8818b731e709))
+
 ## [0.3.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.2.0...v0.3.0) (2026-09-18)
 
 
