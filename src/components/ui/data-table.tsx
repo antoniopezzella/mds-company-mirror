@@ -9,6 +9,8 @@ import {
   type VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -18,11 +20,14 @@ import { ChevronDown, ChevronsUpDown, ChevronUp, Download, EyeOff, Inbox, Search
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
+import { Button } from './button';
 import { Checkbox } from './checkbox';
 import { Input } from './input';
 import { Pagination } from './pagination';
 import { Skeleton } from './skeleton';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
+import { DataTableFacetedFilter, type FacetOption } from './data-table-faceted-filter';
+import { DataTableSortList } from './data-table-sort-list';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty';
 
 /**
@@ -183,6 +188,15 @@ export interface DataTableProps<TData, TValue> {
    * holds no copy of the data, so the handler owns persisting the change.
    */
   onCellEdit?: (params: CellEditParams<TData>) => void;
+  /**
+   * Multi-select filter controls in the toolbar, one per entry. Omit
+   * `options` to derive them (with counts) from the column's own values.
+   * DataTable injects an `arrIncludesSome` filterFn for these columns, since
+   * the default string matcher can't handle an array of selected values.
+   */
+  facetedFilters?: { columnId: string; title: string; options?: FacetOption[] }[];
+  /** Adds a Sort control listing active sorts, with add/remove/direction. */
+  enableSortList?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -208,6 +222,8 @@ export function DataTable<TData, TValue>({
   onPaginationChange,
   emptyState,
   onCellEdit,
+  facetedFilters,
+  enableSortList = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -218,6 +234,18 @@ export function DataTable<TData, TValue>({
   const [editingCell, setEditingCell] = React.useState<{ rowId: string; columnId: string } | null>(null);
   const [draft, setDraft] = React.useState('');
 
+  // Faceted filters set an array of selected values; TanStack's default
+  // filterFn compares strings and would match nothing, so these columns get
+  // `arrIncludesSome` unless the consumer already chose a filterFn.
+  const resolvedColumns = React.useMemo(() => {
+    if (!facetedFilters?.length) return columns;
+    const ids = new Set(facetedFilters.map((f) => f.columnId));
+    return columns.map((c) => {
+      const id = c.id ?? (c as { accessorKey?: string }).accessorKey;
+      return id && ids.has(id) && !c.filterFn ? { ...c, filterFn: 'arrIncludesSome' as const } : c;
+    });
+  }, [columns, facetedFilters]);
+
   const firstColumnId = columns[0]?.id ?? (columns[0] as { accessorKey?: string })?.accessorKey;
   const columnPinning = React.useMemo<ColumnPinningState>(
     () => ({ left: pinFirstColumn && firstColumnId ? [firstColumnId] : [] }),
@@ -226,7 +254,7 @@ export function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns,
+    columns: resolvedColumns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
@@ -234,6 +262,8 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     // Manual pagination: `data` is already just the current page, so
     // there's nothing for TanStack to slice — computing this model would
     // just re-paginate an already-single-page array.
@@ -332,19 +362,29 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      {(searchKey || enableColumnVisibility || enableExport || enableDensityToggle) && (
+      {(searchKey || enableColumnVisibility || enableExport || enableDensityToggle || facetedFilters?.length || enableSortList) && (
         <div className="flex flex-wrap items-center justify-between gap-2">
-          {searchKey ? (
-            <Input
-              placeholder={searchPlaceholder}
-              value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
-              onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
-              className="max-w-sm"
-            />
-          ) : (
-            <div />
-          )}
+          <div className="flex flex-wrap items-center gap-2">
+            {searchKey && (
+              <Input
+                placeholder={searchPlaceholder}
+                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
+                onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
+                className="h-8 w-56"
+              />
+            )}
+            {facetedFilters?.map((f) => (
+              <DataTableFacetedFilter key={f.columnId} column={table.getColumn(f.columnId)} title={f.title} options={f.options} />
+            ))}
+            {columnFilters.length > 0 && (
+              <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
+                Reset
+                <X className="ml-1.5 h-4 w-4" />
+              </Button>
+            )}
+          </div>
           <div className="ml-auto flex items-center gap-2">
+            {enableSortList && <DataTableSortList table={table} />}
             {enableDensityToggle && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
