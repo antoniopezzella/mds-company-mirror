@@ -233,6 +233,7 @@ export function DataTable<TData, TValue>({
   const [density, setDensity] = React.useState<Density>('standard');
   const [editingCell, setEditingCell] = React.useState<{ rowId: string; columnId: string } | null>(null);
   const [draft, setDraft] = React.useState('');
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
 
   // Faceted filters set an array of selected values; TanStack's default
   // filterFn compares strings and would match nothing, so these columns get
@@ -313,6 +314,8 @@ export function DataTable<TData, TValue>({
   // Empty because a filter excluded everything, vs. genuinely having no data.
   // Worth telling apart: the first is recoverable by the user, the second
   // isn't, and offering "clear search" when nothing was searched is noise.
+  const searchValue = (searchKey ? table.getColumn(searchKey)?.getFilterValue() : '') as string ?? '';
+
   const isFilteredEmpty = columnFilters.some((f) => f.value !== '' && f.value != null) && data.length > 0;
 
   const exportableColumns = React.useMemo(() => table.getAllLeafColumns().filter((c) => c.getCanHide()), [table]);
@@ -366,12 +369,32 @@ export function DataTable<TData, TValue>({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             {searchKey && (
-              <Input
-                placeholder={searchPlaceholder}
-                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
-                onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
-                className="h-8 w-56"
-              />
+              // Input has no adornment slot, so the clear control is
+              // positioned over it; `pr-8` keeps typed text from running
+              // underneath the button.
+              <div className="relative w-56">
+                <Input
+                  ref={searchInputRef}
+                  placeholder={searchPlaceholder}
+                  value={searchValue}
+                  onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
+                  className="h-8 w-full pr-8"
+                />
+                {searchValue && (
+                  <button
+                    type="button"
+                    aria-label="Clear search"
+                    onClick={() => {
+                      table.getColumn(searchKey)?.setFilterValue('');
+                      searchInputRef.current?.focus();
+                    }}
+                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-sm opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2"
+                    style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
             )}
             {facetedFilters?.map((f) => (
               <DataTableFacetedFilter key={f.columnId} column={table.getColumn(f.columnId)} title={f.title} options={f.options} />
@@ -406,14 +429,15 @@ export function DataTable<TData, TValue>({
               </DropdownMenu>
             )}
             {enableExport && (
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="sm"
+                iconOnly
+                icon={<Download className="h-4 w-4" />}
                 onClick={handleExport}
-                className="flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm transition-colors"
-                style={{ borderColor, color: textColor, backgroundColor: getRoleColor('surface.default') }}
-              >
-                <Download className="h-4 w-4" /> Export CSV
-              </button>
+                aria-label="Export CSV"
+                title="Export CSV"
+              />
             )}
             {enableColumnVisibility && (
               <DropdownMenu>
