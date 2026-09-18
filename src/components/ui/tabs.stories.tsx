@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tabs, type TabItem } from './tabs';
 
 /**
- * # Tabs (shadcn/ui)
+ * # Tabs
  *
  * Radix-based counterpart to the MUI `Tabs`, styled with `getRoleColor()`
  * role tokens rather than hardcoded hex.

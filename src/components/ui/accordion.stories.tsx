@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Accordion, type AccordionItem } from './accordion';
 
 /**
- * # Accordion (shadcn/ui)
+ * # Accordion
  *
  * Radix-based counterpart to the MUI `Accordion`, styled with `getRoleColor()`
  * role tokens rather than hardcoded hex.

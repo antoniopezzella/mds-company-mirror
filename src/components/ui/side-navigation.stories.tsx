@@ -14,7 +14,7 @@ const meta: Meta<typeof SideNavigation> = {
 **SideNavigation** - Collapsible sidebar navigation for B2B dashboard applications.
 
 ### API Parity with MUI
-This shadcn component maintains full API compatibility with the MUI SideNavigation:
+Maintains full API compatibility with the MUI SideNavigation:
 - Same props interface (items, onSupport, onNavigate, currentPath, variant)
 - Same collapsible group behavior
 - Same active state highlighting
@@ -403,7 +403,7 @@ export const PrimaryColorScheme: Story = {
 The primary color scheme uses Marsh's signature midnight blue as the background with sky blue accents for active states and visual connectors.
 
 **Visual Features:**
-- ✨ **Connecting lines** for expanded sub-items (shadcn style)
+- ✨ **Connecting lines** for expanded sub-items
 - 🎨 Sky blue borders (#ceecff) for active states
 - 📐 Vertical line connecting parent to sub-items
 - 🌙 Dark navy background for professional B2B look
@@ -449,7 +449,7 @@ export const SecondaryColorScheme: Story = {
 The secondary color scheme inverts the palette, using sky blue as the background with midnight blue accents.
 
 **Visual Features:**
-- ✨ **Connecting lines** for expanded sub-items (shadcn style)
+- ✨ **Connecting lines** for expanded sub-items
 - 🎨 Midnight blue borders (#000f47) for active states
 - 📐 Vertical line connecting parent to sub-items
 - ☀️ Lighter background for secondary navigation contexts
@@ -499,7 +499,7 @@ Compare the two MDS color schemes side by side to see how they work in different
 | **Primary** | Midnight Blue (#000f47) | White | Sky Blue (#ceecff) | Main navigation, B2B dashboards |
 | **Secondary** | Sky Blue (#ceecff) | Midnight Blue (#000f47) | Midnight Blue (#000f47) | Secondary nav, lighter contexts |
 
-Both schemes feature **visual connecting lines** for expanded groups, following shadcn's sidebar design patterns.
+Both schemes feature **visual connecting lines** for expanded groups, following the standard sidebar design patterns.
         `,
       },
     },
@@ -554,7 +554,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
           <div>
             <h3 className="font-semibold mb-2">Visual Connectors</h3>
             <p className="text-muted-foreground text-sm">
-              Both schemes include vertical connecting lines for expanded groups, following shadcn's design patterns.
+              Both schemes include vertical connecting lines for expanded groups, following the standard design patterns.
             </p>
           </div>
         </div>
@@ -570,7 +570,7 @@ export const MUIComparison: Story = {
         story: `
 **Comparison with MUI SideNavigation:**
 
-| Feature | MUI Version | shadcn Version |
+| Feature | MUI Version | Current |
 |---------|-------------|----------------|
 | Props API | \`items\`, \`variant\`, \`onNavigate\`, etc. | ✅ Same |
 | Variants | \`dark\`, \`light\` | ✅ Same |
@@ -592,7 +592,7 @@ export const MUIComparison: Story = {
   onSupport={() => openSupport()}
 />
 
-// shadcn version (identical API!)
+// current version (identical API!)
 <SideNavigation 
   items={navItems}
   variant="dark"
@@ -602,7 +602,7 @@ export const MUIComparison: Story = {
 />
 \`\`\`
 
-**Benefits of shadcn version:**
+**Benefits of the current version:**
 - 🎨 Full Tailwind customization
 - 📦 Smaller bundle size (no MUI dependency)
 - 🚀 Faster rendering (no Emotion runtime)

@@ -4,10 +4,10 @@ import { getRoleColor } from '@/theme/roles';
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from './chart';
 
 /**
- * # Chart (shadcn/ui)
+ * # Chart
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions (Recharts + `ChartConfig`), following this repo's
+ * No MDS/Figma spec exists for this component — built directly on
+ * Recharts with a `ChartConfig` wrapper, following this repo's
  * `dataviz` skill. Series default to `--chart-1`..`--chart-5` — five brand
  * hues (green, blue, gold, purple, red) validated for CVD-safe adjacency in
  * both light and dark mode via `node scripts/validate_palette.js`. That

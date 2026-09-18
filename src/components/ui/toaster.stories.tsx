@@ -3,7 +3,7 @@ import { Toaster, showSnackbar } from './toaster';
 import { toast } from './use-toast';
 
 /**
- * # Toast (shadcn/ui)
+ * # Toast
  *
  * Radix `Toast` is a queue/viewport system — call `toast()` from anywhere
  * and it stacks into a shared `<Toaster />`, each with its own auto-dismiss

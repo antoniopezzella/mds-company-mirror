@@ -3,10 +3,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, 
 import { Badge } from './badge';
 
 /**
- * # Card (shadcn/ui)
+ * # Card
  *
  * The composable `Card`/`CardHeader`/`CardTitle`/`CardDescription`/
- * `CardContent`/`CardFooter` primitives are shadcn's own canonical shape —
+ * `CardContent`/`CardFooter` primitives are the canonical primitive shape —
  * the primary API here. `ContentCard` is a convenience wrapper matching
  * what the MDS Card's own Figma spec actually describes (see the note in
  * card.tsx about the existing MUI `Card.tsx` being a differently-scoped

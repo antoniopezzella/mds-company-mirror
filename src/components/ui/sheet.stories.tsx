@@ -11,10 +11,9 @@ import {
 } from './sheet';
 
 /**
- * # Sheet (shadcn/ui)
+ * # Sheet
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (a side-anchored Dialog variant), reusing
+ * No MDS/Figma spec exists for this component — built directly on a side-anchored Dialog variant, reusing
  * `@radix-ui/react-dialog` and styled with `getRoleColor()`.
  */
 const meta: Meta<typeof Sheet> = {

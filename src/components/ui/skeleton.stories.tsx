@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Skeleton } from './skeleton';
 
 /**
- * # Skeleton (shadcn/ui)
+ * # Skeleton
  *
  * `getRoleColor()`-driven counterpart to the MUI `Skeleton`. Same
  * `variant`/`width`/`height`/`animation` API as the MUI twin.

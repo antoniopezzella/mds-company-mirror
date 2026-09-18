@@ -3,10 +3,10 @@ import type { CSSProperties } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './resizable';
 
 /**
- * # Resizable (shadcn/ui)
+ * # Resizable
  *
  * Wraps `react-resizable-panels`. No MDS/Figma spec exists for this
- * component yet — built to match shadcn/ui's reference implementation
+ * component yet — built to the standard reference implementation
  * (`ResizablePanelGroup` / `ResizablePanel` / `ResizableHandle`), styled
  * with `getRoleColor()` role tokens rather than hardcoded hex.
  *
@@ -14,7 +14,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from './resizabl
  * `PanelGroup`/`Panel`/`PanelResizeHandle` exports to `Group`/`Panel`/
  * `Separator` (and `direction` to `orientation`) — see the comment at the
  * top of `resizable.tsx` for details. The public component names here still
- * match the classic shadcn/ui recipe.
+ * match the classic headless-UI recipe.
  */
 const meta: Meta<typeof ResizablePanelGroup> = {
   title: 'Components/Resizable',

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { CircularProgress, LinearProgress } from './progress';
 
 /**
- * # Progress (shadcn/ui)
+ * # Progress
  *
  * `CircularProgress` (hand-rolled SVG — Radix has no circular primitive) and
  * `LinearProgress` (built on `@radix-ui/react-progress`), both styled with

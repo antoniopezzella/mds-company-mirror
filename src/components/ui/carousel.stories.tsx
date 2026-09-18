@@ -3,10 +3,9 @@ import { useEffect, useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from './carousel';
 
 /**
- * # Carousel (shadcn/ui)
+ * # Carousel
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly (`embla-carousel-react`), styled with
+ * No MDS/Figma spec exists for this component — built directly on `embla-carousel-react`, styled with
  * `getRoleColor()`.
  */
 const meta: Meta<typeof Carousel> = {

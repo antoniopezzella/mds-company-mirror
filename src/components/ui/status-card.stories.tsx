@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StatusCard } from './status-card';
 
 /**
- * # StatusCard (shadcn/ui)
+ * # StatusCard
  *
  * `getRoleColor()`-driven counterpart to the MUI `StatusCard`. Same
  * `status`/`title`/`message`/`icon` API as the MUI twin.

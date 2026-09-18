@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Separator, Divider } from './separator';
 
 /**
- * # Separator / Divider (shadcn/ui)
+ * # Separator / Divider
  *
  * `Separator` (built on `@radix-ui/react-separator`) is the primary
  * primitive. `Divider` is a convenience wrapper matching the MUI `Divider`'s

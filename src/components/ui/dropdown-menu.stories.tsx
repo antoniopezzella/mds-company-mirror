@@ -10,7 +10,7 @@ import {
 } from './dropdown-menu';
 
 /**
- * # DropdownMenu (shadcn/ui)
+ * # DropdownMenu
  *
  * Radix-based menu with proper ARIA semantics, roving tabindex, arrow-key
  * navigation, and type-ahead — the primitive `Header`'s profile menu is

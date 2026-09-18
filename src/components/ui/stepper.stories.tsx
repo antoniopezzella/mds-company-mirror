@@ -5,7 +5,7 @@ import { Stepper, type StepConfig } from './stepper';
 import { Button } from './button';
 
 /**
- * # Stepper (shadcn/ui)
+ * # Stepper
  *
  * `getRoleColor()`-driven counterpart to the MUI `Stepper`. Built against
  * the real `steps: StepConfig[]` API (per-step `status`) — the
@@ -15,7 +15,7 @@ import { Button } from './button';
  * Visual language is ported from reui's Stepper
  * ([reui.io/components/stepper](https://reui.io/components/stepper)) — 24px
  * filled numbered indicators, 2px separators, `text-sm leading-none
- * font-medium` titles — with their raw shadcn CSS vars mapped onto this
+ * font-medium` titles — with their raw upstream CSS vars mapped onto this
  * repo's role tokens. The stories below reproduce all 15 of reui's demos
  * through this component's `indicator` / `labelPlacement` / `labelAlign` /
  * `showSeparator` / `showStatusBadge` / `showStepEyebrow` / `completedTone`

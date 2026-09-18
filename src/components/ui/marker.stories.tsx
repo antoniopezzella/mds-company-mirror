@@ -3,7 +3,7 @@ import { InfoIcon } from 'lucide-react';
 import { Marker, MarkerContent, MarkerIcon } from './marker';
 
 /**
- * # Marker (shadcn/ui)
+ * # Marker
  *
  * In-transcript status updates, system notes, and date/thread separators —
  * the smallest of the chat-components family. Pre-existing in this repo,

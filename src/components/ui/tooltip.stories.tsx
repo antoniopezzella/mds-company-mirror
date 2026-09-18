@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tooltip } from './tooltip';
 
 /**
- * # Tooltip (shadcn/ui)
+ * # Tooltip
  *
  * Radix-based counterpart to the MUI `Tooltip`, styled with `getRoleColor()`
  * role tokens rather than hardcoded hex.

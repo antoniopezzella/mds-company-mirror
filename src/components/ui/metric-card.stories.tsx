@@ -13,7 +13,7 @@ const meta: Meta<typeof MetricCard> = {
 **MetricCard** - Display large metrics with labels for dashboard KPIs.
 
 ### API Parity with MUI
-This shadcn component maintains full API compatibility with the MUI MetricCard:
+Maintains full API compatibility with the MUI MetricCard:
 - Same props interface (value, label, className)
 - Same responsive sizing behavior
 - Same visual hierarchy
@@ -165,7 +165,7 @@ export const MUIComparison: Story = {
         story: `
 **Comparison with MUI MetricCard:**
 
-| Feature | MUI Version | shadcn Version |
+| Feature | MUI Version | Current |
 |---------|-------------|----------------|
 | Props API | \`value\`, \`label\` | ✅ Same |
 | Responsive sizing | MUI breakpoints (xs, md, lg) | ✅ Tailwind breakpoints |
@@ -179,7 +179,7 @@ export const MUIComparison: Story = {
 // MUI version
 <MetricCard value="150" label="Countries" />
 
-// shadcn version (identical API!)
+// current version (identical API!)
 <MetricCard value="150" label="Countries" />
 \`\`\`
         `,

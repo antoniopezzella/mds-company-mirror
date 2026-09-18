@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Breadcrumbs } from './breadcrumbs';
 
 /**
- * # Breadcrumbs (shadcn/ui)
+ * # Breadcrumbs
  *
  * Radix-free, `getRoleColor()`-driven counterpart to the MUI `Breadcrumbs`.
  * Same `items`/`separator`/`maxItems`/`ariaLabel` API as the MUI twin,

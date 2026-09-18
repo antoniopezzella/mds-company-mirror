@@ -4,10 +4,10 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from './input-otp';
 
 /**
- * # InputOTP (shadcn/ui)
+ * # InputOTP
  *
  * Wraps the `input-otp` package's `OTPInput`. No MDS/Figma spec exists for
- * this component yet — built to match shadcn/ui's reference implementation
+ * this component yet — built to the standard reference implementation
  * (`InputOTP` / `InputOTPGroup` / `InputOTPSlot` / `InputOTPSeparator`)
  * directly, styled with `getRoleColor()` role tokens. Each slot reads its
  * active/filled state from `input-otp`'s `OTPInputContext` React Context and

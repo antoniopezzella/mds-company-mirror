@@ -4,7 +4,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { Button } from './button';
 
 /**
- * # Empty (shadcn/ui)
+ * # Empty
  *
  * General-purpose empty-state primitives — not chat-specific, but pulled
  * in alongside the chat components for cases like "no messages yet".

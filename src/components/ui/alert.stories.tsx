@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Alert, AlertDescription, AlertTitle } from './alert';
 
 /**
- * # Alert (shadcn/ui)
+ * # Alert
  *
  * Radix-free, `getRoleColor()`-driven counterpart to the MUI `Alert`. Same
  * `severity`/`title`/`outlined`/`onClose` API as the MUI twin; `AlertTitle`/

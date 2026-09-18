@@ -13,7 +13,7 @@ import {
 import { Input } from './input';
 
 /**
- * # Field (shadcn/ui)
+ * # Field
  *
  * General-purpose form-layout primitives — not chat-specific, but pulled
  * in alongside the chat components since a compose box is itself a form.

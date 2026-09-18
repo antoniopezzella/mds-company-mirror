@@ -3,10 +3,9 @@ import { Bold, Italic, Underline } from 'lucide-react';
 import { Toggle } from './toggle';
 
 /**
- * # Toggle (shadcn/ui)
+ * # Toggle
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly, styled with `getRoleColor()`.
+ * No MDS/Figma spec exists for this component — built to standard headless-UI conventions, styled with `getRoleColor()`.
  */
 const meta: Meta<typeof Toggle> = {
   title: 'Components/Toggle',

@@ -6,10 +6,9 @@ import { DataTable, createSelectColumn } from './data-table';
 import { Badge } from './badge';
 
 /**
- * # DataTable (shadcn/ui)
+ * # DataTable
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui's TanStack-Table-based recipe (`@tanstack/react-table`), reusing
+ * No MDS/Figma spec exists for this component — built matching the standard TanStack-Table-based recipe (`@tanstack/react-table`), reusing
  * this repo's own `Checkbox`/`Pagination`/`Input`/`DropdownMenu` atoms
  * rather than duplicating them.
  *

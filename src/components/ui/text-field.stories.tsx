@@ -6,7 +6,7 @@ import { Textarea } from './textarea';
 import { Label } from './label';
 
 /**
- * # TextField (shadcn/ui)
+ * # TextField
  *
  * `Input`, `Textarea`, and `Label` are the primary composable primitives
  * (plain, unopinionated form elements). `DSTextField` (this story's default

@@ -3,10 +3,9 @@ import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from 'luc
 import { ToggleGroup, ToggleGroupItem } from './toggle-group';
 
 /**
- * # ToggleGroup (shadcn/ui)
+ * # ToggleGroup
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly, styled with `getRoleColor()`.
+ * No MDS/Figma spec exists for this component — built to standard headless-UI conventions, styled with `getRoleColor()`.
  */
 const meta: Meta<typeof ToggleGroup> = {
   title: 'Components/ToggleGroup',

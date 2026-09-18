@@ -3,7 +3,7 @@ import { Button } from './button';
 import { Plus, X, Trash2, ArrowRight, Download } from 'lucide-react';
 
 /**
- * # Button (shadcn/ui) — Figma V3 Compliant
+ * # Button — Figma V3 Compliant
  * 
  * **EXACT API MATCH** with MUI Button for seamless migration.
  * 
@@ -314,7 +314,7 @@ export const CompleteShowcase: Story = {
   render: () => (
     <div style={{ padding: '24px' }}>
       <h2 style={{ marginBottom: '24px', fontSize: '20px', fontWeight: 'bold' }}>
-        shadcn Button — Complete Feature Showcase
+        Button — Complete Feature Showcase
       </h2>
 
       <h3 style={{ marginBottom: '16px', fontWeight: 'bold' }}>✅ Figma V3 Variants</h3>
@@ -406,7 +406,7 @@ export const CompleteShowcase: Story = {
 /**
  * ## Figma V3 Mapping — EXACT MATCH with MUI Button
  * 
- * This shadcn Button has identical API and behavior to the MUI Button,
+ * This Button has identical API and behavior to the MUI Button,
  * enabling seamless migration component-by-component.
  * 
  * ### Figma Property Mapping
@@ -498,7 +498,7 @@ export const MUIComparison: Story = {
         border: '1px solid #dadada'
       }}>
         <h3 style={{ marginBottom: '12px', fontWeight: 'bold' }}>✅ API Parity Achieved</h3>
-        <p style={{ marginBottom: '8px' }}>The shadcn Button now has <strong>exact API match</strong> with MUI Button:</p>
+        <p style={{ marginBottom: '8px' }}>The Button now has <strong>exact API match</strong> with MUI Button:</p>
         <ul style={{ marginLeft: '24px', color: '#595959' }}>
           <li>✅ All variants: primary, primaryAlt, secondary, tertiary</li>
           <li>✅ All sizes: sm/small (32px), md/medium (48px), lg/large (56px)</li>

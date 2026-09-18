@@ -13,7 +13,7 @@ import {
 } from './dialog';
 
 /**
- * # Dialog / Modal (shadcn/ui)
+ * # Dialog / Modal
  *
  * Radix `Dialog` is composable by design — you assemble header/body/footer
  * yourself via `DialogHeader`/`DialogTitle`/`DialogDescription`/`DialogFooter`,

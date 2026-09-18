@@ -12,7 +12,7 @@ import {
 import { Button } from './button';
 
 /**
- * # Drawer (shadcn/ui, Base UI)
+ * # Drawer (Base UI)
  *
  * Swipe-to-dismiss, snap-point-capable drawer — genuinely different from
  * (not a duplicate of) this repo's Radix-based `Sheet`, which stays the

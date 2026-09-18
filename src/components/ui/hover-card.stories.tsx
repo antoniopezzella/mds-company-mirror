@@ -3,10 +3,9 @@ import { CalendarDays } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card';
 
 /**
- * # HoverCard (shadcn/ui)
+ * # HoverCard
  *
- * No MDS/Figma spec exists for this component — built matching real
- * shadcn/ui conventions directly, styled with this repo's `getRoleColor()`
+ * No MDS/Figma spec exists for this component — built to standard headless-UI conventions, styled with this repo's `getRoleColor()`
  * role tokens. Useful for lightweight, hover-triggered previews (e.g. a
  * user's profile summary) without committing to a full modal or popover.
  */

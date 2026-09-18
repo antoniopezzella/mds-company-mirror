@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { RadioGroup } from './radio-group';
 
 /**
- * # RadioGroup (shadcn/ui)
+ * # RadioGroup
  *
  * Radix-based counterpart to the MUI `DSRadioGroup` / `DSRadio`, styled with
  * `getRoleColor()` role tokens rather than hardcoded hex, following the same
- * pattern established by the shadcn `Checkbox`.
+ * pattern established by the `Checkbox`.
  *
  * ## API parity with MUI
  * Same options-array shape as MUI's `DSRadioGroup`: `options`, `value`,

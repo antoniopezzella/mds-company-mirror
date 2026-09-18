@@ -4,10 +4,10 @@ import { ChevronsUpDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible';
 
 /**
- * # Collapsible (shadcn/ui)
+ * # Collapsible
  *
  * No MDS/Figma spec exists for this component — a thin, unstyled re-export
- * of Radix Collapsible (matching shadcn/ui's own convention). Compose it
+ * of Radix Collapsible (matching the standard convention). Compose it
  * with role-token-driven styles at the call site, as shown below.
  */
 const meta: Meta<typeof Collapsible> = {

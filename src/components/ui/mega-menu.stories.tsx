@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MegaMenu, type MegaMenuItem } from './mega-menu';
 
 /**
- * # MegaMenu (shadcn/ui)
+ * # MegaMenu
  *
  * Built on Radix `NavigationMenu` — see the note in mega-menu.tsx about why
  * this is a generic `items`/`sections` component rather than a straight
