@@ -1,3 +1,5 @@
+// roles-allow-hex-file — this component *displays* the primitive palette;
+// the hex values are its content, not styling that should use a role.
 import { useTheme } from "@mui/material/styles";
 
 // Marsh primitive color palettes — aligned to Figma "Primitive Colors" collection

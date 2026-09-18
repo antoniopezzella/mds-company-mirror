@@ -1,3 +1,6 @@
+// roles-allow-hex-file — the literals below are tracked debt, not drift:
+// hover/active/disabled states have no roles yet, and each block documents
+// what it's waiting on. Remove this marker once those roles exist.
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
