@@ -96,7 +96,7 @@
     "figma:connect": "npx figma connect",
     "figma:publish": "npx figma connect publish",
     "figma:unpublish": "npx figma connect unpublish",
-    "perf:audit": "node scripts/run-lighthouse.js",
+    "perf:audit": "node scripts/lighthouse-audit.js",
     "perf:dev": "npm run dev & sleep 10 && npm run perf:audit && pkill -f vite",
     "perf:build": "npm run build && npm run preview & sleep 5 && LIGHTHOUSE_URL=http://localhost:4173 npm run perf:audit && pkill -f vite",
     "lighthouse": "node scripts/lighthouse-audit.js",
