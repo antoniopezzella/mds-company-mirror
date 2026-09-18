@@ -210,13 +210,11 @@ export function DataTable<TData, TValue>({
   const borderColor = getRoleColor('border.default');
   const headerBg = getRoleColor('surface.subtle');
   const rowBg = getRoleColor('surface.default');
-  // Row states step base -> hover -> selected in the secondary blue family,
-  // resolving per mode (sky tints in light, blue975/blue990 in dark — the
-  // same stepping the navigation surfaces use). These previously used
-  // surface.subtle (#f8f8f8) and surface.accent (#f7f8f8), which differ by a
-  // contrast ratio of 1.0018 — a selected row was indistinguishable from a
-  // hovered one.
-  const hoverBg = getRoleColor('surface.hover');
+  // Hover is a neutral lift, selection is the brand tint — the usual split
+  // (MUI DataGrid, shadcn) that keeps "passing over" visually distinct from
+  // "chosen". Selected previously used surface.accent (#f7f8f8), which sat
+  // 1.0018 from the hover color and so was effectively invisible.
+  const hoverBg = getRoleColor('surface.subtle');
   const selectedBg = getRoleColor('surface.selected');
   const textColor = getRoleColor('text.primary');
   const mutedColor = getRoleColor('text.secondary');

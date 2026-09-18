@@ -43,11 +43,10 @@ function contrast(hex1, hex2) {
 // Define pairs (same set assessed in both modes)
 const PAIRS = [
   { name: 'textPrimary on surfaceDefault', fg: 'textPrimary', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
-  // Row/list-item states. Enforced in both modes because the obvious-looking
-  // choice here (the sky-blue card tints) is near-white and fails against
-  // dark mode's white textPrimary at 1.09:1 — exactly the regression this
-  // pair is here to catch.
-  { name: 'textPrimary on surfaceHover', fg: 'textPrimary', bg: 'surfaceHover', required: 4.5, warn: 4.5 },
+  // Selected row/list item. Enforced in both modes because the obvious-looking
+  // choice (light mode's Sky Blue) is near-white and fails against dark mode's
+  // white textPrimary at 1.73:1 — exactly the regression this pair catches.
+  { name: 'textPrimary on surfaceSubtle', fg: 'textPrimary', bg: 'surfaceSubtle', required: 4.5, warn: 4.5 },
   { name: 'textPrimary on surfaceSelected', fg: 'textPrimary', bg: 'surfaceSelected', required: 4.5, warn: 4.5 },
   { name: 'textSecondary on surfaceDefault', fg: 'textSecondary', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'textOnInteractive on interactivePrimary', fg: 'textOnInteractive', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
