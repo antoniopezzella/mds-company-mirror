@@ -4,7 +4,14 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 
-export type PaginationVariant = 'simple' | 'advanced';
+/**
+ * simple   — prev/next with an `X / Y` readout.
+ * compact  — page-size select, `Page X of Y`, and first/prev/next/last.
+ *            No numbered buttons or jump-to-page: position is conveyed once
+ *            rather than four times over. This is what DataTable uses.
+ * advanced — everything, including numbered pages and a jump-to-page input.
+ */
+export type PaginationVariant = 'simple' | 'compact' | 'advanced';
 
 export interface PaginationProps {
   currentPage: number;
@@ -101,7 +108,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        {variant === 'advanced' && onPageSizeChange && (
+        {variant !== 'simple' && onPageSizeChange && (
           <div className="flex items-center gap-1.5 text-sm">
             <label htmlFor="pagination-page-size" style={{ color: mutedColor }}>
               {rowsLabel}
@@ -128,7 +135,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         )}
 
         <div className="flex items-center gap-1">
-          {variant === 'advanced' && (
+          {variant !== 'simple' && (
             <button
               type="button"
               aria-label="First page"
@@ -180,6 +187,10 @@ export const Pagination: React.FC<PaginationProps> = ({
                 )
               )}
             </div>
+          ) : variant === 'compact' ? (
+            <div className="whitespace-nowrap px-2 text-sm font-medium">
+              Page {currentPage} of {totalPages}
+            </div>
           ) : (
             <div className="flex items-center gap-1 px-2 text-sm">
               <span className="font-medium">{currentPage}</span>
@@ -198,7 +209,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-          {variant === 'advanced' && (
+          {variant !== 'simple' && (
             <button
               type="button"
               aria-label="Last page"
