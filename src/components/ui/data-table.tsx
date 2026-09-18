@@ -383,7 +383,11 @@ export function DataTable<TData, TValue>({
                 {searchValue && (
                   <button
                     type="button"
-                    aria-label="Clear search"
+                    // Distinct from the empty state's "Clear search" button:
+                    // in the filtered-empty case both are on screen at once,
+                    // and two identically-named controls are ambiguous to a
+                    // screen reader.
+                    aria-label="Clear search field"
                     onClick={() => {
                       table.getColumn(searchKey)?.setFilterValue('');
                       searchInputRef.current?.focus();
@@ -414,13 +418,9 @@ export function DataTable<TData, TValue>({
             {enableDensityToggle && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm transition-colors"
-                    style={{ borderColor, color: textColor, backgroundColor: getRoleColor('surface.default') }}
-                  >
-                    Density <ChevronDown className="h-4 w-4" />
-                  </button>
+                  <Button variant="outline" size="sm" className="font-normal">
+                    Density <ChevronDown className="ml-1.5 h-4 w-4" />
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {(Object.keys(DENSITY_LABEL) as Density[]).map((option) => (
@@ -445,13 +445,9 @@ export function DataTable<TData, TValue>({
             {enableColumnVisibility && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 rounded-md border px-3 py-2 text-sm transition-colors"
-                    style={{ borderColor, color: textColor, backgroundColor: getRoleColor('surface.default') }}
-                  >
-                    Columns <ChevronDown className="h-4 w-4" />
-                  </button>
+                  <Button variant="outline" size="sm" className="font-normal">
+                    Columns <ChevronDown className="ml-1.5 h-4 w-4" />
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {table
@@ -645,14 +641,9 @@ export function DataTable<TData, TValue>({
                       </EmptyHeader>
                       {isFilteredEmpty && (
                         <EmptyContent>
-                          <button
-                            type="button"
-                            onClick={() => table.resetColumnFilters()}
-                            className="rounded-md border px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2"
-                            style={{ borderColor, color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-                          >
+                          <Button variant="outline" size="sm" onClick={() => table.resetColumnFilters()}>
                             Clear search
-                          </button>
+                          </Button>
                         </EmptyContent>
                       )}
                     </Empty>
