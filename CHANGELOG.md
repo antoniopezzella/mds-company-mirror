@@ -1,6 +1,17 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [0.4.1](https://github.com/antoniopezzella/marsh-design-system/compare/v0.4.0...v0.4.1) (2026-09-18)
+
+### Bug Fixes
+
+* **build:** close the package's consumability gaps and repair Lighthouse ([bd680b0](https://github.com/antoniopezzella/marsh-design-system/commit/bd680b001ed8382cbab6a3eb5d7ec440c432eba5))
+* **build:** repair the release, commit-hook and governance tooling ([ee1e562](https://github.com/antoniopezzella/marsh-design-system/commit/ee1e562ab021f5a998509168d2561403e366b391))
+
+### Performance Improvements
+
+* **build:** split the entry chunk and stop shipping a dev script to production ([955de8f](https://github.com/antoniopezzella/marsh-design-system/commit/955de8fa516d1f825d8c49d1749f24ec89095704))
 
 ## [0.4.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.3.0...v0.4.0) (2026-09-18)
 
