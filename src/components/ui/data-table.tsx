@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, Download, Inbox, SearchX } from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, ChevronUp, Download, EyeOff, Inbox, SearchX, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
@@ -386,34 +386,83 @@ export function DataTable<TData, TValue>({
               <tr key={headerGroup.id} style={{ backgroundColor: headerBg }}>
                 {headerGroup.headers.map((header) => {
                   const canSort = header.column.getCanSort();
+                  const canHide = header.column.getCanHide();
                   const sortState = header.column.getIsSorted();
                   const sortIndex = header.column.getSortIndex();
-                  const SortIcon = sortState === 'asc' ? ArrowUp : sortState === 'desc' ? ArrowDown : ArrowUpDown;
+                  const SortIcon = sortState === 'asc' ? ChevronUp : sortState === 'desc' ? ChevronDown : ChevronsUpDown;
+                  const headerLabel = header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext());
                   return (
                     <th
                       key={header.id}
-                      className={cn('relative px-3 text-left text-sm font-semibold', cellPadding, canSort && 'cursor-pointer select-none')}
+                      className={cn('relative px-3 text-left text-sm font-semibold', cellPadding)}
+                      // aria-sort is what actually announces sort state to a
+                      // screen reader; the icon alone conveys nothing to one.
+                      aria-sort={canSort ? (sortState === 'asc' ? 'ascending' : sortState === 'desc' ? 'descending' : 'none') : undefined}
                       style={{
                         color: mutedColor,
                         width: enableColumnResizing ? header.getSize() : undefined,
                         ...getPinnedCellStyle(header.column, headerBg, maxHeight ? { zIndex: header.column.getIsPinned() ? 3 : 2 } : undefined),
                       }}
-                      onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                     >
-                      {header.isPlaceholder ? null : (
-                        <div className="flex items-center gap-1">
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {canSort && (
-                            <span className="inline-flex items-center gap-0.5">
-                              <SortIcon className="h-3.5 w-3.5 opacity-60" />
-                              {sortState && sorting.length > 1 && (
-                                <span className="text-[10px] font-bold" style={{ color: activeColor }}>
-                                  {sortIndex + 1}
+                      {header.isPlaceholder ? null : canSort || canHide ? (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            {/* A real button, not a click handler on the <th>:
+                                the previous version could only be sorted with
+                                a mouse — no focus, no keyboard, no ARIA. */}
+                            <button
+                              type="button"
+                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2"
+                              style={{ color: mutedColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                              // Shift-click keeps its meaning as "add to the
+                              // multi-sort" rather than opening the menu —
+                              // Radix opens on pointerdown, so it has to be
+                              // intercepted here rather than in onClick.
+                              onPointerDown={(e) => {
+                                if (e.shiftKey && canSort) {
+                                  e.preventDefault();
+                                  header.column.toggleSorting(undefined, true);
+                                }
+                              }}
+                            >
+                              <span className="truncate">{headerLabel}</span>
+                              {canSort && (
+                                <span className="inline-flex shrink-0 items-center gap-0.5">
+                                  <SortIcon className="h-3.5 w-3.5 opacity-60" />
+                                  {sortState && sorting.length > 1 && (
+                                    <span className="text-[10px] font-bold" style={{ color: activeColor }}>
+                                      {sortIndex + 1}
+                                    </span>
+                                  )}
                                 </span>
                               )}
-                            </span>
-                          )}
-                        </div>
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="w-36">
+                            {canSort && (
+                              <>
+                                <DropdownMenuCheckboxItem checked={sortState === 'asc'} onCheckedChange={() => header.column.toggleSorting(false)}>
+                                  <ChevronUp className="mr-2 h-4 w-4 opacity-60" /> Asc
+                                </DropdownMenuCheckboxItem>
+                                <DropdownMenuCheckboxItem checked={sortState === 'desc'} onCheckedChange={() => header.column.toggleSorting(true)}>
+                                  <ChevronDown className="mr-2 h-4 w-4 opacity-60" /> Desc
+                                </DropdownMenuCheckboxItem>
+                                {sortState && (
+                                  <DropdownMenuItem onSelect={() => header.column.clearSorting()}>
+                                    <X className="mr-2 h-4 w-4 opacity-60" /> Reset
+                                  </DropdownMenuItem>
+                                )}
+                              </>
+                            )}
+                            {canHide && (
+                              <DropdownMenuItem onSelect={() => header.column.toggleVisibility(false)}>
+                                <EyeOff className="mr-2 h-4 w-4 opacity-60" /> Hide
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      ) : (
+                        headerLabel
                       )}
                       {enableColumnResizing && header.column.getCanResize() && (
                         // This is WAI-ARIA's documented "resizable separator" pattern (a
@@ -556,7 +605,11 @@ export function DataTable<TData, TValue>({
             </span>
           )}
           <Pagination
-            className="min-w-0 flex-1"
+            // justify-end: Pagination's own content flows left, so as the
+            // flex-1 child it used to bunch against the selection count and
+            // leave the right half of the footer empty. Right-clustering
+            // matches MUI DataGrid and tablecn.
+            className="min-w-0 flex-1 justify-end"
             currentPage={pageIndex + 1}
             totalItems={totalItemsForFooter}
             pageSize={currentPageSize}
