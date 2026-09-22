@@ -30,6 +30,7 @@ export * from './components/ui/badge-anchor';
 export * from './components/ui/breadcrumbs';
 export * from './components/ui/bubble';
 export * from './components/ui/button';
+export * from './components/ui/button-group';
 export * from './components/ui/calendar';
 export * from './components/ui/card';
 export * from './components/ui/carousel';
