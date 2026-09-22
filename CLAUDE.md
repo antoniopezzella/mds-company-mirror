@@ -1402,7 +1402,15 @@ npm run roles:check:strict
 **What it checks:**
 - Components using `tokens.*` or `semanticColors.*` directly (FAIL)
 - Components using deprecated tokens (WARN)
-- Components not using `getRoleColor()` for colors (FAIL)
+- Hardcoded colour literals — hex in Tailwind arbitrary values (`bg-[#000f47]`)
+  or inline styles (**INFORMATIONAL — reported with a per-file count, does not
+  fail the build**, because some are documented debt with no role to move to
+  yet). Annotate a deliberate one with `roles-allow-hex` on the line, or
+  `roles-allow-hex-file` anywhere in the file.
+
+Note the asymmetry: the rule below says never hardcode hex, but the checker
+only *reports* it. The hard gate covers direct `tokens.*`/`semanticColors.*`
+references. Don't assume CI will catch a stray `bg-[#...]` for you.
 
 ### Governance CI Pipeline
 

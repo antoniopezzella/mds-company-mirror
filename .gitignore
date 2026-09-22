@@ -62,3 +62,13 @@ coverage/
 # vercel.json's buildCommand regenerates this before every deploy, so
 # committing it risks it going stale against the source markdown.
 api/_data/
+
+# Generated reports — regenerate with the *:badge / lighthouse scripts. These
+# were tracked, so any two people running them locally got conflicting diffs.
+contrast-report.json
+governance-report.json
+lighthouse-*.json
+lighthouse-*.html
+
+# Storybook deploy output, committed once by accident (201 files, 11MB)
+marsh-design-system-deploy/
