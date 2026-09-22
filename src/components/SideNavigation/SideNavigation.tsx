@@ -136,7 +136,13 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
   return (
     <Box component="nav" aria-label={ariaLabel} sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: colors.navBg, color: colors.navText }}>
       <Divider sx={{ borderColor: colors.divider, opacity: 0.3 }} />
-      <List role="list" sx={{ flexGrow: 1, p: collapsed ? 1 : 2 }}>
+      {/* component="div", not the default <ul>, and no explicit role="list".
+          The children are ListItemButtons, which render with role="button" —
+          not listitem — so a list role here has children ARIA forbids (axe:
+          aria-required-children), whether that role is explicit or implicit
+          from the <ul>. The surrounding <nav> already provides the landmark
+          semantics; the nested group below uses the same treatment. */}
+      <List component="div" sx={{ flexGrow: 1, p: collapsed ? 1 : 2 }}>
         {items.map((item) => {
           let icon;
           switch (item.label) {

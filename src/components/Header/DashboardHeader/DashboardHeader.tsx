@@ -157,12 +157,22 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                 </BadgeAnchor>
               </IconButton>
               {/* Profile trigger */}
+              {/* A real <button>, not a clickable <div>. It was the latter, which
+                  broke two things at once: aria-haspopup/aria-expanded are not
+                  allowed on an element with no role (axe: aria-allowed-attr),
+                  and with only an onClick the menu could not be opened from the
+                  keyboard at all. `component="button"` gives the correct role
+                  and native Enter/Space activation; the sx resets the UA button
+                  styling so it looks identical. */}
               <Box
+                component="button"
+                type="button"
                 ref={profileRef}
                 onClick={(e) => setProfileAnchor(e.currentTarget)}
                 sx={{
                   display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
                   borderRadius: 1, px: '6px', py: '4px',
+                  border: 'none', background: 'none', font: 'inherit', color: 'inherit', textAlign: 'left',
                   '&:hover': { backgroundColor: getHoverColor() },
                   transition: 'background-color 0.15s',
                 }}
