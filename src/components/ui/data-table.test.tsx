@@ -218,4 +218,28 @@ describe('DataTable', () => {
       expect(facetTriggers).toHaveLength(1);
     });
   });
+
+  // DataTableSortList is an internal sub-component with no standalone public
+  // API, so it's exercised through the prop that mounts it rather than in
+  // isolation — the same way the faceted filter is covered above.
+  describe('sort list', () => {
+    it('is absent unless enableSortList is set', () => {
+      render(<DataTable columns={columns} data={data} pageSize={10} />);
+      expect(screen.queryByRole('button', { name: 'Sort' })).not.toBeInTheDocument();
+    });
+
+    it('renders a Sort trigger when enabled', () => {
+      render(<DataTable columns={columns} data={data} pageSize={10} enableSortList />);
+      expect(screen.getByRole('button', { name: 'Sort' })).toBeInTheDocument();
+    });
+
+    it('opens to an empty state and can add a sort', () => {
+      render(<DataTable columns={columns} data={data} pageSize={10} enableSortList />);
+      fireEvent.click(screen.getByRole('button', { name: 'Sort' }));
+      const addSort = screen.getByRole('button', { name: /Add sort/i });
+      fireEvent.click(addSort);
+      // Adding a sort surfaces the per-row controls for that sort entry.
+      expect(screen.getByLabelText('Sort column')).toBeInTheDocument();
+    });
+  });
 });
