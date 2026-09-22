@@ -5,14 +5,14 @@ import { Box, Typography, Button } from '@mui/material';
 import PolicyIcon from '@mui/icons-material/Description';
 
 const meta: Meta<typeof Paper> = {
-  title: 'Components/Paper',
+  title: 'Legacy (MUI)/Paper',
   component: Paper,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Container surface with elevation. Use for grouping content with visual hierarchy through shadow levels.'
+        component: '**Legacy (MUI).** Not the canonical Paper — new work should use `Card` from `@/components/ui/card`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Container surface with elevation. Use for grouping content with visual hierarchy through shadow levels.'
       }
     }
   },

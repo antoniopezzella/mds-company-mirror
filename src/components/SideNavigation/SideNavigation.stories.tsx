@@ -17,12 +17,12 @@ const demoItems: SideNavItem[] = [
 ];
 
 const meta = {
-  title: 'Components/Side Navigation',
+  title: 'Legacy (MUI)/SideNavigation',
   component: SideNavigation,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: { description: { component: 'Vertical navigation for app shells and dashboards. Supports active state and collapsible groups via subItems.' } },
+    docs: { description: { component: '**Legacy (MUI).** Not the canonical SideNavigation — new work should use `SideNavigation` from `@/components/ui/side-navigation`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Vertical navigation for app shells and dashboards. Supports active state and collapsible groups via subItems.' } },
   },
   decorators: [
     (Story) => (

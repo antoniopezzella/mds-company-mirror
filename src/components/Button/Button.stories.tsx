@@ -22,7 +22,7 @@ type ButtonStoryArgs = React.ComponentProps<typeof DSButton> & {
 };
 
 const meta = {
-  title: 'Components/Button (MUI)',
+  title: 'Legacy (MUI)/Button',
   component: DSButton,
   tags: ['autodocs'],
   parameters: {
@@ -30,6 +30,10 @@ const meta = {
     docs: {
       description: {
         component: `
+> **Legacy (MUI).** Not the canonical Button — new work should use \`Button\` from
+> \`@/components/ui/button\`. Kept because code still imports this one, and its stories are
+> also its only test coverage, so they stay visible rather than hidden.
+
 # Button
 
 The classic button element aligned to Figma V3 design system (node-id=7579-138).

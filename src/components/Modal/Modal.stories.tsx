@@ -7,7 +7,7 @@ import '../../index.css';
 import '../../styles/_typography.scss';
 
 const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
+  title: 'Legacy (MUI)/Modal',
   component: Modal,
   tags: ['autodocs'],
   parameters: {
@@ -15,6 +15,10 @@ const meta: Meta<typeof Modal> = {
     docs: {
       description: {
         component: `
+> **Legacy (MUI).** Not the canonical Modal — new work should use \`Dialog\` from
+> \`@/components/ui/dialog\`. Kept because code still imports this one, and its stories are
+> also its only test coverage, so they stay visible rather than hidden.
+
 # Modal
 
 A dialog component used to display content in a layer above the current page.

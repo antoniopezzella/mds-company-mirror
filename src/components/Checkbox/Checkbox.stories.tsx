@@ -4,14 +4,14 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Components/Checkbox (MUI)',
+  title: 'Legacy (MUI)/Checkbox',
   component: DSCheckbox,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Selection control for multiple choices. Supports checked, indeterminate, and disabled states with keyboard navigation.'
+        component: '**Legacy (MUI).** Not the canonical Checkbox — new work should use `Checkbox` from `@/components/ui/checkbox`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Selection control for multiple choices. Supports checked, indeterminate, and disabled states with keyboard navigation.'
       }
     }
   },

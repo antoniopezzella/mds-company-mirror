@@ -6,7 +6,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const meta = {
-  title: 'Components/TextField (MUI)',
+  title: 'Legacy (MUI)/TextField',
   component: DSTextField,
   tags: ['autodocs'],
   parameters: {
@@ -14,6 +14,10 @@ const meta = {
     docs: {
       description: {
         component: `
+> **Legacy (MUI).** Not the canonical TextField — new work should use \`TextField\` from
+> \`@/components/ui/text-field\`. Kept because code still imports this one, and its stories are
+> also its only test coverage, so they stay visible rather than hidden.
+
 # TextField
 
 Standard text input component for gathering user information.

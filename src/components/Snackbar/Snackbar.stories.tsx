@@ -4,14 +4,14 @@ import DSSnackbar from './Snackbar';
 import { Button, Stack } from '@mui/material';
 
 const meta = {
-  title: 'Components/Snackbar',
+  title: 'Legacy (MUI)/Snackbar',
   component: DSSnackbar,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Brief notification message that appears at screen edge. Use for non-critical feedback with optional actions.'
+        component: '**Legacy (MUI).** Not the canonical Snackbar — new work should use `Toast` from `@/components/ui/toast`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Brief notification message that appears at screen edge. Use for non-critical feedback with optional actions.'
       }
     }
   },
