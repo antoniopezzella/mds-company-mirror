@@ -53,6 +53,42 @@ do I use" gets no answer from the per-component notes above:
 `CardInternal` was removed on 2026-09-22 — it had no consumers and no
 registry, barrel or doc references.
 
+## Storybook now separates legacy from canonical (2026-09-22)
+
+Prompted by a simple question with no good answer: a new developer opens
+Storybook, sees two `Button`s, and has nothing to tell them which one to use.
+Three of the four `(MUI)` title suffixes that existed were ad-hoc and the rest
+had none at all.
+
+**Deleted — zero consumers (3):** `Menu`, `ContentCard`, `Chip`. The first two
+had no references anywhere. `Chip` looked equally dead to a `components/Chip'`
+grep but in fact had two consumers importing it as `'../Chip/Chip'` —
+`MegaMenu.tsx` (live component code) and `DataGrid.stories.tsx`. Both were
+migrated to `ui/chip` first, which was a pure import swap: the shadcn Chip
+already exposes an identical `label` / `variant` / `tone` / `size` API.
+`registry.json` and `Chip.figma.tsx` already pointed at `ui/chip`, so neither
+needed repointing. **Lesson for the next removal: grep relative import paths
+(`../Name/Name`), not just `components/Name`.**
+
+**Retitled `Components/X` → `Legacy (MUI)/X` (12):** Button, Checkbox,
+DataGrid, Divider, Header, Modal, Paper, Radio, SideNavigation, Snackbar,
+StatusCard, TextField. Each story's docs block now opens with a banner naming
+its replacement and import path, so the answer is on the page rather than in
+this file.
+
+**Not relabelled (1):** `CardWebsite` stays under `Components/` — it has no
+shadcn counterpart, and marking something "legacy" with no successor tells a
+developer to stop using the only implementation there is.
+
+**Why relabel rather than hide or delete.** Stories are these components' only
+test coverage — the `storybook` Vitest project runs every one as a real browser
+test, including axe since 2026-09-22. Hiding them would delete accessibility
+and render coverage on code that is still live in production pages, which is
+the same failure mode as the `a11y: { test: 'todo' }` setting that made the
+accessibility gate silently inert for three audit runs. None of these 13 are
+exported from `src/index.ts`, so consumers of the published package were never
+exposed to them either way; this is purely about what your own developers see.
+
 **Note on scope:** this document tracks MUI-vs-shadcn parity only. It does not
 describe what each shadcn component can do — `DataTable`, for instance, has
 grown faceted filters, a sort list, inline cell editing and CSV export since

@@ -4,14 +4,14 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Components/Radio',
+  title: 'Legacy (MUI)/Radio',
   component: DSRadio,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Single selection control for mutually exclusive options. Supports grouping, disabled states, and keyboard navigation.'
+        component: '**Legacy (MUI).** Not the canonical Radio — new work should use `RadioGroup` from `@/components/ui/radio-group`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Single selection control for mutually exclusive options. Supports grouping, disabled states, and keyboard navigation.'
       }
     }
   },

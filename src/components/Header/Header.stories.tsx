@@ -3,13 +3,13 @@ import Header, { WebsiteHeader } from './Header';
 import type { HeaderProps } from './Header';
 
 export default {
-  title: 'Components/Header (MUI)',
+  title: 'Legacy (MUI)/Header',
   component: Header,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: 'Application header with branding, navigation, and user actions. Responsive and supports light/dark themes.'
+        component: '**Legacy (MUI).** Not the canonical Header — new work should use `Header` from `@/components/ui/header`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Application header with branding, navigation, and user actions. Responsive and supports light/dark themes.'
       }
     }
   },

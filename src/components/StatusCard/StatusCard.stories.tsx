@@ -3,9 +3,20 @@ import StatusCard from './StatusCard';
 import { Box } from '@mui/material';
 
 const meta: Meta<typeof StatusCard> = {
-  title: 'Components/StatusCard (MUI)',
+  title: 'Legacy (MUI)/StatusCard',
   component: StatusCard,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '**Legacy (MUI).** Not the canonical StatusCard — new work should use '
+          + '`StatusCard` from `@/components/ui/status-card`. Kept because code still '
+          + 'imports this one, and its stories are also its only test coverage, so they '
+          + 'stay visible rather than hidden.',
+      },
+    },
+  },
   argTypes: {
     status: {
       control: 'select',

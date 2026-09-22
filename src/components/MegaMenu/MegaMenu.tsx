@@ -2,7 +2,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { Box, Typography, Divider } from '@mui/material';
-import { Chip } from '../Chip/Chip';
+import { Chip } from '../ui/chip';
 import { getRoleColor } from '../../theme/roles';
 import styles from './MegaMenu.module.scss';
 

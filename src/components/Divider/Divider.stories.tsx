@@ -4,14 +4,14 @@ import { Divider } from './Divider';
 import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 
 const meta: Meta<typeof Divider> = {
-  title: 'Components/Divider',
+  title: 'Legacy (MUI)/Divider',
   component: Divider,
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
     docs: {
       description: {
-        component: 'Horizontal or vertical line separator. Use to visually divide content sections with proper semantic structure.'
+        component: '**Legacy (MUI).** Not the canonical Divider — new work should use `Separator` from `@/components/ui/separator`. Kept because code still imports this one; its stories are also its only test coverage, so they stay rather than being hidden. Horizontal or vertical line separator. Use to visually divide content sections with proper semantic structure.'
       }
     }
   },

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import { Chip } from '../Chip/Chip';
+import { Chip } from '../ui/chip';
 import { MDSDataGrid } from './DataGrid';
 
 const meta = {
-  title: 'Components/DataGrid',
+  title: 'Legacy (MUI)/DataGrid',
   component: MDSDataGrid,
   tags: ['autodocs'],
   parameters: {
@@ -12,6 +12,10 @@ const meta = {
     docs: {
       description: {
         component: `
+> **Legacy (MUI).** Not the canonical DataGrid — new work should use \`DataTable\` from
+> \`@/components/ui/data-table\`. Kept because code still imports this one, and its stories are
+> also its only test coverage, so they stay visible rather than hidden.
+
 **MDSDataGrid** is a themed wrapper around [\`@mui/x-data-grid\`](https://mui.com/x/react-data-grid/)
 that applies MDS role-based colours automatically.
 
