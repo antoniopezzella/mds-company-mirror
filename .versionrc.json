@@ -63,5 +63,19 @@
   "scripts": {
     "postchangelog": "node scripts/strip-changelog-false-issues.js",
     "postbump": "npm run tokens:build"
-  }
+  },
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    },
+    {
+      "filename": "package-lock.json",
+      "type": "json"
+    },
+    {
+      "filename": "dist/tokens.json",
+      "updater": "scripts/tokens-json-version-updater.cjs"
+    }
+  ]
 }
