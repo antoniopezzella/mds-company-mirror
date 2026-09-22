@@ -118,7 +118,17 @@ export const CustomStyling: Story = {
   args: {
     value: '42',
     label: 'Years of Excellence',
-    className: 'bg-accent rounded-lg border border-border',
+    // `bg-muted`, not `bg-accent`. MetricCard hardcodes `text-muted-foreground`
+    // on its label, and muted-foreground (#595959) on the gold accent
+    // (#ffbf00) is 4.23:1 — under AA. A caller can't fix that from the outside
+    // either, because the label is a nested element that className doesn't
+    // reach. bg-muted/text-muted-foreground is the pair shadcn designs
+    // together, so it passes by construction.
+    //
+    // If an accent-backed MetricCard is ever wanted, the component needs to
+    // let its label colour be overridden (or inherit) — that's a component
+    // change, not something a story should paper over.
+    className: 'bg-muted rounded-lg border border-border',
   },
 };
 
@@ -147,8 +157,14 @@ export const DarkMode: Story = {
   parameters: {
     layout: 'fullscreen', // Dark mode showcase with grid
   },
+  // Same fix as stat-card/DarkMode: a local `.dark` class only switches
+  // Tailwind's `dark:` variants, while getRoleColor()'s DOM fallback keys off
+  // a `dark` class on <html>. Role tokens therefore stayed light on a dark
+  // surface. The preview's `colorMode` global drives ThemeModeContext,
+  // RoleVarsProvider and the html class together.
+  globals: { colorMode: 'dark' },
   render: () => (
-    <div className="dark bg-background p-8 rounded-lg">
+    <div className="bg-background p-8 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <MetricCard value="150" label="Countries" />
         <MetricCard value="1,234" label="Policies" />

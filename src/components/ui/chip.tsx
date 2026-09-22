@@ -104,62 +104,97 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           boxShadow: selectable && selected ? `inset 0 0 0 2px ${getRoleColor('focus.ring')}` : undefined,
         };
 
-    return (
-      <button
-        ref={ref}
-        type="button"
-        disabled={disabled}
-        onClick={onClick}
-        aria-pressed={selectable ? selected : undefined}
-        className={cn(chipVariants({ size, interactive: isInteractive }), isInteractive && !disabled && 'hover:opacity-[0.85]', className)}
-        style={
-          {
-            ...style,
-            '--tw-ring-color': getRoleColor('focus.ring'),
-            // Tailwind's ring-offset-2 defaults its gap color to white —
-            // wrong against a dark surface. Tying it to surface.default
-            // keeps the ring's inner gap correct in both modes, matching
-            // Checkbox's --checkbox-focus-inner-ring pattern.
-            '--tw-ring-offset-color': getRoleColor('surface.default'),
-            // Caller override last, so it wins over (not replaces) the
-            // tone-based style above — style was destructured out of ...rest
-            // specifically so a plain spread couldn't clobber this object.
-            ...styleProp,
-          } as React.CSSProperties
-        }
-        {...rest}
-      >
+    const chipClassName = cn(
+      chipVariants({ size, interactive: isInteractive }),
+      isInteractive && !disabled && 'hover:opacity-[0.85]',
+      className
+    );
+
+    const chipStyle = {
+      ...style,
+      '--tw-ring-color': getRoleColor('focus.ring'),
+      // Tailwind's ring-offset-2 defaults its gap color to white — wrong
+      // against a dark surface. Tying it to surface.default keeps the ring's
+      // inner gap correct in both modes, matching Checkbox's
+      // --checkbox-focus-inner-ring pattern.
+      '--tw-ring-offset-color': getRoleColor('surface.default'),
+      // Caller override last, so it wins over (not replaces) the tone-based
+      // style above — style was destructured out of ...rest specifically so a
+      // plain spread couldn't clobber this object.
+      ...styleProp,
+    } as React.CSSProperties;
+
+    const content = (
+      <>
         {icon && <span className={cn('flex items-center justify-center', iconSizeClass[size])}>{icon}</span>}
         <span className="truncate">{label}</span>
-        {onDelete && (
-          // Nested inside the outer <button> — invalid HTML5 (interactive
-          // content can't nest) that predates this fix; browsers/AT tolerate
-          // it in practice but a real redesign (delete as a true sibling
-          // button, chip body as a non-button wrapper) is the correct
-          // long-term fix. Scoped here to just closing the concrete
-          // keyboard-operability gap: was tabIndex={-1} with no key handler,
-          // meaning the delete action was mouse-only.
-          <span
-            role="button"
-            aria-label="Remove"
-            tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                e.stopPropagation();
-                onDelete();
-              }
-            }}
-            className={cn('flex items-center justify-center rounded-full opacity-70 hover:opacity-100', deleteIconSizeClass[size])}
+      </>
+    );
+
+    // Without a delete affordance the chip is a single control, so it stays a
+    // plain <button> and `ref` points at it as before.
+    if (!onDelete) {
+      return (
+        <button
+          ref={ref}
+          type="button"
+          disabled={disabled}
+          onClick={onClick}
+          aria-pressed={selectable ? selected : undefined}
+          className={chipClassName}
+          style={chipStyle}
+          {...rest}
+        >
+          {content}
+        </button>
+      );
+    }
+
+    // With a delete affordance there are genuinely TWO actions, so they have to
+    // be two sibling controls. The previous shape nested the delete control
+    // inside the chip's own <button> — invalid HTML5 (interactive content
+    // cannot nest) and flagged by axe as nested-interactive. A comment here
+    // already called the sibling-button redesign the correct long-term fix;
+    // this is that fix.
+    //
+    // The visual container is now a non-interactive <span> carrying the chip
+    // styling, with the body and the delete button as siblings inside it.
+    // `ref` still lands on a <button> (the body) when the chip is interactive,
+    // so the forwarded-ref contract is unchanged for every existing consumer —
+    // none of which pass a ref today in any case.
+    return (
+      <span className={chipClassName} style={chipStyle}>
+        {isInteractive ? (
+          <button
+            ref={ref}
+            type="button"
+            disabled={disabled}
+            onClick={onClick}
+            aria-pressed={selectable ? selected : undefined}
+            className="inline-flex items-center gap-1.5 border-0 bg-transparent p-0 text-inherit focus-visible:outline-none"
+            {...rest}
           >
-            <X className="h-full w-full" />
-          </span>
+            {content}
+          </button>
+        ) : (
+          <span className="inline-flex items-center gap-1.5">{content}</span>
         )}
-      </button>
+        <button
+          type="button"
+          aria-label="Remove"
+          disabled={disabled}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className={cn(
+            'flex items-center justify-center rounded-full border-0 bg-transparent p-0 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2',
+            deleteIconSizeClass[size]
+          )}
+        >
+          <X className="h-full w-full" />
+        </button>
+      </span>
     );
   }
 );
