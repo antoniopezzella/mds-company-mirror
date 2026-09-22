@@ -106,7 +106,9 @@ export const Chip: React.FC<ChipProps> = ({
       case 'success':
         return getRoleColor('status.success.fg');
       case 'warning':
-        return getRoleColor('status.warning.fg');
+        // gold1000 on gold50 is 3.34:1 — an accent, not readable text.
+        // text.onLight is the role for warning gold. See ui/alert.tsx.
+        return getRoleColor('text.onLight');
       case 'danger':
         return getRoleColor('status.danger.fg');
       case 'info':

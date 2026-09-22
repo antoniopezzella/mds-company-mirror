@@ -141,7 +141,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusSuccessBorder",
   },
   {
-    "dark": "#def2d7",
+    "dark": "#f2faef",
     "light": "#2f7d32",
     "role": "status.success.fg",
     "semantic": "statusSuccessText",

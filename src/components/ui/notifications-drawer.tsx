@@ -47,7 +47,9 @@ const DEFAULT_NOTIFICATIONS: RiskNotification[] = [
 // against the closest severity in the existing status.* roles.
 const SEVERITY_CONFIG: Record<RiskNotification['severity'], { label: string; fg: RoleName; bg: RoleName }> = {
   warning: { label: 'Warning', fg: 'status.danger.fg', bg: 'status.danger.bg' },
-  watch: { label: 'Watch', fg: 'status.warning.fg', bg: 'status.warning.bg' },
+  // fg here is rendered as text; status.warning.fg on status.warning.bg is
+  // 3.34:1. text.onLight (17.71:1) is the role intended for warning gold.
+  watch: { label: 'Watch', fg: 'text.onLight', bg: 'status.warning.bg' },
   advisory: { label: 'Advisory', fg: 'status.info.fg', bg: 'status.info.bg' },
   action: { label: 'Action Required', fg: 'interactive.primary', bg: 'surface.accent' },
 };

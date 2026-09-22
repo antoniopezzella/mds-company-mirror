@@ -169,7 +169,12 @@ export const semanticDarkOverrides = {
     statusSuccess: tokens.green500, // #8dcc92
     statusSuccessBg: tokens.green1000, // #2f7d32
     statusSuccessBorder: tokens.green500, // #8dcc92
-    statusSuccessText: tokens.green250, // #def2d7
+    // green250 (#def2d7) measured 4.34:1 on the dark-mode success surface
+    // (green1000) — just under AA, and invisible to the old contrast gate,
+    // which only checked status text against surfaceDefault. green100 gives
+    // 4.80:1 with real margin while staying green-tinted; green200 was
+    // rejected at exactly 4.50:1 as too close to the line.
+    statusSuccessText: tokens.green100, // #f2faef
     // Status Warning (Gold — lightened)
     statusWarning: tokens.gold500, // #ff994a
     statusWarningBg: tokens.gold1000, // #cb7623

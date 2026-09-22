@@ -70,7 +70,23 @@ const PAIRS = [
   { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
   { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 }
+  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+
+  // Status text on its OWN background — the pairing components actually render
+  // (Alert, Badge, Chip, Snackbar, StatusCard, Toast all put status text on the
+  // matching status surface). Until 2026-09-22 this gate only checked status
+  // text against surfaceDefault (white), which every status passes easily, so
+  // the combination that ships was never validated. axe found what this file
+  // was structurally blind to: statusWarningText on statusWarningBg measures
+  // 3.34:1 — gold1000 is the darkest gold and fails even on pure white — and
+  // it had reached 8 components. Those now use textOnLight for text and keep
+  // gold as the 3:1 accent; the warning row below therefore checks the pair
+  // that is genuinely rendered.
+  { name: 'statusSuccessText on statusSuccessBg', fg: 'statusSuccessText', bg: 'statusSuccessBg', required: 4.5, warn: 4.5 },
+  { name: 'statusDangerText on statusDangerBg', fg: 'statusDangerText', bg: 'statusDangerBg', required: 4.5, warn: 4.5 },
+  { name: 'textOnLight on statusWarningBg (warning text)', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
+  // Gold stays legal as a non-text accent (icon, border): 3:1, not 4.5:1.
+  { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 }
 ];
 
 function runMode(mode) {

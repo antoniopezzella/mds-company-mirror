@@ -286,7 +286,7 @@ exports[`design tokens snapshots > semantic dark overrides > semantic-dark-overr
   "statusSuccess": "#b0dc92",
   "statusSuccessBg": "#2f7d32",
   "statusSuccessBorder": "#b0dc92",
-  "statusSuccessText": "#def2d7",
+  "statusSuccessText": "#f2faef",
   "statusWarning": "#ffd98a",
   "statusWarningBg": "#cb7623",
   "statusWarningBorder": "#ffd98a",

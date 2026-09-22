@@ -2915,7 +2915,7 @@
       },
       "statusSuccessText": {
         "$type": "color",
-        "$value": "{color.green250}"
+        "$value": "{color.green100}"
       },
       "statusWarning": {
         "$type": "color",

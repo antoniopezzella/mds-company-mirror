@@ -60,7 +60,11 @@ describe('Toast', () => {
   // the role layer rather than hardcoding colour.
   it.each([
     ['success', 'status.success.bg', 'status.success.fg'],
-    ['warning', 'status.warning.bg', 'status.warning.fg'],
+    // warning deliberately does NOT use status.warning.fg for text: gold1000 on
+    // gold50 is 3.34:1, below the 4.5:1 body text requires, and no gold in the
+    // palette clears it. text.onLight is the role meant for warning gold
+    // (17.71:1) — see the note in alert.tsx. This row is the regression guard.
+    ['warning', 'status.warning.bg', 'text.onLight'],
     ['danger', 'status.danger.bg', 'status.danger.fg'],
     ['info', 'surface.accent', 'text.primary'],
     ['default', 'surface.subtle', 'text.primary'],

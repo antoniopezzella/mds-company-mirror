@@ -51,7 +51,10 @@ function getToneRoles(tone: ChipTone): { bg: RoleName; fg: RoleName; border: Rol
     case 'success':
       return { bg: 'status.success.bg', fg: 'status.success.fg', border: 'status.success.fg' };
     case 'warning':
-      return { bg: 'status.warning.bg', fg: 'status.warning.fg', border: 'status.warning.fg' };
+      // fg is the label colour; the border keeps the gold accent.
+      // status.warning.fg on status.warning.bg is 3.34:1 — fine for the 3:1
+      // border, unreadable as text. See alert.tsx for the full reasoning.
+      return { bg: 'status.warning.bg', fg: 'text.onLight', border: 'status.warning.fg' };
     case 'danger':
       return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.fg' };
     case 'info':
