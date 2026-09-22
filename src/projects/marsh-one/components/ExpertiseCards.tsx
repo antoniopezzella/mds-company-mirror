@@ -117,6 +117,14 @@ export const ExpertiseCards: React.FC<ExpertiseCardsProps> = ({
           {/* Scrollable Cards */}
           <Box
             ref={scrollContainerRef}
+            // A horizontally scrolling region must be keyboard-focusable or its
+            // off-screen cards are unreachable without a mouse (WCAG 2.1.1;
+            // axe: scrollable-region-focusable). Arrow keys scroll it natively
+            // once focused, so it needs no key handler; it carries no
+            // interactive role, hence the group + label for context.
+            tabIndex={0}
+            role="group"
+            aria-label="Areas of expertise"
             sx={{
               display: 'flex',
               gap: '32px',

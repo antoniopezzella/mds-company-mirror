@@ -173,11 +173,22 @@ export const Footer: React.FC = () => {
               gap: 2,
             }}
           >
-            {[LinkedIn, Twitter, YouTube, Facebook, Instagram].map((Icon, index) => (
+            {/* Paired with a name: these are icon-only links, so without an
+                aria-label a screen reader announces five links with no text at
+                all (axe: link-name) and a user cannot tell them apart. The icon
+                conveys nothing to assistive tech. */}
+            {([
+              [LinkedIn, 'LinkedIn'],
+              [Twitter, 'X (formerly Twitter)'],
+              [YouTube, 'YouTube'],
+              [Facebook, 'Facebook'],
+              [Instagram, 'Instagram'],
+            ] as const).map(([Icon, name], index) => (
               <Box
                 key={index}
                 component="a"
                 href="#"
+                aria-label={`Marsh on ${name}`}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
