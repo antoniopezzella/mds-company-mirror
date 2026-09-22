@@ -30,6 +30,23 @@ npm install
 - Keep stories minimal and focused on meaningful states.
 - Prefer composition over custom ad-hoc docs components.
 
+## Which stack do I use?
+
+Two component sets live here. **For anything new, use `src/components/ui/*`** —
+the shadcn/Radix + Tailwind set. It is the canonical half of the system and
+the only half exported to consumers.
+
+`src/components/*` (the MUI set) is being migrated away from. Don't add to it,
+and don't import from it in a new page. Some existing pages import from both
+(`LoginPage`, `RESGAssetListPage`) — that is migration residue, not a pattern
+to copy.
+
+If the component you need only exists on the MUI side, that's a gap worth
+raising rather than silently working around — check
+[`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) first, since the
+answer is often that a `ui/*` equivalent already exists under a different name
+(`DataGrid` → `DataTable`, `TextField` → `input`/`text-field`).
+
 ## 🧩 Creating a New Component
 
 Check `/design-system` and existing components first — see `CLAUDE.md`'s "decision ladder" (does it exist already → do its props cover it → can you compose existing primitives → only then build new).

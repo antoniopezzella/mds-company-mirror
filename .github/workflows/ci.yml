@@ -41,6 +41,19 @@ jobs:
           echo "\n## Token Diff" >> $GITHUB_STEP_SUMMARY
           cat token-diff.md >> $GITHUB_STEP_SUMMARY
 
+      # The Storybook project runs real browser tests, and Vite's dependency
+      # pre-bundling flakes on a cold cache under concurrent load. Persisting
+      # the cache keeps CI off that path; the retry in vitest.config.ts covers
+      # the first run on a cache miss.
+      - name: Cache Storybook/Vite pre-bundle
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/storybook
+            node_modules/.vite
+          key: sb-prebundle-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: sb-prebundle-${{ runner.os }}-
+
       - name: Unit & interaction tests
         run: npm test
 

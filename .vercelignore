@@ -25,7 +25,6 @@ playwright.config.ts
 
 # Development files
 docs/hero-wireframes/
-scripts/capture-hero-wireframes.js
 
 # Documentation build artifacts
 storybook-static/
