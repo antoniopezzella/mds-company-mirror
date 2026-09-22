@@ -62,7 +62,9 @@ const StatusCard: React.FC<StatusCardProps> = ({
     },
     warning: {
       bg: 'status.warning.bg' as const,
-      fg: 'status.warning.fg' as const,
+      // fg is the card's text colour — see ui/alert.tsx for why warning
+      // can't use its own accent here (3.34:1 vs the 4.5:1 text requires).
+      fg: 'text.onLight' as const,
       border: 'status.warning.border' as const,
     },
     error: {

@@ -56,7 +56,9 @@ const DSSnackbar: React.FC<DSSnackbarProps> = ({
         };
       case 'warning':
         return {
-          fg: getRoleColor('status.warning.fg'),
+          // See ui/alert.tsx: gold1000 on gold50 is 3.34:1, unreadable as
+          // text. text.onLight is the role for warning gold (17.71:1).
+          fg: getRoleColor('text.onLight'),
           bg: getRoleColor('status.warning.bg'),
         };
       default:

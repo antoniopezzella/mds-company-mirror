@@ -6,20 +6,40 @@ import { getRoleColor, type RoleName } from '@/theme/roles';
 
 export type AlertSeverity = 'error' | 'warning' | 'info' | 'success';
 
-function getSeverityRoles(severity: AlertSeverity): { fg: RoleName; bg: RoleName } {
+/**
+ * `fg` is the accent (icon, border) and `text` is the body copy colour. They
+ * are the same for every severity except warning, and that exception is the
+ * whole reason this returns two values.
+ *
+ * `status.warning.fg` is gold1000 (#cb7623). On `status.warning.bg` (gold50,
+ * #fffcf8) it measures 3.34:1 — fine for a non-text accent, which needs only
+ * 3:1, but well under the 4.5:1 that body text requires. Every warning Alert,
+ * Badge, Chip and Snackbar was rendering unreadable text, and no gold in the
+ * palette fixes it: gold1000 is the darkest and fails even on pure white
+ * (3.41:1).
+ *
+ * `text.onLight` exists for exactly this — its own role description cites
+ * "warning gold" — and measures 17.71:1 here. check-contrast.js already
+ * validates that pair. Success and danger need no equivalent: their own `fg`
+ * passes on their own background (4.94:1 and 8.77:1).
+ */
+function getSeverityRoles(severity: AlertSeverity): { fg: RoleName; bg: RoleName; text: RoleName } {
   switch (severity) {
     case 'success':
-      return { fg: 'status.success.fg', bg: 'status.success.bg' };
+      return { fg: 'status.success.fg', bg: 'status.success.bg', text: 'status.success.fg' };
     case 'warning':
-      return { fg: 'status.warning.fg', bg: 'status.warning.bg' };
+      return { fg: 'status.warning.fg', bg: 'status.warning.bg', text: 'text.onLight' };
     case 'error':
-      return { fg: 'status.danger.fg', bg: 'status.danger.bg' };
+      return { fg: 'status.danger.fg', bg: 'status.danger.bg', text: 'status.danger.fg' };
     default:
-      return { fg: 'text.primary', bg: 'surface.subtle' };
+      return { fg: 'text.primary', bg: 'surface.subtle', text: 'text.primary' };
   }
 }
 
-const SEVERITY_ICON: Record<AlertSeverity, React.ComponentType<{ className?: string }>> = {
+const SEVERITY_ICON: Record<
+  AlertSeverity,
+  React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+> = {
   success: CheckCircle2,
   warning: AlertTriangle,
   error: AlertCircle,
@@ -44,7 +64,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
  */
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ severity, title, outlined = false, onClose, hideIcon = false, children, className, style, ...rest }, ref) => {
-    const { fg, bg } = getSeverityRoles(severity);
+    const { fg, bg, text } = getSeverityRoles(severity);
     const Icon = SEVERITY_ICON[severity];
 
     return (
@@ -53,14 +73,16 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         role={roleFor(severity)}
         className={cn('flex items-start gap-3 rounded-lg p-4', className)}
         style={{
-          color: getRoleColor(fg),
+          // Body copy uses `text` (4.5:1); the icon below keeps `fg` as the
+          // accent, which only needs 3:1. See getSeverityRoles.
+          color: getRoleColor(text),
           backgroundColor: outlined ? 'transparent' : getRoleColor(bg),
           border: outlined ? `1px solid ${getRoleColor('border.default')}` : 'none',
           ...style,
         }}
         {...rest}
       >
-        {!hideIcon && <Icon className="mt-0.5 h-5 w-5 shrink-0" />}
+        {!hideIcon && <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color: getRoleColor(fg) }} />}
         <div className="min-w-0 flex-1">
           {title && <AlertTitle>{title}</AlertTitle>}
           {children && <AlertDescription>{children}</AlertDescription>}
