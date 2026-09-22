@@ -41,7 +41,7 @@
     "dev:frontend": "vite",
     "dev:gateway": "cd apps/gateway && npm run dev",
     "dev:all": "npm run dev",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run tokens:build",
     "build:gateway": "cd apps/gateway && npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
