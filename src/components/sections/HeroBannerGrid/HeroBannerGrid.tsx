@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useReducedMotion } from '../../../hooks/gsap/useReducedMotion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Pause, Play } from 'lucide-react';
 import Player from '@vimeo/player';
@@ -208,10 +209,16 @@ export const HeroBannerGrid: React.FC<HeroBannerGridProps> = ({
     }
   };
 
+  // Reduced motion implies disableAnimations. This hero's entrance is a
+  // multi-element timeline plus a parallax tween — exactly the kind of motion
+  // WCAG 2.3.3 is about — and the component already had an escape hatch, so
+  // the preference simply switches it on rather than needing a parallel path.
+  const reducedMotion = useReducedMotion();
+
   // GSAP Animations
   useGSAP(
     () => {
-      if (disableAnimations) return;
+      if (disableAnimations || reducedMotion) return;
 
       const mm = gsap.matchMedia();
       const titleWordElements = titleRef.current?.querySelectorAll('[data-hero-title-word]');
@@ -352,7 +359,7 @@ export const HeroBannerGrid: React.FC<HeroBannerGridProps> = ({
     // on it, and without it in this array switching media type (without also
     // changing layout/title) leaves a stale scrollTrigger from whatever
     // vimeoId was set the last time this effect actually ran.
-    { scope: containerRef, dependencies: [disableAnimations, title, layout, showMLogoOverlay, vimeoId] }
+    { scope: containerRef, dependencies: [disableAnimations, reducedMotion, title, layout, showMLogoOverlay, vimeoId] }
   );
 
   const isSplitMediaLeft = layout === 'split' && imagePosition === 'left';

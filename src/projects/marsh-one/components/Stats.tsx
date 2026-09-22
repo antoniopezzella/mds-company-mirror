@@ -3,6 +3,7 @@ import { Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { gsap } from 'gsap';
+import { useReducedMotion } from '../../../hooks/gsap/useReducedMotion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getRoleColor } from '../../../theme/roles';
 
@@ -67,8 +68,20 @@ export const Stats: React.FC<StatsProps> = ({
   const statsRef = useRef<HTMLDivElement>(null);
   const insightHeadlineRef = useRef<HTMLDivElement>(null);
 
+  const reducedMotion = useReducedMotion();
+
+  // Entrance animations are skipped entirely for users who have asked for
+  // reduced motion (WCAG 2.3.3). This component called gsap directly rather
+  // than going through the hooks in src/hooks/gsap/, all of which already
+  // honour the preference, so it animated regardless.
+  //
+  // It also made these elements unreadable while in flight: the animation
+  // starts at opacity 0, so anything sampling the page mid-animation sees text
+  // blended into its background. That is what axe was reporting here as
+  // colour-contrast failures on elements whose declared colour was correct.
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    if (reducedMotion) return;
+const ctx = gsap.context(() => {
       // Animate headline and description when section enters view
       gsap.fromTo(headlineRef.current, 
         { 
@@ -190,7 +203,7 @@ export const Stats: React.FC<StatsProps> = ({
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [stats]);
+  }, [stats, reducedMotion]);
 
   const scrollCards = (direction: 'left' | 'right') => {
     if (scrollRef.current) {

@@ -17,6 +17,7 @@ import {
   Medal,
 } from 'lucide-react';
 import gsap from 'gsap';
+import { useReducedMotion } from '@/hooks/gsap/useReducedMotion';
 import { getRoleColor } from '../../theme/roles';
 import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
@@ -204,9 +205,23 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
 
   const cardRef = useRef<HTMLElement>(null);
 
-  // GSAP entrance fade-up
+  // GSAP entrance fade-up.
+  //
+  // Skipped entirely when the user has asked for reduced motion. Every hook in
+  // src/hooks/gsap/ already honours that preference; this was a raw gsap call
+  // in a useEffect and bypassed it, so a card faded and slid in regardless
+  // (WCAG 2.3.3).
+  //
+  // It also made the card unreadable for the duration: the entrance starts at
+  // opacity 0, and anything sampling the page mid-flight sees the text blended
+  // most of the way into the background. That is what axe was reporting as
+  // dozens of colour-contrast failures across CarouselSection and
+  // WireframeSlide — elements declaring the correct `color: #000f47` but
+  // measuring as ~#e2e3ea at 1.2:1. The colours were never wrong; the text was
+  // simply still fading in.
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
-    if (!animate || !cardRef.current) return;
+    if (!animate || reducedMotion || !cardRef.current) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         cardRef.current!,
@@ -215,7 +230,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
       );
     });
     return () => ctx.revert();
-  }, [animate, animationDelay]);
+  }, [animate, animationDelay, reducedMotion]);
 
   // Bridges getRoleColor() values into CardWebsite.module.scss — keeps color
   // authority with the token system while letting both real :hover/:active

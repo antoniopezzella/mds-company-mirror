@@ -88,7 +88,29 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: 'playwright',
-            instances: [{ browser: 'chromium' }],
+            instances: [
+              {
+                browser: 'chromium',
+                // Run the whole suite as a reduced-motion user would see it.
+                //
+                // This is not just a convenience. Entrance animations start at
+                // opacity 0, so a story sampled mid-flight has text blended
+                // most of the way into its background — axe reported dozens of
+                // colour-contrast failures for elements whose declared colour
+                // was perfectly correct (#000f47 measuring as ~#e2e3ea at
+                // 1.2:1). The readings were real, the defect was not: the text
+                // was simply still fading in, and the result varied with
+                // machine speed.
+                //
+                // Asking for reduced motion settles the DOM before axe looks,
+                // which makes contrast deterministic AND exercises the
+                // accessibility path that actually matters — every animation in
+                // this repo is now expected to honour the preference, so if one
+                // regresses and animates anyway, these tests go flaky again and
+                // say so.
+                context: { reducedMotion: 'reduce' },
+              },
+            ],
           },
         },
       },

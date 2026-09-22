@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { useReducedMotion } from '../../../hooks/gsap/useReducedMotion';
 import { AppBar, Toolbar, Box, Button, Container, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -84,17 +85,25 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
     };
   }, [scrollThreshold]);
 
-  // Animate background whenever the solid/transparent state changes
+  const reducedMotion = useReducedMotion();
+
+  // Animate background whenever the solid/transparent state changes.
+  //
+  // Unlike the entrance animations elsewhere in this project, reduced motion
+  // does NOT skip this one — the tween is what applies the header's colour at
+  // all, so skipping would leave it stuck on the wrong background. It becomes
+  // instant instead (duration 0), which is the correct reading of the
+  // preference: the state change still happens, it just isn't animated.
   useEffect(() => {
     if (typeof window === 'undefined' || !headerRef.current) return;
 
     gsap.to(headerRef.current, {
       backgroundColor: isBackgroundSolid ? semanticColors.brandSecondary : 'transparent',
       color: isBackgroundSolid ? getRoleColor('text.primary') : 'white',
-      duration: 0.35,
+      duration: reducedMotion ? 0 : 0.35,
       ease: 'power2.out',
     });
-  }, [isBackgroundSolid]);
+  }, [isBackgroundSolid, reducedMotion]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);

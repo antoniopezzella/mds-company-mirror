@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { gsap } from 'gsap';
+import { useReducedMotion } from '../../../hooks/gsap/useReducedMotion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Button as DSButton } from '../../../components/ui/button';
 import { getRoleColor } from '../../../theme/roles';
@@ -40,8 +41,20 @@ export const SolutionsGrid: React.FC<SolutionsGridProps> = ({
   const headlineRef = useRef<HTMLDivElement>(null);
   const tilesRef = useRef<HTMLDivElement>(null);
 
+  const reducedMotion = useReducedMotion();
+
+  // Entrance animations are skipped entirely for users who have asked for
+  // reduced motion (WCAG 2.3.3). This component called gsap directly rather
+  // than going through the hooks in src/hooks/gsap/, all of which already
+  // honour the preference, so it animated regardless.
+  //
+  // It also made these elements unreadable while in flight: the animation
+  // starts at opacity 0, so anything sampling the page mid-animation sees text
+  // blended into its background. That is what axe was reporting here as
+  // colour-contrast failures on elements whose declared colour was correct.
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    if (reducedMotion) return;
+const ctx = gsap.context(() => {
       gsap.fromTo(
         headlineRef.current,
         { opacity: 0, y: 30 },
@@ -72,7 +85,7 @@ export const SolutionsGrid: React.FC<SolutionsGridProps> = ({
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [topics]);
+  }, [topics, reducedMotion]);
 
   return (
     <Box
