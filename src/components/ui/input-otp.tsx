@@ -18,6 +18,13 @@ const InputOTP = React.forwardRef<React.ElementRef<typeof OTPInput>, React.Compo
   ({ className, containerClassName, ...props }, ref) => (
     <OTPInput
       ref={ref}
+      // The package renders a real <input> behind the visual slots. It is the
+      // element that actually receives typing, so it needs an accessible name
+      // (axe: label) — there is no visible <label> associated with it, and the
+      // slots are decorative divs. Defaulted rather than required so existing
+      // call sites keep working; placed before the spread so a caller's own
+      // aria-label / aria-labelledby wins.
+      aria-label="One-time code"
       containerClassName={cn('flex items-center gap-2 has-[:disabled]:opacity-50', containerClassName)}
       className={cn('disabled:cursor-not-allowed', className)}
       {...props}

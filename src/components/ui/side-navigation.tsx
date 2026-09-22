@@ -159,6 +159,13 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         activeBg: getRoleColor('surface.navigation.active'),
         activeHoverBg: getRoleColor('surface.navigation.active'),
         activeBorder: getRoleColor('interactive.secondary'),
+        // The active pill's background is the same dark navy
+        // (surface.navigation.active, #333f6b) for BOTH colour schemes, so the
+        // active item's text has to follow that background rather than the
+        // rail's. On the secondary (sky-blue) rail navText is the dark
+        // text.primary, which put #000f47 on #333f6b — 1.78:1, effectively
+        // invisible, on every active item. text.onHero measures 8.27:1 there.
+        activeText: getRoleColor('text.onHero'),
         border: getRoleColor('border.default'),
         ctaBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
         ctaText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
@@ -189,6 +196,10 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
           '--sn-active-bg': colors.activeBg,
           '--sn-active-hover-bg': colors.activeHoverBg,
           '--sn-active-border': colors.activeBorder,
+          // Falls back to the rail's own text colour for the variants that
+          // don't set activeText — their active backgrounds are translucent
+          // tints of the rail, so the rail's text stays correct there.
+          '--sn-active-text': colors.activeText ?? colors.navText,
           '--sn-border': colors.border,
         } as React.CSSProperties}
       >
@@ -251,7 +262,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                     // Active state
                     isItemActive && [
-                      'bg-[var(--sn-active-bg)]',
+                      'bg-[var(--sn-active-bg)] text-[var(--sn-active-text)]',
                       'border-l-4 border-[var(--sn-active-border)]',
                       'hover:bg-[var(--sn-active-hover-bg)]',
                     ],
@@ -320,7 +331,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                               // Active state
                               isSubActive && [
-                                'bg-[var(--sn-active-bg)]',
+                                'bg-[var(--sn-active-bg)] text-[var(--sn-active-text)]',
                                 'border-l-4 border-[var(--sn-active-border)]',
                                 'font-semibold',
                                 'hover:bg-[var(--sn-active-hover-bg)]',

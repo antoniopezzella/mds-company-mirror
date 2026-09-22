@@ -512,6 +512,10 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
         </div>
         <div className="flex-1 rounded-md overflow-hidden shadow-lg">
           <SideNavigation
+              // Two <nav> landmarks on one page need distinct accessible names,
+              // or a screen-reader user gets an unusable "Primary / Primary"
+              // landmark list (axe: landmark-unique).
+            ariaLabel="Primary colour scheme"
             items={sampleItems}
             variant="dark"
             colorScheme="primary"
@@ -527,6 +531,10 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
         </div>
         <div className="flex-1 rounded-md overflow-hidden shadow-lg">
           <SideNavigation
+              // Two <nav> landmarks on one page need distinct accessible names,
+              // or a screen-reader user gets an unusable "Primary / Primary"
+              // landmark list (axe: landmark-unique).
+            ariaLabel="Secondary colour scheme"
             items={sampleItems}
             variant="dark"
             colorScheme="secondary"
