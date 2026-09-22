@@ -56,5 +56,8 @@
       "section": "Reverts",
       "hidden": false
     }
-  ]
+  ],
+  "scripts": {
+    "postchangelog": "node scripts/strip-changelog-false-issues.js"
+  }
 }
