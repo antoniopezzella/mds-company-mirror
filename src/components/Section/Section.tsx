@@ -14,7 +14,13 @@ const Section: React.FC<SectionProps> = ({ title, subtitle, children }) => (
     sx={{
       bgcolor: 'background.paper',
       borderRadius: '4px',
-      boxShadow: 'var(--role-shadow-low)',
+      // `var(--role-shadow-low)` was referenced here but no such role exists —
+      // shadows live in src/shadows.ts and reach components through the MUI
+      // theme's `shadows` array, not the role CSS-var bridge (which exposes
+      // colour roles only). The var resolved to nothing, so this section has
+      // been rendering with no shadow at all. theme.shadows[1] is the
+      // "subtle separation, cards on flat bg" level, per shadows.ts.
+      boxShadow: (theme) => theme.shadows[1],
       p: { xs: 3, md: 6 },
       mb: 4,
     }}

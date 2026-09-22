@@ -87,8 +87,79 @@ for (const file of componentFiles) {
   });
 }
 
+// ─── Dangling --role-* CSS variables ────────────────────────────────────────
+// RoleVarsProvider publishes one custom property per role, named
+// `--role-${role.replaceAll('.', '-')}` — note it does NOT kebab-case the
+// segment, so `text.onInteractive` becomes `--role-text-onInteractive`.
+// A reference to a name that isn't published resolves to nothing, and CSS
+// fails silently: the declaration is dropped and the property inherits or
+// falls back to a browser default. Nothing catches that — not tsc, not the
+// linter, not the hardcoded-hex sweep above.
+//
+// This is not hypothetical. It shipped three times:
+//   • button.tsx asked for `--role-text-on-interactive` (kebab) instead of
+//     `--role-text-onInteractive`, so every destructive primary button
+//     rendered inherited navy text on the red fill (3.38:1) instead of white.
+//   • `--role-border-subtle` and `--role-shadow-low` were referenced but had
+//     no corresponding role at all — shadows aren't in the role system, and
+//     border.subtle doesn't exist — so those surfaces rendered flat/unbordered.
+// All three were found by an accessibility audit, not by any gate.
+// roles.ts is TypeScript and this script is plain Node, so the role list is
+// parsed from the RoleName union rather than imported — the same approach the
+// other governance scripts take to avoid a build step. dist/tokens.json is not
+// an option here: it carries primitives and semantics, not roles.
+const publishedRoleVars = (() => {
+  const rolesSrc = fs.readFileSync(path.join(root, 'src', 'theme', 'roles.ts'), 'utf8');
+  const union = rolesSrc.slice(
+    rolesSrc.indexOf('export type RoleName'),
+    rolesSrc.indexOf(';', rolesSrc.indexOf('export type RoleName'))
+  );
+  const names = [...union.matchAll(/'([a-zA-Z][a-zA-Z0-9.]*)'/g)].map((m) => m[1]);
+  if (names.length === 0) {
+    console.error('check-role-usage: could not parse RoleName union from src/theme/roles.ts');
+    process.exit(2);
+  }
+  return new Set(names.map((role) => `--role-${role.replaceAll('.', '-')}`));
+})();
+const danglingVars = [];
+{
+  const scanDirs = ['src'];
+  const scanExt = new Set(['.ts', '.tsx', '.js', '.jsx', '.scss', '.css']);
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules') continue;
+        walk(full);
+      } else if (scanExt.has(path.extname(entry.name))) {
+        // Comments stripped first — several of these dead names are quoted in
+        // the very comments that explain why they were removed, and a detector
+        // that trips on its own documentation is useless. Line numbers are
+        // preserved because stripComments only blanks comment text, and a
+        // block comment spanning lines collapses; close enough for a pointer.
+        const src = stripComments(fs.readFileSync(full, 'utf8'));
+        const rel = path.relative(root, full);
+        src.split(/\r?\n/).forEach((line, i) => {
+          for (const m of line.matchAll(/--role-[A-Za-z0-9-]+/g)) {
+            if (!publishedRoleVars.has(m[0])) {
+              // Suggest the published name that differs only in case/dashes.
+              const norm = (s) => s.toLowerCase().replace(/-/g, '');
+              const suggestion = [...publishedRoleVars].find((v) => norm(v) === norm(m[0]));
+              danglingVars.push({ file: rel, line: i + 1, match: m[0], suggestion: suggestion ?? null });
+            }
+          }
+        });
+      }
+    }
+  };
+  for (const d of scanDirs) {
+    const abs = path.join(root, d);
+    if (fs.existsSync(abs)) walk(abs);
+  }
+}
+
 if (asJson) {
-  const payload = { strict, violations, hardcoded };
+  const payload = { strict, violations, hardcoded, danglingVars };
   process.stdout.write(JSON.stringify(payload, null, 2) + '\n');
 } else {
   if (violations.length === 0) {
@@ -111,7 +182,17 @@ if (asJson) {
   }
 }
 
-if (strict && violations.length > 0) {
+if (danglingVars.length) {
+  console.log(`\nDangling --role-* CSS variables: ${danglingVars.length} (these resolve to NOTHING at runtime)`);
+  for (const d of danglingVars) {
+    console.log(`  • ${d.file}:${d.line}  ${d.match}${d.suggestion ? `  -> did you mean ${d.suggestion}?` : '  (no such role)'}`);
+  }
+}
+
+// Dangling vars gate in --strict alongside direct-token violations: unlike a
+// hardcoded hex (which at least renders the colour someone intended), one of
+// these renders nothing and is invisible until someone looks closely.
+if (strict && (violations.length > 0 || danglingVars.length > 0)) {
   process.exit(1);
 }
 process.exit(0);
