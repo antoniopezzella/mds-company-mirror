@@ -427,7 +427,7 @@ function App() {
 - [Web Vitals Documentation](https://web.dev/vitals/)
 - [Lighthouse Documentation](https://developer.chrome.com/docs/lighthouse/)
 - [Performance Budgets Guide](https://web.dev/performance-budgets-101/)
-- [Utility README](./src/utils/performance/README.md)
+- [Utility README](../../src/utils/performance/README.md)
 
 ## ✅ Next Steps
 

@@ -270,9 +270,9 @@ Push triggers are intentionally not `main`-only — this repo does substantial w
 Follow the [Token Request Process](./docs/TOKEN_REQUEST_PROCESS.md):
 1. Check if an existing token can work (search Figma Variables or Storybook)
 2. If no match, submit a GitHub issue using the appropriate template:
-   - [⭐ Brand Token](/.github/ISSUE_TEMPLATE/token-request-brand.md) (requires VP approval)
-   - [🎨 Semantic Token](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (requires Design Lead)
-   - [🔧 Role Token](/.github/ISSUE_TEMPLATE/token-request-role.md) (requires DS Team)
+   - [⭐ Brand Token](.github/ISSUE_TEMPLATE/token-request-brand.md) (requires VP approval)
+   - [🎨 Semantic Token](.github/ISSUE_TEMPLATE/token-request-semantic.md) (requires Design Lead)
+   - [🔧 Role Token](.github/ISSUE_TEMPLATE/token-request-role.md) (requires DS Team)
 3. Wait for approval before implementation
 4. Developer will implement and sync to Figma
 

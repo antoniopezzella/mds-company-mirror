@@ -73,9 +73,9 @@ src/components/ComponentName/
 ## 🎨 Token System Workflow
 
 **⚠️ Before adding or modifying a token, submit a token request for approval** — see [Token Request Process](./TOKEN_REQUEST_PROCESS.md). Quick links:
-- [⭐ Brand Token Request](/.github/ISSUE_TEMPLATE/token-request-brand.md) (VP approval)
-- [🎨 Semantic Token Request](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (Design Lead)
-- [🔧 Role Token Request](/.github/ISSUE_TEMPLATE/token-request-role.md) (DS Team)
+- [⭐ Brand Token Request](../.github/ISSUE_TEMPLATE/token-request-brand.md) (VP approval)
+- [🎨 Semantic Token Request](../.github/ISSUE_TEMPLATE/token-request-semantic.md) (Design Lead)
+- [🔧 Role Token Request](../.github/ISSUE_TEMPLATE/token-request-role.md) (DS Team)
 
 Post-approval implementation:
 1. **Primitives** — `src/tokens.ts` (raw values).
