@@ -63,7 +63,18 @@ export default defineConfig({
         },
         test: {
           name: 'storybook',
-          setupFiles: ['.storybook/vitest.setup.ts'],
+          // No `setupFiles` here on purpose. It used to point at
+          // .storybook/vitest.setup.ts, which called setProjectAnnotations()
+          // manually — and since Storybook 10.3 that makes
+          // @storybook/addon-vitest SKIP its own automatic provisioning
+          // ("Skipping automatic provisioning of preview annotations to avoid
+          // conflicts", printed on every run). That automatic path is what
+          // wires in the *addons'* annotations, so preview.tsx's decorators
+          // applied while addon-a11y's never did — meaning
+          // `a11y: { test: 'error' }` in preview.tsx silently ran no checks at
+          // all. Verified by probe: a story with deliberate colour-contrast and
+          // button-name violations PASSED. Letting addon-vitest provision
+          // automatically fixes it, and the same probe then fails as it should.
           // Run story files serially. The cold-cache failures described above
           // come from Vite pre-bundling under concurrent load, so this fixes
           // the cause rather than papering over it: on a cleared cache,

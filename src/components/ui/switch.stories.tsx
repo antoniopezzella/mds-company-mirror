@@ -84,6 +84,10 @@ export const LabelStart: Story = {
 export const WithoutLabel: Story = {
   args: {
     checked: false,
+    // Same rule as Checkbox/WithoutLabel: `role="switch"` takes no name from
+    // content, so a switch with no visible label still needs a programmatic
+    // one. "Without label" means no rendered text, not no accessible name.
+    'aria-label': 'Enable feature',
   },
 };
 

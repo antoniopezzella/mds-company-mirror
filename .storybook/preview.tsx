@@ -118,7 +118,7 @@ export const parameters: Preview['parameters'] = {
     sort: 'requiredFirst',
   },
   a11y: {
-    test: 'todo',
+    test: 'error',
   },
   docs: {
     page: () => (

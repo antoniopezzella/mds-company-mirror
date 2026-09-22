@@ -27,6 +27,16 @@ export interface ComboboxProps {
   emptyText?: string;
   disabled?: boolean;
   className?: string;
+  /**
+   * Accessible name for the trigger. `role="combobox"` does NOT support
+   * name-from-content per ARIA, so the visible placeholder/value text inside
+   * the button contributes nothing to the accessible name — axe reports
+   * `button-name` without this. Defaults to `placeholder`, which is the
+   * closest thing to a label the component already has; pass something
+   * specific where a visible label exists elsewhere.
+   */
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 }
 
 export const Combobox: React.FC<ComboboxProps> = ({
@@ -38,6 +48,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
   emptyText = 'No results found.',
   disabled = false,
   className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }) => {
   const [open, setOpen] = React.useState(false);
   const selected = options.find((o) => o.value === value);
@@ -51,6 +63,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
           role="combobox"
           aria-expanded={open}
           aria-controls={listId}
+          aria-label={ariaLabelledBy ? undefined : (ariaLabel ?? placeholder)}
+          aria-labelledby={ariaLabelledBy}
           disabled={disabled}
           className={cn(
             'flex h-10 w-full items-center justify-between gap-2 rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',

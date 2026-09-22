@@ -24,15 +24,17 @@ export default meta;
 type Story = StoryObj<typeof Toggle>;
 
 export const Default: Story = {
-  args: { children: <Bold className="h-4 w-4" /> },
+  // Icon-only toggles carry no text, so they need an explicit accessible
+  // name — these stories are the reference consumers copy from.
+  args: { 'aria-label': 'Bold', children: <Bold className="h-4 w-4" /> },
 };
 
 export const Outline: Story = {
-  args: { variant: 'outline', children: <Italic className="h-4 w-4" /> },
+  args: { variant: 'outline', 'aria-label': 'Italic', children: <Italic className="h-4 w-4" /> },
 };
 
 export const Pressed: Story = {
-  args: { defaultPressed: true, children: <Underline className="h-4 w-4" /> },
+  args: { defaultPressed: true, 'aria-label': 'Underline', children: <Underline className="h-4 w-4" /> },
 };
 
 export const WithText: Story = {
@@ -40,15 +42,15 @@ export const WithText: Story = {
 };
 
 export const Disabled: Story = {
-  args: { disabled: true, children: <Bold className="h-4 w-4" /> },
+  args: { disabled: true, 'aria-label': 'Bold', children: <Bold className="h-4 w-4" /> },
 };
 
 export const Sizes: StoryObj = {
   render: () => (
     <div className="flex items-center gap-2">
-      <Toggle size="sm"><Bold className="h-3.5 w-3.5" /></Toggle>
-      <Toggle size="default"><Bold className="h-4 w-4" /></Toggle>
-      <Toggle size="lg"><Bold className="h-5 w-5" /></Toggle>
+      <Toggle size="sm" aria-label="Bold (small)"><Bold className="h-3.5 w-3.5" /></Toggle>
+      <Toggle size="default" aria-label="Bold (default)"><Bold className="h-4 w-4" /></Toggle>
+      <Toggle size="lg" aria-label="Bold (large)"><Bold className="h-5 w-5" /></Toggle>
     </div>
   ),
 };

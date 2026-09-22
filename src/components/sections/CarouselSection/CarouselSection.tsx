@@ -95,7 +95,9 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
 }) => {
   const theme    = useTheme();
   const mode     = theme.palette.mode as Mode;
-  const trackRef = useRef<HTMLUListElement>(null);
+  // A <div>, not a <ul> — see the comment on the track element for why the
+  // slides can't be list items.
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const [atStart, setAtStart] = useState(true);
   const [atEnd,   setAtEnd]   = useState(false);
@@ -331,16 +333,34 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
       aria-live="polite"
       aria-atomic="false"
     >
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions --
-          click-and-drag-to-scroll on the track itself, not a discrete
-          click-to-activate control — the real interactive elements are the
-          card children, each with their own accessible trigger. Keyboard
-          users already get full scroll access natively (arrow-key/Tab
-          scrolling on the overflow container), so no keyboard equivalent is
-          needed for a mouse-only drag gesture. See the file-top comment for
-          why this is plain pointer math, not a carousel library. */}
-      <ul
+      {/* Plain <div>s, not <ul>/<li>, on purpose. The WAI carousel pattern puts
+          `role="group" aria-roledescription="slide"` on each slide, and `group`
+          is not an allowed role for <li> — axe flagged every slide
+          (aria-allowed-role) and then flagged the <ul> as well (list), because
+          its children stop counting as list items. One invalid role produced
+          two separate rule failures across 40 violations.
+
+          See the file-top comment for why the panning is plain pointer math
+          rather than a carousel library. */}
+      {/* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex --
+          These two rules and axe disagree about this element, and axe is right.
+          WCAG 2.1.1 requires a scrollable container to be keyboard-focusable —
+          without tabIndex={0} a keyboard-only user cannot scroll the track at
+          all (axe: scrollable-region-focusable). So the tabindex is mandatory
+          here, not a stylistic choice, even though the element carries no
+          interactive role. The lint rules are heuristics with no concept of a
+          scrollable region. The mouse handler is click-and-drag panning, a
+          pointer-only affordance whose keyboard equivalent (arrow keys on the
+          focused container) is native; the genuinely interactive elements are
+          the card children, each with its own accessible trigger.
+
+          Block-scoped rather than -next-line because the report is attributed
+          to the `tabIndex` attribute line, not the opening tag. */}
+      <div
         ref={trackRef}
+        tabIndex={0}
+        role="group"
+        aria-label="Slides"
         className={cn(styles.cardList, fillAvailableSpace && styles.cardListFill)}
         onMouseDown={handleTrackMouseDown}
         onClickCapture={handleTrackClickCapture}
@@ -348,7 +368,7 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
         {items.map((item, index) => {
           const { id, ...cardProps } = item;
           return (
-            <li
+            <div
               key={id ?? index}
               className={cn(styles.slide, fillAvailableSpace && styles.slideFill)}
               role="group"
@@ -359,10 +379,11 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
                 {...cardProps}
                 {...(hideCategories && { category: undefined, categoryIcon: undefined })}
               />
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
+      {/* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */}
     </Box>
   );
 

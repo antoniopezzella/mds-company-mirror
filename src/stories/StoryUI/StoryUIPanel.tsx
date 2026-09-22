@@ -1090,7 +1090,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ streamingState })
     );
   }
   return (
-    <div className="sui-progress" role="progressbar" aria-valuenow={progress?.step} aria-valuemax={progress?.totalSteps}>
+    <div className="sui-progress" role="progressbar" aria-label="Story generation progress" aria-valuenow={progress?.step} aria-valuemax={progress?.totalSteps}>
       <div className="sui-progress-header">
         <span className="sui-progress-label">{progress?.message || 'Please give us a moment while we generate your story...'}</span>
         {progress && <span className="sui-progress-step">{progress.step}/{progress.totalSteps}</span>}

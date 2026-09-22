@@ -49,6 +49,19 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
     const values = props.value ?? props.defaultValue ?? [0];
     const thumbCount = Array.isArray(values) ? values.length : 1;
 
+    // `role="slider"` sits on the Thumb, not the Root, so an aria-label passed
+    // to this component would never reach the element that needs it — axe
+    // reports aria-input-field-name on every thumb. Forward it explicitly, and
+    // for a multi-thumb (range) slider distinguish the handles, since "Price"
+    // on both ends tells a screen-reader user nothing about which is which.
+    const rootLabel = props['aria-label'];
+    const thumbLabel = (index: number) => {
+      if (!rootLabel) return undefined;
+      if (thumbCount === 1) return rootLabel;
+      if (thumbCount === 2) return `${rootLabel} (${index === 0 ? 'minimum' : 'maximum'})`;
+      return `${rootLabel} (handle ${index + 1})`;
+    };
+
     const thumbColor = disabled ? getRoleColor('text.disabled') : getThumbColor(interaction);
 
     return (
@@ -90,6 +103,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
         {Array.from({ length: thumbCount }).map((_, index) => (
           <SliderPrimitive.Thumb
             key={index}
+            aria-label={thumbLabel(index)}
             className={sliderThumbVariants()}
             style={
               {

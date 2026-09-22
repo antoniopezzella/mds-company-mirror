@@ -33,7 +33,7 @@ type Story = StoryObj<typeof Slider>;
 export const Default: Story = {
   render: () => (
     <div className="w-[320px]">
-      <Slider defaultValue={[50]} max={100} step={1} />
+      <Slider defaultValue={[50]} max={100} step={1} aria-label="Value" />
     </div>
   ),
 };
@@ -41,7 +41,7 @@ export const Default: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="w-[320px]">
-      <Slider defaultValue={[40]} max={100} step={1} disabled />
+      <Slider defaultValue={[40]} max={100} step={1} disabled aria-label="Value (disabled)" />
     </div>
   ),
 };
@@ -49,7 +49,7 @@ export const Disabled: Story = {
 export const Range: Story = {
   render: () => (
     <div className="w-[320px]">
-      <Slider defaultValue={[25, 75]} max={100} step={1} />
+      <Slider defaultValue={[25, 75]} max={100} step={1} aria-label="Range" />
     </div>
   ),
 };
@@ -57,7 +57,7 @@ export const Range: Story = {
 export const Stepped: Story = {
   render: () => (
     <div className="w-[320px]">
-      <Slider defaultValue={[20]} max={100} step={20} />
+      <Slider defaultValue={[20]} max={100} step={20} aria-label="Stepped value" />
     </div>
   ),
 };
@@ -81,7 +81,7 @@ export const CoverageLimitAdjuster: Story = {
           <span className="text-sm font-medium">Coverage limit</span>
           <span className="text-sm font-semibold">{formatted}</span>
         </div>
-        <Slider value={value} onValueChange={setValue} min={50000} max={1000000} step={25000} />
+        <Slider value={value} onValueChange={setValue} min={50000} max={1000000} step={25000} aria-label="Coverage amount" />
         <div className="flex justify-between text-xs opacity-60">
           <span>$50,000</span>
           <span>$1,000,000</span>

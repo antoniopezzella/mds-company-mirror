@@ -94,6 +94,10 @@ export const WithHelper: Story = {
 export const WithoutLabel: Story = {
   args: {
     checked: false,
+    // No *visible* label, but a control still needs an accessible one —
+    // "without label" means the text isn't rendered, not that screen-reader
+    // users get nothing. This is the pattern to copy for checkbox-in-a-table.
+    'aria-label': 'Select row',
   },
 };
 
