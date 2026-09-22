@@ -1,62 +1,65 @@
 {
-  "preset": "conventionalcommits",
-  "types": [
-    {
-      "type": "feat",
-      "section": "Features",
-      "hidden": false
-    },
-    {
-      "type": "fix",
-      "section": "Bug Fixes",
-      "hidden": false
-    },
-    {
-      "type": "perf",
-      "section": "Performance",
-      "hidden": false
-    },
-    {
-      "type": "refactor",
-      "section": "Refactoring",
-      "hidden": false
-    },
-    {
-      "type": "style",
-      "section": "Styling",
-      "hidden": false
-    },
-    {
-      "type": "docs",
-      "section": "Documentation",
-      "hidden": false
-    },
-    {
-      "type": "build",
-      "section": "Build System",
-      "hidden": false
-    },
-    {
-      "type": "ci",
-      "section": "Continuous Integration",
-      "hidden": false
-    },
-    {
-      "type": "test",
-      "section": "Tests",
-      "hidden": false
-    },
-    {
-      "type": "chore",
-      "section": "Chores",
-      "hidden": false
-    },
-    {
-      "type": "revert",
-      "section": "Reverts",
-      "hidden": false
-    }
-  ],
+  "_comment": "`preset` is an OBJECT, not the string \"conventionalcommits\". With the string form, conventional-changelog loads the preset with its own defaults and silently ignores the sibling `types` key — the first attempt at the 0.5.0 changelog contained only Features and Bug Fixes, dropping 9 commits (4 docs, 2 chore, 1 build, 1 refactor, 1 test): exactly the set this preset hides by default. Preset options only take effect nested inside the preset. KNOWN TRADE-OFF: in this form conventional-recommended-bump no longer infers the bump from the commits and falls back to patch, so a release containing a `feat` needs an explicit `npm run release -- --release-as minor`. Verified both ways: object preset + explicit minor gives 0.5.0 with all 7 sections and 35 entries; the string preset gives the right bump and a changelog missing a quarter of the work. A silently incomplete changelog is the worse failure — this repo has been bitten by it before. ALWAYS check the section list and entry count in `--dry-run` before releasing.",
+  "preset": {
+    "name": "conventionalcommits",
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features",
+        "hidden": false
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes",
+        "hidden": false
+      },
+      {
+        "type": "perf",
+        "section": "Performance",
+        "hidden": false
+      },
+      {
+        "type": "refactor",
+        "section": "Refactoring",
+        "hidden": false
+      },
+      {
+        "type": "style",
+        "section": "Styling",
+        "hidden": false
+      },
+      {
+        "type": "docs",
+        "section": "Documentation",
+        "hidden": false
+      },
+      {
+        "type": "build",
+        "section": "Build System",
+        "hidden": false
+      },
+      {
+        "type": "ci",
+        "section": "Continuous Integration",
+        "hidden": false
+      },
+      {
+        "type": "test",
+        "section": "Tests",
+        "hidden": false
+      },
+      {
+        "type": "chore",
+        "section": "Chores",
+        "hidden": false
+      },
+      {
+        "type": "revert",
+        "section": "Reverts",
+        "hidden": false
+      }
+    ]
+  },
   "scripts": {
     "postchangelog": "node scripts/strip-changelog-false-issues.js"
   }
