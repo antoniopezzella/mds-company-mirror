@@ -171,7 +171,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             </div>
           </div>
 
-          <Divider sx={{ mb: 10, borderColor: 'var(--role-border-subtle)' }} />
+          <Divider sx={{ mb: 10, borderColor: 'var(--role-border-default)' }} />
 
           {/* Additional Insured Section */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
@@ -296,7 +296,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             + Add Additional Insured
           </Typography>
 
-          <Divider sx={{ mb: 6, borderColor: 'var(--role-border-subtle)' }} />
+          <Divider sx={{ mb: 6, borderColor: 'var(--role-border-default)' }} />
 
           <div className="form-actions">
             <div className="mds-row justify-between items-center">

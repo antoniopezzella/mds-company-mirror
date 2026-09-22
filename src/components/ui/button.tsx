@@ -47,6 +47,13 @@ const buttonVariants = cva(
           'dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:disabled:text-[#878787]',
 
         // DESTRUCTIVE - Red/Danger (applied when destructive=true)
+        // NOTE: the text var below is --role-text-onInteractive, camelCase.
+        // RoleVarsProvider derives var names with role.replaceAll('.', '-'),
+        // so `text.onInteractive` becomes `--role-text-onInteractive` — it does
+        // NOT kebab-case the segment. This read `--role-text-on-interactive`
+        // for a while, which resolves to nothing, so the colour silently fell
+        // back to the inherited text colour (#000f47 navy) on the red fill:
+        // 3.38:1, and wrong in the real app, not just in tests.
         // dark: values from semanticDarkOverrides.interactiveDanger*.
         // text uses the CSS-var bridge (text.onInteractive), not a literal —
         // statusDanger's dark value (#ff6b6b) is a light red that fails
@@ -54,7 +61,7 @@ const buttonVariants = cva(
         // white in light mode, Midnight in dark, correctly for both (5.34/
         // 6.53:1) with no manual dark: override needed.
         destructivePrimary:
-          'bg-[#c53532] text-[var(--role-text-on-interactive)] shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
+          'bg-[#c53532] text-[var(--role-text-onInteractive)] shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
           'dark:bg-[#ff6b6b] dark:hover:bg-[#ff9d9d] dark:active:bg-[#ffe8e8] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
 
         destructiveSecondary:
