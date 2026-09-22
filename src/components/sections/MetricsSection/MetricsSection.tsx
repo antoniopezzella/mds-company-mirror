@@ -31,7 +31,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
 }) => {
   return (
     <section className="metrics-section" style={{ backgroundColor }}>
-      <div className="container">
+      <div className="mds-legacy-container">
         <div className="metrics-section__header">
           <Typography
             variant="h2"
@@ -54,10 +54,10 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
           </Typography>
         </div>
 
-        <div className="row row-cols-1 row-cols-md-3 g-6 metrics-section__row">
+        <div className="mds-legacy-row mds-legacy-row-cols-1 mds-legacy-row-cols-md-3 mds-legacy-g-6 metrics-section__row">
           {metrics.map((metric, index) => (
-            <div key={index} className="col">
-              <MetricCard {...metric} />
+            <div key={index} className="mds-legacy-col">
+              <MetricCard {...metric} countUpDelay={index * 0.15} />
             </div>
           ))}
         </div>

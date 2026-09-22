@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
+import path from 'path';
 
 // Note: Importing 'path' from 'node:path' requires Node.js v16+ (ESM support)
 // https://vite.dev/config/
@@ -12,13 +13,23 @@ export default defineConfig({
     viteCompression({ algorithm: 'gzip', ext: '.gz' }),
     viteCompression({ algorithm: 'brotliCompress', ext: '.br' })
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
           'gsap': ['gsap', 'gsap/ScrollTrigger', 'gsap/ScrollToPlugin'],
-          'react-vendor': ['react', 'react-dom', 'react-router-dom']
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Split the heavy vendors out of the entry chunk: they download in
+          // parallel and cache independently of app code across deploys.
+          'mui-datagrid': ['@mui/x-data-grid'],
+          'recharts': ['recharts'],
+          'mui': ['@mui/material', '@mui/icons-material']
         }
       }
     },
@@ -28,6 +39,13 @@ export default defineConfig({
     cors: {
       origin: ['http://localhost:3333'],
       credentials: true
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3333',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chat/, '/api/answer'),
+      }
     }
   }
 });

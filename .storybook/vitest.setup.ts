@@ -1,7 +1,11 @@
-import * as a11yAddonAnnotations from "@storybook/addon-a11y/preview";
-import { setProjectAnnotations } from '@storybook/react-vite';
-import * as projectAnnotations from './preview';
+// Wires this project's Storybook preview (decorators, parameters, globalTypes
+// — see preview.tsx) into the Vitest "storybook" project defined in
+// vitest.config.ts, so stories run as real tests get the same MUI theme
+// wrapper, RoleVarsProvider, etc. as they do inside Storybook itself.
+import { beforeAll } from 'vitest';
+import { setProjectAnnotations } from '@storybook/react';
+import * as previewAnnotations from './preview';
 
-// This is an important step to apply the right configuration when testing your stories.
-// More info at: https://storybook.js.org/docs/api/portable-stories/portable-stories-vitest#setprojectannotations
-setProjectAnnotations([a11yAddonAnnotations, projectAnnotations]);
+const project = setProjectAnnotations([previewAnnotations]);
+
+beforeAll(project.beforeAll);

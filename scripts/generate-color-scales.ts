@@ -134,14 +134,14 @@ const MARSH_BRAND_COLORS = {
 // Generate Full Scales
 // ============================================================================
 
-console.log('🎨 Generating OKLCH-based color scales for Marsh Design System\n');
-console.log('Using perceptually uniform algorithm from design-system-skills\n');
+console.debug('🎨 Generating OKLCH-based color scales for Marsh Design System\n');
+console.debug('Using perceptually uniform algorithm from design-system-skills\n');
 
 const scales: Record<string, ColorStop[]> = {};
 
 for (const [name, hex] of Object.entries(MARSH_BRAND_COLORS)) {
-  console.log(`\n📊 ${name.toUpperCase()} (Base: ${hex})`);
-  console.log('─'.repeat(60));
+  console.debug(`\n📊 ${name.toUpperCase()} (Base: ${hex})`);
+  console.debug('─'.repeat(60));
   
   const scale = generateColorScale(hex);
   scales[name] = scale;
@@ -150,7 +150,7 @@ for (const [name, hex] of Object.entries(MARSH_BRAND_COLORS)) {
   scale.forEach(({ step, hex, oklch }) => {
     const [L, C, H] = oklch;
     const oklchStr = `oklch(${(L * 100).toFixed(1)}% ${C.toFixed(3)} ${H.toFixed(1)})`;
-    console.log(`  ${name}${step}: '${hex}',  // ${oklchStr}`);
+    console.debug(`  ${name}${step}: '${hex}',  // ${oklchStr}`);
   });
 }
 
@@ -158,8 +158,8 @@ for (const [name, hex] of Object.entries(MARSH_BRAND_COLORS)) {
 // Generate TypeScript Output
 // ============================================================================
 
-console.log('\n\n📝 Complete tokens.ts output:\n');
-console.log('─'.repeat(80));
+console.debug('\n\n📝 Complete tokens.ts output:\n');
+console.debug('─'.repeat(80));
 
 let tokensOutput = `// Generated with OKLCH algorithm from design-system-skills
 // Date: ${new Date().toISOString().split('T')[0]}
@@ -182,7 +182,7 @@ tokensOutput += `  // STATIC COLORS
   transparent: 'transparent',
 } as const;`;
 
-console.log(tokensOutput);
+console.debug(tokensOutput);
 
-console.log('\n\n✅ Color scales generated successfully!');
-console.log('Copy the output above to src/tokens.ts');
+console.debug('\n\n✅ Color scales generated successfully!');
+console.debug('Copy the output above to src/tokens.ts');

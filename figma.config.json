@@ -12,7 +12,7 @@
       "build/**"
     ],
     "documentUrlSubstitutions": {
-      "LIB": "https://www.figma.com/design/C6wGKw7jP7H4p6baq5XRJj"
+      "${LIB}": "https://www.figma.com/design/uWlcofRor5Dik8LBnJbIjo"
     }
   }
 }

@@ -1,637 +1,447 @@
-import { useState, useRef, useEffect } from 'react';
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  Paper, 
-  Typography, 
-  IconButton, 
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { marked } from 'marked';
+import {
+  Box,
+  TextField,
+  IconButton,
+  Typography,
   Chip,
-  Link,
-  Tooltip
+  Tooltip,
+  Divider,
+  CircularProgress,
 } from '@mui/material';
-import { Send, Delete, Close, ContentCopy, Check } from '@mui/icons-material';
-import { tokens } from '../../tokens';
+import SendIcon from '@mui/icons-material/Send';
+import StopIcon from '@mui/icons-material/Stop';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport, type UIMessage } from 'ai';
+import {
+  MessageScrollerProvider,
+  MessageScroller,
+  MessageScrollerViewport,
+  MessageScrollerContent,
+  MessageScrollerItem,
+  MessageScrollerButton,
+} from '@/components/ui/message-scroller';
+import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
+import { Bubble, BubbleContent } from '@/components/ui/bubble';
+import { Marker, MarkerIcon, MarkerContent } from '@/components/ui/marker';
+import { ChatQuestionnaire } from './ChatQuestionnaire';
+import { getRoleColor } from '../../theme/roles';
 import './AIAssistantChat.scss';
 
+type Citation = { title: string; url: string };
+/** This component's message shape: plain text parts plus one custom
+ * `data-citations` part per assistant turn — matches what api/chat-stream.ts
+ * now emits via the Vercel AI SDK's UI Message Stream protocol. */
+type ChatUIMessage = UIMessage<never, { citations: Citation[] }>;
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  citations?: { title: string; url: string }[];
-  suggestions?: string[];
-  latencyMs?: number;
-  timestamp: Date;
-  error?: boolean;
+function getMessageText(message: ChatUIMessage): string {
+  return message.parts
+    .filter((p): p is Extract<ChatUIMessage['parts'][number], { type: 'text' }> => p.type === 'text')
+    .map(p => p.text)
+    .join('');
 }
 
-type LoadingState = 'thinking' | 'searching' | 'writing' | null;
+function getMessageCitations(message: ChatUIMessage): Citation[] {
+  const part = message.parts.find(p => p.type === 'data-citations');
+  return part && part.type === 'data-citations' ? part.data : [];
+}
+
+const HISTORY_KEY = 'marsh-chat-history';
+const TIMESTAMPS_KEY = 'marsh-chat-timestamps';
 
 export interface AIAssistantChatProps {
-  /** Whether the chat is open */
   isOpen?: boolean;
-  /** Callback when chat is closed */
   onClose?: () => void;
-  /** API endpoint for the chat (default: http://localhost:11434/api/chat for Ollama) */
   apiEndpoint?: string;
+  /** When set (and there's no existing conversation), auto-sends this as the first message on open. */
+  initialQuery?: string;
+  /** Which system prompt the backend should use. Defaults to the customer-dashboard prompt when omitted. */
+  visitorType?: 'customer' | 'prospect';
 }
 
-const ALL_EXAMPLE_QUESTIONS = [
-  // Cyber & Technology
-  'What are current cyber insurance rate trends?',
-  'How can Marsh help with cyber risk management?',
-  'What cyber threats should I be aware of in 2025?',
-  
-  // Employee Benefits
-  'How can I reduce employee benefits costs?',
-  'What are the latest trends in employee benefits?',
-  'How do I improve employee retention through benefits?',
-  
-  // General Insurance
-  'What insurance services does Marsh offer?',
-  'How does Marsh help with risk management?',
-  'What makes Marsh different from other brokers?',
-  
-  // Risk & Market Insights
-  'What are emerging risks in 2025?',
-  'What are current market conditions for insurance?',
-  'How is climate change affecting insurance?',
-  
-  // Industry Specific
-  'What insurance do healthcare companies need?',
-  'How can Marsh help with supply chain risks?',
-  'What are the insurance considerations for startups?',
-];
+export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, initialQuery, visitorType }: AIAssistantChatProps) {
+  const resolvedEndpoint = apiEndpoint ?? '/api/chat';
 
-// Randomly select 4 questions each time
-const getRandomQuestions = (count: number = 4): string[] => {
-  const shuffled = [...ALL_EXAMPLE_QUESTIONS].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-};
-
-export default function AIAssistantChat(props: AIAssistantChatProps) {
-  const {
-    isOpen = true,
-    onClose,
-    apiEndpoint = 'http://localhost:3333/api/answer',
-  } = props;
-
-  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingState, setLoadingState] = useState<LoadingState>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [exampleQuestions, setExampleQuestions] = useState<string[]>([]);
-  const [failedQuestion, setFailedQuestion] = useState<string | null>(null);
-  const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
-  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  // Empty state opens on a plain greeting (matching shadcn's chat-components
+  // demo); the guided Questionnaire only appears once the user shows intent
+  // to ask something — focusing the composer — rather than up front.
+  const [hasInteracted, setHasInteracted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const sentInitialQuery = useRef<string | undefined>(undefined);
 
-  // Initialize with random questions
-  useEffect(() => {
-    setExampleQuestions(getRandomQuestions(4));
-  }, []);
-
-  // Conversation persistence - load from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('marsh-chat-history');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        const messagesWithDates = parsed.map((m: Message) => ({
-          ...m,
-          timestamp: new Date(m.timestamp)
-        }));
-        setMessages(messagesWithDates);
-      } catch (error) {
-        console.error('[AIAssistantChat] Failed to load chat history:', error);
-      }
+  // Read once at mount — this component remounts fresh every time the chat
+  // opens (AIAgentBot only renders it while isOpen), so seeding useChat's
+  // initial `messages` here removes the restore-race the old fetch-loop
+  // implementation had to guard against with a separate effect.
+  const restoredMessages = useMemo<ChatUIMessage[]>(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
   }, []);
+  const restoredTimestamps = useMemo<Record<string, Date>>(() => {
+    try {
+      const saved = localStorage.getItem(TIMESTAMPS_KEY);
+      if (!saved) return {};
+      const parsed = JSON.parse(saved) as Record<string, string>;
+      return Object.fromEntries(Object.entries(parsed).map(([id, iso]) => [id, new Date(iso)]));
+    } catch {
+      return {};
+    }
+  }, []);
+  const [timestamps, setTimestamps] = useState<Record<string, Date>>(restoredTimestamps);
 
-  // Save messages to localStorage whenever they change
+  // resolvedEndpoint/visitorType are fixed for this mount (see note above),
+  // so an empty dep array keeps this a stable transport instance rather than
+  // rebuilding it — and the chat it's tied to — on every render.
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport<ChatUIMessage>({
+        api: `${resolvedEndpoint}-stream`,
+        // Keeps api/chat-stream.ts's request shape unchanged — only the
+        // response envelope moved to the AI SDK's protocol, not the request.
+        prepareSendMessagesRequest: ({ messages }) => {
+          const last = messages[messages.length - 1];
+          const question = last ? getMessageText(last) : '';
+          const conversationHistory = messages
+            .slice(0, -1)
+            .map(m => ({ role: m.role, content: getMessageText(m) }));
+          return { body: { question, conversationHistory, visitorType } };
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const {
+    messages,
+    sendMessage: sendChatMessage,
+    status,
+    error,
+    setMessages,
+    stop,
+  } = useChat<ChatUIMessage>({ messages: restoredMessages, transport });
+
+  const isBusy = status === 'submitted' || status === 'streaming';
+
+  // UIMessage carries no Date field, so bubbles track their own
+  // first-seen-in-the-UI timestamp locally instead.
+  useEffect(() => {
+    setTimestamps(prev => {
+      let changed = false;
+      const next = { ...prev };
+      for (const m of messages) {
+        if (!next[m.id]) {
+          next[m.id] = new Date();
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [messages]);
+
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem('marsh-chat-history', JSON.stringify(messages));
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(messages));
+      localStorage.setItem(TIMESTAMPS_KEY, JSON.stringify(timestamps));
     }
-  }, [messages]);
+  }, [messages, timestamps]);
 
-  // Keyboard shortcuts: ⌘+N (new chat), ⌘+/ (focus input)
+  const clearChat = useCallback(() => {
+    setMessages([]);
+    setTimestamps({});
+    localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(TIMESTAMPS_KEY);
+  }, [setMessages]);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
-        e.preventDefault();
-        clearChat();
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === '/') {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'n') { e.preventDefault(); clearChat(); }
+      if ((e.metaKey || e.ctrlKey) && e.key === '/') { e.preventDefault(); inputRef.current?.focus(); }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [clearChat]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const handleCopyMessage = (messageId: string, content: string) => {
+  const copyMessage = (id: string, content: string) => {
     navigator.clipboard.writeText(content).then(() => {
-      setCopiedId(messageId);
+      setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);
     });
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    });
-  };
+  const formatTime = (d: Date) =>
+    d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
-  const sendMessage = async (question: string) => {
-    if (!question.trim() || isLoading) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: question,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+  const sendMessage = (question: string) => {
+    if (!question.trim() || isBusy) return;
     setInput('');
-    setIsLoading(true);
-    setFailedQuestion(null);
+    sendChatMessage({ text: question });
+  };
 
-    // Create placeholder for streaming response
-    const assistantMessageId = (Date.now() + 1).toString();
-    const assistantMessage: Message = {
-      id: assistantMessageId,
-      role: 'assistant',
-      content: '',
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, assistantMessage]);
-    setStreamingMessageId(assistantMessageId);
-
-    // Progressive loading states
-    setLoadingState('thinking');
-    const thinkingTimer = setTimeout(() => setLoadingState('searching'), 800);
-    const searchingTimer = setTimeout(() => setLoadingState('writing'), 1800);
-
-    try {
-      // Use SSE for streaming
-      const conversationHistory = messages.map(m => ({ 
-        role: m.role, 
-        content: m.content 
-      }));
-      
-      const payload = {
-        question,
-        conversationHistory
-      };
-
-      // Use fetch with POST for SSE (EventSource only supports GET)
-      const response = await fetch(`${apiEndpoint}-stream`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let accumulated = '';
-      let citations: { title: string; url: string }[] = [];
-
-      while (reader) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
-            if (data.trim() === '') continue;
-
-            try {
-              const parsed = JSON.parse(data);
-              
-              if (parsed.token) {
-                accumulated += parsed.token;
-                
-                // Update streaming message in real-time
-                setMessages(prev => {
-                  const updated = [...prev];
-                  const msgIndex = updated.findIndex(m => m.id === assistantMessageId);
-                  if (msgIndex !== -1) {
-                    updated[msgIndex] = {
-                      ...updated[msgIndex],
-                      content: accumulated
-                    };
-                  }
-                  return updated;
-                });
-              }
-
-              if (parsed.citations) {
-                citations = parsed.citations;
-              }
-
-              if (parsed.done) {
-                // Finalize message with citations
-                setMessages(prev => {
-                  const updated = [...prev];
-                  const msgIndex = updated.findIndex(m => m.id === assistantMessageId);
-                  if (msgIndex !== -1) {
-                    updated[msgIndex] = {
-                      ...updated[msgIndex],
-                      citations
-                    };
-                  }
-                  return updated;
-                });
-                break;
-              }
-            } catch (e) {
-              console.error('Failed to parse SSE data:', e);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error('[AIAssistantChat] Error sending message:', error);
-      setFailedQuestion(question);
-      
-      // Update with error message
-      setMessages(prev => {
-        const updated = [...prev];
-        const msgIndex = updated.findIndex(m => m.id === assistantMessageId);
-        if (msgIndex !== -1) {
-          updated[msgIndex] = {
-            ...updated[msgIndex],
-            content: 'Sorry, I encountered an error. Please try again.',
-            error: true
-          };
-        }
-        return updated;
-      });
-    } finally {
-      clearTimeout(thinkingTimer);
-      clearTimeout(searchingTimer);
-      setIsLoading(false);
-      setLoadingState(null);
-      setStreamingMessageId(null);
+  // Auto-asks initialQuery (e.g. from a hero topic chip) exactly once per
+  // value — skipped when a restored conversation already exists.
+  useEffect(() => {
+    if (initialQuery && initialQuery !== sentInitialQuery.current && messages.length === 0) {
+      sentInitialQuery.current = initialQuery;
+      sendMessage(initialQuery);
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage(input);
-  };
-
-  const handleExampleClick = (question: string) => {
-    sendMessage(question);
-  };
-
-  const handleSuggestionClick = (suggestion: string) => {
-    sendMessage(suggestion);
-  };
-
-  const clearChat = () => {
-    setMessages([]);
-    localStorage.removeItem('marsh-chat-history');
-    setFailedQuestion(null);
-    // Close any active SSE connection
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
-  };
-
-  const handleRetry = () => {
-    if (failedQuestion) {
-      sendMessage(failedQuestion);
-    }
-  };
-
-  const toggleMessageExpansion = (messageId: string) => {
-    setExpandedMessages(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(messageId)) {
-        newSet.delete(messageId);
-      } else {
-        newSet.add(messageId);
-      }
-      return newSet;
-    });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery]);
 
   if (!isOpen) return null;
 
+  const primaryBlue   = getRoleColor('interactive.primary');
+  const primaryHover  = getRoleColor('interactive.primary.hover');
+  const surfaceDefault = getRoleColor('surface.default');
+  const surfaceSubtle  = getRoleColor('surface.subtle');
+  const surfaceAccent  = getRoleColor('surface.accent');
+  const textPrimary    = getRoleColor('text.primary');
+  const textSecondary  = getRoleColor('text.secondary');
+  const borderDefault  = getRoleColor('border.default');
+  const textOnAccent   = getRoleColor('text.onAccent');
+
   return (
-    <Paper 
-      className="ai-assistant-chat"
-      elevation={8}
+    <Box
       sx={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
-        width: { xs: 'calc(100vw - 32px)', sm: 450, md: 500 },
-        height: { xs: 'calc(100vh - 100px)', sm: 600 },
-        maxHeight: '90vh',
+        bottom: { xs: 16, sm: 24 },
+        right: { xs: 16, sm: 24 },
+        width: { xs: 'calc(100vw - 32px)', sm: 400 },
+        height: { xs: 'calc(100vh - 120px)', sm: 600 },
+        maxHeight: '88vh',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 4,
+        borderRadius: '12px',
         overflow: 'hidden',
-        zIndex: 99998
+        zIndex: 99999,
+        bgcolor: surfaceDefault,
+        border: `1px solid ${borderDefault}`,
+        boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
       }}
     >
-      {/* Header */}
+      {/* ── Header ── */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #0066cc 0%, #004499 100%)',
-          color: 'white',
-          p: 2,
+          px: '20px',
+          py: '14px',
+          bgcolor: primaryBlue,
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          flexShrink: 0,
         }}
       >
-        <Typography variant="h6" fontWeight={600}>
-          💼 Marsh AI Assistant
-        </Typography>
         <Box>
-          <IconButton size="small" onClick={clearChat} sx={{ color: 'white', mr: 1 }}>
-            <Delete />
-          </IconButton>
+          <Typography
+            sx={{ fontSize: 14, fontWeight: 600, color: textOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
+          >
+            Marsh AI Assistant
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '3px' }}>
+            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#4caf50', flexShrink: 0 }} />
+            <Typography sx={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontFamily: 'Noto Sans, sans-serif' }}>
+              {visitorType === 'prospect' ? 'Ask about Marsh products & services' : 'Connected to your dashboard'}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: 'flex', gap: 0.25 }}>
+          <Tooltip title="Clear conversation">
+            <IconButton
+              size="small"
+              onClick={clearChat}
+              sx={{
+                color: 'rgba(255,255,255,0.72)',
+                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                borderRadius: '6px',
+              }}
+            >
+              <DeleteOutlineIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
           {onClose && (
-            <IconButton size="small" onClick={onClose} sx={{ color: 'white' }}>
-              <Close />
+            <IconButton
+              size="small"
+              onClick={onClose}
+              sx={{
+                color: 'rgba(255,255,255,0.72)',
+                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                borderRadius: '6px',
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 18 }} />
             </IconButton>
           )}
         </Box>
       </Box>
 
-      {/* Messages Area */}
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          p: 3,
-          bgcolor: '#f7f9fc',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2
-        }}
-      >
+      {/* ── Messages ── */}
+      <MessageScrollerProvider autoScroll defaultScrollPosition="end">
+      <MessageScroller className="min-h-0 flex-1" style={{ backgroundColor: surfaceSubtle }}>
         {messages.length === 0 ? (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              textAlign: 'center',
-              color: 'text.secondary'
-            }}
-          >
-            <Typography variant="h5" gutterBottom fontWeight={600} color="text.primary">
-              Welcome to Marsh AI Assistant
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 2, maxWidth: 400 }}>
-              I can help you with insurance, risk management, employee benefits, and market insights. Ask me anything!
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-              <Button 
-                size="small" 
-                variant="outlined"
-                onClick={() => setExampleQuestions(getRandomQuestions(4))}
-                sx={{ fontSize: '0.75rem' }}
-              >
-                🔄 Show different questions
-              </Button>
+          /* Empty state — plain scroll, no scroller items to manage. Opens
+             on a centered greeting alone; focusing the composer below
+             reveals the guided Questionnaire underneath it. */
+          <Box sx={{ height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', px: '20px', pb: '12px' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                flex: hasInteracted ? '0 0 auto' : 1,
+                justifyContent: 'center',
+                pt: hasInteracted ? '20px' : 0,
+                pb: hasInteracted ? '4px' : 0,
+              }}
+            >
+              <Typography sx={{ fontSize: hasInteracted ? 16 : 20, fontWeight: 700, color: textPrimary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>
+                {visitorType === 'prospect' ? 'Hi, welcome to Marsh' : 'Hi, how can I help?'}
+              </Typography>
+              <Typography sx={{ fontSize: 13, color: textSecondary, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif', maxWidth: hasInteracted ? 'none' : 260 }}>
+                {visitorType === 'prospect'
+                  ? 'Ask about Marsh products, coverage, or risk trends — or press send to start.'
+                  : 'Ask about your policies, risk exposure, or market trends — or press send to start.'}
+              </Typography>
             </Box>
-            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 1.5, width: '100%', maxWidth: 400 }}>
-              {exampleQuestions.map((question, idx) => (
-                <Paper
-                  key={idx}
-                  onClick={() => handleExampleClick(question)}
-                  sx={{
-                    p: 2,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      borderColor: tokens.blue750,
-                      boxShadow: 3,
-                      transform: 'translateY(-2px)'
-                    }
-                  }}
-                >
-                  <Typography variant="body2" fontWeight={500}>
-                    {question}
-                  </Typography>
-                </Paper>
-              ))}
-            </Box>
+
+            {hasInteracted && (
+              <Box sx={{ mt: '16px' }}>
+                <ChatQuestionnaire visitorType={visitorType} onSubmitQuestion={sendMessage} />
+              </Box>
+            )}
           </Box>
         ) : (
-          <>
-            {messages.map((message) => (
-              <Box
-                key={message.id}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: message.role === 'user' ? 'flex-end' : 'flex-start',
-                  animation: 'slideIn 0.3s ease-out'
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    {formatTime(message.timestamp)}
-                  </Typography>
-                  {message.role === 'assistant' && (
-                    <Tooltip title={copiedId === message.id ? 'Copied!' : 'Copy message'}>
-                      <IconButton 
-                        size="small" 
-                        onClick={() => handleCopyMessage(message.id, message.content)}
-                        sx={{ p: 0.5 }}
-                      >
-                        {copiedId === message.id ? (
-                          <Check sx={{ fontSize: 16, color: 'success.main' }} />
-                        ) : (
-                          <ContentCopy sx={{ fontSize: 16 }} />
-                        )}
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Box>
-                <Paper
-                  sx={{
-                    p: 2,
-                    maxWidth: '80%',
-                    background: message.role === 'user' 
-                      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                      : message.error
-                      ? '#ffebee'
-                      : 'white',
-                    color: message.role === 'user' ? 'white' : 'text.primary',
-                    borderRadius: 3,
-                    borderBottomRightRadius: message.role === 'user' ? 1 : 12,
-                    borderBottomLeftRadius: message.role === 'assistant' ? 1 : 12,
-                    borderLeft: message.error ? '3px solid #f44336' : 'none'
-                  }}
-                >
-                  {(() => {
-                    const isExpanded = expandedMessages.has(message.id);
-                    const isLong = message.content.length > 500;
-                    const displayContent = !isExpanded && isLong 
-                      ? message.content.substring(0, 500) + '...' 
-                      : message.content;
-                    
-                    return (
-                      <>
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            whiteSpace: 'pre-wrap',
-                            '& strong': { fontWeight: 700 }
+          <MessageScrollerViewport style={{ padding: '20px 20px 12px' }}>
+          <MessageScrollerContent className="gap-4">
+            {messages.map((msg, msgIndex) => {
+              const text = getMessageText(msg);
+              const citations = getMessageCitations(msg);
+              const isStreamingThis = status === 'streaming' && msgIndex === messages.length - 1 && msg.role === 'assistant';
+              return (
+              <MessageScrollerItem key={msg.id} messageId={msg.id} scrollAnchor={msg.role === 'user'}>
+              <Message align={msg.role === 'user' ? 'end' : 'start'} className="items-end animate-[slideIn_0.2s_ease-out]">
+                {msg.role === 'assistant' && (
+                  <MessageAvatar style={{ width: 26, height: 26, minWidth: 26, backgroundColor: primaryBlue, marginBottom: 18 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: textOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
+                      M
+                    </span>
+                  </MessageAvatar>
+                )}
+
+                <MessageContent>
+                  <Bubble align={msg.role === 'user' ? 'end' : 'start'} variant={msg.role === 'user' ? 'default' : 'outline'}>
+                    <BubbleContent>
+                      {isStreamingThis && text === '' ? (
+                        <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center', py: '2px' }}>
+                          {[0, 1, 2].map(i => (
+                            <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
+                          ))}
+                        </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            fontSize: '13px',
+                            lineHeight: 1.6,
+                            fontFamily: 'Noto Sans, sans-serif',
+                            '& p': { m: 0, mb: '6px', '&:last-child': { mb: 0 } },
+                            '& strong': { fontWeight: 600 },
+                            '& ul, & ol': { pl: '18px', my: '4px' },
+                            '& li': { mb: '2px' },
+                            '& h1, & h2, & h3, & h4': { fontSize: '13px', fontWeight: 600, mt: '8px', mb: '4px' },
+                            '& code': { fontFamily: 'monospace', fontSize: '12px', bgcolor: 'rgba(0,0,0,0.06)', px: '3px', borderRadius: '2px' },
                           }}
-                          dangerouslySetInnerHTML={{ 
-                            __html: displayContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                          dangerouslySetInnerHTML={{
+                            __html: marked.parse(text, { async: false }) as string,
                           }}
                         />
-                        {isLong && (
-                          <Button
-                            size="small"
-                            onClick={() => toggleMessageExpansion(message.id)}
-                            sx={{ 
-                              mt: 1, 
-                              textTransform: 'none',
-                              color: message.role === 'user' ? 'white' : tokens.blue750
-                            }}
-                          >
-                            {isExpanded ? 'Show less' : 'Show more'}
-                          </Button>
-                        )}
-                      </>
-                    );
-                  })()}
-                  
-                  {message.citations && message.citations.length > 0 && (
-                    <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
-                      <Typography variant="caption" display="block" sx={{ mb: 1 }}>
-                        Sources:
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {message.citations.map((citation, idx) => (
-                          <Chip
-                            key={idx}
-                            label={citation.title}
-                            size="small"
-                            component={Link}
-                            href={citation.url}
-                            clickable
-                            sx={{ fontSize: 11 }}
-                          />
-                        ))}
-                      </Box>
-                    </Box>
-                  )}
+                      )}
 
-                  {message.latencyMs && (
-                    <Typography variant="caption" display="block" sx={{ mt: 1, opacity: 0.7 }}>
-                      {message.latencyMs}ms
-                    </Typography>
-                  )}
-                </Paper>
-              </Box>
-            ))}
+                      {citations.length > 0 && (
+                        <Box sx={{ mt: '10px', pt: '10px', borderTop: `1px solid ${borderDefault}` }}>
+                          <Typography sx={{ fontSize: 10, color: textSecondary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                            {citations.map((c, i) => (
+                              <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
+                                sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
+                              />
+                            ))}
+                          </Box>
+                        </Box>
+                      )}
+                    </BubbleContent>
+                  </Bubble>
 
-            {isLoading && !streamingMessageId && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, ml: 1 }}>
-                  {loadingState === 'thinking' && '🤔 Thinking...'}
-                  {loadingState === 'searching' && '🔍 Searching knowledge base...'}
-                  {loadingState === 'writing' && '✍️ Writing response...'}
-                </Typography>
-                <Paper sx={{ borderRadius: 3, borderBottomLeftRadius: 1 }}>
-                  <Box className="typing-indicator">
-                    <div className="dot" />
-                    <div className="dot" />
-                    <div className="dot" />
-                  </Box>
-                </Paper>
-              </Box>
+                  <MessageFooter>
+                    <span>{formatTime(timestamps[msg.id] ?? new Date())}</span>
+                    {msg.role === 'assistant' && text && (
+                      <Tooltip title={copiedId === msg.id ? 'Copied' : 'Copy'}>
+                        <IconButton size="small" onClick={() => copyMessage(msg.id, text)} sx={{ p: '2px', ml: '4px' }}>
+                          {copiedId === msg.id
+                            ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
+                            : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
+                          }
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </MessageFooter>
+                </MessageContent>
+              </Message>
+              </MessageScrollerItem>
+              );
+            })}
+
+            {/* Streaming status bar */}
+            {isBusy && (
+              <Marker
+                className="gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-[11px] text-muted-foreground"
+                style={{ width: 'fit-content', alignSelf: 'flex-start' }}
+              >
+                <MarkerIcon>
+                  <CircularProgress size={11} thickness={5} sx={{ color: primaryBlue }} />
+                </MarkerIcon>
+                <MarkerContent className="shimmer">Marsh AI is responding…</MarkerContent>
+              </Marker>
             )}
-
-            {streamingMessageId && (
-              <Typography variant="caption" color={tokens.blue750} sx={{ ml: 1, fontWeight: 600 }}>
-                🔴 Streaming...
-              </Typography>
-            )}
-
-            {failedQuestion && !isLoading && (
-              <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={handleRetry}
-                  sx={{ textTransform: 'none' }}
-                >
-                  🔄 Retry last question
-                </Button>
-              </Box>
-            )}
-
-            {messages.length > 0 && messages[messages.length - 1].suggestions && (
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {messages[messages.length - 1].suggestions!.map((suggestion, idx) => (
-                  <Chip
-                    key={idx}
-                    label={suggestion}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    size="small"
-                    variant="outlined"
-                    sx={{ cursor: 'pointer' }}
-                  />
-                ))}
-              </Box>
-            )}
-          </>
+          </MessageScrollerContent>
+          </MessageScrollerViewport>
         )}
-        <div ref={messagesEndRef} />
-      </Box>
+        <MessageScrollerButton />
+      </MessageScroller>
+      </MessageScrollerProvider>
 
-      {/* Input Area */}
+      {/* ── Error banner ── */}
+      {status === 'error' && (
+        <Box sx={{ px: '16px', py: '8px', bgcolor: 'rgba(198,40,40,0.08)', borderTop: `1px solid ${borderDefault}` }}>
+          <Typography sx={{ fontSize: 11, color: '#c62828', fontFamily: 'Noto Sans, sans-serif' }}>
+            {error?.message || 'Unable to reach the assistant. Please try again.'}
+          </Typography>
+        </Box>
+      )}
+
+      {/* ── Input ── */}
+      <Divider sx={{ borderColor: borderDefault }} />
       <Box
         component="form"
-        onSubmit={handleSubmit}
+        onSubmit={e => { e.preventDefault(); sendMessage(input); }}
         sx={{
-          p: 2,
-          bgcolor: 'white',
-          borderTop: '1px solid',
-          borderColor: 'divider',
+          px: '16px',
+          py: '12px',
+          bgcolor: surfaceDefault,
           display: 'flex',
-          gap: 1.5
+          alignItems: 'flex-end',
+          gap: '8px',
+          flexShrink: 0,
         }}
       >
         <TextField
@@ -639,31 +449,56 @@ export default function AIAssistantChat(props: AIAssistantChatProps) {
           multiline
           maxRows={4}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about insurance, risk, or benefits... (⌘+/ to focus, ⌘+N for new chat)"
-          disabled={isLoading}
+          onChange={e => setInput(e.target.value)}
+          onFocus={() => setHasInteracted(true)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage(input);
+            }
+          }}
+          placeholder="Ask about your risks or policies…"
+          disabled={isBusy}
           size="small"
           inputRef={inputRef}
-          sx={{ 
-            '& .MuiOutlinedInput-root': { 
-              borderRadius: 3 
-            } 
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '8px',
+              fontSize: 13,
+              bgcolor: surfaceSubtle,
+              fontFamily: 'Noto Sans, sans-serif',
+              '& fieldset': { borderColor: borderDefault },
+              '&:hover fieldset': { borderColor: primaryBlue },
+              '&.Mui-focused fieldset': { borderColor: primaryBlue, borderWidth: 1.5 },
+            },
+            '& .MuiInputBase-input': {
+              color: textPrimary,
+              '&::placeholder': { color: textSecondary, opacity: 1 },
+            },
           }}
         />
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={!input.trim() || isLoading}
+        <IconButton
+          type={isBusy ? 'button' : 'submit'}
+          onClick={isBusy ? () => stop() : undefined}
+          disabled={!isBusy && !input.trim()}
           sx={{
-            background: 'linear-gradient(135deg, #0066cc 0%, #004499 100%)',
-            borderRadius: 3,
-            minWidth: 56,
-            height: 56
+            width: 40,
+            height: 40,
+            flexShrink: 0,
+            borderRadius: '8px',
+            bgcolor: primaryBlue,
+            color: textOnAccent,
+            transition: 'background-color 0.15s',
+            '&:hover': { bgcolor: primaryHover },
+            '&.Mui-disabled': { bgcolor: surfaceAccent, color: textSecondary },
           }}
         >
-          <Send />
-        </Button>
+          {isBusy
+            ? <StopIcon sx={{ fontSize: 16 }} />
+            : <SendIcon sx={{ fontSize: 16 }} />
+          }
+        </IconButton>
       </Box>
-    </Paper>
+    </Box>
   );
 }

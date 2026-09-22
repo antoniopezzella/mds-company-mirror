@@ -89,45 +89,46 @@ const typography = {
     'Noto Sans',
     'sans-serif',
   ].join(','),
-  // Headings — MMC Display for brand voice; Marsh Serif used in Marsh One project only
+  // Headings read CSS variables so marketing pages can use Marsh Serif while
+  // dashboard containers switch the same variants to Noto Sans Bold.
   h1: {
     fontFamily: 'var(--typo-h1-font-family)',
-    fontWeight: 700, // MMC Display Bold
+    fontWeight: 'var(--typo-h1-font-weight)',
     fontSize: 'var(--typo-h1-font-size)',
     lineHeight: 'var(--typo-h1-line-height)',
     letterSpacing: 'var(--typo-h1-letter-spacing)',
   },
   h2: {
     fontFamily: 'var(--typo-h2-font-family)',
-    fontWeight: 700, // MMC Display Bold
+    fontWeight: 'var(--typo-h2-font-weight)',
     fontSize: 'var(--typo-h2-font-size)',
     lineHeight: 'var(--typo-h2-line-height)',
     letterSpacing: 'var(--typo-h2-letter-spacing)',
   },
   h3: {
     fontFamily: 'var(--typo-h3-font-family)',
-    fontWeight: 700, // MMC Display Bold
+    fontWeight: 'var(--typo-h3-font-weight)',
     fontSize: 'var(--typo-h3-font-size)',
     lineHeight: 'var(--typo-h3-line-height)',
     letterSpacing: 'var(--typo-h3-letter-spacing)',
   },
   h4: {
     fontFamily: 'var(--typo-h4-font-family)',
-    fontWeight: 700, // MMC Display Bold
+    fontWeight: 'var(--typo-h4-font-weight)',
     fontSize: 'var(--typo-h4-font-size)',
     lineHeight: 'var(--typo-h4-line-height)',
     letterSpacing: 'var(--typo-h4-letter-spacing)',
   },
   h5: {
     fontFamily: 'var(--typo-h5-font-family)',
-    fontWeight: 600, // Noto Sans Semibold
+    fontWeight: 'var(--typo-h5-font-weight)',
     fontSize: 'var(--typo-h5-font-size)',
     lineHeight: 'var(--typo-h5-line-height)',
     letterSpacing: 'var(--typo-h5-letter-spacing)',
   },
   h6: {
     fontFamily: 'var(--typo-h6-font-family)',
-    fontWeight: 600, // Noto Sans Semibold
+    fontWeight: 'var(--typo-h6-font-weight)',
     fontSize: 'var(--typo-h6-font-size)',
     lineHeight: 'var(--typo-h6-line-height)',
     letterSpacing: 'var(--typo-h6-letter-spacing)',
@@ -204,6 +205,9 @@ export const theme = createTheme({
     },
   },
 });
+
+// Alias for backward compatibility
+export const lightTheme = theme;
 
 export const darkTheme = createTheme({
   palette: { mode: 'dark', ...darkPalette },

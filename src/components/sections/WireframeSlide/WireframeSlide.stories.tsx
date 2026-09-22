@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WireframeSlide } from './WireframeSlide';
 
 const meta: Meta<typeof WireframeSlide> = {

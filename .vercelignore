@@ -4,6 +4,8 @@ node_modules/
 .vercel/
 *.log
 .DS_Store
+.env
+.env.*
 .env.local
 .env.*.local
 coverage/
@@ -18,16 +20,11 @@ src/__tests__/
 *.test.tsx
 *.spec.ts
 *.spec.tsx
-.storybook/
-stories/
 vitest.config.ts
 playwright.config.ts
 
 # Development files
-src/pages/ParallaxDemo.tsx
-src/pages/AnimatedGridDemo.tsx
 docs/hero-wireframes/
-scripts/capture-hero-wireframes.js
 
 # Documentation build artifacts
 storybook-static/

@@ -23,7 +23,9 @@ describe('sanitizeInput', () => {
 
   it('should handle empty input', () => {
     expect(sanitizeInput('')).toBe('');
-    expect(sanitizeInput(null as any)).toBe('');
+    // @ts-expect-error — deliberately violating the string param type to
+    // verify sanitizeInput degrades safely for untrusted/non-TS callers.
+    expect(sanitizeInput(null)).toBe('');
   });
 });
 

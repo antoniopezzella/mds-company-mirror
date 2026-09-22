@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: '_health/Grid',
@@ -10,10 +10,10 @@ type Story = StoryObj;
 
 export const GridPresent: Story = {
   render: () => (
-    <div className="container" style={{ padding: 8 }}>
-      <div className="row gap-2" data-testid="row">
-        <div className="col-6" style={{ background: '#eef6ff', padding: 8 }}>A</div>
-        <div className="col-6" style={{ background: '#eef6ff', padding: 8 }}>B</div>
+    <div className="mds-legacy-container" style={{ padding: 8 }}>
+      <div className="mds-legacy-row gap-2" data-testid="row">
+        <div className="mds-legacy-col-6" style={{ background: '#eef6ff', padding: 8 }}>A</div>
+        <div className="mds-legacy-col-6" style={{ background: '#eef6ff', padding: 8 }}>B</div>
       </div>
     </div>
   ),

@@ -1,6 +1,7 @@
 import React from 'react';
 
-export function GridHealth(props: { label?: string }) {
+export function GridHealth(props: { label?: string; testClassName?: string }) {
+  const testClassName = props.testClassName ?? 'mds-legacy-row';
   const testRef = React.useRef<HTMLDivElement | null>(null);
   const [status, setStatus] = React.useState<'checking' | 'ok' | 'fail'>('checking');
   const [detail, setDetail] = React.useState<string>('');
@@ -34,7 +35,7 @@ export function GridHealth(props: { label?: string }) {
     // Kick off the first check
     requestAnimationFrame(check);
     return () => { cancelled = true; };
-  }, []);
+  }, [testClassName]);
 
   const color = status === 'ok' ? '#1a7f37' : status === 'fail' ? '#c62828' : '#6b7280';
   const bg = status === 'ok' ? '#e7f5ec' : status === 'fail' ? '#fdecea' : '#f3f4f6';
@@ -46,7 +47,7 @@ export function GridHealth(props: { label?: string }) {
         {props.label ?? 'Grid CSS'}: {status.toUpperCase()} {detail ? `(${detail})` : null}
       </div>
       {/* Hidden test grid */}
-      <div ref={testRef} className="row" style={{ position:'absolute', visibility:'hidden' }} />
+      <div ref={testRef} className={testClassName} style={{ position:'absolute', visibility:'hidden' }} />
     </div>
   );
 }

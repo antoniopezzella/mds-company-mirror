@@ -256,7 +256,7 @@ if (missingInCode.length === 0 && missingInFigma.length === 0 && mismatches.leng
 console.log(`Next steps:`);
 console.log(`  1. Review detailed analysis above`);
 console.log(`  2. Make decisions on missing/extra tokens`);
-console.log(`  3. Update FIGMA_COLOR_SYSTEM_ANALYSIS.md with findings`);
+console.log(`  3. Record findings in docs/ (see docs/archive/FIGMA_COLOR_SYSTEM_ANALYSIS.md for the prior analysis)`);
 console.log(`  4. Get approval before making code changes\n`);
 
 // Write detailed report to file

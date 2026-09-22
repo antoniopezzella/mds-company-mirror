@@ -3,6 +3,7 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 import { Box, Typography, Divider } from '@mui/material';
 import { Chip } from '../Chip/Chip';
+import { getRoleColor } from '../../theme/roles';
 import styles from './MegaMenu.module.scss';
 
 const MARSH_M_LOGO = '/images/M-logo.svg';
@@ -81,6 +82,19 @@ const BOTTOM_LISTS = [
 ];
 
 export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }) => {
+  // Previously the only way to close this dialog was clicking the backdrop
+  // — a keyboard-only user had no way to dismiss it at all. Effect (not a
+  // conditional hook) so it still runs every render per the Rules of
+  // Hooks; the isOpen check lives inside the callback instead.
+  React.useEffect(() => {
+    if (!isOpen || !onClose) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const node = typeof document !== 'undefined' ? document.body : null;
@@ -90,7 +104,10 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
 
   const content = (
     <>
+      {/* Decorative click-to-dismiss backdrop, not the only way to close —
+          Escape (registered above) is the real keyboard path. */}
       <div
+        aria-hidden="true"
         className={styles.overlay}
         onClick={onClose}
         style={{ top: topOffset, height: `calc(100vh - ${topOffset}px)` }}
@@ -101,7 +118,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
         aria-modal="true"
         sx={{ top: topOffset }}
       >
-        <div className="container">
+        <div className="mds-legacy-container">
           <Box className={styles.containerInner}>
             <Divider className={styles.divider} />
 
@@ -114,22 +131,22 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
 
               <Box className={styles.aiSolutionTop}>
                  <Box className={styles.aiHeaderTop}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#000f47' }}>What right solution</Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: getRoleColor('text.primary') }}>What right solution</Typography>
                     <Box className={styles.aiLogoCircleSmall}>
                       <img src={MARSH_M_LOGO} alt="M" className={styles.aiLogoSmall} />
                     </Box>
                  </Box>
                  <Box className={styles.aiChipsTop}>
                     {['Financial Institutions', 'Energy & Oil & Gas', 'Manufacturing', 'Healthcare', 'Real Estate', 'Aviation'].slice(0, 6).map(chip => (
-                      <Chip key={chip} label={chip} variant="outlined" size="small" className={styles.aiChipSmall} />
+                      <Chip key={chip} label={chip} variant="outlined" size="sm" className={styles.aiChipSmall} />
                     ))}
                  </Box>
               </Box>
             </Box>
 
-            <div className="row g-4">
+            <div className="mds-legacy-row mds-legacy-g-4">
               {SOLUTION_PILLARS.map((pillar, idx) => (
-                <div className="col-12 col-sm-6 col-md-3" key={idx}>
+                <div className="mds-legacy-col-12 mds-legacy-col-sm-6 mds-legacy-col-md-3" key={idx}>
                   <Box className={styles.pillarCard}>
                     <Typography variant="subtitle1" component="h3" className={styles.pillarTitle}>
                       <strong>{pillar.title}</strong> {pillar.subtitle}
@@ -148,9 +165,9 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
             </div>
 
             <Box className={styles.bottomSection}>
-              <div className="row g-4">
+              <div className="mds-legacy-row mds-legacy-g-4">
                 {BOTTOM_LISTS.map((list, idx) => (
-                  <div className="col-12 col-md-2" key={idx}>
+                  <div className="mds-legacy-col-12 mds-legacy-col-md-2" key={idx}>
                     <Typography variant="subtitle2" component="h4" className={styles.listTitle}>{list.title}</Typography>
                     {list.subtitle && (
                       <Typography variant="caption" sx={{ display: 'block', mb: 1.5, color: '#595959', lineHeight: 1.2 }}>
@@ -169,14 +186,14 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
                 ))}
 
                 {/* Banner CTA Section - Teal Box from Screenshot */}
-                <div className="col-12 col-md-6">
+                <div className="mds-legacy-col-12 mds-legacy-col-md-6">
                   <Box className={styles.bannerCta}>
                     <Box className={styles.bannerContent}>
-                      <Typography variant="h6" sx={{ fontWeight: 800, color: '#000f47', mb: 1 }}>Headline</Typography>
-                      <Typography variant="body2" sx={{ color: '#000f47', mb: 2, maxWidth: '200px', fontSize: '13px' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), mb: 1 }}>Headline</Typography>
+                      <Typography variant="body2" sx={{ color: getRoleColor('text.primary'), mb: 2, maxWidth: '200px', fontSize: '13px' }}>
                         Lorem ipsum dolor sit amet consectetur. Viverra nunc pellentesque morbi curabitur purus senectus.
                       </Typography>
-                      <Typography variant="button" sx={{ fontWeight: 800, color: '#000f47', cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
+                      <Typography variant="button" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
                         [Banner CTA]
                       </Typography>
                     </Box>

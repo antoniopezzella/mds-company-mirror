@@ -65,15 +65,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           loop
           muted
           playsInline
+          preload="auto"
           className="hero-section__video"
+          onError={(e) => {
+            console.error('Hero video error:', e);
+            console.error('Video src:', videoSrc);
+          }}
+          onLoadedData={() => console.debug('Hero video loaded successfully')}
         >
           <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
       )}
-      <div className="container-fluid">
-        <div className="row g-0 hero-section__row">
+      <div className="mds-legacy-container-fluid">
+        <div className="mds-legacy-row mds-legacy-g-0 hero-section__row">
           {/* Text Column */}
-          <div className="col-12 col-lg-6 hero-section__text-col">
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6 hero-section__text-col">
             <div className="hero-section__content">
               <Typography
                 variant="h1"
@@ -111,7 +118,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Logo/Image Column */}
-          <div className="col-12 col-lg-6 hero-section__logo-col">
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6 hero-section__logo-col">
             {logoSrc && (
               <div className="hero-section__logo-container">
                 <img

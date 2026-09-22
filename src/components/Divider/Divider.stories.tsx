@@ -15,16 +15,50 @@ const meta: Meta<typeof Divider> = {
       }
     }
   },
+  argTypes: {
+    orientation: {
+      control: 'radio',
+      options: ['horizontal', 'vertical'],
+    },
+    variant: {
+      control: 'radio',
+      options: ['fullWidth', 'inset', 'middle'],
+    },
+    label: {
+      control: 'text',
+    },
+    labelPosition: {
+      control: 'radio',
+      options: ['start', 'center', 'end'],
+    },
+    flexItem: {
+      control: 'boolean',
+    },
+    dashed: {
+      control: 'boolean',
+    },
+    sx: {
+      control: 'object',
+    },
+  },
+  args: {
+    orientation: 'horizontal',
+    variant: 'fullWidth',
+    label: '',
+    labelPosition: 'center',
+    flexItem: false,
+    dashed: false,
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof Divider>;
 
 export const Default: Story = {
-  render: () => (
+  render: (args) => (
     <Box>
       <Typography>Section 1</Typography>
-      <Divider />
+      <Divider {...args} />
       <Typography>Section 2</Typography>
     </Box>
   ),

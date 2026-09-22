@@ -2,7 +2,6 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chip } from './Chip';
 import { Box, Stack } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -10,7 +9,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 
 const meta = {
-  title: 'Components/Chip',
+  title: 'Components/Chip (MUI)',
   component: Chip,
   parameters: {
     layout: 'padded',
@@ -507,7 +506,16 @@ export const InteractiveSelection: Story = {
             allChips.has(option.id) ? (
               <div
                 key={option.id}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedChips.has(option.id)}
                 onClick={() => toggleChip(option.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleChip(option.id);
+                  }
+                }}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

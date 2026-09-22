@@ -1,1 +1,0 @@
-const e={title:"Deprecated/Tailwind/TwButton (removed)",parameters:{docs:{disable:!0},controls:{disable:!0},previewTabs:{"storybook/docs/panel":{hidden:!0}}}},t=[];export{t as __namedExportsOrder,e as default};

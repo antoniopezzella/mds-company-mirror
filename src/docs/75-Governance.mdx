@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { GovernanceMap, TokenGovernanceFlow, CIGatesFlow, DocPlacementFlow } from './_components/GovernanceFlows';
+
+<Meta title="Foundations/Governance" />
+
+# Governance
+
+This repo enforces three separate, interlocking governance systems. Each one exists to catch a different kind of drift, and each has its own detailed doc — this page is the map between them, with the visual flow each one is missing on its own.
+
+<GovernanceMap />
+
+---
+
+## 1. Token & role governance
+
+**What it protects:** that every color in the codebase traces back to an approved token, through the 3-tier architecture — never a hardcoded hex value.
+
+<TokenGovernanceFlow />
+
+**Needing a new token that doesn't exist yet** is a separate, upstream decision — design/approval, not enforcement. That flow (which layer, who signs off, how long it takes) is fully mapped in **`docs/TOKEN_REQUEST_DECISION_TREE.md`**, with the written process in **`docs/TOKEN_REQUEST_PROCESS.md`**. This diagram is the other half: once a token *does* exist, what stops someone from bypassing it.
+
+### Checked by
+
+| Command | Checks |
+|---|---|
+| `npm run roles:check:strict` | Any component importing `tokens.*` or `semanticColors.*` directly, or using deprecated tokens |
+| `npm run tokens:check` | Token build succeeds, no unauthorized primitive diff, DTCG export valid, WCAG contrast on every enforced pair |
+| `npm run governance:ci` | `roles:check` + contrast, bundled into one strict report — this is what `governance.yml` runs in CI |
+
+Full architecture, naming rule, and dark-mode mechanics: [Roles](?path=/docs/foundations-roles--docs), [Colors](?path=/docs/foundations-colors--docs), and **`docs/foundations/TOKENS.md`**.
+
+---
+
+## 2. CI quality gates
+
+**What it protects:** that nothing broken — a failing test, a type error, an undocumented token change, a bad commit message — reaches `main`, regardless of which branch it was written on.
+
+<CIGatesFlow />
+
+Push triggers are deliberately **not** `main`-only — this repo does substantial work directly on feature branches, so every branch gets real signal instead of nothing until merge.
+
+**Reproduce any of this locally** before pushing — the exact command for each step is on [Testing](?path=/docs/foundations-testing--docs), and the README's CI & Quality Gates section has the full failure cheatsheet.
+
+---
+
+## 3. Documentation governance
+
+**What it protects:** against exactly what already happened once in this repo — ~70 one-off status reports and build summaries accumulating at the repo root because nothing told anyone where a new doc belonged. `docs:check-sprawl` is the mechanical backstop; the decision ladder below is what actually prevents a new doc from needing to be moved later.
+
+<DocPlacementFlow />
+
+The mechanical gate (`docs:check-sprawl`, run as part of `docs:lint` in every CI run) only catches the literal failure mode — a new `.md` file landing at repo root outside the five allowlisted files. It can't enforce "does an existing doc already cover this" or "has this doc gone stale" — those need judgment, which is what the ladder above is for. Full text version, with the actual list of examples this rule already fixed: **`CLAUDE.md` → Documentation Governance**.
+
+---
+
+## Where each system's detail lives
+
+| System | This page has | Full detail |
+|---|---|---|
+| Token & role | Enforcement flow | `docs/foundations/TOKENS.md`, `docs/TOKEN_REQUEST_PROCESS.md`, `docs/TOKEN_REQUEST_DECISION_TREE.md` |
+| CI gates | Trigger + pipeline flow | [Testing](?path=/docs/foundations-testing--docs), README → CI & Quality Gates |
+| Documentation | Decision-ladder flow | `CLAUDE.md` → Documentation Governance, `docs/README.md` |
+
+_This page mirrors `docs/GOVERNANCE.md` (same content, rendered as Mermaid diagrams there for GitHub — this version renders as MDS components so it stays on-brand and theme-aware in Storybook). Keep both in sync if the flows change._

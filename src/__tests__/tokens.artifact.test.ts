@@ -1,25 +1,53 @@
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
+import { execFileSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
+import type { SemanticColorName } from '../semantic-tokens';
+
+interface TokensArtifact {
+  color: Record<string, string>;
+  spacing: number[];
+  shadows: { level: number }[];
+  semantic: {
+    color: Record<string, string>;
+    modes?: { dark?: Record<string, string> };
+  };
+}
 
 describe('tokens artifact', () => {
   const artifactPath = path.join(process.cwd(), 'dist', 'tokens.json');
+
+  // These assertions read a build artifact, so they used to depend on whether
+  // something had run tokens:build recently — `npm run build` wipes dist/, and
+  // the suite would then fail or pass depending purely on ordering. Rebuild it
+  // here when it's missing or older than its sources, so the test states a
+  // fact about the generator rather than about what ran before it.
+  beforeAll(() => {
+    const sources = ['src/tokens.ts', 'src/semantic-tokens.ts', 'src/spacing.ts', 'src/shadows.ts']
+      .map((f) => path.join(process.cwd(), f))
+      .filter((f) => fs.existsSync(f));
+    const newestSource = Math.max(...sources.map((f) => fs.statSync(f).mtimeMs));
+    const stale = !fs.existsSync(artifactPath) || fs.statSync(artifactPath).mtimeMs < newestSource;
+    if (stale) {
+      execFileSync('node', ['scripts/build-tokens.js'], { cwd: process.cwd(), stdio: 'ignore' });
+    }
+  }, 60_000);
   test('exists after build', () => {
     expect(fs.existsSync(artifactPath)).toBe(true);
   });
   test('keys align with in-memory modules', async () => {
-    const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
+    const artifact: TokensArtifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
     const { tokens } = await import('../tokens');
     const { spacing } = await import('../spacing');
   const { shadows } = await import('../shadows');
   const { semanticColors } = await import('../semantic-tokens');
     expect(Object.keys(artifact.color).sort()).toEqual(Object.keys(tokens).sort());
     expect(artifact.spacing).toEqual(spacing);
-    expect(artifact.shadows.map((s:any)=>s.level)).toEqual(shadows.map(s=>s.level));
+    expect(artifact.shadows.map((s) => s.level)).toEqual(shadows.map(s=>s.level));
     expect(Object.keys(artifact.semantic.color).sort()).toEqual(Object.keys(semanticColors).sort());
   });
   test('dark mode overrides align with code exports and are subset of semantic keys', async () => {
-    const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
+    const artifact: TokensArtifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
     const artifactOverrides = artifact.semantic?.modes?.dark || {};
     const { tokens } = await import('../tokens');
     const { semanticColors, semanticDarkOverrides } = await import('../semantic-tokens');
@@ -33,7 +61,7 @@ describe('tokens artifact', () => {
     // Value equality and primitive reference check
     const primitiveValues = new Set(Object.values(tokens));
     for (const [k,v] of Object.entries(artifactOverrides)) {
-      expect(v).toBe((semanticDarkOverrides as any)[k]);
+      expect(v).toBe(semanticDarkOverrides[k as SemanticColorName]);
       expect(primitiveValues.has(v as string)).toBe(true);
     }
   });

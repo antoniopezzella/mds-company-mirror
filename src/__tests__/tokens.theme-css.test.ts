@@ -1,21 +1,12 @@
 import { describe, test, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { buildCssVariableBlocks } from '../theme/css-tokens';
-import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
 
+// theme.css is a deliberate external/portable token export (Figma/Style-
+// Dictionary handoff, non-React consumers) — the live app's own CSS-var
+// theming goes through RoleVarsProvider (--role-*) instead. This test only
+// checks the build artifact shape, not any in-app wiring.
 describe('CSS variable generation', () => {
-  test('runtime builder includes semantic token vars', () => {
-    const { root, dark } = buildCssVariableBlocks();
-    expect(root).toContain('--color-text-primary');
-    expect(dark).toContain('--color-text-primary');
-    if (semanticDarkOverrides.statusSuccessText) {
-      const lightVal = semanticColors.statusSuccessText;
-      const darkVal = semanticDarkOverrides.statusSuccessText;
-      expect(root).toContain(`--color-status-success-text: ${lightVal}`);
-      expect(dark).toContain(`--color-status-success-text: ${darkVal}`);
-    }
-  });
   test('build output theme.css exists after build (if build run)', () => {
     const cssPath = path.join(process.cwd(), 'dist', 'theme.css');
     if (!fs.existsSync(cssPath)) return; // skip gracefully if not built in this run

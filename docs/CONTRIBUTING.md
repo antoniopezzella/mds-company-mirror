@@ -1,19 +1,16 @@
 # Contributing to MDS Platform
 
-Thank you for your interest in contributing to the Marsh Design System (MDS) Platform! This guide will help you get started with setting up your environment, creating components, and submitting changes.
+Thank you for your interest in contributing to the Marsh Design System (MDS) Platform! This guide covers environment setup, creating components, and submitting changes.
 
 ## 🛠 Development Setup
 
 ### Prerequisites
-- Node.js v22 (Check `package.json` engines)
+- Node.js v22 (check `package.json` engines)
 - npm
 
 ### Installation
 ```bash
-# Clone the repository
 git clone https://github.com/antoniopezzella/Marsh-Design-System.git
-
-# Install dependencies
 npm install
 ```
 
@@ -21,40 +18,111 @@ npm install
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Starts the Vite dev server for the platform app |
-| `npm run storybook` | Starts the Storybook environment (Recommended for component dev) |
-| `npm test` | Runs the test suite (Vitest) |
+| `npm run storybook` | Starts the Storybook environment (recommended for component dev) |
+| `npm test` | Runs the test suite (Vitest — unit tests + every story as a real browser test via Playwright, see README's Testing section) |
 | `npm run tokens:build` | Generates CSS and JSON artifacts from token definitions |
-| `npm run roles:check` | Validates usage of role-based tokens in code |
+| `npm run roles:check` | Validates role-token usage in code |
+| `npm run docs:lint` | Lints MDX docs + enforces repo-root doc placement (see `CLAUDE.md` → "Documentation Governance") |
+
+## Core principles
+
+- Single source of truth: component APIs live in CSF stories (Autodocs); conceptual/foundational narrative lives in MDX under `src/docs`. See `src/docs/60-Documentation-Guidelines.mdx` for the full MDX authoring rules (Meta usage, heading hierarchy, token sourcing) — not repeated here.
+- Keep stories minimal and focused on meaningful states.
+- Prefer composition over custom ad-hoc docs components.
+
+## Which stack do I use?
+
+Two component sets live here. **For anything new, use `src/components/ui/*`** —
+the shadcn/Radix + Tailwind set. It is the canonical half of the system and
+the only half exported to consumers.
+
+`src/components/*` (the MUI set) is being migrated away from. Don't add to it,
+and don't import from it in a new page. Some existing pages import from both
+(`LoginPage`, `RESGAssetListPage`) — that is migration residue, not a pattern
+to copy.
+
+If the component you need only exists on the MUI side, that's a gap worth
+raising rather than silently working around — check
+[`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) first, since the
+answer is often that a `ui/*` equivalent already exists under a different name
+(`DataGrid` → `DataTable`, `TextField` → `input`/`text-field`).
 
 ## 🧩 Creating a New Component
 
-1.  **Scaffold Files**: Create a new folder in `src/components/MyComponent/` with:
-    *   `MyComponent.tsx`
-    *   `MyComponent.stories.tsx`
-    *   `MyComponent.test.tsx`
-    *   `MyComponent.module.scss` (if needed)
+Check `/design-system` and existing components first — see `CLAUDE.md`'s "decision ladder" (does it exist already → do its props cover it → can you compose existing primitives → only then build new).
 
-2.  **Follow Conventions**:
-    *   **Styling**: Use `sx` props with `theme.spacing()` or CSS Modules. Do not assume hardcoded pixels.
-    *   **Colors**: ALWAYS use `getRoleColor(...)`. Never use hex codes directly.
-    *   **Exports**: Export your component from `src/components/index.ts` (if applicable).
+1. **Scaffold files** in `src/components/MyComponent/` (or `src/components/ui/` for the current stack):
+   - `MyComponent.tsx`
+   - `MyComponent.stories.tsx`
+   - `MyComponent.test.tsx`
+2. **Follow conventions**:
+   - **Colors**: always `getRoleColor(...)` — never a hex code directly.
+   - **Spacing**: `theme.spacing()` (MUI stack) or Tailwind spacing classes (current stack) — no hardcoded pixels.
+   - **Exports**: via a barrel `index.ts`.
+3. **Storybook**: stories covering all meaningful states (Primary, Secondary, Disabled, Error, etc.) — see `docs/guides/STORYBOOK_BEST_PRACTICES.md` for naming/organization conventions.
+4. **Testing**: a render test at minimum; interaction tests if the component is interactive.
 
-3.  **Storybook**: Add stories covering all variants (Primary, Secondary, Disabled, Error states).
-
-4.  **Testing**: Ensure you have basic render tests and interaction tests if the component is interactive.
+### Directory layout
+```
+src/components/ComponentName/
+  ComponentName.tsx
+  ComponentName.stories.tsx
+  ComponentName.test.tsx
+```
 
 ## 🎨 Token System Workflow
 
-If you need to add a new color or token:
+**⚠️ Before adding or modifying a token, submit a token request for approval** — see [Token Request Process](./TOKEN_REQUEST_PROCESS.md). Quick links:
+- [⭐ Brand Token Request](/.github/ISSUE_TEMPLATE/token-request-brand.md) (VP approval)
+- [🎨 Semantic Token Request](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (Design Lead)
+- [🔧 Role Token Request](/.github/ISSUE_TEMPLATE/token-request-role.md) (DS Team)
 
-1.  **Primitives**: Update `src/tokens.ts` (Raw values).
-2.  **Semantics**: Update `src/semantic-tokens.ts` (Intent names).
-3.  **Roles**: Update `src/theme/roles.ts` (Component usage API).
-4.  **Build**: Run `npm run tokens:build` to regenerate artifacts.
+Post-approval implementation:
+1. **Primitives** — `src/tokens.ts` (raw values).
+2. **Semantics** — `src/semantic-tokens.ts` (intent names, light + dark).
+3. **Roles** — `src/theme/roles.ts` (the component-facing API).
+4. **Build** — `npm run tokens:build` (regenerates `dist/tokens.json`, `dist/theme.css`, `dist/tokens.tokens.json` — generated, don't hand-edit).
+5. Commit the regenerated `dist/` artifacts so diffs are reviewable; `npm run tokens:diff` shows what changed vs. `HEAD`.
 
 ## ✅ Pull Request Process
 
-1.  Ensure all tests pass: `npm test`
-2.  Check for linting errors: `npm run lint`
-3.  Verify Storybook builds: `npm run build-storybook`
-4.  Update `COMPONENT_COVERAGE.md` if you are delivering a tracked component.
+1. `npm test` passes (unit + Storybook/Playwright tests).
+2. `npm run lint` passes (ESLint, including `eslint-plugin-storybook` rules on story files).
+3. `npm run docs:lint` passes.
+4. `npm run build-storybook` succeeds.
+5. `npm run tokens:build` succeeds if you touched any token file.
+
+Component coverage is tracked in [`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) (the old hand-maintained `COMPONENT_COVERAGE.md` is archived — see `docs/archive/COMPONENT_COVERAGE.md`).
+
+## 📦 Releases & versioning
+
+Releases are cut with `npm run release` (commit-and-tag-version), which reads
+the conventional-commit types since the last tag, works out the next version,
+writes `CHANGELOG.md`, and tags. Section labels live in `.versionrc.json`;
+a type that isn't mapped there is dropped from the changelog silently, so add
+one before using a new type.
+
+What the number means, pre-1.0:
+
+| Bump | Trigger | What a consumer should expect |
+| --- | --- | --- |
+| **patch** (`0.4.0` → `0.4.1`) | only `fix`/`perf`/`chore`/`docs` | No API change. Safe to take without reading anything. |
+| **minor** (`0.4.1` → `0.5.0`) | any `feat` | Additive only — new components, new optional props. Existing code keeps working. |
+| **major** (`0.x` → `1.0`) | `!` or a `BREAKING CHANGE:` footer | Something was removed or changed shape. Read the changelog entry before upgrading. |
+
+**While the package is `0.x`, breaking changes ship in a minor bump** — that
+is standard SemVer for pre-1.0, but it means consumers should pin a minor
+range (`~0.4.0`), not a caret range, if they want to avoid surprises. Anything
+genuinely breaking gets a `BREAKING CHANGE:` footer so it is visible in the
+changelog regardless of where the number lands.
+
+Removing or renaming an exported component, changing a prop's type, or
+changing a role token's resolved value all count as breaking. Adding an
+optional prop, adding a component, or changing an internal implementation
+that isn't observable through the public API do not.
+
+## Out of scope / anti-patterns
+
+- No raw hex colors or hardcoded pixel spacing in components — see `CLAUDE.md`'s token rules.
+- No duplicate variant stories that differ only by trivial args — prefer docs narrative if the distinction matters.
+- No new root-level `.md` files — see `CLAUDE.md` → "Documentation Governance."
