@@ -47,6 +47,17 @@ jobs:
       - name: Build (type + bundle)
         run: npm run build
 
+      # Nothing here previously built or validated what actually ships. Two
+      # regressions reached main that way: the library's .d.ts stopped
+      # emitting for two exported providers (JS fine, every TS consumer
+      # broken), and registry.json kept pointing at a deleted component.
+      # Both are caught by these two steps.
+      - name: Build publishable package
+        run: npm run build:package
+
+      - name: Validate shadcn registry
+        run: npx -y shadcn@latest registry validate
+
       - name: Build Storybook (optional)
         run: npm run build-storybook
         if: ${{ github.event_name == 'pull_request' }}

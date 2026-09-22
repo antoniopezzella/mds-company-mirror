@@ -20,7 +20,17 @@ export default defineConfig({
       // this dedicated tsconfig turns emit back on for just the .d.ts pass.
       tsconfigPath: 'tsconfig.lib.json',
       entryRoot: 'src',
-      include: ['src/index.ts', 'src/components/ui/**/*', 'src/theme/roles.ts'],
+      // src/theme/* must be listed explicitly: index.ts re-exports the
+      // theming providers from there, and anything not in this glob gets no
+      // .d.ts emitted — leaving index.d.ts pointing at files that don't
+      // exist, which breaks every TypeScript consumer while the JS still runs.
+      include: [
+        'src/index.ts',
+        'src/components/ui/**/*',
+        'src/theme/roles.ts',
+        'src/theme/RoleVarsProvider.tsx',
+        'src/theme/ThemeModeContext.tsx',
+      ],
       exclude: ['src/components/ui/**/*.stories.tsx', 'src/components/ui/**/*.test.tsx'],
       outDir: 'dist-pkg',
       rollupTypes: false,
