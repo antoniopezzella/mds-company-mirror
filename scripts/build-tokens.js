@@ -23,7 +23,7 @@
  * Don't read "theme.css isn't linked into index.html" as a bug — it isn't
  * meant to be.
  */
-import { writeFileSync, mkdirSync, rmSync } from 'fs';
+import { writeFileSync, readFileSync, mkdirSync, rmSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -272,6 +272,26 @@ const meta = {
   deprecated: deprecatedTokens
 };
 
+// `dist/tokens.json` is a tracked artifact (CONTRIBUTING.md requires the
+// regenerated dist/ to be committed alongside token changes), and the
+// pre-commit hook runs this script on every commit. With a wall-clock
+// timestamp that meant every single commit rewrote the file — 5 of the last
+// 10 commits touching it changed nothing but this one line. For one developer
+// that's noise; for several it's a guaranteed merge conflict on `dist/
+// tokens.json` in every concurrent branch, on a line whose value nobody reads.
+//
+// So the timestamp now records when the artifact's CONTENT last changed, not
+// when the build last ran: if a rebuild produces byte-identical output apart
+// from this field, the previous timestamp is kept. Real token changes still
+// move it, which is the only case anyone would consult it for.
+const previousTokensJson = (() => {
+  try {
+    return JSON.parse(readFileSync(path.join(root, 'dist', 'tokens.json'), 'utf8'));
+  } catch {
+    return null; // first build, or dist/ cleaned — nothing to preserve
+  }
+})();
+
 // ─── Build via Style Dictionary ──────────────────────────────────────────────
 mkdirSync(path.join(root, 'dist'), { recursive: true });
 
@@ -282,6 +302,20 @@ const originalValues = { tokens, spacing, shadows, semanticColors, semanticDarkO
 const sd = new StyleDictionary(buildConfig(originalValues));
 await sd.hasInitialized;
 await sd.buildAllPlatforms();
+
+// Restore the previous `meta.generated` when nothing else in the artifact
+// moved — see the note next to `previousTokensJson` above for why.
+if (previousTokensJson) {
+  const tokensJsonPath = path.join(root, 'dist', 'tokens.json');
+  const rebuilt = JSON.parse(readFileSync(tokensJsonPath, 'utf8'));
+  const withoutTimestamp = (o) => JSON.stringify({ ...o, meta: { ...o.meta, generated: null } });
+  if (withoutTimestamp(rebuilt) === withoutTimestamp(previousTokensJson)) {
+    rebuilt.meta.generated = previousTokensJson.meta.generated;
+    // No trailing newline — matches exactly what the legacy/tokens-json format
+    // writes, so a preserved-timestamp build and a fresh build are byte-identical.
+    writeFileSync(tokensJsonPath, JSON.stringify(rebuilt, null, 2));
+  }
+}
 
 // `.tokens.json` is one of the two file extensions the spec recommends
 // (https://www.designtokens.org/tr/drafts/format/#file-extension) — `dist/tokens.json`
