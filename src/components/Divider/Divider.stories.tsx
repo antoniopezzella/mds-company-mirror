@@ -136,17 +136,22 @@ export const Variants: Story = {
   ),
 };
 
+// Uses ListItem's own `divider` prop rather than <Divider> elements between
+// items. A <Divider> sibling inside a <ul> is invalid markup however it is
+// rendered: as an <hr> it isn't an <li>, and `component="li"` doesn't help
+// because MUI still sets role="separator" on it — and overriding that to
+// presentation/none doesn't satisfy axe's `list` rule either, which wants real
+// list items. `divider` draws the rule as a border on the item itself, so the
+// list contains nothing but <li>s. This is MUI's intended API for the case.
 export const InList: Story = {
   render: () => (
     <List sx={{ width: '100%' }}>
-      <ListItem>
+      <ListItem divider>
         <ListItemText primary="Policy #POL-2024-001" secondary="Active" />
       </ListItem>
-      <Divider />
-      <ListItem>
+      <ListItem divider>
         <ListItemText primary="Policy #POL-2024-002" secondary="Active" />
       </ListItem>
-      <Divider />
       <ListItem>
         <ListItemText primary="Policy #POL-2024-003" secondary="Expired" />
       </ListItem>
