@@ -35,8 +35,15 @@
     --accent-foreground: 215 100% 24%;          /* #002c77 - MDS: interactive.primary */
     
     /* Destructive (Error/Danger state) */
-    --destructive: 0 84% 60%;                   /* Red - MDS: status.danger.bg */
-    --destructive-foreground: 0 0% 100%;        /* white - MDS: status.danger.fg */
+    /* Was `0 84% 60%` (#ee4343), a Tailwind default — despite the comment
+       claiming it mapped to status.danger. It didn't map to any MDS token, and
+       it failed AA as text: components using `text-destructive` (Field errors,
+       Bubble, Attachment) rendered error copy at 3.78:1 on white.
+       Now the real token: statusDanger / statusCritical #c53532, which is
+       5.34:1 both as text on white AND as a background under white, so it
+       serves `text-destructive` and `bg-destructive` correctly. */
+    --destructive: 1 60% 48%;                   /* #c53532 - MDS: statusDanger (Utilities/Critical) */
+    --destructive-foreground: 0 0% 100%;        /* white - 5.34:1 on the above */
     
     /* UI Elements */
     --border: 0 0% 85%;                         /* #dadada Neutral 250 - MDS: border.default */
@@ -88,8 +95,12 @@
     --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
     --accent-foreground: 0 0% 100%;             /* white */
     
-    --destructive: 0 84% 65%;                   /* Red (lighter for dark bg) */
-    --destructive-foreground: 0 0% 100%;        /* white */
+    /* Dark mode: semanticDarkOverrides.statusDanger is red500 (#ff6b6b), a
+       light red meant to sit on a dark surface. White on it is only 2.78:1, so
+       the foreground flips to the dark brand navy the way text.onInteractive
+       does — same reasoning as the destructive Button variant. */
+    --destructive: 0 100% 71%;                  /* #ff6b6b - MDS dark: statusDanger */
+    --destructive-foreground: 227 100% 14%;     /* #000f47 - 6.53:1 on the above */
     
     --border: 0 0% 25%;                         /* #404040 */
     --input: 0 0% 25%;                          /* #404040 */

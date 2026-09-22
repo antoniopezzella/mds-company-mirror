@@ -127,9 +127,12 @@ function AttachmentDescription({
 }: React.ComponentProps<"span">) {
   return (
     <span
+      // The error state used `text-destructive/80`. That 20% fade dropped the
+      // message to 3.91:1 on the card surface — below AA — and error copy is
+      // the last thing that should be softened. Full strength is 5.34:1.
       data-slot="attachment-description"
       className={cn(
-        "mt-0.5 block min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80",
+        "mt-0.5 block min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive",
         "max-w-full",
         className
       )}
