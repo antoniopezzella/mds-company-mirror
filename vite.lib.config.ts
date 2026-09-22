@@ -30,6 +30,11 @@ export default defineConfig({
         'src/theme/roles.ts',
         'src/theme/RoleVarsProvider.tsx',
         'src/theme/ThemeModeContext.tsx',
+        // The ambient `*.svg` shim. It was already in tsconfig.lib.json, but
+        // this plugin builds its own program from the list here — so without
+        // it, header.tsx/website-header.tsx's logo import raised TS2307 on
+        // every package build.
+        'src/lib-assets.d.ts',
       ],
       exclude: ['src/components/ui/**/*.stories.tsx', 'src/components/ui/**/*.test.tsx'],
       outDir: 'dist-pkg',

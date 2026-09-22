@@ -7,6 +7,16 @@
     "emitDeclarationOnly": true,
     "outDir": "dist-pkg"
   },
-  "include": ["src/index.ts", "src/components/ui", "src/theme/roles.ts", "src/lib-assets.d.ts"],
-  "exclude": ["src/components/ui/**/*.stories.tsx", "src/components/ui/**/*.test.tsx"]
+  "include": [
+    "src/index.ts",
+    "src/components/ui",
+    "src/theme/roles.ts",
+    "src/lib-assets.d.ts",
+    "src/theme/RoleVarsProvider.tsx",
+    "src/theme/ThemeModeContext.tsx"
+  ],
+  "exclude": [
+    "src/components/ui/**/*.stories.tsx",
+    "src/components/ui/**/*.test.tsx"
+  ]
 }
