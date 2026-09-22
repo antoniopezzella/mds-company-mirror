@@ -448,6 +448,26 @@ export const CustomHeight: Story = {
 
 // No CTAs (Content Only)
 export const ContentOnly: Story = {
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          {
+            // The scrollable element axe flags is <body>: this story is a
+            // full-height hero rendered deliberately WITHOUT CTAs, so by
+            // definition it contains nothing focusable, and the canvas scrolls.
+            // "No focusable content" is the story's whole subject.
+            //
+            // Scoped to this one story, not the file — every other HeroBanner
+            // story has CTAs and is still checked. On a real page this hero
+            // sits among headers, links and buttons.
+            id: 'scrollable-region-focusable',
+            enabled: false,
+          },
+        ],
+      },
+    },
+  },
   args: {
     eyebrow: 'Announcement',
     title: 'Introducing Marsh One Platform',

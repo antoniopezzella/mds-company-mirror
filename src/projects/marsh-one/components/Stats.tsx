@@ -446,6 +446,13 @@ const ctx = gsap.context(() => {
 
               <Box
                 ref={scrollRef}
+                // A horizontally scrolling region must be keyboard-focusable or
+                // its off-screen cards are unreachable without a mouse
+                // (WCAG 2.1.1; axe: scrollable-region-focusable). Arrow keys
+                // scroll it natively once focused, so no key handler is needed.
+                tabIndex={0}
+                role="group"
+                aria-label="Insights"
                 sx={{
                   display: 'flex',
                   gap: '24px',
