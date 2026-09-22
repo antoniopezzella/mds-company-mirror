@@ -10,7 +10,14 @@ lerna-debug.log*
 node_modules
 # Keep built token artifacts under version control
 # (Storybook static build still ignored separately)
-dist
+# `dist/*`, not `dist`. Git cannot re-include a file whose parent DIRECTORY is
+# excluded, so the three negations below never actually worked against a bare
+# `dist` rule — those artifacts are tracked only because they were force-added
+# once, and `git add dist/tokens.json` failed with "paths are ignored by one of
+# your .gitignore files". That broke releases: commit-and-tag-version bumps the
+# version stamped inside dist/tokens.json and then could not stage it.
+# Excluding the directory's contents instead lets the negations apply.
+dist/*
 dist-ssr
 dist-pkg
 !dist/tokens.json
