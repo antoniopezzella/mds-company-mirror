@@ -285,9 +285,17 @@ export const DarkMode: Story = {
   parameters: {
     layout: 'fullscreen', // Dark mode showcase with grid
   },
+  // Drives dark mode through the preview's `colorMode` global rather than a
+  // local `.dark` <div>. The class-on-a-div version only switched Tailwind's
+  // `dark:` variants: getRoleColor()'s DOM fallback keys off a `dark` class on
+  // <html> (see .storybook/preview.tsx), so role tokens kept resolving to
+  // their LIGHT values while the surface went dark — green1000 text on a
+  // near-black card, 2.95:1. The story looked like a dark-mode showcase while
+  // demonstrating a contrast failure.
+  globals: { colorMode: 'dark' },
   decorators: [
     (Story) => (
-      <div className="dark bg-background p-8">
+      <div className="bg-background p-8">
         <Story />
       </div>
     ),

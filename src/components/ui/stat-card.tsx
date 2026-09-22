@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getRoleColor } from '@/theme/roles';
 
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Main label/title of the metric. Widened from `string` to `ReactNode`
@@ -67,18 +68,26 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         ? TrendingDown 
         : ArrowRight;
 
-    // Trend color classes
-    const trendColorClass = trend === 'up'
-      ? 'text-green-600 dark:text-green-400'
-      : trend === 'down'
-        ? 'text-red-600 dark:text-red-400'
-        : 'text-muted-foreground';
+    // These were raw Tailwind palette classes — text-green-600 on bg-green-50
+    // (3.14:1) and text-red-600 on bg-red-50 (4.41:1), both under AA, and 39
+    // axe violations in this component's stories alone. They also bypassed the
+    // role system entirely, which is exactly what CLAUDE.md's "no hardcoded
+    // colours" rule exists to prevent: Tailwind's palette has no relationship
+    // to MDS tokens and gets no contrast validation.
+    //
+    // Now driven by the status roles, which ARE contrast-validated against
+    // their own backgrounds (see the status pairs in check-contrast.js) and
+    // follow the theme without a separate `dark:` variant.
+    const trendStyle: React.CSSProperties =
+      trend === 'up'
+        ? { color: getRoleColor('status.success.fg'), backgroundColor: getRoleColor('status.success.bg') }
+        : trend === 'down'
+          ? { color: getRoleColor('status.danger.fg'), backgroundColor: getRoleColor('status.danger.bg') }
+          : { color: getRoleColor('text.secondary'), backgroundColor: getRoleColor('surface.subtle') };
 
-    const badgeBgClass = trend === 'up'
-      ? 'bg-green-50 dark:bg-green-950'
-      : trend === 'down'
-        ? 'bg-red-50 dark:bg-red-950'
-        : 'bg-muted';
+    // The trend description sits on the card surface, not inside the badge, so
+    // it takes the foreground colour only.
+    const trendTextStyle: React.CSSProperties = { color: trendStyle.color };
 
     return (
       <div
@@ -100,10 +109,9 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             <div
               className={cn(
                 'flex items-center gap-1 rounded-full px-2 py-0.5',
-                'text-xs font-semibold',
-                badgeBgClass,
-                trendColorClass
+                'text-xs font-semibold'
               )}
+              style={trendStyle}
             >
               <TrendIcon className="h-3 w-3" />
               <span>{change}</span>
@@ -127,10 +135,10 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
 
         {/* Trend Description */}
         {trendDescription && (
-          <div className={cn(
-            'flex items-center gap-1.5 text-sm font-medium',
-            trendColorClass
-          )}>
+          <div
+            className="flex items-center gap-1.5 text-sm font-medium"
+            style={trendTextStyle}
+          >
             <TrendIcon className="h-4 w-4" />
             <span>{trendDescription}</span>
           </div>
