@@ -22,6 +22,13 @@
  * 6. Deprecation: Mark a role with a `@deprecated` tag in its description comment (future enhancement
  *    may surface that via governance tooling).
  *
+ * CSS-VAR ACCESS
+ * Contexts that can't call `getRoleColor()` directly (.module.scss files,
+ * :hover/:active/::before selectors) can use `var(--role-<dotted.name>)`
+ * instead — see `RoleVarsProvider.tsx`, mounted once in `main.tsx`. Same
+ * roles-only rule applies either way; there is no CSS-var access to
+ * primitives or semantics.
+ *
  * TESTING & GOVERNANCE
  * - `roles.mapping.test.ts`: basic resolution contract.
  * - `roles.snapshot.test.ts`: snapshot of light/dark resolved values (intentional updates require review).
@@ -39,21 +46,25 @@
  * RELATED DOCS: See Storybook page: Foundations / Roles.
  */
 
-import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens';
+import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens.js';
 
 export type RoleName =
   | 'text.primary'
   | 'text.secondary'
   | 'text.inverse'
   | 'text.onAccent'
+  | 'text.onInteractive'
   | 'text.onHero'
   | 'text.onDanger'
+  | 'text.onLight'
   | 'text.disabled'
   | 'surface.default'
   | 'surface.subtle'
   | 'surface.disabled'
   | 'surface.accent'
   | 'surface.secondary'
+  | 'surface.secondary.hover'
+  | 'surface.selected'
   | 'surface.navigation'
   | 'surface.navigation.hover'
   | 'surface.navigation.active'
@@ -63,12 +74,19 @@ export type RoleName =
   | 'focus.ring'
   | 'status.success.fg'
   | 'status.success.bg'
+  | 'status.success.border'
   | 'status.warning.fg'
   | 'status.warning.bg'
+  | 'status.warning.border'
   | 'status.danger.fg'
   | 'status.danger.bg'
+  | 'status.danger.border'
   | 'status.info.fg'
   | 'status.info.bg'
+  | 'status.info.border'
+  | 'brand.accent'
+  | 'interactive.accent.hover'
+  | 'interactive.accent.active'
   | 'interactive.primary'
   | 'interactive.primary.hover'
   | 'interactive.primary.active'
@@ -92,14 +110,18 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
   'text.inverse': { semantic: 'textOnAccent', description: 'Text on accent or inverse surfaces' },
   'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
+  'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
   'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface' },
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
+  'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
   'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
   'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
   'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
   'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
   'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
+  'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
+  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint; hover is a neutral lift (surface.subtle), not this' },
   'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
   'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
@@ -107,14 +129,21 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
   'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
+  'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },
+  'interactive.accent.hover': { semantic: 'interactiveAccentHover', description: 'Gold accent hover (Button primaryAlt variant)' },
+  'interactive.accent.active': { semantic: 'interactiveAccentActive', description: 'Gold accent active (Button primaryAlt variant)' },
   'status.success.fg': { semantic: 'statusSuccessText', description: 'Success text/icon color' },
   'status.success.bg': { semantic: 'statusSuccessBg', description: 'Success background' },
+  'status.success.border': { semantic: 'statusSuccessBorder', description: 'Success border color' },
   'status.warning.fg': { semantic: 'statusWarningText', description: 'Warning text/icon color' },
   'status.warning.bg': { semantic: 'statusWarningBg', description: 'Warning background' },
+  'status.warning.border': { semantic: 'statusWarningBorder', description: 'Warning border color' },
   'status.danger.fg': { semantic: 'statusDangerText', description: 'Danger text/icon color' },
   'status.danger.bg': { semantic: 'statusDangerBg', description: 'Danger background' },
+  'status.danger.border': { semantic: 'statusDangerBorder', description: 'Danger border color' },
   'status.info.fg': { semantic: 'statusInfoText', description: 'Informational text/icon color' },
   'status.info.bg': { semantic: 'statusInfoBg', description: 'Informational background' },
+  'status.info.border': { semantic: 'statusInfoBorder', description: 'Informational border color' },
   'interactive.primary': { semantic: 'interactivePrimary', description: 'Primary interactive base' },
   'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' },
   'interactive.primary.active': { semantic: 'interactivePrimaryActive', description: 'Primary interactive active' },
@@ -135,10 +164,21 @@ export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }
  * @returns Hex color string (e.g. #ffffff)
  * @throws if role is unknown (guards against stale component references)
  */
+function currentDomMode(): 'light' | 'dark' {
+  if (typeof document === 'undefined') return 'light';
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
 export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): string {
   const entry = ROLE_MAP[role];
   if (!entry) throw new Error(`Unknown role: ${role}`);
-  const mode = options.mode || 'light';
+  // Explicit `mode` (the MUI side always passes one, threaded from
+  // ThemeModeContext) wins. Callers that omit it — most of the shadcn/ui
+  // component set — fall back to the `dark` class on <html>, which
+  // ThemeModeProvider keeps in sync with the same shared mode state. This
+  // is what makes dark mode work across the library without having to
+  // thread `mode` through every one of those call sites individually.
+  const mode = options.mode || currentDomMode();
   const base = semanticColors[entry.semantic];
   if (mode === 'dark' && entry.semantic in semanticDarkOverrides) {
     return semanticDarkOverrides[entry.semantic as SemanticColorName] || base;

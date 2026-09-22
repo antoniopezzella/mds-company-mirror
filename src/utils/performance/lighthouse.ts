@@ -5,7 +5,7 @@
  * Can be used across different projects in the MDS ecosystem
  */
 
-import lighthouse from 'lighthouse';
+import lighthouse, { type Config } from 'lighthouse';
 import * as chromeLauncher from 'chrome-launcher';
 import fs from 'fs';
 import path from 'path';
@@ -155,12 +155,15 @@ export async function runLighthouseAudit(config: LighthouseConfig): Promise<Ligh
     const lhConfig = formFactor === 'desktop' ? desktopConfig : mobileConfig;
 
     // Run Lighthouse
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const runnerResult = await lighthouse(url, {
       port: chrome.port,
       output: ['html', 'json'],
       onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
-    }, lhConfig as any); // Using 'as any' to avoid Lighthouse config type complexity
+      // desktopConfig/mobileConfig rely on `extends: 'lighthouse:default'` to
+      // fill in category auditRefs at runtime — something Config's static
+      // type can't verify, hence the assertion (not `any`: still checked
+      // structurally against Config's other fields).
+    }, lhConfig as unknown as Config);
 
     if (!runnerResult) {
       throw new Error('Lighthouse audit failed');

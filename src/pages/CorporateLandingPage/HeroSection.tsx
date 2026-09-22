@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import { getRoleColor } from '../../theme/roles';
-import DSButton from '../../components/Button/Button';
+import { Button as DSButton } from '../../components/ui/button';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -148,10 +148,10 @@ export const HeroSection: React.FC = () => {
       }}
     >
       {/* Main Content Container */}
-      <div className="container-fluid" style={{ height: '100%', paddingLeft: 0, paddingRight: 0 }}>
-        <div className="row" style={{ height: '100%', alignItems: 'center', marginLeft: 0, marginRight: 0 }}>
+      <div className="mds-legacy-container-fluid" style={{ height: '100%', paddingLeft: 0, paddingRight: 0 }}>
+        <div className="mds-legacy-row" style={{ height: '100%', alignItems: 'center', marginLeft: 0, marginRight: 0 }}>
           {/* Left Column: Content (6 cols) */}
-          <div className="col-12 col-lg-6" style={{ paddingLeft: 0 }}>
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6" style={{ paddingLeft: 0 }}>
             <Box
               ref={contentRef}
               sx={{
@@ -199,8 +199,8 @@ export const HeroSection: React.FC = () => {
                   size="md"
                   endIcon={<span>→</span>}
                   style={{
-                    backgroundColor: '#FFBF0D',
-                    borderColor: '#FFBF0D',
+                    backgroundColor: getRoleColor('brand.accent'),
+                    borderColor: getRoleColor('brand.accent'),
                     color: '#1B222F',
                   }}
                 >
@@ -211,7 +211,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Right Column: Hero Video (6 cols) */}
-          <div className="col-12 col-lg-6" style={{ display: 'flex', height: '100%' }}>
+          <div className="mds-legacy-col-12 mds-legacy-col-lg-6" style={{ display: 'flex', height: '100%' }}>
             <Box
               ref={videoContainerRef}
               sx={{
@@ -220,28 +220,36 @@ export const HeroSection: React.FC = () => {
                 display: 'flex',
                 overflow: 'hidden',
                 position: 'relative',
-                backgroundColor: '#000F47', // Match hero background
+                backgroundColor: getRoleColor('surface.hero'),
                 clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
               }}
             >
-              <Box
-                component="iframe"
-                src="https://player.vimeo.com/video/1146072444?autoplay=1&muted=1&background=1&controls=0&loop=1&playsinline=1&autopause=0&dnt=1&title=0&byline=0&portrait=0"
-                sx={{
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onError={(e) => {
+                  console.error('Hero video error:', e);
+                }}
+                onLoadedData={() => console.debug('Hero video loaded successfully')}
+                style={{
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '100vw',
-                  height: '100vh',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
                   minWidth: '100%',
                   minHeight: '100%',
-                  border: 0,
                   backgroundColor: 'transparent',
                 }}
-                allow="autoplay; fullscreen; picture-in-picture"
-                title="Hero video"
-              />
+              >
+                <source src="/video/WebsiteHeaderVideo-960x900_V1 (1).mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </Box>
           </div>
         </div>
@@ -264,7 +272,7 @@ export const HeroSection: React.FC = () => {
             width: 48,
             height: 48,
             borderRadius: '50px',
-            backgroundColor: '#FFBF0D', // Gold color
+            backgroundColor: getRoleColor('brand.accent'),
             border: 'none',
             cursor: 'pointer',
             display: 'flex',

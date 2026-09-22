@@ -50,7 +50,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({
 
   return (
     <section className="journey-section">
-      <div className="container">
+      <div className="mds-legacy-container">
         <div className="journey-section__header">
           <Typography
             variant="h2"

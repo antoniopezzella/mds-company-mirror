@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Box, Typography, Container, Grid } from '@mui/material';
 import { getRoleColor } from '../../theme/roles';
-import DSButton from '../../components/Button/Button';
+import { Button as DSButton } from '../../components/ui/button';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -238,7 +238,7 @@ export const FourBrandsSection: React.FC = () => {
                   ) : (
                     <Typography
                       sx={{
-                        fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+                        fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
                         fontSize: '20px',
                         color: getRoleColor('text.primary'),
                       }}

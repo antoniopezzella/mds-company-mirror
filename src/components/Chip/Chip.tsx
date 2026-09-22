@@ -1,8 +1,10 @@
 import React from 'react';
 import type { SxProps } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import type { ChipProps as MuiChipProps } from '@mui/material';
 import { Chip as MuiChip } from '@mui/material';
 import { getRoleColor } from '../../theme/roles';
+import { getFocusRingSx } from '../../theme/focusRing';
 
 export interface ChipProps extends Omit<Partial<MuiChipProps>, 'variant' | 'color' | 'size'> {
   /** Chip label */
@@ -63,6 +65,7 @@ export const Chip: React.FC<ChipProps> = ({
   disabled = false,
   ...muiProps
 }) => {
+  const theme = useTheme();
   const getBgColor = (isFilled: boolean): string => {
     if (disabled) {
       return getRoleColor('surface.disabled');
@@ -225,18 +228,15 @@ export const Chip: React.FC<ChipProps> = ({
           opacity: 0.8,
           transform: 'scale(1.02)',
         } : {},
-        '&:focus': !disabled ? {
-          outline: `2px solid ${getRoleColor('focus.ring')}`,
-          outlineOffset: '2px',
-        } : {},
+        '&:focus-visible': !disabled ? getFocusRingSx(theme) : {},
         '&.Mui-disabled': {
           opacity: 0.5,
           cursor: 'not-allowed',
         },
         ...(selectable && selected) && {
           backgroundColor: getBgColor(true),
-          borderColor: getRoleColor('focus.ring'),
-          boxShadow: `inset 0 0 0 2px ${getRoleColor('focus.ring')}`,
+          borderColor: getRoleColor('focus.ring', { mode: theme.palette.mode }),
+          boxShadow: `inset 0 0 0 2px ${getRoleColor('focus.ring', { mode: theme.palette.mode })}`,
         },
         ...sizeStyles,
         ...sx,

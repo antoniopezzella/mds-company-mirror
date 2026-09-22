@@ -110,7 +110,7 @@ const semanticPreview = [
   { name: 'interactiveSecondary', color: '#0b4bff', desc: 'Active Blue — links & focus', hex: '#0b4bff' },
   { name: 'textSecondary', color: '#595959', desc: 'Secondary body text', hex: '#595959' },
   { name: 'surfaceSubtle', color: '#f8f8f8', desc: 'Slight elevation surface', hex: '#f8f8f8', border: true },
-  { name: 'borderFocus', color: '#0b4bff', desc: 'Focus ring — WCAG 2.4.11', hex: '#0b4bff' },
+  { name: 'borderFocus', color: '#3d7aff', desc: 'Focus ring — WCAG 2.4.11', hex: '#3d7aff' },
   { name: 'statusSuccess', color: '#64bc30', desc: 'Success state surfaces', hex: '#64bc30' },
   { name: 'statusWarning', color: '#ffb700', desc: 'Warning state surfaces', hex: '#ffb700' },
   { name: 'statusError', color: '#e53e3e', desc: 'Error state surfaces', hex: '#e53e3e' },

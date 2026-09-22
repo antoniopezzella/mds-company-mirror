@@ -4,7 +4,9 @@ on:
   pull_request:
     branches: [ main ]
   push:
-    branches: [ main ]
+    # No branch filter: this repo does substantial work directly on
+    # feature branches (not just main) — restricting push to main meant
+    # active branches got zero CI signal until merge.
 
 jobs:
   build-and-validate:
@@ -26,6 +28,9 @@ jobs:
       - name: Lint docs structure
         run: npm run docs:lint
 
+      - name: Lint
+        run: npm run lint
+
       - name: Token governance (build + diff policy)
         run: npm run tokens:check
 
@@ -36,11 +41,35 @@ jobs:
           echo "\n## Token Diff" >> $GITHUB_STEP_SUMMARY
           cat token-diff.md >> $GITHUB_STEP_SUMMARY
 
+      # The Storybook project runs real browser tests, and Vite's dependency
+      # pre-bundling flakes on a cold cache under concurrent load. Persisting
+      # the cache keeps CI off that path; the retry in vitest.config.ts covers
+      # the first run on a cache miss.
+      - name: Cache Storybook/Vite pre-bundle
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/storybook
+            node_modules/.vite
+          key: sb-prebundle-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: sb-prebundle-${{ runner.os }}-
+
       - name: Unit & interaction tests
         run: npm test
 
       - name: Build (type + bundle)
         run: npm run build
+
+      # Nothing here previously built or validated what actually ships. Two
+      # regressions reached main that way: the library's .d.ts stopped
+      # emitting for two exported providers (JS fine, every TS consumer
+      # broken), and registry.json kept pointing at a deleted component.
+      # Both are caught by these two steps.
+      - name: Build publishable package
+        run: npm run build:package
+
+      - name: Validate shadcn registry
+        run: npx -y shadcn@latest registry validate
 
       - name: Build Storybook (optional)
         run: npm run build-storybook
@@ -59,6 +88,7 @@ jobs:
         run: |
           echo '## CI Summary' >> $GITHUB_STEP_SUMMARY
           echo '* docs:lint ✅' >> $GITHUB_STEP_SUMMARY
+          echo '* lint ✅' >> $GITHUB_STEP_SUMMARY
           echo '* tokens:check ✅ (fails only on changed/removed primitives)' >> $GITHUB_STEP_SUMMARY
           echo '* tests ✅' >> $GITHUB_STEP_SUMMARY
           echo '* build ✅' >> $GITHUB_STEP_SUMMARY

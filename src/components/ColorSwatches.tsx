@@ -1,3 +1,5 @@
+// roles-allow-hex-file — this component *displays* the primitive palette;
+// the hex values are its content, not styling that should use a role.
 import { useTheme } from "@mui/material/styles";
 
 // Marsh primitive color palettes — aligned to Figma "Primitive Colors" collection
@@ -149,7 +151,7 @@ const palettes = [
 
 export const ColorSwatches = () => {
   const theme = useTheme();
-  const small = theme.typography.caption.fontSize as any;
+  const small = theme.typography.caption.fontSize;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {palettes.map((palette) => (

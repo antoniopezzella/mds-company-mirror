@@ -1,13 +1,20 @@
 import React from 'react';
 import { theme } from '../../theme';
 
-const ORDER: Array<keyof typeof theme.typography> = [
+type TypoVariant =
+  | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  | 'subtitle1' | 'subtitle2'
+  | 'body1' | 'body2'
+  | 'caption' | 'overline'
+  | 'button';
+
+const ORDER: TypoVariant[] = [
   'h1','h2','h3','h4','h5','h6',
   'subtitle1','subtitle2',
   'body1','body2',
   'caption','overline',
   'button'
-] as any;
+];
 
 const SAMPLE: Record<string, string> = {
   h1: 'Heading One',
@@ -41,9 +48,9 @@ export const TypographyTable: React.FC = () => {
       </thead>
       <tbody>
         {ORDER.map(key => {
-          const style: any = (theme.typography as any)[key];
+          const style = theme.typography[key];
           if(!style) return null;
-          const family = style.fontFamily || (theme.typography as any).fontFamily;
+          const family = style.fontFamily || theme.typography.fontFamily;
           return (
             <tr key={key}>
               <td style={td}><code>{key}</code></td>

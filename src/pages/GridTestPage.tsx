@@ -26,8 +26,8 @@ export default function GridTestPage() {
           <Typography variant="body2" sx={{ mb: 3, color: getRoleColor('text.secondary') }}>
             Combines `.row`, `.col-*`, offsets, and gap utilities to validate spacing tokens across breakpoints.
           </Typography>
-          <div className="row gap-4 align-start">
-            <section className="col-12 col-md-7">
+          <div className="mds-legacy-row gap-4 mds-legacy-align-start">
+            <section className="mds-legacy-col-12 mds-legacy-col-md-7">
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography variant="overline" sx={{ color: getRoleColor('text.secondary') }}>
@@ -41,7 +41,7 @@ export default function GridTestPage() {
               </Card>
             </section>
 
-            <aside className="col-12 col-md-4 offset-md-1">
+            <aside className="mds-legacy-col-12 mds-legacy-col-md-4 mds-legacy-offset-md-1">
               <Card sx={{ height: '100%', background: getRoleColor('surface.subtle') }}>
                 <CardContent>
                   <Typography variant="overline" sx={{ color: getRoleColor('text.secondary') }}>
@@ -56,7 +56,7 @@ export default function GridTestPage() {
           </div>
         </Box>
 
-        <Divider sx={{ borderColor: getRoleColor('border.muted'), mb: 6 }} />
+        <Divider sx={{ borderColor: getRoleColor('border.default'), mb: 6 }} />
 
         <Box sx={{ mb: 6 }}>
           <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
@@ -79,7 +79,7 @@ export default function GridTestPage() {
           </div>
         </Box>
 
-        <Divider sx={{ borderColor: getRoleColor('border.muted'), mb: 6 }} />
+        <Divider sx={{ borderColor: getRoleColor('border.default'), mb: 6 }} />
 
         <Box>
           <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>

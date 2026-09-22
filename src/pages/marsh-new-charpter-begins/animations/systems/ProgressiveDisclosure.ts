@@ -326,10 +326,10 @@ export class ProgressiveDisclosure {
     const tl = gsap.timeline();
 
     switch (type) {
-      case 'slide':
+      case 'slide': {
         const slideDistance = direction === 'horizontal' ? '100%' : '100%';
         const slideProperty = direction === 'horizontal' ? 'x' : 'y';
-        
+
         tl.to(exitElement, {
           [slideProperty]: slideDistance,
           duration,
@@ -343,6 +343,7 @@ export class ProgressiveDisclosure {
           ease
         }, `-=${duration * 0.5}`);
         break;
+      }
 
       case 'fade':
         tl.to(exitElement, {
@@ -459,7 +460,7 @@ export class ProgressiveDisclosure {
           return Math.sin(aRect.left / 100) - Math.sin(bRect.left / 100);
         });
 
-      case 'spiral':
+      case 'spiral': {
         const center = {
           x: window.innerWidth / 2,
           y: window.innerHeight / 2
@@ -475,6 +476,7 @@ export class ProgressiveDisclosure {
           );
           return aDist - bDist;
         });
+      }
 
       case 'random':
         return [...elements].sort(() => Math.random() - 0.5);

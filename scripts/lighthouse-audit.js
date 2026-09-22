@@ -1,181 +1,100 @@
 #!/usr/bin/env node
-
 /**
- * Comprehensive Lighthouse audit script for MDS Platform
- * Runs both mobile and desktop audits with detailed reporting
+ * Lighthouse audit against a running server.
+ *
+ * ESM, not CJS: this package is `"type": "module"` and lighthouse@12 /
+ * chrome-launcher@1 are both ESM-only, so the previous `require()` version
+ * could never have run under either constraint.
+ *
+ *   LIGHTHOUSE_URL=http://localhost:4173 npm run lighthouse
+ *
+ * Writes JSON + HTML into ./lighthouse-reports and exits non-zero if the
+ * budget below isn't met, so it can gate CI if wired up.
  */
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import * as chromeLauncher from 'chrome-launcher';
+import lighthouse from 'lighthouse';
 
-const lighthouse = require('lighthouse');
-const chromeLauncher = require('chrome-launcher');
-const fs = require('fs').promises;
-const path = require('path');
+const url = process.env.LIGHTHOUSE_URL || 'http://localhost:5173';
+const outputDir = process.env.LIGHTHOUSE_OUT || './lighthouse-reports';
+const enforce = process.env.LIGHTHOUSE_ENFORCE === '1';
 
-const SITE_URL = process.env.LIGHTHOUSE_URL || 'http://localhost:5173';
-const OUTPUT_DIR = './lighthouse-reports';
+// Same thresholds the previous runner declared.
+const budget = {
+  fcp: 1800,
+  lcp: 2500,
+  cls: 0.1,
+  tbt: 200,
+  tti: 3800,
+  performanceScore: 90,
+};
 
-async function ensureOutputDir() {
+const ms = (v) => `${Math.round(v)}ms`;
+const pct = (v) => Math.round((v ?? 0) * 100);
+
+async function main() {
+  const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox'] });
   try {
-    await fs.access(OUTPUT_DIR);
-  } catch {
-    await fs.mkdir(OUTPUT_DIR, { recursive: true });
+    const result = await lighthouse(
+      url,
+      { logLevel: 'error', output: ['json', 'html'], port: chrome.port },
+      undefined
+    );
+    if (!result) throw new Error('Lighthouse returned no result');
+
+    const { lhr, report } = result;
+    await fs.mkdir(outputDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    await fs.writeFile(path.join(outputDir, `report-${stamp}.json`), report[0]);
+    await fs.writeFile(path.join(outputDir, `report-${stamp}.html`), report[1]);
+
+    const a = lhr.audits;
+    const metrics = {
+      performanceScore: pct(lhr.categories.performance?.score),
+      accessibility: pct(lhr.categories.accessibility?.score),
+      bestPractices: pct(lhr.categories['best-practices']?.score),
+      seo: pct(lhr.categories.seo?.score),
+      fcp: a['first-contentful-paint']?.numericValue ?? 0,
+      lcp: a['largest-contentful-paint']?.numericValue ?? 0,
+      cls: a['cumulative-layout-shift']?.numericValue ?? 0,
+      tbt: a['total-blocking-time']?.numericValue ?? 0,
+      tti: a['interactive']?.numericValue ?? 0,
+      speedIndex: a['speed-index']?.numericValue ?? 0,
+    };
+
+    console.log(`\nLighthouse — ${url}\n`);
+    console.log('  Category scores');
+    console.log(`    Performance      ${metrics.performanceScore}`);
+    console.log(`    Accessibility    ${metrics.accessibility}`);
+    console.log(`    Best practices   ${metrics.bestPractices}`);
+    console.log(`    SEO              ${metrics.seo}`);
+    console.log('\n  Metrics                         budget');
+    const rows = [
+      ['First Contentful Paint', ms(metrics.fcp), ms(budget.fcp), metrics.fcp <= budget.fcp],
+      ['Largest Contentful Paint', ms(metrics.lcp), ms(budget.lcp), metrics.lcp <= budget.lcp],
+      ['Total Blocking Time', ms(metrics.tbt), ms(budget.tbt), metrics.tbt <= budget.tbt],
+      ['Time to Interactive', ms(metrics.tti), ms(budget.tti), metrics.tti <= budget.tti],
+      ['Speed Index', ms(metrics.speedIndex), '—', true],
+      ['Cumulative Layout Shift', metrics.cls.toFixed(3), budget.cls.toFixed(3), metrics.cls <= budget.cls],
+    ];
+    for (const [name, value, limit, ok] of rows) {
+      console.log(`    ${ok ? 'PASS' : 'FAIL'}  ${name.padEnd(26)} ${String(value).padStart(9)}   ${limit}`);
+    }
+    const scoreOk = metrics.performanceScore >= budget.performanceScore;
+    console.log(`    ${scoreOk ? 'PASS' : 'FAIL'}  ${'Performance score'.padEnd(26)} ${String(metrics.performanceScore).padStart(9)}   ${budget.performanceScore}`);
+
+    const failures = rows.filter(([, , , ok]) => !ok).length + (scoreOk ? 0 : 1);
+    console.log(`\n  Reports: ${outputDir}/report-${stamp}.{json,html}`);
+    console.log(failures ? `  ${failures} metric(s) over budget.\n` : '  All metrics within budget.\n');
+
+    if (enforce && failures) process.exitCode = 1;
+  } finally {
+    await chrome.kill();
   }
 }
 
-async function runLighthouseAudit(url, config, formFactor = 'desktop') {
-  const chrome = await chromeLauncher.launch({
-    chromeFlags: ['--headless', '--no-sandbox', '--disable-dev-shm-usage']
-  });
-
-  const options = {
-    logLevel: 'info',
-    output: ['html', 'json'],
-    onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
-    port: chrome.port,
-    ...config,
-  };
-
-  const runnerResult = await lighthouse(url, options);
-
-  await chrome.kill();
-  return runnerResult;
-}
-
-async function generateReports() {
-  await ensureOutputDir();
-  
-  console.log('🚀 Starting Lighthouse audits for MDS Platform...\n');
-  
-  // Desktop audit
-  console.log('📱 Running desktop audit...');
-  const desktopConfig = {
-    formFactor: 'desktop',
-    screenEmulation: {
-      mobile: false,
-      width: 1440,
-      height: 900,
-      deviceScaleFactor: 1,
-    },
-    throttling: {
-      rttMs: 40,
-      throughputKbps: 10240,
-      cpuSlowdownMultiplier: 1,
-    },
-  };
-  
-  const desktopResult = await runLighthouseAudit(SITE_URL, desktopConfig, 'desktop');
-  
-  // Save desktop reports
-  await fs.writeFile(
-    path.join(OUTPUT_DIR, 'desktop-report.html'),
-    desktopResult.report[0]
-  );
-  await fs.writeFile(
-    path.join(OUTPUT_DIR, 'desktop-report.json'),
-    JSON.stringify(desktopResult.lhr, null, 2)
-  );
-  
-  // Mobile audit
-  console.log('📱 Running mobile audit...');
-  const mobileConfig = {
-    formFactor: 'mobile',
-    screenEmulation: {
-      mobile: true,
-      width: 375,
-      height: 667,
-      deviceScaleFactor: 2,
-    },
-    throttling: {
-      rttMs: 150,
-      throughputKbps: 1638.4,
-      cpuSlowdownMultiplier: 4,
-    },
-  };
-  
-  const mobileResult = await runLighthouseAudit(SITE_URL, mobileConfig, 'mobile');
-  
-  // Save mobile reports
-  await fs.writeFile(
-    path.join(OUTPUT_DIR, 'mobile-report.html'),
-    mobileResult.report[0]
-  );
-  await fs.writeFile(
-    path.join(OUTPUT_DIR, 'mobile-report.json'),
-    JSON.stringify(mobileResult.lhr, null, 2)
-  );
-  
-  // Generate summary report
-  const summary = generateSummary(desktopResult.lhr, mobileResult.lhr);
-  await fs.writeFile(
-    path.join(OUTPUT_DIR, 'summary.json'),
-    JSON.stringify(summary, null, 2)
-  );
-  
-  console.log('\n✅ Lighthouse audits completed!');
-  console.log(`📊 Reports saved to: ${OUTPUT_DIR}`);
-  console.log(`🌐 Desktop report: ${path.join(OUTPUT_DIR, 'desktop-report.html')}`);
-  console.log(`📱 Mobile report: ${path.join(OUTPUT_DIR, 'mobile-report.html')}`);
-  
-  // Output summary to console
-  printSummary(summary);
-}
-
-function generateSummary(desktopLhr, mobileLhr) {
-  const getScores = (lhr) => ({
-    performance: Math.round(lhr.categories.performance.score * 100),
-    accessibility: Math.round(lhr.categories.accessibility.score * 100),
-    bestPractices: Math.round(lhr.categories['best-practices'].score * 100),
-    seo: Math.round(lhr.categories.seo.score * 100),
-    fcp: Math.round(lhr.audits['first-contentful-paint'].numericValue),
-    lcp: Math.round(lhr.audits['largest-contentful-paint'].numericValue),
-    cls: parseFloat(lhr.audits['cumulative-layout-shift'].numericValue.toFixed(3)),
-    fid: Math.round(lhr.audits['max-potential-fid']?.numericValue || 0),
-    speedIndex: Math.round(lhr.audits['speed-index'].numericValue),
-    tti: Math.round(lhr.audits['interactive'].numericValue),
-  });
-
-  return {
-    url: desktopLhr.finalUrl,
-    timestamp: new Date().toISOString(),
-    desktop: getScores(desktopLhr),
-    mobile: getScores(mobileLhr),
-  };
-}
-
-function printSummary(summary) {
-  console.log('\n📊 LIGHTHOUSE AUDIT SUMMARY');
-  console.log('='.repeat(50));
-  console.log(`URL: ${summary.url}`);
-  console.log(`Timestamp: ${summary.timestamp}\n`);
-  
-  console.log('🖥️  DESKTOP SCORES:');
-  console.log(`   Performance: ${summary.desktop.performance}/100`);
-  console.log(`   Accessibility: ${summary.desktop.accessibility}/100`);
-  console.log(`   Best Practices: ${summary.desktop.bestPractices}/100`);
-  console.log(`   SEO: ${summary.desktop.seo}/100`);
-  console.log(`   
-   Core Web Vitals:
-   - FCP: ${summary.desktop.fcp}ms
-   - LCP: ${summary.desktop.lcp}ms
-   - CLS: ${summary.desktop.cls}
-   - Speed Index: ${summary.desktop.speedIndex}ms
-   - TTI: ${summary.desktop.tti}ms\n`);
-  
-  console.log('📱 MOBILE SCORES:');
-  console.log(`   Performance: ${summary.mobile.performance}/100`);
-  console.log(`   Accessibility: ${summary.mobile.accessibility}/100`);
-  console.log(`   Best Practices: ${summary.mobile.bestPractices}/100`);
-  console.log(`   SEO: ${summary.mobile.seo}/100`);
-  console.log(`   
-   Core Web Vitals:
-   - FCP: ${summary.mobile.fcp}ms
-   - LCP: ${summary.mobile.lcp}ms
-   - CLS: ${summary.mobile.cls}
-   - Speed Index: ${summary.mobile.speedIndex}ms
-   - TTI: ${summary.mobile.tti}ms\n`);
-}
-
-// Run the audit
-generateReports().catch(error => {
-  console.error('❌ Lighthouse audit failed:', error);
-  process.exit(1);
+main().catch((err) => {
+  console.error('Lighthouse audit failed:', err?.message ?? err);
+  process.exitCode = 1;
 });

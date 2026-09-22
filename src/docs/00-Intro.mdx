@@ -1,84 +1,79 @@
+import { Meta } from '@storybook/addon-docs/blocks';
 import { ContrastStatus } from './_components/ContrastStatus';
 
-export const meta = { title: 'Foundations/Intro' };
+<Meta title="Foundations/Intro" />
 
+# Marsh Design System
 
+Three things to know before you write any code here:
 
-# Design System Intro
+1. **Colors always go through a role, never a hex value.** `getRoleColor('interactive.primary')`, not `#000f47`. This is enforced by `npm run roles:check` in CI — see [Colors](?path=/docs/foundations-colors--docs).
+2. **Layout is plain Tailwind grid utilities.** `grid grid-cols-12 gap-6`, not custom CSS. There's an older, unrelated grid system still used by a handful of legacy pages — if you're building something new, you don't need it. See [Grid](?path=/docs/foundations-grid--docs).
+3. **Building UI? Check for an existing component first.** Every component in the current component library — buttons, forms, dialogs, tables, everything — is browsable with live examples and "use this / not that" guidance at `/design-system` (run the app, see below). Don't build something that already exists.
 
-This is a fresh baseline MDX page to validate Storybook MDX indexing in isolation.
+## Run it
 
-## Contrast Status
+```bash
+npm install
+npm run dev         # the app, http://localhost:5173
+npm run storybook   # this documentation, http://localhost:6006
+```
+
+## Starting a new page
+
+1. **Check `/design-system` first.** Does what you need already exist? Does an existing component's props already cover it (a new `variant`/`tone`/`size` beats a new component)? Can you compose two or three existing ones? Only build new as a last resort.
+2. **Add a route.** `src/Router.tsx` is a flat list — lazy-import your page, add one `<Route>`.
+3. **Build with what's in `src/components/ui/`**, laid out with Tailwind grid, colored with roles:
+
+```tsx
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { getRoleColor } from '@/theme/roles';
+
+export default function HelloPage() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ color: getRoleColor('text.primary') }}>
+            Hello
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button variant="primary">Take action</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+```
+
+That's the whole pattern: components from `@/components/ui/*`, `grid`/`gap-*` for layout, `getRoleColor()` for any color that isn't already baked into the component. No `sx` prop, no CSS Modules, no hex values.
+
+Full walkthrough, route to finish: **`docs/get-started/BUILD_YOUR_FIRST_PAGE.md`**.
+
+## Beyond building pages
+
+The workflow above (`components/ui/*` + roles + Tailwind grid) covers most day-to-day work. This system also does several things that aren't visible from that workflow alone — easy to miss if you only ever look at the component docs:
+
+- **Testing** — every `.stories.tsx` file doubles as a real test, rendered in an actual Chromium browser via Playwright (`@storybook/addon-vitest`), not just a visual example — on top of the usual `jsdom` unit tests. No extra test files to write; `npm test` runs both. Full guide, including coverage and running it from Storybook's own UI: [Testing](?path=/docs/foundations-testing--docs).
+- **Figma Code Connect** — real component source shown directly in Figma Dev Mode, so a designer inspecting a component in Figma sees the actual React code, not a guess. Setup and mapping files: `docs/FIGMA_CODE_CONNECT_GUIDE.md`, `src/figma/*.figma.tsx`.
+- **MCP-driven Figma sync** — pulls live Figma Variables straight into an interactive session (via the Figma Desktop Bridge MCP server) and diffs them against the token values actually shipping in code — catches drift between what Figma says a color should be and what's real. Re-checkable anytime without a live Figma connection: `npm run tokens:check-figma` / `tokens:check-figma-semantic`, against the snapshots in `src/figma-variable-map.json` / `src/figma-variable-map-semantic.json`. `docs/FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md` and `docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md` are real worked examples of what this surfaces.
+- **`agents/design-system-agent`** — a separate, unattended pipeline: point it at one Figma component node, it builds an MDS-compliant, PR-ready component headlessly — for a webhook, CI job, or scheduled sweep, not interactive use. Enforces `CLAUDE.md`'s rules structurally (per-subagent filesystem permission allowlists), not just by convention. See its own `agents/design-system-agent/README.md`.
+
+## Where things are
+
+- **[/design-system](http://localhost:5173/design-system)** (run `npm run dev` first) — every component in the current library, live, with guidance on which one to reach for and when. Start here for "how do I build X."
+- **`docs/get-started/DEVELOPERS.md`** — the fuller written guide: project structure, conventions, how to add a new page.
+- **This Storybook, `Foundations/*`** — the token, color, typography, spacing, elevation, and accessibility system in detail.
+- **Root `CLAUDE.md`** — the complete rules document (written for AI coding agents, but accurate and thorough for a human reading it too).
+
+## Token contrast status
+
+Automated WCAG contrast check across the token set, regenerated on token changes:
 
 <ContrastStatus />
 
-Refresh after token changes:
 ```bash
-npm run tokens:contrast:badge
+npm run tokens:contrast:badge   # refresh after a token change
 ```
-Informational pairs (optional) can be displayed with:
-```bash
-npm run tokens:contrast:info
-```
-
-## What This Page Demonstrates
-- MDX v2 syntax with a single `<Meta />`
-- No custom stories or CSF exports
-- Should appear once in the sidebar under Docs/Intro
-
-## Next Steps
-Once this renders correctly we can reintroduce the foundations pages one at a time:
-1. Colors
-2. Typography
-3. Spacing
-4. Elevation
-5. Accessibility
-
-If a duplication or indexer error reappears after adding a page, that page (or its filename) is the trigger.
-
----
-_Health note: dynamic timestamp removed temporarily for MDX debug isolation._
-
-## Troubleshooting MDX Docs
-## Storybook Foundations Grouping: Recommendations
-
-To ensure all foundational docs are visually grouped under a "Foundations" section in the Storybook sidebar:
-
-1. **Meta Title Consistency:**
-	- Every foundational MDX doc must export `export const meta = { title: 'Foundations/<Page>' }` at the top.
-	- The prefix must be exactly `Foundations/` (no extra spaces, dashes, or typos).
-
-2. **No Duplicate Meta/Title:**
-	- Only use the `meta` export, not `<Meta title=... />` tags.
-	- Remove any duplicate or conflicting meta/title exports.
-
-3. **Sidebar Ordering:**
-	- In `.storybook/preview.tsx`, use the `storySort.order` array to explicitly order the Foundations section and its children.
-
-4. **Cache and Browser Refresh:**
-	- After making changes, run `npm run storybook:clean` and restart Storybook.
-	- Hard refresh your browser to clear cached sidebar state.
-
-5. **No Stray Stories:**
-	- Check for any stories with similar but not matching prefixes (e.g., "Foundation", "Foundations -", etc.) and correct them.
-
-6. **MDX v2 Syntax:**
-	- Use only one `meta` export per MDX file.
-	- Avoid raw HTML tags in prose; use Markdown or code blocks.
-
-7. **Troubleshooting:**
-	- If grouping still fails, add a minimal test MDX page (e.g., `ZZ-Debug.mdx` with just a meta export and heading) to isolate indexing issues.
-
-Following these steps will ensure your sidebar visually groups all foundational docs under "Foundations" as intended.
-
-If docs fail to build or pages disappear:
-
-1. Ensure each MDX file has exactly one `<Meta />` at the top.
-2. Look for raw HTML tags (e.g. `<button>`) in prose—replace with backticks.
-3. Remove heavy inline logic (large `{array.map(...)}`) and move it into a helper component.
-4. Confirm the Storybook config still points `stories` to `src/docs/**/*.mdx` and component stories.
-5. Verify docs blocks import path (`@storybook/blocks`) resolves (no alias required).
-6. Clear caches: `npm run storybook:clean`.
-7. Add a minimal new test page (e.g. `ZZ-Debug.mdx` with just `<Meta />` + heading) to isolate indexing issues.
-
-If still broken, temporarily add a Vite debug plugin logging MDX IDs (see removed `mdx-inspect` pattern in `.storybook/main.ts`).

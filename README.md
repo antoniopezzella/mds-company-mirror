@@ -8,38 +8,48 @@
 
 ---
 
-## 🤖 NEW: AI Assistant Integration
+## Getting started
 
-The MDS Platform now includes a **production-ready AI assistant** for insurance queries! 
-
-**Features:**
-- 🧠 RAG (Retrieval Augmented Generation) with 68,000+ words of insurance content
-- 💬 Conversation memory and context-aware follow-ups
-- 🔒 Enterprise security (input validation, audit logging, rate limiting)
-- 📊 OpenTelemetry/Jaeger tracing for observability
-- ✅ Automated evaluation suite for quality assurance
-
-**Quick Start:**
 ```bash
-# 1. Install gateway dependencies
-cd apps/gateway && npm install && cd ../..
-
-# 2. Set up your OpenAI API key
-cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
-
-# 3. Run both frontend and AI backend
-npm run dev:all
+npm install
+npm run dev          # http://localhost:5173
 ```
 
-**Learn more:** [apps/gateway/README.md](./apps/gateway/README.md)
+**Start here:** browse **[/design-system](http://localhost:5173/design-system)** —
+every component in the current library, live, with guidance on which one to
+reach for and when. `npm run storybook` gives you the same components with
+controls and docs.
+
+No API keys or extra setup are needed for any of that. New contributors:
+[`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md).
+
+<details>
+<summary><strong>Optional: the AI assistant gateway</strong></summary>
+
+A separate sub-project under `apps/gateway` — a RAG assistant for insurance
+queries, with conversation memory, input validation and audit logging,
+OpenTelemetry tracing, and an evaluation suite. **Not required to work on the
+design system**, and the only part of this repo that needs an API key.
+
+```bash
+cd apps/gateway && npm install && cd ../..
+cp .env.example .env     # add your OPENAI_API_KEY
+npm run dev              # serves the frontend and the gateway together
+```
+
+See [apps/gateway/README.md](./apps/gateway/README.md).
+
+</details>
 
 ---
 
-## � Documentation
+## Documentation
+
+**Full documentation map:** [`docs/README.md`](./docs/README.md) — every doc in this repo, organized by what it's for.
 
 ### For Builders
 *   [**Developer Get Started**](./docs/get-started/DEVELOPERS.md): Setup, installation, and component usage.
+*   [**Build Your First Page**](./docs/get-started/BUILD_YOUR_FIRST_PAGE.md): End-to-end walkthrough — route, components, grid, tokens.
 *   [**Contributing Guide**](./docs/CONTRIBUTING.md): How to build, test, and submit PRs.
 *   [**Token System**](./docs/foundations/TOKENS.md): Deep dive into Primitives, Semantics, and Roles.
 *   [**Design System Integration**](./docs/DESIGN_SYSTEM_INTEGRATION_GUIDE.md): Connecting components to legacy apps.
@@ -49,16 +59,17 @@ npm run dev:all
 *   [**Figma Code Connect**](./docs/FIGMA_CODE_CONNECT_GUIDE.md): Detailed setup for Dev Mode.
 
 ### Roadmaps & Status
-*   [**Component Coverage**](./COMPONENT_COVERAGE.md): Current status of specific components.
-*   [**Documentation Roadmap**](./docs/ROADMAP_IMPROVEMENTS.md): Our plan for improving these docs.
+*   [**Component Coverage**](./docs/archive/COMPONENT_COVERAGE.md): Archived — stale as of Dec 2025; see [Migration Status](./docs/SHADCN_MIGRATION_STATUS.md) for current component-by-component status.
+*   [**Documentation Roadmap**](./docs/archive/ROADMAP_IMPROVEMENTS.md): Our plan for improving these docs. (archived, historical)
 
 ---
 
 ## �🚀 Quick Links
 
 - **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
-- **Deployment Guide:** [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy to Netlify/Vercel (100% free)
+- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Storybook (GitHub Pages, automated) + app (Vercel)
 - **Local Storybook:** `npm run storybook` → http://localhost:6006
+- **Component showcase:** `npm run dev` → http://localhost:5173/design-system
 - **AI Gateway:** [apps/gateway/README.md](./apps/gateway/README.md) - AI Assistant backend
 
 ---
@@ -145,9 +156,11 @@ export default tseslint.config([
 
 ## Scripts
 
+### Everyday dev
+
 | Script | Purpose |
 |--------|---------|
-| `npm run dev` | Vite dev server |
+| `npm run dev` | Vite dev server, plus the AI gateway (`/design-system` lives here) |
 | `npm run build` | Type-check + production build |
 | `npm run preview` | Preview built output |
 | `npm run storybook` | Run Storybook (design system docs) |
@@ -157,6 +170,26 @@ export default tseslint.config([
 | `npm test` | Run unit tests once (Vitest) |
 | `npm run test:watch` | Watch mode tests |
 | `npm run test:coverage` | Coverage report |
+
+### Tokens & role enforcement
+
+`roles:check` is the mechanism that actually enforces the "colors only via
+`getRoleColor()`" rule described in [Tokens](./docs/foundations/TOKENS.md) —
+run it (or its strict/CI variant) any time you touch component styling.
+
+| Script | Purpose |
+|--------|---------|
+| `npm run tokens:build` | Compile `tokens.ts`/`semantic-tokens.ts` → `dist/tokens.json` + `dist/theme.css` + `dist/tokens.tokens.json` (W3C DTCG format) |
+| `npm run tokens:check` | Full pipeline: build → diff → validate → validate-dtcg → contrast |
+| `npm run tokens:validate` | Schema validation (hex format, structure) |
+| `npm run tokens:validate-dtcg` | Structural conformance check for `dist/tokens.tokens.json` against the DTCG spec |
+| `npm run tokens:diff` | Detect token additions/changes/removals vs. HEAD |
+| `npm run tokens:contrast:all` | WCAG AA contrast check, all pairs |
+| `npm run tokens:contrast:badge` | Regenerate `contrast-badge.svg` after a token change |
+| `npm run roles:check` | Detect direct `tokens.*`/`semanticColors.*` usage in components |
+| `npm run roles:check:strict` | Same, fails the build on any violation (what CI runs) |
+| `npm run governance:report:strict` | Full governance report (naming, deprecated tokens, missing coverage) |
+| `npm run governance:ci` | `tokens:build` + strict governance report, as run in CI |
 
 ## Design System Tokens
 
@@ -169,21 +202,15 @@ Example:
 
 ## Testing
 
-Tests use Vitest + jsdom. React Testing Library exercises component behavior & accessibility. Storybook stories are testable via the Storybook Vitest addon (`vitest.config.ts`).
+`vitest.config.ts` defines two Vitest projects: `unit` (jsdom, component behavior) and `storybook` (every `.stories.tsx` in the repo, rendered as a real Chromium test via Playwright — no separate test files to write). Full walkthrough, including coverage and the Storybook-UI test widget: **Foundations/Testing** in Storybook (`npm run storybook`, or `src/docs/70-Testing.mdx`).
 
-Run all tests:
 ```bash
-npm test
-```
-
-Watch mode:
-```bash
-npm run test:watch
-```
-
-Coverage:
-```bash
-npm run test:coverage
+npm test                              # both projects
+npm run test:watch                    # both projects, watch mode
+npm run test:coverage                 # combined coverage
+npm run test:coverage:storybook       # coverage from stories only
+npx vitest run --project unit         # just unit
+npx vitest run --project storybook    # just stories
 ```
 
 ## Storybook MDX Status
@@ -201,13 +228,17 @@ Chromatic addon is enabled; configure project token via environment variable if 
 
 ## CI & Quality Gates
 
+Flowchart of this whole pipeline, alongside token/role and documentation governance: [`docs/GOVERNANCE.md`](./docs/GOVERNANCE.md).
+
 This repository enforces design system integrity through three GitHub Actions workflows located in `.github/workflows/`:
 
 | Workflow | File | Triggers | Purpose |
 |----------|------|----------|---------|
-| CI | `ci.yml` | push & PR to `main` | Install deps, lint docs, token governance (`tokens:check`), tests, build, (PR) build Storybook + upload artifact |
-| Governance | `governance.yml` | push & PR to `main` | Strict governance: naming, deprecated token usage, missing semantic coverage |
-| Contrast | `contrast.yml` | PR (selected paths) | WCAG contrast validation for token foreground/background pairs |
+| CI | `ci.yml` | push (any branch) & PR to `main` | Install deps, lint docs, lint, token governance (`tokens:check`), tests, build, (PR) build Storybook + upload artifact |
+| Governance | `governance.yml` | push (any branch) & PR to `main` | Strict governance: naming, deprecated token usage, missing semantic coverage |
+| Contrast | `contrast.yml` | push & PR (selected paths, any branch) | WCAG contrast validation for token foreground/background pairs |
+
+Push triggers are intentionally not `main`-only — this repo does substantial work directly on feature branches, so every branch gets real CI signal instead of nothing until merge.
 
 ### Local Reproduction
 | Check | Command |
@@ -232,11 +263,53 @@ This repository enforces design system integrity through three GitHub Actions wo
 | Tests fail | Unit or snapshot regression | Update test or component; confirm semantic token changes intentional |
 
 ### Adding / Changing Tokens Safely
-1. Add primitive (palette) or semantic token in build script source.
-2. Run `npm run tokens:build` locally.
-3. Run `npm run tokens:contrast:all` to ensure no regressions.
-4. Commit changes with clear description (e.g. `feat(tokens): add surface.button.primary semantic token`).
-5. Open PR; verify CI summary & artifacts.
+
+**🚨 Before adding a token, you must submit a token request for review and approval.**
+
+#### For Designers & Product Owners
+Follow the [Token Request Process](./docs/TOKEN_REQUEST_PROCESS.md):
+1. Check if an existing token can work (search Figma Variables or Storybook)
+2. If no match, submit a GitHub issue using the appropriate template:
+   - [⭐ Brand Token](/.github/ISSUE_TEMPLATE/token-request-brand.md) (requires VP approval)
+   - [🎨 Semantic Token](/.github/ISSUE_TEMPLATE/token-request-semantic.md) (requires Design Lead)
+   - [🔧 Role Token](/.github/ISSUE_TEMPLATE/token-request-role.md) (requires DS Team)
+3. Wait for approval before implementation
+4. Developer will implement and sync to Figma
+
+#### For Developers (Post-Approval Implementation)
+Once a token request is **approved**, follow these steps:
+
+**For Primitive/Brand tokens:**
+1. Add to `src/tokens.ts` with clear comment
+2. Run `npm run tokens:build`
+3. Run `npm run tokens:validate` (schema check)
+4. Update Figma variables (Primitives collection)
+
+**For Semantic tokens:**
+1. Add to `src/semantic-tokens.ts`
+2. Define light mode value (reference primitive)
+3. Add dark mode override in `semanticDarkOverrides`
+4. Run `npm run tokens:build`
+5. Run `npm run tokens:contrast:all` (fix failures if any)
+6. Update Figma variables (Semantic collection with light/dark modes)
+
+**For Role tokens:**
+1. Add to `src/theme/roles.ts`
+2. Update `RoleName` type union
+3. Update `ROLE_MAP` with semantic mapping
+4. Run `npm run roles:check`
+5. Update component to use new role
+
+**For all token types:**
+1. Document in Storybook token browser
+2. Add to `CHANGELOG.md` under `[Unreleased]`
+3. Create PR with appropriate label (`tokens:primitive`, `tokens:semantic`, `tokens:role`)
+4. Link to approved token request issue in PR description
+5. Verify CI checks pass (diff, contrast, governance)
+6. Get 1 approval and merge
+7. Sync Figma variables after merge
+
+**📚 Full governance guide:** [TOKEN_REQUEST_PROCESS.md](./docs/TOKEN_REQUEST_PROCESS.md)
 
 ### Governance Escalation Path
 Level 1 (Current): Informational reporting (token diff, contrast).

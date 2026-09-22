@@ -144,4 +144,4 @@ npm test -- ai-personalized-experience
 
 - [GSAP Docs](https://greensock.com/docs/)
 - [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
-- [MDS Documentation](../../DESIGN_SYSTEM.md)
+- [MDS Documentation](../../CLAUDE.md)

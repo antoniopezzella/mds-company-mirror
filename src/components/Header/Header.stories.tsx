@@ -1,9 +1,9 @@
 import './Header.module.scss';
-import Header from './Header';
+import Header, { WebsiteHeader } from './Header';
 import type { HeaderProps } from './Header';
 
 export default {
-  title: 'Dashboard/Header',
+  title: 'Components/Header (MUI)',
   component: Header,
   tags: ['autodocs'],
   parameters: {
@@ -25,3 +25,9 @@ export const Default = (args: HeaderProps) => (
 Default.args = {
   sidebarOpen: true,
 };
+
+export const Website = () => (
+  <div style={{ minHeight: 240, background: 'linear-gradient(180deg, #506070 0%, #d8e4ec 100%)' }}>
+    <WebsiteHeader position="sticky" />
+  </div>
+);

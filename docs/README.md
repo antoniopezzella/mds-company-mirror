@@ -1,0 +1,71 @@
+# Documentation Map
+
+Every doc in this repo, organized by what it's for — not an alphabetical
+dump. See [`CLAUDE.md`](../CLAUDE.md) → "Documentation Governance" for the
+rule this map exists to serve: a new doc should be findable from here, and
+this file should be updated when a new doc is added.
+
+**Start here if you're new**: [`get-started/DEVELOPERS.md`](./get-started/DEVELOPERS.md), then [`get-started/BUILD_YOUR_FIRST_PAGE.md`](./get-started/BUILD_YOUR_FIRST_PAGE.md), then the live [`/design-system`](http://localhost:5173/design-system) showcase (`npm run dev`).
+
+## Get started
+
+| Doc | For |
+|---|---|
+| [`get-started/DEVELOPERS.md`](./get-started/DEVELOPERS.md) | Setup, the current component-library + Tailwind stack (default path), the legacy MUI stack (maintenance-only), using MDS components from another project |
+| [`get-started/BUILD_YOUR_FIRST_PAGE.md`](./get-started/BUILD_YOUR_FIRST_PAGE.md) | End-to-end walkthrough: route → components → grid → tokens |
+| [`get-started/DESIGNERS.md`](./get-started/DESIGNERS.md) | Figma workflow, Code Connect, for designers specifically |
+
+## Foundations
+
+| Doc | For |
+|---|---|
+| [`foundations/TOKENS.md`](./foundations/TOKENS.md) | The 3-tier token system (primitives → semantics → roles), the naming rule, DTCG export |
+| [`foundations/DESIGN.md`](./foundations/DESIGN.md) | Brand identity spec — colors, typography, voice (YAML frontmatter) |
+
+Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Accessibility, Contrast) lives in Storybook itself, not here — `npm run storybook` → `Foundations/*`. Start at `Foundations/Intro`.
+
+## Guides (task-specific how-tos)
+
+| Doc | For |
+|---|---|
+| [`guides/STORYBOOK_BEST_PRACTICES.md`](./guides/STORYBOOK_BEST_PRACTICES.md) | Writing stories/docs the way this repo does it |
+| [`guides/STORY_UI_CONSIDERATIONS.md`](./guides/STORY_UI_CONSIDERATIONS.md) | Story UI + MDS governance interplay |
+| [`guides/TESTING_GUIDE.md`](./guides/TESTING_GUIDE.md) | Writing tests (see also the README's own Testing section for the Vitest+Playwright setup) |
+| [`guides/DEV_SERVER_MANAGEMENT.md`](./guides/DEV_SERVER_MANAGEMENT.md) | Local dev server troubleshooting |
+| [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see also [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the full picture) |
+| [`guides/PERFORMANCE_MONITORING.md`](./guides/PERFORMANCE_MONITORING.md) | RUM / Web Vitals |
+| [`guides/LIGHTHOUSE_GUIDE.md`](./guides/LIGHTHOUSE_GUIDE.md) | Lighthouse audits |
+| [`guides/WORKFLOW_GUIDE.md`](./guides/WORKFLOW_GUIDE.md) | General contributor workflow |
+| [`guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md`](./guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md), [`guides/MARSH_ONE_QUICKSTART.md`](./guides/MARSH_ONE_QUICKSTART.md) | The Marsh One project specifically |
+| [`guides/INSURANCE_DASHBOARD_QUICKSTART.md`](./guides/INSURANCE_DASHBOARD_QUICKSTART.md) | The Insurance Dashboard project specifically |
+
+## Reference (cross-cutting, doesn't fit a category above)
+
+| Doc | For |
+|---|---|
+| [`GOVERNANCE.md`](./GOVERNANCE.md) | Visual map of all three governance systems (token/role, CI gates, documentation) with a flowchart for each — start here before the individual detailed docs below |
+| [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Storybook → GitHub Pages (CI-automated) + app → Vercel (dashboard git integration) |
+| [`FIGMA_CODE_CONNECT_GUIDE.md`](./FIGMA_CODE_CONNECT_GUIDE.md) | Real component source shown in Figma Dev Mode |
+| [`CODE_TO_DESIGN_TOKEN_BINDING.md`](./CODE_TO_DESIGN_TOKEN_BINDING.md) | Binding code tokens back to Figma variables |
+| [`TOKEN_REQUEST_PROCESS.md`](./TOKEN_REQUEST_PROCESS.md), [`TOKEN_REQUEST_DECISION_TREE.md`](./TOKEN_REQUEST_DECISION_TREE.md) | How to request a new/changed token — required before adding one, see `CLAUDE.md` |
+| [`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) | Component-by-component MUI → current-stack migration status (living doc — check before assuming a component is/isn't migrated) |
+| [`DESIGN_SYSTEM_INTEGRATION_GUIDE.md`](./DESIGN_SYSTEM_INTEGRATION_GUIDE.md) | Connecting MDS components to other pages/projects |
+| [`VIDEO_COMPONENT_SPECS.md`](./VIDEO_COMPONENT_SPECS.md), [`HERO_CREATIVE_BRIEF.md`](./HERO_CREATIVE_BRIEF.md) (+ `.docx` twin) | Hero/video component specs — for production teams as much as engineers |
+| [`DS_HEALTH_REPORT.md`](./DS_HEALTH_REPORT.md) | Recurring, agent-generated (`mds-health-auditor`) production-readiness audit — read-only, don't hand-edit; it regenerates itself |
+| [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md), [`GENERATIVE_UI_READINESS.md`](./GENERATIVE_UI_READINESS.md), [`FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md`](./FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md), [`FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md`](./FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md) | Point-in-time assessments written for a specific question/decision — still live/referenced, not archived, but read the date at the top before treating a claim as current |
+
+## Tasks (a specific, scoped, in-progress piece of work)
+
+| Doc | For |
+|---|---|
+| [`tasks/implement-google-lighthouse.md`](./tasks/implement-google-lighthouse.md) | Lighthouse CI implementation task |
+
+## Archive
+
+[`archive/`](./archive/) — ~74 docs that describe something no longer true: completed sprint plans, superseded implementation summaries, one-off research snapshots, retired specs. Kept for history, not for guidance — if you're looking for how something works *today*, it's not in here. Moved here rather than deleted per this repo's archive-don't-delete policy.
+
+## Known open items (not fixed by this map, flagged for a decision)
+
+- **Two unrelated `DESIGN.md` files share a name**: the repo root's `DESIGN.md` is an "AI Design Creation Guide" (Figma MCP design-*creation* rules, companion to `CLAUDE.md`); [`foundations/DESIGN.md`](./foundations/DESIGN.md) is the brand identity spec (colors/typography). Not duplicates — genuinely different content — but the shared name makes it easy to open the wrong one. Consider renaming one for clarity.
+
+**Resolved 2026-09-15:** `CONTRIBUTING.md` used to exist at both the repo root and `docs/CONTRIBUTING.md`, with different, overlapping content (root had newer Storybook-MDX authoring rules largely redundant with `src/docs/60-Documentation-Guidelines.mdx`, plus some genuinely unique conventions). Merged into one file at [`docs/CONTRIBUTING.md`](./CONTRIBUTING.md); root copy removed. `CLAUDE.md`'s root allowlist updated to match.

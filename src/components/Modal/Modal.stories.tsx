@@ -65,7 +65,7 @@ A dialog component used to display content in a layer above the current page.
 export default meta;
 type Story = StoryObj<typeof Modal>;
 
-const ModalWithState = (args: any) => {
+const ModalWithState = (args: React.ComponentProps<typeof Modal>) => {
   const [open, setOpen] = useState(false);
   return (
     <Box>

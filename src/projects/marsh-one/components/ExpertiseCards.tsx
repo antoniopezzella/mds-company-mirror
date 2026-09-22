@@ -4,6 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getRoleColor } from '../../../theme/roles';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -94,7 +95,7 @@ export const ExpertiseCards: React.FC<ExpertiseCardsProps> = ({
                 fontWeight: 400,
                 fontSize: { xs: '36px', md: '56px' },
                 lineHeight: { xs: '44px', md: '72px' },
-                color: '#000f47',
+                color: getRoleColor('text.primary'),
               }}
             >
                 <div ref={headlineRef}>{title}</div>
@@ -173,7 +174,7 @@ export const ExpertiseCards: React.FC<ExpertiseCardsProps> = ({
                       fontWeight: 400,
                       fontSize: { xs: '24px', md: '40px' },
                       lineHeight: '18px',
-                      color: '#000f47',
+                      color: getRoleColor('text.primary'),
                     }}
                   >
                     {card.title}
@@ -212,19 +213,23 @@ export const ExpertiseCards: React.FC<ExpertiseCardsProps> = ({
         <IconButton
           onClick={() => scroll('left')}
           sx={{
-            backgroundColor: '#FFBF0D',
+            backgroundColor: getRoleColor('brand.accent'),
             width: '48px',
             height: '48px',
             '&:hover': { backgroundColor: '#FFD54F' },
           }}
           aria-label="Scroll left"
         >
+          {/* Navy stays constant on the gold surface in both modes — no role
+              captures "always-navy" text yet (textOnLight is orphaned, see
+              semantic-tokens.ts), so this intentionally stays a literal,
+              matching button.tsx's primaryAlt variant's identical choice. */}
           <ArrowBackIcon sx={{ fontSize: '20px', color: '#000f47' }} />
         </IconButton>
         <IconButton
           onClick={() => scroll('right')}
           sx={{
-            backgroundColor: '#FFBF0D',
+            backgroundColor: getRoleColor('brand.accent'),
             width: '48px',
             height: '48px',
             '&:hover': { backgroundColor: '#FFD54F' },

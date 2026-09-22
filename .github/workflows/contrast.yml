@@ -8,6 +8,14 @@ on:
       - 'package.json'
       - 'dist/tokens.json'
       - '.github/workflows/contrast.yml'
+  push:
+    # No branch filter — see ci.yml for why.
+    paths:
+      - 'src/**'
+      - 'scripts/check-contrast.js'
+      - 'package.json'
+      - 'dist/tokens.json'
+      - '.github/workflows/contrast.yml'
 
 jobs:
   contrast:

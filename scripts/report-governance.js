@@ -60,9 +60,19 @@ function parseRoleMap() {
 const ENFORCED_ROLE_PAIRS = [
   ['text.primary','surface.default',4.5],
   ['text.secondary','surface.default',3.0],
-  ['text.inverse','surface.accent',4.5],
-  ['text.onAccent','interactive.primary',4.5],
-  ['text.onAccent','interactive.primary.hover',4.5],
+  // text.inverse/surface.accent removed 2026-08-31: an architecturally
+  // invalid pairing (surface.accent is a light neutral; text.inverse is for
+  // dark/saturated surfaces only) that can never pass 4.5:1 regardless of
+  // implementation — every real usage (chip/avatar/toggle/toggle-group/
+  // mega-menu) has been migrated to text.primary instead. Re-add only if a
+  // genuine new use case needs it, and confirm the token values changed too.
+  ['text.onInteractive','interactive.primary',4.5],
+  ['text.onInteractive','interactive.primary.hover',4.5],
+  ['text.onInteractive','interactive.danger',4.5],
+  ['text.onInteractive','status.success.border',4.5],
+  ['text.onInteractive','status.danger.border',4.5],
+  ['text.onLight','status.warning.border',4.5],
+  ['text.onLight','status.warning.bg',4.5],
   ['status.success.fg','status.success.bg',3.0],
   ['status.warning.fg','status.warning.bg',3.0],
   ['status.danger.fg','status.danger.bg',3.0],
@@ -97,13 +107,22 @@ async function computeRoleContrast() {
 }
 
 // ------------ Role usage scan (reuse logic simplified) ------------
+// Strips comments before scanning — otherwise prose that merely *mentions* a
+// token/role (e.g. "see semantic-tokens.ts") gets flagged as a real
+// reference, since `\btokens\.` matches inside `semantic-tokens.ts` too ('-'
+// counts as a word boundary). Mirrors check-role-usage.js's own fix for the
+// identical false-positive class.
+function stripComments(source) {
+  return source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+}
+
 function scanRoleUsage() {
   const componentsDir = path.join(process.cwd(),'src','components');
   function list(dir){ return fs.existsSync(dir) ? fs.readdirSync(dir).flatMap(e=>{ const f=path.join(dir,e); const s=fs.statSync(f); return s.isDirectory()? list(f): /\.(tsx?|jsx?)$/.test(e)? [f]: []; }) : []; }
   const files = list(componentsDir);
   const viols=[];
   for (const file of files) {
-    const text = fs.readFileSync(file,'utf8');
+    const text = stripComments(fs.readFileSync(file,'utf8'));
     const tokenPattern = /\btokens\.[a-zA-Z0-9_]+/g;
     const semanticPattern = /\bsemanticColors\.[a-zA-Z0-9_]+/g;
     let m; while((m=tokenPattern.exec(text))!==null) viols.push({file:path.relative(process.cwd(),file), ref:m[0]});

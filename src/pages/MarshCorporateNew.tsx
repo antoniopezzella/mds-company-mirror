@@ -40,10 +40,10 @@ const MarshCorporateNew: React.FC = () => {
     <main className="marsh-corporate-new">
         {/* Hero Section */}
         <section ref={heroRef} className="hero-section">
-          <div className="container-fluid hero-container">
-            <div className="row g-0 hero-row">
+          <div className="mds-legacy-container-fluid hero-container">
+            <div className="mds-legacy-row mds-legacy-g-0 hero-row">
               {/* Left Column - 6 cols */}
-              <div className="col-12 col-lg-6 hero-text-col">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-6 hero-text-col">
                 <div className="hero-content">
                   <div className="hero-text-content">
                     <Typography variant="h6" className="hero-eyebrow">
@@ -71,7 +71,7 @@ const MarshCorporateNew: React.FC = () => {
               </div>
               
               {/* Right Column - 6 cols with video */}
-              <div className="col-12 col-lg-6 hero-video-col">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-6 hero-video-col">
                 <video
                   className="hero-video"
                   autoPlay
@@ -93,14 +93,14 @@ const MarshCorporateNew: React.FC = () => {
 
         {/* Brand Section - 4 Businesses */}
         <section ref={brandRef} className="brand-section">
-          <div className="container">
+          <div className="mds-legacy-container">
             <div className="brand-title">
               <Typography variant="h2" className="section-headline">
                 Access the collective expertise of our four businesses.
               </Typography>
             </div>
-            <div className="row g-0 brand-row">
-              <div className="col-12 col-lg-3 brand-card">
+            <div className="mds-legacy-row mds-legacy-g-0 brand-row">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-3 brand-card">
                 <div className="card-content">
                   <div className="card-logo">
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>MARSH</Typography>
@@ -119,7 +119,7 @@ const MarshCorporateNew: React.FC = () => {
                 </Button>
               </div>
               
-              <div className="col-12 col-lg-3 brand-card">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-3 brand-card">
                 <div className="card-content">
                   <div className="card-logo">
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>GUY CARPENTER</Typography>
@@ -138,7 +138,7 @@ const MarshCorporateNew: React.FC = () => {
                 </Button>
               </div>
               
-              <div className="col-12 col-lg-3 brand-card">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-3 brand-card">
                 <div className="card-content">
                   <div className="card-logo">
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>MERCER</Typography>
@@ -157,7 +157,7 @@ const MarshCorporateNew: React.FC = () => {
                 </Button>
               </div>
               
-              <div className="col-12 col-lg-3 brand-card">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-3 brand-card">
                 <div className="card-content">
                   <div className="card-logo">
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>OLIVER WYMAN</Typography>
@@ -181,11 +181,11 @@ const MarshCorporateNew: React.FC = () => {
 
         {/* Map Content - Stats */}
         <section ref={statsRef} className="map-section">
-          <div className="container">
+          <div className="mds-legacy-container">
             <Typography variant="body1" className="map-intro">
               With more than 90,000 colleagues based all over the world, our shared purpose, to build the confidence to thrive through the power of perspective, has never been more important or more relevant. We are in business to expand what's possible for our clients and for each other.
             </Typography>
-            <div className="row row-cols-1 row-cols-md-3 g-8">
+            <div className="mds-legacy-row mds-legacy-row-cols-1 mds-legacy-row-cols-md-3 mds-legacy-g-8">
               <div className="stat-item">
                 <Typography variant="h2" className="stat-number">130</Typography>
                 <Typography variant="body1" className="stat-label">Offices in countries</Typography>
@@ -204,14 +204,14 @@ const MarshCorporateNew: React.FC = () => {
 
         {/* Press - Our Journey */}
         <section ref={pressRef} className="press-section">
-          <div className="container">
+          <div className="mds-legacy-container">
             <div className="press-header">
               <Typography variant="h6" className="section-eyebrow">Our journey</Typography>
               <Typography variant="h3" className="section-headline">
                 Thrive through the power of perspective.
               </Typography>
             </div>
-            <div className="row row-cols-1 row-cols-md-3 g-6">
+            <div className="mds-legacy-row mds-legacy-row-cols-1 mds-legacy-row-cols-md-3 mds-legacy-g-6">
               <div className="press-card">
                 <div className="card-image">
                   <img src="/assets/press-1.jpg" alt="Business and Client Services" />
@@ -242,7 +242,7 @@ const MarshCorporateNew: React.FC = () => {
 
         {/* FAQ Section */}
         <section ref={faqRef} className="faq-section">
-          <div className="container">
+          <div className="mds-legacy-container">
             <div className="faq-header">
               <Typography variant="h3" className="section-headline">
                 Frequently asked questions
@@ -280,9 +280,9 @@ const MarshCorporateNew: React.FC = () => {
 
         {/* Connect CTA Section */}
         <section ref={connectRef} className="connect-section">
-          <div className="container">
-            <div className="row g-6">
-              <div className="col-12 col-lg-6 connect-content">
+          <div className="mds-legacy-container">
+            <div className="mds-legacy-row mds-legacy-g-6">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-6 connect-content">
                 <div className="accent-bar" />
                 <Typography variant="h3" className="connect-headline">
                   Connect with a Marsh expert
@@ -307,7 +307,7 @@ const MarshCorporateNew: React.FC = () => {
                   Contact us
                 </Button>
               </div>
-              <div className="col-12 col-lg-6 connect-image">
+              <div className="mds-legacy-col-12 mds-legacy-col-lg-6 connect-image">
                 <img src="/assets/connect-expert.jpg" alt="Connect with Marsh" />
               </div>
             </div>
@@ -318,7 +318,7 @@ const MarshCorporateNew: React.FC = () => {
       </main>
 
       {/* AI Assistant Bot */}
-      <AIAgentBot />
+      <AIAgentBot visitorType="prospect" />
     </>
   );
 };

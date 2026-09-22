@@ -10,7 +10,6 @@ import RootErrorBoundary from './RootErrorBoundary';
 import { initRUM } from './utils/rum';
 import './index.css'
 import './global.scss'
-import { useEffect } from 'react';
 
 // Initialize Real User Monitoring
 initRUM();

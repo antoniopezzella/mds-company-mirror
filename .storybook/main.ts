@@ -1,4 +1,9 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import remarkGfm from 'remark-gfm';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
@@ -6,29 +11,56 @@ const config: StorybookConfig = {
     '../src/components/**/*.docs.mdx',
     '../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/projects/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/stories/_health/**/*.stories.@(js|jsx|mjs|ts|tsx)'
+    '../src/stories/_health/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/stories/generated/**/*.stories.@(js|jsx|mjs|ts|tsx)'
+  ,
+    '../src/stories/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
   addons: [
-    '@storybook/addon-docs',
+    {
+      name: '@storybook/addon-docs',
+      // Without remark-gfm, GitHub-style markdown tables in .mdx files
+      // silently render as a single raw-text paragraph instead of a real
+      // <table> — no error, just wrong output. Confirmed missing before
+      // this: every existing Foundations page with a `| a | b |` table
+      // (25-Roles.mdx included) was affected.
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
     '@storybook/addon-a11y',
-    '@chromatic-com/storybook'
+    '@storybook/addon-vitest',
   ],
   framework: {
     name: '@storybook/react-vite',
     options: {}
   },
   docs: {},
-  staticDirs: [
-    { from: '../public/fonts', to: '/fonts' },
-    { from: '../public/images', to: '/images' }
-  ],
+  staticDirs: ['../public'],
   viteFinal: async (config) => {
-    // Prevent Vite from using the root index.html for Storybook
-    if (config.build) {
-      config.build.rollupOptions = config.build.rollupOptions || {};
-      config.build.rollupOptions.input = undefined;
-    }
+    // Mirror the '@' -> src alias from vite.config.ts (Storybook builds its own
+    // Vite config and does not inherit the project's vite.config.ts aliases)
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        '@': path.resolve(__dirname, '../src'),
+      },
+    };
+
+    // Story UI: Exclude from dependency optimization to handle CSS imports correctly
+    config.optimizeDeps = {
+      ...config.optimizeDeps,
+      exclude: [
+        ...(config.optimizeDeps?.exclude || []),
+        '@tpitre/story-ui'
+      ]
+    };
     return config;
-  }
+  },
 };
 export default config;

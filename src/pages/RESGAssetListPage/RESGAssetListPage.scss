@@ -48,7 +48,7 @@
     }
 
     .resg-client-name {
-      font-family: var(--font-family-display, 'MMC_Display', sans-serif);
+      font-family: var(--font-family-display, 'Noto Sans', sans-serif);
       font-size: 16px;
       font-weight: 700;
       line-height: 24px;
@@ -121,7 +121,7 @@
     }
 
     .resg-page-title {
-      font-family: var(--font-family-display, 'MMC_Display', sans-serif);
+      font-family: var(--font-family-display, 'Noto Sans', sans-serif);
       font-size: 20px;
       font-weight: 700;
       line-height: 28px;
@@ -210,7 +210,7 @@
         // Asset name column - make it bold
         &:first-child {
           font-weight: 600;
-          color: #000f47;
+          color: var(--role-text-primary);
         }
       }
 

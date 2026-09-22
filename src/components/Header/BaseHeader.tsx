@@ -1,5 +1,6 @@
 import React from 'react';
-import { AppBar, Toolbar, Box, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Box } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface BaseHeaderSlots {
   sidebarToggle?: React.ReactNode;
@@ -10,7 +11,7 @@ export interface BaseHeaderSlots {
 
 interface BaseHeaderProps {
   slots: BaseHeaderSlots;
-  sx?: any;
+  sx?: SxProps<Theme>;
   className?: string;
 }
 

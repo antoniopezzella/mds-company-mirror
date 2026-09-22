@@ -2,7 +2,7 @@ import React from 'react';
 
 type State = { hasError: boolean; error?: unknown };
 
-export class RootErrorBoundary extends React.Component<React.PropsWithChildren<{}>, State> {
+export class RootErrorBoundary extends React.Component<React.PropsWithChildren, State> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(error: unknown): State {
@@ -10,7 +10,6 @@ export class RootErrorBoundary extends React.Component<React.PropsWithChildren<{
   }
 
   componentDidCatch(error: unknown, info: unknown) {
-    // eslint-disable-next-line no-console
     console.error('[RootErrorBoundary] App crashed', error, info);
   }
 

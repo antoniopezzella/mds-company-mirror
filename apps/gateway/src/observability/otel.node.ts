@@ -20,7 +20,7 @@ export async function startTelemetry(serviceName='@marsh/gateway'){
     instrumentations: [getNodeAutoInstrumentations()]
   });
   await sdk.start();
-  console.log('[otel] exporting to', url);
+  console.debug('[otel] exporting to', url);
 }
 
 export async function stopTelemetry(){ 

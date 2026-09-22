@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Components/Checkbox (MUI)',
   component: DSCheckbox,
   tags: ['autodocs'],
   parameters: {
@@ -20,6 +20,15 @@ const meta = {
     disabled: { control: 'boolean' },
     checked: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
+    // Both are typed React.ReactNode — without an explicit control here,
+    // Storybook falls back to auto-inferring one, which defaults a
+    // ReactNode prop to an "object" control seeded with {}. Passing that
+    // empty object straight through as a React child crashes with
+    // "Objects are not valid as a React child". A text control keeps the
+    // Controls panel usable (plain strings are valid ReactNode) and never
+    // emits a bare object as its default.
+    helperText: { control: 'text' },
+    helperIcon: { control: 'text' },
   },
 } satisfies Meta<typeof DSCheckbox>;
 
@@ -72,6 +81,21 @@ export const DangerTone: Story = {
 export const WithoutLabel: Story = {
   args: {
     checked: false,
+  },
+};
+
+export const WithHelperText: Story = {
+  args: {
+    label: 'Email notifications',
+    helperText: 'We will send updates about your account activity.',
+  },
+};
+
+export const WithHelperTextError: Story = {
+  args: {
+    label: 'Accept the terms',
+    tone: 'danger',
+    helperText: 'You must accept the terms to continue.',
   },
 };
 

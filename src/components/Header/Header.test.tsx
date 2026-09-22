@@ -45,6 +45,8 @@ describe('Header', () => {
 
   it('renders notification badge', () => {
     render(<Header sidebarOpen={false} onToggleSidebar={onToggleSidebar} />);
-    expect(screen.getByText('8')).toBeInTheDocument();
+    // 4 is the real default (DashboardHeader.tsx and every ui/header.stories.tsx
+    // story agree) — this test previously expected a stale '8'.
+    expect(screen.getByText('4')).toBeInTheDocument();
   });
 });

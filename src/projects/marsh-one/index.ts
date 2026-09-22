@@ -5,6 +5,7 @@ export { ExpertiseCards } from './components/ExpertiseCards';
 export { AIChatbot } from './components/AIChatbot';
 export { Stats } from './components/Stats';
 export { ContentCards } from './components/ContentCards';
+export { WorkspaceCard } from './components/WorkspaceCard';
 
 // Pages
 export { MarshOneHomepage } from './pages/MarshOneHomepage';

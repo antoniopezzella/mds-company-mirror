@@ -7,17 +7,17 @@ import React, { useState } from 'react';
 import styles from './ComponentGallery.module.scss';
 
 // ── Real MDS components ───────────────────────────────────────────────────
-import DSButton from '../../components/Button/Button';
-import { Alert } from '../../components/Alert/Alert';
-import Tabs from '../../components/Tabs/Tabs';
-import { Stepper } from '../../components/Stepper/Stepper';
-import { Accordion } from '../../components/Accordion/Accordion';
-import { Badge } from '../../components/Badge/Badge';
-import { Chip } from '../../components/Chip/Chip';
-import { Table } from '../../components/Table/Table';
-import type { TableColumn } from '../../components/Table/Table';
+import { Button as DSButton } from '../../components/ui/button';
+import { Alert } from '../../components/ui/alert';
+import Tabs from '../../components/ui/tabs';
+import { Stepper } from '../../components/ui/stepper';
+import { Accordion } from '../../components/ui/accordion';
+import { BadgeAnchor as Badge } from '../../components/ui/badge-anchor';
+import { Chip } from '../../components/ui/chip';
+import { Table } from '../../components/ui/table';
+import type { TableColumn } from '../../components/ui/table';
 import DSTextField from '../../components/TextField/TextField';
-import DSSelect from '../../components/Select/Select';
+import { DSSelect } from '../../components/ui/select';
 
 // Inline SVG icons — avoids Vite dep-optimization reload on first load
 import Box from '@mui/material/Box';
@@ -25,14 +25,15 @@ import Box from '@mui/material/Box';
 const SendIcon    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>;
 const DownloadIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>;
 const AddIcon      = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>;
-const SearchIcon   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>;
-const PolicyIcon   = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>;
-const GroupIcon    = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>;
-const SecurityIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>;
-const VerifiedIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/></svg>;
+type SvgProps = { style?: React.CSSProperties };
+const SearchIcon   = ({ style }: SvgProps) => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style={style}><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>;
+const PolicyIcon   = ({ style }: SvgProps) => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={style}><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>;
+const GroupIcon    = ({ style }: SvgProps) => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={style}><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>;
+const SecurityIcon = ({ style }: SvgProps) => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={style}><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>;
+const VerifiedIcon = ({ style }: SvgProps) => <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={style}><path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/></svg>;
 
 // ── Sample data ───────────────────────────────────────────────────────────
-interface PolicyRow {
+interface PolicyRow extends Record<string, unknown> {
   ref: string;
   client: string;
   coverage: string;
@@ -285,11 +286,11 @@ function DataPanel() {
             <div key={b.tone} className={styles.badgeItem}>
               <Badge content={b.content} tone={b.tone} variant="number">
                 <div className={styles.badgeTarget}>
-                  {b.tone === 'default' && <PolicyIcon sx={{ color: '#595959' }} />}
-                  {b.tone === 'success' && <VerifiedIcon sx={{ color: '#64bc30' }} />}
-                  {b.tone === 'warning' && <SecurityIcon sx={{ color: '#ffb700' }} />}
-                  {b.tone === 'danger'  && <GroupIcon    sx={{ color: '#e53e3e' }} />}
-                  {b.tone === 'info'    && <SearchIcon   sx={{ color: '#0b4bff' }} />}
+                  {b.tone === 'default' && <PolicyIcon style={{ color: '#595959' }} />}
+                  {b.tone === 'success' && <VerifiedIcon style={{ color: '#64bc30' }} />}
+                  {b.tone === 'warning' && <SecurityIcon style={{ color: '#ffb700' }} />}
+                  {b.tone === 'danger'  && <GroupIcon    style={{ color: '#e53e3e' }} />}
+                  {b.tone === 'info'    && <SearchIcon   style={{ color: '#0b4bff' }} />}
                 </div>
               </Badge>
               <span className={styles.badgeLabel}>{b.label}</span>
@@ -400,7 +401,7 @@ function FormsPanel() {
               size="small"
               fullWidth
               value={selectVal}
-              onChange={e => setSelectVal(e.target.value as string)}
+              onChange={value => setSelectVal(value as string)}
               options={[
                 { value: 'marine', label: 'Marine Cargo' },
                 { value: 'aviation', label: 'Aviation Hull' },
@@ -457,7 +458,7 @@ function FormsPanel() {
             fullWidth
             value={searchVal}
             onChange={e => setSearchVal(e.target.value)}
-            InputProps={{ startAdornment: <SearchIcon sx={{ color: '#878787', mr: 1, fontSize: 18 }} /> }}
+            InputProps={{ startAdornment: <SearchIcon style={{ color: '#878787', marginRight: 4 }} /> }}
           />
         </DemoCard>
       </div>
@@ -585,7 +586,10 @@ function NavigationPanel() {
           { name: 'text.primary', color: '#000f47' },
         ]}
       >
-        <Tabs tabs={tabItems} defaultActiveId="overview" variant="standard" enableKeyboardNavigation />
+        {/* enableKeyboardNavigation was an MUI-era opt-in prop; the current
+            Radix-based Tabs (@radix-ui/react-tabs) provides arrow-key/Home/End
+            navigation unconditionally, so there's nothing left to opt into. */}
+        <Tabs tabs={tabItems} defaultActiveId="overview" variant="standard" />
       </DemoCard>
 
       <div className={styles.panelGrid2}>

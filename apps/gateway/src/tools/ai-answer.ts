@@ -56,13 +56,42 @@ Instructions:
 Answer:`;
 
   try {
-    // Stream from OpenAI
-    const stream = await model.stream(prompt);
+    if (process.env.AI_PROVIDER === 'ollama' && Ollama) {
+      // Mirrors composeAIAnswer's non-streaming Ollama branch below, just
+      // with stream: true and iterated as an AsyncGenerator instead of
+      // awaited as a single response.
+      if (process.env.OLLAMA_API_URL) {
+        process.env.OLLAMA_BASE_URL = process.env.OLLAMA_API_URL;
+      }
+      const ollama: OllamaType = new Ollama();
+      const stream = await ollama.chat({
+        model: process.env.OLLAMA_MODEL || 'llama3',
+        messages: [{ role: 'user', content: prompt }],
+        stream: true,
+        options: {
+          temperature: 0.7,
+          top_p: 0.9,
+          num_predict: 500,
+          num_ctx: 2048,
+          repeat_penalty: 1.1,
+        },
+      });
 
-    for await (const chunk of stream) {
-      const content = typeof chunk.content === 'string' ? chunk.content : '';
-      if (content) {
-        yield { token: content };
+      for await (const part of stream) {
+        const content = part.message?.content;
+        if (content) {
+          yield { token: content };
+        }
+      }
+    } else {
+      // Stream from OpenAI
+      const stream = await model.stream(prompt);
+
+      for await (const chunk of stream) {
+        const content = typeof chunk.content === 'string' ? chunk.content : '';
+        if (content) {
+          yield { token: content };
+        }
       }
     }
 

@@ -360,7 +360,7 @@ export class EnhancedAnimationController {
    */
   private detectPerformance(): void {
     // Check device capabilities
-    const deviceMemory = (navigator as any).deviceMemory;
+    const deviceMemory = navigator.deviceMemory;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
     
     if (deviceMemory && deviceMemory < 4) {
@@ -441,7 +441,6 @@ export class EnhancedAnimationController {
 
     // Find elements to animate
     const heroSection = document.querySelector('[data-hero]') as HTMLElement;
-    const gridSections = document.querySelectorAll('.grid-section') as NodeListOf<HTMLElement>;
     const cards = document.querySelectorAll('.card-item') as NodeListOf<HTMLElement>;
 
     const masterTL = gsap.timeline();

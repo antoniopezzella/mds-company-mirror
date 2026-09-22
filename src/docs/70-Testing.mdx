@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Testing" />
+
+# Testing
+
+Everything a developer needs to run this repo's tests — locally, from inside Storybook itself, and in CI — in one place. The full command reference also lives in the README's Testing section; this page is the fuller walkthrough, including the Storybook-UI paths that don't have a CLI equivalent.
+
+## The two test suites
+
+`vitest.config.ts` defines two Vitest **projects** — both run whenever you run "the tests," but they test different things in different environments:
+
+| Project | Environment | What it covers |
+|---|---|---|
+| `unit` | jsdom | Component behavior, hooks, utilities — anything under `src/__tests__/`, `*.unit.test.ts(x)`, `src/components/**/*.test.tsx`, `src/utils/**/*.test.tsx` |
+| `storybook` | Real Chromium, via Playwright (`@storybook/addon-vitest`) | Every `.stories.tsx` file in the repo, rendered for real — not jsdom, not a mock DOM |
+
+The `storybook` project is the important one to understand if you're used to writing separate test files: **you don't write a test for a story — the story *is* the test.** Any `.stories.tsx` you add is automatically picked up and rendered as a real browser test with zero extra setup. Interaction tests (`play` functions) run as part of the same pass.
+
+## Running tests
+
+```bash
+npm test                              # both projects
+npm run test:watch                    # both projects, watch mode
+npx vitest run --project unit         # just the unit suite
+npx vitest run --project storybook    # just the stories, as real browser tests
+```
+
+**Cold-cache note:** the first `storybook`-project run after clearing `node_modules/.cache/storybook` can show transient "Failed to fetch dynamically imported module" failures — Vite's dependency pre-bundling racing under load, not a real failure. A second run passes cleanly. If you hit this in CI, retry once or add a cache-warming step first.
+
+## Coverage
+
+Coverage tells you which lines of your actual source code your tests exercised — and, more usefully, which they *didn't*.
+
+```bash
+npm run test:coverage              # both projects combined — one number per file
+npm run test:coverage:storybook    # storybook project only — coverage from stories alone
+```
+
+The distinction matters: `test:coverage` mixes together whatever a story touched *and* whatever a plain unit test touched into a single per-file percentage. If you specifically want to know "how much of this component's code do its stories alone exercise" — useful for a policy like "every component needs a story that covers most of it" — use the `:storybook` variant instead; the combined number can't isolate that.
+
+### From inside Storybook itself
+
+You don't need the CLI for this. In Storybook's sidebar, expand the **test widget**, check **Coverage**, and run tests from there — this runs the `storybook` project specifically (so it's the same scope as `test:coverage:storybook` above) and gives you a clickable, interactive coverage report right in the browser, file by file, line by line.
+
+This is entirely free — `@storybook/addon-vitest` and the coverage engine (`@vitest/coverage-v8`) are open source, run locally, no account or usage limits. Nothing to configure; both are already installed and wired into `.storybook/main.ts`.
+
+## Lint & type checks
+
+Not part of the two Vitest projects, but run alongside them in CI:
+
+```bash
+npm run lint           # eslint .
+npx tsc -b --noEmit    # typecheck, no build output
+```
+
+## Token & role governance
+
+Design-system-specific checks — not generic tests, but gate the same way in CI:
+
+```bash
+npm run tokens:check          # build + diff + validate + contrast, all in one
+npm run roles:check:strict    # fails if any component bypasses getRoleColor()
+```
+
+See [Roles](?path=/docs/foundations-roles--docs) for what `roles:check` is actually enforcing, and `docs/foundations/TOKENS.md` for the full token build pipeline.
+
+## What CI actually runs
+
+`.github/workflows/ci.yml` runs on **push to any branch** (not just `main` — broadened so feature branches get real signal instead of nothing until merge) and on **pull requests targeting `main`**:
+
+1. `npm ci`
+2. `npm run docs:lint`
+3. `npm run lint`
+4. `npm run tokens:check`
+5. `npm test` — both Vitest projects
+6. `npm run build`
+7. (PR only) `npm run build-storybook`, uploaded as a downloadable artifact
+
+Two more workflows run the same broadened push trigger: `governance.yml` (strict token/role governance) and `commitlint.yml` (conventional-commit message linting). `contrast.yml` runs on both push and PR, but only when `src/**`, `scripts/check-contrast.js`, `package.json`, or `dist/tokens.json` actually changed — see `.github/workflows/*.yml` for the exact trigger conditions on each.
+
+If a PR-only step (Storybook build artifact) is what you need to check locally before pushing, `npm run build-storybook` reproduces it exactly.
+
+---
+_Full CI/local command reference: README.md's Testing and CI & Quality Gates sections._

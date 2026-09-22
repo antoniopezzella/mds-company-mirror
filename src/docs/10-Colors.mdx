@@ -1,85 +1,110 @@
-import { ColorSwatches } from '../components/ColorSwatches';
-import { ContrastStatus } from '../docs/_components/ContrastStatus';
-import { ContrastMatrix } from '../docs/_components/ContrastMatrix';
-import { TokenTable } from '../docs/_components/TokenTable';
-import { listRoles, getRoleColor } from '../theme/roles';
+import { Meta } from '@storybook/addon-docs/blocks';
+import { ColorRampStrips } from './_components/ColorRampStrips';
+import { SemanticColorCards } from './_components/SemanticColorCards';
+import { RoleColorTable } from './_components/RoleColorTable';
+import { ContrastStatus } from './_components/ContrastStatus';
+import { ContrastMatrix } from './_components/ContrastMatrix';
 
-export const meta = { title: 'Foundations/Colors' };
+<Meta title="Foundations/Colors" />
 
 # Colors
 
-Color in Marsh is layered:
-- **Primitives** in `tokens.ts` (brand palettes, neutrals, shades)
-- **Semantic colors** in `semantic-tokens.ts` (brand, text, surfaces, status)
-- **Roles** in `theme/roles.ts` (the only API components consume)
+The MDS color system is structured in three tiers. Each layer adds intention and decouples components from raw palette values.
 
-This page focuses on how those show up in product UIs.
+<div style={{display:'flex',gap:12,margin:'24px 0 32px',fontFamily:'system-ui,sans-serif'}}>
+  {[
+    {tier:'01',label:'Primitives',sub:'tokens.ts',desc:'Raw palette values — 141 tokens across 7 palettes. Never referenced directly in components.',bg:'#f5fbff',border:'#95caff',accent:'#042791'},
+    {tier:'02',label:'Semantics',sub:'semantic-tokens.ts',desc:'Intent-based aliases that reference primitives and express purpose: brandPrimary, textSecondary, statusSuccessBg.',bg:'#f8fcf7',border:'#8dcc92',accent:'#2f7d32'},
+    {tier:'03',label:'Roles',sub:'theme/roles.ts',desc:'The only API components consume via getRoleColor(). Grouped by intent: text.primary, interactive.primary.hover.',bg:'#fff8ed',border:'#ffb700',accent:'#8b5000'},
+  ].map((t,i) => (
+    <div key={t.tier} style={{flex:1,minWidth:0,display:'flex',gap:10,alignItems:'stretch'}}>
+      {i > 0 && (
+        <div style={{display:'flex',alignItems:'center',color:'#ccc',fontSize:18,flexShrink:0}}>→</div>
+      )}
+      <div style={{flex:1,border:`1.5px solid ${t.border}`,borderRadius:8,padding:'14px 12px',background:t.bg}}>
+        <div style={{fontSize:9,fontWeight:700,color:t.accent,letterSpacing:'0.1em',marginBottom:4}}>TIER {t.tier}</div>
+        <div style={{fontSize:14,fontWeight:700,color:'#000f47',marginBottom:2}}>{t.label}</div>
+        <div style={{fontSize:10,fontFamily:'monospace',color:t.accent,marginBottom:6,opacity:0.8}}>{t.sub}</div>
+        <div style={{fontSize:11,color:'#666',lineHeight:1.5}}>{t.desc}</div>
+      </div>
+    </div>
+  ))}
+</div>
 
 ---
 
-## Role Colors (implementation API)
+## Brand Identity
 
-Roles are the contract components use. They are grouped here by intent.
+The four core Marsh brand colors. All palette stops extend from these anchors.
 
-### Text & Surfaces
+<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,margin:'20px 0 32px',fontFamily:'system-ui,sans-serif'}}>
+  {[
+    {name:'Midnight Blue',hex:'#000f47',token:'blue1000',note:'Brand primary — CTAs, navigation, headings'},
+    {name:'Sky Blue',hex:'#ceecff',token:'blue250',note:'Brand secondary — sky tint, on-dark text, hover overlays'},
+    {name:'Gold',hex:'#ffbf00',token:'gold750',note:'Supporting accent — eyebrow dashes, decorative moments'},
+    {name:'White',hex:'#ffffff',token:'white',note:'Default page background, text on dark surfaces'},
+  ].map(c => (
+    <div key={c.hex} style={{borderRadius:8,overflow:'hidden',border:'1px solid #e8e8e8',boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}>
+      <div style={{height:96,background:c.hex,borderBottom:'1px solid #e8e8e8'}} />
+      <div style={{padding:'10px 12px 12px'}}>
+        <div style={{fontSize:13,fontWeight:700,color:'#000f47',marginBottom:2}}>{c.name}</div>
+        <div style={{fontSize:10,fontFamily:'monospace',color:'#0b4bff',marginBottom:1}}>{c.token}</div>
+        <div style={{fontSize:10,fontFamily:'monospace',color:'#999',marginBottom:5}}>{c.hex}</div>
+        <div style={{fontSize:10,color:'#aaa',lineHeight:1.35}}>{c.note}</div>
+      </div>
+    </div>
+  ))}
+</div>
 
-<TokenTable
-  columns={[
-    { key: 'role', label: 'Role' },
-    { key: 'description', label: 'Intent' },
-    { key: 'light', label: 'Light', width: 110 },
-    { key: 'dark', label: 'Dark', width: 110 }
-  ]}
-  rows={listRoles()
-    .filter(r => r.role.startsWith('text.') || r.role.startsWith('surface.') || r.role.startsWith('border.') || r.role.startsWith('focus.'))
-    .map(r => ({
-      role: r.role,
-      description: r.description,
-      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
-      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
-    }))}
-  caption="Text, surface, border and focus roles with light/dark resolved values."
-/>
+---
 
-### Interactive roles
+## Semantic Tokens
 
-<TokenTable
-  columns={[
-    { key: 'role', label: 'Role' },
-    { key: 'description', label: 'Intent' },
-    { key: 'light', label: 'Light', width: 110 },
-    { key: 'dark', label: 'Dark', width: 110 }
-  ]}
-  rows={listRoles()
-    .filter(r => r.role.startsWith('interactive.'))
-    .map(r => ({
-      role: r.role,
-      description: r.description,
-      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
-      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
-    }))}
-  caption="Interactive roles for primary, secondary and danger actions."
-/>
+Semantic tokens express *purpose*, not raw palette values. They define how color intent changes between light and dark mode. Toggle to see dark-mode values. Click any swatch to copy hex — click any token name to copy it.
 
-### Status roles
+<SemanticColorCards />
 
-<TokenTable
-  columns={[
-    { key: 'role', label: 'Role' },
-    { key: 'description', label: 'Intent' },
-    { key: 'light', label: 'Light', width: 110 },
-    { key: 'dark', label: 'Dark', width: 110 }
-  ]}
-  rows={listRoles()
-    .filter(r => r.role.startsWith('status.'))
-    .map(r => ({
-      role: r.role,
-      description: r.description,
-      light: <span style={{ background: getRoleColor(r.role, { mode: 'light' }), color: '#222', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'light' })}</span>,
-      dark: <span style={{ background: getRoleColor(r.role, { mode: 'dark' }), color: '#fff', padding: '2px 8px', borderRadius: 6 }}>{getRoleColor(r.role, { mode: 'dark' })}</span>
-    }))}
-  caption="Status roles for success, warning, danger and info."
-/>
+---
+
+## Roles (Component API)
+
+Roles are the stable interface that components consume via `getRoleColor('role.name')`. They resolve through semantic tokens to primitives. Components must never reference primitives or semantics directly.
+
+<div style={{
+  background: '#fff8ed',
+  border: '1px solid #ffb700',
+  borderRadius: 8,
+  padding: '14px 16px',
+  margin: '16px 0 28px',
+  fontFamily: 'system-ui,sans-serif',
+  fontSize: 12.5,
+  color: '#5c4300',
+  lineHeight: 1.6,
+}}>
+  <strong>Two unrelated meanings of "secondary" live on this page — easy to conflate.</strong> "Brand secondary" above (Sky Blue, <code>brandSecondary</code>) names the second color in Marsh's brand identity — an accent, not a text color. <code>text.secondary</code> below is a completely different axis: text-hierarchy secondary, i.e. de-emphasized body text — it resolves to a muted gray (<code>neutral700</code>), not to Sky Blue. Same word, two independent scales (brand-identity position vs. text-emphasis level) that happen to share a name. When you see "secondary" on a role, ask which axis it's on before assuming a color.
+  <br /><br />
+  <strong>Confirmed intentional (2026-09-15):</strong> Figma's own <code>Text &amp; icon/Secondary</code> variable actually resolves to Gold, not Sky Blue — so Figma's "secondary" collapses both axes into one word, and MDS's split naming is the deliberate, correct departure, not a bug to reconcile. See <code>docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md</code> for the full comparison.
+</div>
+
+### Text, Surface & Border
+
+<RoleColorTable category="text-surface-border" caption="Text, surface, border, focus and brand roles with light / dark resolved values." />
+
+### Interactive
+
+<RoleColorTable category="interactive" caption="Interactive roles for primary, secondary and danger actions." />
+
+### Status
+
+<RoleColorTable category="status" caption="Status roles for success, warning, danger and info feedback states." />
+
+---
+
+## Primitive Palettes
+
+Raw palette values from `tokens.ts`. These are synced from Figma's Primitive Colors collection and are the source of truth for all semantic aliases. Anchor stops (outlined border) indicate values used directly in semantic mappings. Hover any swatch to see the hex — click to copy.
+
+<ColorRampStrips />
 
 ---
 
@@ -88,11 +113,3 @@ Roles are the contract components use. They are grouped here by intent.
 <ContrastStatus />
 
 <ContrastMatrix />
-
----
-
-## Primitive Palettes
-
-Primitive tokens are the raw palette values synced from Figma. Components should not consume them directly, but they are useful for brand and theming work.
-
-<ColorSwatches />

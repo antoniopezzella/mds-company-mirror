@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Box, Typography, Container, Grid } from '@mui/material';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getRoleColor } from '../../theme/roles';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,7 +81,7 @@ export const MetricsSection: React.FC = () => {
       sx={{
         width: '100%',
         minHeight: '100vh',
-        backgroundColor: '#000F47', // GSAP MARK: Solid dark blue background (no transition)
+        backgroundColor: getRoleColor('surface.hero'), // GSAP MARK: Solid dark blue background (no transition)
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -156,7 +157,7 @@ export const MetricsSection: React.FC = () => {
                   sx={{
                     fontSize: '104px',
                     lineHeight: '128px',
-                    color: '#FFBF0D', // Gold
+                    color: getRoleColor('brand.accent'),
                     fontWeight: 400,
                   }}
                 >

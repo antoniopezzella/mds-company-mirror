@@ -251,7 +251,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                   variant="contained"
                   sx={{
                     ml: 1,
-                    backgroundColor: '#FFBF0D',
+                    backgroundColor: getRoleColor('brand.accent'),
                     color: getRoleColor('text.primary'),
                     textTransform: 'none',
                     fontWeight: 600,
@@ -359,7 +359,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
               variant="contained"
               fullWidth
               sx={{
-                backgroundColor: '#FFBF0D',
+                backgroundColor: getRoleColor('brand.accent'),
                 color: getRoleColor('text.primary'),
                 textTransform: 'none',
                 fontWeight: 600,

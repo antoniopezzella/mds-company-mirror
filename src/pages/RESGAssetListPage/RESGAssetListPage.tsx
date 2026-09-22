@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
-import DSButton from '../../components/Button/Button';
-import { Chip } from '../../components/Chip/Chip';
+import { Button as DSButton } from '../../components/ui/button';
+import { Chip } from '../../components/ui/chip';
 import { MDSDataGrid } from '../../components/DataGrid';
 import type { GridColDef } from '../../components/DataGrid';
 import { DashboardHeader } from '../../components/Header/Header';
 import SideNavigation, { type SideNavItem } from '../../components/SideNavigation/SideNavigation';
 import { AIAgentBot } from '../../components/AIAgentBot';
 import DSTextField from '../../components/TextField/TextField';
-import Tabs, { type TabItem } from '../../components/Tabs/Tabs';
+import Tabs, { type TabItem } from '../../components/ui/tabs';
 import './RESGAssetListPage.scss';
 
 /**
@@ -232,7 +232,7 @@ export const RESGAssetListPage: React.FC = () => {
   const sidebarWidth = 260;
 
   return (
-    <Box className="resg-asset-list-page" sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box className="resg-asset-list-page mds-dashboard" sx={{ display: 'flex', minHeight: '100vh' }}>
       <DashboardHeader sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((open) => !open)} />
 
       {isMdUp ? (
@@ -301,9 +301,9 @@ export const RESGAssetListPage: React.FC = () => {
       >
         {/* Header Section (blue client strip + tabs) */}
         <section className="resg-header">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
+          <div className="mds-legacy-container">
+            <div className="mds-legacy-row">
+              <div className="mds-legacy-col-12">
                 <div className="resg-top-nav">
                   <div className="resg-client-info">
                     <h2 className="resg-client-name">Beacon Capital Partners Advisory Group</h2>
@@ -329,9 +329,9 @@ export const RESGAssetListPage: React.FC = () => {
 
         {/* Main Content Section (white card with title + grid) */}
         <section className="resg-content">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
+        <div className="mds-legacy-container">
+          <div className="mds-legacy-row">
+            <div className="mds-legacy-col-12">
               <div className="resg-title-section">
                 <h1 className="resg-page-title">Asset List</h1>
               </div>

@@ -17,6 +17,7 @@
     "src/tokens.ts",
     "src/spacing.ts",
     "src/shadows.ts",
-    "src/semantic-tokens.ts"
+    "src/semantic-tokens.ts",
+    "src/theme/roles.ts"
   ]
 }

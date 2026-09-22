@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Box, Typography, InputBase } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { gsap } from 'gsap';
+import { getRoleColor } from '../../../theme/roles';
 
 interface HeroProps {
   headline?: string;
@@ -124,7 +125,7 @@ export const Hero: React.FC<HeroProps> = ({
     >
       {/* Background layers */}
       <Box aria-hidden="true" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <Box sx={{ position: 'absolute', inset: 0, backgroundColor: '#000f47' }} />
+        <Box sx={{ position: 'absolute', inset: 0, backgroundColor: getRoleColor('surface.hero') }} />
         
         {/* Video Background */}
         <Box
@@ -232,7 +233,7 @@ export const Hero: React.FC<HeroProps> = ({
             mb: '48px',
           }}
         >
-          <AutoAwesomeIcon sx={{ fontSize: '32px', color: '#FFBF0D', flexShrink: 0 }} />
+          <AutoAwesomeIcon sx={{ fontSize: '32px', color: getRoleColor('brand.accent'), flexShrink: 0 }} />
           <InputBase
             placeholder={searchPlaceholder}
             fullWidth

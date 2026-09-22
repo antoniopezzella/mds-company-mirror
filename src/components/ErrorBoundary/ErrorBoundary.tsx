@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import { getRoleColor } from '../../theme/roles';
 
 interface Props {
   children: ReactNode;
@@ -80,7 +81,7 @@ export class ErrorBoundary extends Component<Props, State> {
             sx={{
               color: '#dc3545',
               mb: 2,
-              fontFamily: 'var(--font-family-display, "MMC Display", serif)',
+              fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
             }}
           >
             Something went wrong
@@ -129,7 +130,7 @@ export class ErrorBoundary extends Component<Props, State> {
               variant="contained"
               onClick={this.handleReset}
               sx={{
-                backgroundColor: '#000F47',
+                backgroundColor: getRoleColor('interactive.primary'),
                 '&:hover': {
                   backgroundColor: '#001F67',
                 },
@@ -142,8 +143,8 @@ export class ErrorBoundary extends Component<Props, State> {
               variant="outlined"
               onClick={() => window.location.href = '/'}
               sx={{
-                borderColor: '#000F47',
-                color: '#000F47',
+                borderColor: getRoleColor('interactive.primary'),
+                color: getRoleColor('interactive.primary'),
                 '&:hover': {
                   borderColor: '#001F67',
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',

@@ -21,7 +21,7 @@ export function useRefreshOnAssetsReady() {
     };
 
     // Refresh after fonts load
-    const fontsReady = (document as any).fonts?.ready as Promise<void> | undefined;
+    const fontsReady = document.fonts?.ready;
     if (fontsReady && typeof fontsReady.then === 'function') {
       fontsReady.then(doRefresh);
     }

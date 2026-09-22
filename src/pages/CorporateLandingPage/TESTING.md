@@ -111,7 +111,7 @@ Inspect the video element:
 - Gold button: `#FFBF0D`
 
 ### Typography
-- Font family: MMC Display for headlines, Noto Sans for body
+- Font family: Marsh Serif for headlines, Noto Sans for body
 - Sizes responsive: 56px desktop → 40px mobile for headline
 
 ### Layout

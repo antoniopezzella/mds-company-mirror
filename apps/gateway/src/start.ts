@@ -10,7 +10,7 @@ async function main(){
   await startTelemetry();
   const app = buildServer();
   await app.listen({ port: AppConfig.port, host: '0.0.0.0' });
-  console.log('Gateway running on http://localhost:'+AppConfig.port);
+  console.debug('Gateway running on http://localhost:'+AppConfig.port);
 }
 
 main().catch(err => { 

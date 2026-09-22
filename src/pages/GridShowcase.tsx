@@ -56,7 +56,7 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               Responsive: 1 col mobile → 3 col tablet → 5 col desktop
             </Typography>
-            <div className="grid-cols-1 grid-cols-md-3 grid-cols-lg-5 gap-4">
+            <div className="grid-cols-1 mds-legacy-grid-cols-md-3 mds-legacy-grid-cols-lg-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Card key={i} sx={{ background: getRoleColor('surface.hero') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
@@ -206,7 +206,7 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               .grid-cols-sidebar (250px + flexible)
             </Typography>
-            <div className="grid-cols-sidebar gap-4">
+            <div className="mds-legacy-grid-cols-sidebar gap-4">
               <Card sx={{ background: getRoleColor('surface.subtle') }}>
                 <CardContent>
                   <Typography variant="body2">Sidebar<br />250px fixed</Typography>
@@ -224,7 +224,7 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               .grid-cols-two-thirds (2fr + 1fr)
             </Typography>
-            <div className="grid-cols-two-thirds gap-4">
+            <div className="mds-legacy-grid-cols-two-thirds gap-4">
               <Card sx={{ background: getRoleColor('surface.hero') }}>
                 <CardContent>
                   <Typography variant="body2" sx={{ color: 'white' }}>Main Content (2/3 width)</Typography>
@@ -288,22 +288,22 @@ export default function GridShowcase() {
             Use <code>.col-auto</code> for content-based sizing
           </Typography>
 
-          <div className="row gap-4">
-            <div className="col-auto">
+          <div className="mds-legacy-row gap-4">
+            <div className="mds-legacy-col-auto">
               <Card sx={{ background: getRoleColor('interactive.primary') }}>
                 <CardContent sx={{ py: 1 }}>
                   <Typography variant="button" sx={{ color: 'white' }}>Action Button</Typography>
                 </CardContent>
               </Card>
             </div>
-            <div className="col">
+            <div className="mds-legacy-col">
               <Card sx={{ background: getRoleColor('surface.accent') }}>
                 <CardContent sx={{ py: 1 }}>
                   <Typography variant="body2">Flexible content takes remaining space</Typography>
                 </CardContent>
               </Card>
             </div>
-            <div className="col-auto">
+            <div className="mds-legacy-col-auto">
               <Card sx={{ background: getRoleColor('status.danger.bg') }}>
                 <CardContent sx={{ py: 1 }}>
                   <Typography variant="button">Delete</Typography>
@@ -383,22 +383,22 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               Equal-Width Columns (.col without number)
             </Typography>
-            <div className="row gap-4">
-              <div className="col">
+            <div className="mds-legacy-row gap-4">
+              <div className="mds-legacy-col">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 1</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col">
+              <div className="mds-legacy-col">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 2</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col">
+              <div className="mds-legacy-col">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 3</Typography>
@@ -412,22 +412,22 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               Column Ordering (.order-* utilities)
             </Typography>
-            <div className="row gap-4">
-              <div className="col order-3">
+            <div className="mds-legacy-row gap-4">
+              <div className="mds-legacy-col order-3">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">First in DOM (order: 3)</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col order-1">
+              <div className="mds-legacy-col order-1">
                 <Card sx={{ background: getRoleColor('interactive.primary') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2" sx={{ color: 'white' }}>Second in DOM (order: 1) ← Shows first!</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col order-2">
+              <div className="mds-legacy-col order-2">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Third in DOM (order: 2)</Typography>
@@ -441,22 +441,22 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               Mixed Fixed + Auto Columns
             </Typography>
-            <div className="row gap-4">
-              <div className="col">
+            <div className="mds-legacy-row gap-4">
+              <div className="mds-legacy-col">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto-width</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col-6">
+              <div className="mds-legacy-col-6">
                 <Card sx={{ background: getRoleColor('interactive.primary') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2" sx={{ color: 'white' }}>Fixed 50% (.col-6)</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col">
+              <div className="mds-legacy-col">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto-width</Typography>
@@ -470,15 +470,15 @@ export default function GridShowcase() {
             <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
               Responsive Order (sidebar-first on desktop)
             </Typography>
-            <div className="row gap-4">
-              <div className="col-12 col-md order-md-2">
+            <div className="mds-legacy-row gap-4">
+              <div className="mds-legacy-col-12 mds-legacy-col-md mds-legacy-order-md-2">
                 <Card sx={{ background: getRoleColor('surface.accent') }}>
                   <CardContent>
                     <Typography variant="body2">Main Content (first on mobile, second on desktop)</Typography>
                   </CardContent>
                 </Card>
               </div>
-              <div className="col-12 col-md order-md-1">
+              <div className="mds-legacy-col-12 mds-legacy-col-md mds-legacy-order-md-1">
                 <Card sx={{ background: getRoleColor('surface.hero') }}>
                   <CardContent>
                     <Typography variant="body2" sx={{ color: 'white' }}>Sidebar (second on mobile, first on desktop)</Typography>

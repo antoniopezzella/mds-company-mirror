@@ -1,7 +1,7 @@
 import React from 'react';
 import { Toolbar, Box, Link } from '@mui/material';
 import { getRoleColor } from '../../theme/roles';
-import DSButton from '../../components/Button/Button';
+import { Button as DSButton } from '../../components/ui/button';
 
 /**
  * Corporate Landing Page Header

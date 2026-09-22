@@ -4,12 +4,16 @@ import path from 'path';
 
 // In-memory modules
 import { tokens } from '../tokens';
-import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
+import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens';
 
 // Helper: ensure artifact exists so we also validate emitted JSON shape.
 const artifactPath = path.join(process.cwd(), 'dist', 'tokens.json');
 
-function readArtifact(): any | null {
+interface TokensArtifact {
+  semantic: { modes?: { dark?: Record<string, string> } };
+}
+
+function readArtifact(): TokensArtifact | null {
   if (!fs.existsSync(artifactPath)) return null;
   return JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
 }
@@ -42,7 +46,7 @@ describe('semantic dark mode overrides', () => {
     );
     // Values should match exactly
     for (const k of Object.keys(semanticDarkOverrides)) {
-      expect(artifactOverrides[k]).toBe((semanticDarkOverrides as any)[k]);
+      expect(artifactOverrides[k]).toBe(semanticDarkOverrides[k as SemanticColorName]);
     }
   });
 });

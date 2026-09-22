@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDS Component Mockup Template</title>
+  
+  <!-- Figma Capture Script (Required for code-to-design workflow) -->
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 40px;
+      background: #ffffff;
+    }
+    
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      color: #000f47; /* MDS Blue 1000 */
+      font-family: 'MMC Display', 'Noto Sans', sans-serif;
+    }
+    
+    .container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+    }
+    
+    /* Component styles go here */
+    .component {
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #dadada; /* MDS Neutral 250 */
+    }
+  </style>
+</head>
+<body>
+  <h1>Component Name - All Variants</h1>
+  
+  <div class="container">
+    <!-- Component markup goes here -->
+    <div class="component">
+      Component content
+    </div>
+  </div>
+  
+  <!-- 
+    INSTRUCTIONS FOR CAPTURE TO FIGMA:
+    
+    1. Start a local HTTP server:
+       python3 -m http.server 8899
+       
+    2. Open in browser:
+       http://localhost:8899/design-prototypes/[filename].html
+       
+    3. Use Figma capture toolbar or AI agent automation:
+       - Toolbar appears automatically when capture script loads
+       - Or trigger via MCP: generate_figma_design tool
+       
+    4. After capture, bind MDS tokens:
+       - Run: scripts/bind-[component]-tokens.js
+       - Or manually bind in Figma UI (see docs/CODE_TO_DESIGN_TOKEN_BINDING.md)
+  -->
+</body>
+</html>

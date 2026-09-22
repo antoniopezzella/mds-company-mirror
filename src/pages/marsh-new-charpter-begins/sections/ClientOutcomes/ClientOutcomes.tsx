@@ -94,11 +94,11 @@ const ClientOutcomes: React.FC = () => {
           Client Outcomes
         </Typography>
         
-        <div ref={cardsRef} className="row" style={{ marginTop: '2rem' }}>
+        <div ref={cardsRef} className="mds-legacy-row" style={{ marginTop: '2rem' }}>
           {content.outcomes.map((outcome) => (
             <div
               key={outcome.title}
-              className="col-12 col-md-6 mb-4 outcome-card"
+              className="mds-legacy-col-12 mds-legacy-col-md-6 mb-4 outcome-card"
               style={{
                 backgroundColor: getRoleColor('surface.subtle'),
                 borderRadius: '16px',

@@ -1,3 +1,122 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== shadcn/ui CSS Variables - MDS Token Integration ===== */
+@layer base {
+  :root {
+    /* Core Colors */
+    --background: 0 0% 100%;                    /* white - MDS: surface.default */
+    --foreground: 222 100% 15%;                 /* #000f47 Midnight Blue - MDS: text.primary */
+    
+    /* Card */
+    --card: 0 0% 100%;                          /* white - MDS: surface.default */
+    --card-foreground: 222 100% 15%;            /* #000f47 - MDS: text.primary */
+    
+    /* Popover */
+    --popover: 0 0% 100%;                       /* white - MDS: surface.default */
+    --popover-foreground: 222 100% 15%;         /* #000f47 - MDS: text.primary */
+    
+    /* Primary (Midnight Blue - MODE Primary) */
+    --primary: 215 100% 24%;                    /* #002c77 - MDS: interactive.primary */
+    --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
+    
+    /* Secondary (Outline style) */
+    --secondary: 204 33% 97%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
+    --secondary-foreground: 222 100% 15%;       /* #000f47 - MDS: text.primary */
+    
+    /* Muted (Subtle backgrounds) */
+    --muted: 204 33% 97%;                       /* #f7f8f8 - MDS: surface.subtle */
+    --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
+    
+    /* Accent (Gold - Brand Secondary) */
+    --accent: 45 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
+    --accent-foreground: 215 100% 24%;          /* #002c77 - MDS: interactive.primary */
+    
+    /* Destructive (Error/Danger state) */
+    --destructive: 0 84% 60%;                   /* Red - MDS: status.danger.bg */
+    --destructive-foreground: 0 0% 100%;        /* white - MDS: status.danger.fg */
+    
+    /* UI Elements */
+    --border: 0 0% 85%;                         /* #dadada Neutral 250 - MDS: border.default */
+    --input: 0 0% 85%;                          /* #dadada - MDS: border.default */
+    
+    /* Focus Ring */
+    --ring: #3d7aff;                            /* MDS: focus.ring (light) — plain hex, not HSL: the
+                                                    prior HSL triplet (210 100% 50%) had silently
+                                                    drifted to #0080ff via an imprecise hand
+                                                    conversion; kept in sync with focus.ring by
+                                                    src/__tests__/ring-css-var.sync.test.ts */
+    
+    /* Border Radius */
+    --radius: 0.125rem;                         /* 2px - Marsh DS standard */
+    
+    /* Chart Colors — validated categorical palette (dataviz skill:
+       node scripts/validate_palette.js). Order (green, blue, gold, purple,
+       red) is load-bearing: it's the only arrangement of these five brand
+       hues with no adjacent-pair CVD collision at light-mode lightness —
+       reordering will reintroduce a red/green or red/gold confusion pair.
+       Always pair with a legend + direct labels (WARN-band contrast). */
+    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
+    --chart-2: 223 100% 56%;                    /* #1f60ff Blue 700 */
+    --chart-3: 36 83% 48%;                      /* #e09015 Gold 900 */
+    --chart-4: 277 57% 50%;                     /* #8f37c6 Purple 750 */
+    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
+  }
+  
+  /* Dark Mode */
+  .dark {
+    --background: 0 0% 6%;                      /* #101010 Neutral 950 */
+    --foreground: 0 0% 100%;                    /* white */
+    
+    --card: 0 0% 15%;                           /* #252525 Neutral 900 */
+    --card-foreground: 0 0% 100%;               /* white */
+    
+    --popover: 0 0% 6%;                         /* #101010 */
+    --popover-foreground: 0 0% 100%;            /* white */
+    
+    --primary: 210 100% 60%;                    /* Blue 400 (lighter) */
+    --primary-foreground: 0 0% 6%;              /* #101010 */
+    
+    --secondary: 0 0% 15%;                      /* #252525 */
+    --secondary-foreground: 0 0% 100%;          /* white */
+    
+    --muted: 0 0% 15%;                          /* #252525 */
+    --muted-foreground: 0 0% 65%;               /* #a6a6a6 */
+    
+    --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
+    --accent-foreground: 0 0% 100%;             /* white */
+    
+    --destructive: 0 84% 65%;                   /* Red (lighter for dark bg) */
+    --destructive-foreground: 0 0% 100%;        /* white */
+    
+    --border: 0 0% 25%;                         /* #404040 */
+    --input: 0 0% 25%;                          /* #404040 */
+    
+    --ring: #5e9aff;                             /* MDS: focus.ring (dark) */
+
+    /* Chart Colors — same validated series-to-hue mapping as light mode,
+       independently re-validated against the dark surface (#101010), not
+       an automatic flip: dark mode needs a lighter L band overall. */
+    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
+    --chart-2: 218 100% 64%;                    /* #478aff Blue 600 */
+    --chart-3: 30 71% 47%;                      /* #cb7623 Gold 1000 */
+    --chart-4: 280 59% 43%;                     /* #842daf Purple 800 */
+    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 /* Global MDS display font */
 @font-face {
   font-family: 'MMC Display';
@@ -90,3 +209,65 @@ body {
 }
 
 /* Grid utilities are imported via main.tsx */
+
+/* ===== scroll-fade / shimmer =====
+   Both ship in shadcn's default tailwind.css (generated by `shadcn init`);
+   this project's Tailwind was hand-integrated into a pre-existing setup, so
+   neither was ever added — message-scroller.tsx's `scroll-fade-b` class has
+   been a silent no-op since it was installed. Reimplemented here as plain
+   @layer utilities (the shadcn source likely uses Tailwind v4's `@utility`
+   at-rule, unsupported on this project's Tailwind 3.4.19). */
+@layer utilities {
+  .scroll-fade-b {
+    mask-image: linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent);
+  }
+
+  /* Horizontal counterpart — used by attachment.tsx's AttachmentGroup
+     (a horizontally-scrolling row of file/image chips). Same silent-no-op
+     gap as scroll-fade-b: never added when Tailwind was hand-integrated. */
+  .scroll-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+  }
+
+  /* Same story as above, for the scrollbar-* classes message-scroller.tsx
+     and attachment.tsx both use — no `tailwind-scrollbar` plugin is
+     installed, so these were also silent no-ops. Hand-written rather than
+     pulling in a plugin for three small, stable rules. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-gutter-stable {
+    scrollbar-gutter: stable;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted-foreground) / 0.4) 0%,
+      hsl(var(--foreground)) 50%,
+      hsl(var(--muted-foreground) / 0.4) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 2s linear infinite;
+  }
+
+  @keyframes shimmer {
+    to { background-position: -200% 0; }
+  }
+}

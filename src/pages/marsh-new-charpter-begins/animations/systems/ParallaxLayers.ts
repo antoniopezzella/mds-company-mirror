@@ -106,8 +106,8 @@ export class ParallaxSystem {
 
   private detectPerformance() {
     // Simple performance detection
-    const isLowEnd = navigator.hardwareConcurrency <= 4 || 
-                    (navigator as any).deviceMemory <= 4;
+    const isLowEnd = navigator.hardwareConcurrency <= 4 ||
+                    (navigator.deviceMemory ?? Infinity) <= 4;
     if (isLowEnd) {
       // Reduce complex animations for low-end devices
       this.layers.forEach(layer => {

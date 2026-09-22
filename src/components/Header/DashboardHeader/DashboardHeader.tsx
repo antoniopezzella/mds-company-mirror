@@ -1,16 +1,24 @@
-import React from "react";
-import { Typography, Avatar, Box, IconButton, Tooltip, Badge, Button, Divider, useTheme } from "@mui/material";
+import React, { useState, useRef } from "react";
+import { Typography, Avatar, Box, IconButton, Tooltip, useTheme, Popover, Divider, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { BadgeAnchor } from "../../ui/badge-anchor";
+import type { Theme } from '@mui/material/styles';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LanguageIcon from "@mui/icons-material/Language";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MARSH_LOGO from "../../../assets/images/marsh.svg";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { MegaMenu } from '../../MegaMenu';
 import { getRoleColor } from '../../../theme/roles';
-import { semanticColors } from '../../../semantic-tokens';
 import { useThemeMode } from '../../../theme/ThemeModeContext';
 import styles from '../Header.module.scss';
 import BaseHeader from '../BaseHeader';
@@ -18,20 +26,17 @@ import BaseHeader from '../BaseHeader';
 export interface DashboardHeaderProps {
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
+  onNotificationsClick?: () => void;
+  notificationCount?: number;
   variant?: 'primary' | 'secondary';
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggleSidebar, variant = 'primary' }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggleSidebar, onNotificationsClick, notificationCount = 4, variant = 'primary' }) => {
   const { mode, toggleMode } = useThemeMode();
   const theme = useTheme();
   const systemMode = theme.palette.mode;
-  const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setActiveMenu(null); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  const [profileAnchor, setProfileAnchor] = useState<HTMLElement | null>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const getHeaderStyles = () => {
     // System is in dark mode: Both variants converge to same dark appearance
@@ -104,7 +109,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
       <BaseHeader
         sx={{
           ...getHeaderStyles(),
-          zIndex: (theme: any) => theme.zIndex.drawer + 1,
+          zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
           overflow: 'visible',
           width: '100%'
         }}
@@ -141,37 +146,151 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                   {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                 </IconButton>
               </Tooltip>
-              <IconButton color="inherit" aria-label="Notifications - 8 unread" sx={{ '&:hover': { backgroundColor: getHoverColor() } }}>
-                <Badge badgeContent={8} color="error">
+              <IconButton
+                color="inherit"
+                aria-label={`Notifications - ${notificationCount} unread`}
+                onClick={onNotificationsClick}
+                sx={{ '&:hover': { backgroundColor: getHoverColor() } }}
+              >
+                <BadgeAnchor tone="danger" variant="number" content={notificationCount} invisible={!notificationCount}>
                   <NotificationsIcon />
-                </Badge>
+                </BadgeAnchor>
               </IconButton>
-              <Avatar
+              {/* Profile trigger */}
+              <Box
+                ref={profileRef}
+                onClick={(e) => setProfileAnchor(e.currentTarget)}
                 sx={{
-                  ...getAvatarColors(),
-                  width: 32,
-                  height: 32,
-                  fontWeight: 700,
+                  display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer',
+                  borderRadius: 1, px: '6px', py: '4px',
+                  '&:hover': { backgroundColor: getHoverColor() },
+                  transition: 'background-color 0.15s',
+                }}
+                aria-haspopup="true"
+                aria-expanded={Boolean(profileAnchor)}
+                aria-label="User profile menu"
+              >
+                <Avatar sx={{ ...getAvatarColors(), width: 32, height: 32, fontWeight: 700 }}>TA</Avatar>
+                <Box className={styles.profileMeta}>
+                  <Typography variant="body2" className={styles.profileName}>Tolu Adesina</Typography>
+                  <Typography variant="caption" className={styles.profileRole}>Chief Risk Officer</Typography>
+                </Box>
+                <KeyboardArrowDownIcon
+                  className={styles.arrow}
+                  sx={{ transition: 'transform 0.2s', transform: profileAnchor ? 'rotate(180deg)' : 'none' }}
+                />
+              </Box>
+
+              {/* Profile dropdown */}
+              <Popover
+                open={Boolean(profileAnchor)}
+                anchorEl={profileAnchor}
+                onClose={() => setProfileAnchor(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                PaperProps={{
+                  sx: {
+                    mt: '8px',
+                    width: 280,
+                    borderRadius: '10px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                    bgcolor: getRoleColor('surface.default', { mode: systemMode }),
+                    border: `1px solid ${getRoleColor('border.default', { mode: systemMode })}`,
+                    overflow: 'hidden',
+                  },
                 }}
               >
-                TA
-              </Avatar>
-              <Box className={styles.profileMeta}>
-                <Typography variant="body2" className={styles.profileName}>
-                  Tolu Adesina
-                </Typography>
-                <Typography variant="caption" className={styles.profileRole}>
-                  Chief Risk Officer
-                </Typography>
-              </Box>
-              <KeyboardArrowDownIcon className={styles.arrow} />
+                {/* User identity block */}
+                <Box sx={{ px: '16px', py: '14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <Avatar sx={{ width: 42, height: 42, fontWeight: 700, bgcolor: getRoleColor('interactive.primary', { mode: systemMode }), color: '#fff', fontSize: 15 }}>TA</Avatar>
+                  <Box>
+                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: getRoleColor('text.primary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.3 }}>
+                      Tolu Adesina
+                    </Typography>
+                    <Typography sx={{ fontSize: 12, color: getRoleColor('text.secondary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif' }}>
+                      Chief Risk Officer
+                    </Typography>
+                    <Typography sx={{ fontSize: 11, color: getRoleColor('text.secondary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', mt: '2px' }}>
+                      Beacon Capital Partners
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: getRoleColor('border.default', { mode: systemMode }) }} />
+
+                {/* Account options */}
+                {[
+                  { icon: <PersonOutlineIcon fontSize="small" />, label: 'My Profile', sub: 'Personal info & preferences' },
+                  { icon: <SettingsOutlinedIcon fontSize="small" />, label: 'Account Settings', sub: 'Password, 2FA, sessions' },
+                  { icon: <BusinessOutlinedIcon fontSize="small" />, label: 'Organisation Settings', sub: 'Team, roles & permissions' },
+                  { icon: <SwapHorizIcon fontSize="small" />, label: 'Switch Organisation', sub: 'Beacon Capital Partners ✓' },
+                ].map(({ icon, label, sub }) => (
+                  <MenuItem
+                    key={label}
+                    onClick={() => setProfileAnchor(null)}
+                    sx={{
+                      px: '16px', py: '10px', gap: '12px', alignItems: 'flex-start',
+                      '&:hover': { bgcolor: getRoleColor('surface.subtle', { mode: systemMode }) },
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: getRoleColor('text.secondary', { mode: systemMode }), minWidth: 0, mt: '2px' }}>{icon}</ListItemIcon>
+                    <ListItemText
+                      primary={label}
+                      secondary={sub}
+                      primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.primary', { mode: systemMode }) }}
+                      secondaryTypographyProps={{ fontSize: 11, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.secondary', { mode: systemMode }) }}
+                    />
+                  </MenuItem>
+                ))}
+
+                <Divider sx={{ borderColor: getRoleColor('border.default', { mode: systemMode }), my: '4px' }} />
+
+                {/* Support options */}
+                {[
+                  { icon: <NotificationsNoneIcon fontSize="small" />, label: 'Notification Preferences' },
+                  { icon: <HelpOutlineIcon fontSize="small" />, label: 'Help & Support' },
+                  { icon: <OpenInNewIcon fontSize="small" />, label: 'Marsh McLennan Portal', external: true },
+                ].map(({ icon, label, external }) => (
+                  <MenuItem
+                    key={label}
+                    onClick={() => setProfileAnchor(null)}
+                    sx={{
+                      px: '16px', py: '9px', gap: '12px',
+                      '&:hover': { bgcolor: getRoleColor('surface.subtle', { mode: systemMode }) },
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: getRoleColor('text.secondary', { mode: systemMode }), minWidth: 0 }}>{icon}</ListItemIcon>
+                    <ListItemText
+                      primary={label}
+                      primaryTypographyProps={{ fontSize: 13, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.primary', { mode: systemMode }) }}
+                    />
+                    {external && <OpenInNewIcon sx={{ fontSize: 13, color: getRoleColor('text.secondary', { mode: systemMode }), ml: 'auto' }} />}
+                  </MenuItem>
+                ))}
+
+                <Divider sx={{ borderColor: getRoleColor('border.default', { mode: systemMode }), my: '4px' }} />
+
+                {/* Sign out */}
+                <MenuItem
+                  onClick={() => setProfileAnchor(null)}
+                  sx={{
+                    px: '16px', py: '10px', gap: '12px', mb: '4px',
+                    '&:hover': { bgcolor: getRoleColor('status.danger.bg', { mode: systemMode }) },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: getRoleColor('status.danger.fg', { mode: systemMode }), minWidth: 0 }}>
+                    <LogoutIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Sign Out"
+                    primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('status.danger.fg', { mode: systemMode }) }}
+                  />
+                </MenuItem>
+              </Popover>
             </>
           ),
         }}
       />
-      <Box sx={{ position: 'relative' }}>
-        <MegaMenu isOpen={activeMenu === 'solutions'} onClose={() => setActiveMenu(null)} />
-      </Box>
     </>
   );
 };

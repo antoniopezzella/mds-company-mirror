@@ -116,11 +116,11 @@ const OurJourney: React.FC = () => {
         </Typography>
         
         {/* MDS Grid System: 1 col mobile, 2 col tablet, 3 col desktop */}
-        <div className="row gap-6">
+        <div className="mds-legacy-row gap-6">
           {content.journey.cards.map((card) => (
             <div 
               key={card.title} 
-              className="col-12 col-md-6 col-lg-4 journey-card"
+              className="mds-legacy-col-12 mds-legacy-col-md-6 mds-legacy-col-lg-4 journey-card"
             >
               <Card 
                 sx={{ 

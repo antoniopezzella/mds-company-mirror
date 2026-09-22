@@ -79,7 +79,7 @@ import brandLogo from '../../../assets/brand-logo.svg';
 export const content: LandingContent = {
   hero: {
     logo: { src: brandLogo, alt: 'Marsh', width: 558 },
-    eyebrow: undefined as any, // not used in final design
+    eyebrow: undefined, // not used in final design
     headline: '', // design uses logo + body copy, no large headline
     kicker: '',
     body: [

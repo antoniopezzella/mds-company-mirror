@@ -1,4 +1,4 @@
-import { writeFileSync, appendFileSync, existsSync, mkdirSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { trace } from '@opentelemetry/api';
 
@@ -64,7 +64,7 @@ class AuditLogger {
         
         // Also log to console in development
         if (process.env.NODE_ENV !== 'production') {
-          console.log('[AUDIT]', logEntry);
+          console.debug('[AUDIT]', logEntry);
         }
       } catch (error) {
         console.error('Failed to write audit log:', error);

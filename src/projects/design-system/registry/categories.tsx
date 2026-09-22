@@ -1,0 +1,376 @@
+import type { CategoryEntry } from './types';
+import {
+  PrinciplesDemo,
+  TokensDemo,
+  ColorDemo,
+  IconsDemo,
+  TypographyDemo as FoundationsTypographyDemo,
+  SpacingDemo,
+  GridDemo,
+  ElevationDemo,
+  RadiusDemo,
+  AccessibilityDemo,
+} from '../demos/foundations';
+import { ButtonDemo } from '../demos/actions';
+import {
+  TextFieldDemo,
+  TextareaDemo,
+  SelectDemo,
+  CheckboxDemo,
+  RadioGroupDemo,
+  SwitchDemo,
+  SliderDemo,
+  StepperDemo,
+} from '../demos/forms';
+import { AlertDemo, ToastDemo, TooltipDemo, DialogDemo, ProgressDemo, SpinnerDemo } from '../demos/feedback';
+import {
+  TabsDemo,
+  AccordionDemo,
+  BreadcrumbsDemo,
+  PaginationDemo,
+  HeaderDemo,
+  SideNavigationDemo,
+} from '../demos/navigation';
+import { CardDemo, AvatarDemo, BadgeDemo, ChipDemo, TableDemo, SkeletonDemo } from '../demos/data-display';
+import { ChatDemo, AttachmentDemo } from '../demos/messaging';
+
+/**
+ * Single source of truth for the showcase's sidebar, routes, and content.
+ * Add a category by appending one object here — CategoryPage,
+ * SideNavigation (in DesignSystemLayout), and Router.tsx never need to change.
+ */
+export const categories: CategoryEntry[] = [
+  {
+    id: 'foundations',
+    label: 'Foundations',
+    path: '/design-system/foundations',
+    description: 'The tokens, type scale, spacing, and principles every component is built from.',
+    components: [
+      {
+        id: 'principles',
+        title: 'Principles',
+        summary: 'What makes Marsh feel like Marsh.',
+        sourcePath: 'docs/foundations/DESIGN.md',
+        demo: PrinciplesDemo,
+      },
+      {
+        id: 'tokens',
+        title: 'Tokens',
+        summary: '167 primitives → 63 semantics → 41 roles.',
+        sourcePath: 'src/tokens.ts',
+        demo: TokensDemo,
+      },
+      {
+        id: 'color',
+        title: 'Color',
+        summary: 'The role layer — what components actually consume, in both modes.',
+        sourcePath: 'src/theme/roles.ts',
+        demo: ColorDemo,
+      },
+      {
+        id: 'icons',
+        title: 'Icons',
+        summary: 'lucide-react, used across the shadcn set.',
+        sourcePath: 'lucide-react',
+        demo: IconsDemo,
+      },
+      {
+        id: 'typography',
+        title: 'Typography',
+        summary: 'Marsh Serif for display, Noto Sans for everything else.',
+        sourcePath: 'src/styles/_typography.scss',
+        demo: FoundationsTypographyDemo,
+      },
+      {
+        id: 'spacing',
+        title: 'Spacing',
+        summary: 'A 4px grid, 15 stops from 4px to 128px.',
+        sourcePath: 'src/spacing.ts',
+        demo: SpacingDemo,
+      },
+      {
+        id: 'grid',
+        title: 'Grid',
+        summary: '12-column responsive layout grid.',
+        sourcePath: 'src/pages/GridShowcase.tsx',
+        demo: GridDemo,
+      },
+      {
+        id: 'elevation',
+        title: 'Elevation',
+        summary: 'Six soft, low-contrast shadow levels.',
+        sourcePath: 'src/shadows.ts',
+        demo: ElevationDemo,
+      },
+      {
+        id: 'radius',
+        title: 'Radius',
+        summary: 'Small and consistent — 2px to 8px, no pills.',
+        sourcePath: 'docs/foundations/DESIGN.md',
+        demo: RadiusDemo,
+      },
+      {
+        id: 'accessibility',
+        title: 'Accessibility',
+        summary: 'WCAG AA contrast, visible focus, full keyboard support.',
+        sourcePath: 'src/theme/focusRing.ts',
+        demo: AccessibilityDemo,
+      },
+    ],
+  },
+  {
+    id: 'actions',
+    label: 'Actions',
+    path: '/design-system/actions',
+    description: 'Controls that trigger an action — submit, confirm, move a task forward.',
+    components: [
+      {
+        id: 'button',
+        title: 'Button',
+        summary: 'A control that triggers an action.',
+        sourcePath: 'src/components/ui/button.tsx',
+        demo: ButtonDemo,
+      },
+    ],
+  },
+  {
+    id: 'forms',
+    label: 'Forms',
+    path: '/design-system/forms',
+    description: 'Inputs for collecting and validating data from a person.',
+    components: [
+      {
+        id: 'text-field',
+        title: 'Text field',
+        summary: 'Short, single-line free-form input.',
+        sourcePath: 'src/components/ui/text-field.tsx',
+        demo: TextFieldDemo,
+      },
+      {
+        id: 'textarea',
+        title: 'Textarea',
+        summary: 'Multi-line free-form input.',
+        sourcePath: 'src/components/ui/textarea.tsx',
+        demo: TextareaDemo,
+      },
+      {
+        id: 'select',
+        title: 'Select',
+        summary: 'One answer from a long list of options.',
+        sourcePath: 'src/components/ui/select.tsx',
+        demo: SelectDemo,
+      },
+      {
+        id: 'checkbox',
+        title: 'Checkbox',
+        summary: 'Multi-select, or a tri-state value.',
+        sourcePath: 'src/components/ui/checkbox.tsx',
+        demo: CheckboxDemo,
+      },
+      {
+        id: 'radio-group',
+        title: 'Radio group',
+        summary: 'One answer from a small, fully visible set of options.',
+        sourcePath: 'src/components/ui/radio-group.tsx',
+        demo: RadioGroupDemo,
+      },
+      {
+        id: 'switch',
+        title: 'Switch',
+        summary: 'An immediate on/off toggle.',
+        sourcePath: 'src/components/ui/switch.tsx',
+        demo: SwitchDemo,
+      },
+      {
+        id: 'slider',
+        title: 'Slider',
+        summary: 'A numeric value chosen from a continuous range.',
+        sourcePath: 'src/components/ui/slider.tsx',
+        demo: SliderDemo,
+      },
+      {
+        id: 'stepper',
+        title: 'Stepper',
+        summary: 'Progress through a fixed sequence of steps.',
+        sourcePath: 'src/components/ui/stepper.tsx',
+        demo: StepperDemo,
+      },
+    ],
+  },
+  {
+    id: 'feedback',
+    label: 'Feedback',
+    path: '/design-system/feedback',
+    description: 'Communicates status, confirms an action, or surfaces something that needs attention.',
+    components: [
+      {
+        id: 'alert',
+        title: 'Alert',
+        summary: 'A persistent, inline status message.',
+        sourcePath: 'src/components/ui/alert.tsx',
+        demo: AlertDemo,
+      },
+      {
+        id: 'toast',
+        title: 'Toast',
+        summary: 'A brief, temporary confirmation that appears and disappears on its own.',
+        sourcePath: 'src/components/ui/toast.tsx',
+        demo: ToastDemo,
+      },
+      {
+        id: 'tooltip',
+        title: 'Tooltip',
+        summary: 'Short, supplementary text shown on hover or focus.',
+        sourcePath: 'src/components/ui/tooltip.tsx',
+        demo: TooltipDemo,
+      },
+      {
+        id: 'dialog',
+        title: 'Dialog',
+        summary: 'A focused, blocking surface for a single task or decision.',
+        sourcePath: 'src/components/ui/dialog.tsx',
+        demo: DialogDemo,
+      },
+      {
+        id: 'progress',
+        title: 'Progress',
+        summary: 'Shows how far along a determinate or indeterminate task is.',
+        sourcePath: 'src/components/ui/progress.tsx',
+        demo: ProgressDemo,
+      },
+      {
+        id: 'spinner',
+        title: 'Spinner',
+        summary: 'A lightweight, indeterminate loading indicator.',
+        sourcePath: 'src/components/ui/spinner.tsx',
+        demo: SpinnerDemo,
+      },
+    ],
+  },
+  {
+    id: 'navigation',
+    label: 'Navigation',
+    path: '/design-system/navigation',
+    description: 'Structural chrome and wayfinding — where you are, and how you get somewhere else.',
+    components: [
+      {
+        id: 'tabs',
+        title: 'Tabs',
+        summary: 'Switch between sibling views without leaving the page.',
+        sourcePath: 'src/components/ui/tabs.tsx',
+        demo: TabsDemo,
+      },
+      {
+        id: 'accordion',
+        title: 'Accordion',
+        summary: 'Expand one section of related content at a time.',
+        sourcePath: 'src/components/ui/accordion.tsx',
+        demo: AccordionDemo,
+      },
+      {
+        id: 'breadcrumbs',
+        title: 'Breadcrumbs',
+        summary: 'Shows the path back up a hierarchy.',
+        sourcePath: 'src/components/ui/breadcrumbs.tsx',
+        demo: BreadcrumbsDemo,
+      },
+      {
+        id: 'pagination',
+        title: 'Pagination',
+        summary: 'Move through a large result set in pages.',
+        sourcePath: 'src/components/ui/pagination.tsx',
+        demo: PaginationDemo,
+      },
+      {
+        id: 'header',
+        title: 'Header',
+        summary: 'The app-wide top bar — brand, utilities, profile menu.',
+        sourcePath: 'src/components/ui/header.tsx',
+        demo: HeaderDemo,
+      },
+      {
+        id: 'side-navigation',
+        title: 'Side navigation',
+        summary: 'The persistent app sidebar — also what this showcase’s own sidebar is built on.',
+        sourcePath: 'src/components/ui/side-navigation.tsx',
+        demo: SideNavigationDemo,
+      },
+    ],
+  },
+  {
+    id: 'data-display',
+    label: 'Data display',
+    path: '/design-system/data-display',
+    description: 'Presenting information — a single record, a status, or a whole table of rows.',
+    components: [
+      {
+        id: 'card',
+        title: 'Card',
+        summary: 'A bounded surface for one grouped unit of content.',
+        sourcePath: 'src/components/ui/card.tsx',
+        demo: CardDemo,
+      },
+      {
+        id: 'avatar',
+        title: 'Avatar',
+        summary: 'Represents a person — photo, initials, or status.',
+        sourcePath: 'src/components/ui/avatar.tsx',
+        demo: AvatarDemo,
+      },
+      {
+        id: 'badge',
+        title: 'Badge',
+        summary: 'A small, tone-colored status label.',
+        sourcePath: 'src/components/ui/badge.tsx',
+        demo: BadgeDemo,
+      },
+      {
+        id: 'chip',
+        title: 'Chip',
+        summary: 'A compact, selectable or removable tag.',
+        sourcePath: 'src/components/ui/chip.tsx',
+        demo: ChipDemo,
+      },
+      {
+        id: 'table',
+        title: 'Table',
+        summary: 'Sortable, selectable, paginated tabular data.',
+        sourcePath: 'src/components/ui/table.tsx',
+        demo: TableDemo,
+      },
+      {
+        id: 'skeleton',
+        title: 'Skeleton',
+        summary: 'A loading placeholder shaped like the content it precedes.',
+        sourcePath: 'src/components/ui/skeleton.tsx',
+        demo: SkeletonDemo,
+      },
+    ],
+  },
+  {
+    id: 'messaging',
+    label: 'Messaging',
+    path: '/design-system/messaging',
+    description: 'AI chat and conversational surfaces.',
+    components: [
+      {
+        id: 'chat',
+        title: 'Chat conversation',
+        summary: 'Message bubbles, avatars, and auto-scroll for an AI or human conversation.',
+        sourcePath: 'src/components/ui/message.tsx',
+        demo: ChatDemo,
+      },
+      {
+        id: 'attachment',
+        title: 'Attachment',
+        summary: 'A file reference with upload/processing/error states.',
+        sourcePath: 'src/components/ui/attachment.tsx',
+        demo: AttachmentDemo,
+      },
+    ],
+  },
+];
+
+export function findCategoryForComponent(componentId: string): CategoryEntry | undefined {
+  return categories.find((category) => category.components.some((c) => c.id === componentId));
+}
