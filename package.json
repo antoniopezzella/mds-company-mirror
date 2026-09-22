@@ -1,6 +1,6 @@
 {
   "name": "@antoniopezzella/marsh-design-system",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "description": "Marsh Design System — React component library (shadcn/Radix + Tailwind) with governed design tokens. Published under a personal GitHub account as an explicit stopgap pending move to a Marsh/MMC GitHub org — see docs/SHADCN_MIGRATION_STATUS.md.",
   "repository": {
