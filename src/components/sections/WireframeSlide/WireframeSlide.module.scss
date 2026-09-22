@@ -23,7 +23,10 @@
 
   &__description {
     margin-bottom: t.$spacing-48 !important;
-    opacity: 0.8;
+    // No opacity fade. The description already uses text.secondary, a role
+    // designed to read as muted; layering 0.8 opacity on top took it to
+    // #7a7a7a on white — 4.29:1, just under AA. Muting a colour that is
+    // already the muted role is how body copy ends up unreadable.
   }
 
   &__visual-container {
@@ -45,15 +48,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(0, 0, 0, 0.3);
+    // Was rgba(0, 0, 0, 0.3) — 2.09:1 on the placeholder's own tinted
+    // background. These boxes carry real labels ("Chart", "Image"), so the
+    // text has to be readable; the dashed border and tinted fill already do
+    // the work of signalling "placeholder".
+    color: var(--role-text-secondary);
     font-weight: 500;
   }
 
-  &--dark {
+  // `--dark` is a light (sky blue) surface despite the name — see the note in
+  // WireframeSlide.tsx — so its placeholders keep the dark treatment. Only
+  // `--hero` is a genuinely dark surface and needs the inverted one, which it
+  // never had: it was inheriting the black-on-dark default and rendering at
+  // 1.05:1.
+  &--hero {
     .wireframe-slide__placeholder {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.24);
+      color: var(--role-text-onAccent);
     }
   }
 }
