@@ -64,6 +64,8 @@ export const DangerTone: Story = {
 export const WithoutLabel: Story = {
   args: {
     checked: false,
+    // No *visible* label, but the control still needs an accessible name.
+    'aria-label': 'Select option',
   },
 };
 

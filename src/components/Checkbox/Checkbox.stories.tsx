@@ -81,6 +81,10 @@ export const DangerTone: Story = {
 export const WithoutLabel: Story = {
   args: {
     checked: false,
+    // "Without label" means no *visible* text, not no accessible name — a
+    // control with neither is unusable with a screen reader. Same pattern as
+    // the shadcn Checkbox story.
+    'aria-label': 'Select row',
   },
 };
 

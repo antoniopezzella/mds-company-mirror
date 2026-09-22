@@ -51,6 +51,11 @@ const DSRadio: React.FC<DSRadioProps> = ({
         },
         ...sx,
       }}
+      // A top-level aria-label lands on MUI's root <span>, not on the <input>
+      // that carries the radio role — so axe still saw an unlabelled input
+      // (rule: label). Forwarding it lets callers write the obvious
+      // `aria-label="..."` rather than having to know about inputProps.
+      inputProps={{ 'aria-label': (rest as { 'aria-label'?: string })['aria-label'] }}
       {...rest}
     />
   );
