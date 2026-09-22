@@ -26,6 +26,13 @@ import { Input } from './input';
  * `aria-label`** unless the relationship is already obvious from a visible
  * heading or the button labels themselves.
  *
+ * ## Sizing
+ *
+ * There is **no `size` prop on the group** — upstream shadcn has none either, in
+ * the React or the Vue port. A group's height is simply the height of what it
+ * contains, so set `size` on the child `Button`s (`sm` / `md` / `lg`) and the
+ * group follows. See the **Sizes** and **IconSizes** stories.
+ *
  * ## Related
  *
  * - `ToggleGroup` — when the buttons represent *state* (pressed / not pressed),
@@ -43,7 +50,8 @@ const meta: Meta<typeof ButtonGroup> = {
     docs: {
       description: {
         component:
-          'Joins related buttons into a single unit with shared borders. Ported from shadcn/ui, re-skinned with MDS role tokens.',
+          'Joins related buttons into a single unit with shared borders. Ported from shadcn/ui, re-skinned with MDS role tokens. '
+          + 'Sizing is set on the child Buttons, not on the group — see the Sizes story.',
       },
     },
   },
@@ -162,6 +170,52 @@ export const NestedGroups: StoryObj = {
         <Button variant="outline" iconOnly aria-label="Align center" icon={<AlignCenter className="h-4 w-4" />} />
       </ButtonGroup>
     </ButtonGroup>
+  ),
+};
+
+/**
+ * **Size comes from the buttons, not the group.** `ButtonGroup` has no `size`
+ * prop — upstream shadcn doesn't have one either, in the React or Vue port. Set
+ * `size` on each child `Button` and the group adopts that scale, because its
+ * own height is just the height of what it contains.
+ *
+ * Keep one size per group. Mixing them makes the shared border step mid-row and
+ * the unit stops reading as one control.
+ */
+export const Sizes: StoryObj = {
+  render: () => (
+    <div className="flex flex-col items-start gap-4">
+      <ButtonGroup aria-label="Small">
+        <Button variant="outline" size="sm">Small</Button>
+        <Button variant="outline" size="sm">Small</Button>
+        <Button variant="outline" size="sm">Small</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Default">
+        <Button variant="outline" size="md">Default</Button>
+        <Button variant="outline" size="md">Default</Button>
+        <Button variant="outline" size="md">Default</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Large">
+        <Button variant="outline" size="lg">Large</Button>
+        <Button variant="outline" size="lg">Large</Button>
+        <Button variant="outline" size="lg">Large</Button>
+      </ButtonGroup>
+    </div>
+  ),
+};
+
+/** Icon-only groups at each size, where the scale is most visible. */
+export const IconSizes: StoryObj = {
+  render: () => (
+    <div className="flex flex-col items-start gap-4">
+      {(['sm', 'md', 'lg'] as const).map((size) => (
+        <ButtonGroup key={size} aria-label={`Text alignment (${size})`}>
+          <Button variant="outline" size={size} iconOnly aria-label={`Align left (${size})`} icon={<AlignLeft className="h-4 w-4" />} />
+          <Button variant="outline" size={size} iconOnly aria-label={`Align center (${size})`} icon={<AlignCenter className="h-4 w-4" />} />
+          <Button variant="outline" size={size} iconOnly aria-label={`Align right (${size})`} icon={<AlignRight className="h-4 w-4" />} />
+        </ButtonGroup>
+      ))}
+    </div>
   ),
 };
 
