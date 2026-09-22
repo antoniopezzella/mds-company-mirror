@@ -1,8 +1,9 @@
 import * as React from 'react';
 
+import { Check } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
-import { Checkbox } from './checkbox';
 
 /**
  * Design System List — shadcn/ui counterpart for the MDS List. Built
@@ -86,6 +87,9 @@ export const List: React.FC<ListProps> = ({
                   type="button"
                   disabled={item.disabled}
                   onClick={() => (selectable ? handleSelect(item.id) : item.onClick?.())}
+                  // On a selectable list the row IS the control, so its
+                  // pressed state is what conveys selection to assistive tech.
+                  aria-pressed={selectable ? isSelected : undefined}
                   onMouseEnter={() => setHoveredId(item.id)}
                   onMouseLeave={() => setHoveredId(null)}
                   className={cn(
@@ -96,7 +100,25 @@ export const List: React.FC<ListProps> = ({
                   style={{ color: item.disabled ? getRoleColor('text.disabled') : getRoleColor('text.primary') }}
                 >
                   {selectable && (
-                    <Checkbox checked={isSelected} tabIndex={-1} className="pointer-events-none" aria-hidden="true" />
+                    // Purely presentational. This used to render the real
+                    // Checkbox component, which is itself a
+                    // <button role="checkbox"> — a nested interactive control
+                    // inside the row's own <button>, which axe flags
+                    // (nested-interactive) and HTML5 forbids. It was already
+                    // decorative in intent (tabIndex={-1}, pointer-events-none,
+                    // aria-hidden), so it is now a plain visual and the row's
+                    // aria-pressed carries the state instead.
+                    <span
+                      aria-hidden="true"
+                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[2px] border"
+                      style={{
+                        borderColor: isSelected ? getRoleColor('interactive.primary') : getRoleColor('border.default'),
+                        backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',
+                        color: getRoleColor('text.onInteractive'),
+                      }}
+                    >
+                      {isSelected && <Check className="h-3 w-3" />}
+                    </span>
                   )}
                   {item.icon && <span className="flex h-5 w-5 shrink-0 items-center justify-center">{item.icon}</span>}
                   <span className="min-w-0 flex-1">
