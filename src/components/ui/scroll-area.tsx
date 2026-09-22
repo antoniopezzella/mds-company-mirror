@@ -15,7 +15,14 @@ const ScrollArea = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
 >(({ className, children, ...props }, ref) => (
   <ScrollAreaPrimitive.Root ref={ref} className={cn('relative overflow-hidden', className)} {...props}>
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
+    {/* tabIndex={0} so a keyboard-only user can focus the viewport and scroll
+        it with the arrow keys. Radix leaves this to the consumer, and without
+        it the content is unreachable without a mouse (WCAG 2.1.1; axe:
+        scrollable-region-focusable). The viewport has no interactive role, so
+        it needs no key handler — arrow-key scrolling is native once focused. */}
+    <ScrollAreaPrimitive.Viewport tabIndex={0} className="h-full w-full rounded-[inherit]">
+      {children}
+    </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
     <ScrollAreaPrimitive.Corner />
   </ScrollAreaPrimitive.Root>

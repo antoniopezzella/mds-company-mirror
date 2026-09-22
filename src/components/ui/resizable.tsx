@@ -28,6 +28,18 @@ const ResizablePanelGroup = ({ className, ...props }: GroupProps) => (
 );
 ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 
+// KNOWN A11Y GAP (upstream, react-resizable-panels 4.12.2): each Panel renders
+// as an outer div wrapping an inner div that carries `overflow: auto`. The
+// inner div is the actual scroll container and the library exposes no way to
+// put props on it — its only `tabIndex` is on the resize handle. So a
+// scrollable panel can't be made keyboard-focusable from here (WCAG 2.1.1;
+// axe: scrollable-region-focusable).
+//
+// Putting tabIndex on the Panel was tried and reverted: it lands on the OUTER
+// div, which adds a tab stop that still cannot scroll the inner container —
+// worse than leaving it alone, since it implies keyboard access that doesn't
+// exist. The stories scope that one axe rule off with this same explanation;
+// the fix belongs upstream, or in replacing the library.
 const ResizablePanel = (props: PanelProps) => <Panel {...props} />;
 ResizablePanel.displayName = 'ResizablePanel';
 

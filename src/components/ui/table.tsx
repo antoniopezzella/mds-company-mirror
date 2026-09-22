@@ -198,25 +198,33 @@ function TableComponent<T extends object>({
                 const canSort = Boolean(column.sortable && sortable);
                 const SortIcon = isSorted ? (sortDirection === 'asc' ? ChevronUp : ChevronDown) : ChevronsUpDown;
                 return (
+                  // A sortable header is a <th> (implicitly role=columnheader)
+                  // containing a real <button> — NOT a <th role="button">.
+                  // The previous shape put role="button" on the cell itself,
+                  // which invalidated aria-sort (axe: aria-allowed-attr —
+                  // aria-sort is only legal on columnheader/rowheader) and
+                  // discarded the column-header semantics a screen reader needs
+                  // to relate a cell to its column. The native button also
+                  // brings keyboard activation for free, so the hand-rolled
+                  // Enter/Space handler is gone.
                   <th
                     key={column.key}
-                    className={cn(cellPadding, 'font-semibold', canSort && 'cursor-pointer select-none')}
+                    className={cn(cellPadding, 'font-semibold')}
                     style={{ width: column.width, textAlign: column.align ?? 'left', color: mutedColor }}
-                    onClick={() => canSort && handleSort(column)}
                     aria-sort={canSort ? (isSorted ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none') : undefined}
-                    role={canSort ? 'button' : undefined}
-                    tabIndex={canSort ? 0 : undefined}
-                    onKeyDown={(e) => {
-                      if (canSort && (e.key === 'Enter' || e.key === ' ')) {
-                        e.preventDefault();
-                        handleSort(column);
-                      }
-                    }}
                   >
-                    <div className="flex items-center gap-1">
-                      {column.header}
-                      {canSort && <SortIcon className="h-3.5 w-3.5 opacity-60" />}
-                    </div>
+                    {canSort ? (
+                      <button
+                        type="button"
+                        onClick={() => handleSort(column)}
+                        className="flex cursor-pointer select-none items-center gap-1 border-0 bg-transparent p-0 font-semibold text-inherit"
+                      >
+                        {column.header}
+                        <SortIcon className="h-3.5 w-3.5 opacity-60" />
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-1">{column.header}</div>
+                    )}
                   </th>
                 );
               })}
