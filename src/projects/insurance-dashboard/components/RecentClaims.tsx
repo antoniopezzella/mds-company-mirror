@@ -18,8 +18,14 @@ const getStatusColor = (status: Claim['status']) => {
       return getRoleColor('status.success.fg');
     case 'rejected':
       return getRoleColor('status.danger.fg');
+      // text.onLight for warning: status.warning.fg is gold1000, which is
+      // 3.34:1 on its own status.warning.bg and 3.2:1 on the card surface —
+      // both under the 4.5:1 text needs, and no gold in the palette clears
+      // it. text.onLight is the role intended for warning gold. The amber
+      // still reads through the chip background and the warning icon, which
+      // need only 3:1. See ui/alert.tsx for the full reasoning.
     case 'investigating':
-      return getRoleColor('status.warning.fg');
+      return getRoleColor('text.onLight');
     default:
       return getRoleColor('status.info.fg');
   }
@@ -43,7 +49,8 @@ const getPriorityColor = (priority: Claim['priority']) => {
     case 'high':
       return getRoleColor('status.danger.fg');
     case 'medium':
-      return getRoleColor('status.warning.fg');
+      // Same as getStatusColor above — this drives label text.
+      return getRoleColor('text.onLight');
     default:
       return getRoleColor('status.info.fg');
   }

@@ -94,7 +94,14 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
         color: getRoleColor('status.danger.fg'),
       },
       ...(isSuccess && { color: getRoleColor('status.success.fg') }),
-      ...(isWarning && { color: getRoleColor('status.warning.fg') }),
+      // text.onLight, not status.warning.fg, for HELPER TEXT specifically.
+      // status.warning.fg is gold1000 (#cb7623) and measures 3.41:1 on white —
+      // under the 4.5:1 body text requires, and no gold in the palette clears
+      // it (gold1000 is the darkest, and it fails even on pure white).
+      // text.onLight is the role meant for warning gold. The warning is still
+      // signalled by the field's own gold border, which needs only 3:1 as a
+      // non-text element. Same resolution as ui/alert.tsx.
+      ...(isWarning && { color: getRoleColor('text.onLight') }),
     },
     '& .MuiInputBase-input::placeholder': {
       color: getRoleColor('text.secondary'),

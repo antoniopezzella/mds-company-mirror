@@ -23,10 +23,25 @@ const lightPalette = {
   },
   warning: {
     main: tokens.statusWarning,     // #cb7e03 — Utilities/Warning
-    contrastText: tokens.white,
+    // Navy, not white. White on this amber is 3.22:1 — under AA — so every
+    // `<Button color="warning" variant="contained">`, and any other filled
+    // warning surface, shipped unreadable text. Navy (blue1000, the value
+    // text.onLight resolves to) gives 5.63:1. Same rule that makes
+    // status.warning.fg unusable as body text: MDS amber is an accent, and
+    // needs dark text on top of it, not light.
+    contrastText: tokens.blue1000,
   },
   success: {
     main: tokens.statusSuccess,     // #14853d — Utilities/Success
+    contrastText: tokens.white,
+  },
+  // MDS had no `info` entry at all, so MUI's own default (#0288d1) was in use —
+  // an off-brand blue, and only 3.86:1 under white, so every filled info
+  // surface was under AA. statusInfo itself (blue500 #6fb4ff) is a light tint
+  // meant for backgrounds, not a fill to put white on, so `main` uses
+  // interactive.secondary (blue750 #0b4bff): on-brand, and 6.06:1 with white.
+  info: {
+    main: tokens.blue750,           // #0b4bff — MDS Active Blue
     contrastText: tokens.white,
   },
   background: {

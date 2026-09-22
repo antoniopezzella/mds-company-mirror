@@ -16,7 +16,10 @@ export interface RiskOverviewProps {
 
 const getRiskLevel = (score: number): { label: string; color: string } => {
   if (score >= 80) return { label: 'High Risk', color: getRoleColor('status.danger.fg') };
-  if (score >= 50) return { label: 'Medium Risk', color: getRoleColor('status.warning.fg') };
+  // text.onLight, not status.warning.fg — this colour is applied to the score
+  // text ("68/100"), and gold1000 on the card surface is 3.2:1. The risk level
+  // is still carried by the progress bar's fill, which needs only 3:1.
+  if (score >= 50) return { label: 'Medium Risk', color: getRoleColor('text.onLight') };
   return { label: 'Low Risk', color: getRoleColor('status.success.fg') };
 };
 
