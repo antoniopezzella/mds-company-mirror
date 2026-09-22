@@ -40,6 +40,19 @@ const DSCheckbox: React.FC<DSCheckboxProps> = ({
   inputProps,
   ...rest
 }) => {
+  // MUI's `indeterminate` prop changes the icon and emits aria-checked="mixed",
+  // but it never sets the native `input.indeterminate` DOM property. That left
+  // the two disagreeing: ARIA said "mixed" while the native state said
+  // "unchecked", which is what axe's aria-conditional-attr flags ("Remove
+  // aria-checked, or set it to false to match the real checkbox state") — and
+  // means assistive tech reading the native state announced the wrong thing.
+  // Mirroring the prop onto the DOM property makes them agree.
+  const indeterminateRef = React.useCallback(
+    (input: HTMLInputElement | null) => {
+      if (input) input.indeterminate = Boolean(rest.indeterminate);
+    },
+    [rest.indeterminate]
+  );
   const theme = useTheme();
   const reactId = React.useId();
   const checkboxId = id ?? `ds-checkbox-${reactId}`;
@@ -164,7 +177,14 @@ const DSCheckbox: React.FC<DSCheckboxProps> = ({
       }}
       id={checkboxId}
       disabled={disabled}
+      inputRef={indeterminateRef}
       inputProps={{
+        // A top-level aria-label lands on MUI's root <span>, not on the
+        // <input> that actually carries the control role — so axe still saw an
+        // unlabelled input (rule: label). Forwarding it here means callers can
+        // write the obvious `aria-label="..."` instead of having to know about
+        // inputProps. An explicit inputProps['aria-label'] still wins.
+        'aria-label': (rest as { 'aria-label'?: string })['aria-label'],
         ...inputProps,
         'aria-describedby': showHelper
           ? [inputProps?.['aria-describedby'], helperTextId].filter(Boolean).join(' ')
