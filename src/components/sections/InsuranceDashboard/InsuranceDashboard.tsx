@@ -162,8 +162,14 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
         }}
       >
         <Container maxWidth="xl">
+          {/* `variant` is the size, `component` the semantics. This is the
+              dashboard's top-level heading, so <h1>; the section titles below
+              are <h2>. It previously rendered h3 with sections at h5/h6,
+              skipping levels (axe: heading-order) and leaving the heading
+              outline unusable for anyone navigating by headings. */}
           <Typography
             variant="h3"
+            component="h1"
             sx={{
               color: getRoleColor('text.primary'),
               fontWeight: 600,
@@ -212,6 +218,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
             <Box>
               <Typography
                 variant="h5"
+                component="h2"
                 sx={{
                   color: getRoleColor('text.primary'),
                   mb: 3,
@@ -248,7 +255,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                     bgcolor: getRoleColor('surface.subtle'),
                   }}
                 >
-                  <Typography variant="h6">Quick Actions</Typography>
+                  <Typography variant="h6" component="h2">Quick Actions</Typography>
                   <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
                     Common tasks and workflows
                   </Typography>
@@ -279,7 +286,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                     bgcolor: getRoleColor('surface.subtle'),
                   }}
                 >
-                  <Typography variant="h6">Recent Policies</Typography>
+                  <Typography variant="h6" component="h2">Recent Policies</Typography>
                   <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
                     Latest policy updates and renewals
                   </Typography>
@@ -297,6 +304,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
             <Box>
               <Typography
                 variant="h5"
+                component="h2"
                 sx={{
                   color: getRoleColor('text.primary'),
                   mb: 3,
@@ -319,6 +327,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
               <Typography
                 variant="h5"
+                component="h2"
                 sx={{
                   color: getRoleColor('text.primary'),
                   fontWeight: 600,
@@ -340,7 +349,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
         {/* Tab Content: Claims */}
         {activeTab === 'claims' && (
           <Box>
-            <Typography variant="h5" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
+            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
               Claims Management
             </Typography>
             <Alert severity="warning" title="Pending Claims">
@@ -352,7 +361,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
         {/* Tab Content: Analytics */}
         {activeTab === 'analytics' && (
           <Box>
-            <Typography variant="h5" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
+            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
               Analytics & Insights
             </Typography>
             <Grid container spacing={3}>
