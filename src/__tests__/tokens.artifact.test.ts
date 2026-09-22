@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
+import { execFileSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 import type { SemanticColorName } from '../semantic-tokens';
@@ -15,6 +16,22 @@ interface TokensArtifact {
 
 describe('tokens artifact', () => {
   const artifactPath = path.join(process.cwd(), 'dist', 'tokens.json');
+
+  // These assertions read a build artifact, so they used to depend on whether
+  // something had run tokens:build recently — `npm run build` wipes dist/, and
+  // the suite would then fail or pass depending purely on ordering. Rebuild it
+  // here when it's missing or older than its sources, so the test states a
+  // fact about the generator rather than about what ran before it.
+  beforeAll(() => {
+    const sources = ['src/tokens.ts', 'src/semantic-tokens.ts', 'src/spacing.ts', 'src/shadows.ts']
+      .map((f) => path.join(process.cwd(), f))
+      .filter((f) => fs.existsSync(f));
+    const newestSource = Math.max(...sources.map((f) => fs.statSync(f).mtimeMs));
+    const stale = !fs.existsSync(artifactPath) || fs.statSync(artifactPath).mtimeMs < newestSource;
+    if (stale) {
+      execFileSync('node', ['scripts/build-tokens.js'], { cwd: process.cwd(), stdio: 'ignore' });
+    }
+  }, 60_000);
   test('exists after build', () => {
     expect(fs.existsSync(artifactPath)).toBe(true);
   });

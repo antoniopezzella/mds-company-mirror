@@ -77,6 +77,33 @@ Post-approval implementation:
 
 Component coverage is tracked in [`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) (the old hand-maintained `COMPONENT_COVERAGE.md` is archived — see `docs/archive/COMPONENT_COVERAGE.md`).
 
+## 📦 Releases & versioning
+
+Releases are cut with `npm run release` (commit-and-tag-version), which reads
+the conventional-commit types since the last tag, works out the next version,
+writes `CHANGELOG.md`, and tags. Section labels live in `.versionrc.json`;
+a type that isn't mapped there is dropped from the changelog silently, so add
+one before using a new type.
+
+What the number means, pre-1.0:
+
+| Bump | Trigger | What a consumer should expect |
+| --- | --- | --- |
+| **patch** (`0.4.0` → `0.4.1`) | only `fix`/`perf`/`chore`/`docs` | No API change. Safe to take without reading anything. |
+| **minor** (`0.4.1` → `0.5.0`) | any `feat` | Additive only — new components, new optional props. Existing code keeps working. |
+| **major** (`0.x` → `1.0`) | `!` or a `BREAKING CHANGE:` footer | Something was removed or changed shape. Read the changelog entry before upgrading. |
+
+**While the package is `0.x`, breaking changes ship in a minor bump** — that
+is standard SemVer for pre-1.0, but it means consumers should pin a minor
+range (`~0.4.0`), not a caret range, if they want to avoid surprises. Anything
+genuinely breaking gets a `BREAKING CHANGE:` footer so it is visible in the
+changelog regardless of where the number lands.
+
+Removing or renaming an exported component, changing a prop's type, or
+changing a role token's resolved value all count as breaking. Adding an
+optional prop, adding a component, or changing an internal implementation
+that isn't observable through the public API do not.
+
 ## Out of scope / anti-patterns
 
 - No raw hex colors or hardcoded pixel spacing in components — see `CLAUDE.md`'s token rules.

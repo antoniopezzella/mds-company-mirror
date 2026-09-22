@@ -38,3 +38,23 @@ A `roles:check` false positive was also fixed in this pass: the governance scrip
 ## Real parity gaps — none remaining
 
 All 5 previously-open gaps (Badge, Card, Header, Select, Stepper) are resolved as of 2026-08-27 (see above).
+
+## MUI components still in use, not yet tracked above
+
+These sit under `src/components/` with live consumers, so they are neither
+migrated nor dead. They are listed here because a developer asking "which one
+do I use" gets no answer from the per-component notes above:
+
+| Component | Consumers | shadcn counterpart | Status |
+| --- | --- | --- | --- |
+| `CardWebsite` | `Marsh1DER`, `CorporateHome`, `CarouselSection` | none — marketing-page card, no `ui/` equivalent | Keep for now; no parity work planned |
+| `TextField` | `ClinicalTrialsPage`, `LoginPage`, `RESGAssetListPage` | `ui/input` + `ui/text-field` | Prefer `ui/*` for new work; existing usages not yet migrated |
+
+`CardInternal` was removed on 2026-09-22 — it had no consumers and no
+registry, barrel or doc references.
+
+**Note on scope:** this document tracks MUI-vs-shadcn parity only. It does not
+describe what each shadcn component can do — `DataTable`, for instance, has
+grown faceted filters, a sort list, inline cell editing and CSV export since
+this was last revised. Storybook is the source of truth for component
+capability.
