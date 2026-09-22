@@ -8,37 +8,42 @@
 
 ---
 
-## 🤖 NEW: AI Assistant Integration
+## Getting started
 
-The MDS Platform now includes a **production-ready AI assistant** for insurance queries! 
-
-**Features:**
-- 🧠 RAG (Retrieval Augmented Generation) with 68,000+ words of insurance content
-- 💬 Conversation memory and context-aware follow-ups
-- 🔒 Enterprise security (input validation, audit logging, rate limiting)
-- 📊 OpenTelemetry/Jaeger tracing for observability
-- ✅ Automated evaluation suite for quality assurance
-
-**Quick Start:**
 ```bash
-# 1. Install gateway dependencies
-cd apps/gateway && npm install && cd ../..
-
-# 2. Set up your OpenAI API key
-cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
-
-# 3. Run both frontend and AI backend
-npm run dev:all
+npm install
+npm run dev          # http://localhost:5173
 ```
 
-**Learn more:** [apps/gateway/README.md](./apps/gateway/README.md)
+**Start here:** browse **[/design-system](http://localhost:5173/design-system)** —
+every component in the current library, live, with guidance on which one to
+reach for and when. `npm run storybook` gives you the same components with
+controls and docs.
+
+No API keys or extra setup are needed for any of that. New contributors:
+[`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md).
+
+<details>
+<summary><strong>Optional: the AI assistant gateway</strong></summary>
+
+A separate sub-project under `apps/gateway` — a RAG assistant for insurance
+queries, with conversation memory, input validation and audit logging,
+OpenTelemetry tracing, and an evaluation suite. **Not required to work on the
+design system**, and the only part of this repo that needs an API key.
+
+```bash
+cd apps/gateway && npm install && cd ../..
+cp .env.example .env     # add your OPENAI_API_KEY
+npm run dev              # serves the frontend and the gateway together
+```
+
+See [apps/gateway/README.md](./apps/gateway/README.md).
+
+</details>
 
 ---
 
-## � Documentation
-
-**Start here:** run `npm run dev`, then browse **[/design-system](http://localhost:5173/design-system)** — every component in the current library, live, with guidance on which one to reach for and when.
+## Documentation
 
 **Full documentation map:** [`docs/README.md`](./docs/README.md) — every doc in this repo, organized by what it's for.
 

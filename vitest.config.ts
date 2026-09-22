@@ -64,6 +64,15 @@ export default defineConfig({
         test: {
           name: 'storybook',
           setupFiles: ['.storybook/vitest.setup.ts'],
+          // Run story files serially. The cold-cache failures described above
+          // come from Vite pre-bundling under concurrent load, so this fixes
+          // the cause rather than papering over it: on a cleared cache,
+          // parallel runs fail 13 tests while serial passes 638/638. Measured
+          // cost on a warm cache is ~2s (33s -> 35s), which is a good trade
+          // for removing a red check that has nothing to do with the change
+          // that triggered it. A `retry` does NOT work here — verified; the
+          // failures persist across retries within the same run.
+          fileParallelism: false,
           browser: {
             enabled: true,
             headless: true,
