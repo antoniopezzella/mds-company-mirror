@@ -99,7 +99,18 @@ const CommandSeparator = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator ref={ref} className={cn('-mx-1 my-1 h-px', className)} style={{ backgroundColor: getRoleColor('border.default') }} {...props} />
+  // aria-hidden because CommandList is a role="listbox", and a listbox may
+  // only contain options and groups — a role="separator" child makes the
+  // listbox invalid (axe: aria-required-children). The separator is purely
+  // visual grouping; the CommandGroup headings already convey the structure to
+  // assistive tech, so hiding it loses nothing and makes the listbox valid.
+  <CommandPrimitive.Separator
+    ref={ref}
+    aria-hidden="true"
+    className={cn('-mx-1 my-1 h-px', className)}
+    style={{ backgroundColor: getRoleColor('border.default') }}
+    {...props}
+  />
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 

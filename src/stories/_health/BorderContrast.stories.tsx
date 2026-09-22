@@ -25,7 +25,28 @@ import { Marker } from '../../components/ui/marker';
  */
 const meta: Meta = {
   title: 'Health/Border Contrast',
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    a11y: {
+      config: {
+        rules: [
+        {
+          // The scrollable element axe flags here is <body> itself: this
+          // story renders a tall, entirely static block, so the Storybook
+          // canvas scrolls while containing nothing focusable. That's a
+          // property of previewing one section in isolation, not of the
+          // component — on the real page it sits among headers, links and
+          // buttons, and the body scroll is reachable by keyboard through
+          // them. Scoped to this story only, so the rule still guards
+          // genuinely scrollable containers elsewhere (it caught real bugs
+          // in CarouselSection, ExpertiseCards, ScrollArea and Attachment).
+          id: 'scrollable-region-focusable',
+          enabled: false,
+        },
+        ],
+      },
+    },
+  },
 };
 export default meta;
 type Story = StoryObj;
