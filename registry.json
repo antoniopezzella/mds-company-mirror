@@ -8,9 +8,15 @@
       "type": "registry:lib",
       "title": "cn() utility",
       "description": "Tailwind class merging helper (clsx + tailwind-merge) — every MDS shadcn component depends on this.",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
       "files": [
-        { "path": "src/lib/utils.ts", "type": "registry:lib" }
+        {
+          "path": "src/lib/utils.ts",
+          "type": "registry:lib"
+        }
       ]
     },
     {
@@ -19,9 +25,18 @@
       "title": "MDS design tokens",
       "description": "The 3-tier token system (primitives -> semantics -> roles) and getRoleColor() — the only color API MDS components use.",
       "files": [
-        { "path": "src/tokens.ts", "type": "registry:lib" },
-        { "path": "src/semantic-tokens.ts", "type": "registry:lib" },
-        { "path": "src/theme/roles.ts", "type": "registry:lib" }
+        {
+          "path": "src/tokens.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "src/semantic-tokens.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "src/theme/roles.ts",
+          "type": "registry:lib"
+        }
       ]
     },
     {
@@ -30,7 +45,10 @@
       "title": "useThemeMode",
       "description": "Light/dark mode React context — no external dependencies.",
       "files": [
-        { "path": "src/theme/ThemeModeContext.tsx", "type": "registry:hook" }
+        {
+          "path": "src/theme/ThemeModeContext.tsx",
+          "type": "registry:hook"
+        }
       ]
     },
     {
@@ -39,7 +57,11 @@
       "title": "Marsh logo asset",
       "description": "SVG logo used by Header and WebsiteHeader.",
       "files": [
-        { "path": "src/assets/images/marsh.svg", "type": "registry:file", "target": "~/src/assets/images/marsh.svg" }
+        {
+          "path": "src/assets/images/marsh.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/images/marsh.svg"
+        }
       ]
     },
     {
@@ -47,577 +69,1314 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "Primary/secondary/tertiary/accent/outline/ghost variants, sizes, loading state.",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/button.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/button.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
       "description": "Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction.",
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/card.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
       "description": "Text input with tone-driven validation coloring (default/error/success/warning).",
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/input.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
       "description": "Radix Popover primitive, styled with MDS role tokens.",
-      "dependencies": ["@radix-ui/react-popover"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/popover.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-popover"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "calendar",
       "type": "registry:ui",
       "title": "Calendar",
       "description": "react-day-picker v10 wrapper — every day/nav/caption state routed through role tokens, including range-selection styling.",
-      "dependencies": ["react-day-picker", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/calendar.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "react-day-picker",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/calendar.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "date-picker",
       "type": "registry:ui",
       "title": "Date Picker",
       "description": "All 7 shadcn/ui date-picker variants: basic, range, date of birth, input field, time picker, natural-language (chrono-node), and RTL.",
-      "dependencies": ["date-fns", "chrono-node", "react-day-picker", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "button", "calendar", "input", "popover"],
-      "files": [{ "path": "src/components/ui/date-picker.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "date-fns",
+        "chrono-node",
+        "react-day-picker",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "button",
+        "calendar",
+        "input",
+        "popover"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/date-picker.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "accordion",
       "type": "registry:ui",
       "title": "Accordion",
-      "dependencies": ["@radix-ui/react-accordion", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/accordion.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-accordion",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/accordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "alert",
       "type": "registry:ui",
       "title": "Alert",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/alert.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/alert.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "aspect-ratio",
       "type": "registry:ui",
       "title": "Aspect Ratio",
       "description": "Thin unstyled re-export of Radix AspectRatio.",
-      "dependencies": ["@radix-ui/react-aspect-ratio"],
-      "files": [{ "path": "src/components/ui/aspect-ratio.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-aspect-ratio"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/aspect-ratio.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "attachment",
       "type": "registry:ui",
       "title": "Attachment",
-      "dependencies": ["class-variance-authority", "radix-ui"],
-      "registryDependencies": ["utils", "button"],
-      "files": [{ "path": "src/components/ui/attachment.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/attachment.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "avatar",
       "type": "registry:ui",
       "title": "Avatar",
-      "dependencies": ["@radix-ui/react-avatar", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/avatar.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-avatar",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/avatar.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/badge.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/badge.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "badge-anchor",
       "type": "registry:ui",
       "title": "Badge Anchor",
       "description": "Corner-pin positioning wrapper around Badge (notification-count overlay pattern).",
-      "registryDependencies": ["utils", "mds-tokens", "badge"],
-      "files": [{ "path": "src/components/ui/badge-anchor.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/badge-anchor.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "breadcrumbs",
       "type": "registry:ui",
       "title": "Breadcrumbs",
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/breadcrumbs.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/breadcrumbs.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "bubble",
       "type": "registry:ui",
       "title": "Bubble",
       "description": "Chat message bubble — part of the chat-components family alongside message-scroller.",
-      "dependencies": ["class-variance-authority", "radix-ui"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/bubble.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/bubble.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "carousel",
       "type": "registry:ui",
       "title": "Carousel",
-      "dependencies": ["embla-carousel-react", "embla-carousel", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/carousel.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "embla-carousel-react",
+        "embla-carousel",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/carousel.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "chart",
       "type": "registry:ui",
       "title": "Chart",
-      "dependencies": ["recharts"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/chart.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "recharts"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/chart.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
-      "dependencies": ["@radix-ui/react-checkbox", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/checkbox.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-checkbox",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "chip",
       "type": "registry:ui",
       "title": "Chip",
-      "dependencies": ["class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/chip.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/chip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "collapsible",
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "Thin unstyled re-export of Radix Collapsible.",
-      "dependencies": ["@radix-ui/react-collapsible"],
-      "files": [{ "path": "src/components/ui/collapsible.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-collapsible"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/collapsible.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "command",
       "type": "registry:ui",
       "title": "Command",
-      "dependencies": ["cmdk", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "dialog"],
-      "files": [{ "path": "src/components/ui/command.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "cmdk",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "dialog"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/command.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "command", "popover"],
-      "files": [{ "path": "src/components/ui/combobox.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "command",
+        "popover"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/combobox.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "context-menu",
       "type": "registry:ui",
       "title": "Context Menu",
-      "dependencies": ["@radix-ui/react-context-menu", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/context-menu.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-context-menu",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/context-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "dependencies": ["@radix-ui/react-dialog", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/dialog.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
-      "dependencies": ["@tanstack/react-table", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "checkbox", "input", "pagination", "skeleton", "dropdown-menu"],
-      "files": [{ "path": "src/components/ui/data-table.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@tanstack/react-table",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "checkbox",
+        "input",
+        "pagination",
+        "skeleton",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-table.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "drawer",
       "type": "registry:ui",
       "title": "Drawer",
-      "dependencies": ["@base-ui/react"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/drawer.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "dropdown-menu",
       "type": "registry:ui",
       "title": "Dropdown Menu",
-      "dependencies": ["@radix-ui/react-dropdown-menu", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/dropdown-menu.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-dropdown-menu",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/dropdown-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "empty",
       "type": "registry:ui",
       "title": "Empty",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/empty.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/empty.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
-      "dependencies": ["@radix-ui/react-label", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/label.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-label",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/label.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",
-      "dependencies": ["@radix-ui/react-separator"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/separator.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-separator"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/separator.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "field",
       "type": "registry:ui",
       "title": "Field",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["utils", "label", "separator"],
-      "files": [{ "path": "src/components/ui/field.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "label",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
-      "dependencies": ["@radix-ui/react-tooltip"],
-      "registryDependencies": ["mds-tokens"],
-      "files": [{ "path": "src/components/ui/tooltip.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-tooltip"
+      ],
+      "registryDependencies": [
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "header",
       "type": "registry:ui",
       "title": "Header",
       "description": "Dashboard header — sidebar toggle, notifications, user menu, color-mode switch.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "avatar", "tooltip", "dropdown-menu", "marsh-logo"],
-      "files": [{ "path": "src/components/ui/header.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "avatar",
+        "tooltip",
+        "dropdown-menu",
+        "marsh-logo"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/header.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
-      "dependencies": ["@radix-ui/react-hover-card"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/hover-card.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-hover-card"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/hover-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/skeleton.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "image-with-fallback",
       "type": "registry:ui",
       "title": "Image With Fallback",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "skeleton"],
-      "files": [{ "path": "src/components/ui/image-with-fallback.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/image-with-fallback.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "input-group",
       "type": "registry:ui",
       "title": "Input Group",
-      "dependencies": ["class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens", "button"],
-      "files": [{ "path": "src/components/ui/input-group.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "input-otp",
       "type": "registry:ui",
       "title": "Input OTP",
-      "dependencies": ["input-otp", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/input-otp.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "input-otp",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/input-otp.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "list",
       "type": "registry:ui",
       "title": "List",
-      "registryDependencies": ["utils", "mds-tokens", "checkbox"],
-      "files": [{ "path": "src/components/ui/list.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "checkbox"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/list.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "marker",
       "type": "registry:ui",
       "title": "Marker",
-      "dependencies": ["class-variance-authority", "radix-ui"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/marker.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "class-variance-authority",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/marker.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "mega-menu",
       "type": "registry:ui",
       "title": "Mega Menu",
-      "dependencies": ["@radix-ui/react-navigation-menu", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/mega-menu.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-navigation-menu",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/mega-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "menubar",
       "type": "registry:ui",
       "title": "Menubar",
-      "dependencies": ["@radix-ui/react-menubar", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/menubar.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-menubar",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/menubar.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "message",
       "type": "registry:ui",
       "title": "Message",
       "description": "Chat message row — part of the chat-components family.",
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/message.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/message.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "message-scroller",
       "type": "registry:ui",
       "title": "Message Scroller",
       "description": "Anchored-turn chat scroller — 7 demo patterns (see Storybook), including streaming auto-scroll and load-earlier-history.",
-      "dependencies": ["@shadcn/react", "lucide-react"],
-      "registryDependencies": ["utils", "button"],
-      "files": [{ "path": "src/components/ui/message-scroller.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@shadcn/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/message-scroller.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "metric-card",
       "type": "registry:ui",
       "title": "Metric Card",
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/metric-card.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/metric-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "sheet",
       "type": "registry:ui",
       "title": "Sheet",
-      "dependencies": ["@radix-ui/react-dialog", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/sheet.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "notifications-drawer",
       "type": "registry:ui",
       "title": "Notifications Drawer",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["mds-tokens", "sheet"],
-      "files": [{ "path": "src/components/ui/notifications-drawer.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "mds-tokens",
+        "sheet"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/notifications-drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "pagination",
       "type": "registry:ui",
       "title": "Pagination",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/pagination.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "progress",
       "type": "registry:ui",
       "title": "Progress",
-      "dependencies": ["@radix-ui/react-progress"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/progress.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-progress"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "questionnaire",
       "type": "registry:ui",
       "title": "Questionnaire",
-      "dependencies": ["@shadcn/react", "lucide-react"],
-      "registryDependencies": ["utils", "button"],
-      "files": [{ "path": "src/components/ui/questionnaire.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@shadcn/react",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/questionnaire.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "radio-group",
       "type": "registry:ui",
       "title": "Radio Group",
-      "dependencies": ["@radix-ui/react-radio-group", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/radio-group.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-radio-group",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/radio-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "resizable",
       "type": "registry:ui",
       "title": "Resizable",
-      "dependencies": ["lucide-react", "react-resizable-panels"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/resizable.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react",
+        "react-resizable-panels"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/resizable.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "scroll-area",
       "type": "registry:ui",
       "title": "Scroll Area",
-      "dependencies": ["@radix-ui/react-scroll-area"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/scroll-area.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-scroll-area"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/scroll-area.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "dependencies": ["@radix-ui/react-select", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/select.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-select",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "side-navigation",
       "type": "registry:ui",
       "title": "Side Navigation",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "button", "theme-mode-context"],
-      "files": [{ "path": "src/components/ui/side-navigation.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "button",
+        "theme-mode-context"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/side-navigation.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",
-      "dependencies": ["@radix-ui/react-slider", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/slider.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-slider",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/slider.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/spinner.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "stat-card",
       "type": "registry:ui",
       "title": "Stat Card",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils"],
-      "files": [{ "path": "src/components/ui/stat-card.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/stat-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "status-card",
       "type": "registry:ui",
       "title": "Status Card",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["mds-tokens"],
-      "files": [{ "path": "src/components/ui/status-card.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/status-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "stepper",
       "type": "registry:ui",
       "title": "Stepper",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "badge"],
-      "files": [{ "path": "src/components/ui/stepper.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "badge"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
-      "dependencies": ["@radix-ui/react-switch", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/switch.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-switch",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "table",
       "type": "registry:ui",
       "title": "Table",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "checkbox", "skeleton", "pagination"],
-      "files": [{ "path": "src/components/ui/table.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "checkbox",
+        "skeleton",
+        "pagination"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/table.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
-      "dependencies": ["@radix-ui/react-tabs", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/tabs.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-tabs",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
-      "registryDependencies": ["utils", "mds-tokens", "input"],
-      "files": [{ "path": "src/components/ui/textarea.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "input"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "text-field",
       "type": "registry:ui",
       "title": "Text Field",
-      "registryDependencies": ["utils", "mds-tokens", "input", "label", "textarea"],
-      "files": [{ "path": "src/components/ui/text-field.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "input",
+        "label",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/text-field.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "toast",
       "type": "registry:ui",
       "title": "Toast",
-      "dependencies": ["@radix-ui/react-toast", "class-variance-authority", "lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/toast.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-toast",
+        "class-variance-authority",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/toast.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "use-toast",
       "type": "registry:hook",
       "title": "useToast",
-      "registryDependencies": ["toast"],
-      "files": [{ "path": "src/components/ui/use-toast.ts", "type": "registry:hook" }]
+      "registryDependencies": [
+        "toast"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/use-toast.ts",
+          "type": "registry:hook"
+        }
+      ]
     },
     {
       "name": "toaster",
       "type": "registry:ui",
       "title": "Toaster",
-      "registryDependencies": ["toast", "use-toast"],
-      "files": [{ "path": "src/components/ui/toaster.tsx", "type": "registry:ui" }]
+      "registryDependencies": [
+        "toast",
+        "use-toast"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/toaster.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "toggle",
       "type": "registry:ui",
       "title": "Toggle",
-      "dependencies": ["@radix-ui/react-toggle", "class-variance-authority"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/toggle.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-toggle",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/toggle.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "toggle-group",
       "type": "registry:ui",
       "title": "Toggle Group",
-      "dependencies": ["@radix-ui/react-toggle-group"],
-      "registryDependencies": ["utils", "mds-tokens", "toggle"],
-      "files": [{ "path": "src/components/ui/toggle-group.tsx", "type": "registry:ui" }]
-    },
-    {
-      "name": "website-alert-banner",
-      "type": "registry:ui",
-      "title": "Website Alert Banner",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens"],
-      "files": [{ "path": "src/components/ui/website-alert-banner.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "@radix-ui/react-toggle-group"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "toggle"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "website-header",
       "type": "registry:ui",
       "title": "Website Header",
       "description": "Marketing-site header — scroll-triggered transparent-to-solid background, mobile drawer.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "mds-tokens", "button", "sheet", "marsh-logo"],
-      "files": [{ "path": "src/components/ui/website-header.tsx", "type": "registry:ui" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "utils",
+        "mds-tokens",
+        "button",
+        "sheet",
+        "marsh-logo"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/website-header.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
