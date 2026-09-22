@@ -233,7 +233,7 @@ function CompleteDemo() {
           <InputGroupAddon align="inline-start">
             <ComposerAttachMenu />
           </InputGroupAddon>
-          <InputGroupInput readOnly value="Reply and MessageScroller will pin to the new bottom automatically." />
+          <InputGroupInput aria-label="Message" readOnly value="Reply and MessageScroller will pin to the new bottom automatically." />
           <InputGroupAddon align="inline-end">
             <InputGroupButton variant="primary" aria-label="Send" icon={<ArrowUpIcon className="h-4 w-4" />} />
           </InputGroupAddon>
@@ -304,7 +304,7 @@ function NewChatDemo() {
           <InputGroupAddon align="inline-start">
             <ComposerAttachMenu />
           </InputGroupAddon>
-          <InputGroupInput readOnly value="I need to check on the status of a property claim." />
+          <InputGroupInput aria-label="Message" readOnly value="I need to check on the status of a property claim." />
           <InputGroupAddon align="inline-end">
             <InputGroupButton variant="primary" aria-label="Send" icon={<ArrowUpIcon className="h-4 w-4" />} />
           </InputGroupAddon>

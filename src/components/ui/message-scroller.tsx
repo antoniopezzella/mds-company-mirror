@@ -96,6 +96,13 @@ function MessageScrollerButton({
       data-variant={variant}
       data-size={size}
       direction={direction}
+      // The sr-only <span> below cannot provide this button's name: `render`
+      // hands it to Button with `iconOnly`, and Button renders
+      // `{iconOnly ? iconOnlyNode : children}` — so the children, sr-only span
+      // included, are discarded. axe therefore saw a nameless button. An
+      // explicit aria-label survives that; a caller's own still wins, since
+      // ...props spreads after.
+      aria-label={direction === "end" ? "Scroll to end" : "Scroll to start"}
       className={cn(
         "absolute inset-s-1/2 -translate-x-1/2 rounded-full border-border bg-background text-foreground shadow-md transition-[translate,scale,opacity] duration-200 hover:bg-muted hover:text-foreground data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-400 data-[active=false]:[transition-timing-function:cubic-bezier(0.7,0,0.84,0)] data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:[transition-timing-function:cubic-bezier(0.23,1,0.32,1)] data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&_svg]:rotate-180",
         className
