@@ -26,6 +26,23 @@ const meta: Meta<typeof ResizablePanelGroup> = {
         component: 'Split layout with draggable dividers, for panes users can resize to taste.',
       },
     },
+    a11y: {
+      config: {
+        rules: [
+          {
+            // Upstream limitation in react-resizable-panels 4.12.2, not
+            // something this wrapper can fix — see the long note on
+            // ResizablePanel in resizable.tsx. Each Panel's scroll container
+            // is an inner div the library exposes no props for, so it cannot
+            // be made focusable. Scoped off HERE (not globally) so the rule
+            // still guards every other component, and so this shows up as a
+            // deliberate, explained exception rather than a silent pass.
+            id: 'scrollable-region-focusable',
+            enabled: false,
+          },
+        ],
+      },
+    },
   },
 };
 

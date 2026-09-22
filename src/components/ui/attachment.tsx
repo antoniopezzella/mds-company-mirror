@@ -193,10 +193,15 @@ function AttachmentTrigger({
   )
 }
 
-function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
+function AttachmentGroup({ className, tabIndex, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="attachment-group"
+      // Horizontally scrollable (overflow-x-auto), so it must be focusable or
+      // a keyboard-only user cannot scroll to attachments past the fold
+      // (WCAG 2.1.1; axe: scrollable-region-focusable). Arrow-key scrolling is
+      // native once focused, so no key handler is needed. Caller can override.
+      tabIndex={tabIndex ?? 0}
       className={cn(
         // `[&>[data-slot=X]]:` not `*:data-[slot=X]:` — see the note in
         // bubble.tsx; the shorthand compiles to a broken selector on this
