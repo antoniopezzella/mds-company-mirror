@@ -47,7 +47,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
 }) => {
   return (
     <Paper elevation={1} sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ color: getRoleColor('text.primary'), fontWeight: 600, mb: 3 }}>
+      <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600, mb: 3 }}>
         Quick Actions
       </Typography>
 

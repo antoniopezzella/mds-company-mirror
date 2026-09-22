@@ -52,7 +52,7 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
     <Paper elevation={1} sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
         <WarningAmberIcon sx={{ color: getRoleColor('status.warning.fg') }} />
-        <Typography variant="h6" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
+        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
           Risk Overview
         </Typography>
       </Box>
@@ -81,6 +81,12 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
               <LinearProgress
                 variant="determinate"
                 value={category.score}
+                // role="progressbar" obliges an accessible name, and the score
+                // is rendered as adjacent text rather than a label MUI can
+                // associate (axe: aria-progressbar-name). Naming it per
+                // category is more useful than a generic "Progress" anyway,
+                // since several of these appear on the same screen.
+                aria-label={`${category.name} risk score`}
                 sx={{
                   height: 8,
                   borderRadius: 4,

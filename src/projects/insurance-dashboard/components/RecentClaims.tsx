@@ -100,7 +100,7 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
   return (
     <Paper elevation={1} sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
+        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
           Recent Claims
         </Typography>
         <Typography
@@ -165,7 +165,7 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-              <Typography variant="h6" sx={{ color: getRoleColor('interactive.primary'), fontWeight: 700 }}>
+              <Typography variant="h6" component="h2" sx={{ color: getRoleColor('interactive.primary'), fontWeight: 700 }}>
                 {claim.amount}
               </Typography>
               <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>

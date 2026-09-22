@@ -161,7 +161,12 @@ export const ContentCards: React.FC<ContentCardsProps> = ({
                   }}
                 >
                   <Typography
+                    // component="h3": these card titles sit under the
+                    // section's <h2>, so h3 is the next level. As <h5> they
+                    // skipped two (axe: heading-order). The h5 variant keeps
+                    // the type scale unchanged.
                     variant="h5"
+                    component="h3"
                     sx={{
                       fontWeight: 400,
                       fontSize: '1.5rem',

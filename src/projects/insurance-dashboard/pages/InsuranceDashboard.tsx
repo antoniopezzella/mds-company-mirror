@@ -18,8 +18,14 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
       <Container maxWidth="xl">
         {/* Header */}
         <Box sx={{ mb: 4 }}>
+          {/* `variant` sets the size, `component` the semantics. This is the
+              page's top-level heading, so it is an <h1>; the section cards
+              below are <h2>. It previously rendered <h3> with sections at
+              <h6>, skipping two levels (axe: heading-order) and leaving a
+              screen reader's heading outline nonsensical. */}
           <Typography
             variant="h3"
+            component="h1"
             sx={{
               color: getRoleColor('text.primary'),
               fontWeight: 700,

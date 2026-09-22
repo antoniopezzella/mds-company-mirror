@@ -42,7 +42,12 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLab
         )}
       </Box>
       
-      <Typography variant="h3" sx={{ 
+      {/* component="p": this is a metric value, not a section heading. As an
+              <h3> it entered the document heading outline between the page <h1>
+              and the <h2> section titles, breaking the order (axe: heading-order)
+              and putting "$2.4M" into a screen reader's heading list. The h3
+              variant keeps the type scale. */}
+              <Typography variant="h3" component="p" sx={{ 
         color: getRoleColor('text.primary'),
         fontWeight: 700,
         mb: 1,

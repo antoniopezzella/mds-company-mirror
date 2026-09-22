@@ -64,8 +64,11 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
       }}
     >
       <Box
-        role="img"
-        aria-label={imageAlt}
+        // A CSS-background image with no alt text is decorative, and a
+        // role="img" with an empty name is worse than no role at all — axe
+        // flags it (role-img-alt) and a screen reader announces an unnamed
+        // image. Only claim the img role when there is something to announce.
+        {...(imageAlt ? { role: 'img' as const, 'aria-label': imageAlt } : {})}
         sx={{
           position: 'relative',
           minHeight: { xs: 240, md: 320 },
