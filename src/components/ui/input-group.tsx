@@ -85,18 +85,32 @@ function InputGroupButton({
   type = 'button',
   variant = 'tertiary',
   size = 'sm',
-  iconOnly = true,
+  iconOnly,
+  children,
   ...props
 }: React.ComponentProps<typeof Button>) {
+  // `iconOnly` used to default to `true` unconditionally. Button renders
+  // `{iconOnly ? iconOnlyNode : children}`, so under that default a text label
+  // — `<InputGroupButton>Save</InputGroupButton>` — was silently discarded,
+  // producing an empty button with no accessible name and no warning. Every
+  // existing call site passes `icon` + `aria-label` and is unaffected, but the
+  // default is a trap for the next person.
+  //
+  // Defaulting from the presence of children keeps the icon-button ergonomics
+  // (the common case in an input group) while making a text label work as
+  // written. An explicit `iconOnly` prop still wins either way.
+  const resolvedIconOnly = iconOnly ?? children == null;
   return (
     <Button
       type={type}
       variant={variant}
       size={size}
-      iconOnly={iconOnly}
+      iconOnly={resolvedIconOnly}
       className={className}
       {...props}
-    />
+    >
+      {children}
+    </Button>
   )
 }
 
