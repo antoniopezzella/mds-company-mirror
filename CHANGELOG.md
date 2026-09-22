@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.4.1...v0.5.0) (2026-09-22)
+
+### Features
+
+* **components:** add ButtonGroup ([36e7b7f](https://github.com/antoniopezzella/marsh-design-system/commit/36e7b7f4881f615ac651fdce08ef0c02e412806d))
+
+### Bug Fixes
+
+* **a11y:** --destructive was a Tailwind default, not the MDS danger token ([94453fe](https://github.com/antoniopezzella/marsh-design-system/commit/94453fe60109ba4459f0efde8e3b45b37121f241))* **a11y:** animations now honour prefers-reduced-motion — and that was the contrast bug ([271e502](https://github.com/antoniopezzella/marsh-design-system/commit/271e502d1f4f6d48a1d50741faa0cc82b7c8f396))* **a11y:** checkbox indeterminate state lied, and labels never reached the input ([ce6e1d3](https://github.com/antoniopezzella/marsh-design-system/commit/ce6e1d31385aa9c6d7e71ae2fd31a356d74c9e90))
+* **a11y:** clear scrollable-region and invalid-ARIA violations ([db21a2a](https://github.com/antoniopezzella/marsh-design-system/commit/db21a2acc356d02246dfbde2af3bf32eaec3cc49))
+* **a11y:** clear the last violations — suite should now be green ([41db961](https://github.com/antoniopezzella/marsh-design-system/commit/41db961fe323e4f98a0a4dd12fa90b5da2f4e9ca))* **a11y:** clear the remaining structural violations ([2edeb03](https://github.com/antoniopezzella/marsh-design-system/commit/2edeb03c23141c8887c480a25896f97c431b91bd))
+* **a11y:** heading hierarchy, progress-bar names, decorative image role ([2de8b9c](https://github.com/antoniopezzella/marsh-design-system/commit/2de8b9c1a6c1697032925a499a8cd6df5d28c168))
+* **a11y:** heading order in the sections InsuranceDashboard — CI now green ([c4d19a2](https://github.com/antoniopezzella/marsh-design-system/commit/c4d19a28440dec615c004d87b36e41b0327b46c6))
+* **a11y:** make the accessibility gate real, and start clearing the backlog ([5453d72](https://github.com/antoniopezzella/marsh-design-system/commit/5453d7238d55a2e162c22d0a08df21ac60ad8e09))
+* **a11y:** naming, landmarks, and a hidden side-navigation contrast bug ([3bf717e](https://github.com/antoniopezzella/marsh-design-system/commit/3bf717e0877efcd11510fa97ab4ddc4a24ef268c))* **a11y:** remove nested interactive controls from chip and list ([955fde6](https://github.com/antoniopezzella/marsh-design-system/commit/955fde6490e434b997de3ed64b73116d000f717f))
+* **a11y:** stat-card was the single largest source of contrast failures ([01810f1](https://github.com/antoniopezzella/marsh-design-system/commit/01810f1a1df7fdcf5cc2d6ae98e0b7d29d0d6ddd))
+* **a11y:** valid ARIA on Header profile trigger, SideNavigation list, Divider story ([db7a71a](https://github.com/antoniopezzella/marsh-design-system/commit/db7a71ac9141764ae57c3bba276eea5fc0e58048))
+* **a11y:** warning surfaces and the MUI theme's warning/info palette ([39cc9e7](https://github.com/antoniopezzella/marsh-design-system/commit/39cc9e7fa961b01772d8d1432309fab503612fac))* **a11y:** WireframeSlide text, and the shared --border nobody could see ([1557bdb](https://github.com/antoniopezzella/marsh-design-system/commit/1557bdb484430e0df8a8d1990bb4ac116eefa7d0))* **build:** emit types for the theming providers and drop a dead registry entry ([d928cce](https://github.com/antoniopezzella/marsh-design-system/commit/d928cced635432b4962536801486da84e47ecaee))
+* **build:** gitignore negations for tracked dist artifacts never worked ([cb95f6e](https://github.com/antoniopezzella/marsh-design-system/commit/cb95f6e1a631def89d1b84dc800ea511ec9abcb3))
+* **build:** stop the build deleting tracked token artifacts, untrack generated output ([e056f98](https://github.com/antoniopezzella/marsh-design-system/commit/e056f98004a8c8ae703c7c7e54de96b1addd9a90))
+* **build:** Vercel builds generated the knowledge base after typechecking it ([4513f83](https://github.com/antoniopezzella/marsh-design-system/commit/4513f830a653ad2da3709f08ac3bf82a5d5f848f))
+* close the remaining developer-readiness gaps ([40481dd](https://github.com/antoniopezzella/marsh-design-system/commit/40481dd03b354e0e01db679b6760b66df59110cd))
+* **roles:** three --role-* CSS vars resolved to nothing, plus a gate ([921a668](https://github.com/antoniopezzella/marsh-design-system/commit/921a668b9a721a080447e01ced2e137f962fbd01))* **security:** take production vulnerabilities to zero ([ae8d668](https://github.com/antoniopezzella/marsh-design-system/commit/ae8d66863672463df9c7135bf4ed0083e55a182e))
+* **tokens:** correct the stale version stamped into dist/tokens.json ([b2f714f](https://github.com/antoniopezzella/marsh-design-system/commit/b2f714fb10c544a6d72626c58420ad6e8fe456a0))
+* **tokens:** eliminate the Style Dictionary collision warning on every build ([2630251](https://github.com/antoniopezzella/marsh-design-system/commit/2630251d3f10e399fb8882cd19a3a82ee8fe7208))
+* **tokens:** resolve the warning-contrast defect using an existing role ([0ecb795](https://github.com/antoniopezzella/marsh-design-system/commit/0ecb795ab79889fdb565f4195335c90272abc82a))* **tokens:** stop dist/tokens.json churning on every commit ([7372094](https://github.com/antoniopezzella/marsh-design-system/commit/73720944b3daef6c5fd536a71d37b22d92f8367b))
+
+### Refactoring
+
+* **components:** separate legacy MUI from canonical in Storybook ([3b6b49b](https://github.com/antoniopezzella/marsh-design-system/commit/3b6b49b476ee7d4faee6ed9dd5a9ac9359686773))
+
+### Documentation
+
+* add MDS design system health report (2026-08-28) ([813286e](https://github.com/antoniopezzella/marsh-design-system/commit/813286e29e34796d2e6836c27235adac661b1ebf))
+* **components:** show ButtonGroup at each size ([2e30182](https://github.com/antoniopezzella/marsh-design-system/commit/2e30182d1c8d6478f8ad897ebf5f664233cb41c0))
+* fix 8 broken internal links in the onboarding path ([5049df9](https://github.com/antoniopezzella/marsh-design-system/commit/5049df92dfd74698fccd8b3185f341278921b2fe))
+* **governance:** record the 2026-09-22 health run ([2b76e48](https://github.com/antoniopezzella/marsh-design-system/commit/2b76e48d7b9f328e4dc4b74740bbd733ddae40e0))
+
+### Build System
+
+* **release:** nest types inside the preset so the changelog stops dropping commits ([0605e22](https://github.com/antoniopezzella/marsh-design-system/commit/0605e22211b4930ede3d2fd3c4f80da035cf683e))
+* **release:** regenerate the token artifact during the release commit ([07866b9](https://github.com/antoniopezzella/marsh-design-system/commit/07866b93dbb2c4a64350f0a7782bf9ed3b3f32a3))
+* **release:** stage dist/tokens.json with the release commit ([cee66f1](https://github.com/antoniopezzella/marsh-design-system/commit/cee66f115fc3bb2648df7eb570a4dc87658e121b))
+* **release:** strip hex colours misparsed as issue links from the changelog ([78b563e](https://github.com/antoniopezzella/marsh-design-system/commit/78b563e0a1cfe36f534fd5ff1c1b307e2496583c)), closes  ### Tests
+
+* **components:** cover the primitives that had no test and no story ([6e196d1](https://github.com/antoniopezzella/marsh-design-system/commit/6e196d13c8e0c48ed594c007c8d8e3ee7a52c76b))
+
+### Chores
+
+* **deps:** remove five unused dependencies ([04c01c2](https://github.com/antoniopezzella/marsh-design-system/commit/04c01c290523c2e26cb6ff0794591f834efd2601))
+* prepare the repo for concurrent contributors ([9fb20d8](https://github.com/antoniopezzella/marsh-design-system/commit/9fb20d87dbae5f36911141120da4e855757ad880))
+
 ## [0.4.1](https://github.com/antoniopezzella/marsh-design-system/compare/v0.4.0...v0.4.1) (2026-09-18)
 
 ### Bug Fixes
