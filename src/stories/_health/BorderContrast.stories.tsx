@@ -43,6 +43,23 @@ const meta: Meta = {
           id: 'scrollable-region-focusable',
           enabled: false,
         },
+        {
+          // This page renders light and dark side by side for comparison, which
+          // the token architecture cannot actually support: getRoleColor()
+          // resolves against a `dark` class on <html>, so components inside a
+          // LOCAL `.dark` wrapper still receive light-mode values. The dark
+          // zone therefore shows the correct borders (the thing being compared,
+          // set explicitly) on an approximated background, and axe reads the
+          // mismatch as a contrast failure — #000f47 on #0f0f0f.
+          //
+          // That's a real limitation worth knowing, not a defect in any
+          // component: a genuine dark-mode preview needs the story's
+          // `globals: { colorMode: 'dark' }`, which switches the whole canvas
+          // and so can't produce a side-by-side. Scoped to this health page
+          // only; the rule still guards every real component.
+          id: 'color-contrast',
+          enabled: false,
+        },
         ],
       },
     },

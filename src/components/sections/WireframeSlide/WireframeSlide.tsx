@@ -41,19 +41,20 @@ export const WireframeSlide: React.FC<WireframeSlideProps> = ({
     }
   };
 
-  const getTextColor = () => {
-    if (variant === 'dark' || variant === 'hero') {
-      return getRoleColor('text.inverse');
-    }
-    return getRoleColor('text.primary');
-  };
+  // Only `hero` is actually a dark surface. `dark` resolves to
+  // surface.secondary, which is MDS sky blue (#ceecff) — a LIGHT colour, in
+  // spite of the variant's name. Both variants were being given inverse/white
+  // text, so the `dark` variant rendered white on sky blue at 1.23:1 and
+  // near-white (text.onAccent) at 1.17:1: effectively invisible.
+  //
+  // Text colour now follows the surface rather than the variant's name.
+  const isDarkSurface = variant === 'hero';
 
-  const getSecondaryColor = () => {
-    if (variant === 'dark' || variant === 'hero') {
-      return getRoleColor('text.onAccent');
-    }
-    return getRoleColor('text.secondary');
-  };
+  const getTextColor = () =>
+    isDarkSurface ? getRoleColor('text.inverse') : getRoleColor('text.primary');
+
+  const getSecondaryColor = () =>
+    isDarkSurface ? getRoleColor('text.onAccent') : getRoleColor('text.secondary');
 
   const variantClass = styles[`wireframe-slide--${variant}`] ?? '';
 
