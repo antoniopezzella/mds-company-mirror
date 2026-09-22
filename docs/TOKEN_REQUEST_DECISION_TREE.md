@@ -134,7 +134,7 @@ Before submitting any token request:
 | **Token already exists** | Use existing token; update docs if usage is non-obvious |
 | **One-off custom value** | Redesign to use system tokens or get VP approval for exception |
 | **Wrong layer** | Should be semantic, not primitive (or vice versa) — resubmit |
-| **Poor naming** | Review naming conventions in [TOKENS.md](../foundations/TOKENS.md) |
+| **Poor naming** | Review naming conventions in [TOKENS.md](./foundations/TOKENS.md) |
 | **Single use case** | Semantic tokens need 2+ components — add more use cases or make it a role |
 | **Missing dark mode** | Define `semanticDarkOverrides` value for dark theme |
 | **Contrast failure** | Proposed color pair fails WCAG AA (4.5:1) — adjust values |
