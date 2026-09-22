@@ -36,7 +36,9 @@ export default meta;
 export const Composable: StoryObj = {
   render: () => (
     <Select defaultValue="pro">
-      <SelectTrigger className="w-[220px]">
+      {/* role="combobox" takes no name from its content, so the trigger needs
+          an explicit label even though the plan name is visible inside it. */}
+      <SelectTrigger className="w-[220px]" aria-label="Plan">
         <SelectValue placeholder="Select a plan" />
       </SelectTrigger>
       <SelectContent>

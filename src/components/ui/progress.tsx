@@ -48,6 +48,11 @@ export const CircularProgress = React.forwardRef<SVGSVGElement, CircularProgress
         height={size}
         viewBox={`0 0 ${size} ${size}`}
         role="progressbar"
+        // role="progressbar" obliges an accessible name (axe:
+        // aria-progressbar-name) and there's no visible text to derive one
+        // from. Placed BEFORE the spread so a caller's own aria-label or
+        // aria-labelledby still wins.
+        aria-label="Loading"
         aria-valuenow={variant === 'determinate' ? clamped : undefined}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -78,6 +83,14 @@ export interface LinearProgressProps {
   variant?: 'determinate' | 'indeterminate';
   tone?: ProgressTone;
   className?: string;
+  /**
+   * Accessible name for the progress bar. Radix renders the root with
+   * `role="progressbar"`, which obliges a name; defaults to "Loading" since
+   * there is no visible text to derive one from. Pass something specific
+   * ("Upload progress") where the context warrants it.
+   */
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 }
 
 export const LinearProgress: React.FC<LinearProgressProps> = ({
@@ -85,6 +98,8 @@ export const LinearProgress: React.FC<LinearProgressProps> = ({
   variant = 'determinate',
   tone = 'default',
   className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }) => {
   const color = getRoleColor(getToneColor(tone));
   const clamped = Math.min(Math.max(value, 0), 100);
@@ -94,6 +109,8 @@ export const LinearProgress: React.FC<LinearProgressProps> = ({
       className={cn('relative h-2 w-full overflow-hidden rounded-full', className)}
       style={{ backgroundColor: getRoleColor('surface.subtle') }}
       value={variant === 'determinate' ? clamped : undefined}
+      aria-label={ariaLabelledBy ? undefined : (ariaLabel ?? 'Loading')}
+      aria-labelledby={ariaLabelledBy}
     >
       <ProgressPrimitive.Indicator
         className={cn(

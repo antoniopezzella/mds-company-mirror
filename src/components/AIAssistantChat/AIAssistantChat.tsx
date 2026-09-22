@@ -408,7 +408,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
                 style={{ width: 'fit-content', alignSelf: 'flex-start' }}
               >
                 <MarkerIcon>
-                  <CircularProgress size={11} thickness={5} sx={{ color: primaryBlue }} />
+                  <CircularProgress aria-label="Assistant is thinking" size={11} thickness={5} sx={{ color: primaryBlue }} />
                 </MarkerIcon>
                 <MarkerContent className="shimmer">Marsh AI is responding…</MarkerContent>
               </Marker>

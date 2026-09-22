@@ -357,6 +357,11 @@ const DSButton: React.FC<DSButtonProps> = ({
     >
       {loading && (
         <CircularProgress
+          // MUI renders this with role="progressbar", which obliges an
+          // accessible name (axe: aria-progressbar-name). While loading, the
+          // button's own label is visually suppressed, so this spinner is the
+          // only thing conveying state to a screen reader.
+          aria-label="Loading"
           size={height * 0.4}
           thickness={4}
           sx={{
