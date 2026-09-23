@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import { Check, Loader2, X } from 'lucide-react';
 
