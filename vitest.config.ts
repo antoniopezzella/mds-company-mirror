@@ -32,7 +32,11 @@ export default defineConfig({
           // meant src/hooks/ and src/theme/ were untestable in practice, which
           // is a plausible reason the theming layer had no tests at all — the
           // place a dangling-CSS-variable bug later hid.
-          include: ['src/**/*.{test,spec}.{ts,tsx}'],
+          // src/ AND api/. The serverless functions under api/ are real
+          // shipped code — chat-stream.ts is a public endpoint spending an
+          // OpenAI key — and were outside the test runner entirely, the same
+          // way src/hooks/ and src/theme/ were before the previous widening.
+          include: ['src/**/*.{test,spec}.{ts,tsx}', 'api/**/*.{test,spec}.{ts,tsx}'],
           exclude: [
             'src/**/*.stories.{ts,tsx}',
             'src/**/*.accessibility.test.tsx',

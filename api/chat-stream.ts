@@ -3,6 +3,7 @@ import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 // ESM resolution, which requires it (TS2835). TypeScript still maps it to
 // the sibling `retrieve.ts`, and it resolves the same under `bundler`.
 import { retrieve, type Doc } from './_lib/retrieve.js';
+import { corsHeaders, clientKey, rateLimit, validateInput } from './_lib/guard.js';
 import kbDocsRaw from './_data/knowledge-base.json';
 
 export const config = { runtime: 'edge' };
@@ -84,10 +85,15 @@ const PROSPECT_PROMPT_SUFFIX = `
 - Tone: professional, direct, consultative — like a knowledgeable risk advisor helping someone evaluate their options`;
 
 export default async function handler(req: Request) {
+  // This endpoint proxies to OpenAI on our own API key, so every guard below
+  // is a guard on spend. See api/_lib/guard.ts for what each one does and,
+  // importantly, what the rate limiter cannot promise.
+  const cors = corsHeaders(req.headers.get('origin'));
+
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        ...cors,
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
@@ -95,12 +101,20 @@ export default async function handler(req: Request) {
   }
 
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers: cors });
+  }
+
+  const limit = rateLimit(clientKey(req));
+  if (!limit.ok) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), {
+      status: 429,
+      headers: { ...cors, 'Retry-After': String(limit.retryAfterSec) },
+    });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), { status: 500, headers: cors });
   }
 
   let body: {
@@ -111,12 +125,16 @@ export default async function handler(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers: cors });
   }
 
   const { question, conversationHistory = [], visitorType } = body;
-  if (!question?.trim()) {
-    return new Response(JSON.stringify({ error: 'Question is required' }), { status: 400 });
+  // Caps the attacker-controlled text that reaches the prompt. Without these
+  // a single request could carry an unbounded question and history, which is
+  // a direct lever on token spend.
+  const invalid = validateInput(question, conversationHistory);
+  if (invalid) {
+    return new Response(JSON.stringify({ error: invalid }), { status: 400, headers: cors });
   }
 
   const topDocs = retrieve(question, KB_DOCS, 3);
@@ -185,6 +203,6 @@ export default async function handler(req: Request) {
 
   return createUIMessageStreamResponse({
     stream: uiStream,
-    headers: { 'Access-Control-Allow-Origin': '*' },
+    headers: cors,
   });
 }
