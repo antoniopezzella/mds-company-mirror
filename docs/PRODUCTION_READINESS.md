@@ -23,7 +23,7 @@
 ## (a) Executive summary
 
 **Verdict: conditionally ready.** Adopt for internal dashboard projects once the
-four P0s below are closed. **Do not yet position it as the cross-brand foundation** —
+six P0s below are closed. **Do not yet position it as the cross-brand foundation** —
 one architectural decision (§2) makes multi-brand theming impossible without a
 large refactor, and that should be decided before more teams build on it.
 
@@ -143,7 +143,7 @@ platform, and unwinding it touches 133 files.
 | P1-8 | **The hex checker has a blind spot.** `button.tsx` carries `roles-allow-hex-file`, so its **81 hex literals report as 0**. The scan is also limited to `src/components`, leaving ~617 literals in `src/pages`/`src/projects` unscanned. Reported total 125; actual repo-wide ~823. | `check-role-usage.js:17,79`; `button.tsx:3` | **S** |
 | P1-9 | **Bus factor of 1.** `CODEOWNERS` names one owner on all 8 paths — its own comment calls this "a bus factor, not a review process". No deprecation window, no support commitment. | `.github/CODEOWNERS` | **S** |
 | P1-10 | **No composed filter bar; no date-range presets.** The toolbar is welded inside `DataTable` with no slot, so it cannot host a date filter. No "Last 7 days / MTD / YTD". | `data-table.tsx:370-473`; `date-picker.tsx:90-129` | **M** |
-| P1-11 | **No app shell or layout primitive.** Hand-assembled per consumer, on top of a live cascade collision: `_grid.scss` defines unprefixed `.grid-cols-1..12` that silently beat Tailwind's. | documented only in a code comment at `ShadcnDashboard.tsx:254-260` | **M** |
+| P1-11 | **No app shell or layout primitive.** Hand-assembled per consumer, on top of a live cascade collision: `_grid.scss` defines unprefixed `.grid-cols-1..12` that silently beat Tailwind's. | documented only in a code comment at `DashboardDemo.tsx:254-260` | **M** |
 | P1-12 | **Coverage is misconfigured.** `vitest.config.ts` has no coverage block — no include/exclude, no thresholds — so the headline number instruments Storybook's own built bundles. | reported **4.6%**; scoped to `src/components/ui/**/*.tsx` it is **45.25%** | **S** |
 
 ### P2 — quality and scale
