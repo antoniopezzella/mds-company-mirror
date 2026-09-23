@@ -281,8 +281,75 @@ const userData = {
 - [ ] CSRF tokens for state-changing requests
 - [ ] Secure authentication (JWT, OAuth)
 - [ ] Subresource Integrity (SRI) for CDN assets
-- [ ] Security incident response plan
+- [x] Security incident response plan — see [`docs/OPERATIONS.md` §4](./docs/OPERATIONS.md#4-when-it-breaks) (diagnosis) and §3 (rollback)
 - [ ] Regular penetration testing
+
+## ⚠️ This system's actual exposures
+
+The sections above describe the threats a generic web application faces — XSS,
+CSRF, injection. Those are real and the mitigations are in place. But a threat
+model is only useful if it names *this* system's exposures, and for a long time
+this document did not. Added 2026-09-22.
+
+### 1. Live credentials remain in git history
+
+`.env` was committed between 2025-10-05 and 2026-09-16 carrying a real
+`OPENAI_API_KEY`, `FIGMA_API_KEY` and `FIGMA_ACCESS_TOKEN`. It is untracked and
+ignored now, but history is intact: the values are readable at commits
+`6515c4c9`, `ff46b8b6` and `364c5bf1`.
+
+**Anyone with repository access has those keys.** Granting someone read access
+grants them the credentials. Rotation is the fix; rewriting history is cleanup
+afterwards and is not a substitute, because a clone taken at any point in those
+eleven months already has them.
+
+### 2. A public AI endpoint spending our own key
+
+`/api/chat-stream` proxies to OpenAI using `OPENAI_API_KEY`. It is
+unauthenticated by design — it powers the site's assistant for anonymous
+visitors — which makes it the highest-value target here: a stranger with the URL
+spends our budget, not theirs.
+
+Guards in place (`api/_lib/guard.ts`):
+
+| Guard | Setting |
+|---|---|
+| CORS allowlist | Production alias, Vercel preview hostnames, localhost. Not `*` |
+| Rate limit | 15 requests/minute per client IP, `429` + `Retry-After` |
+| Question size | ≤ 2,000 characters |
+| History size | ≤ 12 turns **and** ≤ 12,000 characters total |
+
+**Understand what these do not cover.** CORS is enforced by browsers, so it
+stops a third-party *site* using the endpoint but not a direct `curl`. And the
+rate limiter holds its counter in Edge-isolate module scope, so it resets as
+isolates recycle — it stops one client looping, not a distributed effort. A hard
+limit needs shared state (Vercel KV, Upstash, or a WAF rule).
+
+`conversationHistory` is attacker-controlled and goes into the prompt. The size
+caps bound the spend; they do not prevent prompt injection. Treat model output
+as untrusted.
+
+### 3. One credential across every environment
+
+`OPENAI_API_KEY` is configured in Vercel for **Preview and Production with the
+same value**, so every pull-request preview spends production budget and widens
+the blast radius of a leak. There is no staging tier.
+
+### 4. No spend ceiling
+
+Rate limiting caps request *frequency*, not monthly cost. Set a hard usage limit
+on the OpenAI key so that a bypass is bounded in money as well as in rate.
+
+### 5. Failures are silent
+
+A failed deploy does not fail CI and does not take the site down — Vercel keeps
+serving the last good build. One ran undetected for four days in September 2026.
+A spend spike would be equally quiet. Alerting is not configured.
+
+Operational detail, including how to diagnose each of these:
+[`docs/OPERATIONS.md`](./docs/OPERATIONS.md).
+
+---
 
 ## 🔧 Production Hardening
 
