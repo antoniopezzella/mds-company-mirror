@@ -129,8 +129,20 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
-      className={cn('sticky top-0 z-40 flex h-16 w-full items-center justify-between gap-4 px-4', className)}
-      style={{ backgroundColor: bg, color: fg }}
+      className={cn('sticky top-0 z-40 flex h-16 w-full items-center justify-between gap-4 border-b px-4', className)}
+      style={{
+        backgroundColor: bg,
+        color: fg,
+        // surface.navigation is deliberately the same midnight blue in both
+        // modes — it is brand chrome. Against a white page that reads as a bold
+        // band (17:1), but against a dark page it is only 1.18:1, so the header
+        // dissolves into the content behind it.
+        //
+        // A delineating edge fixes that without lightening the brand navy or
+        // disturbing the nav hover/active scale, which already occupy the
+        // lighter blues.
+        borderBottomColor: getRoleColor('surface.navigation.active'),
+      }}
     >
       {/* Left: sidebar toggle + brand */}
       <div className="flex items-center gap-3">
