@@ -160,7 +160,7 @@ Listed because a gap you know about is manageable and one you don't is not.
 
 | Weakness | Impact | Fix |
 |---|---|---|
-| **Secrets in git history** | `.env` was committed Oct 2025 – Sep 2026 with live OpenAI and Figma keys. Still readable at `6515c4c9`, `ff46b8b6`, `364c5bf1`. Repo access = key access. | Rotate all three. Scrubbing history is cleanup, not a substitute |
+| **Secrets in git history** | `.env` was committed Oct 2025 – Sep 2026 with live OpenAI and Figma keys. Still readable at `6515c4c9`, `ff46b8b6`, `364c5bf1`. Repo access = key access. | Rotate all three — procedure in §6. Scrubbing history is cleanup, not a substitute |
 | **One key across environments** | `OPENAI_API_KEY` is set for Preview *and* Production with the same value — every PR preview spends production budget | Separate keys per environment |
 | **No spend ceiling** | Rate limiting caps request *frequency*, not monthly cost | Set a hard usage limit on the OpenAI key |
 | **Rate limiter is per-isolate** | Edge functions run as many short-lived isolates; the counter lives in module scope, so it resets and an attacker spread across isolates exceeds 15/min | Needs shared state — Vercel KV, Upstash, or a WAF rule. See the note in `api/_lib/guard.ts` |
@@ -170,7 +170,61 @@ Listed because a gap you know about is manageable and one you don't is not.
 
 ---
 
-## 6. Routine commands
+## 6. Rotating a credential
+
+**Order matters: create the new one, put it everywhere, verify it works, and
+only then revoke the old one.** Revoking first takes the site down.
+
+### OpenAI (`OPENAI_API_KEY`)
+
+Live in production, and exposed in git history — the one that matters.
+
+1. platform.openai.com → API keys → **Create new secret key**. It is shown
+   once; copy it now.
+2. While you are there, Settings → Limits → set a **hard monthly usage limit**.
+   Rate limiting caps request frequency, not spend; this is the only thing that
+   bounds the bill.
+3. Put it in Vercel, per environment:
+   ```bash
+   npx vercel env rm  OPENAI_API_KEY production
+   npx vercel env add OPENAI_API_KEY production
+   # repeat for preview — and use a SEPARATE key there, so a pull-request
+   # preview cannot spend production budget
+   ```
+4. Update your local `.env`.
+5. **Verify before revoking.** Redeploy, open the site, ask the assistant a
+   question. An answer means the new key is live.
+6. Revoke the old key.
+
+### Figma (`FIGMA_ACCESS_TOKEN`, `FIGMA_API_KEY`)
+
+Developer-machine only — not in Vercel, not in production — so revoke-first is
+acceptable here.
+
+1. figma.com → Settings → Security → **Personal access tokens**
+2. Revoke the old tokens
+3. Generate a replacement, scoped to the minimum needed (file read is usually
+   enough)
+4. Update local `.env`
+
+`FIGMA_API_KEY` is not read anywhere in the codebase. It was exposed, so revoke
+it; do not recreate it.
+
+### Afterwards
+
+```bash
+npm run kb:build && npm test    # nothing should break
+```
+
+**Rotation does not remove the old values from git history** — they stay
+readable at `6515c4c9`, `ff46b8b6` and `364c5bf1` forever. Rotation makes them
+*worthless*, which is the objective. Rewriting history is separate, optional
+cleanup, and it changes every commit SHA — disruptive once anyone else has a
+clone. Rotate first; decide on scrubbing as its own piece of work.
+
+---
+
+## 7. Routine commands
 
 ```bash
 npm ci                      # install exactly the lockfile
