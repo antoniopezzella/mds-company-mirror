@@ -26,7 +26,7 @@
 import { writeFileSync, readFileSync, mkdirSync, rmSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import StyleDictionary from 'style-dictionary';
 import { legacyTokensJsonFormat } from './style-dictionary/formats/legacy-tokens-json.mjs';
 import { legacyThemeCssFormat } from './style-dictionary/formats/legacy-theme-css.mjs';
@@ -285,10 +285,32 @@ const meta = {
 // from this field, the previous timestamp is kept. Real token changes still
 // move it, which is the only case anyone would consult it for.
 const previousTokensJson = (() => {
+  // On disk first — the normal local case.
   try {
     return JSON.parse(readFileSync(path.join(root, 'dist', 'tokens.json'), 'utf8'));
   } catch {
-    return null; // first build, or dist/ cleaned — nothing to preserve
+    /* fall through to git */
+  }
+  // Then the committed copy.
+  //
+  // This fallback is what makes the preservation work in CI at all. `npm run
+  // build` is `tsc -b && vite build && npm run tokens:build`, and vite's
+  // `emptyOutDir` defaults to true — so vite DELETES the committed
+  // dist/tokens.json before this script ever runs. On disk there is nothing
+  // left to compare against, so every CI build minted a fresh timestamp, the
+  // artifact differed from the committed one on every deploy, and every
+  // downstream asset hash changed with it. That defeats both the "has the
+  // content actually changed" question this timestamp exists to answer and
+  // the OPERATIONS.md §4.2 staleness check built on top of it.
+  try {
+    const committed = execFileSync('git', ['show', 'HEAD:dist/tokens.json'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return JSON.parse(committed);
+  } catch {
+    return null; // first build, shallow clone, or no git — nothing to preserve
   }
 })();
 
