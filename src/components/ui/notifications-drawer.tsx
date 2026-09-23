@@ -71,7 +71,11 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
   const surfaceSubtle = getRoleColor('surface.subtle');
   const surfaceDefault = getRoleColor('surface.default');
   const primaryBlue = getRoleColor('interactive.primary');
-  const textOnAccent = getRoleColor('text.onAccent');
+  // `text.onInteractive`, NOT `text.onAccent`. interactive.primary LIGHTENS in
+  // dark mode (#000f47 -> #95caff), so white-on-accent drops to 1.73:1 there —
+  // a clear AA failure. text.onInteractive exists for exactly these surfaces
+  // and resolves to #000f47 in dark, giving 10.50:1.
+  const textOnInteractive = getRoleColor('text.onInteractive');
 
   const unreadCount = notifications.filter((n) => n.unread).length;
   const actionCount = notifications.filter((n) => n.actionRequired).length;
@@ -92,7 +96,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
   return (
     <Sheet open={open} onOpenChange={(next) => !next && onClose()}>
       <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
-        <SheetHeader className="flex-row items-center justify-between px-6 pb-4 pt-5">
+        <SheetHeader className="flex-row items-center justify-between px-6 pb-4 pt-6">
           <SheetTitle style={{ fontFamily: 'var(--typo-h5-font-family, "MMC Display", sans-serif)' }}>Notifications</SheetTitle>
         </SheetHeader>
 
@@ -116,7 +120,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                 className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium leading-none transition-colors"
                 style={{
                   backgroundColor: active ? primaryBlue : 'transparent',
-                  color: active ? textOnAccent : textPrimary,
+                  color: active ? textOnInteractive : textPrimary,
                   borderColor: active ? primaryBlue : borderDefault,
                 }}
               >
@@ -124,8 +128,8 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                 <span
                   className="flex h-5 min-w-[20px] items-center justify-center rounded-full px-1 text-[11px] font-bold"
                   style={{
-                    backgroundColor: active ? 'rgba(255,255,255,0.25)' : surfaceSubtle,
-                    color: active ? textOnAccent : textSecondary,
+                    backgroundColor: active ? 'color-mix(in srgb, currentColor 18%, transparent)' : surfaceSubtle,
+                    color: active ? textOnInteractive : textSecondary,
                   }}
                 >
                   {count}

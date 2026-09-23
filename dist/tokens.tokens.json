@@ -2790,7 +2790,7 @@
       },
       "surfaceAccent": {
         "$type": "color",
-        "$value": "{color.gray800}"
+        "$value": "{color.gray1000}"
       },
       "surfaceNavigation": {
         "$type": "color",
