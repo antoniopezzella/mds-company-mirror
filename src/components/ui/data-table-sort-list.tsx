@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import type { Table } from '@tanstack/react-table';
 import { ArrowDownUp, Plus, Trash2 } from 'lucide-react';

@@ -1,3 +1,5 @@
+"use client"
+
 // No MDS/Figma spec exists for this yet; built matching real shadcn/ui conventions directly.
 import * as React from 'react';
 import { OTPInput, OTPInputContext } from 'input-otp';

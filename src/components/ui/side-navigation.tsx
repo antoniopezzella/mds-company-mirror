@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import { ChevronDown, ChevronRight, LayoutDashboard, FileText, Shield, ClipboardList, BarChart3, Folder, Settings, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';

@@ -1,3 +1,5 @@
+"use client"
+
 import { Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, type ToastTone } from './toast';
 import { toast, useToast } from './use-toast';
 

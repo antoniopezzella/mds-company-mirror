@@ -34,6 +34,38 @@ const externalPackages = [
 const isExternal = (id: string) =>
   externalPackages.some((dep) => id === dep || id.startsWith(`${dep}/`));
 
+/**
+ * Preserve `"use client"` directives through the bundle.
+ *
+ * Rollup strips module-level directives and warns about them, because in a
+ * merged bundle they are meaningless. Under `preserveModules` they are not:
+ * each output file is still one module, and React Server Components rely on
+ * that directive to mark the client boundary.
+ *
+ * Without this, a Next.js App Router consumer importing any interactive
+ * component gets a hard error — "You're importing a component that needs
+ * useState, which is not available in a Server Component" — and the only
+ * workaround is re-exporting every component through their own
+ * `"use client"` file. Radix ships the directive for exactly this reason;
+ * drawer.tsx already declared it in source and the build was silently
+ * discarding it.
+ */
+function preserveUseClient(): import('vite').Plugin {
+  const clientModules = new Set<string>();
+  return {
+    name: 'mds-preserve-use-client',
+    transform(code, id) {
+      if (/^\s*(["'])use client\1/.test(code)) clientModules.add(id);
+      return null;
+    },
+    renderChunk(code, chunk) {
+      const isClient = Object.keys(chunk.modules).some((id) => clientModules.has(id));
+      if (!isClient || /^\s*(["'])use client\1/.test(code)) return null;
+      return { code: `"use client";\n${code}`, map: null };
+    },
+  };
+}
+
 // Library build for the published @marsh/design-system package — distinct
 // from vite.config.ts, which builds this repo's own app/Storybook. Entry is
 // src/index.ts (the curated shadcn/token export surface — see that file's
@@ -55,6 +87,7 @@ export default defineConfig({
   publicDir: false,
   plugins: [
     react(),
+    preserveUseClient(),
     dts({
       // tsconfig.app.json (the project's normal config) has noEmit:true, so
       // vite-plugin-dts silently produced nothing when using it by default —
