@@ -53,6 +53,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`DESIGN_SYSTEM_INTEGRATION_GUIDE.md`](./DESIGN_SYSTEM_INTEGRATION_GUIDE.md) | Connecting MDS components to other pages/projects |
 | [`VIDEO_COMPONENT_SPECS.md`](./VIDEO_COMPONENT_SPECS.md), [`HERO_CREATIVE_BRIEF.md`](./HERO_CREATIVE_BRIEF.md) (+ `.docx` twin) | Hero/video component specs — for production teams as much as engineers |
 | [`DS_HEALTH_REPORT.md`](./DS_HEALTH_REPORT.md) | Recurring, agent-generated (`mds-health-auditor`) production-readiness audit — read-only, don't hand-edit; it regenerates itself |
+| [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md) | Scored 0–3 adoption audit written for a reviewer deciding whether other teams build on this — exec summary, scorecard, P0/P1/P2 gaps, 30/60/90 plan. Re-run with `/audit`; it keeps a score history so progress is visible across runs. Distinct from `DS_HEALTH_REPORT.md`, which is the internal running health log |
 | [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md), [`GENERATIVE_UI_READINESS.md`](./GENERATIVE_UI_READINESS.md), [`FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md`](./FIGMA_PRIMITIVE_TOKEN_ASSESSMENT.md), [`FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md`](./FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md) | Point-in-time assessments written for a specific question/decision — still live/referenced, not archived, but read the date at the top before treating a claim as current |
 
 ## Tasks (a specific, scoped, in-progress piece of work)
