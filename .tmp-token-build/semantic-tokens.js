@@ -140,9 +140,22 @@ export const semanticDarkOverrides = {
     // surfaces (notification cards, chips) read as washed out in dark mode.
     // gray1000 keeps the same gray family as light's gray250 at a +3.6 lift.
     surfaceAccent: tokens.gray1000, // #303c37 (was gray800 #6a6e6b)
-    surfaceNavigation: tokens.blue1000, // #000f47 — Midnight Blue (same as light)
-    surfaceNavigationHover: tokens.blue975, // #1a2759 — ~white@10% over #000f47
-    surfaceNavigationActive: tokens.blue990, // #333f6b — ~white@20% over #000f47
+    // App chrome goes NEUTRAL in dark mode rather than staying midnight blue.
+    //
+    // Keeping the brand navy looked deliberate but failed in practice: #000f47
+    // against a dark page is 1.18:1, so the header stopped reading as a distinct
+    // surface and a navy slab sat oddly among otherwise neutral dark surfaces.
+    // The MUI DashboardHeader had already worked around this by hard-coding
+    // `surface.subtle` for dark mode — this moves that decision into the token
+    // layer so every piece of chrome adapts the same way and the workaround can
+    // go. Brand navy remains the light-mode identity.
+    //
+    // Only app chrome consumes these (header, side navigation, dashboard header,
+    // nav bar). The marketing website-header does NOT use surface.navigation, so
+    // its branding is unaffected.
+    surfaceNavigation: tokens.neutral950, // #101010 — deep chrome (light: #000f47)
+    surfaceNavigationHover: tokens.neutral900, // #252525 — ~white@8% lift
+    surfaceNavigationActive: tokens.neutral800, // #3b3b3b — ~white@16% lift
     // The light-mode Sky Blue would be near-white here and fail against dark
     // mode's white textPrimary (1.73:1), so selection uses the navy step the
     // navigation surfaces already use.

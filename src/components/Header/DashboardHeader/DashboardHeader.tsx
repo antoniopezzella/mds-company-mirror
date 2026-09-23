@@ -39,24 +39,21 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
   const profileRef = useRef<HTMLDivElement>(null);
 
   const getHeaderStyles = () => {
-    // System is in dark mode: Both variants converge to same dark appearance
-    if (systemMode === 'dark') {
-      return {
-        backgroundColor: getRoleColor('surface.subtle', { mode: 'dark' }),
-        color: getRoleColor('text.primary', { mode: 'dark' })
-      };
-    }
-
-    // Light mode: variant determines appearance
+    // There used to be a `systemMode === 'dark'` branch here that swapped in
+    // `surface.subtle` by hand, because surface.navigation stayed midnight blue
+    // in dark mode and a navy bar looked wrong among neutral dark surfaces.
+    // surface.navigation now carries a proper neutral dark override, so both
+    // variants resolve correctly on their own and the special case is gone —
+    // which also means this header and the shadcn ui/header finally agree.
     if (variant === 'primary') {
       return {
-        backgroundColor: getRoleColor('surface.navigation'),
-        color: getRoleColor('text.onHero')
+        backgroundColor: getRoleColor('surface.navigation', { mode: systemMode }),
+        color: getRoleColor('text.onHero', { mode: systemMode })
       };
     }
     return {
-      backgroundColor: getRoleColor('surface.secondary'),
-      color: getRoleColor('text.primary')
+      backgroundColor: getRoleColor('surface.secondary', { mode: systemMode }),
+      color: getRoleColor('text.primary', { mode: systemMode })
     };
   };
 
