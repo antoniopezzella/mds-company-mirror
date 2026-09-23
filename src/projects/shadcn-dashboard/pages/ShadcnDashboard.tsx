@@ -163,7 +163,15 @@ export function ShadcnDashboard() {
   }, []);
 
   return (
-    <div className="grid min-h-screen grid-rows-[auto_1fr]" style={{ backgroundColor: getRoleColor('surface.subtle') }}>
+    // `mds-dashboard` switches h1–h6 to Noto Sans 700 (see
+    // styles/_typography.scss). Without it a dashboard inherits the marketing
+    // default — Marsh Serif at weight 400 — which is a display face meant for
+    // hero copy, not for dense data UI. Every other dashboard in the repo sets
+    // this; this page was the one that didn't.
+    <div
+      className="mds-dashboard grid min-h-screen grid-rows-[auto_1fr]"
+      style={{ backgroundColor: getRoleColor('surface.subtle') }}
+    >
       <Header
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
@@ -222,7 +230,19 @@ export function ShadcnDashboard() {
             on mobile/tablet. */}
         <main className="min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8">
           <div className="flex flex-col gap-1 mb-6">
-            <h1 style={{ fontFamily: 'var(--typo-h3-font-family, var(--font-family-dashboard))', color: getRoleColor('text.primary') }} className="text-2xl font-semibold">
+            {/*
+              Reads the h1 variables rather than borrowing h3's. Under
+              `mds-dashboard` these resolve to Noto Sans 700; the fallbacks
+              only matter if the context class is ever dropped.
+            */}
+            <h1
+              style={{
+                fontFamily: 'var(--typo-h1-font-family, var(--font-family-dashboard))',
+                fontWeight: 'var(--typo-h1-font-weight, 700)' as React.CSSProperties['fontWeight'],
+                color: getRoleColor('text.primary'),
+              }}
+              className="text-2xl"
+            >
               Claims overview
             </h1>
             <p style={{ color: getRoleColor('text.secondary') }} className="text-sm">
