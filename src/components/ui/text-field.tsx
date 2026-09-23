@@ -3,8 +3,9 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { normalizeSize, normalizeTone } from './prop-compat';
 import { getRoleColor } from '@/theme/roles';
-import { Input, type InputTone } from './input';
+import { Input, type InputTone, type LegacyInputTone } from './input';
 import { Label } from './label';
 import { Textarea } from './textarea';
 
@@ -12,8 +13,8 @@ export interface DSTextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'tone'> {
   /** Renders a `<textarea>` instead of an `<input>` when set to 'textarea'. */
   type?: React.HTMLInputTypeAttribute | 'textarea';
-  tone?: InputTone;
-  size?: 'small' | 'medium';
+  tone?: InputTone | LegacyInputTone;
+  size?: 'sm' | 'md' | 'small' | 'medium';
   fullWidth?: boolean;
   error?: boolean;
   label?: string;
@@ -30,20 +31,21 @@ export interface DSTextFieldProps
  */
 export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, DSTextFieldProps>(
   (
-    { type = 'text', tone = 'default', size = 'medium', fullWidth = false, error = false, label, helperText, rows, id, className, ...rest },
+    { type = 'text', tone = 'default', size = 'md', fullWidth = false, error = false, label, helperText, rows, id, className, ...rest },
     ref
   ) => {
     const generatedId = React.useId();
     const fieldId = id ?? generatedId;
     const helperId = `${fieldId}-helper`;
-    const isError = error || tone === 'error';
-    const effectiveTone: InputTone = isError ? 'error' : tone;
+    const resolvedTone = normalizeTone(tone, 'TextField') as InputTone;
+    const isError = error || resolvedTone === 'danger';
+    const effectiveTone: InputTone = isError ? 'danger' : resolvedTone;
 
     const helperColor = isError
       ? getRoleColor('status.danger.fg')
-      : tone === 'success'
+      : resolvedTone === 'success'
         ? getRoleColor('status.success.fg')
-        : tone === 'warning'
+        : resolvedTone === 'warning'
           ? getRoleColor('status.warning.fg')
           : getRoleColor('text.secondary');
 
@@ -72,7 +74,7 @@ export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaEleme
             id={fieldId}
             type={type}
             tone={effectiveTone}
-            inputSize={size}
+            inputSize={normalizeSize(size, 'TextField')}
             aria-describedby={helperText ? helperId : undefined}
             aria-invalid={isError || undefined}
             className={fullWidth ? 'w-full' : undefined}

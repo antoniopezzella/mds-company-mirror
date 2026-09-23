@@ -23,7 +23,7 @@ const meta: Meta<typeof DSTextField> = {
   },
   argTypes: {
     tone: { control: 'select', options: ['default', 'error', 'success', 'warning'] },
-    size: { control: 'select', options: ['small', 'medium'] },
+    size: { control: 'select', options: ['sm', 'md'] },
   },
 };
 

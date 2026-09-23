@@ -188,7 +188,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="group ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2"
               style={{ color: 'inherit', backgroundColor: profileHover ? hoverBg : 'transparent' }}
             >
-              <Avatar initials={user.initials} size="small" tone={isPrimary ? 'default' : 'primary'} />
+              <Avatar initials={user.initials} size="sm" tone={isPrimary ? 'default' : 'primary'} />
               <span className="hidden flex-col items-start leading-tight md:flex">
                 <span className="text-sm font-medium">{user.name}</span>
                 {user.role && <span className="text-xs opacity-80">{user.role}</span>}
@@ -198,7 +198,7 @@ export const Header: React.FC<HeaderProps> = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-72">
             <div className="flex items-center gap-3 px-3 py-3">
-              <Avatar initials={user.initials} size="medium" tone="primary" />
+              <Avatar initials={user.initials} size="md" tone="primary" />
               <div>
                 <p className="text-sm font-semibold" style={{ color: getRoleColor('text.primary') }}>
                   {user.name}

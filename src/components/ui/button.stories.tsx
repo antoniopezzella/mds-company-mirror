@@ -205,9 +205,9 @@ export const Sizes: Story = {
 export const LegacySizes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-      <Button size="small" variant="primary">size="small"</Button>
-      <Button size="medium" variant="primary">size="medium"</Button>
-      <Button size="large" variant="primary">size="large"</Button>
+      <Button size="small" variant="primary">size="small"</Button>  {/* prop-vocab-allow-legacy — demonstrates the deprecated spelling still resolves */}
+      <Button size="medium" variant="primary">size="medium"</Button>  {/* prop-vocab-allow-legacy — demonstrates the deprecated spelling still resolves */}
+      <Button size="large" variant="primary">size="large"</Button>  {/* prop-vocab-allow-legacy — demonstrates the deprecated spelling still resolves */}
     </div>
   ),
 };
@@ -397,7 +397,7 @@ export const CompleteShowcase: Story = {
         <Button variant="accent">variant="accent" → primaryAlt</Button>
         <Button variant="outline">variant="outline" → secondary</Button>
         <Button variant="ghost">variant="ghost" → tertiary</Button>
-        <Button size="small" variant="primary">size="small" → sm</Button>
+        <Button size="small" variant="primary">size="small" → sm</Button>  {/* prop-vocab-allow-legacy — demonstrates the deprecated spelling still resolves */}
       </div>
     </div>
   ),

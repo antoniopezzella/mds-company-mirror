@@ -136,14 +136,22 @@ export {
 // Same `open`/`onClose`/`hasHeader`/`hasFooter`/`size`/`title`/`description`/
 // `footer` API as the MUI twin, composed from the primitives above.
 
-export type ModalSize = 'Small' | 'Medium' | 'Large' | 'FullScreen';
+/**
+ * Modal size. Aligned with `DialogContentProps['size']` so this file no longer
+ * exports two different size vocabularies for the same concept — the PascalCase
+ * spellings still work but are deprecated.
+ */
+export type ModalSize = 'sm' | 'md' | 'lg' | 'fullscreen';
+
+/** @deprecated Use the lowercase {@link ModalSize} values. Removed at 1.0. */
+export type LegacyModalSize = 'Small' | 'Medium' | 'Large' | 'FullScreen';
 
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
   hasHeader?: boolean;
   hasFooter?: boolean;
-  size?: ModalSize;
+  size?: ModalSize | LegacyModalSize;
   title?: string;
   description?: string;
   children?: React.ReactNode;
@@ -151,19 +159,28 @@ export interface ModalProps {
   className?: string;
 }
 
-const MODAL_SIZE_MAP: Record<ModalSize, DialogContentProps['size']> = {
+/**
+ * Legacy PascalCase → canonical. `normalizeSize` handles Small/Medium/Large;
+ * `FullScreen` is mapped here because it is the one member with no counterpart
+ * on the shared sm|md|lg|xl scale.
+ */
+const LEGACY_MODAL_SIZE_MAP: Record<LegacyModalSize, ModalSize> = {
   Small: 'sm',
   Medium: 'md',
   Large: 'lg',
   FullScreen: 'fullscreen',
 };
 
+function resolveModalSize(size: ModalSize | LegacyModalSize): ModalSize {
+  return LEGACY_MODAL_SIZE_MAP[size as LegacyModalSize] ?? (size as ModalSize);
+}
+
 export const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
   hasHeader = true,
   hasFooter = true,
-  size = 'Medium',
+  size = 'md',
   title,
   description,
   children,
@@ -172,7 +189,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent size={MODAL_SIZE_MAP[size]} className={className}>
+      <DialogContent size={resolveModalSize(size)} className={className}>
         {hasHeader && (title || description) && (
           <DialogHeader>
             {title && <DialogTitle>{title}</DialogTitle>}

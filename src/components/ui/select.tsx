@@ -5,6 +5,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { normalizeSize } from './prop-compat';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
@@ -21,14 +22,14 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
     invalid?: boolean;
-    size?: 'small' | 'medium';
+    size?: 'sm' | 'md' | 'small' | 'medium';
   }
->(({ className, children, invalid = false, size = 'medium', ...props }, ref) => (
+>(({ className, children, invalid = false, size = 'md', ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
       'flex w-full items-center justify-between gap-2 rounded-md border font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      size === 'small' ? 'h-8 px-2 py-1 text-xs' : 'h-10 px-3 py-2 text-sm',
+      normalizeSize(size, 'Select') === 'sm' ? 'h-8 px-2 py-1 text-xs' : 'h-10 px-3 py-2 text-sm',
       className
     )}
     style={
@@ -194,7 +195,7 @@ export interface DSSelectProps {
   helperText?: string;
   error?: boolean;
   tone?: 'default' | 'error' | 'success' | 'warning';
-  size?: 'small' | 'medium';
+  size?: 'sm' | 'md' | 'small' | 'medium';
   fullWidth?: boolean;
   disabled?: boolean;
   value?: string | number;
@@ -241,7 +242,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
   helperText,
   error = false,
   tone = 'default',
-  size = 'medium',
+  size = 'md',
   fullWidth = false,
   disabled = false,
   value,

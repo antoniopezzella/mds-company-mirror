@@ -6,8 +6,16 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor, type RoleName } from '@/theme/roles';
+import { normalizeSize } from './prop-compat';
 
-export type AvatarSize = 'small' | 'medium' | 'large' | 'xlarge';
+/**
+ * Canonical size scale. The `small|medium|large|xlarge` spellings still work but
+ * are deprecated — see `prop-compat.ts` for the compatibility contract.
+ */
+export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+
+/** @deprecated Use {@link AvatarSize} (`sm`/`md`/`lg`/`xl`). Removed at 1.0. */
+export type LegacyAvatarSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type AvatarVariant = 'circular' | 'rounded' | 'square';
 export type AvatarTone = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy';
@@ -15,7 +23,7 @@ export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy';
 export interface AvatarProps {
   src?: string;
   initials?: string;
-  size?: AvatarSize;
+  size?: AvatarSize | LegacyAvatarSize;
   variant?: AvatarVariant;
   tone?: AvatarTone;
   alt?: string;
@@ -26,24 +34,24 @@ export interface AvatarProps {
 }
 
 const SIZE_PX: Record<AvatarSize, number> = {
-  small: 32,
-  medium: 40,
-  large: 56,
-  xlarge: 64,
+  sm: 32,
+  md: 40,
+  lg: 56,
+  xl: 64,
 };
 
 const FONT_SIZE: Record<AvatarSize, string> = {
-  small: '0.75rem',
-  medium: '1rem',
-  large: '1.25rem',
-  xlarge: '1.25rem',
+  sm: '0.75rem',
+  md: '1rem',
+  lg: '1.25rem',
+  xl: '1.25rem',
 };
 
 const STATUS_SIZE: Record<AvatarSize, number> = {
-  small: 8,
-  medium: 12,
-  large: 14,
-  xlarge: 14,
+  sm: 8,
+  md: 12,
+  lg: 14,
+  xl: 14,
 };
 
 const RADIUS: Record<AvatarVariant, string> = {
@@ -107,7 +115,7 @@ const avatarRootVariants = cva('flex shrink-0 items-center justify-center overfl
 export const Avatar: React.FC<AvatarProps> = ({
   src,
   initials,
-  size = 'medium',
+  size = 'md',
   variant = 'circular',
   tone = 'default',
   alt = 'User Avatar',
@@ -116,8 +124,9 @@ export const Avatar: React.FC<AvatarProps> = ({
   badge,
   className,
 }) => {
-  const sizePx = SIZE_PX[size];
-  const statusPx = STATUS_SIZE[size];
+  const resolvedSize = normalizeSize(size, 'Avatar') as AvatarSize;
+  const sizePx = SIZE_PX[resolvedSize];
+  const statusPx = STATUS_SIZE[resolvedSize];
   const { bg, fg } = getToneColors(tone);
 
   return (
@@ -143,7 +152,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           width: sizePx,
           height: sizePx,
           borderRadius: RADIUS[variant],
-          fontSize: FONT_SIZE[size],
+          fontSize: FONT_SIZE[resolvedSize],
           border: `2px solid ${getRoleColor('surface.default')}`,
           boxShadow: `0 0 0 1px ${getRoleColor('border.default')}`,
         }}

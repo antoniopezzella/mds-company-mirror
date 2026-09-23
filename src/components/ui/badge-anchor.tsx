@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { normalizeSize } from './prop-compat';
 import { getRoleColor } from '@/theme/roles';
 import { Badge, type BadgeTone } from './badge';
 
@@ -20,7 +21,7 @@ export interface BadgeAnchorProps {
   /** Content for `number`/`text` variants. Ignored for `dot`. */
   content?: React.ReactNode;
   variant?: 'dot' | 'number' | 'text';
-  size?: 'small' | 'medium';
+  size?: 'sm' | 'md' | 'small' | 'medium';
   tone?: BadgeTone;
   /**
    * Visual nuance only in the MUI original (a few px of corner-hugging
@@ -48,13 +49,14 @@ const POSITION_CLASSES: Record<string, string> = {
 export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
   content,
   variant = 'dot',
-  size = 'medium',
+  size = 'md',
   tone = 'default',
   anchorOrigin = { vertical: 'top', horizontal: 'right' },
   invisible = false,
   children,
   className,
 }) => {
+  const resolvedSize = normalizeSize(size, 'BadgeAnchor');
   const positionKey = `${anchorOrigin.vertical}-${anchorOrigin.horizontal}`;
   const isDot = variant === 'dot';
 
@@ -68,10 +70,10 @@ export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
             'absolute z-10 flex items-center justify-center rounded-full border-2 p-0 leading-none',
             POSITION_CLASSES[positionKey],
             isDot
-              ? size === 'small'
+              ? resolvedSize === 'sm'
                 ? 'h-2 w-2'
                 : 'h-3 w-3'
-              : size === 'small'
+              : resolvedSize === 'sm'
                 ? 'h-5 min-w-[20px] px-1 text-[0.65rem]'
                 : 'h-6 min-w-[24px] px-1 text-xs'
           )}
