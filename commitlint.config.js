@@ -37,6 +37,11 @@ export default {
         'storybook',
         'governance',
         'build',
+        // The published npm package specifically — its entry points, exports,
+        // bundling and stylesheet. Distinct from 'build', which is this repo's
+        // own app/Storybook pipeline: the two have different consumers and
+        // different failure modes, and a change to one rarely touches the other.
+        'package',
         // Dependency and release work. Both are routine and neither had a
         // scope here, so every `chore(deps)` / `chore(release)` commit —
         // including the ones commit-and-tag-version generates itself —
