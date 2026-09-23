@@ -134,7 +134,12 @@ export const semanticDarkOverrides = {
     surfaceDefault: tokens.neutral950, // #101010
     surfaceSubtle: tokens.neutral900, // #252525
     surfaceMuted: tokens.neutral800, // #3b3b3b
-    surfaceAccent: tokens.gray800, // #6a6e6b (was blueGray800)
+    // #303c37. Was gray800 (#6a6e6b), which inverted the light-mode relationship:
+    // light's accent sits -6.3 luminance BELOW the page, but #6a6e6b sat +14.8
+    // ABOVE it — a mid-grey slab rather than a subtle tint, which is why accent
+    // surfaces (notification cards, chips) read as washed out in dark mode.
+    // gray1000 keeps the same gray family as light's gray250 at a +3.6 lift.
+    surfaceAccent: tokens.gray1000, // #303c37 (was gray800 #6a6e6b)
     surfaceNavigation: tokens.blue1000, // #000f47 — Midnight Blue (same as light)
     surfaceNavigationHover: tokens.blue975, // #1a2759 — ~white@10% over #000f47
     surfaceNavigationActive: tokens.blue990, // #333f6b — ~white@20% over #000f47

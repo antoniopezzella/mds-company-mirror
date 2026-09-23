@@ -65,9 +65,34 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Co
         {...props}
       >
         {children}
+        {/*
+          Icon-button treatment rather than a bare glyph: transparent by default
+          with a hover surface, which is the right affordance for a dismiss — a
+          tertiary Button would bring text-button padding and semantics it
+          doesn't need.
+
+          Positioned at right-5/top-4 to sit on the optical centre of a
+          `px-6 pt-5` SheetHeader title rather than the 4/4 it used before,
+          which left it visibly high and tight against the corner. The 40px
+          box also gives it a real touch target; the old version was a 20px
+          glyph with no padding.
+        */}
         <DialogPrimitive.Close
-          className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-          style={{ color: getRoleColor('text.secondary') }}
+          className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          style={
+            {
+              color: getRoleColor('text.secondary'),
+              '--sheet-close-hover': getRoleColor('surface.subtle'),
+            } as React.CSSProperties
+          }
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = getRoleColor('surface.subtle');
+            e.currentTarget.style.color = getRoleColor('text.primary');
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = getRoleColor('text.secondary');
+          }}
           aria-label="Close"
         >
           <X className="h-5 w-5" />

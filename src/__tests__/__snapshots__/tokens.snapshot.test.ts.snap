@@ -291,7 +291,7 @@ exports[`design tokens snapshots > semantic dark overrides > semantic-dark-overr
   "statusWarningBg": "#cb7623",
   "statusWarningBorder": "#ffd98a",
   "statusWarningText": "#fff2da",
-  "surfaceAccent": "#6a6e6b",
+  "surfaceAccent": "#303c37",
   "surfaceAccentStrong": "#8a8c88",
   "surfaceDefault": "#101010",
   "surfaceDisabled": "#3b3b3b",
