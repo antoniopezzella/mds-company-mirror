@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
+import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
  * Ported from shadcn/ui's Base UI "attachment" registry item
  * (apps/v4/registry/new-york-v4/ui/attachment.tsx) — part of the same
  * chat-components family as message-scroller.tsx/message.tsx/bubble.tsx/
- * marker.tsx. Self-contained (cva + radix-ui Slot only, no @shadcn/react
+ * marker.tsx. Self-contained (cva + @radix-ui/react-slot only, no @shadcn/react
  * primitive needed here), same as Bubble/Marker/Message.
  *
  * One adaptation: upstream's `AttachmentAction` defaults to Button's
@@ -184,7 +184,7 @@ function AttachmentTrigger({
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
 }) {
-  const Comp = asChild ? Slot.Root : "button"
+  const Comp = asChild ? Slot : "button"
 
   return (
     <Comp
