@@ -25,7 +25,7 @@ const meta: Meta<typeof Avatar> = {
     },
   },
   argTypes: {
-    size: { control: 'select', options: ['small', 'medium', 'large', 'xlarge'] },
+    size: { control: 'select', options: ['sm', 'md', 'lg', 'xl'] },
     variant: { control: 'select', options: ['circular', 'rounded', 'square'] },
     tone: { control: 'select', options: ['default', 'primary', 'secondary', 'success', 'warning', 'danger'] },
     status: { control: 'select', options: [undefined, 'online', 'offline', 'away', 'busy'] },
@@ -59,10 +59,10 @@ export const BrokenImageFallsBackToInitials: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-end gap-3">
-      <Avatar initials="S" size="small" />
-      <Avatar initials="M" size="medium" />
-      <Avatar initials="L" size="large" />
-      <Avatar initials="XL" size="xlarge" />
+      <Avatar initials="S" size="sm" />
+      <Avatar initials="M" size="md" />
+      <Avatar initials="L" size="lg" />
+      <Avatar initials="XL" size="xl" />
     </div>
   ),
 };

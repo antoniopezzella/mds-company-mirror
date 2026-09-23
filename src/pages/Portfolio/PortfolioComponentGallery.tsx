@@ -398,7 +398,7 @@ function FormsPanel() {
           <div className={styles.formStack}>
             <DSSelect
               label="Coverage Type"
-              size="small"
+              size="sm"
               fullWidth
               value={selectVal}
               onChange={value => setSelectVal(value as string)}
@@ -414,7 +414,7 @@ function FormsPanel() {
             />
             <DSSelect
               label="Policy Status"
-              size="small"
+              size="sm"
               fullWidth
               value="active"
               options={[
@@ -428,7 +428,7 @@ function FormsPanel() {
             />
             <DSSelect
               label="Broker Assignment"
-              size="small"
+              size="sm"
               fullWidth
               value=""
               options={[

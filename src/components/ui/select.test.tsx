@@ -34,7 +34,14 @@ describe('DSSelect', () => {
   });
 
   it('applies the small size class to the trigger', () => {
-    render(<DSSelect options={options} label="Type" size="small" />);
+    render(<DSSelect options={options} label="Type" size="sm" />);
+    expect(screen.getByRole('combobox').className).toMatch(/h-8/);
+  });
+
+  // The legacy spelling has to keep working until it is removed at 1.0 — that
+  // is the whole compatibility promise of the size unification.
+  it('still accepts the deprecated size="small"', () => { // prop-vocab-allow-legacy
+    render(<DSSelect options={options} label="Type" size="small" />); // prop-vocab-allow-legacy
     expect(screen.getByRole('combobox').className).toMatch(/h-8/);
   });
 

@@ -33,7 +33,7 @@ export function ChatDemo() {
               <MessageScrollerItem>
                 <Message>
                   <MessageAvatar>
-                    <Avatar initials="AI" size="small" tone="primary" />
+                    <Avatar initials="AI" size="sm" tone="primary" />
                   </MessageAvatar>
                   <MessageContent>
                     <Bubble variant="muted">
@@ -54,7 +54,7 @@ export function ChatDemo() {
               <MessageScrollerItem>
                 <Message>
                   <MessageAvatar>
-                    <Avatar initials="AI" size="small" tone="primary" />
+                    <Avatar initials="AI" size="sm" tone="primary" />
                   </MessageAvatar>
                   <MessageContent>
                     <Bubble variant="muted">

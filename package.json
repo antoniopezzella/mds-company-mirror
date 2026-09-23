@@ -80,7 +80,7 @@
     "governance:report": "node scripts/report-governance.js",
     "governance:report:json": "node scripts/report-governance.js --json",
     "governance:report:strict": "node scripts/report-governance.js --strict --json",
-    "governance:ci": "npm run tokens:build && npm run governance:report:strict",
+    "governance:ci": "npm run tokens:build && npm run governance:report:strict && npm run props:check:strict",
     "governance:badge": "npm run governance:report:strict > governance-report.json && node scripts/generate-governance-badge.js governance-report.json",
     "automation:validate": "node scripts/automation/ai-design-validator.js",
     "automation:validate:test": "node scripts/automation/ai-design-validator.js --test",
@@ -115,7 +115,10 @@
     "workflow:local": "npm run clean:install && npm run security && npm test && npm run build",
     "workflow:ci": "npm ci && npm run security && npm test && npm run build && npm run build-storybook",
     "storybook-with-ui": "concurrently \"npm run storybook\" \"npm run story-ui\"",
-    "build:css": "tailwindcss -c tailwind.package.config.js -i src/styles.package.css -o dist-pkg/styles.css --minify"
+    "build:css": "tailwindcss -c tailwind.package.config.js -i src/styles.package.css -o dist-pkg/styles.css --minify",
+    "props:check": "node scripts/check-prop-vocab.js",
+    "props:check:strict": "node scripts/check-prop-vocab.js --strict",
+    "props:check:json": "node scripts/check-prop-vocab.js --json"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

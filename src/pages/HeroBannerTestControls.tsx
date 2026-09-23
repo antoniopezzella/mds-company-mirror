@@ -106,7 +106,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           <Divider sx={{ borderColor: 'rgba(0, 15, 71, 0.16)' }} />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Banner Size"
             value={values.bannerSize}
@@ -119,7 +119,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Subtitle (H2)"
             value={values.showSubtitle ? 'show' : 'hide'}
@@ -131,7 +131,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Body Text"
             value={values.showDescription ? 'show' : 'hide'}
@@ -143,7 +143,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Media Type"
             value={values.mediaType}
@@ -152,7 +152,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Number of Banners"
             value={values.numBanners}
@@ -165,7 +165,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Layout"
             value={values.layout}
@@ -177,7 +177,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             disabled={values.layout === 'background'}
             label="Media Position (Split Only)"
@@ -190,7 +190,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Language (i18n Test)"
             value={values.language}
@@ -199,7 +199,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="Color Variant Theme"
             value={values.variant}
@@ -211,7 +211,7 @@ export const HeroBannerTestControls: React.FC<HeroBannerTestControlsProps> = ({
           />
 
           <DSSelect
-            size="small"
+            size="sm"
             fullWidth
             label="CMS Helpers"
             value={values.showCmsHints ? 'show' : 'hide'}

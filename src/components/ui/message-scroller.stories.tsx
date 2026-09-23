@@ -353,7 +353,7 @@ function GroupChatDemo() {
                   <MessageScrollerItem key={i} messageId={`group-${i}`} scrollAnchor={i === GROUP_THREAD.length - 1}>
                     <Message align={turn.align}>
                       <MessageAvatar>
-                        <Avatar initials={turn.initials} tone={turn.tone} size="small" alt={turn.author} />
+                        <Avatar initials={turn.initials} tone={turn.tone} size="sm" alt={turn.author} />
                       </MessageAvatar>
                       <MessageContent>
                         <MessageHeader>{turn.author}</MessageHeader>

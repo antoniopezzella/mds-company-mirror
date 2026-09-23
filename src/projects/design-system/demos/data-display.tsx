@@ -44,11 +44,11 @@ export function CardDemo() {
 export function AvatarDemo() {
   return (
     <div className="flex flex-wrap items-end gap-4">
-      <Avatar initials="JD" size="small" />
-      <Avatar initials="AM" size="medium" tone="primary" />
-      <Avatar initials="RK" size="large" tone="success" status="online" />
-      <Avatar initials="TL" size="xlarge" variant="rounded" status="busy" />
-      <Avatar initials="?" size="medium" tone="warning" status="away" />
+      <Avatar initials="JD" size="sm" />
+      <Avatar initials="AM" size="md" tone="primary" />
+      <Avatar initials="RK" size="lg" tone="success" status="online" />
+      <Avatar initials="TL" size="xl" variant="rounded" status="busy" />
+      <Avatar initials="?" size="md" tone="warning" status="away" />
     </div>
   );
 }
