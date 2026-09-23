@@ -66,6 +66,11 @@ export * from './components/ui/metric-card';
 export * from './components/ui/pagination';
 export * from './components/ui/popover';
 export * from './components/ui/progress';
+// `export *` does not re-export a default, so the `{ Circular, Linear }`
+// grouping was unreachable from the package while CircularProgress and
+// LinearProgress were not. Named explicitly so the published surface matches
+// the module's own API.
+export { default as Progress } from './components/ui/progress';
 export * from './components/ui/questionnaire';
 export * from './components/ui/radio-group';
 export * from './components/ui/resizable';

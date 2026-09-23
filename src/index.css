@@ -1,135 +1,14 @@
+/* Token custom properties. Extracted to styles/tokens.css so the published
+   package stylesheet can include the same definitions without duplicating
+   them. @import must come before any other rule, hence its position here. */
+@import './styles/token-variables.css';
+
 /* Tailwind CSS Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ===== shadcn/ui CSS Variables - MDS Token Integration ===== */
-@layer base {
-  :root {
-    /* Core Colors */
-    --background: 0 0% 100%;                    /* white - MDS: surface.default */
-    --foreground: 222 100% 15%;                 /* #000f47 Midnight Blue - MDS: text.primary */
-    
-    /* Card */
-    --card: 0 0% 100%;                          /* white - MDS: surface.default */
-    --card-foreground: 222 100% 15%;            /* #000f47 - MDS: text.primary */
-    
-    /* Popover */
-    --popover: 0 0% 100%;                       /* white - MDS: surface.default */
-    --popover-foreground: 222 100% 15%;         /* #000f47 - MDS: text.primary */
-    
-    /* Primary (Midnight Blue - MODE Primary) */
-    --primary: 215 100% 24%;                    /* #002c77 - MDS: interactive.primary */
-    --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
-    
-    /* Secondary (Outline style) */
-    --secondary: 204 33% 97%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
-    --secondary-foreground: 222 100% 15%;       /* #000f47 - MDS: text.primary */
-    
-    /* Muted (Subtle backgrounds) */
-    --muted: 204 33% 97%;                       /* #f7f8f8 - MDS: surface.subtle */
-    --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
-    
-    /* Accent (Gold - Brand Secondary) */
-    --accent: 45 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
-    --accent-foreground: 215 100% 24%;          /* #002c77 - MDS: interactive.primary */
-    
-    /* Destructive (Error/Danger state) */
-    /* Was `0 84% 60%` (#ee4343), a Tailwind default — despite the comment
-       claiming it mapped to status.danger. It didn't map to any MDS token, and
-       it failed AA as text: components using `text-destructive` (Field errors,
-       Bubble, Attachment) rendered error copy at 3.78:1 on white.
-       Now the real token: statusDanger / statusCritical #c53532, which is
-       5.34:1 both as text on white AND as a background under white, so it
-       serves `text-destructive` and `bg-destructive` correctly. */
-    --destructive: 1 60% 48%;                   /* #c53532 - MDS: statusDanger (Utilities/Critical) */
-    --destructive-foreground: 0 0% 100%;        /* white - 5.34:1 on the above */
-    
-    /* UI Elements */
-    /* Both comments already claimed `MDS: border.default`, but neither was set
-       to that role's actual value. #dadada is 1.38:1 on white — far under the
-       3:1 WCAG requires for a non-text boundary — so every component borrowing
-       the shared border (StatCard, Bubble, Marker, Drawer, MessageScroller,
-       Questionnaire, and anything using `border-input`) drew an edge nobody
-       with low vision could see. src/stories/_health/BorderContrast.stories.tsx
-       has documented this for some time; this is that fix applied.
-       border.default is neutral500 #878787, deliberately unchanged across modes
-       (3.59:1 light, 5.30:1 dark). */
-    --border: 0 0% 53%;                         /* #878787 neutral500 - MDS: border.default */
-    --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
-    
-    /* Focus Ring */
-    --ring: #3d7aff;                            /* MDS: focus.ring (light) — plain hex, not HSL: the
-                                                    prior HSL triplet (210 100% 50%) had silently
-                                                    drifted to #0080ff via an imprecise hand
-                                                    conversion; kept in sync with focus.ring by
-                                                    src/__tests__/ring-css-var.sync.test.ts */
-    
-    /* Border Radius */
-    --radius: 0.125rem;                         /* 2px - Marsh DS standard */
-    
-    /* Chart Colors — validated categorical palette (dataviz skill:
-       node scripts/validate_palette.js). Order (green, blue, gold, purple,
-       red) is load-bearing: it's the only arrangement of these five brand
-       hues with no adjacent-pair CVD collision at light-mode lightness —
-       reordering will reintroduce a red/green or red/gold confusion pair.
-       Always pair with a legend + direct labels (WARN-band contrast). */
-    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
-    --chart-2: 223 100% 56%;                    /* #1f60ff Blue 700 */
-    --chart-3: 36 83% 48%;                      /* #e09015 Gold 900 */
-    --chart-4: 277 57% 50%;                     /* #8f37c6 Purple 750 */
-    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
-  }
-  
-  /* Dark Mode */
-  .dark {
-    --background: 0 0% 6%;                      /* #101010 Neutral 950 */
-    --foreground: 0 0% 100%;                    /* white */
-    
-    --card: 0 0% 15%;                           /* #252525 Neutral 900 */
-    --card-foreground: 0 0% 100%;               /* white */
-    
-    --popover: 0 0% 6%;                         /* #101010 */
-    --popover-foreground: 0 0% 100%;            /* white */
-    
-    --primary: 210 100% 60%;                    /* Blue 400 (lighter) */
-    --primary-foreground: 0 0% 6%;              /* #101010 */
-    
-    --secondary: 0 0% 15%;                      /* #252525 */
-    --secondary-foreground: 0 0% 100%;          /* white */
-    
-    --muted: 0 0% 15%;                          /* #252525 */
-    --muted-foreground: 0 0% 65%;               /* #a6a6a6 */
-    
-    --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
-    --accent-foreground: 0 0% 100%;             /* white */
-    
-    /* Dark mode: semanticDarkOverrides.statusDanger is red500 (#ff6b6b), a
-       light red meant to sit on a dark surface. White on it is only 2.78:1, so
-       the foreground flips to the dark brand navy the way text.onInteractive
-       does — same reasoning as the destructive Button variant. */
-    --destructive: 0 100% 71%;                  /* #ff6b6b - MDS dark: statusDanger */
-    --destructive-foreground: 227 100% 14%;     /* #000f47 - 6.53:1 on the above */
-    
-    /* Same value in dark mode, on purpose: border.default is marked
-       "pivot — unchanged" in semantic-tokens.ts precisely because #878787
-       clears 3:1 against both grounds (3.59:1 light, 5.30:1 dark). The old
-       #404040 was 1.84:1 on the dark surface. */
-    --border: 0 0% 53%;                         /* #878787 - MDS: border.default */
-    --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
-    
-    --ring: #5e9aff;                             /* MDS: focus.ring (dark) */
-
-    /* Chart Colors — same validated series-to-hue mapping as light mode,
-       independently re-validated against the dark surface (#101010), not
-       an automatic flip: dark mode needs a lighter L band overall. */
-    --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
-    --chart-2: 218 100% 64%;                    /* #478aff Blue 600 */
-    --chart-3: 30 71% 47%;                      /* #cb7623 Gold 1000 */
-    --chart-4: 280 59% 43%;                     /* #842daf Purple 800 */
-    --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
-  }
-}
 
 @layer base {
   * {
