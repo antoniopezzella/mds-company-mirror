@@ -32,7 +32,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`guides/STORY_UI_CONSIDERATIONS.md`](./guides/STORY_UI_CONSIDERATIONS.md) | Story UI + MDS governance interplay |
 | [`guides/TESTING_GUIDE.md`](./guides/TESTING_GUIDE.md) | Writing tests (see also the README's own Testing section for the Vitest+Playwright setup) |
 | [`guides/DEV_SERVER_MANAGEMENT.md`](./guides/DEV_SERVER_MANAGEMENT.md) | Local dev server troubleshooting |
-| [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see also [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the full picture) |
+| [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see [`OPERATIONS.md`](./OPERATIONS.md) for the operational picture) |
 | [`guides/PERFORMANCE_MONITORING.md`](./guides/PERFORMANCE_MONITORING.md) | RUM / Web Vitals |
 | [`guides/LIGHTHOUSE_GUIDE.md`](./guides/LIGHTHOUSE_GUIDE.md) | Lighthouse audits |
 | [`guides/WORKFLOW_GUIDE.md`](./guides/WORKFLOW_GUIDE.md) | General contributor workflow |
@@ -43,8 +43,9 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 
 | Doc | For |
 |---|---|
-| [`GOVERNANCE.md`](./GOVERNANCE.md) | Visual map of all three governance systems (token/role, CI gates, documentation) with a flowchart for each — start here before the individual detailed docs below |
-| [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Storybook → GitHub Pages (CI-automated) + app → Vercel (dashboard git integration) |
+| [`OPERATIONS.md`](./OPERATIONS.md) | **Start here when something is broken.** What's running, how it deploys, how to roll back, how to diagnose a failed deploy or a misbehaving AI endpoint, and the known weaknesses |
+| [`GOVERNANCE.md`](./GOVERNANCE.md) | Visual map of all four governance systems (token/role, CI gates, documentation, branches) with a flowchart for each — start here before the individual detailed docs below |
+| [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Pointer to `OPERATIONS.md`; kept because it's linked from elsewhere. Its old procedures were wrong and are documented as such |
 | [`FIGMA_CODE_CONNECT_GUIDE.md`](./FIGMA_CODE_CONNECT_GUIDE.md) | Real component source shown in Figma Dev Mode |
 | [`CODE_TO_DESIGN_TOKEN_BINDING.md`](./CODE_TO_DESIGN_TOKEN_BINDING.md) | Binding code tokens back to Figma variables |
 | [`TOKEN_REQUEST_PROCESS.md`](./TOKEN_REQUEST_PROCESS.md), [`TOKEN_REQUEST_DECISION_TREE.md`](./TOKEN_REQUEST_DECISION_TREE.md) | How to request a new/changed token — required before adding one, see `CLAUDE.md` |
