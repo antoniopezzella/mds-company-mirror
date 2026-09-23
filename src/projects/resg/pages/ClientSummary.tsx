@@ -17,8 +17,8 @@ import { useThemeMode } from '../../../theme/ThemeModeContext';
 
 /**
  * RESG (Real Estate segment) — "Client Summary" page. First page of a new
- * shadcn-only project, following src/projects/shadcn-dashboard/pages/
- * ShadcnDashboard.tsx's exact shell conventions (same matchMedia-driven
+ * shadcn-only project, following src/projects/dashboard-demo/pages/
+ * DashboardDemo.tsx's exact shell conventions (same matchMedia-driven
  * responsive sidebar, getRoleColor() for all color, --typo-* vars, no MUI).
  * Built from a wireframe for a client ("Acme Realty Ltd") portfolio
  * overview. Separate from src/pages/RESGAssetListPage/ — an existing,
@@ -224,7 +224,7 @@ export function ClientSummary() {
       {/* Sub-header — client name + stat pills + nav-link tabs. No existing
           component matches this shape (see plan Part A) — composed from
           Chip (pills) and Tabs (nav-link strip, same content:null convention
-          ShadcnDashboard.tsx and RESGAssetListPage.tsx already use). */}
+          DashboardDemo.tsx and RESGAssetListPage.tsx already use). */}
       <div
         className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4 md:px-8"
         style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}

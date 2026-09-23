@@ -59,7 +59,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
  * features like row grouping aren't a fair comparison target): column
  * resizing, multi-column sort (shift-click, same as MUI), sticky header,
  * CSV export, and a density toggle are all opt-in props below, defaulting
- * to off so the one real consumer (ShadcnDashboard.tsx) is unaffected.
+ * to off so the one real consumer (DashboardDemo.tsx) is unaffected.
  * Manual/server-side pagination is a genuine new capability, not just a
  * story — previously DataTable could only ever slice `data` client-side.
  */

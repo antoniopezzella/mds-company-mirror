@@ -15,12 +15,12 @@ import { getRoleColor } from '../../../theme/roles';
 import { useThemeMode } from '../../../theme/ThemeModeContext';
 
 /**
- * shadcn-dashboard — a real, working dashboard page built entirely from the
+ * dashboard-demo — a real, working dashboard page built entirely from the
  * shadcn/Radix component set (no MUI), following the same top-level shape
  * as App.tsx's own kitchen-sink demo, but as an actual layout (header +
  * side nav + content), not a flat stack of every component. Exists to be a
  * live, in-app proving ground for the shadcn migration — including the new
- * DataTable pinning/loading work — reachable at /shadcn-dashboard, not just
+ * DataTable pinning/loading work — reachable at /dashboard-demo, not just
  * verified in isolation via Storybook or tsc.
  *
  * Foundation used throughout: Tailwind's own spacing/grid utilities and
@@ -75,28 +75,28 @@ const claimColumns: ColumnDef<Claim>[] = [
 // (`sampleItems`) — including the two collapsible groups — just namespaced
 // under this page's own route instead of the story's placeholder paths.
 const NAV_ITEMS: SideNavItem[] = [
-  { label: 'Dashboard', path: '/shadcn-dashboard', active: true },
+  { label: 'Dashboard', path: '/dashboard-demo', active: true },
   {
     label: 'Policies & Coverage',
-    path: '/shadcn-dashboard/policies',
+    path: '/dashboard-demo/policies',
     subItems: [
-      { label: 'All Policies', path: '/shadcn-dashboard/policies/all' },
-      { label: 'Active Policies', path: '/shadcn-dashboard/policies/active' },
-      { label: 'Renewals', path: '/shadcn-dashboard/policies/renewals' },
+      { label: 'All Policies', path: '/dashboard-demo/policies/all' },
+      { label: 'Active Policies', path: '/dashboard-demo/policies/active' },
+      { label: 'Renewals', path: '/dashboard-demo/policies/renewals' },
     ],
   },
-  { label: 'Risk & Insights', path: '/shadcn-dashboard/risk' },
-  { label: 'Claims', path: '/shadcn-dashboard/claims' },
+  { label: 'Risk & Insights', path: '/dashboard-demo/risk' },
+  { label: 'Claims', path: '/dashboard-demo/claims' },
   {
     label: 'Analytics',
-    path: '/shadcn-dashboard/analytics',
+    path: '/dashboard-demo/analytics',
     subItems: [
-      { label: 'Reports', path: '/shadcn-dashboard/analytics/reports' },
-      { label: 'Trends', path: '/shadcn-dashboard/analytics/trends' },
+      { label: 'Reports', path: '/dashboard-demo/analytics/reports' },
+      { label: 'Trends', path: '/dashboard-demo/analytics/trends' },
     ],
   },
-  { label: 'Documents', path: '/shadcn-dashboard/documents' },
-  { label: 'Settings', path: '/shadcn-dashboard/settings' },
+  { label: 'Documents', path: '/dashboard-demo/documents' },
+  { label: 'Settings', path: '/dashboard-demo/settings' },
 ];
 
 const TABS: TabItem[] = [
@@ -123,7 +123,7 @@ function claimsForTab(tabId: string): Claim[] {
 
 const DESKTOP_QUERY = '(min-width: 1024px)'; // Tailwind's `lg` — matches the breakpoint used below
 
-export function ShadcnDashboard() {
+export function DashboardDemo() {
   const navigate = useNavigate();
   const { mode, toggleMode } = useThemeMode();
   // Tracked separately from `sidebarOpen`: this drives *how* the sidebar is
@@ -214,7 +214,7 @@ export function ShadcnDashboard() {
             )}
             <SideNavigation
               items={NAV_ITEMS}
-              currentPath="/shadcn-dashboard"
+              currentPath="/dashboard-demo"
               onNavigate={(path) => navigate(path)}
               onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
               className="fixed inset-y-0 left-0 z-50 w-72 shrink-0 lg:static lg:z-auto lg:w-auto"
@@ -313,4 +313,4 @@ export function ShadcnDashboard() {
   );
 }
 
-export default ShadcnDashboard;
+export default DashboardDemo;

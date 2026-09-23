@@ -95,6 +95,16 @@
   ],
   "redirects": [
     {
+      "source": "/shadcn-dashboard",
+      "destination": "/dashboard-demo",
+      "permanent": false
+    },
+    {
+      "source": "/shadcn-dashboard/:path*",
+      "destination": "/dashboard-demo/:path*",
+      "permanent": false
+    },
+    {
       "source": "/storybook",
       "destination": "/storybook/",
       "permanent": false
