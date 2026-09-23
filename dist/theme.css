@@ -263,10 +263,10 @@
   --color-surface-accent: #303c37;
   --color-surface-secondary-hover: #ebf7ff;
   --color-surface-selected: #1a2759;
-  --color-surface-navigation: #000f47;
+  --color-surface-navigation: #101010;
   --color-surface-navigation-mode: #002c77;
-  --color-surface-navigation-hover: #1a2759;
-  --color-surface-navigation-active: #333f6b;
+  --color-surface-navigation-hover: #252525;
+  --color-surface-navigation-active: #3b3b3b;
   --color-surface-accent-strong: #8a8c88;
   --color-surface-hero: #3e4944;
   --color-surface-disabled: #3b3b3b;

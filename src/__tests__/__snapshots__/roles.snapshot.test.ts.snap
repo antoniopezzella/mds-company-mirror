@@ -189,19 +189,19 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceHero",
   },
   {
-    "dark": "#000f47",
+    "dark": "#101010",
     "light": "#000f47",
     "role": "surface.navigation",
     "semantic": "surfaceNavigation",
   },
   {
-    "dark": "#333f6b",
+    "dark": "#3b3b3b",
     "light": "#333f6b",
     "role": "surface.navigation.active",
     "semantic": "surfaceNavigationActive",
   },
   {
-    "dark": "#1a2759",
+    "dark": "#252525",
     "light": "#1a2759",
     "role": "surface.navigation.hover",
     "semantic": "surfaceNavigationHover",

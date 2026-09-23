@@ -2794,15 +2794,15 @@
       },
       "surfaceNavigation": {
         "$type": "color",
-        "$value": "{color.blue1000}"
+        "$value": "{color.neutral950}"
       },
       "surfaceNavigationHover": {
         "$type": "color",
-        "$value": "{color.blue975}"
+        "$value": "{color.neutral900}"
       },
       "surfaceNavigationActive": {
         "$type": "color",
-        "$value": "{color.blue990}"
+        "$value": "{color.neutral800}"
       },
       "surfaceSelected": {
         "$type": "color",
