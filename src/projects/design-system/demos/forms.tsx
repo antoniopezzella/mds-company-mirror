@@ -12,7 +12,7 @@ export function TextFieldDemo() {
     <div className="flex flex-wrap items-start gap-4">
       <DSTextField label="Name" placeholder="Jane Doe" />
       <DSTextField label="Email" placeholder="jane@example.com" helperText="We'll never share this." />
-      <DSTextField label="Policy number" tone="danger" helperText="This policy number wasn't found." defaultValue="MB-00X" />
+      <DSTextField label="Policy number" tone="error" helperText="This policy number wasn't found." defaultValue="MB-00X" />
     </div>
   );
 }

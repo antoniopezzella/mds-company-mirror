@@ -45,7 +45,7 @@ export const ProfileForm: Story = {
         </Field>
         <Field data-invalid>
           <FieldLabel htmlFor="story-email">Email</FieldLabel>
-          <Input id="story-email" tone="danger" defaultValue="not-an-email" />
+          <Input id="story-email" tone="error" defaultValue="not-an-email" />
           <FieldError>Enter a valid email address.</FieldError>
         </Field>
       </FieldGroup>
