@@ -3,19 +3,18 @@ import { render } from '@testing-library/react';
 
 import {
   normalizeSize,
-  normalizeTone,
   SIZE_ALIASES,
-  TONE_ALIASES,
   DEPRECATED_PROP_VALUES,
   __resetPropCompatWarnings,
 } from './prop-compat';
 import { Avatar } from './avatar';
 import { BadgeAnchor } from './badge-anchor';
 
-// The component set had grown 7 `size` vocabularies and 4 `tone` vocabularies.
-// Unifying them is only safe if the legacy spellings keep working identically —
-// that equivalence is what these tests pin down, not the normalisation function
-// in isolation.
+// The component set had grown 7 `size` vocabularies. Unifying them is only safe
+// if the legacy spellings keep working identically — that equivalence is what
+// these tests pin down, not the normalisation function in isolation.
+//
+// `tone` is NOT unified, and the last describe block pins that decision down too.
 
 beforeEach(__resetPropCompatWarnings);
 
@@ -45,16 +44,6 @@ describe('size normalisation', () => {
   });
 });
 
-describe('tone normalisation', () => {
-  it('maps error to danger — the spelling every other component uses', () => {
-    expect(normalizeTone('error')).toBe('danger');
-  });
-
-  it.each(['default', 'danger', 'success', 'warning', 'info'])('passes %s through', (v) => {
-    expect(normalizeTone(v)).toBe(v);
-  });
-});
-
 describe('deprecation warnings', () => {
   let warn: ReturnType<typeof vi.spyOn>;
   beforeEach(() => {
@@ -78,7 +67,7 @@ describe('deprecation warnings', () => {
 
   it('stays silent on canonical values', () => {
     normalizeSize('sm', 'Avatar');
-    normalizeTone('danger', 'Input');
+    normalizeSize('lg', 'Avatar');
     expect(warn).not.toHaveBeenCalled();
   });
 
@@ -137,9 +126,6 @@ describe('the deprecation record itself is intact', () => {
     for (const legacy of Object.keys(SIZE_ALIASES)) {
       expect(DEPRECATED_PROP_VALUES[`size.${legacy}`], `size.${legacy}`).toBeDefined();
     }
-    for (const legacy of Object.keys(TONE_ALIASES)) {
-      expect(DEPRECATED_PROP_VALUES[`tone.${legacy}`], `tone.${legacy}`).toBeDefined();
-    }
   });
 
   it('every registry entry names a replacement and a rationale', () => {
@@ -153,8 +139,17 @@ describe('the deprecation record itself is intact', () => {
     for (const [legacy, canonical] of Object.entries(SIZE_ALIASES)) {
       expect(DEPRECATED_PROP_VALUES[`size.${legacy}`].replaceWith).toBe(canonical);
     }
-    for (const [legacy, canonical] of Object.entries(TONE_ALIASES)) {
-      expect(DEPRECATED_PROP_VALUES[`tone.${legacy}`].replaceWith).toBe(canonical);
-    }
+  });
+});
+
+describe('tone is deliberately NOT unified', () => {
+  // A form field's `error` is the state of its value (aria-invalid, :invalid,
+  // WCAG 3.3.1). A Button's `danger` is the severity of an action. Collapsing
+  // them loses meaning, and every benchmarked system keeps them separate —
+  // Polaris goes further and uses `critical` for actions so the two can never
+  // be confused. This test exists so the distinction is not "tidied away".
+  it('has no tone aliases in the deprecation record', () => {
+    const toneEntries = Object.keys(DEPRECATED_PROP_VALUES).filter((k) => k.startsWith('tone.'));
+    expect(toneEntries).toEqual([]);
   });
 });

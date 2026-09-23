@@ -1,15 +1,16 @@
 /**
- * Canonical `size` / `tone` vocabularies, and the compatibility layer that keeps
- * the legacy spellings working.
+ * The canonical `size` scale, and the compatibility layer that keeps the legacy
+ * spellings working.
  *
  * Why this file exists
  * --------------------
- * The component set had grown SEVEN different `size` vocabularies and FOUR
- * `tone` vocabularies. A developer could not predict what a prop was called:
- * `Avatar` took `small|medium|large|xlarge`, `Tooltip` took `sm|md|lg`,
- * `Dialog` exported BOTH `sm|md|lg|fullscreen` and a PascalCase
- * `Small|Medium|Large|FullScreen`, and `Input` named the prop `inputSize`
- * rather than `size` at all.
+ * The component set had grown SEVEN different `size` vocabularies. A developer
+ * could not predict what a prop was called: `Avatar` took
+ * `small|medium|large|xlarge`, `Tooltip` took `sm|md|lg`, `Dialog` exported
+ * BOTH `sm|md|lg|fullscreen` and a PascalCase `Small|Medium|Large|FullScreen`,
+ * and `Input` named the prop `inputSize` rather than `size` at all.
+ *
+ * `tone` is deliberately NOT unified the same way — see the note below it.
  *
  * Two normalisation idioms had also grown up independently — an inline ternary
  * chain in `button.tsx` and a `Record` lookup in `dialog.tsx`. This module is
@@ -34,8 +35,41 @@
 /** The canonical size scale. `xl` exists only where a component genuinely has a fourth step. */
 export type Size = 'sm' | 'md' | 'lg' | 'xl';
 
-/** The canonical tone scale. `danger`, never `error`. */
+/**
+ * Action-severity tone — for components where the tone describes what an action
+ * DOES: Button, Chip, Badge, Switch, MenuItem.
+ *
+ * `error` is deliberately NOT a member. See the note below.
+ */
 export type Tone = 'default' | 'danger' | 'success' | 'warning' | 'info';
+
+/**
+ * WHY FORM FIELDS USE `error` AND ACTIONS USE `danger`
+ * ----------------------------------------------------
+ * This looks like an inconsistency and is not. They are two different axes, and
+ * collapsing them loses meaning:
+ *
+ *   - A form field's tone is the STATE OF ITS VALUE. `error` means "this failed
+ *     validation" — the same concept as `aria-invalid`, the CSS `:invalid`
+ *     pseudo-class, and WCAG 3.3.1, which is literally titled "Error
+ *     Identification". Every form library a consumer already uses (React Hook
+ *     Form, Formik, Zod) calls this `errors`.
+ *
+ *   - An action's tone is the SEVERITY OF WHAT IT DOES. `danger` means
+ *     "this is destructive" — it says nothing about validity.
+ *
+ * A disabled delete button is `danger` and perfectly valid; an email field with
+ * a typo is `error` and nothing is destructive about it.
+ *
+ * Every benchmarked system keeps these separate, and Shopify Polaris makes the
+ * split explicit by using entirely different words: `error` on form fields,
+ * `critical` on buttons. Carbon uses `invalid` / `danger`; Primer uses
+ * `validationStatus="error"` / `variant="danger"`; MUI uses a boolean `error`
+ * prop on TextField.
+ *
+ * So `InputTone` (input.tsx — shared by Input, Textarea, TextField and Select)
+ * keeps `error`, and it is not aliased to `danger`. Both remain correct.
+ */
 
 /**
  * Legacy size spellings → canonical. Covers the `small|medium|large|xlarge`
@@ -54,13 +88,7 @@ export const SIZE_ALIASES = {
   Large: 'lg',
 } as const satisfies Record<string, Size>;
 
-/** Legacy tone spellings → canonical. */
-export const TONE_ALIASES = {
-  error: 'danger',
-} as const satisfies Record<string, Tone>;
-
 export type LegacySize = keyof typeof SIZE_ALIASES;
-export type LegacyTone = keyof typeof TONE_ALIASES;
 
 /**
  * The deprecation record. Machine-readable on purpose: `scripts/check-prop-vocab.js`
@@ -79,7 +107,6 @@ export const DEPRECATED_PROP_VALUES: Record<
   'size.Medium': { replaceWith: 'md', rationale: 'ModalSize PascalCase retired; Dialog now uses one size vocabulary.' },
   'size.Large': { replaceWith: 'lg', rationale: 'ModalSize PascalCase retired; Dialog now uses one size vocabulary.' },
   'size.FullScreen': { replaceWith: 'fullscreen', rationale: 'ModalSize PascalCase retired; Dialog now uses one size vocabulary.' },
-  'tone.error': { replaceWith: 'danger', rationale: 'The system uses `danger` for the destructive tone everywhere else.' },
 };
 
 /**
@@ -92,7 +119,7 @@ export const DEPRECATED_PROP_VALUES: Record<
  */
 const warned = new Set<string>();
 
-function warnOnce(prop: 'size' | 'tone', legacy: string, canonical: string, component?: string) {
+function warnOnce(prop: 'size', legacy: string, canonical: string, component?: string) {
   if (process.env.NODE_ENV === 'production') return;
   const key = `${component ?? ''}:${prop}.${legacy}`;
   if (warned.has(key)) return;
@@ -120,7 +147,6 @@ export function __resetPropCompatWarnings() {
  * resolving to `'sm' | 'md'` and `Avatar`'s to `'sm' | 'md' | 'lg' | 'xl'`.
  */
 type CanonicalSize<T extends string> = T extends LegacySize ? (typeof SIZE_ALIASES)[T] : T;
-type CanonicalTone<T extends string> = T extends LegacyTone ? (typeof TONE_ALIASES)[T] : T;
 
 /**
  * Resolve a possibly-legacy size to the canonical scale.
@@ -139,14 +165,3 @@ export function normalizeSize<T extends string>(
   return mapped as CanonicalSize<T>;
 }
 
-/** Resolve a possibly-legacy tone to the canonical scale. */
-export function normalizeTone<T extends string>(
-  value: T | undefined,
-  component?: string,
-): CanonicalTone<T> | undefined {
-  if (value == null) return undefined;
-  const mapped = (TONE_ALIASES as Record<string, Tone>)[value];
-  if (!mapped) return value as CanonicalTone<T>;
-  warnOnce('tone', value, mapped, component);
-  return mapped as CanonicalTone<T>;
-}

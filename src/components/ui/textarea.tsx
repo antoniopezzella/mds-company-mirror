@@ -4,12 +4,11 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor, type RoleName } from '@/theme/roles';
-import type { InputTone, LegacyInputTone } from './input';
-import { normalizeTone } from './prop-compat';
+import type { InputTone } from './input';
 
 function getToneBorderRole(tone: InputTone): RoleName | null {
   switch (tone) {
-    case 'danger':
+    case 'error':
       return 'status.danger.fg';
     case 'success':
       return 'status.success.fg';
@@ -21,7 +20,7 @@ function getToneBorderRole(tone: InputTone): RoleName | null {
 }
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  tone?: InputTone | LegacyInputTone;
+  tone?: InputTone;
 }
 
 /**
@@ -30,8 +29,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
  */
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, tone = 'default', style, disabled, ...props }, ref) => {
-    const resolvedTone = normalizeTone(tone, 'Textarea') as InputTone;
-    const toneRole = getToneBorderRole(resolvedTone);
+    const toneRole = getToneBorderRole(tone);
     return (
       <textarea
         ref={ref}

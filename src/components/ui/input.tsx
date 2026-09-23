@@ -3,21 +3,21 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { normalizeSize, normalizeTone } from './prop-compat';
+import { normalizeSize } from './prop-compat';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 
 /**
- * Canonical tone scale. `error` still works but is deprecated in favour of
- * `danger`, which is what every other component in the set uses.
+ * Form-field validation state — NOT action severity.
+ *
+ * `error` here is the state of the field's value (cf. `aria-invalid`, `:invalid`,
+ * WCAG 3.3.1 "Error Identification"), which is a different axis from a Button's
+ * `danger` tone meaning "this action is destructive". See prop-compat.ts.
  */
-export type InputTone = 'default' | 'danger' | 'success' | 'warning';
-
-/** @deprecated Use `danger`. Removed at 1.0. */
-export type LegacyInputTone = 'error';
+export type InputTone = 'default' | 'error' | 'success' | 'warning';
 
 function getToneBorderRole(tone: InputTone): RoleName | null {
   switch (tone) {
-    case 'danger':
+    case 'error':
       return 'status.danger.fg';
     case 'success':
       return 'status.success.fg';
@@ -29,7 +29,7 @@ function getToneBorderRole(tone: InputTone): RoleName | null {
 }
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  tone?: InputTone | LegacyInputTone;
+  tone?: InputTone;
   /** MUI-parity size preset */
   inputSize?: 'sm' | 'md' | 'small' | 'medium';
 }
@@ -40,9 +40,8 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
  */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, tone = 'default', inputSize = 'md', style, disabled, ...props }, ref) => {
-    const resolvedTone = normalizeTone(tone, 'Input') as InputTone;
     const resolvedSize = normalizeSize(inputSize, 'Input');
-    const toneRole = getToneBorderRole(resolvedTone);
+    const toneRole = getToneBorderRole(tone);
     return (
       <input
         ref={ref}

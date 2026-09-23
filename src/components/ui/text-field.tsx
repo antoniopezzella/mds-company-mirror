@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { normalizeSize, normalizeTone } from './prop-compat';
+import { normalizeSize } from './prop-compat';
 import { getRoleColor } from '@/theme/roles';
-import { Input, type InputTone, type LegacyInputTone } from './input';
+import { Input, type InputTone } from './input';
 import { Label } from './label';
 import { Textarea } from './textarea';
 
@@ -13,7 +13,7 @@ export interface DSTextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'tone'> {
   /** Renders a `<textarea>` instead of an `<input>` when set to 'textarea'. */
   type?: React.HTMLInputTypeAttribute | 'textarea';
-  tone?: InputTone | LegacyInputTone;
+  tone?: InputTone;
   size?: 'sm' | 'md' | 'small' | 'medium';
   fullWidth?: boolean;
   error?: boolean;
@@ -37,15 +37,14 @@ export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaEleme
     const generatedId = React.useId();
     const fieldId = id ?? generatedId;
     const helperId = `${fieldId}-helper`;
-    const resolvedTone = normalizeTone(tone, 'TextField') as InputTone;
-    const isError = error || resolvedTone === 'danger';
-    const effectiveTone: InputTone = isError ? 'danger' : resolvedTone;
+    const isError = error || tone === 'error';
+    const effectiveTone: InputTone = isError ? 'error' : tone;
 
     const helperColor = isError
       ? getRoleColor('status.danger.fg')
-      : resolvedTone === 'success'
+      : tone === 'success'
         ? getRoleColor('status.success.fg')
-        : resolvedTone === 'warning'
+        : tone === 'warning'
           ? getRoleColor('status.warning.fg')
           : getRoleColor('text.secondary');
 

@@ -5,10 +5,13 @@
  *
  * The component set had grown SEVEN `size` vocabularies (`small|medium`,
  * `small|medium|large|xlarge`, `sm|md|lg`, `sm|md|lg|fullscreen`, `sm|md`,
- * Button accepting both, and Dialog's PascalCase `Small|Medium|Large|FullScreen`)
- * and FOUR `tone` vocabularies. They are unified on `sm|md|lg|xl` and `danger`;
- * the legacy spellings still resolve via src/components/ui/prop-compat.ts and
- * are removed at 1.0.
+ * Button accepting both, and Dialog's PascalCase `Small|Medium|Large|FullScreen`).
+ * They are unified on `sm|md|lg|xl`; the legacy spellings still resolve via
+ * src/components/ui/prop-compat.ts and are removed at 1.0.
+ *
+ * `tone` is NOT unified: a form field's `error` (state of the value) and a
+ * button's `danger` (severity of an action) are different axes, and every
+ * benchmarked system keeps them separate. See prop-compat.ts.
  *
  * This script does two different jobs, deliberately:
  *
@@ -99,7 +102,7 @@ function parseAliasBlock(name) {
 }
 
 const SIZE_ALIASES = parseAliasBlock('SIZE_ALIASES');
-const TONE_ALIASES = parseAliasBlock('TONE_ALIASES');
+const TONE_ALIASES = {}; // intentionally empty — see prop-compat.ts on why `tone` is not unified
 
 const registry = {};
 {
