@@ -84,6 +84,28 @@ Post-approval implementation:
 4. **Build** — `npm run tokens:build` (regenerates `dist/tokens.json`, `dist/theme.css`, `dist/tokens.tokens.json` — generated, don't hand-edit).
 5. Commit the regenerated `dist/` artifacts so diffs are reviewable; `npm run tokens:diff` shows what changed vs. `HEAD`.
 
+## 🌿 Branches
+
+Keep them short — **hours to a few days**, then merge or close. `main` is the
+trunk and is protected; everything else is temporary.
+
+**The one rule worth memorising: never merge a branch older than the work it
+would touch.** Cherry-pick what you want out of it and delete the rest. A stale
+branch reverts newer work *without any conflict*, because it simply predates it
+— a clean merge is not evidence of a safe merge. This has already nearly cost
+this repo a day's accessibility fixes.
+
+Before deleting a branch, check whether it's merged:
+
+```bash
+git merge-base --is-ancestor origin/<branch> origin/main && echo merged || echo "NOT merged"
+```
+
+If it is **not** merged, it holds commits that exist nowhere else — extract what
+matters first, and record the SHA in the commit message so it can be restored.
+
+Full reasoning and the lifetimes table: [`GOVERNANCE.md` → Branch governance](./GOVERNANCE.md#4-branch-governance).
+
 ## ✅ Pull Request Process
 
 1. `npm test` passes (unit + Storybook/Playwright tests).
