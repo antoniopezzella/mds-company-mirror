@@ -22,12 +22,17 @@ export default defineConfig({
           globals: true,
           pool: 'vmForks',
           setupFiles: [path.join(dirname, './src/setupTests.ts')],
-          include: [
-            'src/__tests__/**/*.{test,spec}.{ts,tsx}',
-            'src/**/*.unit.{test,spec}.{ts,tsx}',
-            'src/components/**/*.test.{ts,tsx}',
-            'src/utils/**/*.test.{ts,tsx}',
-          ],
+          // One glob for the whole tree, not a per-directory allowlist.
+          //
+          // The previous list named only __tests__, *.unit.*, components/ and
+          // utils/ — so a test written anywhere else simply never ran, with no
+          // error and no output to say so. Two had been sitting unexecuted in
+          // the repo: src/features/tree-testing/treeTesting.utils.test.ts and
+          // src/projects/marsh-one/components/WorkspaceCard.test.tsx. It also
+          // meant src/hooks/ and src/theme/ were untestable in practice, which
+          // is a plausible reason the theming layer had no tests at all — the
+          // place a dangling-CSS-variable bug later hid.
+          include: ['src/**/*.{test,spec}.{ts,tsx}'],
           exclude: [
             'src/**/*.stories.{ts,tsx}',
             'src/**/*.accessibility.test.tsx',
