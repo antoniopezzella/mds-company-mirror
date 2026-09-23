@@ -39,6 +39,16 @@ const isExternal = (id: string) =>
 // src/index.ts (the curated shadcn/token export surface — see that file's
 // header comment for what's deliberately excluded from v0.1.0).
 export default defineConfig({
+  // Force the PRODUCTION JSX transform. Without this the package shipped the
+  // development one: 146 of 149 modules imported `react/jsx-dev-runtime`, so
+  // every consumer paid for jsxDEV's extra per-element validation inside their
+  // own production bundle.
+  //
+  // `NODE_ENV=production` also fixes it, and `mode: 'production'` does not —
+  // the transform here is esbuild's, and it reads this flag rather than Vite's
+  // mode. Pinned in the config on purpose: a published artifact must not vary
+  // with the environment of whoever happened to run the build.
+  esbuild: { jsxDev: false },
   // Vite copies publicDir into the build output by default, even in library
   // mode — that would pull this app's fonts/videos/marketing images into
   // the published package tarball. A component library ships none of that.
