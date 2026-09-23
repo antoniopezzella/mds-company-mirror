@@ -18,7 +18,8 @@
       "types": "./dist-pkg/index.d.ts",
       "import": "./dist-pkg/index.mjs",
       "require": "./dist-pkg/index.cjs"
-    }
+    },
+    "./styles.css": "./dist-pkg/styles.css"
   },
   "files": [
     "dist-pkg",
@@ -32,7 +33,7 @@
     "node": ">=22 <23"
   },
   "scripts": {
-    "build:package": "vite build --config vite.lib.config.ts",
+    "build:package": "vite build --config vite.lib.config.ts && npm run build:css",
     "pretest": "node scripts/kill-storybook.js",
     "prestorybook": "node scripts/kill-storybook.js",
     "predev": "node scripts/cleanup-ports.js",
@@ -113,7 +114,8 @@
     "security": "npm audit && npm audit fix",
     "workflow:local": "npm run clean:install && npm run security && npm test && npm run build",
     "workflow:ci": "npm ci && npm run security && npm test && npm run build && npm run build-storybook",
-    "storybook-with-ui": "concurrently \"npm run storybook\" \"npm run story-ui\""
+    "storybook-with-ui": "concurrently \"npm run storybook\" \"npm run story-ui\"",
+    "build:css": "tailwindcss -c tailwind.package.config.js -i src/styles.package.css -o dist-pkg/styles.css --minify"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.71",
@@ -235,5 +237,8 @@
   },
   "overrides": {
     "@exodus/bytes": "1.14.1"
-  }
+  },
+  "sideEffects": [
+    "**/*.css"
+  ]
 }

@@ -39,6 +39,65 @@ npm install @antoniopezzella/marsh-design-system
 
 ## Usage
 
+**Import the stylesheet once, at your app's entry point.** Without it the
+components render with the right markup and no styling at all:
+
+```tsx
+// main.tsx / _app.tsx / layout.tsx — wherever your app boots
+import '@antoniopezzella/marsh-design-system/styles.css';
+```
+
+This is required, and it is the whole setup. **You do not need Tailwind in your
+project** — the stylesheet is pre-compiled and self-contained.
+
+<details>
+<summary>Why a stylesheet is needed at all, if the components use Tailwind</summary>
+
+Tailwind generates CSS at *build* time by scanning source files for class
+names, and [it does not scan `node_modules`](https://tailwindcss.com/docs/content-configuration#working-with-third-party-libraries).
+So a consuming app's Tailwind build never sees this package's classes, and
+every component arrives with class names that nothing defines.
+
+Shipping compiled CSS is what Tailwind's own docs recommend for library
+authors, and what MUI, Carbon and Bootstrap all do. The upside is that
+adopting MDS doesn't force your team onto a particular version of a particular
+build tool.
+
+The stylesheet **deliberately excludes Tailwind's preflight reset.** A reset is
+a global, opinionated change to every element on the page, and a component
+library has no business imposing one on an app it's a guest in. If you want it,
+add Tailwind's preflight yourself.
+
+</details>
+
+### If you already use Tailwind
+
+Optional, and only worth it if bundle size matters to you: instead of importing
+the stylesheet, point your own Tailwind `content` at the package so it compiles
+just the classes you actually use.
+
+```js
+// tailwind.config.js
+export default {
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/@antoniopezzella/marsh-design-system/dist-pkg/**/*.{js,mjs,cjs}',
+  ],
+};
+```
+
+You still need the design-token custom properties the components resolve
+against, so import those on their own:
+
+```tsx
+import '@antoniopezzella/marsh-design-system/styles.css'; // or extract just the :root block
+```
+
+For most teams the plain stylesheet import is the right call — it's ~12 kB
+gzipped, and it removes a whole class of build-config problems.
+
+### Components
+
 ```tsx
 import { Button, Card, getRoleColor } from '@antoniopezzella/marsh-design-system';
 
@@ -54,6 +113,33 @@ function Example() {
 ```
 
 Every component consumes the same governed design-token API (`getRoleColor`) internally — colors, spacing, and typography stay consistent with the source design system rather than being hardcoded per-component.
+
+### You only pay for what you import
+
+The package ships one module per component rather than a single merged bundle,
+so your bundler drops everything you didn't import. Measured with esbuild,
+React external, gzipped:
+
+| Your import | Your bundle |
+|---|---|
+| `import { Button }` | ~12 kB |
+| `import { Button, Card, Badge }` | ~12 kB |
+| `import { Dialog }` | ~27 kB |
+
+`Dialog` costs more than `Button` because it genuinely pulls in Radix's dialog
+primitive — the cost tracks what you actually use. Importing three simple
+components costs the same as one because they share the same small base.
+
+The stylesheet is the one exception: it is a single file covering all
+components (~12 kB gzipped), not split per component. If that matters to you,
+use the Tailwind `content` route above and your own build will emit only the
+classes you use.
+
+Radix, `lucide-react` and the other runtime dependencies are declared as
+regular `dependencies` and resolved from your `node_modules` — the package
+never bundles its own copy. That keeps your build from ending up with two
+copies of a Radix primitive, which would give you two React contexts and, for
+example, a `Dialog` whose trigger silently fails to open its content.
 
 ## What's included
 

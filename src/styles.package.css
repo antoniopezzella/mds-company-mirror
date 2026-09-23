@@ -1,0 +1,41 @@
+/**
+ * Stylesheet entry for the PUBLISHED package — not used by this repo's own app,
+ * which loads src/index.css.
+ *
+ * Why this file exists
+ * --------------------
+ * Components in src/components/ui/ are styled with Tailwind utility classes and
+ * `var(--role-*)` custom properties. Both are generated at *build* time, in the
+ * project that compiles them. Tailwind does not scan node_modules (its docs are
+ * explicit about this), so a consumer installing the package got class names in
+ * the HTML with no CSS defining them — every component rendered unstyled.
+ *
+ * Shipping this compiled stylesheet is the fix Tailwind's own documentation
+ * recommends for library authors, and it is what Carbon, MUI and Bootstrap all
+ * do. It also means a consumer does NOT need Tailwind at all, which matters:
+ * without it, adopting MDS would force a team onto a specific version of a
+ * specific build tool.
+ *
+ * What this includes, and deliberately excludes
+ * ---------------------------------------------
+ * INCLUDES the Tailwind utilities used by the exported components, plus the
+ * design-token custom properties they reference (light and dark).
+ *
+ * EXCLUDES `@tailwind base` — Tailwind's preflight reset. A reset is a global,
+ * opinionated change to every element on the page; a component library has no
+ * business imposing one on an app it is a guest in. Consumers who want it can
+ * add Tailwind's preflight themselves.
+ *
+ * Kept in sync with src/index.css by construction: the token block below is
+ * imported from it rather than duplicated.
+ */
+
+/* The design-token custom properties the components resolve against.
+   Imported, not copied, so there is exactly one definition of these values —
+   this repo's own index.css imports the same file. @import must precede all
+   other rules. */
+@import './styles/token-variables.css';
+
+/* Utilities and component classes only — no preflight, see above. */
+@tailwind components;
+@tailwind utilities;
