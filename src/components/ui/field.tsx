@@ -54,7 +54,14 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="field-group"
       className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4",
+        /* `gap-7` (28px) is upstream shadcn's value and is NOT on the MDS
+           spacing scale — the neighbouring steps are 24px (gap-6) and 32px
+           (gap-8). Unlike the other annotated exceptions in this codebase,
+           which are geometry derived from a control, this is a genuine
+           spacing decision. Held at the upstream value pending a design call
+           rather than changed unilaterally, since it would restyle every
+           form. Surfaced by `npm run composition:check`. */
+        "group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", // spacing-allow
         className
       )}
       {...props}

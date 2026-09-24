@@ -158,7 +158,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
       <Input
         value={text}
         placeholder={INPUT_DATE_FORMAT.toUpperCase()}
-        className="pr-9"
+        className="pr-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
         onChange={(e) => setText(e.target.value)}
         onBlur={(e) => commitText(e.target.value)}
         onKeyDown={(e) => {
@@ -282,7 +282,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
         <Input
           value={text}
           placeholder={placeholder}
-          className="pr-9"
+          className="pr-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && parsed) onDateChange?.(parsed);
