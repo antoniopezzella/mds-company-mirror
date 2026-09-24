@@ -1,0 +1,146 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { TAXONOMY, TIERS, CONTESTED, byTier } from '../components/ui/taxonomy';
+
+<Meta title="Foundations/Composition" />
+
+{/*
+  Every list on this page is rendered from src/components/ui/taxonomy.ts, not
+  transcribed from it. A hand-maintained copy of a 75-entry classification
+  would be wrong within a month, and `taxonomy.test.ts` already fails if the
+  manifest falls out of step with the files on disk — so rendering from the
+  manifest makes this page as current as that test.
+*/}
+
+# Composition
+
+How the 75 component modules fit together, and which one to reach for.
+
+## Do not build a new component
+
+The most common failure here is not bad code — it is building the 76th thing
+that already existed as a prop on the 9th. Work down this ladder and **stop at
+the first step that works**:
+
+1. **Does it exist?** Check the tiers below, or browse `/design-system`.
+2. **Does a prop cover it?** A new `variant`, `tone` or `size` value is far
+   cheaper than a new component. Read the component's stories before deciding
+   the prop isn't there — the stories are the API documentation.
+3. **Can you compose it?** `Card` + `Inline` + `Button` covers most "new"
+   patterns with no new component code.
+4. **Only then build one.**
+
+## The four tiers
+
+Classification lives in `src/components/ui/taxonomy.ts` — **not** in the folder
+structure. Files stay flat in `src/components/ui/`, the way shadcn/ui, Radix,
+MUI and Polaris all do it, because the atom/molecule boundary is genuinely
+contested and baking a contested answer into import paths buys nothing: what
+you need is to *know* that `DataTable` is an organism, not to find it at a
+particular path.
+
+<div style={{ display: 'grid', gap: 16, margin: '24px 0' }}>
+  {Object.entries(TIERS).map(([tier, def]) => (
+    <div
+      key={tier}
+      style={{
+        border: '1px solid var(--mds-border, #dadada)',
+        borderRadius: 2,
+        padding: 16,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
+        <strong style={{ fontSize: 16, textTransform: 'capitalize' }}>{tier}</strong>
+        <span style={{ fontSize: 12, opacity: 0.6 }}>{byTier(tier).length} modules</span>
+      </div>
+      <p style={{ margin: '0 0 6px', fontSize: 14 }}>
+        <strong>Test:</strong> {def.test}
+      </p>
+      <p style={{ margin: 0, fontSize: 14, opacity: 0.8 }}>{def.role}</p>
+      <p style={{ margin: '10px 0 0', fontSize: 13, fontFamily: 'ui-monospace, monospace', opacity: 0.75 }}>
+        {byTier(tier).join(' · ')}
+      </p>
+    </div>
+  ))}
+</div>
+
+A module may export several components, and they share its tier — `stack`
+exports both `Stack` and `Inline`; `page-shell` exports `PageShell` and
+`PageHeading`.
+
+**Start at molecule.** Most feature code should live there. Drop to atoms only
+when you need one styled surface; reach for an organism when you need data in
+and events out.
+
+## Contested calls
+
+These were genuinely arguable. The reasoning is recorded so nobody
+relitigates them from scratch — and so that disagreeing means editing one
+file, not one hundred.
+
+<table>
+  <thead>
+    <tr>
+      <th style={{ textAlign: 'left' }}>Module</th>
+      <th style={{ textAlign: 'left' }}>Tier</th>
+      <th style={{ textAlign: 'left' }}>Why</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(CONTESTED).map(([name, why]) => (
+      <tr key={name}>
+        <td style={{ fontFamily: 'ui-monospace, monospace', whiteSpace: 'nowrap', verticalAlign: 'top' }}>{name}</td>
+        <td style={{ verticalAlign: 'top' }}>{TAXONOMY[name]}</td>
+        <td style={{ verticalAlign: 'top' }}>{why}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Building a page
+
+Start from the template — do not hand-roll the frame:
+
+```tsx
+import { PageShell, PageHeading, Stack, Button } from '@/components/ui';
+
+<PageShell
+  header={<Header sidebarOpen={open} onToggleSidebar={toggle} />}
+  sidebar={<SideNavigation items={items} className="fixed inset-y-0 left-0 z-50 w-72 shrink-0 lg:static lg:z-auto lg:w-auto" />}
+  sidebarOpen={open}
+  onSidebarClose={close}
+>
+  <PageHeading title="Overview" description="Your portfolio at a glance." actions={<Button>New claim</Button>} />
+  <Stack gap={6}>
+    {/* sections */}
+  </Stack>
+</PageShell>
+```
+
+`PageShell` exists because the scaffold is easy to get subtly wrong. The
+sidebar is `fixed` with a scrim below `lg` and `static` above it, and there is
+a `min-w-0` chain that must run down **every** flex ancestor between the page
+and a wide table — a flex item defaults to `min-width: auto` and refuses to
+shrink below its content, so one missing link makes the whole page scroll
+sideways. It presents as a table bug and isn't one.
+
+## Choosing a layout tool
+
+| Situation | Use |
+| --- | --- |
+| Children in one direction, even spacing | `<Stack>` / `<Inline>` |
+| Two-dimensional — reflowing columns, spans, ordering | Grid utilities — see **Foundations → Grid** |
+| The page frame | `<PageShell>` |
+
+`Stack` and `Inline` take the spacing scale as a **type**: `gap={7}` (28px,
+off-scale) is a compile error, where `className="gap-7"` compiles happily and
+is quietly 4px wrong. Spacing rules and the CI gate that enforces them are in
+**Foundations → Spacing**.
+
+## Adding a component
+
+`taxonomy.test.ts` fails if a module on disk is unclassified, so a new
+component means a new taxonomy entry. Also required: a `.stories.tsx` covering
+every variant, a `.test.tsx`, and a passing `npm run composition:check:strict`
+and `npm run roles:check`.
+
+Full checklist: the `composition` skill in `.claude/skills/composition/`.
