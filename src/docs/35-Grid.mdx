@@ -82,6 +82,22 @@ Tailwind's grid utilities are generated on demand from whatever classes appear i
 
 ---
 
+## Grid, Stack, or PageShell?
+
+Three tools, and picking the wrong one is the usual cause of layout that
+fights back:
+
+| Situation | Use | Why |
+| --- | --- | --- |
+| Children in **one direction** with even spacing | `<Stack>` / `<Inline>` | The gap is type-checked against the DS scale; `gap={7}` will not compile |
+| **Two-dimensional** layout — columns that reflow, spans, ordering | Grid utilities on this page | A grid is what this is. Three nested stacks faking one is harder to read and to change |
+| The **page frame** — header, sidebar, main | `<PageShell>` | It already handles the responsive sidebar, the mobile scrim, and the `min-w-0` chain that stops wide tables scrolling the page sideways |
+
+`Stack` and grid compose freely: a `Stack` of sections where one section is a
+`grid grid-cols-3` is the normal shape of a dashboard page.
+
+---
+
 ## Common Patterns
 
 ### Pattern 1 — Two-column layout (main + sidebar)

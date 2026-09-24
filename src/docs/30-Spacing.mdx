@@ -40,11 +40,17 @@ worth knowing the lever exists.
 
 | You are working on… | Use | Example |
 | --- | --- | --- |
+| **Laying out children** (the common case) | `Stack` / `Inline` | `<Stack gap={4}>` |
 | A component in `src/components/ui/` (shadcn/Radix) | Tailwind utility classes | `className="p-4 gap-2"` |
 | An MUI-based component or an `sx` prop | `theme.spacing(index)` | `sx={{ p: 3, gap: 2 }}` |
 
-Both land on the same pixel values. Do not convert between them by hand — use
-the table below.
+All three land on the same pixel values. Do not convert between them by hand —
+use the table below.
+
+**Prefer `Stack`/`Inline` when you are spacing siblings.** They take the same
+scale, but as a *type*: `gap={7}` (28px — not a step) is a compile error,
+whereas `className="gap-7"` compiles happily and is quietly 4px off. See
+**Components → Stack**.
 
 ## The scale
 
@@ -159,13 +165,39 @@ first; use a half-step only when the full step is visibly wrong.
 ## What not to do
 
 - **No arbitrary values.** `p-[13px]`, `gap-[7px]` and similar bypass the grid
-  entirely. There are currently **zero** of these in `src/components/ui/` —
-  that is worth keeping.
+  entirely. This is now **enforced** — see below.
 - **Do not hand-convert between the tracks.** `spacing[6]` is 32px is `p-8`.
   Guessing produces `p-6` (24px) and a layout that is one step out.
 - **Do not add a step to `spacing.ts` casually.** The scale is deliberately
   curated — 4px micro-steps at the small end, widening to 16px intervals at the
   large end. See the token request process before extending it.
+
+## Enforcement
+
+`npm run composition:check` reports, and `composition:check:strict` **fails**
+CI (via `governance:ci`) on two things:
+
+| Rejected | Why | Instead |
+| --- | --- | --- |
+| `p-[16px]`, `gap-[8px]` | An arbitrary value is a scale step spelled so it bypasses the scale | `p-4`, `gap-2` |
+| `gap-7` (28px), `pr-9` (36px) | Compiles fine; not a value in `spacing.ts` | `gap-6`/`gap-8`, `pr-8`/`pr-10` |
+
+`p-[var(--x)]` is allowed — reading a token is the sanctioned use of an
+arbitrary value.
+
+When the check was first run it found 20 arbitrary values and 5 off-scale
+steps, including `gap-[8px]` five times. Those are fixed; the gate keeps them
+fixed.
+
+**Escape hatches:** `spacing-allow` on the line, `spacing-allow-file` in the
+file. Legitimate for values derived from a control's **geometry** — the 28px
+indent aligning checkbox helper text under its label, the 36px padding
+clearing a calendar icon button — but not for dodging a spacing decision.
+Say which in the comment.
+
+A third check is **advisory and never fails**: physical properties
+(`ml-`/`mr-`/`pl-`/`pr-`) over logical ones (`ms-`/`me-`/`ps-`/`pe-`).
+Currently 61 physical, 0 logical. That number should shrink, not grow.
 
 ## Layout guidance
 
@@ -173,7 +205,12 @@ first; use a half-step only when the full step is visibly wrong.
 - Vertical rhythm in dense panels: multiples of **8** (`gap-2`, `gap-4`).
 - Dashboard section gutters: **32–48** (`gap-8` … `gap-12`).
 - Compact table rows: **6–10** via the half-steps above.
-- Stacks and lists: a flex/grid parent with `gap-*`, not `mb-*` on each child.
+- Stacks and lists: a flex/grid parent with `gap-*`, not `mb-*` on each child —
+  or better, `<Stack gap={n}>`, which cannot drift off-scale.
+- Starting a whole page? Use the `PageShell` template rather than rebuilding
+  the frame. See **Components → PageShell**.
+- Genuinely two-dimensional layout belongs in grid utilities, not nested
+  stacks — see **Foundations → Grid**.
 
 ## Corner radius
 

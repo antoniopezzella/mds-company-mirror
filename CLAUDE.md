@@ -1397,6 +1397,10 @@ npm run roles:check
 
 # Strict mode (fails on any violations)
 npm run roles:check:strict
+
+# Spacing-scale conformance — arbitrary values and off-scale steps
+npm run composition:check
+npm run composition:check:strict   # folded into governance:ci
 ```
 
 **What it checks:**
@@ -1558,8 +1562,9 @@ import { getRoleColor } from '@/theme/roles';
 stop at the first step that satisfies the need; don't skip to "build new"
 by default:
 
-1. **Does it already exist?** Check `/design-system` (run `npm run dev`,
-   browse the live showcase) and `src/components/ui/`. If a component
+1. **Does it already exist?** Check `src/components/ui/taxonomy.ts` — the
+   manifest classifying all 75 modules as atom / molecule / organism /
+   template — or `/design-system` (run `npm run dev`). If a component
    already does this, use it.
 2. **Does an existing component's props cover it?** A new `variant`, `tone`,
    or `size` value on `Button`/`Card`/etc. is much cheaper than a new
@@ -1571,6 +1576,13 @@ by default:
 4. **Only then, build new** — and only using role tokens + existing
    primitives, never raw hex/pixel values. This is what the rest of this
    checklist covers.
+
+**Layout and page structure have their own primitives — use them.** `Stack` /
+`Inline` take the spacing scale as a *type* (`gap={7}` is a compile error, not
+a layout that is quietly 4px off), and `PageShell` is the page template. Full
+guidance, including where the bundled generic `shadcn` skill is wrong for this
+repo, is in the **`composition` skill** (`.claude/skills/composition/`) and
+Storybook's **Foundations → Composition**.
 
 When creating a new component:
 
