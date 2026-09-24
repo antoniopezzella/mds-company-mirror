@@ -9,6 +9,7 @@ import { cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { useControlSize, type ControlSize } from './control-size';
 
 /**
  * Button variants using class-variance-authority
@@ -86,10 +87,19 @@ const buttonVariants = cva(
         inverseTertiary:
           'bg-transparent text-white border-none hover:bg-[rgba(255,255,255,0.1)] active:bg-[rgba(255,255,255,0.2)] disabled:bg-transparent disabled:text-[#878580]',
       },
+      // Heights come from the shared control scale in control-size.ts — the
+      // same one Input/Select/Combobox/DatePicker/Textarea use — so a button
+      // and a field declaring the same size are the same height.
+      //
+      // These were 32/48/56. A button and an input both at size="md" rendered
+      // 48px and 40px respectively, so the button visibly towered over the
+      // fields in every filter bar and search row. Nothing caught it: each
+      // component was internally consistent and no story rendered them
+      // together. Now 32/40/48, matching IBM Carbon.
       size: {
-        sm: 'h-8 text-base font-bold leading-6',      // 32px height - Figma Small
-        md: 'h-12 text-base font-bold leading-6',     // 48px height - Figma Default
-        lg: 'h-14 text-base font-bold leading-6',     // 56px height - Figma Large
+        sm: 'h-8 text-base font-bold leading-6',      // 32px
+        md: 'h-10 text-base font-bold leading-6',     // 40px
+        lg: 'h-12 text-base font-bold leading-6',     // 48px
       },
       // Icon-only size handled separately
       iconOnly: {
@@ -200,7 +210,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ 
     className, 
     variant = 'secondary', 
-    size = 'md', 
+    size, 
     destructive = false,
     tone = 'default',
     iconOnly = false,
@@ -262,13 +272,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Icon-only node (for iconOnly mode)
     const iconOnlyNode = icon ?? startIcon ?? endIcon;
     
-    // Icon-only square dimensions (static classes for Tailwind)
+    // Icon-only square dimensions (static classes for Tailwind).
+    // Square, so these track the shared control heights above — an icon
+    // button beside a text input must match it exactly.
     const iconOnlyClasses = iconOnly
       ? normalizedSize === 'sm'
         ? 'w-8 h-8 p-0'  // 32px
         : normalizedSize === 'lg'
-        ? 'w-14 h-14 p-0'  // 56px
-        : 'w-12 h-12 p-0'  // 48px (default)
+        ? 'w-12 h-12 p-0'  // 48px
+        : 'w-10 h-10 p-0'  // 40px (default)
       : '';
     
     const isDisabled = disabled || loading;

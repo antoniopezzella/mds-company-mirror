@@ -4,6 +4,12 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import {
+  CONTROL_HEIGHT,
+  ControlSizeContext,
+  useControlSize,
+  type ControlSize,
+} from "./control-size"
 import { getRoleColor } from "@/theme/roles"
 import { Button } from "@/components/ui/button"
 
@@ -27,20 +33,37 @@ import { Button } from "@/components/ui/button"
  *    for AttachmentAction.
  */
 
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+export interface InputGroupProps extends React.ComponentProps<'div'> {
+  /**
+   * Size for every control in the group. Cascades via context, matching
+   * ButtonGroup — an addon button and the input it sits against must be the
+   * same height, and requiring the author to keep two props in sync is how
+   * they drift.
+   */
+  size?: ControlSize;
+}
+
+function InputGroup({ className, size, ...props }: InputGroupProps) {
   const borderColor = getRoleColor('border.default');
+  const resolved = useControlSize(size);
   return (
-    <div
-      data-slot="input-group"
-      role="group"
-      className={cn(
-        'group/input-group relative flex w-full min-w-0 items-center rounded-xs border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
-        'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
-        className
-      )}
-      style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-      {...props}
-    />
+    <ControlSizeContext.Provider value={resolved}>
+      <div
+        data-slot="input-group"
+        role="group"
+        data-size={resolved}
+        className={cn(
+          'group/input-group relative flex w-full min-w-0 items-center rounded-xs border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
+          'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
+          // The group owns the height; the inner control is borderless and
+          // fills it, so the two cannot disagree.
+          CONTROL_HEIGHT[resolved],
+          className
+        )}
+        style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+        {...props}
+      />
+    </ControlSizeContext.Provider>
   )
 }
 

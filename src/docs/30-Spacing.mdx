@@ -210,6 +210,40 @@ Currently 61 physical, 0 logical. That number should shrink, not grow.
 - Starting a whole page? Use the `PageShell` template rather than rebuilding
   the frame. See **Components → PageShell**.
 
+### Control heights
+
+Every interactive control — buttons *and* fields — shares one height scale,
+defined in `src/components/ui/control-size.ts`:
+
+| `size` | Height | Padding | Type | Icon |
+| --- | --- | --- | --- | --- |
+| `sm` | 32px (`h-8`) | `px-2.5` | `text-sm` | 14px |
+| `md` | 40px (`h-10`) | `px-3` | `text-sm` | 16px |
+| `lg` | 48px (`h-12`) | `px-4` | `text-base` | 20px |
+
+The rule this enforces: **a control and a button declaring the same size are
+the same height.** They constantly sit side by side — filter bars, search
+rows, button groups — and nothing else checks it.
+
+It did not hold before. `size="md"` meant 48px on a Button and 40px on an
+Input and Select, so the button towered over the fields in every such row.
+Four more controls (Textarea, Combobox, DatePicker, InputOTP) had no size
+prop at all and had drifted to 40px, 32px and 40px respectively. The scale
+now lives in one file and every control reads from it; a height defined
+privately inside one component's cva block is how that drift started.
+
+Two deliberate exclusions:
+
+- **Textarea** takes the padding and type but no fixed height — its height
+  comes from content and `rows`.
+- **Checkbox, Radio, Switch** sit on their own scale. They are glyphs, not
+  text boxes, and stretching them to 40px would look broken.
+
+Grouped controls cascade: `<ButtonGroup size="sm">` and `<InputGroup size="sm">`
+publish the size through context, so children inherit it and a group with a
+mismatched child is not expressible by accident. A child's own `size` still
+wins for the deliberate exception.
+
 ### Form rhythm
 
 Forms are the densest nesting in the system, so the steps are fixed and

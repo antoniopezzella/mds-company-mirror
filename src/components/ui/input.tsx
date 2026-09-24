@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { normalizeSize } from './prop-compat';
+import { CONTROL_HEIGHT, CONTROL_PX, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 
 /**
@@ -30,8 +31,14 @@ function getToneBorderRole(tone: InputTone): RoleName | null {
 
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   tone?: InputTone;
-  /** MUI-parity size preset */
-  inputSize?: 'sm' | 'md' | 'small' | 'medium';
+  /**
+   * Control size. Shares one scale with Button and every other field —
+   * see control-size.ts. Omit to inherit from an enclosing
+   * `InputGroup`/`ButtonGroup`, which defaults to `md`.
+   */
+  size?: ControlSize;
+  /** @deprecated Use `size`. Kept so existing call sites keep working. */
+  inputSize?: ControlSize | 'small' | 'medium';
 }
 
 /**
@@ -39,16 +46,21 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
  * mode. Same tone-driven validation coloring as the MUI twin.
  */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, tone = 'default', inputSize = 'md', style, disabled, ...props }, ref) => {
-    const resolvedSize = normalizeSize(inputSize, 'Input');
+  ({ className, tone = 'default', size, inputSize, style, disabled, ...props }, ref) => {
+    // `size` wins; `inputSize` is the legacy spelling. Neither set means
+    // inherit from the enclosing group, then fall back to md.
+    const legacy = inputSize ? (normalizeSize(inputSize, 'Input') as ControlSize) : undefined;
+    const resolvedSize = useControlSize(size ?? legacy);
     const toneRole = getToneBorderRole(tone);
     return (
       <input
         ref={ref}
         disabled={disabled}
         className={cn(
-          'flex w-full rounded-xs border bg-transparent font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-          resolvedSize === 'sm' ? 'h-8 px-2.5 py-1' : 'h-10 px-3 py-2',
+          'flex w-full rounded-xs border bg-transparent font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          CONTROL_HEIGHT[resolvedSize],
+          CONTROL_PX[resolvedSize],
+          CONTROL_TEXT[resolvedSize],
           className
         )}
         style={

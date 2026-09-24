@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { CONTROL_HEIGHT, CONTROL_ICON, CONTROL_PX, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor } from '@/theme/roles';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -22,6 +23,12 @@ export interface ComboboxOption {
 
 export interface ComboboxProps {
   options: ComboboxOption[];
+  /**
+   * Control size, shared with Button and every other field. Previously this
+   * component had no size prop and was pinned at 40px while DatePicker sat
+   * at 32px — two comparable triggers, two different heights.
+   */
+  size?: ControlSize;
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -43,6 +50,7 @@ export interface ComboboxProps {
 
 export const Combobox: React.FC<ComboboxProps> = ({
   options,
+  size,
   value,
   onChange,
   placeholder = 'Select an option',
@@ -56,6 +64,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const [open, setOpen] = React.useState(false);
   const selected = options.find((o) => o.value === value);
   const listId = React.useId();
+  const resolvedSize = useControlSize(size);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -69,7 +78,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
           aria-labelledby={ariaLabelledBy}
           disabled={disabled}
           className={cn(
-            'flex h-10 w-full items-center justify-between gap-2 rounded-xs border px-3 py-2 text-sm transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'flex w-full items-center justify-between gap-2 rounded-xs border transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            CONTROL_HEIGHT[resolvedSize],
+            CONTROL_PX[resolvedSize],
+            CONTROL_TEXT[resolvedSize],
             className
           )}
           style={
