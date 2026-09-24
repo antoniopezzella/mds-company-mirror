@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { Checkbox } from './checkbox';
 import { Skeleton } from './skeleton';
+import { DataState, resolveDataStatus } from './data-state';
 import { Pagination, type PaginationVariant } from './pagination';
 
 /**
@@ -52,6 +53,20 @@ export interface TableProps<T = object> {
   selectable?: boolean;
   onRowSelect?: (selectedRows: T[]) => void;
   loading?: boolean;
+  /**
+   * The fetch failed. Named `loadError`, not `error`, to stay lexically
+   * distinct from form validation — see data-state.tsx.
+   */
+  loadError?: React.ReactNode | Error | boolean | null;
+  /** Re-runs the failed load. Renders "Try again"; omitted when absent. */
+  onRetry?: () => void;
+  /** Replaces the empty state entirely. The canonical name across the system. */
+  emptyState?: React.ReactNode;
+  /**
+   * @deprecated Use `emptyState`, which takes a ReactNode and is the name
+   * every other data surface uses. Still honoured: passing a string here is
+   * equivalent to `emptyState={<string>}`.
+   */
   emptyMessage?: string;
   caption?: string;
   className?: string;
@@ -79,7 +94,10 @@ function TableComponent<T extends object>({
   selectable = false,
   onRowSelect,
   loading = false,
-  emptyMessage = 'No data available',
+  emptyMessage,
+  emptyState,
+  loadError,
+  onRetry,
   caption,
   className,
   sortable = false,
@@ -119,6 +137,17 @@ function TableComponent<T extends object>({
     const start = (currentPage - 1) * pageSize;
     return sortedData.slice(start, start + pageSize);
   }, [sortedData, pagination, currentPage, pageSize]);
+
+  // `emptyMessage` (string) is the deprecated spelling of `emptyState`
+  // (ReactNode). ReactNode is a superset of string, so the alias is a straight
+  // pass-through — no behaviour change for existing callers.
+  const resolvedEmptyState = emptyState ?? emptyMessage;
+
+  // One precedence rule for the whole system: loading > error > empty > ready.
+  const status = resolveDataStatus(
+    { loading, loadError, isEmpty: sortedData.length === 0 },
+    'Table'
+  );
 
   const handleSort = (column: TableColumn<T>) => {
     if (!sortable || !column.sortable) return;
@@ -251,14 +280,17 @@ function TableComponent<T extends object>({
                   ))}
                 </tr>
               ))
-            ) : sortedData.length === 0 ? (
+            ) : status !== 'ready' ? (
               <tr>
-                <td
-                  colSpan={columns.length + (selectable ? 1 : 0)}
-                  className={cn(cellPadding, 'text-center')}
-                  style={{ color: mutedColor }}
-                >
-                  {emptyMessage}
+                {/* `p-0`: DataState brings its own padding. */}
+                <td colSpan={columns.length + (selectable ? 1 : 0)} className="p-0">
+                  <DataState
+                    status={status}
+                    loadError={loadError}
+                    onRetry={onRetry}
+                    emptyState={resolvedEmptyState}
+                    name="Table"
+                  />
                 </td>
               </tr>
             ) : (

@@ -133,3 +133,33 @@ export const SingleSeriesNoLegend: StoryObj = {
     </ChartContainer>
   ),
 };
+
+/**
+ * A chart with no error state renders an empty plot area, which a reader
+ * interprets as **zero** rather than "this failed to load" — the same
+ * "looks like an answer" failure the tables had.
+ */
+export const DataStates: StoryObj = {
+  render: () => (
+    <div className="grid gap-6 lg:grid-cols-3">
+      <div>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">loading</p>
+        <ChartContainer config={{ v: { label: 'Value' } }} loading>
+          <LineChart data={[]} />
+        </ChartContainer>
+      </div>
+      <div>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">loadError</p>
+        <ChartContainer config={{ v: { label: 'Value' } }} loadError onRetry={() => {}}>
+          <LineChart data={[]} />
+        </ChartContainer>
+      </div>
+      <div>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">empty</p>
+        <ChartContainer config={{ v: { label: 'Value' } }} isEmpty>
+          <LineChart data={[]} />
+        </ChartContainer>
+      </div>
+    </div>
+  ),
+};

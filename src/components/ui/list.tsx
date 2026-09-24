@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Check } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { DataState, resolveDataStatus, type DataStateProps } from './data-state';
 import { getRoleColor } from '@/theme/roles';
 
 /**
@@ -26,7 +27,7 @@ export interface ListItemConfig {
   badge?: React.ReactNode;
 }
 
-export interface ListProps {
+export interface ListProps extends DataStateProps {
   items: ListItemConfig[];
   subheader?: string;
   selectable?: boolean;
@@ -40,6 +41,14 @@ export interface ListProps {
 
 export const List: React.FC<ListProps> = ({
   items,
+  loading,
+  loadError,
+  onRetry,
+  emptyReason,
+  onClearFilters,
+  emptyState,
+  emptyTitle,
+  emptyDescription,
   subheader,
   selectable = false,
   multiSelect = false,
@@ -66,6 +75,15 @@ export const List: React.FC<ListProps> = ({
     onSelectionChange?.(Array.from(next));
   };
 
+  const status = resolveDataStatus(
+
+    { loading, loadError, isEmpty: items.length === 0 },
+
+    'List'
+
+  );
+
+
   return (
     <div className={cn('w-full overflow-hidden rounded-xs', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
       {subheader && (
@@ -76,6 +94,19 @@ export const List: React.FC<ListProps> = ({
           {subheader}
         </div>
       )}
+      {/* The subheader stays above the state, so a list keeps its identity
+          while empty — "Recent claims: none" reads better than a bare block. */}
+      <DataState
+        status={status}
+        loadError={loadError}
+        onRetry={onRetry}
+        emptyReason={emptyReason}
+        onClearFilters={onClearFilters}
+        emptyState={emptyState}
+        emptyTitle={emptyTitle}
+        emptyDescription={emptyDescription}
+        name="List"
+      >
       <ul>
         {items.map((item, index) => {
           const isSelected = selected.has(item.id);
@@ -141,6 +172,7 @@ export const List: React.FC<ListProps> = ({
           );
         })}
       </ul>
+      </DataState>
     </div>
   );
 };

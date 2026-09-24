@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/lib/utils';
+import { DataState, resolveDataStatus, type DataStateProps } from './data-state';
 import { getRoleColor } from '@/theme/roles';
 
 /**
@@ -41,13 +42,45 @@ function useChart() {
   return context;
 }
 
-export interface ChartContainerProps extends React.ComponentProps<'div'> {
+export interface ChartContainerProps
+  extends React.ComponentProps<'div'>,
+    DataStateProps {
   config: ChartConfig;
   children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>['children'];
+  /**
+   * No data to plot. Computed by the caller — the container cannot inspect
+   * an arbitrary Recharts child to find out.
+   *
+   * This matters more for a chart than for a table: a chart with no error
+   * state renders an empty plot area, which a reader interprets as "zero"
+   * rather than "this failed to load". Same class of bug as a table saying
+   * "No data yet" when the request 500'd — it looks like an answer.
+   */
+  isEmpty?: boolean;
 }
 
 const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
-  ({ id, className, children, config, ...props }, ref) => {
+  (
+    {
+      id,
+      className,
+      children,
+      config,
+      loading,
+      loadError,
+      onRetry,
+      isEmpty,
+      emptyReason,
+      onClearFilters,
+      emptyState,
+      emptyTitle,
+      emptyDescription,
+      loadingState,
+      errorState,
+      ...props
+    },
+    ref
+  ) => {
     const generatedId = React.useId();
     const chartId = `chart-${id ?? generatedId}`.replace(/:/g, '');
 
@@ -63,6 +96,8 @@ const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
       }));
     }, [config]);
 
+    const status = resolveDataStatus({ loading, loadError, isEmpty }, 'ChartContainer');
+
     return (
       <ChartContext.Provider value={{ config }}>
         <div
@@ -72,7 +107,26 @@ const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
           {...props}
         >
           <ChartStyle id={chartId} colorAssignments={colorAssignments} />
-          <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+          {/*
+            The container already owns a sized box (`aspect-video`), so the
+            state renders at the chart's own height and the surrounding card
+            does not collapse when data is absent.
+          */}
+          <DataState
+            status={status}
+            loadError={loadError}
+            onRetry={onRetry}
+            emptyReason={emptyReason}
+            onClearFilters={onClearFilters}
+            emptyState={emptyState}
+            emptyTitle={emptyTitle}
+            emptyDescription={emptyDescription}
+            loadingState={loadingState}
+            errorState={errorState}
+            name="ChartContainer"
+          >
+            <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+          </DataState>
         </div>
       </ChartContext.Provider>
     );
