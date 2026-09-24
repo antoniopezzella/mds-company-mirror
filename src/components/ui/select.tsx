@@ -291,6 +291,50 @@ export const DSSelect: React.FC<DSSelectProps> = ({
   const isError = error || tone === 'error';
   const { text: helperColor } = getToneRoles(tone, error);
 
+  // With no label and no helper text there is nothing to lay out, so the
+  // wrapper is skipped entirely and the trigger becomes the root element.
+  //
+  // This is what makes DSSelect usable inside a ButtonGroup/InputGroup. A
+  // group styles its *direct children* — `[&>*:not(:first-child)]:border-l-0`
+  // collapses the doubled border between adjacent controls — so a wrapper
+  // div absorbs those selectors and the trigger inside never receives them,
+  // leaving a double border. The wrapper also has no height of its own, so
+  // `items-stretch` stretched it to the tallest sibling while the trigger
+  // kept its own height: measured 40px wrapper around a 32px trigger in a
+  // `size="sm"` group.
+  const bare = !label && !helperText;
+
+  const control = (
+    <Select
+      value={value !== undefined ? toRadixValue(value) : undefined}
+      defaultValue={defaultValue !== undefined ? toRadixValue(defaultValue) : undefined}
+      onValueChange={(radixValue) => onChange?.(fromRadixValue(radixValue, options))}
+      disabled={disabled}
+      name={name}
+    >
+      <SelectTrigger
+        id={generatedId}
+        invalid={isError}
+        size={size}
+        aria-label={label ? undefined : ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        aria-describedby={helperText ? helperId : undefined}
+        className={bare ? cn(!fullWidth && 'w-auto', className) : undefined}
+      >
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={toRadixValue(option.value)} value={toRadixValue(option.value)} disabled={option.disabled}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+
+  if (bare) return control;
+
   return (
     <div className={cn('inline-flex flex-col gap-1.5', fullWidth && 'w-full', className)}>
       {label && (
@@ -302,31 +346,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
           {label}
         </label>
       )}
-      <Select
-        value={value !== undefined ? toRadixValue(value) : undefined}
-        defaultValue={defaultValue !== undefined ? toRadixValue(defaultValue) : undefined}
-        onValueChange={(radixValue) => onChange?.(fromRadixValue(radixValue, options))}
-        disabled={disabled}
-        name={name}
-      >
-        <SelectTrigger
-            id={generatedId}
-            invalid={isError}
-            size={size}
-            aria-label={label ? undefined : ariaLabel}
-            aria-labelledby={ariaLabelledBy}
-            aria-describedby={helperText ? helperId : undefined}
-          >
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={toRadixValue(option.value)} value={toRadixValue(option.value)} disabled={option.disabled}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {control}
       {helperText && (
         <span
           id={helperId}

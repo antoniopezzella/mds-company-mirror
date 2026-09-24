@@ -165,11 +165,17 @@ export const GroupedControls: Story = {
         </Stack>
       ))}
 
-      <Stack gap={3}>
+      <Stack gap={1}>
         <h3 className="text-sm font-semibold">
           A child&apos;s own size still wins
         </h3>
-        <ButtonGroup size="sm" aria-label="Override example">
+        <p className="text-sm text-muted-foreground">
+          Deliberately mismatched, to show precedence: the group says{' '}
+          <code>sm</code> and the button overrides with <code>lg</code>. This is
+          the escape hatch, not a recommended pattern — a group normally reads
+          as one unit.
+        </p>
+        <ButtonGroup size="sm" aria-label="Override example" className="mt-2">
           <Input placeholder="Inherits sm" aria-label="Inherits sm" />
           <Button variant="primary" size="lg">
             Explicit lg

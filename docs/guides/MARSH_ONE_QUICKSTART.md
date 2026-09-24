@@ -30,6 +30,28 @@ A complete implementation of the **Marsh One homepage** from your Figma design, 
    http://localhost:5173/marsh-one
    ```
 
+### Internal go-to-market workspace
+
+Visit `/marsh-one/go-to-market` for the internal MVP planning dashboard.
+It connects strategy, selectable MVP scope, proposed validation experiments,
+and a launch checklist. Export a Markdown decision brief for a scope review.
+
+The initial proposal is one prospect journey: needs discovery → relevant,
+sourced insights → expert handoff → outcome measurement. Market, segment,
+named owners, capacity, dates and success thresholds still need agreement.
+AI discovery is a comparative experiment before inclusion in the MVP.
+
+Content is a working strategy proposal, not validated client research or live
+commercial reporting. Scope and checklist selections persist only in the
+current browser; they are not shared team records. Checklist completion is
+self-reported and does not constitute release approval. The page has no
+authentication of its own; “internal” identifies its intended audience,
+not an access restriction. Do not add confidential planning data before
+integrating the appropriate access controls and shared storage.
+
+Implementation: `src/pages/GoToMarket/GoToMarket.tsx`; proposed capabilities,
+experiments and readiness conditions: `src/pages/GoToMarket/data.ts`.
+
 ## 🏗️ Project Structure
 
 ```
