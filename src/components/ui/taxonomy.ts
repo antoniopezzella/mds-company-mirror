@@ -74,6 +74,7 @@ export const TAXONOMY: Record<string, Tier> = {
   separator: 'atom',
   skeleton: 'atom',
   slider: 'atom',
+  sparkline: 'atom',
   spinner: 'atom',
   switch: 'atom',
   textarea: 'atom',

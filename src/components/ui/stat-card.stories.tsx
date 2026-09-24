@@ -451,3 +451,88 @@ interface StatCardProps {
     </div>
   ),
 };
+
+/**
+ * The value is a **number**, formatted by the card. Passing pre-formatted
+ * strings is what produced `$1,250.00`, `$12,400`, `$2.4M` and `$13.362B`
+ * side by side in this repo.
+ */
+export const FormattedValues: Story = {
+  render: () => (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <StatCard label="Total premium" value={1250000} format="currency" />
+      <StatCard label="Total premium (compact)" value={1250000} format="currency" formatOptions={{ compact: true }} />
+      <StatCard label="Policies in force" value={18432} format="number" />
+      <StatCard label="Loss ratio" value={62.4} format="percent" />
+    </div>
+  ),
+};
+
+/**
+ * **Direction is derived from the delta's sign, and colour from direction ×
+ * polarity.** These are different functions, and collapsing them is a bug
+ * this component shipped: a `-2 days` change with `trend="down"` rendered red
+ * beside a caption reading "faster than last quarter".
+ */
+export const DeltaPolarity: Story = {
+  render: () => (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <StatCard
+        label="Premium written"
+        value={4200000}
+        format="currency"
+        formatOptions={{ compact: true }}
+        delta={12.5}
+        trendDescription="up is good — more premium"
+      />
+      <StatCard
+        label="Open claims"
+        value={184}
+        delta={12.5}
+        deltaPolarity="down-is-good"
+        trendDescription="same +12.5%, but up is bad here"
+      />
+      <StatCard
+        label="Avg. resolution time"
+        value={14}
+        format={(v) => `${v} days`}
+        delta={-2}
+        deltaFormat="number"
+        deltaPolarity="down-is-good"
+        trendDescription="faster than last quarter"
+      />
+      <StatCard
+        label="Headcount"
+        value={312}
+        delta={4}
+        deltaFormat="number"
+        deltaPolarity="neutral"
+        trendDescription="movement has no valence"
+      />
+    </div>
+  ),
+};
+
+/** An inline trend line, coloured by the delta's sentiment. */
+export const WithSparkline: Story = {
+  render: () => (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <StatCard label="Premium" value={4200000} format="currency" formatOptions={{ compact: true }}
+        delta={12.5} sparkline={[3.6, 3.7, 3.9, 3.8, 4.0, 4.1, 4.2]} />
+      <StatCard label="Open claims" value={184} delta={12.5} deltaPolarity="down-is-good"
+        sparkline={[150, 158, 164, 171, 168, 178, 184]} />
+      <StatCard label="Flat series" value={100} delta={0} sparkline={[100, 100, 100, 100]} />
+    </div>
+  ),
+};
+
+/** The four data states, rendered in place so a KPI grid never reflows. */
+export const DataStates: Story = {
+  render: () => (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <StatCard label="Total premium" value={1250000} format="currency" loading sparkline={[1, 2]} />
+      <StatCard label="Total premium" value={undefined} format="currency" loadError onRetry={() => {}} />
+      <StatCard label="Total premium" value={null} format="currency" description="Absent values render an em dash, never NaN." />
+    </div>
+  ),
+};
