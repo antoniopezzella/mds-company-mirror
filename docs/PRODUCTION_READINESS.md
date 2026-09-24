@@ -143,7 +143,7 @@ platform, and unwinding it touches 133 files.
 | P1-8 | **The hex checker has a blind spot.** `button.tsx` carries `roles-allow-hex-file`, so its **81 hex literals report as 0**. The scan is also limited to `src/components`, leaving ~617 literals in `src/pages`/`src/projects` unscanned. Reported total 125; actual repo-wide ~823. | `check-role-usage.js:17,79`; `button.tsx:3` | **S** |
 | P1-9 | **Bus factor of 1.** `CODEOWNERS` names one owner on all 8 paths — its own comment calls this "a bus factor, not a review process". No deprecation window, no support commitment. | `.github/CODEOWNERS` | **S** |
 | P1-10 | **No composed filter bar; no date-range presets.** The toolbar is welded inside `DataTable` with no slot, so it cannot host a date filter. No "Last 7 days / MTD / YTD". | `data-table.tsx:370-473`; `date-picker.tsx:90-129` | **M** |
-| P1-11 | **No app shell or layout primitive.** Hand-assembled per consumer, on top of a live cascade collision: `_grid.scss` defines unprefixed `.grid-cols-1..12` that silently beat Tailwind's. | documented only in a code comment at `DashboardDemo.tsx:254-260` | **M** |
+| P1-11 | **No app shell or layout primitive.** The shell is hand-assembled by each consumer — no `AppShell`/`DashboardLayout`, no responsive grid component. | no such export in `src/components/` | **M** |
 | P1-12 | **Coverage is misconfigured.** `vitest.config.ts` has no coverage block — no include/exclude, no thresholds — so the headline number instruments Storybook's own built bundles. | reported **4.6%**; scoped to `src/components/ui/**/*.tsx` it is **45.25%** | **S** |
 
 ### P2 — quality and scale
@@ -212,8 +212,8 @@ Sequenced by dependency, not effort. Each stage unblocks the next.
 ### 90 days — make it a platform
 
 13. **Virtualization** for both tables, or a documented row-count ceiling (P1-4).
-14. **App shell + layout primitives**, and resolve the `_grid.scss` ↔ Tailwind
-    cascade collision that currently only a code comment warns about (P1-11).
+14. **App shell + layout primitives** (P1-11) — an `AppShell`/`DashboardLayout`
+    and a responsive grid component, so each consumer stops hand-assembling one.
 15. **Component maturity ladder** (experimental/beta/stable) with objective
     criteria, surfaced in Storybook and a generated status page (P2-7).
 16. **Consolidate the table story** — one table API, not three (P2-1).
@@ -303,7 +303,7 @@ Neither table uses `React.memo` or `useCallback`; `data-table.tsx` has 3 `useMem
 
 ---
 
-## A finding that did not survive verification
+## Findings that did not survive verification
 
 A sub-agent reported that `table.tsx` row selection breaks across pages because
 indices are page-relative. **Checked and dropped:** selection *is* cleared on page
@@ -311,8 +311,18 @@ change (`table.tsx:304,309`), so the indices stay consistent. The real limitatio
 is narrower — selection cannot be *accumulated* across pages — which is a feature
 gap, not a defect.
 
-Recorded here deliberately. Every P0 in this document was re-verified against
-source or command output before publication, and this is what that process caught.
+**A stale code comment became a finding.** P1-11 originally claimed a live
+cascade collision — that `_grid.scss` defined unprefixed `.grid-cols-1..12`
+which beat Tailwind's. The evidence was a warning comment in
+`DashboardDemo.tsx`. Re-checking the source found **zero** unprefixed
+`.grid-cols-N` rules in the SCSS and **zero** in the built app CSS: the legacy
+utilities were namespaced to `.mds-legacy-grid-cols-*` at some point, and the
+comment outlived the problem. The comment has since been corrected. P1-11 stands
+on the missing app shell alone.
+
+Recorded deliberately. Every P0 in this document was re-verified against source
+or command output before publication, and these are what that process caught. A
+warning comment is evidence that something was once true, not that it still is.
 
 ---
 
