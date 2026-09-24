@@ -250,13 +250,18 @@ export function DashboardDemo() {
             </p>
           </div>
 
-          {/* Stat row — CSS grid, Tailwind defaults, responsive at Tailwind's own breakpoints.
-              No bare `grid-cols-1` here: src/styles/_grid.scss defines its own unprefixed
-              `.grid-cols-1`..`.grid-cols-12` (a legacy pre-Tailwind utility system that
-              happens to share Tailwind's exact class names) and, because it compiles in
-              after Tailwind, silently wins the cascade over any bare `grid-cols-N` — even
-              inside a matching `sm:`/`lg:` media query. Omitting the unprefixed base class
-              sidesteps it; `grid` alone already renders as an implicit single column. */}
+            {/* Stat row — CSS grid, Tailwind defaults, responsive at Tailwind's own breakpoints.
+
+                This comment used to warn that src/styles/_grid.scss defined its own
+                unprefixed `.grid-cols-1`..`.grid-cols-12` and won the cascade over
+                Tailwind's identically-named classes, so the bare base class had to be
+                omitted. That is NO LONGER TRUE — the legacy utilities were namespaced
+                to `.mds-legacy-grid-cols-*`. Re-verified: zero unprefixed `.grid-cols-N`
+                rules in the SCSS sources, and zero in the built app CSS.
+
+                `grid-cols-1` is safe here. It is omitted only because `grid` alone
+                already renders as a single implicit column, so it would be redundant —
+                not because of a collision. */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <StatCard label="Open claims" value="184" change="+12.5%" trend="up" trendDescription="vs last month" />
             <StatCard label="Total exposure" value="$4.2M" change="+3.1%" trend="up" trendDescription="vs last month" />
