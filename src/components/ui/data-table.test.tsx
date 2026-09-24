@@ -80,7 +80,11 @@ describe('DataTable', () => {
       fireEvent.change(screen.getByRole('textbox'), { target: { value: 'zzzzz' } });
 
       expect(screen.getByText('No matching results')).toBeInTheDocument();
-      const clear = screen.getByRole('button', { name: 'Clear search' });
+      // "Clear filters", not "Clear search": DataTable now renders the shared
+      // empty state from data-state.tsx, so every data surface offers the same
+      // recovery action with the same words. The action is unchanged —
+      // `table.resetColumnFilters()`, which is what the search box drives.
+      const clear = screen.getByRole('button', { name: 'Clear filters' });
       fireEvent.click(clear);
       expect(bodyRows()).toHaveLength(data.length);
     });

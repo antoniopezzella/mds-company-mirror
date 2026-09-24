@@ -18,7 +18,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ChevronDown, ChevronsUpDown, ChevronUp, Download, EyeOff, Inbox, SearchX, X } from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, ChevronUp, Download, EyeOff, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
@@ -27,10 +27,10 @@ import { Checkbox } from './checkbox';
 import { Input } from './input';
 import { Pagination } from './pagination';
 import { Skeleton } from './skeleton';
+import { DataState, resolveDataStatus } from './data-state';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 import { DataTableFacetedFilter, type FacetOption } from './data-table-faceted-filter';
 import { DataTableSortList } from './data-table-sort-list';
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from './empty';
 
 /**
  * DataTable — no MDS/Figma spec exists for this yet; built matching real
@@ -199,6 +199,17 @@ export interface DataTableProps<TData, TValue> {
   facetedFilters?: { columnId: string; title: string; options?: FacetOption[] }[];
   /** Adds a Sort control listing active sorts, with add/remove/direction. */
   enableSortList?: boolean;
+  /**
+   * The fetch failed. Renders the error branch instead of the rows.
+   *
+   * Named `loadError`, not `error`, to keep it clearly separate from form
+   * validation's `error`/`invalid` — see data-state.tsx. Before this prop
+   * existed a failed request rendered as "No data yet", which looks like an
+   * answer rather than a failure.
+   */
+  loadError?: React.ReactNode | Error | boolean | null;
+  /** Re-runs the failed load. Renders "Try again"; omitted when absent. */
+  onRetry?: () => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -226,6 +237,8 @@ export function DataTable<TData, TValue>({
   onCellEdit,
   facetedFilters,
   enableSortList = false,
+  loadError,
+  onRetry,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -319,6 +332,12 @@ export function DataTable<TData, TValue>({
   const searchValue = (searchKey ? table.getColumn(searchKey)?.getFilterValue() : '') as string ?? '';
 
   const isFilteredEmpty = columnFilters.some((f) => f.value !== '' && f.value != null) && data.length > 0;
+
+  // One precedence rule for the whole system: loading > error > empty > ready.
+  const status = resolveDataStatus(
+    { loading, loadError, isEmpty: rows.length === 0 },
+    'DataTable'
+  );
 
   const exportableColumns = React.useMemo(() => table.getAllLeafColumns().filter((c) => c.getCanHide()), [table]);
 
@@ -626,33 +645,20 @@ export function DataTable<TData, TValue>({
                   ))}
                 </tr>
               ))
-            ) : rows.length === 0 ? (
+            ) : status !== 'ready' ? (
               <tr>
-                {/* `p-0`: Empty brings its own padding, so the cell must not
-                    add a second layer around it. */}
+                {/* `p-0`: DataState brings its own padding, so the cell must
+                    not add a second layer around it. */}
                 <td colSpan={columns.length} className="p-0">
-                  {emptyState ?? (
-                    // border-0: Empty's default dashed outline would read as a
-                    // second box inside the table's own border.
-                    <Empty className="border-0">
-                      <EmptyHeader>
-                        <EmptyMedia variant="icon">{isFilteredEmpty ? <SearchX /> : <Inbox />}</EmptyMedia>
-                        <EmptyTitle>{isFilteredEmpty ? 'No matching results' : 'No data yet'}</EmptyTitle>
-                        <EmptyDescription>
-                          {isFilteredEmpty
-                            ? 'No rows match your current search. Try a different term, or clear the search to see everything.'
-                            : 'There is nothing to show here yet.'}
-                        </EmptyDescription>
-                      </EmptyHeader>
-                      {isFilteredEmpty && (
-                        <EmptyContent>
-                          <Button variant="outline" size="sm" onClick={() => table.resetColumnFilters()}>
-                            Clear search
-                          </Button>
-                        </EmptyContent>
-                      )}
-                    </Empty>
-                  )}
+                  <DataState
+                    status={status}
+                    loadError={loadError}
+                    onRetry={onRetry}
+                    emptyState={emptyState}
+                    emptyReason={isFilteredEmpty ? 'no-results' : 'no-data'}
+                    onClearFilters={() => table.resetColumnFilters()}
+                    name="DataTable"
+                  />
                 </td>
               </tr>
             ) : (
