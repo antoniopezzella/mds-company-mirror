@@ -263,10 +263,51 @@ export function DashboardDemo() {
                 already renders as a single implicit column, so it would be redundant —
                 not because of a collision. */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <StatCard label="Open claims" value="184" change="+12.5%" trend="up" trendDescription="vs last month" />
-            <StatCard label="Total exposure" value="$4.2M" change="+3.1%" trend="up" trendDescription="vs last month" />
-            <StatCard label="Avg. resolution time" value="14 days" change="-2 days" trend="down" trendDescription="faster than last quarter" />
-            <StatCard label="Closed this month" value="47" change="+8" trend="up" trendDescription="vs last month" />
+            {/*
+              Numbers, not pre-formatted strings — the card formats them, so
+              every figure on this page uses one convention.
+
+              `deltaPolarity` is load-bearing on two of these: more open claims
+              is worse, and a shorter resolution time is better, so both are
+              `down-is-good`. Before it existed, "Avg. resolution time" passed
+              `trend="down"` and rendered RED right beside its own caption
+              saying "faster than last quarter".
+            */}
+            <StatCard
+              label="Open claims"
+              value={184}
+              delta={12.5}
+              deltaPolarity="down-is-good"
+              trendDescription="vs last month"
+              sparkline={[150, 158, 164, 171, 168, 178, 184]}
+            />
+            <StatCard
+              label="Total exposure"
+              value={4_200_000}
+              format="currency"
+              formatOptions={{ compact: true }}
+              delta={3.1}
+              trendDescription="vs last month"
+              sparkline={[3.6, 3.7, 3.9, 3.8, 4.0, 4.1, 4.2]}
+            />
+            <StatCard
+              label="Avg. resolution time"
+              value={14}
+              format={(v) => `${v} days`}
+              delta={-2}
+              deltaFormat="number"
+              deltaPolarity="down-is-good"
+              trendDescription="faster than last quarter"
+              sparkline={[19, 18, 18, 16, 15, 15, 14]}
+            />
+            <StatCard
+              label="Closed this month"
+              value={47}
+              delta={8}
+              deltaFormat="number"
+              trendDescription="vs last month"
+              sparkline={[31, 35, 33, 39, 42, 44, 47]}
+            />
           </div>
 
           {/* Filter row — Select + Button, exercising real interactive components */}

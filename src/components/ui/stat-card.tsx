@@ -2,156 +2,279 @@
 
 import * as React from 'react';
 import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
+
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
+import {
+  formatDelta,
+  formatValue,
+  type CurrencyFormatOptions,
+  type DateFormatOptions,
+  type Formattable,
+  type FormatKind,
+} from '@/lib/format';
+import { DataError } from './error-state';
+import { resolveDataStatus, type DataStateProps } from './data-state';
+import { Skeleton } from './skeleton';
+import { Sparkline } from './sparkline';
 
-export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Main label/title of the metric. Widened from `string` to `ReactNode`
-   *  (backward compatible — a string is a valid ReactNode) so callers can
-   *  carry an inline icon/tooltip alongside the text. */
+export type StatCardTrend = 'up' | 'down' | 'neutral';
+
+/**
+ * Which direction is good news. Insurance needs this constantly: premium up
+ * is good, open claims up is not, and headcount has no valence at all.
+ */
+export type DeltaPolarity = 'up-is-good' | 'down-is-good' | 'neutral';
+
+export interface StatCardProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>,
+    DataStateProps {
+  /** Main label/title of the metric. */
   label: React.ReactNode;
-  /** Primary metric value displayed large */
-  value: string;
-  /** Change percentage/amount (e.g., '+12.5%', '-20%') */
+
+  /**
+   * The metric. **Pass a number and let the card format it** — that is the
+   * point of `format`.
+   *
+   * Widened from `string`, which was the root cause of this repo shipping
+   * `$1,250.00`, `$12,400`, `$2.4M` and `$13.362B` side by side: the type
+   * pushed formatting onto every consumer, so every consumer invented its
+   * own. Strings still pass through untouched, so existing call sites are
+   * unaffected.
+   */
+  value: Formattable;
+
+  /** How to render `value`. Omit for strings; pass a name or a function for numbers. */
+  format?: FormatKind | ((value: Formattable) => string);
+  /** Per-card overrides of locale/currency/decimals. */
+  formatOptions?: CurrencyFormatOptions & DateFormatOptions;
+
+  /**
+   * Change versus the comparison period. **Direction is derived from the
+   * sign** — there is no way to state a delta that disagrees with its arrow.
+   *
+   * Percentage *points*, not a ratio: `delta={12.5}` renders "+12.5%",
+   * matching `formatPercent`.
+   */
+  delta?: number;
+  /** How to render `delta`. Defaults to a percentage. */
+  deltaFormat?: 'percent' | 'number' | 'currency';
+  /** Which direction is good news. Defaults to up-is-good. */
+  deltaPolarity?: DeltaPolarity;
+
+  /** Pre-formatted change string. @deprecated Use `delta` — it derives direction. */
   change?: string;
-  /** Trend direction */
-  trend?: 'up' | 'down' | 'neutral';
-  /** Trend description text */
+  /**
+   * Explicit trend direction.
+   * @deprecated Use `delta` (direction is derived) with `deltaPolarity`.
+   * Kept because it can contradict the number it sits beside, which is a bug
+   * this component has shipped — see the note on `deltaSentiment` below.
+   */
+  trend?: StatCardTrend;
+
+  /** Trend description text, e.g. "faster than last quarter". */
   trendDescription?: string;
-  /** Label for a secondary comparison value, e.g. "At Renewal" */
+  /** Label for a secondary comparison value, e.g. "At Renewal". */
   comparisonLabel?: string;
-  /** Value for the secondary comparison, e.g. "394" */
-  comparisonValue?: string;
-  /** Secondary description below trend */
+  /** Value for the secondary comparison. Formatted with the same `format`. */
+  comparisonValue?: Formattable;
+  /** Secondary description below trend. */
   description?: string;
-  /** Custom className for additional styling */
+
+  /** Series for an inline trend line. Colour follows the delta's sentiment. */
+  sparkline?: number[];
+
+  /**
+   * Element for `label`. Defaults to `'p'` — **a KPI label is not a section
+   * heading**, and the section containing the row of tiles is. This used to be
+   * a hardcoded `<h3>`, which broke heading order under a page `<h1>` and
+   * forced callers to add a visually-hidden `<h2>` to compensate.
+   */
+  as?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+
   className?: string;
 }
 
+/** Arrow follows direction. */
+function deltaDirection(delta: number): StatCardTrend {
+  if (delta > 0) return 'up';
+  if (delta < 0) return 'down';
+  return 'neutral';
+}
+
 /**
- * StatCard - Advanced KPI card with trend indicators and descriptions
- * 
- * Features:
- * - Header with label and trend badge
- * - Large metric value display
- * - Trend indicator with icon and text
- * - Secondary description text
- * - Automatic color coding based on trend direction
- * 
+ * Colour follows *sentiment*, which is direction × polarity — a different
+ * function from direction, and collapsing the two is a live bug in this
+ * repo today:
+ *
+ *   DashboardDemo.tsx:268
+ *   <StatCard value="14 days" change="-2 days" trend="down"
+ *             trendDescription="faster than last quarter" />
+ *
+ * `trend="down"` maps to the danger role, so an improvement the caption
+ * itself calls "faster" renders red. With `delta={-2}` and
+ * `deltaPolarity="down-is-good"` the arrow still points down and the colour
+ * is green, which is what was meant.
+ */
+function deltaSentiment(direction: StatCardTrend, polarity: DeltaPolarity): StatCardTrend {
+  if (direction === 'neutral' || polarity === 'neutral') return 'neutral';
+  if (polarity === 'down-is-good') return direction === 'down' ? 'up' : 'down';
+  return direction;
+}
+
+/**
+ * StatCard — the dashboard KPI tile.
+ *
  * @example
  * ```tsx
  * <StatCard
- *   label="Total Revenue"
- *   value="$1,250.00"
- *   change="+12.5%"
- *   trend="up"
- *   trendDescription="Trending up this month"
- *   description="Visitors for the last 6 months"
+ *   label="Total premium"
+ *   value={1250000}
+ *   format="currency"
+ *   formatOptions={{ compact: true }}
+ *   delta={12.5}
+ *   trendDescription="vs last quarter"
+ *   sparkline={[8, 12, 10, 14, 16]}
  * />
+ *
+ * // Down is good here — fewer open claims.
+ * <StatCard label="Open claims" value={3} delta={-2} deltaFormat="number"
+ *           deltaPolarity="down-is-good" />
  * ```
  */
 const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
-  ({
-    label,
-    value,
-    change,
-    trend = 'neutral',
-    trendDescription,
-    comparisonLabel,
-    comparisonValue,
-    description,
-    className,
-    ...props
-  }, ref) => {
-    // Determine trend icon
-    const TrendIcon = trend === 'up' 
-      ? TrendingUp 
-      : trend === 'down' 
-        ? TrendingDown 
-        : ArrowRight;
+  (
+    {
+      label,
+      value,
+      format,
+      formatOptions,
+      delta,
+      deltaFormat = 'percent',
+      deltaPolarity = 'up-is-good',
+      change,
+      trend,
+      trendDescription,
+      comparisonLabel,
+      comparisonValue,
+      description,
+      sparkline,
+      as: As = 'p',
+      loading,
+      loadError,
+      onRetry,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const status = resolveDataStatus({ loading, loadError }, 'StatCard');
 
-    // These were raw Tailwind palette classes — text-green-600 on bg-green-50
-    // (3.14:1) and text-red-600 on bg-red-50 (4.41:1), both under AA, and 39
-    // axe violations in this component's stories alone. They also bypassed the
-    // role system entirely, which is exactly what CLAUDE.md's "no hardcoded
-    // colours" rule exists to prevent: Tailwind's palette has no relationship
-    // to MDS tokens and gets no contrast validation.
-    //
-    // Now driven by the status roles, which ARE contrast-validated against
-    // their own backgrounds (see the status pairs in check-contrast.js) and
+    // `delta` derives its own direction; `trend` is the deprecated override.
+    const direction: StatCardTrend =
+      delta !== undefined ? deltaDirection(delta) : (trend ?? 'neutral');
+    const sentiment = delta !== undefined ? deltaSentiment(direction, deltaPolarity) : direction;
+
+    const deltaText =
+      delta !== undefined ? formatDelta(delta, deltaFormat, formatOptions) : change;
+
+    const DirectionIcon =
+      direction === 'up' ? TrendingUp : direction === 'down' ? TrendingDown : ArrowRight;
+
+    // Status roles, not raw Tailwind palette classes: those were text-green-600
+    // on bg-green-50 (3.14:1) and text-red-600 on bg-red-50 (4.41:1) — both
+    // under AA, and 39 axe violations in this component's stories alone. The
+    // status roles ARE contrast-validated against their own backgrounds and
     // follow the theme without a separate `dark:` variant.
-    const trendStyle: React.CSSProperties =
-      trend === 'up'
+    const badgeStyle: React.CSSProperties =
+      sentiment === 'up'
         ? { color: getRoleColor('status.success.fg'), backgroundColor: getRoleColor('status.success.bg') }
-        : trend === 'down'
+        : sentiment === 'down'
           ? { color: getRoleColor('status.danger.fg'), backgroundColor: getRoleColor('status.danger.bg') }
           : { color: getRoleColor('text.secondary'), backgroundColor: getRoleColor('surface.subtle') };
 
-    // The trend description sits on the card surface, not inside the badge, so
-    // it takes the foreground colour only.
-    const trendTextStyle: React.CSSProperties = { color: trendStyle.color };
+    const shell = cn(
+      'flex flex-col gap-4',
+      'rounded border border-border bg-card p-6',
+      'shadow-xs transition-shadow hover:shadow-md',
+      className
+    );
+
+    // Loading and error render IN PLACE rather than through <DataState>: an
+    // icon-and-headline block inside a 120px tile is absurd, and swapping the
+    // subtree would make a 4-tile grid reflow the moment data lands.
+    if (status === 'loading') {
+      return (
+        <div ref={ref} className={shell} aria-busy="true" {...props}>
+          <Skeleton height={14} width="45%" />
+          <Skeleton height={32} width="70%" />
+          {sparkline && <Skeleton height={40} width="100%" />}
+        </div>
+      );
+    }
+
+    if (status === 'error') {
+      return (
+        <div ref={ref} className={shell} {...props}>
+          <As className="text-sm font-medium text-muted-foreground">{label}</As>
+          <DataError variant="inline" onRetry={onRetry} description={undefined} />
+        </div>
+      );
+    }
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          'flex flex-col gap-4',
-          'rounded border border-border bg-card p-6', // 4px radius by default
-          'shadow-xs transition-shadow hover:shadow-md',
-          className
-        )}
-        {...props}
-      >
-        {/* Header: Label + Trend Badge */}
+      <div ref={ref} className={shell} {...props}>
+        {/* Header: label + delta badge */}
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            {label}
-          </h3>
-          {change && (
+          <As className="text-sm font-medium text-muted-foreground">{label}</As>
+          {deltaText && (
             <div
-              className={cn(
-                'flex items-center gap-1 rounded-full px-2 py-0.5',
-                'text-xs font-semibold'
-              )}
-              style={trendStyle}
+              className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold"
+              style={badgeStyle}
             >
-              <TrendIcon className="h-3 w-3" />
-              <span>{change}</span>
+              {/* The sign and the arrow both carry the meaning, so colour is
+                  never the only signal (WCAG 1.4.1). */}
+              <DirectionIcon className="h-3 w-3" aria-hidden="true" />
+              <span>{deltaText}</span>
             </div>
           )}
         </div>
 
-        {/* Main Metric Value */}
+        {/* The metric. `tabular-nums` so digits line up across a row of tiles. */}
         <div className="text-3xl font-bold tracking-tight text-foreground tabular-nums">
-          {value}
+          {formatValue(value, format, formatOptions)}
         </div>
 
-        {/* Secondary Comparison Value (e.g. "At Renewal: 394") */}
-        {(comparisonLabel || comparisonValue) && (
+        {sparkline && (
+          <Sparkline
+            data={sparkline}
+            sentiment={
+              sentiment === 'up' ? 'positive' : sentiment === 'down' ? 'negative' : 'neutral'
+            }
+          />
+        )}
+
+        {(comparisonLabel || comparisonValue !== undefined) && (
           <div className="text-sm text-muted-foreground">
             {comparisonLabel}
-            {comparisonLabel && comparisonValue ? ': ' : ''}
-            <span className="font-medium text-foreground">{comparisonValue}</span>
+            {comparisonLabel && comparisonValue !== undefined ? ': ' : ''}
+            <span className="font-medium text-foreground tabular-nums">
+              {formatValue(comparisonValue, format, formatOptions)}
+            </span>
           </div>
         )}
 
-        {/* Trend Description */}
         {trendDescription && (
           <div
             className="flex items-center gap-1.5 text-sm font-medium"
-            style={trendTextStyle}
+            style={{ color: badgeStyle.color }}
           >
-            <TrendIcon className="h-4 w-4" />
+            <DirectionIcon className="h-4 w-4" aria-hidden="true" />
             <span>{trendDescription}</span>
           </div>
         )}
 
-        {/* Secondary Description */}
-        {description && (
-          <p className="text-sm text-muted-foreground">
-            {description}
-          </p>
-        )}
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>
     );
   }
