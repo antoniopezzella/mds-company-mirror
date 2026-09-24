@@ -13,12 +13,6 @@ figma.connect(MegaMenu, NODE_URL, {
     hasTitle: figma.boolean('Has title'),
   },
   example: (props) => (
-    <MegaMenu
-      sections={[
-        { title: 'Section 1', items: [{ label: 'Item 1', href: '#' }] },
-        { title: 'Section 2', items: [{ label: 'Item 2', href: '#' }] },
-      ]}
-      description={props.hasDescription ? props.description : undefined}
-    />
+    <MegaMenu isOpen onClose={() => {}} />
   ),
 });

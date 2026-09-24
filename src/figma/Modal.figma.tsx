@@ -13,8 +13,8 @@ figma.connect(Modal, NODE_URL, {
     hasTitle: figma.boolean('Has Title'),
     hasDivider: figma.boolean('Has Divider'),
     size: figma.enum('Size', {
-      Default: 'md',
-      Fullscreen: 'fullscreen',
+      Default: 'Medium',
+      Fullscreen: 'FullScreen',
     }),
   },
   example: (props) => (
@@ -22,8 +22,8 @@ figma.connect(Modal, NODE_URL, {
       open
       size={props.size}
       title={props.hasTitle ? 'Modal Title' : undefined}
-      onClose={props.hasCloseButton ? () => {} : undefined}
-      actions={props.hasActionButtons ? [{ label: 'Confirm' }, { label: 'Cancel' }] : undefined}
+      onClose={() => {}}
+      footer={props.hasActionButtons ? <>Confirm · Cancel</> : undefined}
     >
       Modal content
     </Modal>

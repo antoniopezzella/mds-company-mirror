@@ -32,8 +32,7 @@ figma.connect(Avatar, NODE_URL, {
       size={props.size}
       alt="User"
       src={props.content === 'image' ? '/avatar.jpg' : undefined}
-    >
-      {props.content === 'initials' ? 'AP' : undefined}
-    </Avatar>
+      initials={props.content === 'initials' ? 'AP' : undefined}
+    />
   ),
 });

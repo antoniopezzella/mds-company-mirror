@@ -18,7 +18,7 @@ figma.connect(DSRadio, NODE_URL, {
   example: (props) => (
     <DSRadio
       checked={props.checked}
-      error={props.invalid}
+      tone={props.invalid ? 'danger' : 'default'}
       label="Radio option"
       value="option-1"
     />

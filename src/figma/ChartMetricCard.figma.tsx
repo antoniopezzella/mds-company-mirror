@@ -14,9 +14,11 @@ figma.connect(ChartMetricCard, NODE_URL, {
   },
   example: (props) => (
     <ChartMetricCard
-      title="Metric Title"
+      label="Metric Title"
       value="$1,234"
-      trend={props.hasInsights ? { value: 12, direction: 'up' } : undefined}
+      change="+12.0%"
+      trend="up"
+      data={[{ v: 8 }, { v: 12 }, { v: 10 }, { v: 14 }]}
     />
   ),
 });
