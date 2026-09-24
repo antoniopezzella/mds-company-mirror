@@ -32,9 +32,42 @@ v3**. In v3 the equivalents are `shadow-sm`, `blur-sm`, `rounded-sm`,
 `outline-none`, `bg-[--var]`, `!flex`, `@layer utilities`, and the `content`
 array.
 
-If an upgrade is ever on the table, `npx @tailwindcss/upgrade` handles most of
-it — but note v4 drops Sass support, and this repo still has 19 SCSS files.
-That makes the upgrade a real project, not a command.
+### If an upgrade is on the table
+
+`npx @tailwindcss/upgrade` handles the mechanical part. Measured blast radius
+here, so the decision can be made on numbers:
+
+| Item | Count | Notes |
+| --- | --- | --- |
+| `outline-none` → `outline-hidden` | 69 | codemod |
+| `rounded-sm` → `rounded-xs` | 37 | codemod |
+| `shadow-sm` → `shadow-xs` | 6 | codemod |
+| `bg-[--var]` → `bg-(--var)` | 1 | trivial |
+| `!x` → `x!` | 1 | trivial |
+| `tailwindcss-animate` | — | **incompatible**; replace with `tw-animate-css` |
+| `tailwind-merge` 3.6.0 | — | already v4-compatible |
+
+**Sass is NOT a blocker here**, despite the common warning. v4 drops the
+ability to use Tailwind *inside* Sass — but this repo has **zero** `@apply` and
+**zero** `@tailwind` in its 39 `.scss` files. They are plain Sass compiled by
+Vite, which Tailwind never processed. `@apply` appears only in `src/index.css`
+(2 lines), and v4 still supports it.
+
+**The two real risks are silent visual changes, not syntax:**
+
+- `border` default colour goes `gray-200` → `currentColor`. There are **39 bare
+  `border` classes** with no colour — every one would start inheriting text
+  colour.
+- `ring` goes `3px`/`blue-500` → `1px`/`currentColor`, across **188 usages**.
+  Focus rings are an accessibility feature, so this is not cosmetic.
+
+Both can be pinned back in `@theme` (`--default-ring-width`,
+`--default-ring-color`), but they must be handled deliberately rather than
+discovered.
+
+Also note the package stylesheet build (`npm run build:css`) invokes the v3 CLI
+with `-c tailwind.package.config.js`. v4 moves that to `@tailwindcss/cli` with
+CSS-first config, so that pipeline needs reworking too.
 
 ---
 
