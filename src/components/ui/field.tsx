@@ -54,14 +54,20 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="field-group"
       className={cn(
-        /* `gap-7` (28px) is upstream shadcn's value and is NOT on the MDS
-           spacing scale — the neighbouring steps are 24px (gap-6) and 32px
-           (gap-8). Unlike the other annotated exceptions in this codebase,
-           which are geometry derived from a control, this is a genuine
-           spacing decision. Held at the upstream value pending a design call
-           rather than changed unilaterally, since it would restyle every
-           form. Surfaced by `npm run composition:check`. */
-        "group/field-group @container/field-group flex w-full flex-col gap-7 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4", // spacing-allow
+        /* `gap-5` (20px), not upstream shadcn's `gap-7` (28px).
+
+           Two reasons, beyond 28px simply not being a step on the MDS scale:
+
+           1. It was inverted. FieldGroup nests inside FieldSet, which uses
+              `gap-6` (24px) — so fields sat *further* apart than the section
+              heading sat from them, making fields read as less related to
+              each other than to the legend above. 24px outer > 20px inner
+              restores the hierarchy.
+           2. It stays clear of Field's own `gap-3` (12px) internal label/
+              content spacing. At 20px the ratio is ~1.7x, enough that field
+              boundaries stay legible; `gap-4` (16px) was rejected because
+              1.3x starts to blur which label belongs to which input. */
+        "group/field-group @container/field-group flex w-full flex-col gap-5 data-[slot=checkbox-group]:gap-3 [&>[data-slot=field-group]]:gap-4",
         className
       )}
       {...props}
