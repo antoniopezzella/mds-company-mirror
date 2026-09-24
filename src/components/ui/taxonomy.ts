@@ -102,6 +102,9 @@ export const TAXONOMY: Record<string, Tier> = {
   combobox: 'molecule',
   empty: 'molecule',
   field: 'molecule',
+  // Organism: it owns a filter row's composition and publishes a size cascade,
+  // and it occupies a whole region above a data surface.
+  'filter-bar': 'organism',
   'hover-card': 'molecule',
   'input-group': 'molecule',
   'input-otp': 'molecule',
