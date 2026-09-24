@@ -17,6 +17,10 @@ import { getRoleColor, type RoleName } from '@/theme/roles';
 
 const ToastProvider = ToastPrimitive.Provider;
 
+// z-[1600] = Z_INDEX.toast, deliberately ABOVE the 1500 overlay layer.
+// This was z-[100], so a toast fired while a Dialog, Sheet, Drawer, Popover
+// or Select was open rendered BEHIND it — confirmations and save errors
+// vanished at exactly the moment they mattered. See z-index.ts.
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitive.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitive.Viewport>
@@ -24,7 +28,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitive.Viewport
     ref={ref}
     className={cn(
-      'fixed bottom-0 right-0 z-[100] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:max-w-[420px]',
+      'fixed bottom-0 right-0 z-[1600] flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:max-w-[420px]',
       className
     )}
     {...props}
