@@ -49,8 +49,12 @@ const inputGroupAddonVariants = cva(
   {
     variants: {
       align: {
-        'inline-start': 'order-first pl-3 has-[>button]:ml-[-0.3rem]',
-        'inline-end': 'order-last pr-3 has-[>button]:mr-[-0.3rem]',
+        /* The -0.3rem below is an optical nudge pulling a nested button back
+           over the addon's own padding so the button's edge aligns with the
+           input's. It is not a spacing decision — there is no scale step for
+           "half a border plus the button's transparent hit area". */
+        'inline-start': 'order-first pl-3 has-[>button]:ml-[-0.3rem]', // spacing-allow
+        'inline-end': 'order-last pr-3 has-[>button]:mr-[-0.3rem]', // spacing-allow
         'block-start': 'order-first w-full justify-start px-3 pt-3',
         'block-end': 'order-last w-full justify-start px-3 pb-3',
       },

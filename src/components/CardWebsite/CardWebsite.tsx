@@ -292,9 +292,9 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           style={{ background: 'linear-gradient(to top, rgba(0,15,71,0.85) 0%, rgba(0,15,71,0.45) 50%, transparent 100%)' }}
         />
         {/* Content */}
-        <div className="absolute inset-x-0 bottom-0 z-[1] p-[16px]">
+        <div className="absolute inset-x-0 bottom-0 z-[1] p-4">
           {hasHeader && (category || timestamp) && (
-            <div className="mb-[8px] flex items-center gap-[8px]">
+            <div className="mb-2 flex items-center gap-2">
               {category && (
                 <span style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 14, lineHeight: '20px', color: getRoleColor('text.onHero'), opacity: 0.85 }}>
                   {category}
@@ -387,13 +387,13 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
         {/* ── Content ─────────────────────────────────────────────────────── */}
         <CardContent
           className={cn(
-            'flex flex-1 flex-col gap-[8px] p-0',
-            isTextOnly ? 'pb-[16px]' : 'pb-[32px]',
-            isHorizontal ? 'px-[16px]' : 'px-0',
+            'flex flex-1 flex-col gap-2 p-0',
+            isTextOnly ? 'pb-4' : 'pb-8',
+            isHorizontal ? 'px-4' : 'px-0',
             // Space between the image and the title/content block below it —
             // widens slightly at larger breakpoints to keep the gap feeling
             // proportional as card width grows (desktop/tablet/mobile).
-            'pt-[16px] md:pt-[20px] lg:pt-[24px]'
+            'pt-4 md:pt-5 lg:pt-6'
           )}
         >
           {/* Header: category · divider · date */}
@@ -402,9 +402,9 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           ) : (
             hasHeader &&
             (category || timestamp) && (
-              <div className="flex items-center gap-[8px] overflow-hidden">
+              <div className="flex items-center gap-2 overflow-hidden">
                 {category && (
-                  <div className="flex min-w-0 items-center gap-[2px]">
+                  <div className="flex min-w-0 items-center gap-0.5">
                     {resolvedCategoryIcon && (
                       <span className="flex h-[20px] w-[20px] shrink-0 items-center" style={{ color: textColor }}>
                         {resolvedCategoryIcon}
@@ -442,7 +442,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           )}
 
           {/* Title + Description */}
-          <div className={cn('flex flex-col gap-[8px]', isTextOnly ? 'pr-[20px]' : 'pr-[40px]')}>
+          <div className={cn('flex flex-col gap-2', isTextOnly ? 'pr-5' : 'pr-10')}>
             {skeleton ? (
               <>
                 <Skeleton variant="rectangular" width="90%" height={28} className="rounded-xs" />
@@ -503,11 +503,11 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
 
           {/* Badges */}
           {!skeleton && badges && badges.length > 0 && (
-            <div className="flex flex-wrap gap-[8px]">
+            <div className="flex flex-wrap gap-2">
               {badges.map((badge) => (
                 <span
                   key={badge}
-                  className="inline-flex h-[24px] items-center rounded-[8px] px-[12px]"
+                  className="inline-flex h-[24px] items-center rounded-[8px] px-3"
                   style={{
                     fontFamily: 'var(--typo-body1-font-family)',
                     fontSize: 14,
@@ -530,7 +530,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
 
           {/* Text-only: inline always-visible arrow */}
           {isTextOnly && !skeleton && (
-            <div className="mt-auto pt-[8px]">
+            <div className="mt-auto pt-2">
               <ArrowRight size={20} color={textColor} aria-hidden />
             </div>
           )}
