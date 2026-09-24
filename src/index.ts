@@ -80,6 +80,7 @@ export * from './components/ui/dropdown-menu';
 export * from './components/ui/empty';
 export * from './components/ui/error-state';
 export * from './components/ui/field';
+export * from './components/ui/filter-bar';
 export * from './components/ui/header';
 export * from './components/ui/hover-card';
 export * from './components/ui/image-with-fallback';

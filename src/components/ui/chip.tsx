@@ -101,7 +101,16 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         }
       : {
           backgroundColor: isFilled ? getRoleColor(bg) : 'transparent',
-          color: isFilled ? getRoleColor(fg) : getRoleColor(border),
+          // Text always takes `fg`; `border` is for the border only.
+          //
+          // Outlined chips used to render their label in the BORDER colour,
+          // which is the exact trap the `warning` case in getToneRoles already
+          // documents: border roles are validated at 3:1 for non-text UI, not
+          // 4.5:1 for text. For `default`/`secondary` that meant `#878787` on
+          // white — 3.59:1, below AA, and it failed axe the moment an outlined
+          // chip was used at `size="sm"` (12px). Every tone's `fg` clears 4.5:1
+          // against the page surface; the tightest is success at 5.12:1.
+          color: getRoleColor(fg),
           border: variant === 'outlined' ? `1px solid ${getRoleColor(border)}` : 'none',
           boxShadow: selectable && selected ? `inset 0 0 0 2px ${getRoleColor('focus.ring')}` : undefined,
         };

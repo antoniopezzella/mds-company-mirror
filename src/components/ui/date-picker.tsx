@@ -32,6 +32,33 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
 //    building three near-identical components would just be copy/paste.
 // ---------------------------------------------------------------------------
 
+/**
+ * A date picker is a FIELD, so its trigger must look like one.
+ *
+ * All three pickers used `variant="secondary"`, which is a 2px brand-navy
+ * button border. Sitting in a filter row beside an Input and a Select — both
+ * 1px `border.default` — the date control read as a different kind of thing
+ * entirely. The control-size work fixed the heights; this fixes the surface.
+ *
+ * `tertiary` (no border of its own) plus the field classes, rather than
+ * fighting `secondary`'s border-2 with an override.
+ */
+const FIELD_TRIGGER = 'justify-start gap-2 rounded-xs font-normal';
+
+/**
+ * Border is set in the style, not via a `border` class: the `tertiary`
+ * variant carries `border-none`, which sets `border-style: none` and kills
+ * any border regardless of width. Setting style explicitly wins over the
+ * class without having to fight cva's variant ordering.
+ */
+const FIELD_TRIGGER_STYLE: React.CSSProperties = {
+  borderStyle: 'solid',
+  borderWidth: 1,
+  borderColor: getRoleColor('border.default'),
+  backgroundColor: getRoleColor('surface.default'),
+  color: getRoleColor('text.primary'),
+};
+
 export interface DatePickerProps {
   /**
    * Control size, shared with Button and every other field. The trigger used
@@ -72,7 +99,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   return (
   <Popover>
     <PopoverTrigger asChild>
-      <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)} dir={dir}>
+      <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE} dir={dir}>
         <CalendarIcon className={CONTROL_ICON[controlSize]} />
         {date ? format(date, 'MMM d, yyyy') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
       </Button>
@@ -130,7 +157,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)}>
+        <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {label ?? <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
         </Button>
@@ -254,7 +281,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)}>
+        <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {date ? format(date, 'MMM d, yyyy · h:mm a') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
         </Button>
