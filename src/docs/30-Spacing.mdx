@@ -43,20 +43,90 @@ is 16px, and 16px is `p-4`, not `p-3`.
 <TokenTable
   columns={[
     { key: 'index', label: 'spacing[i]', width: 90 },
-    { key: 'value', label: 'px', width: 60 },
-    { key: 'tw', label: 'Tailwind', width: 90 },
-    { key: 'mui', label: 'MUI sx', width: 90 },
+    { key: 'value', label: 'px', width: 55 },
+    { key: 'rem', label: 'rem', width: 70 },
+    { key: 'tw', label: 'Tailwind', width: 85 },
+    { key: 'mui', label: 'MUI sx', width: 80 },
     { key: 'visual', label: 'Visual' }
   ]}
   rows={spacing.map((v, i) => ({
     index: i,
     value: v,
+    rem: `${v / 16}rem`,
     tw: `p-${v / 4}`,
     mui: `p: ${i}`,
     visual: <div style={{ width: v, height: 12, background: '#002c77', borderRadius: 2 }} />
   }))}
-  caption="All 15 MDS steps map exactly onto stock Tailwind classes — no config extension required."
+  caption="All 15 MDS steps map exactly onto stock Tailwind classes — no config extension required. rem values assume the browser default 16px root, which this app does not override."
 />
+
+### px or rem — they are not interchangeable here
+
+The two tracks emit **different units**, and that has a real consequence:
+
+| Track | What it emits | Under a user font-size change |
+| --- | --- | --- |
+| Tailwind (`p-4`) | `padding: 1rem` | **Scales** with the user's setting |
+| MUI (`sx={{ p: 3 }}`) | `padding: 16px` | **Fixed** |
+
+`spacing.ts` stores plain numbers and `src/theme.ts`'s `spacingFn` appends
+`px`, so every MUI-spaced component is pinned to absolute pixels while every
+shadcn component reflows. A user who raises their browser font size gets a
+layout where half the components grow and half do not.
+
+That matters for **WCAG 1.4.4 (Resize Text)**. It is not a defect in either
+track on its own — it is a consequence of the two coexisting, and it is worth
+knowing before choosing which to build a new dense layout in. Prefer the
+Tailwind track for anything text-adjacent.
+
+The `rem` column above is the conversion: divide px by 16.
+
+## One scale, many utilities
+
+The same 15 steps drive every spacing utility — padding, margin, gap, and the
+sizing/inset families. Picking a step is one decision; which property you apply
+it to is another.
+
+| Family | Tailwind | MUI `sx` | Used here |
+| --- | --- | --- | --- |
+| Gap (flex/grid) | `gap-4` `gap-x-2` `gap-y-6` | `gap: 3` | **231** |
+| Padding, all sides | `p-4` | `p: 3` | 90 |
+| Padding, axis | `px-4` `py-2` | `px: 3` `py: 1` | 177 |
+| Padding, one side | `pt-2` `pr-3` `pb-2` `pl-3` | `pt: 1` … | 42 |
+| Margin, all sides | `m-4` | `m: 3` | — |
+| Margin, axis | `mx-auto` `my-4` | `mx: 'auto'` `my: 3` | 7 |
+| Margin, one side | `mt-4` `mb-2` | `mt: 3` `mb: 1` | 65 |
+| Space between children | `space-y-2` `space-x-4` | — | 8 |
+
+Counts are live usage in `src/components/ui/`.
+
+### Prefer `gap` over margins
+
+`gap-*` outnumbers every margin utility here roughly three to one, and that is
+the house style rather than an accident. Gap spaces children from the parent, so
+it cannot collapse, cannot double up against a sibling's margin, and leaves no
+stray trailing space on the last child. Reach for a flex or grid container with
+`gap-*` before adding `mb-*` to a list of items.
+
+Margins are still right for pushing a single element away from its neighbours —
+`mt-*` on a section heading, `mb-*` on a standalone block. Both are in the
+system; the ordering is a default, not a prohibition.
+
+Negative margins (`-mt-2`, `-mx-4`) exist and are used sparingly — 5 occurrences,
+all for deliberate overlap such as pulling a border flush. They are legitimate
+but should be commented where they appear.
+
+### Physical vs logical properties
+
+Tailwind offers both physical (`ml-` `mr-` `pl-` `pr-`) and logical
+(`ms-` `me-` `ps-` `pe-`) directions. Logical properties flip automatically in
+right-to-left locales; physical ones do not.
+
+**Today this system uses 64 physical and 0 logical.** That is fine while every
+consumer is left-to-right, and it is the single thing that would need changing
+first if a right-to-left market is ever in scope. New components should prefer
+`ms-`/`me-`/`ps-`/`pe-` where the choice is arbitrary, so the retrofit shrinks
+rather than grows.
 
 ## Dense half-steps
 
@@ -65,11 +135,11 @@ that the MDS index scale does not contain. These are **permitted in dense,
 list-like UI** — menu items, table rows, drawer rows, chips — where 4px is too
 tight and 8px too loose.
 
-| Class | px | Where it is appropriate |
-| --- | --- | --- |
-| `p-1.5` | 6px | Menu and dropdown items, compact chips |
-| `p-2.5` | 10px | Table cells at compact density, drawer rows |
-| `p-3.5` | 14px | Rare — prefer `p-3` (12px) or `p-4` (16px) first |
+| Class | px | rem | Where it is appropriate |
+| --- | --- | --- | --- |
+| `p-1.5` | 6px | `0.375rem` | Menu and dropdown items, compact chips |
+| `p-2.5` | 10px | `0.625rem` | Table cells at compact density, drawer rows |
+| `p-3.5` | 14px | `0.875rem` | Rare — prefer `p-3` (12px) or `p-4` (16px) first |
 
 They are a deliberate sub-scale, not an escape hatch. Reach for a full step
 first; use a half-step only when the full step is visibly wrong.
@@ -91,6 +161,7 @@ first; use a half-step only when the full step is visibly wrong.
 - Vertical rhythm in dense panels: multiples of **8** (`gap-2`, `gap-4`).
 - Dashboard section gutters: **32–48** (`gap-8` … `gap-12`).
 - Compact table rows: **6–10** via the half-steps above.
+- Stacks and lists: a flex/grid parent with `gap-*`, not `mb-*` on each child.
 
 ## Where the values live
 
