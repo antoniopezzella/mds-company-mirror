@@ -40,6 +40,7 @@ export * from './components/ui/chip';
 export * from './components/ui/collapsible';
 export * from './components/ui/combobox';
 export * from './components/ui/command';
+export * from './components/ui/control-size';
 export * from './components/ui/context-menu';
 export * from './components/ui/data-table';
 export * from './components/ui/date-picker';

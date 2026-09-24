@@ -6,6 +6,14 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { normalizeSize } from './prop-compat';
+import {
+  CONTROL_HEIGHT,
+  CONTROL_ICON,
+  CONTROL_PX,
+  CONTROL_TEXT,
+  useControlSize,
+  type ControlSize,
+} from './control-size';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
@@ -22,14 +30,23 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
     invalid?: boolean;
-    size?: 'sm' | 'md' | 'small' | 'medium';
+    /** Shares the control scale with Button and every other field. */
+    size?: ControlSize | 'small' | 'medium';
   }
->(({ className, children, invalid = false, size = 'md', ...props }, ref) => (
+>(({ className, children, invalid = false, size, ...props }, ref) => {
+  // Previously `sm` used `px-2 text-xs` while Input's `sm` used
+  // `px-2.5 text-sm` — the two controls looked different at the same
+  // declared size, and 12px is below what data entry should use. Both now
+  // come from the shared scale.
+  const resolvedSize = useControlSize(size ? (normalizeSize(size, 'Select') as ControlSize) : undefined);
+  return (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
       'flex w-full items-center justify-between gap-2 rounded-xs border font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      normalizeSize(size, 'Select') === 'sm' ? 'h-8 px-2 py-1 text-xs' : 'h-10 px-3 py-2 text-sm',
+      CONTROL_HEIGHT[resolvedSize],
+      CONTROL_PX[resolvedSize],
+      CONTROL_TEXT[resolvedSize],
       className
     )}
     style={
@@ -44,10 +61,11 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
+      <ChevronDown className={cn('shrink-0 opacity-60', CONTROL_ICON[resolvedSize])} />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
-));
+  );
+});
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
@@ -195,7 +213,7 @@ export interface DSSelectProps {
   helperText?: string;
   error?: boolean;
   tone?: 'default' | 'error' | 'success' | 'warning';
-  size?: 'sm' | 'md' | 'small' | 'medium';
+  size?: ControlSize | 'small' | 'medium';
   fullWidth?: boolean;
   disabled?: boolean;
   value?: string | number;
@@ -203,6 +221,21 @@ export interface DSSelectProps {
   onChange?: (value: string | number) => void;
   name?: string;
   className?: string;
+  /**
+   * Accessible name for the trigger when there is no visible `label`.
+   *
+   * Radix renders the trigger as `role="combobox"`, and ARIA does NOT allow
+   * name-from-content for that role — so the placeholder and selected-value
+   * text inside it contribute nothing to the accessible name. Without a
+   * visible `label` or one of these, axe reports `button-name` and the
+   * control is unusable with a screen reader.
+   *
+   * `Combobox` already exposed this; `DSSelect` did not, which meant a
+   * label-less Select could not be made accessible at all. Mirrored here so
+   * the two comparable controls have the same accessibility API.
+   */
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 }
 
 function getToneRoles(tone: NonNullable<DSSelectProps['tone']>, error?: boolean): { border: RoleName; text: RoleName } {
@@ -242,7 +275,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
   helperText,
   error = false,
   tone = 'default',
-  size = 'md',
+  size,
   fullWidth = false,
   disabled = false,
   value,
@@ -250,6 +283,8 @@ export const DSSelect: React.FC<DSSelectProps> = ({
   onChange,
   name,
   className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
 }) => {
   const generatedId = React.useId();
   const helperId = `${generatedId}-helper`;
@@ -274,7 +309,14 @@ export const DSSelect: React.FC<DSSelectProps> = ({
         disabled={disabled}
         name={name}
       >
-        <SelectTrigger id={generatedId} invalid={isError} size={size} aria-describedby={helperText ? helperId : undefined}>
+        <SelectTrigger
+            id={generatedId}
+            invalid={isError}
+            size={size}
+            aria-label={label ? undefined : ariaLabel}
+            aria-labelledby={ariaLabelledBy}
+            aria-describedby={helperText ? helperId : undefined}
+          >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

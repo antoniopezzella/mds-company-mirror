@@ -7,6 +7,7 @@ import * as chrono from 'chrono-node';
 import type { DateRange, DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
+import { CONTROL_ICON, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { Calendar } from './calendar';
@@ -32,6 +33,13 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
 // ---------------------------------------------------------------------------
 
 export interface DatePickerProps {
+  /**
+   * Control size, shared with Button and every other field. The trigger used
+   * to hardcode `size="sm"`, so a DatePicker rendered 32px next to a 40px
+   * Combobox — two comparable triggers, two heights, no way to fix it from
+   * the outside.
+   */
+  size?: ControlSize;
   date?: Date;
   onDateChange?: (date: Date | undefined) => void;
   placeholder?: string;
@@ -49,6 +57,7 @@ export interface DatePickerProps {
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
+  size,
   date,
   onDateChange,
   placeholder = 'Pick a date',
@@ -58,11 +67,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   endMonth,
   locale,
   dir,
-}) => (
+}) => {
+  const controlSize = useControlSize(size);
+  return (
   <Popover>
     <PopoverTrigger asChild>
-      <Button variant="secondary" size="sm" className={cn('justify-start gap-2 font-normal', className)} dir={dir}>
-        <CalendarIcon className="h-4 w-4" />
+      <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)} dir={dir}>
+        <CalendarIcon className={CONTROL_ICON[controlSize]} />
         {date ? format(date, 'MMM d, yyyy') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
       </Button>
     </PopoverTrigger>
@@ -81,13 +92,21 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       />
     </PopoverContent>
   </Popover>
-);
+  );
+};
 
 // ---------------------------------------------------------------------------
 // 2. Range Picker
 // ---------------------------------------------------------------------------
 
 export interface DateRangePickerProps {
+  /**
+   * Control size, shared with Button and every other field. The trigger used
+   * to hardcode `size="sm"`, so a DatePicker rendered 32px next to a 40px
+   * Combobox — two comparable triggers, two heights, no way to fix it from
+   * the outside.
+   */
+  size?: ControlSize;
   range?: DateRange;
   onRangeChange?: (range: DateRange | undefined) => void;
   placeholder?: string;
@@ -95,11 +114,13 @@ export interface DateRangePickerProps {
 }
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
+  size,
   range,
   onRangeChange,
   placeholder = 'Pick a date range',
   className,
 }) => {
+  const controlSize = useControlSize(size);
   const label = (() => {
     if (!range?.from) return null;
     if (!range.to) return format(range.from, 'MMM d, yyyy');
@@ -109,8 +130,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="sm" className={cn('justify-start gap-2 font-normal', className)}>
-          <CalendarIcon className="h-4 w-4" />
+        <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)}>
+          <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {label ?? <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
@@ -173,6 +194,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
             className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-xs"
             style={{ color: getRoleColor('text.secondary') }}
           >
+            {/* Fixed 32px affordance inside the field — does not scale. */}
             <CalendarIcon className="h-4 w-4" />
           </button>
         </PopoverTrigger>
@@ -198,6 +220,13 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
 // ---------------------------------------------------------------------------
 
 export interface DateTimePickerProps {
+  /**
+   * Control size, shared with Button and every other field. The trigger used
+   * to hardcode `size="sm"`, so a DatePicker rendered 32px next to a 40px
+   * Combobox — two comparable triggers, two heights, no way to fix it from
+   * the outside.
+   */
+  size?: ControlSize;
   date?: Date;
   onDateChange?: (date: Date | undefined) => void;
   placeholder?: string;
@@ -205,11 +234,13 @@ export interface DateTimePickerProps {
 }
 
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
+  size,
   date,
   onDateChange,
   placeholder = 'Pick a date & time',
   className,
 }) => {
+  const controlSize = useControlSize(size);
   const timeValue = date ? format(date, 'HH:mm') : '';
 
   const applyTime = (base: Date | undefined, time: string) => {
@@ -223,8 +254,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="sm" className={cn('justify-start gap-2 font-normal', className)}>
-          <CalendarIcon className="h-4 w-4" />
+        <Button variant="secondary" size={controlSize} className={cn('justify-start gap-2 font-normal', className)}>
+          <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {date ? format(date, 'MMM d, yyyy · h:mm a') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
         </Button>
       </PopoverTrigger>

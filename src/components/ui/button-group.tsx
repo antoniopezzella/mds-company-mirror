@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { ControlSizeContext, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor } from '@/theme/roles';
 import { Separator } from './separator';
 
@@ -46,7 +47,15 @@ const buttonGroupVariants = cva(
 
 export interface ButtonGroupProps
   extends React.ComponentProps<'div'>,
-    VariantProps<typeof buttonGroupVariants> {}
+    VariantProps<typeof buttonGroupVariants> {
+  /**
+   * Size for every control in the group. Cascades via context, so a Button,
+   * an Input and a Select in the same group are the same height without the
+   * author repeating it on each — and a mismatched group is not expressible
+   * by accident. A child's own `size` prop still wins.
+   */
+  size?: ControlSize;
+}
 
 /**
  * Groups related buttons into a single visual unit.
@@ -54,16 +63,26 @@ export interface ButtonGroupProps
  * `role="group"` is deliberate: it tells assistive tech these controls belong
  * together. Pair it with `aria-label` whenever the grouping isn't obvious from
  * the buttons alone — a bare group announces nothing about what it groups.
+ *
+ * A group is the one place where a height mismatch is unmissable, because the
+ * controls share edges. Before the shared control scale existed, an Input
+ * (40px) beside a Button (48px) inside a group left a visible step in what is
+ * supposed to read as a single unit — `items-stretch` could not fix it,
+ * because both children set explicit heights that override stretch.
  */
-function ButtonGroup({ className, orientation, ...props }: ButtonGroupProps) {
+function ButtonGroup({ className, orientation, size, ...props }: ButtonGroupProps) {
+  const resolved = useControlSize(size);
   return (
-    <div
-      role="group"
-      data-slot="button-group"
-      data-orientation={orientation ?? 'horizontal'}
-      className={cn(buttonGroupVariants({ orientation }), className)}
-      {...props}
-    />
+    <ControlSizeContext.Provider value={resolved}>
+      <div
+        role="group"
+        data-slot="button-group"
+        data-orientation={orientation ?? 'horizontal'}
+        data-size={resolved}
+        className={cn(buttonGroupVariants({ orientation }), className)}
+        {...props}
+      />
+    </ControlSizeContext.Provider>
   );
 }
 

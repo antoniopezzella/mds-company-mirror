@@ -121,6 +121,41 @@ Other rules:
 - **2px half-steps** (`gap-0.5`, `p-1.5`, `py-2.5`) are sanctioned. See
   `src/docs/30-Spacing.mdx`.
 
+## Control sizes
+
+One scale for buttons **and** fields, in `src/components/ui/control-size.ts`:
+`sm` 32px, `md` 40px, `lg` 48px. Never write a control height inline — import
+`CONTROL_HEIGHT`/`CONTROL_PX`/`CONTROL_TEXT`/`CONTROL_ICON`, or call
+`controlSizeClasses(size)`.
+
+Every control resolves its size through `useControlSize(explicit)`, which
+falls back to the enclosing group and then to `md`. Reading the context by
+hand is how one component ends up defaulting differently from the rest.
+
+```tsx
+// Grouped: declare once, children inherit via context.
+<ButtonGroup size="sm">
+  <Input placeholder="Policy number" />
+  <DSSelect options={…} aria-label="Coverage" />
+  <Button variant="primary">Search</Button>
+</ButtonGroup>
+```
+
+`Textarea` takes padding and type but no fixed height. Checkbox/Radio/Switch
+are glyphs and stay on their own scale.
+
+Verify against **Components → Form Controls**, which renders every control at
+every size with its measured height — the only place cross-component drift is
+visible.
+
+### Selects need an accessible name
+
+Radix renders Select and Combobox triggers as `role="combobox"`, and ARIA does
+**not** allow name-from-content for that role — so placeholder and
+selected-value text contribute nothing to the accessible name. A label-less
+`DSSelect` or `Combobox` fails axe `button-name` and breaks the build. Pass a
+visible `label`, or `aria-label`/`aria-labelledby`.
+
 ## Heading order
 
 `PageHeading` renders an `<h1>`. Several components render their own heading
