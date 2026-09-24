@@ -96,9 +96,12 @@ const buttonVariants = cva(
       // fields in every filter bar and search row. Nothing caught it: each
       // component was internally consistent and no story rendered them
       // together. Now 32/40/48, matching IBM Carbon.
+      // Type tracks the control scale too, not just height. `text-base` at
+      // every size put 16px bold button text beside a 14px input in the same
+      // 32px row, which read as a mismatch even once the heights agreed.
       size: {
-        sm: 'h-8 text-base font-bold leading-6',      // 32px
-        md: 'h-10 text-base font-bold leading-6',     // 40px
+        sm: 'h-8 text-sm font-bold leading-5',        // 32px
+        md: 'h-10 text-sm font-bold leading-5',       // 40px
         lg: 'h-12 text-base font-bold leading-6',     // 48px
       },
       // Icon-only size handled separately
@@ -234,12 +237,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       : variant === 'accent' ? 'primaryAlt'
       : variant;
     
-    // Map legacy size names
-    const normalizedSize = 
-      size === 'small' ? 'sm' 
-      : size === 'large' ? 'lg' 
-      : size === 'medium' ? 'md' 
+    // Map legacy size names, then fall back to an enclosing
+    // ButtonGroup/InputGroup before defaulting to md — so a group can size
+    // every child at once and a button inside one can never be the odd height
+    // out. Without the `useControlSize` call this resolves to `undefined` and
+    // cva's `defaultVariants.size` silently pins every button to md,
+    // regardless of the group it sits in.
+    const explicitSize: ControlSize | undefined =
+      size === 'small' ? 'sm'
+      : size === 'large' ? 'lg'
+      : size === 'medium' ? 'md'
       : size;
+    const normalizedSize = useControlSize(explicitSize);
     
     // Determine if destructive
     const isDestructive = destructive || tone === 'danger';
@@ -297,11 +306,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           }),
           // Icon-only square dimensions (static Tailwind classes)
           iconOnlyClasses,
-          // Typography matching MUI exactly
+          // Typography matching MUI exactly.
+          //
+          // Font SIZE and leading deliberately are NOT set here — they come
+          // from the size variant above, so button type scales with the
+          // control scale. They used to be hardcoded `text-base leading-6` on
+          // this line, and because `cn()` is twMerge the later class won: the
+          // size variant's `text-sm` was silently discarded and every button
+          // rendered 16px regardless of size.
           'font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
-          'text-base font-bold leading-6 tracking-normal',
-          // Border radius
-          'rounded-[2px]',
+          'font-bold tracking-normal',
+          // Border radius — `rounded-xs` IS 2px on Tailwind v4's stock scale,
+          // so the arbitrary value this used to carry is no longer needed.
+          'rounded-xs',
           // Loading opacity
           loading && 'opacity-80',
           className
