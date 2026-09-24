@@ -4,40 +4,100 @@ import { TokenTable } from './_components/TokenTable';
 
 <Meta title="Foundations/Spacing" />
 
+{/*
+  This page documents BOTH spacing tracks on purpose.
 
+  The previous version described only `theme.spacing(index)` — the MUI track —
+  while all 73 components in src/components/ui use Tailwind utility classes.
+  A developer reading it would not have found the API their component actually
+  needs. The mapping table below is generated from `spacing.ts` so the two
+  tracks cannot silently diverge in this document.
+*/}
 
 # Spacing
 
-Consistent spacing ensures rhythm and visual clarity. We use a curated scale mixing 4px micro steps and larger 8px multiples.
+Everything in this system sits on a **4px grid**. There is one grid and two ways
+to write it, because the component set spans two styling tracks.
 
-## Scale
+The important thing to know up front: **Tailwind's default spacing scale is
+already a 4px grid** (it counts in `0.25rem` = 4px increments). That is why
+`tailwind.config.js` does not extend `spacing` — it does not need to. Every step
+in the MDS scale is reachable with a stock Tailwind class, exactly.
+
+## Which API to use
+
+| You are working on… | Use | Example |
+| --- | --- | --- |
+| A component in `src/components/ui/` (shadcn/Radix) | Tailwind utility classes | `className="p-4 gap-2"` |
+| An MUI-based component or an `sx` prop | `theme.spacing(index)` | `sx={{ p: 3, gap: 2 }}` |
+
+Both land on the same pixel values. Do not convert between them by hand — use
+the table below.
+
+## The scale
+
+`spacing[i]` is **index-based**; the Tailwind class is **named for the pixel
+value ÷ 4**. This is the single most common source of confusion: `spacing[3]`
+is 16px, and 16px is `p-4`, not `p-3`.
 
 <TokenTable
   columns={[
-    { key: 'index', label: 'Index', width: 60 },
-    { key: 'value', label: 'Value (px)', width: 90 },
+    { key: 'index', label: 'spacing[i]', width: 90 },
+    { key: 'value', label: 'px', width: 60 },
+    { key: 'tw', label: 'Tailwind', width: 90 },
+    { key: 'mui', label: 'MUI sx', width: 90 },
     { key: 'visual', label: 'Visual' }
   ]}
-  rows={spacing.map((v,i) => ({
+  rows={spacing.map((v, i) => ({
     index: i,
     value: v,
-    visual: <div style={{ width: v, height: v, background:'#002c77', borderRadius: 2 }} />
+    tw: `p-${v / 4}`,
+    mui: `p: ${i}`,
+    visual: <div style={{ width: v, height: 12, background: '#002c77', borderRadius: 2 }} />
   }))}
-  caption="Spacing scale derived from design tokens; use theme.spacing(index) in components."
+  caption="All 15 MDS steps map exactly onto stock Tailwind classes — no config extension required."
 />
 
-## Usage Guidelines
-- Prefer container padding of 16 / 24 / 32 depending on breakpoint.
-- Vertical rhythm in dense panels: multiples of 8.
-- Dashboard section gutters: 32–48.
-- Avoid ad‑hoc pixel values; add to the scale before use.
+## Dense half-steps
 
-## API Integration
-The theme `spacing` function is overridden. Use:
+Tailwind's default scale also offers **2px half-steps** (`1.5`, `2.5`, `3.5`)
+that the MDS index scale does not contain. These are **permitted in dense,
+list-like UI** — menu items, table rows, drawer rows, chips — where 4px is too
+tight and 8px too loose.
 
-```tsx
-sx={{ p: 3, gap: 2 }} // maps to spacing indices -> px
-```
+| Class | px | Where it is appropriate |
+| --- | --- | --- |
+| `p-1.5` | 6px | Menu and dropdown items, compact chips |
+| `p-2.5` | 10px | Table cells at compact density, drawer rows |
+| `p-3.5` | 14px | Rare — prefer `p-3` (12px) or `p-4` (16px) first |
 
----
-_Future: add responsive examples & layout patterns._
+They are a deliberate sub-scale, not an escape hatch. Reach for a full step
+first; use a half-step only when the full step is visibly wrong.
+
+## What not to do
+
+- **No arbitrary values.** `p-[13px]`, `gap-[7px]` and similar bypass the grid
+  entirely. There are currently **zero** of these in `src/components/ui/` —
+  that is worth keeping.
+- **Do not hand-convert between the tracks.** `spacing[6]` is 32px is `p-8`.
+  Guessing produces `p-6` (24px) and a layout that is one step out.
+- **Do not add a step to `spacing.ts` casually.** The scale is deliberately
+  curated — 4px micro-steps at the small end, widening to 16px intervals at the
+  large end. See the token request process before extending it.
+
+## Layout guidance
+
+- Container padding: **16 / 24 / 32** (`p-4` / `p-6` / `p-8`) by breakpoint.
+- Vertical rhythm in dense panels: multiples of **8** (`gap-2`, `gap-4`).
+- Dashboard section gutters: **32–48** (`gap-8` … `gap-12`).
+- Compact table rows: **6–10** via the half-steps above.
+
+## Where the values live
+
+- `src/spacing.ts` — the canonical array, exported as `spacing` and consumed by
+  the MUI theme's `spacing` function (`src/theme.ts`).
+- `dist/tokens.json` — the same 15 steps, exported under `spacing` for Figma and
+  non-React consumers.
+- Tailwind — **not configured**, because its default scale already matches. If
+  the MDS scale ever gains a step that is not a multiple of 4px, Tailwind will
+  need an explicit `extend.spacing` entry at that point.
