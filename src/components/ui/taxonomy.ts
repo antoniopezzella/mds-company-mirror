@@ -94,6 +94,10 @@ export const TAXONOMY: Record<string, Tier> = {
   'button-group': 'molecule',
   card: 'molecule',
   collapsible: 'molecule',
+  // The four-state contract. Molecules: they compose Empty/ErrorState/Spinner
+  // into one unit, but own no page or server state of their own.
+  'data-state': 'molecule',
+  'error-state': 'molecule',
   combobox: 'molecule',
   empty: 'molecule',
   field: 'molecule',
