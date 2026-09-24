@@ -20,9 +20,21 @@ Everything in this system sits on a **4px grid**. There is one grid and two ways
 to write it, because the component set spans two styling tracks.
 
 The important thing to know up front: **Tailwind's default spacing scale is
-already a 4px grid** (it counts in `0.25rem` = 4px increments). That is why
-`tailwind.config.js` does not extend `spacing` — it does not need to. Every step
-in the MDS scale is reachable with a stock Tailwind class, exactly.
+already a 4px grid.** That is why `tailwind.config.js` does not extend
+`spacing` — it does not need to. Every step in the MDS scale is reachable with
+a stock Tailwind class, exactly.
+
+Since the v4 upgrade the whole scale derives from one variable:
+
+```css
+--spacing: 0.25rem;                    /* 4px */
+.p-4 { padding: calc(var(--spacing) * 4) }   /* 1rem */
+```
+
+Practically that means the entire grid can be retuned from a single value — a
+denser build could set `--spacing: 0.1875rem` (3px) and every utility follows.
+Nothing here does that today, and it should not be done casually, but it is
+worth knowing the lever exists.
 
 ## Which API to use
 
@@ -162,6 +174,40 @@ first; use a half-step only when the full step is visibly wrong.
 - Dashboard section gutters: **32–48** (`gap-8` … `gap-12`).
 - Compact table rows: **6–10** via the half-steps above.
 - Stacks and lists: a flex/grid parent with `gap-*`, not `mb-*` on each child.
+
+## Corner radius
+
+Radius sits on its own scale, and it is deliberately **not** overridden.
+
+The Marsh DS standard radius is **2px** — small, squared-off, and a big part of
+why the system reads as it does. That happens to be exactly Tailwind's stock
+`rounded-xs`, so no configuration is required:
+
+| Class | px | Use |
+| --- | --- | --- |
+| `rounded-none` | 0 | Flush edges, table cells |
+| **`rounded-xs`** | **2** | **The DS default.** Buttons, inputs, cards, menus |
+| `rounded-sm` | 4 | Larger surfaces — dialogs, sheets, popovers |
+| `rounded-md` | 6 | Rare; prefer `sm` |
+| `rounded-lg` | 8 | Rare |
+| `rounded-full` | 9999 | Pills, avatars, badges |
+
+### Why there is no override — and why that matters
+
+`tailwind.config.js` used to rescale `borderRadius` around a `--radius`
+variable, because shadcn's defaults assume `0.5rem` and this system wants 2px.
+That override did real damage: it collapsed `rounded-md` to `calc(2px - 2px)` =
+**0** and drove `rounded-sm` negative, so roughly **110 components silently
+rendered square** while their class names said otherwise.
+
+Under v4's scale the override is unnecessary — `rounded-xs` *is* 2px — so it
+was removed and components were remapped (`md` → `xs`, `lg` → `sm`), keeping
+their pixel values. The gain is that `rounded-*` now means the same thing here
+as in any other Tailwind codebase, and there is one less override to drift.
+
+**Do not reintroduce a `borderRadius` override.** If the DS radius ever
+changes, change which class components use, or set `--radius-xs` in `@theme`
+once — do not rescale the whole ladder around a variable again.
 
 ## Where the values live
 
