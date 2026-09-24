@@ -17,9 +17,9 @@ figma.connect(SideNavigation, NODE_URL, {
     <SideNavigation
       collapsed={props.state === 'collapsed'}
       items={[
-        { label: 'Dashboard', icon: 'home', href: '/' },
-        { label: 'Reports', icon: 'chart', href: '/reports' },
-        { label: 'Settings', icon: 'settings', href: '/settings' },
+        { label: 'Dashboard', path: '/' },
+        { label: 'Reports', path: '/reports' },
+        { label: 'Settings', path: '/settings' },
       ]}
     />
   ),

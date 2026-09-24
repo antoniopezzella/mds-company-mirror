@@ -20,9 +20,8 @@ figma.connect(Divider, NODE_URL, {
   example: (props) => (
     <Divider
       orientation={props.type === 'vertical' ? 'vertical' : 'horizontal'}
-      textAlign="center"
-    >
-      {props.text}
-    </Divider>
+      labelPosition="center"
+      label={props.text}
+    />
   ),
 });

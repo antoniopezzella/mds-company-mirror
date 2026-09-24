@@ -40,7 +40,6 @@
     "src/**/*.old.tsx",
     "src/**/*.old-test.tsx",
     "src/**/*.backup.tsx",
-    "src/**/*.backup.*.tsx",
-    "src/figma/**"
+    "src/**/*.backup.*.tsx"
   ]
 }

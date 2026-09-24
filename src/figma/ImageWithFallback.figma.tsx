@@ -29,7 +29,7 @@ figma.connect(ImageWithFallback, NODE_URL, {
     <ImageWithFallback
       src="/image.jpg"
       alt="Placeholder image"
-      aspectRatio={props.format}
+      fallbackSrc="/placeholder.jpg"
     />
   ),
 });

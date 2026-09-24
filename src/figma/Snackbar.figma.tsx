@@ -8,7 +8,7 @@ figma.connect(DSSnackbar, NODE_URL, {
   props: {
     status: figma.enum('Status', {
       Unread: 'info',
-      Read: 'default',
+      Read: 'success',
     }),
     hasBadge: figma.boolean('Has badge'),
     hasActionCTA: figma.boolean('Has action CTA'),
@@ -18,7 +18,7 @@ figma.connect(DSSnackbar, NODE_URL, {
       open
       message="Notification message"
       severity={props.status}
-      action={props.hasActionCTA ? 'Undo' : undefined}
+      actionText={props.hasActionCTA ? 'Undo' : undefined}
     />
   ),
 });
