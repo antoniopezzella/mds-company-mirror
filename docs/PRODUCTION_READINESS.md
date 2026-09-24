@@ -1,12 +1,12 @@
 # Production readiness audit
 
-**Audited:** 2026-09-23 · **Commit:** `847ceec` · **Auditor:** staff-level design-systems review
+**Last audited:** 2026-09-24 · **Commit:** `1481270` · **Run:** 2 (see Score history) · **Auditor:** staff-level design-systems review
 **Audience:** IT Development Lead, deciding whether other teams adopt this system
 **Method:** parallel sub-agent audits per area, consolidated; every P0 re-verified first-hand
 **Re-run with:** `/audit` (see `.claude/commands/audit.md`)
 
 > **Scope note.** This audits the **shadcn/Radix component set** in `src/components/ui/`
-> (73 components) and the package built from it — the half that is published and
+> (75 modules) and the package built from it — the half that is published and
 > intended for reuse. The repo also contains an older MUI track and marketing-site
 > components; those are called out only where they collide with the reusable half.
 
@@ -17,6 +17,30 @@
 | Run | Date | Commit | Overall | Notes |
 |---|---|---|---|---|
 | 1 | 2026-09-23 | `847ceec` | **1.9 / 3** | Baseline. Packaging repaired same-day (6 blocking defects fixed). |
+| 2 | 2026-09-24 | `1481270` | **2.1 / 3** | Tailwind v4 migration; composition layer added; control sizes unified. 2 of 6 P0s closed, 1 narrowed. Two P0s were *found and fixed* in this window that did not exist at run 1. |
+
+**Movement since run 1:** areas 3 (API quality) and 7 (type safety & DX) each
++1. Everything else held. The two areas that did not move — 4 (Radix/z-index)
+and 8 (dashboard readiness) — are now the binding constraints, and both are
+concentrated in a small number of specific, cheap fixes rather than anything
+architectural.
+
+**Two defects were introduced and fixed inside this window.** Neither existed
+at run 1, and both are worth recording because neither would have been caught
+by any gate that existed then:
+
+- The **published stylesheet shipped with zero padding, margin and gap rules**
+  after the Tailwind v4 migration. `styles.package.css` imported
+  `tailwindcss/utilities` without `tailwindcss/theme`; v4 derives the spacing
+  scale from `--spacing` at build time, so Tailwind silently *dropped* every
+  rule it could not resolve rather than erroring. Build exit 0, file still
+  71 kB, still contained `.flex-col`. Now fixed and guarded by
+  `scripts/check-package-css.js`, chained into `build:css`.
+- **Message bubbles rendered at 80% of their own content width**, because a
+  v4-only variant (`*:data-slot:self-end`) started compiling and collapsed a
+  flex parent to shrink-to-fit, changing what `max-w-[80%]` was a percentage
+  *of*. Found by the visual baseline, which is the tool run 1 recorded as
+  "scaffolded but not running".
 
 ---
 
@@ -62,21 +86,27 @@ hard to fake, and weaker in the places that are easy to defer.**
 4. **The CSS-variable layer that shadcn components actually render is
    hand-maintained and has drifted** (§2). 26 of 34 variables decode to a
    different colour than they claim.
-5. **The product page claims accessibility features that do not exist** (§5) —
-   focus trapping and skip links are advertised "throughout"; there are zero of
-   each. This is a disclosure problem, not a code problem, and it is the one
-   finding here with compliance rather than engineering consequences.
+5. **The product page makes accessibility claims the repo cannot evidence** (§5).
+   *Narrowed at run 2 — see the correction under (c).* Focus trapping **is**
+   real (Radix provides it) and skip links **do** exist in two marketing pages,
+   so run 1's "zero of each" was wrong. What survives: "skip-links implemented
+   throughout" is false for the dashboard product — `PageShell` has none — and
+   the VoiceOver claim rests on an assertion in an archived doc rather than any
+   test artefact. Still a disclosure problem with compliance rather than
+   engineering consequences, but a one-sentence fix plus one component change.
 
 **A caution about the accessibility green light.** The axe gate is the best thing
-in this repo and it is being read as broader assurance than it provides. It covers
-603 stories — but ~601 of them render light mode only, so *dark-mode component
-contrast is effectively unverified*; the suite forces reduced motion, so the
-animated path is never sampled; axe cannot check focus visibility at all, and
-39 of 73 components have no focus styling; and 451 lines of hand-written a11y
-tests are excluded from the runner. Automated coverage is roughly a third of
-WCAG at the best of times. Green here means "no detectable violation in a static,
-light-mode, reduced-motion render" — which is worth having, and is not the same
-as accessible.
+in this repo and it is being read as broader assurance than it provides. It now
+covers **616 stories** — but ~614 of them render light mode only, so *dark-mode
+component contrast is effectively unverified*; the suite forces reduced motion,
+so the animated path is never sampled; and axe cannot check focus visibility at
+all. Automated coverage is roughly a third of WCAG at the best of times. Green
+here means "no detectable violation in a static, light-mode, reduced-motion
+render" — which is worth having, and is not the same as accessible.
+
+*Run 2:* the 451 excluded lines now execute (P0-6 closed), and the gate earned
+its keep twice this window — catching a heading-order break and a Select with
+no accessible name, both in newly written code, before either merged.
 
 **The strategic question, separate from the P0s:** 58 of 73 components resolve
 colour by calling `getRoleColor()`, which returns a **hex string** computed at
@@ -90,24 +120,69 @@ platform, and unwinding it touches 133 files.
 
 ## (b) Scorecard
 
+Run 2 scores. `(1)` marks movement since run 1.
+
 | # | Area | Score | One-line justification |
 |---|---|:---:|---|
-| 1 | Architecture & packaging | **3** | Matches/beats all four benchmarks structurally; 41 deps with 0 extraneous and 0 undeclared; Button tree-shakes to 12 kB gz. |
-| 2 | Tokens & theming | **2** | DTCG-conformant generated pipeline, but the hand-written CSS-var layer has 26/34 drifts and there is no multi-brand mechanism. |
-| 3 | Component API quality | **1** | 38/73 lack `forwardRef`, 7 reject `className`, 5 support `asChild`, **8 vocabularies** for "value changed". Ad hoc across the set. |
-| 4 | Radix usage | **1** | Wrapping and portals are mostly right, but there is **no z-index scale**, `1500` is copied 16×, and toasts render behind overlays. |
-| 5 | Accessibility | **2** | Axe gates **603 stories** at error severity — genuinely exemplary. But ~601 of them run light-mode only, 451 lines of a11y tests are excluded from the runner, there are zero focus traps, and the product page claims otherwise. |
-| 6 | Testing | **2** | 1,135 tests in a real browser with axe gating; coverage is misconfigured, 3/62 interaction tests, visual regression scaffolded but not running. |
-| 7 | Type safety & DX | **2** | `strict: true` and **zero `any`** in the component set; but onboarding docs omit the required stylesheet import and 0/73 components carry a maturity label. |
-| 8 | **Dashboard readiness** ⭐ | **2** | Strong table, CVD-validated chart palette, real date-range picker — against **zero formatters**, no error state, no virtualization, no app shell. |
-| 9 | Performance | **2** | Small bundles (median 3.6 kB) and verified tree-shaking; no virtualization, no memoization in either table. |
-| 10 | Governance & CI | **2** | Four gates run on every PR; bus factor of **1**, no deprecation window, and the hex checker has a blind spot hiding 81 literals. |
+| 1 | Architecture & packaging | **3** | 41 deps, 0 extraneous/undeclared; Button tree-shakes to 12 kB gz. Stylesheet now guarded at build time after shipping empty of spacing rules. |
+| 2 | Tokens & theming | **2** | DTCG-conformant generated pipeline, but the hand-written CSS-var layer still has **26/34 drifts** and there is no multi-brand mechanism. Unchanged. |
+| 3 | Component API quality | **2** `(1→2)` | `size`/`tone` unified and **CI-gated**; one control-size scale shared by 7 modules with a group cascade; 75/75 classified in a tested taxonomy; `asChild` 5→15, `className` rejected by 1 not 7. Change-handler vocabulary (8 names) still ad hoc. |
+| 4 | Radix usage | **1** | **No z-index scale.** `1500` still hardcoded 15×, and `toast.tsx:27` is still `z-[100]`, so toasts render behind every overlay. Unchanged — now the lowest score. |
+| 5 | Accessibility | **2** | Axe gates **616 stories** at error severity. The 451 excluded lines now run (P0-6 closed), and two real defects were caught by the gate this window. Still light-mode-only in ~614 stories, no VPAT, and no skip link in the new `PageShell`. |
+| 6 | Testing | **2** | **1,200 tests / 177 files** in a real browser with axe gating, and visual regression now genuinely runs (603→616 stories diffed). Coverage still misconfigured; interaction tests still ~3/62; the visual tool is local-only, not in CI. |
+| 7 | Type safety & DX | **3** `(2→3)` | `strict: true`, **zero `any`**, and the design scales are now *compile-time enforced* — `gap={7}` is a type error, not a 4px-wrong layout. Package README documents the stylesheet import; a `composition` skill and taxonomy make the system navigable. 0/75 maturity labels remain (P2-7). |
+| 8 | **Dashboard readiness** ⭐ | **2** | `PageShell` + `Stack`/`Inline` close the app-shell gap (P1-11), and filter rows finally align. But **zero formatters** and **no data-error state** — the two P0s that matter most for a dashboard — are untouched, as is virtualization. |
+| 9 | Performance | **2** | Small bundles (median 3.6 kB), verified tree-shaking; no virtualization, no memoization in either table. Unchanged. |
+| 10 | Governance & CI | **2** | Now **5** gates on every PR (spacing-scale conformance added) plus a package-stylesheet guard and a taxonomy-sync test. Bus factor of **1** and no deprecation window are untouched — these are organisational, not technical. |
+
+**Overall: 2.1 / 3** (simple mean, as in run 1).
 
 **Overall: 1.9 / 3.** ⭐ = weighted heaviest per the brief.
 
 ---
 
 ## (c) Prioritised gaps
+
+### Status at run 2 (2026-09-24, `1481270`)
+
+Verified individually against HEAD, not carried forward on trust.
+
+| Gap | Status | Evidence |
+|---|---|---|
+| P0-1 formatters | **open** | `src/lib/` still contains only `utils.ts` |
+| P0-2 data-error state | **open** | still no error branch in `data-table.tsx` |
+| P0-3 toasts behind overlays | **open** | `toast.tsx:27` still `z-[100]` |
+| P0-4 CSS-var drift | **open** | re-decoded all 34: **26 still drift** |
+| P0-5 unsubstantiated a11y claims | **narrowed** | see correction below |
+| P0-6 451 excluded a11y tests | **CLOSED** | exclusion removed; both files now run |
+| P1-11 no app shell | **CLOSED** | `page-shell.tsx`, `stack.tsx` shipped |
+| P1-12 coverage misconfigured | **open** | still no coverage block in `vitest.config.ts` |
+| P2-4 density/size vocabulary | **mostly closed** | one control scale, 7 modules, group cascade |
+
+#### Correction: P0-5 was overstated at run 1
+
+Run 1 claimed "**zero** focus-trap implementations, **zero** skip links". Both
+halves are wrong, and the audit's own method says to report the narrower
+version:
+
+- **Focus trapping is real.** `dialog.tsx` and `sheet.tsx` build on
+  `@radix-ui/react-dialog`, which traps focus natively. Run 1 grepped for
+  hand-rolled traps and missed that the library provides it. That part of the
+  product-page claim is substantiated.
+- **Skip links exist**, in `CarouselSection.tsx` and `GoToMarket.tsx:553`.
+
+What survives is narrower but still real: "skip-links implemented
+**throughout**" is false for the dashboard product the page advertises —
+`PageShell`, the template every new dashboard page now uses, has **none**. And
+"Tested with axe-core and VoiceOver" is half-substantiated: axe-core
+demonstrably gates 616 stories; the only VoiceOver evidence is a *claim* in an
+archived doc (`docs/archive/HEADER_ACCESSIBILITY_REPORT.md:142`), not a test
+artefact — no dated session, no findings, no tooling output.
+
+It stays P0 because a public page making accessibility claims the repo cannot
+evidence is a compliance exposure regardless of how many sub-claims are true.
+The fix is now smaller than run 1 implied: correct one sentence, and add a
+skip link to `PageShell`.
 
 ### P0 — blocks production
 
@@ -162,6 +237,32 @@ platform, and unwinding it touches 133 files.
 ---
 
 ## (d) 30 / 60 / 90-day plan
+
+### What to do next — run 2 recommendation
+
+The composition and consistency layer is now in place, which means the
+remaining work is unusually concentrated: **four of the five highest-value
+items are S-effort and independent of each other.** Do them in this order.
+
+| # | Do this | Why now | Effort |
+|---|---|---|:---:|
+| 1 | **Toast z-index + a z-index scale** (P0-3, P1-2) | The only *user-visible bug* left on the P0 list: a toast fired while any dialog, sheet or drawer is open renders behind it. One token file and 15 call sites. | **S** |
+| 2 | **Generate `token-variables.css`** (P0-4) | 26 of 34 variables still decode to a different hex than they state. It is the one link in the token chain with no build step — and the system's whole premise is governed tokens. | **S** |
+| 3 | **Correct the `Portfolio.tsx` a11y claims + add a skip link to `PageShell`** (P0-5) | Compliance exposure, and now a one-sentence edit plus one component change. See the correction above. | **S** |
+| 4 | **Formatters in `src/lib/`** (P0-1) | The highest-value *functional* gap for an insurance product: every number in every dashboard is currently formatted by the consumer. Blocks nothing technically, but every adopting team will rebuild it. | **M** |
+| 5 | **Data-error state** (P0-2) | A failed API call is still indistinguishable from an empty result. Pairs naturally with 4 — both are "what a dashboard does with real data". | **S** |
+
+After those, the two structural decisions that need an owner rather than a
+commit: **multi-brand theming** (P1-1 — `getRoleColor()` returns resolved hex
+with no brand parameter, 133 caller files) and **bus factor 1** (P1-9). Neither
+is urgent this month; both should be decided before a second team builds on
+the system.
+
+Deliberately *not* recommended next: virtualization (P1-4). `DataTable`
+paginates by default, so it only bites the hand-rolled `Table`, and the two
+table APIs should be reconciled (P2-1) before either is optimised.
+
+---
 
 Sequenced by dependency, not effort. Each stage unblocks the next.
 
