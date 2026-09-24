@@ -1,7 +1,7 @@
 # MDS-Platform — Claude AI Rules & Design System Integration Guide
 
-**Version:** 1.0  
-**Last Updated:** April 24, 2026  
+**Version:** 1.1  
+**Last Updated:** September 24, 2026  
 **Purpose:** Comprehensive rules for AI agents (Claude) to understand and integrate Figma designs into the Marsh Design System Platform codebase using the Model Context Protocol (MCP).
 
 ---
@@ -1554,7 +1554,26 @@ import { getRoleColor } from '@/theme/roles';
 
 // ✅ DS-specific props
 <DSButton variant="primary" tone="danger" size="lg">Good</DSButton>
+
+// ✅ One size scale for buttons AND fields — sm 32 / md 40 / lg 48.
+//    Never write a control height inline; import from control-size.ts.
+import { CONTROL_HEIGHT, useControlSize } from '@/components/ui/control-size';
+
+// ✅ Grouped controls declare size once; children inherit via context.
+<ButtonGroup size="sm">
+  <Input placeholder="Policy number" />
+  <DSSelect options={opts} aria-label="Coverage" />
+  <Button variant="primary">Search</Button>
+</ButtonGroup>
+
+// ✅ Layout: Stack/Inline take the spacing scale as a TYPE.
+<Stack gap={6}>…</Stack>   // gap={7} is a compile error, not a 4px-wrong layout
 ```
+
+> **Note on this section and Tailwind.** Parts of the stack description above
+> still describe Tailwind v3. The repo is on **v4** — `.claude/skills/tailwind/`
+> is authoritative for anything Tailwind-related, and
+> `.claude/skills/composition/` for how to assemble UI.
 
 ### Component Checklist (for AI code generation)
 
@@ -1837,6 +1856,7 @@ export const semanticDarkOverrides = {
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1 | September 24, 2026 | Tailwind v4 (the stack section below still describes v3 in places — the `tailwind` skill is authoritative). Added the composition layer: taxonomy, `Stack`/`Inline`, `PageShell`, the shared control-size scale, and the `composition:check` gate. |
 | 1.0 | April 24, 2026 | Initial comprehensive rules document |
 
 ---

@@ -36,10 +36,24 @@ Visit `/marsh-one/go-to-market` for the internal MVP planning dashboard.
 It connects strategy, selectable MVP scope, proposed validation experiments,
 and a launch checklist. Export a Markdown decision brief for a scope review.
 
-The initial proposal is one prospect journey: needs discovery → relevant,
-sourced insights → expert handoff → outcome measurement. Market, segment,
-named owners, capacity, dates and success thresholds still need agreement.
-AI discovery is a comparative experiment before inclusion in the MVP.
+The dashboard now uses the user-supplied **Marsh One Strategic Product Roadmap,
+July 2026, version 6** as planning context. The proposed 2026 MVP comprises
+R1–R3 with the minimum Existing Client Bridge (EC) in parallel. It serves
+prospects and existing clients across Enter → Orient → Explore → Narrow →
+Understand → Trust → Engage → Continue. R4–R5 and full EC are gated 2027
+outcomes; H3 and H4 remain direction and vision, not selectable MVP features.
+
+The Roadmap & decisions view preserves release timing as source proposals,
+separates delivery conditions, and flags unresolved horizon dates, the R4
+interaction target, content operations, mobile strategy and accountable owners.
+Numerical baselines, approval and actual delivery status are not verified.
+AI discoverability belongs to R2; routing to R3/R5; discovery and comprehension
+to R4 after foundation evidence. Later anticipation is a strategic bet.
+
+Version 6 scope and readiness selections use a separate browser-storage key;
+the initial exploratory plan is retained under its original key. Nothing is
+silently migrated as an approved decision. Export includes the source release
+map, selected scope, readiness checklist and open decisions.
 
 Content is a working strategy proposal, not validated client research or live
 commercial reporting. Scope and checklist selections persist only in the
@@ -49,7 +63,7 @@ authentication of its own; “internal” identifies its intended audience,
 not an access restriction. Do not add confidential planning data before
 integrating the appropriate access controls and shared storage.
 
-Implementation: `src/pages/GoToMarket/GoToMarket.tsx`; proposed capabilities,
+Implementation: `src/pages/GoToMarket/GoToMarket.tsx` and `Roadmap.tsx`; proposed capabilities,
 experiments and readiness conditions: `src/pages/GoToMarket/data.ts`.
 
 ## 🏗️ Project Structure

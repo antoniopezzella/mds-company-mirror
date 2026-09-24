@@ -22,10 +22,20 @@ import { Tabs } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert } from "@/components/ui/alert";
 import { getRoleColor } from "@/theme/roles";
-import { opportunities, gates, experiments } from "./data";
+import {
+  opportunities,
+  gates,
+  experiments,
+  journey,
+  releases,
+  decisions,
+  roadmapSource,
+} from "./data";
+import { Roadmap } from "./Roadmap";
 import "./go-to-market.css";
 
-const storageKey = "marsh-one-gtm-v1";
+// Keep the initial exploratory plan intact; roadmap v6 has a separate scope and checklist.
+const storageKey = "marsh-one-gtm-roadmap-v6";
 type Plan = { scope: string[]; gates: string[] };
 const initialPlan = (): Plan => ({
   scope: opportunities.filter((item) => item.selected).map((item) => item.id),
@@ -87,8 +97,17 @@ export default function GoToMarket() {
       "# Marsh One — MVP decision brief",
       `Exported: ${new Date().toISOString().slice(0, 10)}`,
       "",
-      "Working proposal. No client research or live commercial data connected.",
-      "Pilot hypothesis: prospects in one market and segment discover a relevant service and reach the right specialist.",
+      "Working proposal derived from " +
+        roadmapSource +
+        ". Approval and delivery status are unverified. No client research or live commercial data connected.",
+      "Recommended 2026 MVP: R1–R3 with the minimum Existing Client Bridge in parallel. Market and segment remain open for both audiences.",
+      "2027: R4–R5 and full EC, gated by foundation evidence. H3/H4 remain strategic direction and vision, not delivery scope.",
+      "",
+      "## Source release map",
+      ...releases.map(
+        (release) =>
+          `- ${release.id} — ${release.title} (${release.timing}): ${release.outcome} Condition: ${release.gate} Source: ${release.source}.`
+      ),
       "",
       "## Selected scope",
       ...opportunities
@@ -107,13 +126,14 @@ export default function GoToMarket() {
       ),
       "",
       "## Open decisions",
-      "- Confirm market, segment and buyer.",
-      "- Assign named owners, capacity and dates.",
-      "- Agree success thresholds and response service level.",
-      "- Attach evidence before launch approval.",
+      ...decisions.map(
+        (decision) =>
+          `- [${decision.kind}] ${decision.title}: ${decision.detail} Source: ${decision.source}.`
+      ),
+      "- Agree success thresholds and response service level; attach evidence before launch approval.",
       "",
       "## Proposed success measure",
-      "Qualified expert conversations / consented handoff requests, by pilot cohort. Agree qualification with sales operations. Baseline unavailable.",
+      "Prospects: comprehension, findability and Insight → Solution → Contact progression, with qualified contacts as a commercial signal. Existing clients: contextual pathway use, public-to-authenticated progression and re-identification friction. Segment outcomes by relationship. Numerical baselines are not attached.",
     ].join("\n");
     const url = URL.createObjectURL(
       new Blob([text], { type: "text/markdown" })
@@ -152,33 +172,34 @@ export default function GoToMarket() {
           step clear, and brings a Marsh specialist into the conversation.
         </p>
         <div className="gtm-thesis-footer">
-          <span>PROPOSED PILOT · ONE MARKET · ONE SEGMENT</span>
+          <span>2026 PROPOSAL · R1–R3 + EXISTING CLIENT BRIDGE</span>
           <ArrowRight aria-hidden="true" />
         </div>
       </section>
       <Card>
         <CardHeader>
           <CardDescription>THE NEXT DECISION</CardDescription>
-          <CardTitle>Choose who we serve first.</CardTitle>
+          <CardTitle>Serve both sides of the relationship.</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="gtm-copy">
-            Start with prospects seeking risk and insurance expertise. Confirm
-            the market, company segment and buyer role before committing to
-            delivery.
+            Roadmap v6 makes existing clients a first-class audience. The MVP
+            should help prospects find expertise and help existing clients
+            continue their relationship. Confirm the pilot market and segment
+            for both pathways.
           </p>
           <dl className="gtm-facts">
             <div>
-              <dt>Buyer hypothesis</dt>
-              <dd>Risk / finance decision-maker</dd>
+              <dt>Audience</dt>
+              <dd>Prospects + existing clients</dd>
             </div>
             <div>
-              <dt>Primary channel</dt>
-              <dd>Marsh One → specialist</dd>
+              <dt>2026 boundary</dt>
+              <dd>R1–R3 + minimum EC bridge</dd>
             </div>
             <div>
-              <dt>Value proposition</dt>
-              <dd>Clarity, relevance, continuity</dd>
+              <dt>Decision needed</dt>
+              <dd>Pilot scope + named EC owner</dd>
             </div>
           </dl>
         </CardContent>
@@ -191,7 +212,9 @@ export default function GoToMarket() {
       <section className="gtm-journey gtm-full" aria-labelledby="journey-title">
         <div className="gtm-section-heading">
           <div>
-            <span className="gtm-eyebrow">ONE JOURNEY, FOUR MOMENTS</span>
+            <span className="gtm-eyebrow">
+              ONE JOURNEY, EIGHT STAGES · ROADMAP PART 6
+            </span>
             <h2 id="journey-title">Build the smallest complete experience.</h2>
           </div>
           <a href="/marsh-one" target="_blank" rel="noreferrer">
@@ -199,8 +222,8 @@ export default function GoToMarket() {
           </a>
         </div>
         <div className="gtm-journey-grid">
-          {opportunities.slice(0, 4).map((item, i) => (
-            <article key={item.id}>
+          {journey.map((item, i) => (
+            <article key={item.stage}>
               <span className="gtm-step">0{i + 1}</span>
               <h3>{item.stage}</h3>
               <p>{item.outcome}</p>
@@ -212,20 +235,21 @@ export default function GoToMarket() {
       <Card>
         <CardHeader>
           <CardDescription>MEASURE VALUE</CardDescription>
-          <CardTitle>Useful conversations, not just visits.</CardTitle>
+          <CardTitle>Measure acquisition and continuity.</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="gtm-copy">
-            Proposed primary measure: qualified expert conversations divided by
-            consented handoff requests, by pilot cohort.
+            For prospects: comprehension, findability and Insight → Solution →
+            Contact progression, connected to qualified contact submissions.
           </p>
           <p className="gtm-copy">
-            Pair this with discovery task success and time to first response.
-            Agree “qualified” with sales operations.
+            For existing clients: contextual pathway use,
+            public-to-authenticated progression and reduced re-identification
+            friction. Review both with the Product Lead each quarter.
           </p>
         </CardContent>
         <CardFooter>
-          <Badge>Baseline not yet available</Badge>
+          <Badge>Numerical baselines not attached</Badge>
         </CardFooter>
       </Card>
       <Card>
@@ -239,8 +263,9 @@ export default function GoToMarket() {
             followed by an expert handoff that carries the conversation forward.
           </p>
           <p className="gtm-copy">
-            Test a sourced AI assistant against the guided journey before adding
-            it to the MVP.
+            R2 establishes discoverability; R3 develops the contact and routing
+            foundations. R4 tests AI discovery and comprehension after taxonomy,
+            metadata and measurement generate signal.
           </p>
         </CardContent>
         <CardFooter>
@@ -257,15 +282,32 @@ export default function GoToMarket() {
       <div className="gtm-section-heading">
         <div>
           <span className="gtm-eyebrow">MAKE THE TRADE-OFFS VISIBLE</span>
-          <h2>Your proposed MVP</h2>
+          <h2>Your proposed 2026 MVP</h2>
           <p>
-            Include capabilities that complete the journey. Expand each to
-            inspect the validation and dependencies.
+            R1–R3 plus the minimum EC bridge. Selections are a local planning
+            scenario, not approved commitments. R4–R5 and later horizons are
+            available in the Roadmap & decisions view.
           </p>
         </div>
-        <Badge tone="info" soft>
-          {plan.scope.length} selected
-        </Badge>
+        <div className="flex flex-wrap items-center gap-4">
+          <Badge tone="info" soft>
+            {plan.scope.length} selected
+          </Badge>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setPlan((current) => ({
+                ...current,
+                scope: initialPlan().scope,
+              }));
+              setNotice(
+                "Roadmap baseline applied to scope. Readiness checks unchanged."
+              );
+            }}
+          >
+            Use roadmap baseline
+          </Button>
+        </div>
       </div>
       <div className="gtm-scope-grid">
         {opportunities.map((item) => (
@@ -288,7 +330,7 @@ export default function GoToMarket() {
                 <dl className="gtm-facts">
                   <div>
                     <dt>Evidence status</dt>
-                    <dd>Hypothesis · no client validation attached</dd>
+                    <dd>Roadmap v6 proposal · no client validation attached</dd>
                   </div>
                   <div>
                     <dt>Proposed test</dt>
@@ -312,6 +354,16 @@ export default function GoToMarket() {
         <Alert severity="warning" title="The proposed journey has no handoff">
           Add expert handoff or explicitly redefine the pilot outcome before
           committing the scope.
+        </Alert>
+      )}
+      {!plan.scope.includes("existing-client") && (
+        <Alert
+          severity="warning"
+          title="The existing-client pathway is missing"
+        >
+          Roadmap v6 places minimum EC alongside R1–R3 in 2026. Removing it
+          changes the proposed MVP boundary and needs an explicit scope
+          decision.
         </Alert>
       )}
       {!plan.scope.includes("measurement") && (
@@ -340,9 +392,7 @@ export default function GoToMarket() {
         {experiments.map((item, i) => (
           <Card key={item.title}>
             <CardHeader>
-              <CardDescription>
-                EXPERIMENT 0{i + 1} · NOT STARTED
-              </CardDescription>
+              <CardDescription>EXPERIMENT 0{i + 1} · PROPOSED</CardDescription>
               <CardTitle>{item.title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -374,6 +424,12 @@ export default function GoToMarket() {
         </CardHeader>
         <CardContent>
           <ul className="gtm-sources">
+            <li>
+              <strong>{roadmapSource}</strong> — supplied by you. Parts 6–9
+              inform journey, release scope and AI dependencies; Parts 12–14
+              inform measurement, governance and open decisions. Narrative
+              baselines and vision stories are not measured results.
+            </li>
             <li>
               <a href="/marsh-one" target="_blank" rel="noreferrer">
                 Local Marsh One experience
@@ -457,29 +513,31 @@ export default function GoToMarket() {
               <li>
                 <strong>01 · Align</strong>
                 <p>
-                  Choose the segment, market, client problem and accountable
-                  sponsor.
+                  Choose pilot cohorts for both audiences, the market, client
+                  problem and accountable Product Lead. Name the EC owner.
                 </p>
               </li>
               <li>
                 <strong>02 · Validate</strong>
                 <p>
-                  Test discovery and rehearse the specialist handoff. Refine
-                  scope from observed friction.
+                  Test R1 comprehension, R2 findability, R3 handoff and the
+                  minimum EC pathway. Refine scope from observed friction.
                 </p>
               </li>
               <li>
                 <strong>03 · Pilot</strong>
                 <p>
-                  Invite a defined cohort through account teams and targeted
-                  Marsh One entry points. Review outcomes weekly.
+                  Invite prospects through targeted entry points and existing
+                  clients through relationship teams. Review pilot operations
+                  weekly; review the roadmap quarterly.
                 </p>
               </li>
               <li>
                 <strong>04 · Expand</strong>
                 <p>
-                  Scale channels only when client value, operational capacity
-                  and attribution are demonstrated.
+                  Scale channels when client value, capacity and attribution are
+                  demonstrated. Open R4 delivery only when foundation taxonomy,
+                  metadata and measurement generate signal.
                 </p>
               </li>
             </ol>
@@ -526,18 +584,18 @@ export default function GoToMarket() {
           <span>
             <span className="gtm-dot" /> Working proposal
           </span>
-          <span>Illustrative strategy · no live commercial data</span>
+          <span>Roadmap v6 · July 2026 · delivery status unverified</span>
           <span>
             {storageError
               ? "Changes are temporary — storage unavailable"
-              : "Scope and checklist saved in this browser"}
+              : "Roadmap v6 plan saved separately in this browser"}
           </span>
         </div>
         <div className="gtm-metrics">
           <div>
             <Compass aria-hidden="true" />
             <span>
-              Launch focus<strong>1 complete journey</strong>
+              2026 boundary<strong>R1–R3 + EC</strong>
             </span>
           </div>
           <div>
@@ -568,6 +626,11 @@ export default function GoToMarket() {
           onSelect={setActiveTab}
           tabs={[
             { id: "overview", title: "Strategic overview", content: overview },
+            {
+              id: "roadmap",
+              title: "Roadmap & decisions",
+              content: <Roadmap />,
+            },
             { id: "scope", title: "MVP scope", content: scope },
             {
               id: "evidence",
