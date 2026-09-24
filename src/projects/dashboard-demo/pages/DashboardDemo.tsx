@@ -6,11 +6,20 @@ import { SideNavigation, type SideNavItem } from '../../../components/ui/side-na
 import { StatCard } from '../../../components/ui/stat-card';
 import { Button } from '../../../components/ui/button';
 import { Badge, type BadgeTone } from '../../../components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
+import {
+  FilterBar,
+  FilterBarActions,
+  FilterBarChips,
+  FilterBarDateRange,
+  FilterBarSelect,
+  type ActiveFilter,
+} from '../../../components/ui/filter-bar';
+import { PageHeading, PageShell } from '../../../components/ui/page-shell';
 import { Tabs, type TabItem } from '../../../components/ui/tabs';
 import { DataTable, createSelectColumn } from '../../../components/ui/data-table';
 import { NotificationsDrawer } from '../../../components/ui/notifications-drawer';
 import type { ColumnDef } from '@tanstack/react-table';
+import type { DateRange } from 'react-day-picker';
 import { getRoleColor } from '../../../theme/roles';
 import { useThemeMode } from '../../../theme/ThemeModeContext';
 
@@ -121,6 +130,18 @@ function claimsForTab(tabId: string): Claim[] {
   }
 }
 
+const REGION_OPTIONS = [
+  { value: 'ne', label: 'Northeast' },
+  { value: 'mw', label: 'Midwest' },
+  { value: 'w', label: 'West' },
+];
+
+const STATUS_OPTIONS = [
+  { value: 'Open', label: 'Open' },
+  { value: 'In Review', label: 'In review' },
+  { value: 'Closed', label: 'Closed' },
+];
+
 const DESKTOP_QUERY = '(min-width: 1024px)'; // Tailwind's `lg` — matches the breakpoint used below
 
 export function DashboardDemo() {
@@ -135,10 +156,43 @@ export function DashboardDemo() {
   const [isDesktop, setIsDesktop] = React.useState(() => window.matchMedia(DESKTOP_QUERY).matches);
   const [sidebarOpen, setSidebarOpen] = React.useState(isDesktop);
   const [loading, setLoading] = React.useState(true);
-  const [region, setRegion] = React.useState('all');
+  const [simulateError, setSimulateError] = React.useState(false);
+  const [region, setRegion] = React.useState<string | undefined>();
+  const [status, setStatus] = React.useState<string | undefined>();
+  const [range, setRange] = React.useState<DateRange | undefined>();
   const [activeTab, setActiveTab] = React.useState('recent');
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-  const visibleClaims = React.useMemo(() => claimsForTab(activeTab), [activeTab]);
+  // Tabs narrow the set, then the filter bar narrows it further — so the
+  // table's own "no matching results" branch is reachable from the page.
+  const visibleClaims = React.useMemo(
+    () => claimsForTab(activeTab).filter((c) => (status ? c.status === status : true)),
+    [activeTab, status]
+  );
+
+  // What is currently narrowing the view, as the user would describe it.
+  // Without this the page silently hides rows and offers no explanation.
+  const activeFilters: ActiveFilter[] = [
+    region && { id: 'region', label: 'Region', value: REGION_OPTIONS.find((r) => r.value === region)!.label },
+    status && { id: 'status', label: 'Status', value: status },
+    range?.from && { id: 'range', label: 'Period', value: 'Custom range' },
+  ].filter(Boolean) as ActiveFilter[];
+
+  const removeFilter = (id: string) => {
+    if (id === 'region') setRegion(undefined);
+    if (id === 'status') setStatus(undefined);
+    if (id === 'range') setRange(undefined);
+  };
+
+  const clearFilters = () => {
+    setRegion(undefined);
+    setStatus(undefined);
+    setRange(undefined);
+  };
+
+  const refresh = () => {
+    setSimulateError(false);
+    setLoading(true);
+  };
 
   // Simulates a real async data fetch so the DataTable's loading state
   // (built in this same session) gets genuinely exercised here, not just
@@ -168,87 +222,51 @@ export function DashboardDemo() {
     // default — Marsh Serif at weight 400 — which is a display face meant for
     // hero copy, not for dense data UI. Every other dashboard in the repo sets
     // this; this page was the one that didn't.
-    <div
-      className="mds-dashboard grid min-h-screen grid-rows-[auto_1fr]"
+    // `mds-dashboard` switches h1-h6 to Noto Sans 700 (styles/_typography.scss).
+    // Without it a dashboard inherits the marketing default — Marsh Serif at
+    // weight 400 — which is a display face for hero copy, not dense data UI.
+    //
+    // Everything below the header used to be hand-rolled here: the
+    // grid-rows-[auto_1fr] frame, the mobile scrim, and the min-w-0 chain that
+    // stops a wide table scrolling the whole page sideways. `PageShell` was
+    // extracted FROM this file and then had zero consumers — it does now.
+    <PageShell
+      className="mds-dashboard"
       style={{ backgroundColor: getRoleColor('surface.subtle') }}
+      sidebarOpen={sidebarOpen && !isDesktop}
+      onSidebarClose={() => setSidebarOpen(false)}
+      header={
+        <Header
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((v) => !v)}
+          user={{ name: 'Antonio Pezzella', role: 'Design System Lead', initials: 'AP' }}
+          colorMode={mode}
+          onColorModeChange={toggleMode}
+          onNotificationsClick={() => setNotificationsOpen(true)}
+          notificationCount={4}
+        />
+      }
+      sidebar={
+        sidebarOpen ? (
+          <SideNavigation
+            items={NAV_ITEMS}
+            currentPath="/dashboard-demo"
+            onNavigate={(path) => navigate(path)}
+            onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
+            className="fixed inset-y-0 left-0 z-50 w-72 shrink-0 lg:static lg:z-auto lg:w-auto"
+          />
+        ) : undefined
+      }
     >
-      <Header
-        sidebarOpen={sidebarOpen}
-        onToggleSidebar={() => setSidebarOpen((v) => !v)}
-        user={{ name: 'Antonio Pezzella', role: 'Design System Lead', initials: 'AP' }}
-        colorMode={mode}
-        onColorModeChange={toggleMode}
-        onNotificationsClick={() => setNotificationsOpen(true)}
-        notificationCount={4}
-      />
       <NotificationsDrawer open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
-
-      {/* Grid, not nested flex: SideNavigation's own root uses `h-full`
-          (a percentage height), and a flex row's height derived purely from
-          `flex-1`/content isn't "definite" enough for a flex-item child's
-          percentage height to reliably resolve against in Chromium — it
-          silently falls back to the nav's own intrinsic content height,
-          leaving it visibly shorter than `main` whenever main is taller. A
-          grid `1fr` track has none of that ambiguity: it resolves to a real
-          pixel height as part of track sizing, so `h-full` on the flex-item
-          nav inside this cell resolves correctly. */}
-      {/* `min-w-0`: this row is itself a grid item (child of the `grid`
-          wrapper above), and grid items get the same implicit
-          `min-width: auto` floor as flex items — without overriding it
-          here too, the row (and the grid track sizing it) refuses to
-          shrink below its content's intrinsic width, which is what was
-          still forcing the page wider than the viewport on mobile even
-          after `main` got its own `min-w-0`. */}
-      <div className="flex min-w-0">
-        {sidebarOpen && (
-          <>
-            {/* Backdrop only exists below `lg`, matching the sidebar's own
-                `lg:static` reset — on desktop the sidebar is back in normal
-                flow and there's nothing to dim. */}
-            {!isDesktop && (
-              <div
-                className="fixed inset-0 z-40 bg-black/50"
-                onClick={() => setSidebarOpen(false)}
-                aria-hidden="true"
-              />
-            )}
-            <SideNavigation
-              items={NAV_ITEMS}
-              currentPath="/dashboard-demo"
-              onNavigate={(path) => navigate(path)}
-              onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
-              className="fixed inset-y-0 left-0 z-50 w-72 shrink-0 lg:static lg:z-auto lg:w-auto"
-            />
-          </>
-        )}
-
-        {/* `min-w-0` overrides the flex item's default `min-width: auto` —
-            without it, DataTable's own `overflow-auto` never gets a chance
-            to clip anything: `main` just grows to fit the table's full
-            intrinsic width instead, which is what forced page-wide
-            horizontal scroll (dragging the sticky header along with it)
-            on mobile/tablet. */}
-        <main className="min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8">
-          <div className="flex flex-col gap-1 mb-6">
-            {/*
-              Reads the h1 variables rather than borrowing h3's. Under
-              `mds-dashboard` these resolve to Noto Sans 700; the fallbacks
-              only matter if the context class is ever dropped.
-            */}
-            <h1
-              style={{
-                fontFamily: 'var(--typo-h1-font-family, var(--font-family-dashboard))',
-                fontWeight: 'var(--typo-h1-font-weight, 700)' as React.CSSProperties['fontWeight'],
-                color: getRoleColor('text.primary'),
-              }}
-              className="text-2xl"
-            >
-              Claims overview
-            </h1>
-            <p style={{ color: getRoleColor('text.secondary') }} className="text-sm">
-              shadcn/Radix component set — live proving ground for the migration.
-            </p>
-          </div>
+          {/* Was a hand-rolled div + inline h1 reading the --typo-h1-* vars.
+              `PageHeading` owns that treatment now, so every page gets the
+              same hierarchy without restating it. */}
+          <PageHeading
+            title="Claims overview"
+            description="shadcn/Radix component set — live proving ground for the migration."
+            actions={<Button variant="primary" size="sm">New claim</Button>}
+          />
 
             {/* Stat row — CSS grid, Tailwind defaults, responsive at Tailwind's own breakpoints.
 
@@ -310,26 +328,57 @@ export function DashboardDemo() {
             />
           </div>
 
-          {/* Filter row — Select + Button, exercising real interactive components */}
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <Select value={region} onValueChange={setRegion}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Region" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All regions</SelectItem>
-                <SelectItem value="ne">Northeast</SelectItem>
-                <SelectItem value="mw">Midwest</SelectItem>
-                <SelectItem value="w">West</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="secondary" size="sm" onClick={() => setLoading(true)}>
-              Refresh
-            </Button>
-            <Button variant="primary" size="sm" className="ml-auto">
-              New claim
-            </Button>
-          </div>
+          {/*
+            Was a bespoke flex row of a raw Select + two Buttons — one of the
+            four hand-rolled filter rows in this repo that shared nothing, and
+            none of which showed the user what was actually filtering the view.
+
+            `simulateError` is here deliberately: the error state is the branch
+            no page in this repo could render before, so the demo needs a way
+            to actually show it.
+          */}
+          <FilterBar
+            className="mb-4"
+            size="sm"
+            onClearAll={clearFilters}
+            hasActiveFilters={activeFilters.length > 0}
+          >
+            <FilterBarSelect
+              label="Region"
+              options={REGION_OPTIONS}
+              value={region}
+              onChange={(v) => setRegion(String(v))}
+              placeholder="All regions"
+            />
+            <FilterBarSelect
+              label="Status"
+              options={STATUS_OPTIONS}
+              value={status}
+              onChange={(v) => setStatus(String(v))}
+              placeholder="Any status"
+            />
+            <FilterBarDateRange value={range} onChange={setRange} />
+            <FilterBarActions>
+              <Button variant="secondary" size="sm" onClick={refresh}>
+                Refresh
+              </Button>
+              <Button
+                variant="secondary"
+                tone={simulateError ? 'danger' : 'default'}
+                size="sm"
+                onClick={() => setSimulateError((v) => !v)}
+              >
+                {simulateError ? 'Clear error' : 'Simulate error'}
+              </Button>
+            </FilterBarActions>
+          </FilterBar>
+
+          <FilterBarChips
+            className="mb-4"
+            filters={activeFilters}
+            onRemove={removeFilter}
+            onClearAll={clearFilters}
+          />
 
           {/* `scrollable`: the 3 tab labels need ~590px at this size and
               won't wrap (same as MUI's own `standard` Tabs variant, which
@@ -346,6 +395,8 @@ export function DashboardDemo() {
             data={visibleClaims}
             loading={loading}
             loadingRowCount={5}
+            loadError={simulateError}
+            onRetry={refresh}
             enableRowSelection
             searchKey="policyholder"
             searchPlaceholder="Search policyholder..."
@@ -353,9 +404,7 @@ export function DashboardDemo() {
             pinFirstColumn
             pageSize={5}
           />
-        </main>
-      </div>
-    </div>
+    </PageShell>
   );
 }
 
