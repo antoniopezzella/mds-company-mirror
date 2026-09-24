@@ -77,7 +77,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
               role="button"
               aria-label={`Clear ${title} filter`}
               tabIndex={0}
-              className="mr-1.5 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2"
+              className="mr-1.5 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
               style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
               onClick={(e) => {
                 e.stopPropagation();

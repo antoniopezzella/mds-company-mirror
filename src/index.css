@@ -3,10 +3,22 @@
    them. @import must come before any other rule, hence its position here. */
 @import './styles/token-variables.css';
 
-/* Tailwind CSS Directives */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4. The three v3 directives collapse into one import.
+   `@config` keeps the existing tailwind.config.js as the source of theme
+   truth — porting its ~60 lines of colour/keyframe config to CSS `@theme`
+   is a separate change, and doing both at once would make this diff
+   unreviewable. */
+@import "tailwindcss";
+/* MUST sit above @config. CSS requires every @import to precede other
+   at-rules, so an @import placed after @config is silently dropped — which
+   removed every animate-in/animate-out class with no build error at all. */
+@import "tw-animate-css";
+
+@config "../tailwind.config.js";
+
+/* tailwindcss-animate is v3-only (JS plugin API). tw-animate-css is the
+   v4-compatible replacement and keeps the same animate-in/animate-out
+   class names shadcn components already use. */
 
 /* ===== shadcn/ui CSS Variables - MDS Token Integration ===== */
 

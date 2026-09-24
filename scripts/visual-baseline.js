@@ -29,6 +29,8 @@ import path from 'path';
 import crypto from 'crypto';
 import http from 'http';
 import { chromium } from 'playwright';
+import pixelmatch from 'pixelmatch';
+import { PNG } from 'pngjs';
 
 const root = process.cwd();
 const STORYBOOK_DIR = path.join(root, 'dist', 'storybook');
@@ -167,22 +169,42 @@ const UNSTABLE = [
   /^concepts-brand-website/,      // real video
 ];
 
+/** Below this share of differing pixels, a change is antialiasing rather than
+ *  a visual regression. Chosen after observing that two textfield renders which
+ *  are indistinguishable by eye still differ in a handful of edge pixels. */
+const MIN_PCT = 0.05;
+
 const isUnstable = (id) => UNSTABLE.some((re) => re.test(id));
 
 function compare(dirA, dirB) {
   const list = (d) => new Set(fs.readdirSync(d));
   const a = list(dirA), b = list(dirB);
   const changed = [], added = [], removed = [];
-  let skipped = 0;
+  let skipped = 0, subPerceptual = 0;
 
   for (const f of a) {
     if (!b.has(f)) { removed.push(f); continue; }
     if (f.endsWith('.FAILED')) continue;
     if (isUnstable(f.replace(/\.png$/, ''))) { skipped++; continue; }
-    if (sha(path.join(dirA, f)) !== sha(path.join(dirB, f))) changed.push(f);
+    if (sha(path.join(dirA, f)) === sha(path.join(dirB, f))) continue;
+
+    // Identical hashes mean identical images, but DIFFERENT hashes do not mean
+    // a meaningful change — a single re-antialiased pixel flips the hash. So
+    // measure how much actually differs and let the caller judge.
+    const pa = PNG.sync.read(fs.readFileSync(path.join(dirA, f)));
+    const pb = PNG.sync.read(fs.readFileSync(path.join(dirB, f)));
+    if (pa.width !== pb.width || pa.height !== pb.height) {
+      changed.push({ f, pct: 100, note: 'dimensions differ' });
+      continue;
+    }
+    const diffPixels = pixelmatch(pa.data, pb.data, null, pa.width, pa.height, { threshold: 0.1 });
+    const pct = (diffPixels / (pa.width * pa.height)) * 100;
+    if (pct >= MIN_PCT) changed.push({ f, pct });
+    else subPerceptual++;
   }
   for (const f of b) if (!a.has(f)) added.push(f);
   console.log(`  skipped  : ${skipped} known-nondeterministic (media/async — see UNSTABLE in this script)`);
+  console.log(`  sub-perceptual: ${subPerceptual} differ by <${MIN_PCT}% of pixels (antialiasing; not reported)`);
 
   console.log(`  baseline : ${a.size} captures (${dirA})`);
   console.log(`  current  : ${b.size} captures (${dirB})`);
@@ -191,7 +213,9 @@ function compare(dirA, dirB) {
   console.log(`  removed  : ${removed.length}`);
   if (changed.length) {
     console.log('\nStories whose rendering changed:');
-    for (const f of changed.sort()) console.log(`  ${f.replace(/\.png$/, '')}`);
+    for (const c of changed.sort((x, y) => y.pct - x.pct)) {
+      console.log(`  ${c.pct.toFixed(2).padStart(6)}%  ${c.f.replace(/\.png$/, '')}${c.note ? '  (' + c.note + ')' : ''}`);
+    }
   }
   for (const f of added) console.log(`  + ${f.replace(/\.png$/, '')}`);
   for (const f of removed) console.log(`  - ${f.replace(/\.png$/, '')}`);

@@ -53,7 +53,7 @@ const accordionItemVariants = cva('transition-colors', {
 });
 
 const accordionTriggerVariants = cva(
-  'flex flex-1 items-center gap-3 text-left transition-colors [&[data-state=open]>svg]:rotate-180 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring)] focus-visible:ring-offset-2',
+  'flex flex-1 items-center gap-3 text-left transition-colors [&[data-state=open]>svg]:rotate-180 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring)] focus-visible:ring-offset-2',
   {
     variants: {
       variant: {

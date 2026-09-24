@@ -1,4 +1,3 @@
-import tailwindcssAnimate from 'tailwindcss-animate';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -108,5 +107,7 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  // tailwindcss-animate used the v3 JS plugin API, which v4 removed.
+  // Replaced by `@import "tw-animate-css"` in src/index.css.
+  plugins: [],
 };

@@ -83,7 +83,7 @@ function ButtonGroupText({ className, asChild = false, style, ...props }: Button
     <Comp
       data-slot="button-group-text"
       className={cn(
-        "flex items-center gap-2 border px-4 text-sm font-medium shadow-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
+        "flex items-center gap-2 border px-4 text-sm font-medium shadow-xs [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
         className
       )}
       style={{
@@ -108,7 +108,7 @@ function ButtonGroupSeparator({ className, orientation = 'vertical', ...props }:
     <Separator
       data-slot="button-group-separator"
       orientation={orientation}
-      className={cn('relative !m-0 self-stretch data-[orientation=vertical]:h-auto', className)}
+      className={cn('relative m-0! self-stretch data-[orientation=vertical]:h-auto', className)}
       {...props}
     />
   );

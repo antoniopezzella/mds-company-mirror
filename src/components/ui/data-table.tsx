@@ -394,7 +394,7 @@ export function DataTable<TData, TValue>({
                       table.getColumn(searchKey)?.setFilterValue('');
                       searchInputRef.current?.focus();
                     }}
-                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-sm opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2"
+                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-sm opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
                     style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                   >
                     <X className="h-3.5 w-3.5" />
@@ -512,7 +512,7 @@ export function DataTable<TData, TValue>({
                                 a mouse — no focus, no keyboard, no ARIA. */}
                             <button
                               type="button"
-                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2"
+                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
                               style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                               // Shift-click keeps its meaning as "add to the
                               // multi-sort" rather than opening the menu —
@@ -598,7 +598,7 @@ export function DataTable<TData, TValue>({
                               }));
                             }
                           }}
-                          className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-none focus-visible:ring-2"
+                          className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-hidden focus-visible:ring-2"
                           style={{
                             backgroundColor: header.column.getIsResizing() ? activeColor : 'transparent',
                             '--tw-ring-color': getRoleColor('focus.ring'),
@@ -736,7 +736,7 @@ export function DataTable<TData, TValue>({
                                   beginEdit();
                                 }
                               }}
-                              className="-mx-1 flex h-7 w-full items-center rounded px-1 text-left focus-visible:outline-none focus-visible:ring-2"
+                              className="-mx-1 flex h-7 w-full items-center rounded px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
                               style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                               title="Double-click or press Enter to edit"
                             >

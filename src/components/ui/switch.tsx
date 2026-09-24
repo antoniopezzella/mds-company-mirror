@@ -27,7 +27,7 @@ const switchOptionVariants = cva('inline-flex items-center gap-2', {
 });
 
 const switchRootVariants = cva(
-  'peer inline-flex h-6 w-10 shrink-0 items-center rounded-full border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--switch-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--switch-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
+  'peer inline-flex h-6 w-10 shrink-0 items-center rounded-full border transition-colors duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--switch-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--switch-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50'
 );
 
 const switchThumbVariants = cva(

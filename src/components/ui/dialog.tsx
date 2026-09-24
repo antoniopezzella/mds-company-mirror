@@ -66,7 +66,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
         {children}
         {!hideCloseButton && (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{ color: getRoleColor('text.secondary') }}
             aria-label="Close"
           >

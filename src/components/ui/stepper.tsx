@@ -380,7 +380,7 @@ export const Stepper: React.FC<StepperProps> = ({
     };
 
     const interactionClass = cn(
-      isInteractive && !isDisabled && 'cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2',
+      isInteractive && !isDisabled && 'cursor-pointer rounded-md focus-visible:outline-hidden focus-visible:ring-2',
       isInteractive && isDisabled && 'cursor-not-allowed opacity-50'
     );
     const focusStyle = isInteractive ? ({ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties) : undefined;

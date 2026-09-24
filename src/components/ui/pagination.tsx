@@ -53,7 +53,7 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | '...
 }
 
 const navButtonClass =
-  'flex h-8 w-8 items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
+  'flex h-8 w-8 items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2';
 
 /**
  * Design System Pagination — shadcn/ui counterpart for the MDS Pagination.
@@ -124,7 +124,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 onPageSizeChange(newSize);
                 if (currentPage > Math.ceil(totalItems / newSize)) onPageChange(1);
               }}
-              className="rounded-md border px-2 py-1 text-sm focus-visible:outline-none focus-visible:ring-2"
+              className="rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
               style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.default'), color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             >
               {pageSizeOptions.map((option) => (
@@ -243,7 +243,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 if (!Number.isNaN(page)) goTo(page);
               }}
               aria-label="Jump to page"
-              className="w-14 rounded-md border px-2 py-1 text-sm focus-visible:outline-none focus-visible:ring-2"
+              className="w-14 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
               style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.default'), color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             />
             <span style={{ color: mutedColor }}>of {totalPages}</span>

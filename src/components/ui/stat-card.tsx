@@ -97,7 +97,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         className={cn(
           'flex flex-col gap-4',
           'rounded border border-border bg-card p-6', // 4px radius by default
-          'shadow-sm transition-shadow hover:shadow-md',
+          'shadow-xs transition-shadow hover:shadow-md',
           className
         )}
         {...props}

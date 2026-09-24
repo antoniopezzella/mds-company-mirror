@@ -25,7 +25,12 @@ const Command = React.forwardRef<
       {
         backgroundColor: getRoleColor('surface.default'),
         color: getRoleColor('text.primary'),
-        // Referenced by CommandItem's `data-[selected=true]:bg-[var(...)]` — a
+          // Referenced by CommandItem's data-selected background utility. The
+          // class is described in prose, not written out: Tailwind's content
+          // scanner is a plain text scan with no awareness of comments, so a
+          // class-shaped string in a comment gets compiled like real code —
+          // spelling it out emitted an invalid rule and a parse warning on
+          // every build. It is still a
         // static Tailwind class naming a CSS var it can generate at build
         // time, with the actual color supplied here at runtime. Sidesteps
         // the "Tailwind JIT can't see a dynamic getRoleColor() value" issue
@@ -59,7 +64,7 @@ const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        'flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-11 w-full bg-transparent py-3 text-sm outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       {...props}
@@ -123,7 +128,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-[var(--cmdk-selected-bg)]',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-[var(--cmdk-selected-bg)]',
       className
     )}
     style={{ color: getRoleColor('text.primary') }}

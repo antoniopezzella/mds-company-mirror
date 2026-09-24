@@ -138,7 +138,7 @@ function InfoHint({ text }: { text: string }) {
 
 function MidTermActivityCard() {
   return (
-    <div className="flex flex-col gap-4 rounded border border-border bg-card p-6 shadow-sm">
+    <div className="flex flex-col gap-4 rounded border border-border bg-card p-6 shadow-xs">
       <h3 className="text-sm font-medium text-muted-foreground inline-flex items-center gap-1.5">
         Mid-term Activity <InfoHint text="Assets added or deleted since the current policy term began." />
       </h3>

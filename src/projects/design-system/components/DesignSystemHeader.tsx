@@ -35,7 +35,7 @@ function ThemeModeSegment() {
             type="button"
             onClick={() => select(option)}
             aria-pressed={isActive}
-            className={cn('flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-xs font-medium capitalize transition-colors', 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2')}
+            className={cn('flex items-center gap-1.5 rounded-[4px] px-2.5 py-1.5 text-xs font-medium capitalize transition-colors', 'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2')}
             style={{ backgroundColor: isActive ? activeBg : 'transparent', color: isActive ? activeText : inactiveText }}
           >
             <Icon className="h-3.5 w-3.5" />

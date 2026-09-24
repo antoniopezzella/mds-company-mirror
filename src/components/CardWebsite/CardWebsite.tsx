@@ -318,7 +318,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
               style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 22, fontWeight: 500, lineHeight: '28px', color: '#fff' }}
             >
               {href ? (
-                <a href={href} className="relative text-inherit no-underline outline-none after:absolute after:inset-0 after:z-[2] after:content-['']">
+                <a href={href} className="relative text-inherit no-underline outline-hidden after:absolute after:inset-0 after:z-[2] after:content-['']">
                   {title}
                 </a>
               ) : (
@@ -464,7 +464,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
                   }}
                 >
                   {href ? (
-                    <a href={href} aria-label={`Read: ${title}`} className="relative text-inherit no-underline outline-none after:absolute after:inset-0 after:z-[1] after:content-['']">
+                    <a href={href} aria-label={`Read: ${title}`} className="relative text-inherit no-underline outline-hidden after:absolute after:inset-0 after:z-[1] after:content-['']">
                       {title}
                     </a>
                   ) : (

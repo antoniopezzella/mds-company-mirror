@@ -36,6 +36,15 @@
    other rules. */
 @import './styles/token-variables.css';
 
-/* Utilities and component classes only — no preflight, see above. */
-@tailwind components;
-@tailwind utilities;
+/* Utilities and component classes only — no preflight, see above.
+   v4 splits what v3's three directives covered into separate importable
+   layers, so importing only `utilities` (and not `preflight`/`theme`) is how
+   a library ships styles without imposing a global reset on its host app. */
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Radix overlay animations (animate-in / animate-out). Must precede @config —
+   an @import after another at-rule is silently dropped. */
+@import "tw-animate-css";
+
+/* Reuse the package content globs and the theme from the JS config. */
+@config "../tailwind.package.config.js";

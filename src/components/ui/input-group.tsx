@@ -34,7 +34,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="input-group"
       role="group"
       className={cn(
-        'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-none has-[>textarea]:h-auto',
+        'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
         'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
         className
       )}
@@ -131,7 +131,7 @@ function InputGroupInput({ className, style, ...props }: React.ComponentProps<'i
     <input
       data-slot="input-group-control"
       className={cn(
-        'flex-1 border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-none placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex-1 border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       style={{ color: getRoleColor('text.primary'), ...style }}
@@ -145,7 +145,7 @@ function InputGroupTextarea({ className, style, ...props }: React.ComponentProps
     <textarea
       data-slot="input-group-control"
       className={cn(
-        'flex-1 resize-none border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-none placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
+        'flex-1 resize-none border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
       style={{ color: getRoleColor('text.primary'), ...style }}
