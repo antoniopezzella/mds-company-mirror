@@ -19,6 +19,35 @@ export type { RoleVarsProviderProps } from './theme/RoleVarsProvider';
 export { ThemeModeProvider, ThemeModeContext, useThemeMode } from './theme/ThemeModeContext';
 export type { ThemeMode } from './theme/ThemeModeContext';
 
+// Data formatting. Dashboards are mostly numbers, and before this the repo had
+// exactly one `Intl.*` call site — in a story — while currency was produced
+// four different ways. `cn` is exported here too; it was previously
+// unreachable by consumers despite being the documented way to merge classes.
+export {
+  formatCurrency,
+  formatNumber,
+  formatCompact,
+  formatPercent,
+  formatDelta,
+  formatDate,
+  formatRelative,
+  formatValue,
+  toFiniteNumber,
+  toValidDate,
+  EMPTY_VALUE,
+} from './lib/format';
+export type {
+  Formattable,
+  FormatKind,
+  BaseFormatOptions,
+  NumberFormatOptions,
+  CurrencyFormatOptions,
+  DateFormatOptions,
+} from './lib/format';
+export { FormatProvider, useFormat, useFormatConfig } from './lib/format-context';
+export type { FormatConfig, FormatProviderProps } from './lib/format-context';
+export { cn } from './lib/utils';
+
 // Components (shadcn/Radix + Tailwind)
 export * from './components/ui/accordion';
 export * from './components/ui/alert';
