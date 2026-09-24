@@ -155,7 +155,7 @@ const CarouselNavButton = React.forwardRef<HTMLButtonElement, CarouselNavButtonP
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={cn(
-          'absolute flex h-8 w-8 items-center justify-center rounded-full border transition-colors disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+          'absolute flex h-8 w-8 items-center justify-center rounded-full border transition-colors disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
           positionClassName,
           className
         )}

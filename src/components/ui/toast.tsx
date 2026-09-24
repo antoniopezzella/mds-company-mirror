@@ -84,7 +84,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitive.Action
     ref={ref}
     className={cn(
-      'inline-flex shrink-0 items-center justify-center rounded-md border bg-transparent px-3 py-1.5 font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex shrink-0 items-center justify-center rounded-md border bg-transparent px-3 py-1.5 font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     style={{ borderColor: 'currentColor', color: 'inherit' }}
@@ -100,7 +100,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitive.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2',
+      'absolute right-2 top-2 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-hidden focus:ring-2',
       className
     )}
     style={{ color: 'inherit' }}

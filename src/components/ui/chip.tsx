@@ -12,7 +12,7 @@ export type ChipVariant = 'filled' | 'outlined';
 export type ChipSize = 'sm' | 'md' | 'lg';
 
 const chipVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] font-medium transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex items-center gap-1.5 rounded-full font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] font-medium transition-transform focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       size: {
@@ -173,7 +173,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
             disabled={disabled}
             onClick={onClick}
             aria-pressed={selectable ? selected : undefined}
-            className="inline-flex items-center gap-1.5 border-0 bg-transparent p-0 text-inherit focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 border-0 bg-transparent p-0 text-inherit focus-visible:outline-hidden"
             {...rest}
           >
             {content}
@@ -190,7 +190,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
             onDelete();
           }}
           className={cn(
-            'flex items-center justify-center rounded-full border-0 bg-transparent p-0 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2',
+            'flex items-center justify-center rounded-full border-0 bg-transparent p-0 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2',
             deleteIconSizeClass[size]
           )}
         >

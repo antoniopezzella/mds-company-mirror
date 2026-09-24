@@ -70,7 +70,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                         item.onClick(e);
                       }
                     }}
-                    className="rounded transition-opacity hover:underline hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="rounded transition-opacity hover:underline hover:opacity-80 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
                     style={{ color: linkColor, '--tw-ring-color': linkColor } as React.CSSProperties}
                   >
                     {item.label}

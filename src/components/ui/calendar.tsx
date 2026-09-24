@@ -60,7 +60,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       ref={ref}
       type="button"
       className={cn(
-        'inline-flex h-9 w-9 items-center justify-center text-sm font-normal outline-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed',
+        'inline-flex h-9 w-9 items-center justify-center text-sm font-normal outline-hidden transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed',
         isRangeMiddle ? 'rounded-none' : 'rounded-md',
         className
       )}

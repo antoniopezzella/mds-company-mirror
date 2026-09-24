@@ -50,7 +50,7 @@ export interface ResizableHandleProps extends SeparatorProps {
 const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandleProps) => (
   <Separator
     className={cn(
-      'relative flex w-px items-center justify-center aria-[orientation=vertical]:h-px aria-[orientation=vertical]:w-full after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 aria-[orientation=vertical]:after:inset-x-0 aria-[orientation=vertical]:after:left-0 aria-[orientation=vertical]:after:h-1 aria-[orientation=vertical]:after:w-full aria-[orientation=vertical]:after:translate-x-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--resizable-focus-ring)] focus-visible:ring-offset-1',
+      'relative flex w-px items-center justify-center aria-[orientation=vertical]:h-px aria-[orientation=vertical]:w-full after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 aria-[orientation=vertical]:after:inset-x-0 aria-[orientation=vertical]:after:left-0 aria-[orientation=vertical]:after:h-1 aria-[orientation=vertical]:after:w-full aria-[orientation=vertical]:after:translate-x-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--resizable-focus-ring)] focus-visible:ring-offset-1',
       className
     )}
     style={

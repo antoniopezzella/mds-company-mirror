@@ -21,7 +21,7 @@ const sliderTrackVariants = cva(
 const sliderRangeVariants = cva('absolute h-full data-[orientation=vertical]:w-full');
 
 const sliderThumbVariants = cva(
-  'block h-4 w-4 rounded-full border-2 shadow-[0_1px_2px_rgba(0,0,0,0.2)] ring-offset-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--slider-focus-ring)] disabled:pointer-events-none disabled:opacity-50'
+  'block h-4 w-4 rounded-full border-2 shadow-[0_1px_2px_rgba(0,0,0,0.2)] ring-offset-2 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--slider-focus-ring)] disabled:pointer-events-none disabled:opacity-50'
 );
 
 function getThumbColor(interaction: InteractionState): string {

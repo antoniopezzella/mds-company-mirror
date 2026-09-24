@@ -43,7 +43,7 @@ const checkboxRowVariants = cva('flex min-h-6 items-start gap-2', {
 const checkboxFrameVariants = cva('flex h-6 shrink-0 items-center py-0.5');
 
 const checkboxControlVariants = cva(
-  'peer flex h-5 w-5 shrink-0 items-center justify-center rounded-[2px] border transition-[background-color,border-color,box-shadow,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--checkbox-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--checkbox-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed'
+  'peer flex h-5 w-5 shrink-0 items-center justify-center rounded-[2px] border transition-[background-color,border-color,box-shadow,color] duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--checkbox-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--checkbox-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed'
 );
 
 const checkboxIndicatorVariants = cva('flex h-4 w-4 items-center justify-center');

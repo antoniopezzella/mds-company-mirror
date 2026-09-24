@@ -69,7 +69,7 @@ const radioRowVariants = cva('flex min-h-6 items-start gap-2', {
 const radioFrameVariants = cva('flex h-6 shrink-0 items-center py-0.5');
 
 const radioControlVariants = cva(
-  'peer flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-[background-color,border-color,box-shadow,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--radio-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--radio-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed'
+  'peer flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-[background-color,border-color,box-shadow,color] duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--radio-focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--radio-focus-inner-ring)] disabled:pointer-events-none disabled:cursor-not-allowed'
 );
 
 const radioIndicatorVariants = cva('flex items-center justify-center');

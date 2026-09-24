@@ -261,7 +261,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     'min-h-[48px]', // Accessibility: minimum touch target
                     'transition-colors duration-200',
                     'text-left',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                    'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                     // Active state
                     isItemActive && [
                       'bg-[var(--sn-active-bg)] text-[var(--sn-active-text)]',
@@ -330,7 +330,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               'min-h-[44px]', // Accessibility: minimum touch target
                               'transition-colors duration-200',
                               'text-left text-sm',
-                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                              'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                               // Active state
                               isSubActive && [
                                 'bg-[var(--sn-active-bg)] text-[var(--sn-active-text)]',
