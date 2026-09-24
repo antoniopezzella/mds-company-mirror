@@ -227,24 +227,56 @@ Two configs exist and they are not interchangeable.
 | Entry | `src/index.css` | `src/styles.package.css` |
 | Output | Vite pipeline | `npm run build:css` → `dist-pkg/styles.css` |
 
-`src/styles.package.css` imports `tailwindcss/utilities` only (not the full
-`tailwindcss`), which is how preflight is kept out:
+`src/styles.package.css` imports the **theme** and **utilities** layers but not
+preflight, which is how the global reset is kept out of a library:
 
 ```css
 @import './styles/token-variables.css';
+@import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
 @import "tw-animate-css";
 @config "../tailwind.package.config.js";
 ```
 
+### The theme layer is not optional — omitting it silently guts the package
+
+This shipped broken and is worth understanding, because nothing failed.
+
+The file previously imported `tailwindcss/utilities` **alone**, on the
+reasonable-sounding theory that a library wants utilities and not a theme. But
+in v4 the spacing scale is *derived at build time* from `--spacing: 0.25rem`,
+which lives in `tailwindcss/theme`. Without that layer Tailwind cannot resolve
+`p-4` / `gap-2` / `mb-3`, and it **drops those rules rather than erroring**.
+
+Result: the stylesheet built fine, exit 0, still contained static utilities
+like `.flex-col` and `.items-center` — and shipped to consumers with **every
+padding, margin and gap missing**. Measured: 873 rules, zero numeric spacing
+utilities, and tw-animate-css's slide transforms resolving against an
+undefined `var(--spacing)`.
+
+Static utilities survive; theme-derived ones vanish. That asymmetry is the
+tell — if `.flex-col` is present but `.p-4` isn't, the theme layer is missing.
+
 The package stylesheet is built by the **CLI**, not Vite — Vite's library mode
 forces `cssCodeSplit: false` and then rejects a CSS entry outright.
 
 After changing any `src/components/ui/` styling: `npm run build:package`
-(chains `build:css`). Current size **71.3 kB raw / 11.8 kB gzipped**. It grew
-from 64 kB/11.4 kB at the v4 migration because the previously-inert variants in
-§2 now emit real rules. A *large* jump means the content globs are catching
-something they shouldn't; a drop to ~50 kB means an `@import` got dropped (§3).
+(chains `build:css`). Current size **107.9 kB raw / 17.7 kB gzipped**.
+
+Size is the canary here, so know the numbers:
+
+| Size | Meaning |
+| --- | --- |
+| ~108 kB / 17.7 kB gz | correct |
+| ~71 kB / 11.8 kB gz | **theme layer missing** — no spacing utilities |
+| ~50 kB | an `@import` was dropped by ordering (§3) |
+| much larger | content globs are catching something they shouldn't |
+
+Verify after any change to this pipeline, rather than trusting exit 0:
+
+```bash
+grep -c '\.p-4{' dist-pkg/styles.css   # must be 1, not 0
+```
 
 ---
 

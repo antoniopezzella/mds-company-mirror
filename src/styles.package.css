@@ -36,10 +36,23 @@
    other rules. */
 @import './styles/token-variables.css';
 
-/* Utilities and component classes only — no preflight, see above.
-   v4 splits what v3's three directives covered into separate importable
-   layers, so importing only `utilities` (and not `preflight`/`theme`) is how
-   a library ships styles without imposing a global reset on its host app. */
+/* The theme layer, then utilities. Preflight is deliberately NOT imported —
+   that is the layer carrying the global reset, and a library must not impose
+   one on its host app.
+
+   The theme layer is NOT optional, and omitting it silently breaks the
+   package. In v4 the spacing scale is derived at build time from
+   `--spacing: 0.25rem`, which `tailwindcss/theme` defines. Without it
+   Tailwind cannot resolve `p-4`/`gap-2`/`mb-3` and drops those rules
+   entirely rather than erroring — so the stylesheet still builds, still
+   contains static utilities like `.flex-col`, and ships to consumers with
+   every padding, margin and gap missing. Measured before this fix: 873 rules
+   total, ZERO numeric spacing utilities, and tw-animate-css's slide
+   transforms referencing an undefined `var(--spacing)`.
+
+   If you ever see the package stylesheet drop sharply in size, check this
+   first. */
+@import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
 
 /* Radix overlay animations (animate-in / animate-out). Must precede @config —
