@@ -33,14 +33,14 @@ const badgeVariants = cva(
     variants: {
       size: {
         /** Figma "Text Badge" spec (node-id 7584:27300): 24px tall, 8px padding, 8px radius, 14px text. */
-        md: 'h-6 rounded-lg px-2 text-sm',
+        md: 'h-6 rounded-sm px-2 text-sm',
         /**
          * Dense contexts where a 24px pill would dominate its row — e.g. the
          * per-step status pills in `Stepper`'s `showStatusBadge` layout.
          * NOT in the Figma spec yet (Figma defines only the 24px size);
          * raise a Figma-side variant request before leaning on this widely.
          */
-        sm: 'h-5 rounded-md px-1.5 text-xs',
+        sm: 'h-5 rounded-xs px-1.5 text-xs',
       },
     },
     defaultVariants: { size: 'md' },

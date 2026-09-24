@@ -60,7 +60,7 @@ export function PrinciplesDemo() {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {PRINCIPLES.map((p) => (
-        <div key={p.title} className="rounded-lg border p-4" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+        <div key={p.title} className="rounded-sm border p-4" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
           <h5 className="text-sm font-semibold" style={{ color: getRoleColor('text.primary', { mode }) }}>
             {p.title}
           </h5>
@@ -125,7 +125,7 @@ export function TokensDemo() {
         <p className="mt-3 text-sm" style={{ color: bodyColor }}>
           Three layers, each with a different job:
         </p>
-        <div className="mt-3 rounded-lg border p-4" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+        <div className="mt-3 rounded-sm border p-4" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
           <TokenArchitectureRow
             step="1"
             file="src/tokens.ts — primitives (167 values, 7 palettes)"
@@ -172,7 +172,7 @@ export function TokensDemo() {
                   <div
                     key={key}
                     title={`${key}: ${value}`}
-                    className="h-8 flex-1 rounded-sm border"
+                    className="h-8 flex-1 rounded-xs border"
                     style={{ backgroundColor: value, borderColor: getRoleColor('border.default', { mode }) }}
                   />
                 );
@@ -262,14 +262,14 @@ export function ColorDemo() {
         </p>
         <div className="space-y-3">
           {LIGHT_DARK_COMPARISON.map(({ role, note }) => (
-            <div key={role} className="flex items-start gap-4 rounded-lg border p-3" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+            <div key={role} className="flex items-start gap-4 rounded-sm border p-3" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
               <div className="flex shrink-0 gap-2">
                 <div className="flex flex-col items-center gap-1">
-                  <div className="h-10 w-10 rounded-md border" style={{ backgroundColor: getRoleColor(role, { mode: 'light' }), borderColor: getRoleColor('border.default', { mode }) }} />
+                  <div className="h-10 w-10 rounded-xs border" style={{ backgroundColor: getRoleColor(role, { mode: 'light' }), borderColor: getRoleColor('border.default', { mode }) }} />
                   <span className="text-[10px]" style={{ color: bodyColor }}>light</span>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <div className="h-10 w-10 rounded-md border" style={{ backgroundColor: getRoleColor(role, { mode: 'dark' }), borderColor: getRoleColor('border.default', { mode }) }} />
+                  <div className="h-10 w-10 rounded-xs border" style={{ backgroundColor: getRoleColor(role, { mode: 'dark' }), borderColor: getRoleColor('border.default', { mode }) }} />
                   <span className="text-[10px]" style={{ color: bodyColor }}>dark</span>
                 </div>
               </div>
@@ -304,7 +304,7 @@ export function ColorDemo() {
               return (
                 <div key={role} className="flex flex-col items-center gap-1.5">
                   <div
-                    className="h-12 w-12 rounded-md border"
+                    className="h-12 w-12 rounded-xs border"
                     style={{ backgroundColor: value, borderColor: getRoleColor('border.default', { mode }) }}
                     title={value}
                   />
@@ -366,7 +366,7 @@ export function IconsDemo() {
         {ICONS.map(({ name, Icon }) => (
           <div
             key={name}
-            className="flex flex-col items-center gap-1.5 rounded-md p-3"
+            className="flex flex-col items-center gap-1.5 rounded-xs p-3"
             style={{ color: getRoleColor('text.primary', { mode }) }}
           >
             <Icon className="h-5 w-5" />
@@ -434,7 +434,7 @@ export function SpacingDemo() {
             {px}
           </span>
           <div
-            className="h-3 rounded-sm"
+            className="h-3 rounded-xs"
             style={{ width: `${(px / max) * 100}%`, backgroundColor: getRoleColor('interactive.primary', { mode }) }}
           />
         </div>
@@ -454,7 +454,7 @@ function CodeBlock({ children }: { children: string }) {
   const { mode } = useThemeMode();
   return (
     <pre
-      className="mt-3 overflow-x-auto rounded-md p-3 text-xs"
+      className="mt-3 overflow-x-auto rounded-xs p-3 text-xs"
       style={{ backgroundColor: getRoleColor('surface.subtle', { mode }), color: getRoleColor('text.primary', { mode }) }}
     >
       <code className="font-mono">{children}</code>
@@ -475,7 +475,7 @@ export function GridDemo() {
         </p>
         <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-8 lg:grid-cols-12">
           {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="flex h-10 items-center justify-center rounded-sm text-xs" style={cellStyle}>
+            <div key={i} className="flex h-10 items-center justify-center rounded-xs text-xs" style={cellStyle}>
               {i + 1}
             </div>
           ))}
@@ -488,13 +488,13 @@ export function GridDemo() {
           Real usage — a lead card spanning more columns than its siblings via <code className="font-mono">col-span-*</code>.
         </p>
         <div className="mt-4 grid grid-cols-4 gap-3">
-          <div className="col-span-4 flex h-16 items-center justify-center rounded-md text-sm sm:col-span-2" style={cellStyle}>
+          <div className="col-span-4 flex h-16 items-center justify-center rounded-xs text-sm sm:col-span-2" style={cellStyle}>
             col-span-4 sm:col-span-2
           </div>
-          <div className="col-span-2 flex h-16 items-center justify-center rounded-md text-sm sm:col-span-1" style={cellStyle}>
+          <div className="col-span-2 flex h-16 items-center justify-center rounded-xs text-sm sm:col-span-1" style={cellStyle}>
             col-span-1
           </div>
-          <div className="col-span-2 flex h-16 items-center justify-center rounded-md text-sm sm:col-span-1" style={cellStyle}>
+          <div className="col-span-2 flex h-16 items-center justify-center rounded-xs text-sm sm:col-span-1" style={cellStyle}>
             col-span-1
           </div>
         </div>
@@ -513,7 +513,7 @@ export function ElevationDemo() {
       {shadows.map((s) => (
         <div key={s.level} className="flex flex-col items-center gap-2">
           <div
-            className="h-16 w-16 rounded-md"
+            className="h-16 w-16 rounded-xs"
             style={{ boxShadow: s.value, backgroundColor: getRoleColor('surface.default', { mode }) }}
             title={s.usage}
           />

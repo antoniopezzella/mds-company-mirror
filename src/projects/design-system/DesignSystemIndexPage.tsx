@@ -30,7 +30,7 @@ const DesignSystemIndexPage: React.FC = () => {
           <Link
             key={category.id}
             to={category.path}
-            className="rounded-lg border p-5 transition-colors"
+            className="rounded-sm border p-5 transition-colors"
             style={{ borderColor: cardBorder, backgroundColor: cardBg }}
           >
             <h2 className="text-lg font-semibold" style={{ color: titleColor }}>

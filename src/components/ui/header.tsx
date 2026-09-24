@@ -58,7 +58,7 @@ const HeaderIconButton = React.forwardRef<HTMLButtonElement, HeaderIconButtonPro
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={cn(
-          'relative flex h-9 w-9 items-center justify-center rounded-md transition-colors focus-visible:outline-hidden focus-visible:ring-2',
+          'relative flex h-9 w-9 items-center justify-center rounded-xs transition-colors focus-visible:outline-hidden focus-visible:ring-2',
           className
         )}
         style={{ color: 'inherit', backgroundColor: hover ? hoverColor : 'transparent', ...style }}
@@ -197,7 +197,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="User profile menu"
               onMouseEnter={() => setProfileHover(true)}
               onMouseLeave={() => setProfileHover(false)}
-              className="group ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors focus-visible:outline-hidden focus-visible:ring-2"
+              className="group ml-1 flex items-center gap-2 rounded-xs px-1.5 py-1 transition-colors focus-visible:outline-hidden focus-visible:ring-2"
               style={{ color: 'inherit', backgroundColor: profileHover ? hoverBg : 'transparent' }}
             >
               <Avatar initials={user.initials} size="sm" tone={isPrimary ? 'default' : 'primary'} />

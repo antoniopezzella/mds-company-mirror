@@ -67,7 +67,7 @@ export const List: React.FC<ListProps> = ({
   };
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
+    <div className={cn('w-full overflow-hidden rounded-xs', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"

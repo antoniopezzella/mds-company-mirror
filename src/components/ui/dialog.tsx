@@ -55,7 +55,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          'fixed left-1/2 top-1/2 z-[1500] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg p-6 shadow-lg duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          'fixed left-1/2 top-1/2 z-[1500] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-sm p-6 shadow-lg duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           SIZE_CLASSES[size],
           size === 'fullscreen' ? 'max-h-screen overflow-y-auto' : 'max-h-[85vh] overflow-y-auto',
           className
@@ -66,7 +66,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
         {children}
         {!hideCloseButton && (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="absolute right-4 top-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{ color: getRoleColor('text.secondary') }}
             aria-label="Close"
           >

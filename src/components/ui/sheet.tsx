@@ -78,7 +78,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Co
           glyph with no padding.
         */}
         <DialogPrimitive.Close
-          className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-xs transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
           style={
             {
               color: getRoleColor('text.secondary'),

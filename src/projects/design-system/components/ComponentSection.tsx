@@ -77,7 +77,7 @@ export const ComponentSection: React.FC<ComponentSectionProps> = ({ entry }) => 
           {entry.summary}
         </p>
       )}
-      <div className="mt-4 rounded-lg border p-6" style={{ borderColor, backgroundColor: demoBg }}>
+      <div className="mt-4 rounded-sm border p-6" style={{ borderColor, backgroundColor: demoBg }}>
         {entry.demo()}
       </div>
       <GuidanceBlock componentId={entry.id} />

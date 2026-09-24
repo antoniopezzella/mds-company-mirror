@@ -170,7 +170,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
           <button
             type="button"
             aria-label="Open calendar"
-            className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
+            className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-xs"
             style={{ color: getRoleColor('text.secondary') }}
           >
             <CalendarIcon className="h-4 w-4" />
@@ -293,7 +293,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
             <button
               type="button"
               aria-label="Open calendar"
-              className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
+              className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-xs"
               style={{ color: getRoleColor('text.secondary') }}
             >
               <CalendarIcon className="h-4 w-4" />

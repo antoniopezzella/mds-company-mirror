@@ -58,7 +58,7 @@ const boxStyle: CSSProperties = {
 
 export const Default: StoryObj = {
   render: () => (
-    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[500px] rounded-md border">
+    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[500px] rounded-xs border">
       <ResizablePanel defaultSize={50}>
         <div style={boxStyle}>Panel One</div>
       </ResizablePanel>
@@ -72,7 +72,7 @@ export const Default: StoryObj = {
 
 export const WithHandle: StoryObj = {
   render: () => (
-    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[500px] rounded-md border">
+    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[500px] rounded-xs border">
       <ResizablePanel defaultSize={50}>
         <div style={boxStyle}>Panel One</div>
       </ResizablePanel>
@@ -86,7 +86,7 @@ export const WithHandle: StoryObj = {
 
 export const Vertical: StoryObj = {
   render: () => (
-    <ResizablePanelGroup orientation="vertical" className="h-[400px] w-[500px] rounded-md border">
+    <ResizablePanelGroup orientation="vertical" className="h-[400px] w-[500px] rounded-xs border">
       <ResizablePanel defaultSize={40}>
         <div style={boxStyle}>Top</div>
       </ResizablePanel>
@@ -100,7 +100,7 @@ export const Vertical: StoryObj = {
 
 export const ThreePanels: StoryObj = {
   render: () => (
-    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[600px] rounded-md border">
+    <ResizablePanelGroup orientation="horizontal" className="h-[240px] w-[600px] rounded-xs border">
       <ResizablePanel defaultSize={25} minSize={15}>
         <div style={boxStyle}>Sidebar</div>
       </ResizablePanel>
@@ -122,7 +122,7 @@ export const ThreePanels: StoryObj = {
  */
 export const PolicyListWithDetail: StoryObj = {
   render: () => (
-    <ResizablePanelGroup orientation="horizontal" className="h-[320px] w-[640px] rounded-md border">
+    <ResizablePanelGroup orientation="horizontal" className="h-[320px] w-[640px] rounded-xs border">
       <ResizablePanel defaultSize={35} minSize={25}>
         <div className="flex h-full flex-col gap-1 p-3 text-sm">
           <div className="mb-1 font-semibold">Policies</div>

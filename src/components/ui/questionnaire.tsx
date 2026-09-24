@@ -137,7 +137,7 @@ function QuestionnaireChoice({
     <QuestionnairePrimitive.Choice
       data-slot="questionnaire-choice"
       className={cn(
-        "group/choice flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background px-3.5 py-3 text-sm text-foreground transition-colors hover:bg-muted data-[checked]:border-primary data-[checked]:bg-primary/5 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
+        "group/choice flex cursor-pointer items-center gap-3 rounded-xs border border-border bg-background px-3.5 py-3 text-sm text-foreground transition-colors hover:bg-muted data-[checked]:border-primary data-[checked]:bg-primary/5 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
         className
       )}
       {...props}
@@ -145,10 +145,10 @@ function QuestionnaireChoice({
       <QuestionnairePrimitive.ChoiceInput className="sr-only" />
       {/* data-type is set by the primitive itself (radio for single-select
           items, checkbox when the item has `multiple`) — rounded-full for
-          radio, rounded-md for checkbox, so multi-select choices actually
+          radio, rounded-xs for checkbox, so multi-select choices actually
           look like checkboxes instead of circles pretending to be one. */}
       <span
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border text-transparent transition-colors group-data-[checked]/choice:border-primary group-data-[checked]/choice:bg-primary group-data-[checked]/choice:text-primary-foreground group-data-[type=checkbox]/choice:rounded-md"
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border text-transparent transition-colors group-data-[checked]/choice:border-primary group-data-[checked]/choice:bg-primary group-data-[checked]/choice:text-primary-foreground group-data-[type=checkbox]/choice:rounded-xs"
         aria-hidden="true"
       >
         <CheckIcon className="h-3.5 w-3.5" />
@@ -169,7 +169,7 @@ function QuestionnaireInput({
     <QuestionnairePrimitive.Input
       data-slot="questionnaire-input"
       className={cn(
-        "flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[invalid]:border-destructive",
+        "flex h-10 w-full rounded-xs border border-input bg-transparent px-3 py-2 text-sm text-foreground shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50 data-[invalid]:border-destructive",
         className
       )}
       {...props}

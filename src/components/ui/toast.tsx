@@ -35,7 +35,7 @@ ToastViewport.displayName = ToastPrimitive.Viewport.displayName;
 export type ToastTone = 'default' | 'success' | 'warning' | 'danger' | 'info';
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full'
+  'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-sm p-4 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full'
 );
 
 function getToneRoles(tone: ToastTone): { bg: RoleName; fg: RoleName } {
@@ -84,7 +84,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitive.Action
     ref={ref}
     className={cn(
-      'inline-flex shrink-0 items-center justify-center rounded-md border bg-transparent px-3 py-1.5 font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex shrink-0 items-center justify-center rounded-xs border bg-transparent px-3 py-1.5 font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     style={{ borderColor: 'currentColor', color: 'inherit' }}
@@ -100,7 +100,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitive.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-hidden focus:ring-2',
+      'absolute right-2 top-2 rounded-xs p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-hidden focus:ring-2',
       className
     )}
     style={{ color: 'inherit' }}
