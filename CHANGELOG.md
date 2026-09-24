@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.6.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.5.0...v0.6.0) (2026-09-24)
+
+### ⚠ BREAKING CHANGES
+
+* **build:** migrate to Tailwind CSS v4
+* **repo:** rename shadcn-dashboard to dashboard-demo
+* **components:** unify the size and tone vocabularies
+
+### Features
+
+* **build:** migrate to Tailwind CSS v4 ([24c7aa5](https://github.com/antoniopezzella/marsh-design-system/commit/24c7aa560cbecd77e68f513179bc5bed1fd7b303))
+* **components:** add layout primitives, page template and taxonomy ([08c985e](https://github.com/antoniopezzella/marsh-design-system/commit/08c985e02acbf3216914d4250e8b17d240093db5))
+* **components:** unify control sizes across buttons and form fields ([203d9f7](https://github.com/antoniopezzella/marsh-design-system/commit/203d9f770ea81ea03bd97caae7c8ced707406dea))
+* **components:** unify the size and tone vocabularies ([0e49174](https://github.com/antoniopezzella/marsh-design-system/commit/0e4917473df218d8c3a7efa2fb64b68b23f04407)), references [#4](https://github.com/antoniopezzella/marsh-design-system/issues/4)
+* **package:** ship compiled CSS and make the bundle tree-shakeable ([50c305a](https://github.com/antoniopezzella/marsh-design-system/commit/50c305aec4bc5c6fd4851a89adb22aa21ff704ff))
+* **repo:** add a Tailwind specialist skill, and retract a stale audit finding ([76937af](https://github.com/antoniopezzella/marsh-design-system/commit/76937afbd9df5edf0eb28fe7882f04f57bcd3752))
+
+### Bug Fixes
+
+* **a11y:** un-exclude the accessibility suite, and fix the keyboard bug it found ([528c406](https://github.com/antoniopezzella/marsh-design-system/commit/528c4069ce343ae9264254e8549feb177bbff11e))
+* **build:** stop the SPA rewrite swallowing missing assets, and make token builds reproducible ([847ceec](https://github.com/antoniopezzella/marsh-design-system/commit/847ceec2ee6e3ed65473a0a2c0bc0681b711efdd))
+* **components:** adopt Tailwind v4's stock radius scale and fix bubble width ([8ca2804](https://github.com/antoniopezzella/marsh-design-system/commit/8ca2804d5cff1a480893675e66a1856dd096cf31))
+* **components:** delineate the dark-mode header and fix the drawer's font ([6299005](https://github.com/antoniopezzella/marsh-design-system/commit/62990054fbce7a61ff4d712af09f98e442acb6d8))* **components:** keep `error` on form fields — it is not the same axis as `danger` ([e5bf30b](https://github.com/antoniopezzella/marsh-design-system/commit/e5bf30be169c4ae552e6203afe6dd01145b819bd))
+* **components:** make the control-size cascade actually reach every child ([1481270](https://github.com/antoniopezzella/marsh-design-system/commit/14812707949ea0cdae8436bdc9eda982f4ba0210))
+* **components:** set form field rhythm to 20px, resolving the gap-7 exception ([05f7b63](https://github.com/antoniopezzella/marsh-design-system/commit/05f7b636faeec58bad77d43da603a7ec094afb68))
+* **package:** correct runtime deps and ship the production JSX transform ([ef6836a](https://github.com/antoniopezzella/marsh-design-system/commit/ef6836a44f22ccbf185c65fe527fb26d2185d67e))
+* **package:** correct the consumer-facing contract before org migration ([f0903d8](https://github.com/antoniopezzella/marsh-design-system/commit/f0903d8c7f2ef5242c5dc2e904b87033c129bd95))
+* **package:** mark client components so Next.js App Router consumers work ([05c308c](https://github.com/antoniopezzella/marsh-design-system/commit/05c308c9ce3a760ecf3f00acb1ae803b5d688bbd))
+* **package:** restore spacing utilities missing from published stylesheet ([4c3d77d](https://github.com/antoniopezzella/marsh-design-system/commit/4c3d77d25927d305e0dc50274394e2d6cba91b53))
+* **security:** the AI endpoint was an open, unmetered OpenAI proxy ([73d83f6](https://github.com/antoniopezzella/marsh-design-system/commit/73d83f6f40b8fb889a49b4889dba58beddf53aca))
+* **theme:** apply the dashboard typography context to ShadcnDashboard ([86854be](https://github.com/antoniopezzella/marsh-design-system/commit/86854be6b4c489587e7d7972e7705891d51f2d15))
+* **theme:** repair dark-mode accent surfaces and the drawer's filter chip ([db74ad3](https://github.com/antoniopezzella/marsh-design-system/commit/db74ad3404f53e557d0ce851407d87d0383ca791))* **tokens:** app chrome goes neutral in dark mode instead of staying navy ([9916b87](https://github.com/antoniopezzella/marsh-design-system/commit/9916b8719432511de9f03a5e264c8f17b29af739))### Refactoring
+
+* **repo:** rename shadcn-dashboard to dashboard-demo ([c98ecf3](https://github.com/antoniopezzella/marsh-design-system/commit/c98ecf39c263be972c295d9e1b14b94ef01036bc))
+
+### Documentation
+
+* benchmark the design system against Carbon and Material Design ([12ac94a](https://github.com/antoniopezzella/marsh-design-system/commit/12ac94aed6a42a543167009cb2448fff265e6ca3))
+* **governance:** add branch governance as the fourth system ([d7a2fb4](https://github.com/antoniopezzella/marsh-design-system/commit/d7a2fb43416cfa2b7ff6c49cd581019846f99df5))
+* **ops:** add a runbook, and correct a deployment guide that was wrong ([6c031e8](https://github.com/antoniopezzella/marsh-design-system/commit/6c031e8005b0f9fd39cd3b2c01bc93f9ad6b2564))
+* **ops:** document how to rotate a credential, and fix .env.example ([8bf9c03](https://github.com/antoniopezzella/marsh-design-system/commit/8bf9c0323dece7b68acd0e97766948c677e8d500))
+* production-readiness audit for adoption review ([caff040](https://github.com/antoniopezzella/marsh-design-system/commit/caff0403e75c640fd538469ef2759d87caedd2eb))
+* **repo:** add composition skill and wire the knowledge base together ([b772f99](https://github.com/antoniopezzella/marsh-design-system/commit/b772f991b3e7be0bb33e3b26688adff12ef17d60))
+* **repo:** audit run 2 — 2.1/3, and correct an overstated run-1 finding ([7754821](https://github.com/antoniopezzella/marsh-design-system/commit/77548218c8c8674c46a17763efff40ce8a0c60aa))
+* **repo:** correct the Tailwind skill's v4 upgrade assessment ([bbb99fd](https://github.com/antoniopezzella/marsh-design-system/commit/bbb99fd907fc242ace7ffd4bc6607d604d12b250))
+* **repo:** rewrite the Tailwind skill for v4 and document spacing/radius ([949b33f](https://github.com/antoniopezzella/marsh-design-system/commit/949b33f91e48cfc6781a2ee00a53a79cdfcaff22))
+* **tokens:** cover the whole spacing family, and the px/rem split between tracks ([77a480f](https://github.com/antoniopezzella/marsh-design-system/commit/77a480f0fed4579d8ba16394938b6d230730b03c))
+* **tokens:** document both spacing tracks, not just the MUI one ([5630955](https://github.com/antoniopezzella/marsh-design-system/commit/5630955f49592bf7f45c699fa77ba5451d8321c1))
+
+### Tests
+
+* **components:** recover four more tests from the stale copilot branch ([83ce698](https://github.com/antoniopezzella/marsh-design-system/commit/83ce6988155456538bee868146b192f5ce6f3e24))
+* run every test in src/, and recover three from a stale branch ([9fde944](https://github.com/antoniopezzella/marsh-design-system/commit/9fde94419d89cfdb2bb0036719200783f16e993f))
+
+### Chores
+
+* **deps:** install Tailwind v4 toolchain ([c5ebf50](https://github.com/antoniopezzella/marsh-design-system/commit/c5ebf50e1ff46e7e14443a65f8c828f7ea4a16e4))
+* **governance:** allow 'package' as a commit scope ([0cbc130](https://github.com/antoniopezzella/marsh-design-system/commit/0cbc130e9ef3723ca662dd15bd5c26d728147267))
+* **repo:** declare the proprietary internal license ([3d5e103](https://github.com/antoniopezzella/marsh-design-system/commit/3d5e103f743ee8039f4ce93ba3bce1d9a4b43528))
+* **tokens:** regenerate dist/tokens.json for the dark-mode surface changes ([8a912eb](https://github.com/antoniopezzella/marsh-design-system/commit/8a912ebbcb69770aea4c34ce7a3bfec6b1d159c3))[1a2759/#333f6b](https://github.com/antoniopezzella/marsh-design-system/issues/333f6b)
+
 ## [0.5.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.4.1...v0.5.0) (2026-09-22)
 
 ### Features
