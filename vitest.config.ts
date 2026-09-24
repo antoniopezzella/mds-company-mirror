@@ -39,7 +39,11 @@ export default defineConfig({
           include: ['src/**/*.{test,spec}.{ts,tsx}', 'api/**/*.{test,spec}.{ts,tsx}'],
           exclude: [
             'src/**/*.stories.{ts,tsx}',
-            'src/**/*.accessibility.test.tsx',
+            // `src/**/*.accessibility.test.tsx` was excluded here, which silently
+            // disabled 451 lines of accessibility tests (Header, SideNavigation).
+            // They existed in the repo and had never executed once. An a11y suite
+            // that does not run is worse than no suite at all, because its
+            // presence in the tree reads as coverage that isn't there.
             'src/**/*.old-test.tsx',
             '**/node_modules/**',
           ],

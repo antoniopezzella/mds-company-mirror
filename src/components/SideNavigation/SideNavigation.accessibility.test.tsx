@@ -113,11 +113,15 @@ describe('SideNavigation Accessibility', () => {
         </TestWrapper>
       );
 
-      const list = screen.getByRole('list');
-      expect(list).toBeInTheDocument();
-      
-      const listItems = screen.getAllByRole('listitem');
-      expect(listItems.length).toBeGreaterThan(0);
+      // Deliberately does NOT assert role="list". SideNavigation renders its
+      // MUI List as `component="div"` on purpose (SideNavigation.tsx:139-145):
+      // the children are ListItemButtons with role="button", and a list whose
+      // children are buttons violates aria-required-children. Asserting a list
+      // role would require reintroducing that axe violation — the <nav>
+      // landmark already carries the structural semantics.
+      expect(screen.getByRole('navigation')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Overview/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Help/ })).toBeInTheDocument();
     });
 
     it('should indicate active page with aria-current', () => {
@@ -164,12 +168,21 @@ describe('SideNavigation Accessibility', () => {
         </TestWrapper>
       );
 
-      // Just verify the component structure is correct
-      const nav = screen.getByRole('navigation');
-      expect(nav).toBeInTheDocument();
-      
-      const list = screen.getByRole('list');
-      expect(list).toBeInTheDocument();
+      // This previously asserted a nav landmark and a list role, and exercised
+      // no keyboard at all — a placeholder that never tested its own title.
+      // It now drives the real expand/collapse contract.
+      const group = screen.getByRole('button', { name: /Risk & Insights/ });
+
+      // A collapsed group announces its state and points at the panel it owns.
+      expect(group).toHaveAttribute('aria-expanded', 'false');
+      expect(group).toHaveAttribute('aria-controls');
+
+      group.focus();
+      fireEvent.keyDown(group, { key: 'Enter' });
+      expect(group).toHaveAttribute('aria-expanded', 'true');
+
+      // Sub-items become reachable once expanded.
+      expect(screen.getByText('Property Risk')).toBeInTheDocument();
     });
   });
 

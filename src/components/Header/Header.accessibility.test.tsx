@@ -244,17 +244,26 @@ describe('Header Accessibility', () => {
     it('should provide notification count information', () => {
       render(
         <TestWrapper>
-          <Header 
-            sidebarOpen={false} 
+          <Header
+            sidebarOpen={false}
             onToggleSidebar={mockToggleSidebar}
             variant="primary"
+            notificationCount={8}
           />
         </TestWrapper>
       );
 
-      // Badge should provide accessible notification count
-      const badge = screen.getByText('8');
-      expect(badge).toBeInTheDocument();
+      // The count must reach a screen reader through the control's accessible
+      // NAME, not just the badge glyph — a visually-rendered "8" next to a bell
+      // announces as an unlabelled button.
+      //
+      // This previously asserted getByText('8') against the component's default
+      // count, which has since changed to 4, so the test broke silently while
+      // excluded from the runner. Passing the count explicitly also stops this
+      // depending on a default that is free to change.
+      expect(
+        screen.getByRole('button', { name: /notifications\s*-\s*8 unread/i }),
+      ).toBeInTheDocument();
     });
   });
 });

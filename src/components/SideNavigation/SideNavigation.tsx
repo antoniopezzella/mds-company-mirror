@@ -196,27 +196,29 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
                 aria-expanded={isGroup ? !!open[item.label] : undefined}
                 aria-controls={isGroup ? panelId : undefined}
                 aria-haspopup={isGroup ? 'true' : undefined}
-                onKeyDown={(e) => {
-                  if (!isGroup) {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                  onKeyDown={(e) => {
+                    // Enter/Space are deliberately NOT handled here.
+                    //
+                    // MUI's ButtonBase already turns an Enter/Space keydown into
+                    // a synthetic click, which reaches onClick above. When this
+                    // handler also ran on Enter, the toggle fired TWICE — the
+                    // group opened and immediately closed, so pressing Enter on
+                    // a nav group did nothing at all. Arrow keys were unaffected
+                    // because they are one-directional; only a toggle can hide a
+                    // double-fire, which is why this survived unnoticed.
+                    //
+                    // Surfaced by SideNavigation.accessibility.test.tsx once it
+                    // was un-excluded from the test runner. WCAG 2.1.1.
+                    if (!isGroup) return;
+                    if (e.key === 'ArrowRight' && !open[item.label]) {
                       e.preventDefault();
-                      navigateTo(item.path);
+                      handleClick(item.label);
                     }
-                    return;
-                  }
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleClick(item.label);
-                  }
-                  if (e.key === 'ArrowRight' && !open[item.label]) {
-                    e.preventDefault();
-                    handleClick(item.label);
-                  }
-                  if (e.key === 'ArrowLeft' && open[item.label]) {
-                    e.preventDefault();
-                    handleClick(item.label);
-                  }
-                }}
+                    if (e.key === 'ArrowLeft' && open[item.label]) {
+                      e.preventDefault();
+                      handleClick(item.label);
+                    }
+                  }}
                 sx={{
                   borderRadius: 1,
                   mb: 0.5,
