@@ -480,7 +480,7 @@ export function DataTable<TData, TValue>({
           still resolve against that and are unaffected. */}
       <div className="overflow-hidden rounded-xs border" style={{ borderColor, backgroundColor: rowBg }}>
         <div className="overflow-auto" style={{ maxHeight }}>
-          <table className="w-full border-collapse" style={tableStyle}>
+          <table className="w-full border-collapse" style={tableStyle} aria-busy={loading || undefined}>
           <thead style={maxHeight ? { position: 'sticky', top: 0, zIndex: 2 } : undefined}>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} style={{ backgroundColor: headerBg }}>
@@ -614,8 +614,11 @@ export function DataTable<TData, TValue>({
           </thead>
           <tbody>
             {loading ? (
+              // Skeleton rows are aria-hidden: they are a visual placeholder, not
+              // content. Without it a screen reader narrates a grid of empty cells on
+              // every load. `aria-busy` on the <table> is what conveys "loading".
               Array.from({ length: loadingRowCount ?? pageSize }).map((_, i) => (
-                <tr key={`loading-${i}`} style={{ borderTop: `1px solid ${borderColor}` }}>
+                <tr aria-hidden="true" key={`loading-${i}`} style={{ borderTop: `1px solid ${borderColor}` }}>
                   {columns.map((col, colIndex) => (
                     <td key={col.id ?? colIndex} className={cn('px-3', cellPadding)}>
                       <Skeleton height={16} width={colIndex === 0 ? '60%' : '80%'} />

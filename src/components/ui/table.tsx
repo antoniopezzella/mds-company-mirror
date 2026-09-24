@@ -178,7 +178,7 @@ function TableComponent<T extends object>({
         className={cn('overflow-auto rounded-xs', bordered && 'border')}
         style={{ maxHeight, borderColor: bordered ? borderColor : undefined }}
       >
-        <table className={cn('w-full border-collapse', className)}>
+        <table className={cn('w-full border-collapse', className)} aria-busy={loading || undefined}>
           {caption && (
             <caption className="p-2 text-left text-sm" style={{ color: mutedColor }}>
               {caption}
@@ -234,8 +234,11 @@ function TableComponent<T extends object>({
           </thead>
           <tbody>
             {loading ? (
+              // Skeleton rows are aria-hidden: they are a visual placeholder, not
+              // content. Without it a screen reader narrates a grid of empty cells on
+              // every load. `aria-busy` on the <table> is what conveys "loading".
               Array.from({ length: pageSize || 5 }).map((_, rowIndex) => (
-                <tr key={`skeleton-${rowIndex}`} style={{ borderTop: `1px solid ${borderColor}` }}>
+                <tr aria-hidden="true" key={`skeleton-${rowIndex}`} style={{ borderTop: `1px solid ${borderColor}` }}>
                   {selectable && (
                     <td className={cellPadding}>
                       <Skeleton variant="rectangular" width={16} height={16} />
