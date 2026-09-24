@@ -63,7 +63,7 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
                     const next = sorting.map((x) => (x.id === s.id ? { ...x, id: e.target.value } : x));
                     table.setSorting(next);
                   }}
-                  className="flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
+                  className="flex-1 rounded-xs border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
                   style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                 >
                   {[s.id, ...unsorted.map((c) => c.id)].map((id) => (
@@ -76,7 +76,7 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
                   aria-label={`Sort direction for ${label(s.id)}`}
                   value={s.desc ? 'desc' : 'asc'}
                   onChange={(e) => table.setSorting(sorting.map((x) => (x.id === s.id ? { ...x, desc: e.target.value === 'desc' } : x)))}
-                  className="w-24 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
+                  className="w-24 rounded-xs border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
                   style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                 >
                   <option value="asc">Asc</option>

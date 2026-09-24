@@ -27,18 +27,19 @@ export default {
         // cap without the `container` utility's centering/padding.
         container: '1540px',
       },
-      // These offsets came from shadcn's defaults, which assume
-      // `--radius: 0.5rem` (8px) and yield md=6px / sm=4px. This repo
-      // overrides --radius to the Marsh DS standard of 2px but kept the
-      // offsets, so `md` collapsed to calc(2px - 2px) = 0 and `sm` went
-      // negative — leaving ~110 `rounded-md`/`rounded-sm` usages silently
-      // rendering square. Rescaled around the 2px standard so `md` is the
-      // DS radius and the steps stay monotonic.
-      borderRadius: {
-        lg: 'calc(var(--radius) + 2px)',
-        md: 'var(--radius)',
-        sm: 'calc(var(--radius) - 1px)',
-      },
+        // borderRadius is deliberately NOT overridden.
+        //
+        // It used to be, rescaled around `--radius: 2px`, because shadcn's
+        // defaults assume 0.5rem and collapsed `rounded-md` to 0 and
+        // `rounded-sm` to a negative value — which silently rendered ~110
+        // components square.
+        //
+        // Tailwind v4's stock scale removes the need entirely: its
+        // `rounded-xs` IS 0.125rem = 2px, exactly the Marsh DS standard, and
+        // `rounded-sm` is 4px. Components were remapped md->xs and lg->sm, so
+        // they keep their pixel values while using the stock scale. One less
+        // override to drift, and the class name now means the same thing here
+        // as it does in every other Tailwind codebase.
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

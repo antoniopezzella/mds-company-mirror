@@ -24,7 +24,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
   ({ className, border = true, style, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col rounded-lg', border && 'border', className)}
+      className={cn('flex flex-col rounded-sm', border && 'border', className)}
       style={{
         backgroundColor: getRoleColor('surface.default'),
         borderColor: border ? getRoleColor('border.default') : undefined,

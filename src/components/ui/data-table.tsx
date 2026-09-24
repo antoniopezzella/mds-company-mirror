@@ -394,7 +394,7 @@ export function DataTable<TData, TValue>({
                       table.getColumn(searchKey)?.setFilterValue('');
                       searchInputRef.current?.focus();
                     }}
-                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-sm opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
+                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-xs opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
                     style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                   >
                     <X className="h-3.5 w-3.5" />
@@ -478,7 +478,7 @@ export function DataTable<TData, TValue>({
           clips the table's top corners to the shell's radius; the scroll
           container is the inner div, so sticky headers and pinned columns
           still resolve against that and are unaffected. */}
-      <div className="overflow-hidden rounded-md border" style={{ borderColor, backgroundColor: rowBg }}>
+      <div className="overflow-hidden rounded-xs border" style={{ borderColor, backgroundColor: rowBg }}>
         <div className="overflow-auto" style={{ maxHeight }}>
           <table className="w-full border-collapse" style={tableStyle}>
           <thead style={maxHeight ? { position: 'sticky', top: 0, zIndex: 2 } : undefined}>
@@ -512,7 +512,7 @@ export function DataTable<TData, TValue>({
                                 a mouse — no focus, no keyboard, no ARIA. */}
                             <button
                               type="button"
-                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
+                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-xs px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
                               style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                               // Shift-click keeps its meaning as "add to the
                               // multi-sort" rather than opening the menu —

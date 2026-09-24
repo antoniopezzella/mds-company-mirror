@@ -14,7 +14,7 @@ import { Badge } from './badge';
  * `Stepper.figma.tsx`'s Code Connect example.
  *
  * Visual language is ported 1:1 from reui's Stepper (reui.io/components/stepper)
- * — 24px filled numbered indicators, 2px `rounded-sm` separators, `text-sm
+ * — 24px filled numbered indicators, 2px `rounded-xs` separators, `text-sm
  * leading-none font-medium` titles — with reui's raw shadcn CSS vars mapped
  * onto this repo's role tokens (`bg-primary` → `interactive.primary`,
  * `bg-muted` → `border.default`, `text-muted-foreground` → `text.secondary`,
@@ -380,7 +380,7 @@ export const Stepper: React.FC<StepperProps> = ({
     };
 
     const interactionClass = cn(
-      isInteractive && !isDisabled && 'cursor-pointer rounded-md focus-visible:outline-hidden focus-visible:ring-2',
+      isInteractive && !isDisabled && 'cursor-pointer rounded-xs focus-visible:outline-hidden focus-visible:ring-2',
       isInteractive && isDisabled && 'cursor-not-allowed opacity-50'
     );
     const focusStyle = isInteractive ? ({ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties) : undefined;
@@ -408,7 +408,7 @@ export const Stepper: React.FC<StepperProps> = ({
           {drawSeparator && (
             <div
               aria-hidden
-              className="absolute h-0.5 rounded-sm"
+              className="absolute h-0.5 rounded-xs"
               style={{ top: halfIndicator - 1, left: sepLeft, width: sepWidth, backgroundColor: sepColor }}
             />
           )}
@@ -424,7 +424,7 @@ export const Stepper: React.FC<StepperProps> = ({
             <StepIndicator step={step} index={index} status={status} indicator={indicator} completedTone={completedTone} />
             {renderLabels(step, index, status, 'start')}
           </div>
-          {drawSeparator && <div aria-hidden className="mx-2.5 h-0.5 flex-1 rounded-sm" style={{ backgroundColor: sepColor }} />}
+          {drawSeparator && <div aria-hidden className="mx-2.5 h-0.5 flex-1 rounded-xs" style={{ backgroundColor: sepColor }} />}
         </div>
       );
     }
@@ -436,7 +436,7 @@ export const Stepper: React.FC<StepperProps> = ({
           <div {...tabProps} className={cn('inline-flex', interactionClass)} style={focusStyle}>
             <StepIndicator step={step} index={index} status={status} indicator={indicator} completedTone={completedTone} />
           </div>
-          {drawSeparator && <div aria-hidden className="my-1.5 w-0.5 rounded-sm" style={{ height: 48, backgroundColor: sepColor }} />}
+          {drawSeparator && <div aria-hidden className="my-1.5 w-0.5 rounded-xs" style={{ height: 48, backgroundColor: sepColor }} />}
         </div>
       );
     }
@@ -465,7 +465,7 @@ export const Stepper: React.FC<StepperProps> = ({
         {drawSeparator && (
           <div
             aria-hidden
-            className="absolute w-0.5 rounded-sm"
+            className="absolute w-0.5 rounded-xs"
             style={{
               left: indicatorSize / 2 - 1,
               top: indicatorSize + 4,

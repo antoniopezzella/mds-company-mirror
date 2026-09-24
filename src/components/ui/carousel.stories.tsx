@@ -19,7 +19,7 @@ const meta: Meta<typeof Carousel> = {
 export default meta;
 
 const Slide = ({ n }: { n: number }) => (
-  <div className="flex h-40 items-center justify-center rounded-md border text-2xl font-semibold">{n}</div>
+  <div className="flex h-40 items-center justify-center rounded-xs border text-2xl font-semibold">{n}</div>
 );
 
 export const Default: StoryObj = {

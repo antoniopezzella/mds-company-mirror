@@ -63,7 +63,7 @@ const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandlePro
   >
     {withHandle && (
       <div
-        className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border"
+        className="z-10 flex h-4 w-3 items-center justify-center rounded-xs border"
         style={{
           backgroundColor: getRoleColor('surface.default'),
           borderColor: getRoleColor('border.default'),

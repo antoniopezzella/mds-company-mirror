@@ -8,13 +8,35 @@ function BubbleGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="bubble-group"
-      className={cn("flex min-w-0 flex-col gap-2", className)}
+      // `w-full` is load-bearing, and only became so under Tailwind v4.
+      //
+      // MessageContent carries `group-data-[align=end]/message:*:data-slot:self-end`
+      // (message.tsx). Both `*:` and the bare `data-slot` variant are v4-only
+      // syntax, so under v3 that rule compiled to nothing and this group simply
+      // stretched to the full message row (a column flex container defaults to
+      // `align-items: stretch`).
+      //
+      // In v4 the rule compiles, so on a right-aligned message this group gets
+      // `align-self: flex-end` and collapses to shrink-to-fit. That silently
+      // changes what `max-w-[80%]` on the Bubble below is a percentage *of*:
+      // it stops meaning "80% of the message row" and starts meaning "80% of
+      // the bubble's own content width" — a self-referential clamp that shrank
+      // every user-side bubble to 80% of its natural width (measured: 307px ->
+      // 246px) and wrapped text that used to fit one line.
+      //
+      // Setting the width explicitly restores the stretch geometry for both
+      // alignments while leaving `self-end` to do its actual job on the Bubble,
+      // which already declares it.
+      className={cn("flex w-full min-w-0 flex-col gap-2", className)}
       {...props}
     />
   )
 }
 
 const bubbleVariants = cva(
+  // `max-w-[80%]` is a percentage of BubbleGroup, so BubbleGroup must have a
+  // stretched width for it to mean "80% of the message row" — see the comment
+  // on BubbleGroup above.
   "group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end data-[align=end]:self-end data-[variant=ghost]:max-w-full",
   {
     variants: {

@@ -26,7 +26,7 @@ export const SingleDatePicker: StoryObj = {
   render: () => {
     const [selected, setSelected] = React.useState<Date | undefined>(new Date());
     return (
-      <div className="rounded-lg border p-1">
+      <div className="rounded-sm border p-1">
         <Calendar mode="single" selected={selected} onSelect={setSelected} />
       </div>
     );
@@ -41,7 +41,7 @@ export const PolicyEffectiveDate: StoryObj = {
     today.setHours(0, 0, 0, 0);
     return (
       <div className="flex flex-col items-center gap-2">
-        <div className="rounded-lg border p-1">
+        <div className="rounded-sm border p-1">
           <Calendar mode="single" selected={selected} onSelect={setSelected} disabled={{ before: today }} />
         </div>
         <p className="text-sm text-muted-foreground">
@@ -59,7 +59,7 @@ export const MultiMonthRange: StoryObj = {
       to: undefined,
     });
     return (
-      <div className="rounded-lg border p-1">
+      <div className="rounded-sm border p-1">
         <Calendar mode="range" required={false} numberOfMonths={2} selected={range} onSelect={setRange} />
       </div>
     );

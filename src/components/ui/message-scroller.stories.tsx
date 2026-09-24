@@ -253,7 +253,7 @@ export const Complete: Story = {
 export const ScrollableThread: Story = {
   render: () => (
     <MessageScrollerProvider autoScroll defaultScrollPosition="end">
-      <MessageScroller className="h-[360px] rounded-md border">
+      <MessageScroller className="h-[360px] rounded-xs border">
         <MessageScrollerViewport>
           <MessageScrollerContent className="p-4">
             {THREAD.map((msg) => (

@@ -11,7 +11,7 @@ const skeletonVariants = cva('block', {
     variant: {
       text: 'rounded',
       rectangular: 'rounded-none',
-      rounded: 'rounded-md',
+      rounded: 'rounded-xs',
       circular: 'rounded-full',
     },
     animation: {

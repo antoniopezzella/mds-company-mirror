@@ -34,7 +34,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="input-group"
       role="group"
       className={cn(
-        'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
+        'group/input-group relative flex w-full min-w-0 items-center rounded-xs border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
         'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
         className
       )}

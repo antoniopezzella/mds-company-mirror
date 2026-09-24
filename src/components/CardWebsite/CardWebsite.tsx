@@ -253,7 +253,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           ref={cardRef as React.RefObject<HTMLElement>}
           data-card
           data-layout="image-bg"
-          className="relative w-full overflow-hidden rounded-sm"
+          className="relative w-full overflow-hidden rounded-xs"
           style={{ aspectRatio: arCSS }}
         >
           <Skeleton variant="rectangular" width="100%" height="100%" className="absolute inset-0" />
@@ -267,7 +267,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
         data-surface={surface}
         data-layout="image-bg"
         data-force-state={forceState}
-        className={cn('relative w-full overflow-hidden rounded-sm', styles.imageBgRoot, href ? 'cursor-pointer' : 'cursor-default')}
+        className={cn('relative w-full overflow-hidden rounded-xs', styles.imageBgRoot, href ? 'cursor-pointer' : 'cursor-default')}
         style={{ aspectRatio: arCSS, ...cssVars }}
       >
         {/* draggable={false}: <img> is draggable by browser default. Cards
@@ -351,7 +351,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
         useStateLayer ? styles.stateLayer : styles.halo,
         !isHorizontal && styles.subgrid,
         isHorizontal ? 'flex flex-row' : 'grid',
-        'relative w-full rounded-sm'
+        'relative w-full rounded-xs'
       )}
       style={{ minWidth: isHorizontal ? 480 : 282, ...cssVars }}
     >
@@ -398,7 +398,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
         >
           {/* Header: category · divider · date */}
           {skeleton ? (
-            <Skeleton variant="rectangular" width="60%" height={20} className="rounded-sm" />
+            <Skeleton variant="rectangular" width="60%" height={20} className="rounded-xs" />
           ) : (
             hasHeader &&
             (category || timestamp) && (
@@ -445,8 +445,8 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           <div className={cn('flex flex-col gap-[8px]', isTextOnly ? 'pr-[20px]' : 'pr-[40px]')}>
             {skeleton ? (
               <>
-                <Skeleton variant="rectangular" width="90%" height={28} className="rounded-sm" />
-                <Skeleton variant="rectangular" width="75%" height={28} className="rounded-sm" />
+                <Skeleton variant="rectangular" width="90%" height={28} className="rounded-xs" />
+                <Skeleton variant="rectangular" width="75%" height={28} className="rounded-xs" />
               </>
             ) : (
               hasTitle &&
@@ -476,9 +476,9 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
 
             {skeleton ? (
               <>
-                <Skeleton variant="rectangular" width="100%" height={20} className="rounded-sm" />
-                <Skeleton variant="rectangular" width="80%" height={20} className="rounded-sm" />
-                <Skeleton variant="rectangular" width="60%" height={20} className="rounded-sm" />
+                <Skeleton variant="rectangular" width="100%" height={20} className="rounded-xs" />
+                <Skeleton variant="rectangular" width="80%" height={20} className="rounded-xs" />
+                <Skeleton variant="rectangular" width="60%" height={20} className="rounded-xs" />
               </>
             ) : (
               hasDescription &&

@@ -77,7 +77,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
               role="button"
               aria-label={`Clear ${title} filter`}
               tabIndex={0}
-              className="mr-1.5 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
+              className="mr-1.5 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
               style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
               onClick={(e) => {
                 e.stopPropagation();
@@ -130,7 +130,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                 return (
                   <CommandItem key={option.value} onSelect={() => toggle(option.value)}>
                     <span
-                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-sm border')}
+                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-xs border')}
                       style={{
                         borderColor: getRoleColor('interactive.primary'),
                         backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',

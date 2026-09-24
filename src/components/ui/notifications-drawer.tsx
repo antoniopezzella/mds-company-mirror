@@ -175,7 +175,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                     return (
                       <div
                         key={n.id}
-                        className="relative rounded-lg border p-3.5"
+                        className="relative rounded-sm border p-3.5"
                         style={{
                           borderColor: borderDefault,
                           backgroundColor: n.unread ? getRoleColor('surface.accent') : surfaceDefault,

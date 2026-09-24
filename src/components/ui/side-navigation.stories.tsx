@@ -507,10 +507,10 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
   render: () => (
     <div className="h-screen flex gap-4 p-4 bg-gray-100">
       <div className="w-64 flex flex-col gap-2">
-        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+        <div className="text-sm font-semibold text-center py-2 bg-white rounded-xs shadow">
           Primary (Midnight Blue)
         </div>
-        <div className="flex-1 rounded-md overflow-hidden shadow-lg">
+        <div className="flex-1 rounded-xs overflow-hidden shadow-lg">
           <SideNavigation
               // Two <nav> landmarks on one page need distinct accessible names,
               // or a screen-reader user gets an unusable "Primary / Primary"
@@ -526,10 +526,10 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
         </div>
       </div>
       <div className="w-64 flex flex-col gap-2">
-        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+        <div className="text-sm font-semibold text-center py-2 bg-white rounded-xs shadow">
           Secondary (Sky Blue)
         </div>
-        <div className="flex-1 rounded-md overflow-hidden shadow-lg">
+        <div className="flex-1 rounded-xs overflow-hidden shadow-lg">
           <SideNavigation
               // Two <nav> landmarks on one page need distinct accessible names,
               // or a screen-reader user gets an unusable "Primary / Primary"
@@ -544,7 +544,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
           />
         </div>
       </div>
-      <div className="flex-1 p-8 bg-white rounded-md shadow">
+      <div className="flex-1 p-8 bg-white rounded-xs shadow">
         <h2 className="text-2xl font-bold mb-4">Color Scheme Guide</h2>
         <div className="space-y-4">
           <div>

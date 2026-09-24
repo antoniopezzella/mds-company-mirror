@@ -271,7 +271,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
                 key={item.label}
                 href={item.href ?? '#'}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between rounded-md px-2 py-3 text-sm font-medium"
+                className="flex items-center justify-between rounded-xs px-2 py-3 text-sm font-medium"
                 style={{ color: getRoleColor('text.primary') }}
               >
                 {item.label}

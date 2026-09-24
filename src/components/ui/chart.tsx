@@ -132,7 +132,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
   return (
     <div
       ref={ref}
-      className={cn('grid min-w-[8rem] gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-md', className)}
+      className={cn('grid min-w-[8rem] gap-1.5 rounded-sm border px-2.5 py-1.5 text-xs shadow-md', className)}
       style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default'), color: getRoleColor('text.primary') }}
     >
       {!hideLabel && label !== undefined && (
