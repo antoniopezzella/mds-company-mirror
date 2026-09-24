@@ -39,6 +39,20 @@ export interface PageShellProps extends React.HTMLAttributes<HTMLDivElement> {
   onSidebarClose?: () => void;
   /** Constrain the main column to the 1540px MDS container. Defaults to `true`. */
   contained?: boolean;
+  /**
+   * Renders a "Skip to main content" link as the first focusable element.
+   * On by default.
+   *
+   * A dashboard puts a header and a full side navigation ahead of the
+   * content, so a keyboard user otherwise tabs through every nav item on
+   * every page before reaching anything. This is the fix for the one
+   * accessibility claim on the product page that the codebase could not
+   * substantiate — skip links existed in two marketing pages and nowhere in
+   * the dashboard product itself.
+   */
+  skipLink?: boolean;
+  /** Id of the main region, used as the skip-link target. */
+  mainId?: string;
 }
 
 export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
@@ -49,6 +63,8 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
       sidebarOpen = false,
       onSidebarClose,
       contained = true,
+      skipLink = true,
+      mainId = 'main-content',
       className,
       children,
       style,
@@ -63,6 +79,24 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
       style={{ backgroundColor: getRoleColor('surface.default'), ...style }}
       {...props}
     >
+      {/*
+        First focusable element on the page. Visually hidden until focused,
+        which is the standard pattern — a permanently visible skip link is
+        noise for everyone who does not need it.
+      */}
+      {skipLink && (
+        <a
+          href={`#${mainId}`}
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[1700] focus:rounded-xs focus:px-4 focus:py-2 focus:outline-hidden focus:ring-2"
+          style={{
+            backgroundColor: getRoleColor('surface.default'),
+            color: getRoleColor('text.primary'),
+            ['--tw-ring-color' as string]: getRoleColor('focus.ring'),
+          } as React.CSSProperties}
+        >
+          Skip to main content
+        </a>
+      )}
       {header}
 
       <div className="flex min-w-0">
@@ -85,7 +119,10 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
           takes `min-width: auto`, refuses to shrink below its widest child,
           and any wide table pushes the page into horizontal scroll.
         */}
-        <main className="min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8">
+        {/* `tabIndex={-1}`: without it the skip link moves the focus ring but
+            not the actual focus point in several browsers, so the next Tab
+            continues from the nav rather than from the content. */}
+        <main id={mainId} tabIndex={-1} className="min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8 focus:outline-hidden">
           <div className={cn('min-w-0', contained && 'mx-auto w-full max-w-container')}>
             {children}
           </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
+import { cn } from '@/lib/utils';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 
 export type TooltipPlacement =
@@ -133,6 +134,48 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
 export const TooltipProvider = TooltipPrimitive.Provider;
 export const TooltipTrigger = TooltipPrimitive.Trigger;
-export const TooltipContent = TooltipPrimitive.Content;
+
+/**
+ * Styled tooltip content for the composable shape
+ * (`TooltipProvider`/`Root`/`Trigger`/`Content`), which is what anyone
+ * arriving from shadcn/ui will reach for.
+ *
+ * This used to be `export const TooltipContent = TooltipPrimitive.Content` —
+ * the raw Radix primitive, with no background, no radius and no z-index. It
+ * rendered as unstyled text at the default stacking level, i.e. invisible
+ * against the page and behind every overlay. The `Tooltip` wrapper above
+ * looked fine, so the defect only appeared for consumers composing the
+ * primitives, which is the idiomatic usage.
+ *
+ * Styling is kept in sync with that wrapper deliberately: same surface, same
+ * radius, same shadow, and the same 1500 overlay layer (`Z_INDEX.overlay`),
+ * because MUI's own scale runs to 1500 and a bare `z-50` loses to any MUI
+ * Paper/Modal/Drawer with an explicit z-index.
+ */
+export const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, style, ...props }, ref) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        'z-[1500] overflow-hidden px-3 py-1.5 text-sm font-medium',
+        'data-[state=delayed-open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=delayed-open]:fade-in-0',
+        className
+      )}
+      style={{
+        backgroundColor: getRoleColor('surface.disabled'),
+        color: getRoleColor('text.primary'),
+        borderRadius: '6px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        ...style,
+      }}
+      {...props}
+    />
+  </TooltipPrimitive.Portal>
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
 export default Tooltip;

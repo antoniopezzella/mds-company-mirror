@@ -597,7 +597,7 @@ const Portfolio: React.FC = () => {
             <div className={styles.a11yCard}>
               <div className={styles.a11yIcon} style={{ background: '#ceecff' }}>⌨️</div>
               <div className={styles.a11yTitle}>Keyboard Navigation</div>
-              <div className={styles.a11yDesc}>Every interactive component supports full keyboard operation. Focus order, focus trapping in modals, and skip-links implemented throughout.</div>
+              <div className={styles.a11yDesc}>Every interactive component supports full keyboard operation. Radix primitives provide focus trapping in modals and menus, and the dashboard page template ships a skip-to-content link.</div>
               <div style={{ marginTop: 20 }}>
                 {['Tab / Shift+Tab — focus traversal','Enter / Space — activate controls','Escape — dismiss modals & menus','Arrow keys — navigate within groups','Home/End — jump to first/last item'].map(k => (
                   <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: '1px solid rgba(0,15,71,0.06)', fontSize: 13, color: '#595959' }}>
@@ -612,7 +612,7 @@ const Portfolio: React.FC = () => {
             <div className={styles.a11yCard}>
               <div className={styles.a11yIcon} style={{ background: '#fff2da' }}>📋</div>
               <div className={styles.a11yTitle}>Semantic HTML & ARIA</div>
-              <div className={styles.a11yDesc}>Correct HTML5 landmarks, ARIA roles, live regions, and labelling patterns. Tested with axe-core and VoiceOver.</div>
+              <div className={styles.a11yDesc}>Correct HTML5 landmarks, ARIA roles, live regions, and labelling patterns. Every Storybook story is gated by axe-core at error severity — a violation fails the build.</div>
               <div style={{ marginTop: 20 }}>
                 {[
                   'aria-live regions on Alerts & Snackbars',

@@ -7,6 +7,44 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 export default defineConfig({
   test: {
+    /**
+     * Coverage was previously unconfigured — no reporter, no include, no
+     * exclude, no thresholds. The headline number therefore instrumented
+     * Storybook's own built bundles alongside the source and reported
+     * **4.6%**, which is not a fact about this codebase. Scoped to the
+     * component set it is **~45%**.
+     *
+     * `include` is deliberately narrow: this measures the PUBLISHED surface —
+     * the components, the theme and the lib — not marketing pages, demo
+     * projects or generated stories, none of which a consumer installs.
+     *
+     * Thresholds are set at roughly today's level rather than an aspiration,
+     * so the gate catches regression rather than failing from day one. Raise
+     * them as coverage rises; a threshold nobody can pass gets disabled.
+     */
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'json-summary', 'html'],
+      reportsDirectory: './coverage',
+      include: ['src/components/ui/**/*.{ts,tsx}', 'src/theme/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}'],
+      exclude: [
+        '**/*.stories.tsx',
+        '**/*.test.{ts,tsx}',
+        '**/*.d.ts',
+        // Data, not logic — a manifest and a deprecation record.
+        'src/components/ui/taxonomy.ts',
+      ],
+      // Set just below the measured floor (unit project alone: 48.98% lines,
+      // 52.45% functions, 81.95% branches) so the gate catches regression
+      // rather than sitting so far below actual that it never fires. Raise
+      // these as coverage rises.
+      thresholds: {
+        lines: 45,
+        functions: 50,
+        statements: 45,
+        branches: 78,
+      },
+    },
     projects: [
       {
         // Existing unit tests — unchanged from before the Storybook project was added.

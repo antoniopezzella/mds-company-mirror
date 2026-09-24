@@ -30,31 +30,31 @@
 :root {
   /* Core Colors */
   --background: 0 0% 100%;                    /* white - MDS: surface.default */
-  --foreground: 222 100% 15%;                 /* #000f47 Midnight Blue - MDS: text.primary */
+  --foreground: 227.3 100% 13.9%;                 /* #000f47 Midnight Blue - MDS: text.primary */
   
   /* Card */
   --card: 0 0% 100%;                          /* white - MDS: surface.default */
-  --card-foreground: 222 100% 15%;            /* #000f47 - MDS: text.primary */
+  --card-foreground: 227.3 100% 13.9%;            /* #000f47 - MDS: text.primary */
   
   /* Popover */
   --popover: 0 0% 100%;                       /* white - MDS: surface.default */
-  --popover-foreground: 222 100% 15%;         /* #000f47 - MDS: text.primary */
+  --popover-foreground: 227.3 100% 13.9%;         /* #000f47 - MDS: text.primary */
   
   /* Primary (Midnight Blue - MODE Primary) */
-  --primary: 215 100% 24%;                    /* #002c77 - MDS: interactive.primary */
+  --primary: 217.8 100% 23.3%;                    /* #002c77 - MDS: interactive.primary */
   --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
   
   /* Secondary (Outline style) */
-  --secondary: 204 33% 97%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
-  --secondary-foreground: 222 100% 15%;       /* #000f47 - MDS: text.primary */
+  --secondary: 180 6.7% 97.1%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
+  --secondary-foreground: 227.3 100% 13.9%;       /* #000f47 - MDS: text.primary */
   
   /* Muted (Subtle backgrounds) */
-  --muted: 204 33% 97%;                       /* #f7f8f8 - MDS: surface.subtle */
+  --muted: 180 6.7% 97.1%;                       /* #f7f8f8 - MDS: surface.subtle */
   --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
   
   /* Accent (Gold - Brand Secondary) */
-  --accent: 45 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
-  --accent-foreground: 215 100% 24%;          /* #002c77 - MDS: interactive.primary */
+  --accent: 43.1 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
+  --accent-foreground: 217.8 100% 23.3%;          /* #002c77 - MDS: interactive.primary */
   
   /* Destructive (Error/Danger state) */
   /* Was `0 84% 60%` (#ee4343), a Tailwind default — despite the comment
@@ -64,7 +64,7 @@
      Now the real token: statusDanger / statusCritical #c53532, which is
      5.34:1 both as text on white AND as a background under white, so it
      serves `text-destructive` and `bg-destructive` correctly. */
-  --destructive: 1 60% 48%;                   /* #c53532 - MDS: statusDanger (Utilities/Critical) */
+  --destructive: 1.2 59.5% 48.4%;                   /* #c53532 - MDS: statusDanger (Utilities/Critical) */
   --destructive-foreground: 0 0% 100%;        /* white - 5.34:1 on the above */
   
   /* UI Elements */
@@ -96,31 +96,31 @@
      hues with no adjacent-pair CVD collision at light-mode lightness —
      reordering will reintroduce a red/green or red/gold confusion pair.
      Always pair with a legend + direct labels (WARN-band contrast). */
-  --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
-  --chart-2: 223 100% 56%;                    /* #1f60ff Blue 700 */
-  --chart-3: 36 83% 48%;                      /* #e09015 Gold 900 */
-  --chart-4: 277 57% 50%;                     /* #8f37c6 Purple 750 */
-  --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
+  --chart-1: 102.2 54.6% 42.4%;                     /* #54a731 Green 800 */
+  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 */
+  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 */
+  --chart-4: 276.9 56.5% 49.6%;                     /* #8f37c6 Purple 750 */
+  --chart-5: 1.1 64.9% 50.8%;                       /* #d33330 Red 800 */
 }
 
 /* Dark Mode */
 .dark {
-  --background: 0 0% 6%;                      /* #101010 Neutral 950 */
+  --background: 0 0% 6.3%;                      /* #101010 Neutral 950 */
   --foreground: 0 0% 100%;                    /* white */
   
-  --card: 0 0% 15%;                           /* #252525 Neutral 900 */
+  --card: 0 0% 14.5%;                           /* #252525 Neutral 900 */
   --card-foreground: 0 0% 100%;               /* white */
   
-  --popover: 0 0% 6%;                         /* #101010 */
+  --popover: 0 0% 6.3%;                         /* #101010 */
   --popover-foreground: 0 0% 100%;            /* white */
   
   --primary: 210 100% 60%;                    /* Blue 400 (lighter) */
-  --primary-foreground: 0 0% 6%;              /* #101010 */
+  --primary-foreground: 0 0% 6.3%;              /* #101010 */
   
-  --secondary: 0 0% 15%;                      /* #252525 */
+  --secondary: 0 0% 14.5%;                      /* #252525 */
   --secondary-foreground: 0 0% 100%;          /* white */
   
-  --muted: 0 0% 15%;                          /* #252525 */
+  --muted: 0 0% 14.5%;                          /* #252525 */
   --muted-foreground: 0 0% 65%;               /* #a6a6a6 */
   
   --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
@@ -145,9 +145,9 @@
   /* Chart Colors — same validated series-to-hue mapping as light mode,
      independently re-validated against the dark surface (#101010), not
      an automatic flip: dark mode needs a lighter L band overall. */
-  --chart-1: 102 55% 42%;                     /* #54a731 Green 800 */
-  --chart-2: 218 100% 64%;                    /* #478aff Blue 600 */
-  --chart-3: 30 71% 47%;                      /* #cb7623 Gold 1000 */
-  --chart-4: 280 59% 43%;                     /* #842daf Purple 800 */
-  --chart-5: 1 65% 51%;                       /* #d33330 Red 800 */
+  --chart-1: 102.2 54.6% 42.4%;                     /* #54a731 Green 800 */
+  --chart-2: 218.2 100% 63.9%;                    /* #478aff Blue 600 */
+  --chart-3: 29.6 70.6% 46.7%;                      /* #cb7623 Gold 1000 */
+  --chart-4: 280.2 59.1% 43.1%;                     /* #842daf Purple 800 */
+  --chart-5: 1.1 64.9% 50.8%;                       /* #d33330 Red 800 */
 }
