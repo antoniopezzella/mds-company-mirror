@@ -2,35 +2,27 @@
 
 import * as React from 'react';
 import {
-  type ColumnDef,
   type ColumnFiltersState,
+  type ColumnOrderState,
   type ColumnPinningState,
+  type ColumnVisibilityState,
   type RowData,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table';
-import { ChevronDown, ChevronsUpDown, ChevronUp, Download, EyeOff, X } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
-import { Button } from './button';
 import { Checkbox } from './checkbox';
-import { Input } from './input';
-import { Pagination } from './pagination';
-import { Skeleton } from './skeleton';
-import { DataState, resolveDataStatus } from './data-state';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
-import { DataTableFacetedFilter, type FacetOption } from './data-table-faceted-filter';
-import { DataTableSortList } from './data-table-sort-list';
+import type { FacetOption } from './data-table-faceted-filter';
+import { dataGridFeatures, type DataGridColumnDef } from './data-grid-features';
+import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
+import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
+import { DataGridToolbar } from './data-grid-toolbar';
+import { DataGridPagination } from './data-grid-pagination';
+
+// Re-exported so the preset stays a single import site for its own payload
+// type, even though the editor now lives in data-grid-table.tsx.
+export type { CellEditParams };
 
 /**
  * DataTable — no MDS/Figma spec exists for this yet; built matching real
@@ -65,7 +57,7 @@ import { DataTableSortList } from './data-table-sort-list';
  */
 
 /** Ready-made row-selection column — drop into a `columns` array. */
-export function createSelectColumn<TData>(): ColumnDef<TData, unknown> {
+export function createSelectColumn<TData extends RowData>(): DataGridColumnDef<TData> {
   return {
     id: 'select',
     header: ({ table }) => (
@@ -87,50 +79,15 @@ export function createSelectColumn<TData>(): ColumnDef<TData, unknown> {
   };
 }
 
-type Density = 'compact' | 'standard' | 'comfortable';
-
-const DENSITY_PADDING: Record<Density, string> = {
-  compact: 'py-1',
-  standard: 'py-2.5',
-  comfortable: 'py-4',
-};
-
-const DENSITY_LABEL: Record<Density, string> = {
-  compact: 'Compact',
-  standard: 'Standard',
-  comfortable: 'Comfortable',
-};
-
 /**
- * Opts a column into inline editing: `meta: { editable: true }` on its
- * ColumnDef. Declared through TanStack's own ColumnMeta augmentation so it
- * type-checks at the call site rather than being a loose string prop.
+ * Opting a column into inline editing is `meta: { editable: true }` on its
+ * column def. That used to be a `declare module` augmentation of TanStack's
+ * `ColumnMeta`, which leaked onto every table in every consuming app; it is
+ * now a scoped `columnMeta` slot on the feature set — see data-grid-features.ts.
  */
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- both params are required by the interface being augmented
-  interface ColumnMeta<TData extends RowData, TValue> {
-    editable?: boolean;
-  }
-}
 
-export interface CellEditParams<TData> {
-  rowId: string;
-  rowIndex: number;
-  columnId: string;
-  /** The edited text. Cast/parse it in the handler — the input is always a string. */
-  value: string;
-  previousValue: unknown;
-  row: TData;
-}
-
-/** Quotes a CSV field per RFC 4180 only when it actually needs it. */
-function csvField(value: unknown): string {
-  const s = value == null ? '' : String(value);
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-}
-
-export interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+export interface DataTableProps<TData extends RowData, TValue> {
+  columns: DataGridColumnDef<TData, TValue>[];
   data: TData[];
   searchKey?: string;
   searchPlaceholder?: string;
@@ -197,8 +154,83 @@ export interface DataTableProps<TData, TValue> {
    * the default string matcher can't handle an array of selected values.
    */
   facetedFilters?: { columnId: string; title: string; options?: FacetOption[] }[];
+  /**
+   * Date-range filter controls in the toolbar, one per entry — the same dashed
+   * trigger shape as `facetedFilters`, for columns a multi-select cannot serve.
+   *
+   * A date column's unique values are every distinct date in the data, so a
+   * faceted list of them is useless the moment there is more than a handful.
+   * DataTable injects a range `filterFn` for these columns.
+   */
+  dateFilters?: { columnId: string; title: string }[];
+  /**
+   * Page-level actions for the right of the toolbar — Refresh, New, and the
+   * like. They sit with Sort/Density/Export/Columns rather than in a separate
+   * row above the table, which is the shape this repo kept hand-rolling: four
+   * different pages each grew their own filter strip that shared nothing with
+   * the table it controlled, and could drift out of sync with it.
+   */
+  toolbarActions?: React.ReactNode;
   /** Adds a Sort control listing active sorts, with add/remove/direction. */
   enableSortList?: boolean;
+  /**
+   * Lets the user pin any column to the start or end from its column menu.
+   *
+   * Separate from `pinFirstColumn`, which is the layout default (keep the
+   * identity column visible while the rest scrolls). This is the user's
+   * control over it.
+   */
+  enableColumnPinning?: boolean;
+  /** Adds "Move left" / "Move right" to each column menu. Keyboard-operable. */
+  enableColumnReorder?: boolean;
+  /**
+   * Renders a master-detail panel under an expanded row. Pair with
+   * `createExpandColumn()` in `columns`.
+   *
+   * Supplying this also makes every row expandable: TanStack's default is
+   * "expandable if it has subRows", which is wrong for master-detail — the
+   * toggle would never render and the panel would be unreachable. Pass
+   * `canExpandRow` to narrow it.
+   */
+  renderDetail?: DataGridTableProps<TData>['renderDetail'];
+  /**
+   * Which rows can expand. Defaults to "has sub-rows, or `renderDetail` is
+   * set". Use it when only some rows have detail to show.
+   */
+  canExpandRow?: (row: TData) => boolean;
+  /** Nested rows. Returning undefined for a row makes it a leaf. */
+  getSubRows?: (row: TData, index: number) => TData[] | undefined;
+  /** Lets rows be pinned to the top. Pair with `createRowPinColumn()`. */
+  enableRowPinning?: boolean;
+  /**
+   * Renders only the rows in view. Requires `maxHeight`.
+   *
+   * Use it past roughly a thousand unpaginated rows; below that the DOM is
+   * not the bottleneck and pagination is the more accessible answer (infinite
+   * lists strand keyboard users above an unreachable footer).
+   */
+  enableVirtualization?: boolean;
+  /** Estimated row height for the virtualizer, in px. */
+  estimateRowSize?: number;
+  /** Renders a `<tfoot>` from each column's `footer`. */
+  showFooter?: boolean;
+  /** Sticks that footer to the bottom of the scroll area. Needs `maxHeight`. */
+  stickyFooter?: boolean;
+  /**
+   * Spreadsheet mode: cell/range selection, keyboard grid navigation and
+   * clipboard. Switches the table's ARIA from `table` to `grid`.
+   */
+  enableCellSelection?: boolean;
+  /** Every batch of cell changes, including what could not be applied. */
+  onCellsChange?: DataGridTableProps<TData>['onCellsChange'];
+  /** Row activation — click, or Enter/Space. Ignored in cell-selection mode. */
+  onRowClick?: DataGridTableProps<TData>['onRowClick'];
+  /** Shows the draggable fill square. Ctrl/Cmd+D and +R already fill without it. */
+  enableFillHandle?: boolean;
+  /** Zebra striping on alternate rows. */
+  striped?: boolean;
+  /** A `<caption>` — the table's accessible name, and visible to everyone. */
+  caption?: string;
   /**
    * The fetch failed. Renders the error branch instead of the rows.
    *
@@ -212,7 +244,7 @@ export interface DataTableProps<TData, TValue> {
   onRetry?: () => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData, TValue>({
   columns,
   data,
   searchKey,
@@ -236,570 +268,181 @@ export function DataTable<TData, TValue>({
   emptyState,
   onCellEdit,
   facetedFilters,
+  dateFilters,
+  toolbarActions,
   enableSortList = false,
+  enableColumnPinning = false,
+  enableColumnReorder = false,
+  renderDetail,
+  canExpandRow,
+  getSubRows,
+  enableRowPinning = false,
+  enableVirtualization = false,
+  estimateRowSize,
+  showFooter = false,
+  stickyFooter = false,
+  enableCellSelection = false,
+  enableFillHandle = false,
+  striped = false,
+  caption,
+  onCellsChange,
+  onRowClick,
   loadError,
   onRetry,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [hoveredRow, setHoveredRow] = React.useState<string | null>(null);
-  const [density, setDensity] = React.useState<Density>('standard');
-  const [editingCell, setEditingCell] = React.useState<{ rowId: string; columnId: string } | null>(null);
-  const [draft, setDraft] = React.useState('');
-  const searchInputRef = React.useRef<HTMLInputElement>(null);
 
-  // Faceted filters set an array of selected values; TanStack's default
-  // filterFn compares strings and would match nothing, so these columns get
-  // `arrIncludesSome` unless the consumer already chose a filterFn.
+  // Faceted filters set an array of selected values and date filters set a
+  // {from,to} object; the default string matcher would match nothing for
+  // either, so those columns get the right filterFn unless the consumer
+  // already chose one. Both names are registered on the feature set (see
+  // data-grid-features.ts) — in v9 an unregistered name is a type error
+  // rather than a filter that silently matches nothing.
   const resolvedColumns = React.useMemo(() => {
-    if (!facetedFilters?.length) return columns;
-    const ids = new Set(facetedFilters.map((f) => f.columnId));
-    return columns.map((c) => {
+    if (!facetedFilters?.length && !dateFilters?.length) return columns;
+    const facetIds = new Set(facetedFilters?.map((f) => f.columnId) ?? []);
+    const dateIds = new Set(dateFilters?.map((f) => f.columnId) ?? []);
+    return columns.map((c): DataGridColumnDef<TData, TValue> => {
       const id = c.id ?? (c as { accessorKey?: string }).accessorKey;
-      return id && ids.has(id) && !c.filterFn ? { ...c, filterFn: 'arrIncludesSome' as const } : c;
+      if (!id || c.filterFn) return c;
+      if (facetIds.has(id)) return { ...c, filterFn: 'arrHas' as const };
+      if (dateIds.has(id)) return { ...c, filterFn: 'dateRange' as const };
+      return c;
     });
-  }, [columns, facetedFilters]);
+  }, [columns, facetedFilters, dateFilters]);
 
   const firstColumnId = columns[0]?.id ?? (columns[0] as { accessorKey?: string })?.accessorKey;
-  const columnPinning = React.useMemo<ColumnPinningState>(
-    () => ({ left: pinFirstColumn && firstColumnId ? [firstColumnId] : [] }),
-    [pinFirstColumn, firstColumnId]
-  );
 
-  const table = useReactTable({
+  // Real state, not a derived memo.
+  //
+  // This was `useMemo(() => ({ start: [firstColumnId], end: [] }))` — passed
+  // as controlled `state.columnPinning` with no setter, so TanStack could
+  // never change it. That was invisible while `pinFirstColumn` was the only
+  // way to pin anything; the moment the column menu offers "Pin to end", the
+  // control silently does nothing. Same for column order, which was not in
+  // state at all.
+  const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>(() => ({
+    start: pinFirstColumn && firstColumnId ? [firstColumnId] : [],
+    end: [],
+  }));
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([]);
+
+  // `pinFirstColumn` is the initial layout, so a change to it re-seeds — but
+  // only that leading pin, leaving anything the user pinned themselves alone.
+  React.useEffect(() => {
+    setColumnPinning((prev) => ({
+      ...prev,
+      start: pinFirstColumn && firstColumnId ? [firstColumnId] : prev.start.filter((id) => id !== firstColumnId),
+    }));
+  }, [pinFirstColumn, firstColumnId]);
+
+  const table = useTable({
+    features: dataGridFeatures,
     data,
-    columns: resolvedColumns,
+    // TanStack types a table's `columns` as `ColumnDef<F, TData, unknown>[]`
+    // because one array holds columns of differing value types. `TValue` on
+    // DataTableProps is the per-column parameter, so the two are the same
+    // shape with a different generic position — v8 erased the difference,
+    // v9 does not.
+    columns: resolvedColumns as DataGridColumnDef<TData>[],
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    // Manual pagination: `data` is already just the current page, so
-    // there's nothing for TanStack to slice — computing this model would
-    // just re-paginate an already-single-page array.
-    getPaginationRowModel: manualPagination ? undefined : getPaginationRowModel(),
+    onColumnPinningChange: setColumnPinning,
+    onColumnOrderChange: setColumnOrder,
     manualPagination,
     pageCount: manualPagination ? pageCount : undefined,
     enableRowSelection,
     enableMultiSort: true,
     enableColumnResizing,
+    enableColumnPinning,
+    enableRowPinning,
+    enableCellSelection,
+    enableCellRangeSelection: enableCellSelection,
+    getSubRows,
+    // Without this, a detail panel is unreachable: `getCanExpand()` is
+    // "row has subRows" by default, so the toggle never renders for flat data.
+    getRowCanExpand: canExpandRow
+      ? (row) => canExpandRow(row.original)
+      : renderDetail
+        ? () => true
+        : undefined,
     columnResizeMode: 'onChange',
-    state: { sorting, columnFilters, columnVisibility, rowSelection, columnPinning },
-    initialState: { pagination: { pageSize } },
+    state: { sorting, columnFilters, columnVisibility, rowSelection, columnPinning, columnOrder },
+    // v9's PaginationState is required whole; v8 accepted a partial.
+    initialState: { pagination: { pageIndex: 0, pageSize } },
   });
 
-  const borderColor = getRoleColor('border.default');
-  // tablecn's header is the page surface with a rule under it, not a
-  // filled band. Kept explicit rather than transparent because a sticky
-  // header has to paint over the rows scrolling beneath it.
-  const headerBg = getRoleColor('surface.default');
-  const rowBg = getRoleColor('surface.default');
-  // Hover is a neutral lift, selection is the brand tint — the usual split
-  // (MUI DataGrid, shadcn) that keeps "passing over" visually distinct from
-  // "chosen". Selected previously used surface.accent (#f7f8f8), which sat
-  // 1.0018 from the hover color and so was effectively invisible.
-  const hoverBg = getRoleColor('surface.subtle');
-  const selectedBg = getRoleColor('surface.selected');
-  const textColor = getRoleColor('text.primary');
-  const mutedColor = getRoleColor('text.secondary');
-  const activeColor = getRoleColor('interactive.primary');
-
-  const rows = table.getRowModel().rows;
-  const { pageIndex, pageSize: currentPageSize } = table.getState().pagination;
-  const filteredCount = table.getFilteredRowModel().rows.length;
-  // In manual mode the local row model only ever contains the current
-  // page, so the footer needs the server's real total instead.
-  const totalItemsForFooter = manualPagination ? rowCount ?? data.length : filteredCount;
-
-  const handlePageChange = (page: number) => {
-    table.setPageIndex(page - 1);
-    if (manualPagination) onPaginationChange?.(page - 1, currentPageSize);
-  };
-  const handlePageSizeChange = (size: number) => {
-    table.setPageSize(size);
-    if (manualPagination) onPaginationChange?.(0, size);
-  };
-
-  // Empty because a filter excluded everything, vs. genuinely having no data.
-  // Worth telling apart: the first is recoverable by the user, the second
-  // isn't, and offering "clear search" when nothing was searched is noise.
-  const searchValue = (searchKey ? table.getColumn(searchKey)?.getFilterValue() : '') as string ?? '';
-
-  const isFilteredEmpty = columnFilters.some((f) => f.value !== '' && f.value != null) && data.length > 0;
-
-  // One precedence rule for the whole system: loading > error > empty > ready.
-  const status = resolveDataStatus(
-    { loading, loadError, isEmpty: rows.length === 0 },
-    'DataTable'
-  );
-
-  const exportableColumns = React.useMemo(() => table.getAllLeafColumns().filter((c) => c.getCanHide()), [table]);
-
-  const handleExport = () => {
-    const header = exportableColumns
-      .map((c) => (typeof c.columnDef.header === 'string' ? c.columnDef.header : c.id))
-      .map(csvField)
-      .join(',');
-    const body = table
-      .getFilteredRowModel()
-      .rows.map((row) => exportableColumns.map((c) => csvField(row.getValue(c.id))).join(','))
-      .join('\n');
-    const blob = new Blob([`${header}\n${body}`], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${exportFilename}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // Sticky cells detach from the row's own background during scroll, so a
-  // pinned cell needs its background painted explicitly (it won't inherit
-  // through from the <tr>) — `bg` is whatever that specific row/header
-  // would otherwise have been. The right-edge shadow marks where the
-  // pinned region ends and the scrolling content begins.
-  const getPinnedCellStyle = (
-    column: { getIsPinned: () => false | 'left' | 'right'; getStart: (side: 'left') => number },
-    bg: string,
-    extra?: React.CSSProperties
-  ): React.CSSProperties =>
-    column.getIsPinned() === 'left'
-      ? { position: 'sticky', left: column.getStart('left'), zIndex: 1, backgroundColor: bg, boxShadow: `1px 0 0 0 ${borderColor}`, ...extra }
-      : extra ?? {};
-
-  const cellPadding = DENSITY_PADDING[density];
-  // `minWidth: '100%'` matters when resizing is on: the columns' summed
-  // width is often narrower than the container, and without this the table
-  // stops short and leaves dead space (with the header band ending
-  // mid-shell). The explicit width still wins once columns are resized
-  // wider than the container, which is what keeps horizontal scrolling and
-  // the pinned-column offsets working.
-  const tableStyle: React.CSSProperties | undefined = enableColumnResizing
-    ? { width: table.getTotalSize(), minWidth: '100%' }
-    : undefined;
+  // The footer's total: the server's count in manual mode, where the local
+  // row model only ever holds one page.
+  const recordCount = manualPagination ? (rowCount ?? data.length) : data.length;
 
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
-      {(searchKey || enableColumnVisibility || enableExport || enableDensityToggle || facetedFilters?.length || enableSortList) && (
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            {searchKey && (
-              // Input has no adornment slot, so the clear control is
-              // positioned over it; `pr-8` keeps typed text from running
-              // underneath the button.
-              <div className="relative w-56">
-                <Input
-                  ref={searchInputRef}
-                  placeholder={searchPlaceholder}
-                  value={searchValue}
-                  onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
-                  className="h-8 w-full pr-8"
-                />
-                {searchValue && (
-                  <button
-                    type="button"
-                    // Distinct from the empty state's "Clear search" button:
-                    // in the filtered-empty case both are on screen at once,
-                    // and two identically-named controls are ambiguous to a
-                    // screen reader.
-                    aria-label="Clear search field"
-                    onClick={() => {
-                      table.getColumn(searchKey)?.setFilterValue('');
-                      searchInputRef.current?.focus();
-                    }}
-                    className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-xs opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-                    style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                )}
-              </div>
-            )}
-            {facetedFilters?.map((f) => (
-              <DataTableFacetedFilter key={f.columnId} column={table.getColumn(f.columnId)} title={f.title} options={f.options} />
-            ))}
-            {/* Typing alone doesn't raise Reset — the search input clears
-                itself via its own X. Reset is only for the faceted filters,
-                where it's the one control that clears several at once. */}
-            {columnFilters.some((f) => f.id !== searchKey) && (
-              <Button variant="ghost" size="sm" onClick={() => table.resetColumnFilters()}>
-                Reset
-                <X className="ml-1.5 h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            {enableSortList && <DataTableSortList table={table} />}
-            {enableDensityToggle && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="font-normal">
-                    Density <ChevronDown className="ml-1.5 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {(Object.keys(DENSITY_LABEL) as Density[]).map((option) => (
-                    <DropdownMenuItem key={option} onSelect={() => setDensity(option)}>
-                      <span style={{ fontWeight: option === density ? 600 : 400 }}>{DENSITY_LABEL[option]}</span>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-            {enableExport && (
-              <Button
-                variant="outline"
-                size="sm"
-                iconOnly
-                icon={<Download className="h-4 w-4" />}
-                onClick={handleExport}
-                aria-label="Export CSV"
-                title="Export CSV"
-              />
-            )}
-            {enableColumnVisibility && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="font-normal">
-                    Columns <ChevronDown className="ml-1.5 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {table
-                    .getAllColumns()
-                    .filter((column) => column.getCanHide())
-                    .map((column) => (
-                      <DropdownMenuCheckboxItem
-                        key={column.id}
-                        checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                        onSelect={(e) => e.preventDefault()}
-                      >
-                        {column.id}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        </div>
+    <DataGrid
+      table={table}
+      recordCount={recordCount}
+      loading={loading}
+      loadError={loadError}
+      onRetry={onRetry}
+      emptyState={emptyState}
+      maxHeight={maxHeight}
+      searchKey={searchKey}
+      className={className}
+    >
+      {(searchKey ||
+        enableColumnVisibility ||
+        enableExport ||
+        enableDensityToggle ||
+        facetedFilters?.length ||
+        dateFilters?.length ||
+        toolbarActions ||
+        enableSortList) && (
+        <DataGridToolbar
+          facetedFilters={facetedFilters}
+          dateFilters={dateFilters}
+          searchPlaceholder={searchPlaceholder}
+          enableSortList={enableSortList}
+          enableDensityToggle={enableDensityToggle}
+          enableColumnVisibility={enableColumnVisibility}
+          enableExport={enableExport}
+          exportFilename={exportFilename}
+        >
+          {toolbarActions}
+        </DataGridToolbar>
       )}
 
       {/* Table and footer share one bordered, rounded shell so the footer
           reads as part of the grid (MUI DataGrid's treatment) rather than a
-          detached row floating beneath it. `overflow-hidden` here is what
-          clips the table's top corners to the shell's radius; the scroll
-          container is the inner div, so sticky headers and pinned columns
-          still resolve against that and are unaffected. */}
-      <div className="overflow-hidden rounded-xs border" style={{ borderColor, backgroundColor: rowBg }}>
-        <div className="overflow-auto" style={{ maxHeight }}>
-          <table className="w-full border-collapse" style={tableStyle} aria-busy={loading || undefined}>
-          <thead style={maxHeight ? { position: 'sticky', top: 0, zIndex: 2 } : undefined}>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} style={{ backgroundColor: headerBg }}>
-                {headerGroup.headers.map((header) => {
-                  const canSort = header.column.getCanSort();
-                  const canHide = header.column.getCanHide();
-                  const sortState = header.column.getIsSorted();
-                  const sortIndex = header.column.getSortIndex();
-                  const SortIcon = sortState === 'asc' ? ChevronUp : sortState === 'desc' ? ChevronDown : ChevronsUpDown;
-                  const headerLabel = header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext());
-                  return (
-                    <th
-                      key={header.id}
-                      className={cn('relative h-10 px-3 text-left text-sm font-medium')}
-                      // aria-sort is what actually announces sort state to a
-                      // screen reader; the icon alone conveys nothing to one.
-                      aria-sort={canSort ? (sortState === 'asc' ? 'ascending' : sortState === 'desc' ? 'descending' : 'none') : undefined}
-                      style={{
-                        color: textColor,
-                        width: enableColumnResizing ? header.getSize() : undefined,
-                        ...getPinnedCellStyle(header.column, headerBg, maxHeight ? { zIndex: header.column.getIsPinned() ? 3 : 2 } : undefined),
-                      }}
-                    >
-                      {header.isPlaceholder ? null : canSort || canHide ? (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            {/* A real button, not a click handler on the <th>:
-                                the previous version could only be sorted with
-                                a mouse — no focus, no keyboard, no ARIA. */}
-                            <button
-                              type="button"
-                              className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-xs px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
-                              style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-                              // Shift-click keeps its meaning as "add to the
-                              // multi-sort" rather than opening the menu —
-                              // Radix opens on pointerdown, so it has to be
-                              // intercepted here rather than in onClick.
-                              onPointerDown={(e) => {
-                                if (e.shiftKey && canSort) {
-                                  e.preventDefault();
-                                  header.column.toggleSorting(undefined, true);
-                                }
-                              }}
-                            >
-                              <span className="truncate">{headerLabel}</span>
-                              {canSort && (
-                                <span className="inline-flex shrink-0 items-center gap-0.5">
-                                  <SortIcon className="h-3.5 w-3.5 opacity-60" />
-                                  {sortState && sorting.length > 1 && (
-                                    <span className="text-[10px] font-bold" style={{ color: activeColor }}>
-                                      {sortIndex + 1}
-                                    </span>
-                                  )}
-                                </span>
-                              )}
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start" className="w-36">
-                            {canSort && (
-                              <>
-                                <DropdownMenuCheckboxItem checked={sortState === 'asc'} onCheckedChange={() => header.column.toggleSorting(false)}>
-                                  <ChevronUp className="mr-2 h-4 w-4 opacity-60" /> Asc
-                                </DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem checked={sortState === 'desc'} onCheckedChange={() => header.column.toggleSorting(true)}>
-                                  <ChevronDown className="mr-2 h-4 w-4 opacity-60" /> Desc
-                                </DropdownMenuCheckboxItem>
-                                {sortState && (
-                                  <DropdownMenuItem onSelect={() => header.column.clearSorting()}>
-                                    <X className="mr-2 h-4 w-4 opacity-60" /> Reset
-                                  </DropdownMenuItem>
-                                )}
-                              </>
-                            )}
-                            {canHide && (
-                              <DropdownMenuItem onSelect={() => header.column.toggleVisibility(false)}>
-                                <EyeOff className="mr-2 h-4 w-4 opacity-60" /> Hide
-                              </DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      ) : (
-                        headerLabel
-                      )}
-                      {enableColumnResizing && header.column.getCanResize() && (
-                        // This is WAI-ARIA's documented "resizable separator" pattern (a
-                        // focusable role="separator" with aria-valuenow + keyboard support) —
-                        // jsx-a11y's static rules don't special-case that variant of the role
-                        // and flag it as if it were the plain, non-interactive divider use.
-                        /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
-                        <div
-                          role="separator"
-                          aria-orientation="vertical"
-                          aria-label={`Resize column ${header.id}`}
-                          aria-valuenow={header.column.getSize()}
-                          tabIndex={0}
-                          onMouseDown={header.getResizeHandler()}
-                          onTouchStart={header.getResizeHandler()}
-                          onKeyDown={(e) => {
-                            // No pointer to drive TanStack's own resize
-                            // handler here — resize the column directly.
-                            // shiftKey for a bigger step, matching the
-                            // common resizable-pane keyboard convention.
-                            const step = e.shiftKey ? 20 : 5;
-                            if (e.key === 'ArrowLeft') {
-                              e.preventDefault();
-                              table.setColumnSizing((old) => ({
-                                ...old,
-                                [header.column.id]: Math.max(20, header.column.getSize() - step),
-                              }));
-                            } else if (e.key === 'ArrowRight') {
-                              e.preventDefault();
-                              table.setColumnSizing((old) => ({
-                                ...old,
-                                [header.column.id]: header.column.getSize() + step,
-                              }));
-                            }
-                          }}
-                          className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-hidden focus-visible:ring-2"
-                          style={{
-                            backgroundColor: header.column.getIsResizing() ? activeColor : 'transparent',
-                            '--tw-ring-color': getRoleColor('focus.ring'),
-                          } as React.CSSProperties}
-                        />
-                        /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {loading ? (
-              // Skeleton rows are aria-hidden: they are a visual placeholder, not
-              // content. Without it a screen reader narrates a grid of empty cells on
-              // every load. `aria-busy` on the <table> is what conveys "loading".
-              Array.from({ length: loadingRowCount ?? pageSize }).map((_, i) => (
-                <tr aria-hidden="true" key={`loading-${i}`} style={{ borderTop: `1px solid ${borderColor}` }}>
-                  {columns.map((col, colIndex) => (
-                    <td key={col.id ?? colIndex} className={cn('px-3', cellPadding)}>
-                      <Skeleton height={16} width={colIndex === 0 ? '60%' : '80%'} />
-                    </td>
-                  ))}
-                </tr>
-              ))
-            ) : status !== 'ready' ? (
-              <tr>
-                {/* `p-0`: DataState brings its own padding, so the cell must
-                    not add a second layer around it. */}
-                <td colSpan={columns.length} className="p-0">
-                  <DataState
-                    status={status}
-                    loadError={loadError}
-                    onRetry={onRetry}
-                    emptyState={emptyState}
-                    emptyReason={isFilteredEmpty ? 'no-results' : 'no-data'}
-                    onClearFilters={() => table.resetColumnFilters()}
-                    name="DataTable"
-                  />
-                </td>
-              </tr>
-            ) : (
-              rows.map((row) => {
-                const rowBackground = row.getIsSelected() ? selectedBg : hoveredRow === row.id ? hoverBg : rowBg;
-                return (
-                  <tr
-                    key={row.id}
-                    onMouseEnter={() => setHoveredRow(row.id)}
-                    onMouseLeave={() => setHoveredRow(null)}
-                    style={{
-                      backgroundColor: rowBackground,
-                      borderTop: `1px solid ${borderColor}`,
-                      color: textColor,
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const isEditable = !!onCellEdit && cell.column.columnDef.meta?.editable;
-                      const isEditing = isEditable && editingCell?.rowId === row.id && editingCell?.columnId === cell.column.id;
-
-                      const beginEdit = () => {
-                        const current = cell.getValue();
-                        setDraft(current == null ? '' : String(current));
-                        setEditingCell({ rowId: row.id, columnId: cell.column.id });
-                      };
-                      const commit = () => {
-                        const previousValue = cell.getValue();
-                        setEditingCell(null);
-                        // Skip the callback when nothing actually changed, so
-                        // a stray click into and out of a cell isn't reported
-                        // to the consumer as an edit.
-                        if (draft !== (previousValue == null ? '' : String(previousValue))) {
-                          onCellEdit?.({ rowId: row.id, rowIndex: row.index, columnId: cell.column.id, value: draft, previousValue, row: row.original });
-                        }
-                      };
-
-                      return (
-                        <td
-                          key={cell.id}
-                          className={cn('px-3 text-sm', isEditing ? 'py-0' : cellPadding)}
-                          style={{
-                            width: enableColumnResizing ? cell.column.getSize() : undefined,
-                            ...getPinnedCellStyle(cell.column, rowBackground),
-                          }}
-                        >
-                          {isEditing ? (
-                            <Input
-                              // Focus-on-mount via ref rather than autoFocus:
-                              // entering edit mode must move focus or a
-                              // keyboard user is stranded, but autoFocus is
-                              // the blunt version jsx-a11y rightly rejects.
-                              // Guarded so re-renders while typing don't
-                              // re-steal focus.
-                              ref={(el) => {
-                                if (el && document.activeElement !== el) el.focus();
-                              }}
-                              value={draft}
-                              aria-label={`Edit ${cell.column.id}`}
-                              onChange={(e) => setDraft(e.target.value)}
-                              onBlur={commit}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  commit();
-                                } else if (e.key === 'Escape') {
-                                  e.preventDefault();
-                                  // Discard: clear the cell before React can
-                                  // fire the blur-commit on unmount.
-                                  setEditingCell(null);
-                                }
-                              }}
-                              className="h-8 w-full"
-                            />
-                          ) : isEditable ? (
-                            // A button, not a div with onDoubleClick: editing
-                            // has to be reachable by keyboard too (Enter/F2,
-                            // the convention spreadsheets use).
-                            <button
-                              type="button"
-                              onDoubleClick={beginEdit}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === 'F2') {
-                                  e.preventDefault();
-                                  beginEdit();
-                                }
-                              }}
-                              className="-mx-1 flex h-7 w-full items-center rounded px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
-                              style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-                              title="Double-click or press Enter to edit"
-                            >
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </button>
-                          ) : (
-                            flexRender(cell.column.columnDef.cell, cell.getContext())
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-          </table>
-        </div>
-
-        {/* `flex-wrap`: Pagination's own root already wraps internally, but
-            that only helps once something forces it into a constrained
-            width — this row previously didn't, so on narrow viewports
-            Pagination just rendered at its full unwrapped intrinsic width
-            instead, overflowing past the table (which cascaded into
-            page-wide horizontal scroll for any consumer without its own
-            fix upstream). */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t px-3 py-2" style={{ borderColor }}>
-          {enableRowSelection && (
-            <span className="text-sm" style={{ color: mutedColor }}>
-              {table.getFilteredSelectedRowModel().rows.length} of {filteredCount} row(s) selected.
-            </span>
-          )}
-          <Pagination
-            // justify-end: Pagination's own content flows left, so as the
-            // flex-1 child it used to bunch against the selection count and
-            // leave the right half of the footer empty. Right-clustering
-            // matches MUI DataGrid and tablecn.
-            className="min-w-0 flex-1 justify-end"
-            currentPage={pageIndex + 1}
-            totalItems={totalItemsForFooter}
-            pageSize={currentPageSize}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-            // Position is stated once, as "Page X of Y" — the old footer said
-            // it four ways at once (range text, numbered buttons, jump-to-page
-            // input, and the totals), which read as clutter.
-            variant="compact"
-            showItemsRange={false}
-            showTotalItems={false}
-            rowsLabel="Rows per page:"
+          detached row floating beneath it. */}
+      <DataGridContainer>
+        <DataGridScrollArea>
+          <DataGridTable
+            loadingRowCount={loadingRowCount}
+            enableColumnReorder={enableColumnReorder}
+            renderDetail={renderDetail}
+            enableVirtualization={enableVirtualization}
+            estimateRowSize={estimateRowSize}
+            showFooter={showFooter}
+            stickyFooter={stickyFooter}
+            enableCellSelection={enableCellSelection}
+            onCellsChange={onCellsChange}
+            enableFillHandle={enableFillHandle}
+            striped={striped}
+            caption={caption}
+            onRowClick={onRowClick}
+            onCellEdit={onCellEdit}
           />
-        </div>
-      </div>
-    </div>
+        </DataGridScrollArea>
+        <DataGridPagination
+          showSelectedCount={enableRowSelection}
+          onPaginationChange={onPaginationChange}
+        />
+      </DataGridContainer>
+    </DataGrid>
   );
 }
 

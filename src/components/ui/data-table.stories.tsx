@@ -1,9 +1,11 @@
+import type { DataGridColumnDef } from './data-grid-features';
 import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { userEvent } from 'storybook/test';
-import type { ColumnDef } from '@tanstack/react-table';
+
 import { DataTable, createSelectColumn } from './data-table';
 import { Badge } from './badge';
+import { Button } from './button';
 
 /**
  * # DataTable
@@ -45,7 +47,7 @@ const policyData: Policy[] = [
   { id: 7, name: 'Marine Cargo', status: 'Pending', premium: '$11,750', renewalDate: '2026-02-27' },
 ];
 
-const baseColumns: ColumnDef<Policy>[] = [
+const baseColumns: DataGridColumnDef<Policy>[] = [
   { accessorKey: 'name', header: 'Policy', enableSorting: true },
   {
     accessorKey: 'status',
@@ -161,7 +163,7 @@ export const FullToolbar: StoryObj = {
     docs: {
       description: {
         story:
-          'The tablecn toolbar shape: search plus per-column faceted filters on the left, Sort / Density / Export / Columns on the right. Each filter is a multi-select popover with per-value counts derived from the column itself, showing the selected values as chips on the trigger (collapsing to a count past two) and offering Clear. A Reset button appears next to the filters whenever any are active. Sort exposes the multi-column sort as an editable list — the same state shift-clicking headers produces.',
+          'The tablecn toolbar shape: search plus per-column filters on the left, Sort / Density / Export / Columns and any page actions on the right. Every trigger shares one compact dashed shape at `text-xs`, half a step tighter than a stock `sm` button — a row of filters should read as filters, not as a row of buttons — while keeping the `h-8` control height so it still lines up with the search field. Selecting a value only appends a chip: the leading icon never changes and there is no separator, so the first click does not shove the rest of the row sideways. **Status** is a faceted multi-select with per-value counts derived from the column itself, collapsing to a count past two selections. **Renewal** is a date range — a facet would list every distinct date in the data, which stops being usable the moment there are more than a handful. Reset appears whenever any filter is active and clears all of them.',
       },
     },
   },
@@ -172,15 +174,18 @@ export const FullToolbar: StoryObj = {
       searchKey="name"
       searchPlaceholder="Search policies..."
       pageSize={8}
-      facetedFilters={[
-        { columnId: 'status', title: 'Status' },
-        { columnId: 'renewalDate', title: 'Renewal' },
-      ]}
+      facetedFilters={[{ columnId: 'status', title: 'Status' }]}
+      dateFilters={[{ columnId: 'renewalDate', title: 'Renewal' }]}
       enableSortList
       enableColumnVisibility
       enableDensityToggle
       enableExport
       exportFilename="policies"
+      toolbarActions={
+        <Button variant="outline" size="sm" className="px-2 text-xs font-normal">
+          New policy
+        </Button>
+      }
     />
   ),
 };
@@ -189,7 +194,7 @@ function InlineEditDemo() {
   const [rows, setRows] = useState<Policy[]>(policyData);
   const [log, setLog] = useState<string[]>([]);
 
-  const editableColumns: ColumnDef<Policy>[] = [
+  const editableColumns: DataGridColumnDef<Policy>[] = [
     { accessorKey: 'name', header: 'Policy', enableSorting: true, meta: { editable: true } },
     baseColumns[1],
     { accessorKey: 'premium', header: 'Premium', enableSorting: true, meta: { editable: true } },
