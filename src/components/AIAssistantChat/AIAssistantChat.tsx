@@ -404,7 +404,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
             {/* Streaming status bar */}
             {isBusy && (
               <Marker
-                className="gap-1.5 rounded-sm border border-border bg-secondary px-3 py-2 text-[11px] text-muted-foreground"
+                className="gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-[11px] text-muted-foreground"
                 style={{ width: 'fit-content', alignSelf: 'flex-start' }}
               >
                 <MarkerIcon>

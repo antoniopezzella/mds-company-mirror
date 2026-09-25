@@ -52,7 +52,7 @@ export default meta;
 type Story = StoryObj<typeof Stack>;
 
 const Swatch = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-xs border border-dashed px-3 py-2 text-sm">{children}</div>
+  <div className="rounded-md border border-dashed px-3 py-2 text-sm">{children}</div>
 );
 
 export const Default: Story = {
@@ -89,7 +89,7 @@ export const GapScale: Story = {
 /** `Inline` wraps by default — a row of filters must survive a narrow viewport. */
 export const InlineWrapping: Story = {
   render: () => (
-    <div className="max-w-sm rounded-xs border p-3">
+    <div className="max-w-sm rounded-md border p-3">
       <Inline gap={2}>
         {['Property', 'Liability', 'Cyber', 'Marine', 'Aviation', 'Casualty', 'Motor'].map((t) => (
           <Badge key={t}>{t}</Badge>
@@ -102,7 +102,7 @@ export const InlineWrapping: Story = {
 /** `justify="between"` is the idiomatic title-row layout. */
 export const JustifyBetween: Story = {
   render: () => (
-    <Inline gap={4} justify="between" className="w-full rounded-xs border p-3">
+    <Inline gap={4} justify="between" className="w-full rounded-md border p-3">
       <span className="text-sm font-semibold">Active policies</span>
       <Button variant="outline" size="sm">
         View all

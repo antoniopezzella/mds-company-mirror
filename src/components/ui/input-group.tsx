@@ -53,7 +53,7 @@ function InputGroup({ className, size, ...props }: InputGroupProps) {
         role="group"
         data-size={resolved}
         className={cn(
-          'group/input-group relative flex w-full min-w-0 items-center rounded-xs border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
+          'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
           'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
           // The group owns the height; the inner control is borderless and
           // fills it, so the two cannot disagree.

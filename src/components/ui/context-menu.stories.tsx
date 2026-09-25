@@ -33,7 +33,7 @@ export default meta;
 export const Default: StoryObj = {
   render: () => (
     <ContextMenu>
-      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-xs border border-dashed text-sm">
+      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-md border border-dashed text-sm">
         Right-click here
       </ContextMenuTrigger>
       <ContextMenuContent>
@@ -54,7 +54,7 @@ export const Default: StoryObj = {
 export const PolicyRowActions: StoryObj = {
   render: () => (
     <ContextMenu>
-      <ContextMenuTrigger className="flex h-14 w-96 items-center justify-between rounded-xs border px-4 text-sm">
+      <ContextMenuTrigger className="flex h-14 w-96 items-center justify-between rounded-md border px-4 text-sm">
         <span>Policy #AVI-2026-0417 — Aviation Liability</span>
         <span className="text-xs opacity-60">Right-click for actions</span>
       </ContextMenuTrigger>
@@ -80,7 +80,7 @@ export const PolicyRowActions: StoryObj = {
 export const WithCheckboxAndRadio: StoryObj = {
   render: () => (
     <ContextMenu>
-      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-xs border border-dashed text-sm">
+      <ContextMenuTrigger className="flex h-32 w-64 items-center justify-center rounded-md border border-dashed text-sm">
         Right-click for view options
       </ContextMenuTrigger>
       <ContextMenuContent>

@@ -205,7 +205,7 @@ function TableComponent<T extends object>({
   return (
     <div className="flex flex-col gap-3">
       <div
-        className={cn('overflow-auto rounded-xs', bordered && 'border')}
+        className={cn('overflow-auto rounded-md', bordered && 'border')}
         style={{ maxHeight, borderColor: bordered ? borderColor : undefined }}
       >
         <table className={cn('w-full border-collapse', className)} aria-busy={loading || undefined}>

@@ -87,7 +87,7 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
       {skipLink && (
         <a
           href={`#${mainId}`}
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[1700] focus:rounded-xs focus:px-4 focus:py-2 focus:outline-hidden focus:ring-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[1700] focus:rounded-md focus:px-4 focus:py-2 focus:outline-hidden focus:ring-2"
           style={{
             backgroundColor: getRoleColor('surface.default'),
             color: getRoleColor('text.primary'),

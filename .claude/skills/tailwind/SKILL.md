@@ -97,10 +97,32 @@ It used to be, rescaled around `--radius: 2px`, because shadcn's defaults
 assume `0.5rem` and collapsed `rounded-md` to `calc(2px - 2px)` = 0 while
 driving `rounded-sm` negative — ~110 components silently rendered square.
 
-v4's **stock** scale removes the need: `rounded-xs` *is* 0.125rem = 2px, exactly
-the Marsh standard, and `rounded-sm` is 4px. Components were remapped
-`md`→`xs` and `lg`→`sm`, keeping their pixel values on the stock scale.
-**Do not reintroduce a `borderRadius` override.**
+v4's **stock** scale removes the need, and the repo now uses it **unmodified**.
+There is no `@theme` radius block either — that was a second, subtler version of
+the same mistake, removed 2026-09-25.
+
+| step | px | for |
+|---|---|---|
+| `rounded-md` | **6** | controls: inputs, buttons, chips, cells |
+| `rounded-lg` | **8** | badges, menu items, small surfaces |
+| `rounded-xl` | **12** | cards, the data-grid shell, dialogs |
+| `rounded-2xl` | **16** | large feature surfaces |
+
+`rounded-xs`, `rounded-sm`, `rounded-3xl`, `rounded-4xl` are valid Tailwind and
+**rejected by `npm run radius:check`** inside `src/components/ui` — the gate
+enforces intent, not values.
+
+**Do not reintroduce a `borderRadius` override, and do not redeclare
+`--radius-*` in `@theme`.** The first collapsed `rounded-md` to
+`calc(2px - 2px)` = 0 across ~110 components. The second made `rounded-lg` mean
+12px here and 8px everywhere else — and `styles.package.css` shipped that
+redefinition into consumers' own code.
+
+Also banned, because both inline a literal and answer to nothing: **bare
+`rounded`** and **arbitrary values** (`rounded-[7px]`).
+
+If you read "the Marsh standard is 2px" anywhere, that material is stale —
+except in Figma, which has not moved yet.
 
 ### 5. A percentage `max-w-` resolves against whatever the parent ended up being
 

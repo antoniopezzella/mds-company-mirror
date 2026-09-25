@@ -44,7 +44,7 @@ const accordionItemVariants = cva('transition-colors', {
     variant: {
       default: 'border-b',
       compact: '',
-      elevated: 'rounded-sm overflow-hidden shadow-[0_2px_8px_var(--accordion-shadow-color)]',
+      elevated: 'rounded-lg overflow-hidden shadow-[0_2px_8px_var(--accordion-shadow-color)]',
     },
   },
   defaultVariants: {

@@ -211,6 +211,16 @@ export const theme = createTheme({
   palette: { mode: 'light', ...lightPalette },
   typography,
   spacing: spacingFn,
+  /**
+   * The MUI half of the app had NO `shape` key at all, so every MUI component
+   * silently used MUI's own default of 4px — while CLAUDE.md documented
+   * `borderRadius: 2` as if it were configured. The two halves of the system
+   * have never actually agreed on a radius.
+   *
+   * 6 matches `rounded-md`, the control default the Tailwind side now uses.
+   */
+  shape: { borderRadius: 6 },
+
   components: {
     MuiButton: {
       defaultProps: {
@@ -228,6 +238,7 @@ export const darkTheme = createTheme({
   palette: { mode: 'dark', ...darkPalette },
   typography,
   spacing: spacingFn,
+  shape: { borderRadius: 6 },
   components: {
     MuiButton: {
       defaultProps: {

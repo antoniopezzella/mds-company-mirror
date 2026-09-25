@@ -273,37 +273,78 @@ their rows are single-line and do not need field-sized separation.
 
 ## Corner radius
 
-Radius sits on its own scale, and it is deliberately **not** overridden.
-
-The Marsh DS standard radius is **2px** — small, squared-off, and a big part of
-why the system reads as it does. That happens to be exactly Tailwind's stock
-`rounded-xs`, so no configuration is required:
+Radius uses **Tailwind's stock scale, unmodified**. Nothing is overridden; what
+this system adds is *intent* — which step means what — enforced in CI.
 
 | Class | px | Use |
 | --- | --- | --- |
 | `rounded-none` | 0 | Flush edges, table cells |
-| **`rounded-xs`** | **2** | **The DS default.** Buttons, inputs, cards, menus |
-| `rounded-sm` | 4 | Larger surfaces — dialogs, sheets, popovers |
-| `rounded-md` | 6 | Rare; prefer `sm` |
-| `rounded-lg` | 8 | Rare |
-| `rounded-full` | 9999 | Pills, avatars, badges |
+| **`rounded-md`** | **6** | **The control default.** Buttons, inputs, chips, cells |
+| `rounded-lg` | 8 | Badges, menu items, small surfaces |
+| `rounded-xl` | 12 | Cards, the data-grid shell, dialogs |
+| `rounded-2xl` | 16 | Large feature surfaces |
+| `rounded-full` | — | Pills, avatars |
 
-### Why there is no override — and why that matters
+`rounded-full` and `rounded-none` are keywords, not steps. `rounded-xs`,
+`rounded-sm`, `rounded-3xl` and `rounded-4xl` are valid Tailwind but **rejected
+here** — a fifth and sixth corner size is how a scale stops being a scale.
 
-`tailwind.config.js` used to rescale `borderRadius` around a `--radius`
-variable, because shadcn's defaults assume `0.5rem` and this system wants 2px.
-That override did real damage: it collapsed `rounded-md` to `calc(2px - 2px)` =
-**0** and drove `rounded-sm` negative, so roughly **110 components silently
-rendered square** while their class names said otherwise.
+### The 2px era, and why it ended
 
-Under v4's scale the override is unnecessary — `rounded-xs` *is* 2px — so it
-was removed and components were remapped (`md` → `xs`, `lg` → `sm`), keeping
-their pixel values. The gain is that `rounded-*` now means the same thing here
-as in any other Tailwind codebase, and there is one less override to drift.
+The system ran on a **2px** radius for its first year: small, squared-off, and
+a deliberate part of an institutional, precise feel. It was raised in
+**September 2026** — softer surfaces, crisper contents — after a visual review
+against contemporary data-grid references found the old value was the single
+largest contributor to the system reading as dated.
 
-**Do not reintroduce a `borderRadius` override.** If the DS radius ever
-changes, change which class components use, or set `--radius-xs` in `@theme`
-once — do not rescale the whole ladder around a variable again.
+This was a brand decision, not a tidy-up. If it is ever revisited, revisit it
+as one.
+
+### Why nothing is overridden — two failures, not one
+
+**First failure.** `tailwind.config.js` used to rescale `borderRadius` around a
+`--radius` variable, because shadcn's defaults assume `0.5rem`. It computed
+`rounded-md` as `calc(2px - 2px)` = **0** and drove `rounded-sm` negative, so
+roughly **110 components silently rendered square** while their class names
+said otherwise.
+
+**Second failure.** The fix for that was an `@theme` block redefining
+`--radius-xs` … `--radius-xl` with this system's own values. It held the ladder
+monotonic, but it made our class names disagree with the entire ecosystem:
+`rounded-lg` meant 12px here and 8px everywhere else, so any snippet copied
+from shadcn or the Tailwind docs rendered at the wrong size with no error. And
+because `src/styles.package.css` shipped that block, it **redefined `rounded-*`
+inside every consuming application** — the same category of mistake as a
+library imposing its own CSS reset.
+
+The stock scale already contains four of the five values this system needs, so
+neither workaround is necessary. The fifth (10px, for popovers) had exactly two
+call sites and was dropped to 8px.
+
+**Do not reintroduce a `borderRadius` override, and do not redeclare
+`--radius-*` in `@theme`.** Both are gated.
+
+### The trade-off, stated plainly
+
+There is no single lever any more. Moving the brand radius means a scripted
+rename across ~190 call sites rather than editing one variable. That is a real
+cost, accepted deliberately: a design system's radius changes rarely, the
+rename is mechanical and gate-verified, and the alternative was redefining
+words that belong to Tailwind.
+
+### What is gated
+
+`npm run radius:check` (in `governance:ci`) fails on:
+
+- an **arbitrary** radius (`rounded-[7px]`) or the **bare `rounded`** utility —
+  Tailwind inlines both, so they answer to nothing;
+- a step **outside the four sanctioned ones**, inside `src/components/ui`;
+- `src/index.css` or `src/styles.package.css` **reintroducing a `--radius-*`
+  override**;
+- **this table** disagreeing with those values.
+
+Before this gate existed, nothing in the repo inspected radius at all — not a
+script, not a test — so the 2px→6px change would have been invisible to CI.
 
 ## Where the values live
 

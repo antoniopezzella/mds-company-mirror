@@ -42,7 +42,7 @@ const errorStateVariants = cva('flex min-w-0 flex-col items-center text-center t
   variants: {
     variant: {
       /** Full-height block, for replacing a table body or a chart. */
-      block: 'flex-1 justify-center gap-6 rounded-sm p-6 md:p-12',
+      block: 'flex-1 justify-center gap-6 rounded-lg p-6 md:p-12',
       /** Compact row, for inside a card or a KPI tile where a block is absurd. */
       inline: 'w-full gap-3 p-4',
     },
@@ -81,7 +81,7 @@ const errorStateMediaVariants = cva(
     variants: {
       variant: {
         default: 'bg-transparent',
-        icon: "flex size-10 shrink-0 items-center justify-center rounded-sm [&_svg:not([class*='size-'])]:size-6",
+        icon: "flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6",
       },
     },
     defaultVariants: { variant: 'icon' },
