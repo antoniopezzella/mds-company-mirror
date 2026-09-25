@@ -61,6 +61,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | Doc | For |
 |---|---|
 | [`tasks/data-grid-backlog.md`](./tasks/data-grid-backlog.md) | DataGrid — what is deliberately not built yet, and why |
+| [`tasks/data-table-audit.md`](./tasks/data-table-audit.md) | DataTable/DataGrid audited against the Experience Specification — capability matrix and prioritised gaps |
 | [`tasks/implement-google-lighthouse.md`](./tasks/implement-google-lighthouse.md) | Lighthouse CI implementation task |
 
 ## Archive
