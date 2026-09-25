@@ -123,7 +123,6 @@ const warned = new Set<string>();
 function warnOnce(message: string) {
   if (warned.has(message)) return;
   warned.add(message);
-  // eslint-disable-next-line no-console
   console.warn(`[mds] ${message}`);
 }
 

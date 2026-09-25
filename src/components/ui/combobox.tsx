@@ -78,7 +78,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           aria-labelledby={ariaLabelledBy}
           disabled={disabled}
           className={cn(
-            'flex w-full items-center justify-between gap-2 rounded-xs border transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'flex w-full items-center justify-between gap-2 rounded-md border transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
             CONTROL_HEIGHT[resolvedSize],
             CONTROL_PX[resolvedSize],
             CONTROL_TEXT[resolvedSize],
@@ -94,7 +94,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           }
         >
           <span className="truncate">{selected ? selected.label : placeholder}</span>
-          <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className={cn('shrink-0 opacity-50', CONTROL_ICON[resolvedSize])} />
         </button>
       </PopoverTrigger>
       <PopoverContent id={listId} className="w-[--radix-popover-trigger-width] p-0">

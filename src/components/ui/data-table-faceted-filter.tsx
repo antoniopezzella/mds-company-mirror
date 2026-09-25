@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from 'react';
-import type { Column } from '@tanstack/react-table';
-import { Check, PlusCircle, XCircle } from 'lucide-react';
+import type { RowData } from '@tanstack/react-table';
+import type { DataGridColumn } from './data-grid-features';
+import { Check, PlusCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
@@ -10,7 +11,6 @@ import { Badge } from './badge';
 import { Button } from './button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Separator } from './separator';
 
 /**
  * Multi-select column filter, following tablecn's faceted-filter pattern
@@ -27,14 +27,14 @@ export interface FacetOption {
   count?: number;
 }
 
-export interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>;
+export interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
+  column?: DataGridColumn<TData, TValue>;
   title: string;
   /** Omit to derive from the column's unique values (with counts). */
   options?: FacetOption[];
 }
 
-export function DataTableFacetedFilter<TData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
+export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
   const [open, setOpen] = React.useState(false);
 
   const filterValue = column?.getFilterValue();
@@ -68,54 +68,44 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="border-dashed font-normal">
-          {selected.size > 0 ? (
-            // Reset lives inside the trigger, so clearing doesn't require
-            // opening the popover first. stopPropagation keeps the click from
-            // also toggling the popover open.
-            <span
-              role="button"
-              aria-label={`Clear ${title} filter`}
-              tabIndex={0}
-              className="mr-1.5 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-              style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
-              onClick={(e) => {
-                e.stopPropagation();
-                reset();
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  reset();
-                }
-              }}
-            >
-              <XCircle className="h-4 w-4" />
-            </span>
-          ) : (
-            <PlusCircle className="mr-1.5 h-4 w-4" />
-          )}
+        {/*
+          Deliberately tighter than a stock `sm` Button: `px-2` and `text-xs`
+          against the scale's `px-2.5`/`text-sm`. A filter trigger is a dense,
+          repeated control that sits in a row of its own kind — at body size a
+          row of four reads as a toolbar of buttons rather than as filters.
+          The HEIGHT stays on the control scale (h-8 via size="sm") so it still
+          lines up with the search input and the right-hand controls.
+
+          Selecting a value used to swap PlusCircle -> XCircle and insert a
+          vertical Separator, which moved the title sideways and pushed every
+          later control along the row on the first click. The icon is now
+          constant and the separator is gone: selection only appends chips, so
+          the trigger grows rightward instead of reflowing internally.
+        */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-1.5 border-dashed px-2 text-xs font-normal"
+          aria-label={
+            selected.size > 0
+              ? `${title}, ${selected.size} selected`
+              : `Filter by ${title}`
+          }
+        >
+          <PlusCircle className="size-3.5 shrink-0 opacity-70" aria-hidden="true" />
           {title}
-          {selected.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              {/* Past two selections the individual chips stop being
-                  readable, so collapse to a count. */}
-              {selected.size > 2 ? (
-                <Badge tone="default" size="sm">{selected.size} selected</Badge>
-              ) : (
-                <span className="flex items-center gap-1">
-                  {resolved
-                    .filter((o) => selected.has(o.value))
-                    .map((o) => (
-                      <Badge key={o.value} tone="default" size="sm">
-                        {o.label}
-                      </Badge>
-                    ))}
-                </span>
-              )}
-            </>
+          {/* Past two selections the individual chips stop being readable, so
+              collapse to a count. */}
+          {selected.size > 2 ? (
+            <Badge tone="default" size="sm">{selected.size} selected</Badge>
+          ) : (
+            resolved
+              .filter((o) => selected.has(o.value))
+              .map((o) => (
+                <Badge key={o.value} tone="default" size="sm">
+                  {o.label}
+                </Badge>
+              ))
           )}
         </Button>
       </PopoverTrigger>
@@ -130,7 +120,7 @@ export function DataTableFacetedFilter<TData, TValue>({ column, title, options }
                 return (
                   <CommandItem key={option.value} onSelect={() => toggle(option.value)}>
                     <span
-                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-xs border')}
+                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
                       style={{
                         borderColor: getRoleColor('interactive.primary'),
                         backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',
