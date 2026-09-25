@@ -143,7 +143,8 @@ export {
  */
 export type ModalSize = 'sm' | 'md' | 'lg' | 'fullscreen';
 
-/** @deprecated Use the lowercase {@link ModalSize} values. Removed at 1.0. */
+/** @deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.
+   *  Use the lowercase {@link ModalSize} values. */
 export type LegacyModalSize = 'Small' | 'Medium' | 'Large' | 'FullScreen';
 
 export interface ModalProps {

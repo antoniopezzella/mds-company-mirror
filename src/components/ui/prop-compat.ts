@@ -21,8 +21,13 @@
  * --------------------------
  * Legacy spellings still work — nothing breaks on upgrade. They are marked
  * `@deprecated` so editors strike them through, they warn once per prop in
- * development, and they are removed at 1.0 per the deprecation window in
- * docs/CONTRIBUTING.md.
+ * development, and they are removed per the deprecation window in
+ * docs/CONTRIBUTING.md — one further minor AND 90 days, whichever is later.
+ *
+ * That section is now real. It was not when this sentence was first written:
+ * the code promised a support commitment and pointed at a heading nobody had
+ * added, so a reader following it found nothing. `npm run deprecations:check`
+ * now fails on any `@deprecated` that carries no removal promise.
  *
  * The registry below is deliberately shaped like the token system's
  * `deprecatedTokens` in scripts/build-tokens.js: keyed by the deprecated thing,
@@ -128,7 +133,7 @@ function warnOnce(prop: 'size', legacy: string, canonical: string, component?: s
   console.warn(
     `[MDS] ${where}${prop}="${legacy}" is deprecated — use ${prop}="${canonical}". ` +
       `${DEPRECATED_PROP_VALUES[`${prop}.${legacy}`]?.rationale ?? ''} ` +
-      `Legacy values are removed at 1.0; see docs/CONTRIBUTING.md.`,
+      `Legacy values are removed per the deprecation window in docs/CONTRIBUTING.md.`,
   );
 }
 

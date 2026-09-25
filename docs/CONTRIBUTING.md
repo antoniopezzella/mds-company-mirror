@@ -143,6 +143,52 @@ changing a role token's resolved value all count as breaking. Adding an
 optional prop, adding a component, or changing an internal implementation
 that isn't observable through the public API do not.
 
+### Deprecation window
+
+**A deprecated API survives at least one further minor release AND 90
+calendar days.** Both conditions, not either.
+
+The date floor is the part that matters. This project shipped `0.5.0` and
+`0.6.0` two days apart, so a release-count rule on its own would have meant a
+window of about a week — technically honoured, useless to anyone trying to
+upgrade on their own schedule.
+
+Every `@deprecated` must say when it started and when it can end:
+
+```ts
+/** @deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.
+ *  Use `size`. */
+inputSize?: ControlSize;
+```
+
+- **since** — the version the deprecation first ships in.
+- **remove after** — the next minor. Removal may happen in that release or
+  any later one.
+- **date** — 90 days from the deprecation being authored. Authoring date, not
+  release date, because it is knowable when you write the tag; the release can
+  only be later, so the real window is never shorter than 90 days.
+
+Rules:
+
+- **Never remove in a patch.** A patch means "safe to take without reading
+  anything", and that has to stay true.
+- **The window is a floor, not a deadline.** Passing it makes removal
+  permitted, not required — removal is still a breaking change and still
+  needs a `BREAKING CHANGE:` footer.
+- **The old path must keep working for the whole window**, not just type-check.
+  Deprecated props route through `src/components/ui/prop-compat.ts`, which
+  normalises them and warns once per prop in development.
+- **A deprecation with no removal promise is not a deprecation**, it is a
+  comment. `npm run deprecations:check` fails on a bare `@deprecated`.
+
+This is enforced: `scripts/check-deprecations.js` validates every tag's form
+and ordering, reports which windows have closed, and runs in `governance:ci`.
+
+> Written after `prop-compat.ts` was found telling consumers that legacy
+> values "are removed at 1.0 per the deprecation window in
+> docs/CONTRIBUTING.md" — pointing at a section that did not exist. The code
+> was making a support commitment on behalf of a policy nobody had written.
+
 ## Out of scope / anti-patterns
 
 - No raw hex colors or hardcoded pixel spacing in components — see `CLAUDE.md`'s token rules.
