@@ -193,7 +193,15 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
       // aria-pressed, not aria-checked: this is a toggle button, not a
       // checkbox. It is what carries selection to a screen reader when the
       // checkmark cannot be seen.
-      'aria-pressed': selected,
+      //
+      // OMITTED for a menu trigger. Radix adds aria-haspopup="menu" and
+      // aria-expanded via `asChild`, and a control cannot coherently be both
+      // a toggle button and a menu button — a screen reader would announce
+      // "pressed, has menu, collapsed", conflating two interaction models.
+      // For a menu chip the applied state lives in the accessible NAME
+      // instead ("Region: EMEA" vs "Region"), which is where a menu button's
+      // current value belongs.
+      'aria-pressed': hasMenu ? undefined : selected,
     };
 
     if (!onRemove) {
@@ -263,8 +271,15 @@ export function FilterChipSet({ label, children, className, ...rest }: FilterChi
   const ref = React.useRef<HTMLDivElement>(null);
   const [active, setActive] = React.useState(0);
 
+  // EVERY button, not just the toggles. This previously selected
+  // `button[aria-pressed]`, which silently excluded the remove (×) controls —
+  // so a row of three removable filters left its three × buttons at the
+  // default tabIndex of 0 and cost FOUR tab stops, not the one this component
+  // exists to provide. APG's toolbar pattern puts every control in the group
+  // on the roving sequence, which is also what a user expects: arrows walk
+  // the row, including the way to clear each filter.
   const chips = React.useCallback(
-    () => Array.from(ref.current?.querySelectorAll<HTMLButtonElement>('button[aria-pressed]') ?? []),
+    () => Array.from(ref.current?.querySelectorAll<HTMLButtonElement>('button') ?? []),
     []
   );
 

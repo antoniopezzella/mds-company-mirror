@@ -2,7 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi } from 'vitest';
 
-import { FilterChip, FilterChipSet } from './filter-chip';
+import { FilterChip, FilterChipMenu, FilterChipSet } from './filter-chip';
 
 /**
  * These target the specific defects that made `Chip` unsuitable as a filter
@@ -88,6 +88,34 @@ describe('it is always a real control', () => {
   });
 });
 
+describe('a menu chip is a menu button, not a toggle button', () => {
+  it('drops aria-pressed when it opens a menu', () => {
+    // A control cannot coherently be both. Radix adds aria-haspopup="menu"
+    // and aria-expanded; leaving aria-pressed alongside them makes a screen
+    // reader announce "pressed, has menu, collapsed" — two interaction
+    // models at once.
+    render(
+      <FilterChipMenu
+        label="Region"
+        value={['a']}
+        onValueChange={() => {}}
+        options={[{ value: 'a', label: 'EMEA' }]}
+      />
+    );
+    const trigger = screen.getByRole('button');
+    expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+    expect(trigger).not.toHaveAttribute('aria-pressed');
+    // The applied state lives in the accessible NAME instead, which is where
+    // a menu button's current value belongs.
+    expect(trigger).toHaveAccessibleName(/Region: EMEA/);
+  });
+
+  it('keeps aria-pressed on a plain toggle chip', () => {
+    render(<FilterChip label="Active" selected />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
 describe('FilterChipSet keyboard navigation', () => {
   const set = (props: { onChange?: (i: number) => void } = {}) => (
     <FilterChipSet label="Filter policies">
@@ -149,6 +177,40 @@ describe('FilterChipSet keyboard navigation', () => {
     chips[0].focus();
     fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
     expect(document.activeElement).toBe(chips[2]);
+  });
+
+  it('is ONE tab stop even when every chip is removable', () => {
+    // The × controls were excluded from the roving set, so three removable
+    // filters cost FOUR tab stops — the exact thing this component exists to
+    // prevent, and it was shipping in FilterBar.
+    render(
+      <FilterChipSet label="Applied filters">
+        {['Region', 'Line', 'Premium'].map((l) => (
+          <FilterChip key={l} label={l} selected onRemove={() => {}} />
+        ))}
+      </FilterChipSet>
+    );
+    const toolbar = screen.getByRole('toolbar', { name: 'Applied filters' });
+    const buttons = within(toolbar).getAllByRole('button');
+    expect(buttons).toHaveLength(6); // 3 toggles + 3 removes
+    expect(buttons.filter((b) => b.tabIndex === 0)).toHaveLength(1);
+  });
+
+  it('arrows reach the remove control, not just the chips', () => {
+    render(
+      <FilterChipSet label="Applied filters">
+        <FilterChip label="Region" selected onRemove={() => {}} />
+        <FilterChip label="Line" selected onRemove={() => {}} />
+      </FilterChipSet>
+    );
+    const toolbar = screen.getByRole('toolbar', { name: 'Applied filters' });
+    const buttons = within(toolbar).getAllByRole('button');
+    buttons[0].focus();
+    fireEvent.keyDown(toolbar, { key: 'ArrowRight' });
+    // The way to clear a filter must be reachable by the same keys that walk
+    // the row, or it is mouse-only for anyone navigating the toolbar.
+    expect(document.activeElement).toBe(buttons[1]);
+    expect(buttons[1]).toHaveAccessibleName(/Remove Region/);
   });
 
   it('keeps exactly one tab stop after a chip is removed', () => {
