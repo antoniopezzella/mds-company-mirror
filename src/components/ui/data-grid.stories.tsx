@@ -28,7 +28,23 @@ import { Button } from './button';
 const meta: Meta = {
   title: 'Components/DataGrid',
   tags: ['autodocs'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    docs: { description: { component: [
+      '**The same table, composed.** Reach for this when **you need the table instance** — not',
+      'when you need more features.',
+      '',
+      '[`DataTable`](/docs/components-datatable--docs) is a preset over this component and has',
+      '**identical capabilities**. What `DataGrid` adds is ownership: you hold the instance, so',
+      'anything outside the table can read its selection, filters and sorting, drive it, or',
+      'reorder and omit its parts.',
+      '',
+      '`ConsumerOwnedState` is the story that earns this API. Stories that also appear under',
+      '`DataTable` show the same behaviour through a different shape, not different behaviour.',
+      '',
+      'See [Foundations -> Choosing a table](/docs/foundations-choosing-a-table--docs).',
+    ].join('\n') } },
+  },
 };
 
 export default meta;
@@ -131,6 +147,14 @@ export const Loading: StoryObj = {
 };
 
 export const Empty: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Same four-state vocabulary as `DataTable` — the state layer is shared, not per-API. What composition adds is that the toolbar and footer are siblings of the table, so they keep rendering around an empty body instead of disappearing with it: the user can still clear the filter that emptied it.',
+      },
+    },
+  },
   render: () => <Composed data={[]} />,
 };
 

@@ -16,6 +16,16 @@ const meta: Meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+    docs: { description: { component: [
+      '**The simple table** — a standalone implementation sharing no engine with `DataTable`',
+      'or `DataGrid`.',
+      '',
+      '**Do not start new work here.** Its capabilities were deliberately ported to the grid so',
+      'it could be retired, and every fix made here has to be made twice. Use',
+      '[`DataTable`](/docs/components-datatable--docs).',
+      '',
+      'See [Foundations -> Choosing a table](/docs/foundations-choosing-a-table--docs).',
+    ].join('\n') } },
   },
 };
 
