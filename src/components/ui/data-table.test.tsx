@@ -1,6 +1,7 @@
+import type { DataGridColumnDef } from './data-grid-features';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { ColumnDef } from '@tanstack/react-table';
+
 import { DataTable, createSelectColumn } from './data-table';
 
 /**
@@ -27,7 +28,7 @@ const data: Row[] = [
   { id: 4, name: 'Property', status: 'Expired', premium: '$22,000' },
 ];
 
-const columns: ColumnDef<Row>[] = [
+const columns: DataGridColumnDef<Row>[] = [
   { accessorKey: 'name', header: 'Policy', enableSorting: true },
   { accessorKey: 'status', header: 'Status' },
   { accessorKey: 'premium', header: 'Premium', enableSorting: true },
@@ -97,7 +98,7 @@ describe('DataTable', () => {
   });
 
   describe('inline editing', () => {
-    const editable: ColumnDef<Row>[] = [
+    const editable: DataGridColumnDef<Row>[] = [
       { accessorKey: 'name', header: 'Policy', meta: { editable: true } },
       { accessorKey: 'status', header: 'Status' },
     ];
@@ -220,6 +221,35 @@ describe('DataTable', () => {
         .getAllByRole('button', { name: /Status/ })
         .filter((b) => b.getAttribute('aria-haspopup') === 'dialog');
       expect(facetTriggers).toHaveLength(1);
+
+      expect(screen.getByText('Commercial Auto')).toBeInTheDocument();
+      expect(screen.getByText('Cyber Liability')).toBeInTheDocument();
+
+      // Actually select a value. These assertions are the point of the test
+      // and were missing: the body only checked that the trigger existed, so
+      // the name promised behaviour nothing verified.
+      fireEvent.click(facetTriggers[0]);
+      fireEvent.click(screen.getByRole('option', { name: /Active/ }));
+
+      // Assert on CONTENT, not on a row count. When nothing matches, the table
+      // renders an empty-state <tr>, so "more than zero rows" is still true
+      // with the filter completely broken — which is exactly how a first
+      // attempt at this test passed against a filter matching nothing.
+      //
+      // What it now catches: TanStack v9 narrowed `arrIncludesSome` to
+      // array-valued columns (it early-returns false unless
+      // `Array.isArray(dataValue)`), while v8 called `dataValue.includes(...)`
+      // and so happened to work on strings. Every faceted filter here was
+      // relying on that accident; under v9 they matched zero rows.
+      expect(screen.getByText('Commercial Auto')).toBeInTheDocument();
+      expect(screen.getByText('General Liability')).toBeInTheDocument();
+      expect(screen.queryByText('Cyber Liability')).not.toBeInTheDocument(); // Pending
+      expect(screen.queryByText('Property')).not.toBeInTheDocument(); // Expired
+
+      // ...and Reset restores them.
+      fireEvent.click(screen.getByRole('button', { name: 'Reset' }));
+      expect(screen.getByText('Cyber Liability')).toBeInTheDocument();
+      expect(screen.getByText('Property')).toBeInTheDocument();
     });
   });
 
