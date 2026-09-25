@@ -237,6 +237,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceSelected",
   },
   {
+    "dark": "#1a2759",
+    "light": "#ebf7ff",
+    "role": "surface.selected.subtle",
+    "semantic": "surfaceSelectedSubtle",
+  },
+  {
     "dark": "#252525",
     "light": "#f8f8f8",
     "role": "surface.subtle",

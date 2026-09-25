@@ -43,6 +43,24 @@ export const semanticColors = {
     // token here — it's a neutral lift (surfaceSubtle), so that "passing over"
     // and "chosen" don't both read as brand blue.
     surfaceSelected: ref('blue250'), // #ceecff — Sky Blue; selected row/item
+    /**
+     * The selected state for a DENSE surface — a table row, a list item —
+     * where the tint is a backdrop for other content rather than the content
+     * itself.
+     *
+     * surfaceSelected (#ceecff) is correct for a small control like a filter
+     * chip, whose own label is textPrimary at 14.72:1. It is NOT correct behind
+     * a row, because everything in that row composites against it: a success
+     * badge's #2f7d32 measures 4.16:1 on Sky Blue — under AA — and green1000 is
+     * the darkest anchor in the ramp, so there is no darker green to promote.
+     *
+     * The lighter tint restores contrast. Distinguishing selected from hovered
+     * is then carried by a left accent bar rather than by tint depth, because
+     * every tint light enough for the badge to pass is too close to
+     * surfaceSubtle to tell the two apart. Colour alone was never going to
+     * satisfy both constraints.
+     */
+    surfaceSelectedSubtle: ref('blue100'), // #ebf7ff — selected ROW fill
     surfaceNavigation: ref('blue1000'), // #000f47 — Midnight Blue header (legacy)
     surfaceNavigationMode: ref('blue1100'), // #002c77 — MODE Surface Primary (Figma future-state)
     // Approximations of white overlays blended on `#000f47` to produce stable hex values
@@ -181,6 +199,9 @@ export const semanticDarkOverrides = {
     // mode's white textPrimary (1.73:1), so selection uses the navy step the
     // navigation surfaces already use.
     surfaceSelected: tokens.blue975, // #1a2759 — white on it: 14.20:1
+    // Dark needs no lightening: status text inverts to the near-white end of
+    // each ramp, so it clears easily on the navy. Same value as surfaceSelected.
+    surfaceSelectedSubtle: tokens.blue975, // #1a2759
     surfaceAccentStrong: tokens.gray700, // #8a8c88 (was blueGray700)
     surfaceHero: tokens.gray950, // #3e4944 (was blueGray850)
     surfaceDisabled: tokens.neutral800, // #3b3b3b

@@ -87,6 +87,15 @@ const PAIRS = [
   // white textPrimary at 1.73:1 — exactly the regression this pair catches.
   { name: 'textPrimary on surfaceSubtle', fg: 'textPrimary', bg: 'surfaceSubtle', required: 4.5, warn: 4.5 },
   { name: 'textPrimary on surfaceSelected', fg: 'textPrimary', bg: 'surfaceSelected', required: 4.5, warn: 4.5 },
+  // A selected ROW is a backdrop for everything in it — status badges above
+  // all. These were never checked, and the omission shipped a real AA failure:
+  // statusSuccessText measured 4.16:1 once the grid's selected row moved to
+  // Sky Blue. green1000 is the darkest green in the ramp, so the fix had to be
+  // a lighter fill (surfaceSelectedSubtle) with a left accent bar carrying the
+  // state instead.
+  { name: 'textPrimary on surfaceSelectedSubtle', fg: 'textPrimary', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
+  { name: 'statusSuccessText on surfaceSelectedSubtle', fg: 'statusSuccessText', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
+  { name: 'statusDangerText on surfaceSelectedSubtle', fg: 'statusDangerText', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
   // The raised panel (grid shell, card) must hold body text as well as the
   // page does — it is a reading surface, not decoration.
   { name: 'textPrimary on surfaceRaised', fg: 'textPrimary', bg: 'surfaceRaised', required: 4.5, warn: 4.5 },

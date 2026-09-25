@@ -1,9 +1,10 @@
 import type { DataGridColumnDef } from './data-grid-features';
 import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { userEvent } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 
 import { DataTable, createSelectColumn } from './data-table';
+import type { SelectionState } from './data-grid-selection';
 import { Badge } from './badge';
 import { Button } from './button';
 
@@ -74,6 +75,71 @@ export const WithRowSelection: StoryObj = {
       pageSize={5}
     />
   ),
+};
+
+/**
+ * **"Select all" must never be ambiguous.**
+ *
+ * The header checkbox selects the PAGE — it says so, because that is what it
+ * does. Selecting every record matching the current filters is a separate,
+ * explicit act, and the banner states which scope is in force at all times.
+ *
+ * This matters most in server mode: the client holds one page, so "all 1,284"
+ * cannot be a set of selected rows — there are no row objects for the other
+ * 1,279. It is a flag about the QUERY. A bulk action must branch on
+ * `allFilteredRowsSelected` and send the filter state, not `selectedRowIds`.
+ *
+ * Note each checkbox is named after its record ("Select Commercial Auto"),
+ * not its position: position changes under sorting and filtering.
+ */
+export const SelectAllResults: StoryObj = {
+  render: function Render() {
+    const [selection, setSelection] = useState<SelectionState | null>(null);
+    return (
+      <div className="flex flex-col gap-3">
+        <DataTable
+          columns={[createSelectColumn<Policy>({ getRowLabel: (p) => p.name }), ...baseColumns]}
+          data={policyData}
+          enableRowSelection
+          selectionNoun="policy"
+          selectionNounPlural="policies"
+          pageSize={3}
+          onSelectionChange={setSelection}
+        />
+        <pre className="rounded-lg p-3 text-xs" style={{ background: 'var(--role-surface-subtle)' }}>
+{JSON.stringify(
+  {
+    selectedRowIds: selection?.selectedRowIds ?? [],
+    selectedVisibleRows: selection?.selectedVisibleRows ?? 0,
+    allFilteredRowsSelected: selection?.allFilteredRowsSelected ?? false,
+    totalFilteredCount: selection?.totalFilteredCount ?? 0,
+  },
+  null,
+  2
+)}
+        </pre>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('the header checkbox says it selects the page', async () => {
+      await expect(
+        canvas.getByRole('checkbox', { name: 'Select all rows on this page' })
+      ).toBeInTheDocument();
+    });
+    await step('each row is named after its record, not its position', async () => {
+      await expect(
+        canvas.getByRole('checkbox', { name: 'Select Commercial Auto' })
+      ).toBeInTheDocument();
+    });
+    await step('escalating states the wider scope', async () => {
+      await userEvent.click(canvas.getByRole('checkbox', { name: 'Select all rows on this page' }));
+      const escalate = await canvas.findByRole('button', { name: /Select all \d+ results/ });
+      await userEvent.click(escalate);
+      await expect(canvas.getByRole('status')).toHaveTextContent(/All \d+ policies matching/);
+    });
+  },
 };
 
 export const WithColumnVisibility: StoryObj = {

@@ -69,6 +69,10 @@ const ROLE_MAP = {
     },
     'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
     'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
+    'surface.selected.subtle': {
+        semantic: 'surfaceSelectedSubtle',
+        description: 'Selected row/list-item fill — lighter than surface.selected so in-row content keeps its contrast',
+    },
     'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint; hover is a neutral lift (surface.subtle), not this' },
     'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
     'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },

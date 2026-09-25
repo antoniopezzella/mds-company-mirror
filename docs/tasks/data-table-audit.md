@@ -167,7 +167,7 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 
 | Capability | Status | Notes |
 |---|---|---|
-| **Export** (§32) | **✗** | nothing. The first pass recorded a false positive on the JS `export` keyword |
+| **Export** (§32) | ◐ | CSV export exists (`enableExport`). **No scope choice** — serialises `getFilteredRowModel()`, which is one page in server mode |
 | **Permissions** (§31) | ◐ | cell-level `readonly` rejection exists for paste/fill; no table/row/column model |
 | **Responsive / column priority** (§27) | **✗** | no `priority: essential\|secondary\|tertiary`, no strategy |
 | Loading / empty / no-results / error | ✅ | four-state vocabulary, distinct copy for empty vs filtered-empty |
@@ -254,16 +254,32 @@ Not covered:
 ## Recommended priorities
 
 ### P0 — core correctness
-1. **Select-all scope semantics** (§9). `selectedVisibleRows` / `selectedRowIds` /
-   `allFilteredRowsSelected`, plus the "Select all 12,482 results" affordance. Blocks P1.1.
-2. **Selection accessible names** (§33) — verify and fix "Select Asset 10428".
+1. ~~**Select-all scope semantics** (§9)~~ — **done 2026-09-25**. `useSelectionScope` +
+   `DataGridSelectionBanner`, wired into `DataTable`.
+2. ~~**Selection accessible names** (§33)~~ — **done**. `createSelectColumn({ getRowLabel })`.
 3. **Migrate the 5 `table.tsx` consumers** and delete it on schedule.
+
+> **Found while doing 1–2, and worth recording.** Adding a story that selects rows *and*
+> renders status badges made axe fail: `statusSuccessText` measured **4.16:1** on the
+> selected-row fill. The cause was a correct fix made earlier in the same session —
+> moving the grid's selected row from near-white `surface.accent` to Sky Blue
+> `surface.selected`, to stop selected and hovered rows looking identical. It changed the
+> backdrop every in-row badge composites against, and status colours had only ever been
+> validated against white.
+>
+> No green fixes it: `green1000` is the darkest anchor in the ramp. And no tint fixes it
+> either — every fill light enough for the badge to pass is too close to `surface.subtle`
+> to distinguish selected from hovered. **Colour alone could not satisfy both
+> constraints.** Resolved with `surface.selected.subtle` (a lighter fill) plus a left
+> accent bar carrying the state, and three new contrast pairs so the gate can see it:
+> status text on a *selected* row was never checked.
 
 ### P1 — enterprise essentials
 1. **Bulk actions** (§10) — depends on P0.1.
 2. **Row actions** (§11) — primary / contextual / overflow.
 3. **Saved views** (§18) — the largest gap; needs a serialisation format and a test.
-4. **Export** (§32) with explicit scope.
+4. **Export scope** (§32) — the mechanism exists; it needs Current page / Selected rows /
+   All filtered results, and must refuse to imply a dataset-wide export it cannot perform.
 5. **Responsive column priority** (§27).
 6. **Enterprise pattern stories** (§40) — at minimum Asset Management, the §55 milestone.
 
