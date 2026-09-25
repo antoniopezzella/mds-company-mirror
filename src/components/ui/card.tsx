@@ -24,7 +24,10 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
   ({ className, border = true, style, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col rounded-sm', border && 'border', className)}
+      // rounded-xl is the scale's documented slot for cards (see
+      // 30-Spacing.mdx) and matches DataGridContainer, which this used to
+      // disagree with — a card beside a grid had visibly different corners.
+      className={cn('flex flex-col rounded-xl', border && 'border', className)}
       style={{
         backgroundColor: getRoleColor('surface.default'),
         borderColor: border ? getRoleColor('border.default') : undefined,
