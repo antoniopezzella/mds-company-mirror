@@ -477,6 +477,32 @@ export function DataGridTable<TData extends RowData>({
   // a layout effect for a value the header itself hardcodes.
   const headerHeight = maxHeight ? 40 : 0;
 
+  /**
+   * Numbers align right — automatically, not by per-column discipline.
+   *
+   * Digits only line up for comparison when their last significant figure
+   * does, so "amounts and numbers align right" is a rule of the system rather
+   * than a choice each table makes. Left-aligned currency in a column of
+   * varying magnitudes is unscannable, and relying on every author to
+   * remember `meta.align` guarantees some of them will not.
+   *
+   * Precedence: an explicit `meta.align` always wins · then `meta.type` ·
+   * then the actual value type in the first row. The last is what makes this
+   * work for the tables that declare nothing at all.
+   *
+   * Sampled from the first row rather than every row: a column is one type,
+   * and scanning the page on every render to re-learn that is wasted work.
+   */
+  const NUMERIC_TYPES = new Set(['number', 'currency', 'percent']);
+  const sampleRow = rows[0];
+  const resolveAlign = (column: { id: string; columnDef: { meta?: { align?: 'left' | 'center' | 'right'; type?: string } } }) => {
+    const meta = column.columnDef.meta;
+    if (meta?.align) return meta.align;
+    if (meta?.type) return NUMERIC_TYPES.has(meta.type) ? 'right' : 'left';
+    if (sampleRow && typeof sampleRow.getValue(column.id) === 'number') return 'right';
+    return 'left';
+  };
+
   // Literal class strings, never `text-${align}`: Tailwind's scanner is plain
   // text, so an interpolated class generates no CSS at all.
   const alignClass = (align?: 'left' | 'center' | 'right') =>
@@ -658,7 +684,7 @@ export function DataGridTable<TData extends RowData>({
                     className={cn(
                       'px-3 text-sm',
                       isEditing ? 'py-0' : cellPadding,
-                      alignClass(cell.column.columnDef.meta?.align)
+                      alignClass(resolveAlign(cell.column))
                     )}
                     // Grid semantics ONLY in cell-selection mode. `role=grid`
                     // promises arrow-key navigation; on a static table that
@@ -944,7 +970,7 @@ export function DataGridTable<TData extends RowData>({
                   colSpan={header.colSpan > 1 ? header.colSpan : undefined}
                   className={cn(
                     'relative h-10 px-3 text-sm font-medium',
-                    alignClass(header.column.columnDef.meta?.align)
+                    alignClass(resolveAlign(header.column))
                   )}
                   // aria-sort is what actually announces sort state to a screen
                   // reader; the icon alone conveys nothing to one.
@@ -1210,7 +1236,7 @@ export function DataGridTable<TData extends RowData>({
                   className={cn(
                     'px-3 text-sm font-medium',
                     cellPadding,
-                    alignClass(header.column.columnDef.meta?.align)
+                    alignClass(resolveAlign(header.column))
                   )}
                   style={{
                     color: textColor,
