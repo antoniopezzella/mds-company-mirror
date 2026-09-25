@@ -45,6 +45,53 @@ describe('Badge', () => {
     expect(solidBg).not.toBe(softBg);
   });
 
+  // The default treatment for a STATUS tone was untested: every case above
+  // passes `soft` explicitly, so the default could have changed silently in
+  // either direction without a single failure.
+  it('defaults a status tone to the outline treatment', () => {
+    const { container } = render(<Badge tone="success">Active</Badge>);
+    const el = container.firstElementChild as HTMLElement;
+    expect(el.style.backgroundColor).toBe('transparent');
+    expect(el.className).toMatch(/\bborder\b/);
+    expect(el.style.borderColor).toBeTruthy();
+    // Tonal text, not the body colour — this is what makes it read as a status.
+    expect(el.style.color).toBeTruthy();
+  });
+
+  it('keeps the legacy `soft` prop meaning exactly what it meant', () => {
+    // The default moved; explicit call sites must not. `soft={false}` is still
+    // solid and `soft` is still the tint, or the deprecation silently restyles
+    // every existing consumer instead of only the ones relying on the default.
+    const { container: solid } = render(<Badge tone="success" soft={false}>S</Badge>);
+    const { container: viaVariant } = render(<Badge tone="success" variant="solid">S</Badge>);
+    expect((solid.firstElementChild as HTMLElement).style.backgroundColor)
+      .toBe((viaVariant.firstElementChild as HTMLElement).style.backgroundColor);
+
+    const { container: soft } = render(<Badge tone="success" soft>S</Badge>);
+    const { container: softVariant } = render(<Badge tone="success" variant="soft">S</Badge>);
+    expect((soft.firstElementChild as HTMLElement).style.backgroundColor)
+      .toBe((softVariant.firstElementChild as HTMLElement).style.backgroundColor);
+  });
+
+  it('gives outline, soft and solid three distinct treatments', () => {
+    const bg = (c: HTMLElement) => (c.firstElementChild as HTMLElement).style.backgroundColor;
+    const { container: o } = render(<Badge tone="danger" variant="outline">D</Badge>);
+    const { container: sf } = render(<Badge tone="danger" variant="soft">D</Badge>);
+    const { container: sd } = render(<Badge tone="danger" variant="solid">D</Badge>);
+    expect(new Set([bg(o), bg(sf), bg(sd)]).size).toBe(3);
+  });
+
+  it('does not use the sub-AA gold for warning outline text', () => {
+    // status.warning.fg is gold1000 (#cb7623) — 3.41:1 on white, under AA for
+    // this variant's small text, and the gold ramp has no darker step. The
+    // border carries the tone instead. Pinned because the "obvious" fix is to
+    // make it tonal like the others, which reintroduces the failure.
+    const { container } = render(<Badge tone="warning" variant="outline">Pending</Badge>);
+    const el = container.firstElementChild as HTMLElement;
+    expect(el.style.color).not.toBe('rgb(203, 118, 35)');
+    expect(el.style.borderColor).toBeTruthy();
+  });
+
   it('forwards additional props like data-testid', () => {
     render(<Badge data-testid="my-badge">Tagged</Badge>);
     expect(screen.getByTestId('my-badge')).toBeInTheDocument();
