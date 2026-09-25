@@ -73,6 +73,20 @@ export * from './components/ui/control-size';
 export * from './components/ui/context-menu';
 export * from './components/ui/data-state';
 export * from './components/ui/data-table';
+// The feature set + its type aliases. `DataGridColumnDef` in particular MUST
+// be reachable: it is what keeps a consumer's column arrays writing two
+// generic params after TanStack v9 made ColumnDef take three.
+export * from './components/ui/data-grid-features';
+// The composable grid. `DataTable` (above) is the batteries-included preset
+// over exactly these parts; reach for them directly when you need to compose.
+export * from './components/ui/data-grid';
+export * from './components/ui/data-grid-table';
+export * from './components/ui/data-grid-rows';
+export * from './components/ui/data-grid-cell-selection';
+export * from './components/ui/data-grid-clipboard';
+export * from './components/ui/data-grid-cell-edit';
+export * from './components/ui/data-grid-toolbar';
+export * from './components/ui/data-grid-pagination';
 export * from './components/ui/date-picker';
 export * from './components/ui/dialog';
 export * from './components/ui/drawer';
@@ -125,6 +139,7 @@ export * from './components/ui/switch';
 export * from './components/ui/table';
 export * from './components/ui/tabs';
 export * from './components/ui/taxonomy';
+export * from './components/ui/z-index';
 export * from './components/ui/text-field';
 export * from './components/ui/textarea';
 export * from './components/ui/toast';

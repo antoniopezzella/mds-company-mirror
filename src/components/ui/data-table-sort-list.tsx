@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from 'react';
-import type { Table } from '@tanstack/react-table';
+import type { RowData } from '@tanstack/react-table';
+import type { DataGridTableInstance } from './data-grid-features';
 import { ArrowDownUp, Plus, Trash2 } from 'lucide-react';
 
 import { getRoleColor } from '@/theme/roles';
@@ -15,13 +16,13 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * shift-clicking headers and only read from the little index badges.
  * Mirrors tablecn's sort-list; state lives in TanStack, not here.
  */
-export interface DataTableSortListProps<TData> {
-  table: Table<TData>;
+export interface DataTableSortListProps<TData extends RowData> {
+  table: DataGridTableInstance<TData>;
 }
 
-export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData>) {
+export function DataTableSortList<TData extends RowData>({ table }: DataTableSortListProps<TData>) {
   const [open, setOpen] = React.useState(false);
-  const sorting = table.getState().sorting;
+  const sorting = table.state.sorting;
 
   const sortableColumns = table.getAllLeafColumns().filter((c) => c.getCanSort());
   const unsorted = sortableColumns.filter((c) => !sorting.some((s) => s.id === c.id));
@@ -37,11 +38,13 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="font-normal">
-          <ArrowDownUp className="mr-1.5 h-4 w-4" />
+        {/* Compact to match the faceted-filter triggers — see the note in
+            data-table-faceted-filter.tsx. Height stays on the control scale. */}
+        <Button variant="outline" size="sm" className="gap-1.5 px-2 text-xs font-normal">
+          <ArrowDownUp className="size-3.5 shrink-0 opacity-70" aria-hidden="true" />
           Sort
           {sorting.length > 0 && (
-            <Badge tone="default" size="sm" className="ml-2">
+            <Badge tone="default" size="sm">
               {sorting.length}
             </Badge>
           )}
@@ -63,7 +66,7 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
                     const next = sorting.map((x) => (x.id === s.id ? { ...x, id: e.target.value } : x));
                     table.setSorting(next);
                   }}
-                  className="flex-1 rounded-xs border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
+                  className="flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
                   style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                 >
                   {[s.id, ...unsorted.map((c) => c.id)].map((id) => (
@@ -76,7 +79,7 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
                   aria-label={`Sort direction for ${label(s.id)}`}
                   value={s.desc ? 'desc' : 'asc'}
                   onChange={(e) => table.setSorting(sorting.map((x) => (x.id === s.id ? { ...x, desc: e.target.value === 'desc' } : x)))}
-                  className="w-24 rounded-xs border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
+                  className="w-24 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
                   style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
                 >
                   <option value="asc">Asc</option>
