@@ -213,6 +213,26 @@ describe('capabilities ported from table.tsx', () => {
     expect(cells[0].className).toContain('text-left');
   });
 
+  it('opens on a given sort — Table\'s defaultSortColumn/Direction', () => {
+    // The one capability Table had that the grid lacked. Without it, every
+    // consumer migrating off Table would have to hoist sorting into their own
+    // state just to choose a starting order.
+    const sorted: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'name', header: 'Item' },
+      { accessorKey: 'qty', header: 'Qty' },
+    ];
+    render(
+      <DataTable
+        columns={sorted}
+        data={rows.slice(0, 5)}
+        pinFirstColumn={false}
+        initialSorting={[{ id: 'qty', desc: true }]}
+      />
+    );
+    const body = within(screen.getByRole('table')).getAllByRole('row').slice(1);
+    expect(within(body[0]).getAllByRole('cell')[1]).toHaveTextContent('5');
+  });
+
   it('right-aligns numbers WITHOUT being told to', () => {
     // The rule: amounts and numbers align right. Relying on every author to
     // remember meta.align guarantees some will not, and left-aligned currency
