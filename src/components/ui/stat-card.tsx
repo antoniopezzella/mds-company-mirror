@@ -13,6 +13,7 @@ import {
   type Formattable,
   type FormatKind,
 } from '@/lib/format';
+import { useFormatConfig } from '@/lib/format-context';
 import { DataError } from './error-state';
 import { resolveDataStatus, type DataStateProps } from './data-state';
 import { Skeleton } from './skeleton';
@@ -175,13 +176,27 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
   ) => {
     const status = resolveDataStatus({ loading, loadError }, 'StatCard');
 
+    // Locale and currency come from the ambient FormatProvider, with this
+    // card's own `formatOptions` winning over it — the usual precedence, and
+    // the reason the provider exists at all. Passing `formatOptions` straight
+    // through (as this did) meant `<FormatProvider currency="EUR">` had no
+    // effect on the one component in the set that formats anything, so the
+    // provider was exported and inert.
+    const ambient = useFormatConfig();
+    const opts: CurrencyFormatOptions & DateFormatOptions = {
+      locale: ambient.locale,
+      currency: ambient.currency,
+      placeholder: ambient.placeholder,
+      ...formatOptions,
+    };
+
     // `delta` derives its own direction; `trend` is the deprecated override.
     const direction: StatCardTrend =
       delta !== undefined ? deltaDirection(delta) : (trend ?? 'neutral');
     const sentiment = delta !== undefined ? deltaSentiment(direction, deltaPolarity) : direction;
 
     const deltaText =
-      delta !== undefined ? formatDelta(delta, deltaFormat, formatOptions) : change;
+      delta !== undefined ? formatDelta(delta, deltaFormat, opts) : change;
 
     const DirectionIcon =
       direction === 'up' ? TrendingUp : direction === 'down' ? TrendingDown : ArrowRight;
@@ -200,7 +215,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
 
     const shell = cn(
       'flex flex-col gap-4',
-      'rounded border border-border bg-card p-6',
+      'rounded-lg border border-border bg-card p-6',
       'shadow-xs transition-shadow hover:shadow-md',
       className
     );
@@ -247,7 +262,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
 
         {/* The metric. `tabular-nums` so digits line up across a row of tiles. */}
         <div className="text-3xl font-bold tracking-tight text-foreground tabular-nums">
-          {formatValue(value, format, formatOptions)}
+          {formatValue(value, format, opts)}
         </div>
 
         {sparkline && (
@@ -264,7 +279,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             {comparisonLabel}
             {comparisonLabel && comparisonValue !== undefined ? ': ' : ''}
             <span className="font-medium text-foreground tabular-nums">
-              {formatValue(comparisonValue, format, formatOptions)}
+              {formatValue(comparisonValue, format, opts)}
             </span>
           </div>
         )}

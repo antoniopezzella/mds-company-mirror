@@ -73,7 +73,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
       <div
         ref={ref}
         role={roleFor(severity)}
-        className={cn('flex items-start gap-3 rounded-sm p-4', className)}
+        className={cn('flex items-start gap-3 rounded-lg p-4', className)}
         style={{
           // Body copy uses `text` (4.5:1); the icon below keeps `fg` as the
           // accent, which only needs 3:1. See getSeverityRoles.
@@ -94,7 +94,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-mr-1 -mt-1 shrink-0 rounded p-1 opacity-70 transition-opacity hover:opacity-100"
+            className="-mr-1 -mt-1 shrink-0 rounded-lg p-1 opacity-70 transition-opacity hover:opacity-100"
             style={{ color: 'inherit' }}
           >
             <X className="h-4 w-4" />

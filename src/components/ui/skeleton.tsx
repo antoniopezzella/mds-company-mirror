@@ -9,9 +9,9 @@ export type SkeletonVariant = 'text' | 'rectangular' | 'rounded' | 'circular';
 const skeletonVariants = cva('block', {
   variants: {
     variant: {
-      text: 'rounded',
+      text: 'rounded-lg',
       rectangular: 'rounded-none',
-      rounded: 'rounded-xs',
+      rounded: 'rounded-md',
       circular: 'rounded-full',
     },
     animation: {

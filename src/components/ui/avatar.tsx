@@ -55,9 +55,13 @@ const STATUS_SIZE: Record<AvatarSize, number> = {
   xl: 14,
 };
 
+// An inline style, so it cannot use a `rounded-*` utility — but it must still
+// track the scale, or Avatar drifts every time the scale moves. `--radius-sm`
+// is the same step `rounded-lg` resolves to, with the old 8px as the fallback
+// for any context that has not loaded the theme layer.
 const RADIUS: Record<AvatarVariant, string> = {
   circular: '50%',
-  rounded: '8px',
+  rounded: 'var(--radius-lg, 8px)',
   square: '0',
 };
 

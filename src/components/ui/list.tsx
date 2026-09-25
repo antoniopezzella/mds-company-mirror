@@ -85,7 +85,7 @@ export const List: React.FC<ListProps> = ({
 
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-xs', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
+    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"
@@ -143,7 +143,7 @@ export const List: React.FC<ListProps> = ({
                     // aria-pressed carries the state instead.
                     <span
                       aria-hidden="true"
-                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[2px] border"
+                      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md border"
                       style={{
                         borderColor: isSelected ? getRoleColor('interactive.primary') : getRoleColor('border.default'),
                         backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',
