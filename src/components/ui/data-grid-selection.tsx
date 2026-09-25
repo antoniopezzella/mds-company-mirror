@@ -111,8 +111,15 @@ export function useSelectionScope<TData extends RowData>(
 }
 
 export interface DataGridSelectionBannerProps extends UseSelectionScopeResult {
-  /** Noun for the records, e.g. "policy". Pluralised with a trailing "s". */
+  /** Noun for the records, e.g. "policy". */
   itemNoun?: string;
+  /**
+   * Plural form. Defaults to `itemNoun + "s"`, which is wrong for "policy",
+   * "match", "party" and most of the world's languages — the spec requires
+   * i18n support (§45), and a design system guessing English morphology is
+   * how "7 policys" ships. Pass it whenever the default does not apply.
+   */
+  itemNounPlural?: string;
   className?: string;
 }
 
@@ -132,11 +139,13 @@ export function DataGridSelectionBanner({
   selectAllFiltered,
   clearSelection,
   itemNoun = 'row',
+  itemNounPlural,
   className,
 }: DataGridSelectionBannerProps) {
   if (selectedVisibleRows === 0 && !allFilteredRowsSelected) return null;
 
-  const plural = (n: number) => `${n.toLocaleString()} ${itemNoun}${n === 1 ? '' : 's'}`;
+  const many = itemNounPlural ?? `${itemNoun}s`;
+  const plural = (n: number) => `${n.toLocaleString()} ${n === 1 ? itemNoun : many}`;
 
   return (
     <div

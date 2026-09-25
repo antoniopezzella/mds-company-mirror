@@ -2553,6 +2553,10 @@
         "$type": "color",
         "$value": "{color.blue250}"
       },
+      "surfaceSelectedSubtle": {
+        "$type": "color",
+        "$value": "{color.blue100}"
+      },
       "surfaceNavigation": {
         "$type": "color",
         "$value": "{color.blue1000}"
@@ -2824,6 +2828,10 @@
         "$type": "color",
         "$value": "{color.blue975}"
       },
+      "surfaceSelectedSubtle": {
+        "$type": "color",
+        "$value": "{color.blue975}"
+      },
       "surfaceAccentStrong": {
         "$type": "color",
         "$value": "{color.gray700}"
@@ -3071,6 +3079,10 @@
           }
         },
         "selected": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceSelectedSubtle}"
+          },
           "$type": "color",
           "$value": "{semantic.color.surfaceSelected}"
         },
@@ -3295,6 +3307,10 @@
           }
         },
         "selected": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{semanticDark.color.surfaceSelectedSubtle}"
+          },
           "$type": "color",
           "$value": "{semanticDark.color.surfaceSelected}"
         },

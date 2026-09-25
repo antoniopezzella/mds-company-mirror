@@ -16,6 +16,7 @@ import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
 import { dataGridFeatures, type DataGridColumnDef } from './data-grid-features';
 import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
+import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
 import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
 import { DataGridToolbar } from './data-grid-toolbar';
 import { DataGridPagination } from './data-grid-pagination';
@@ -117,6 +118,24 @@ export interface DataTableProps<TData extends RowData, TValue> {
   searchKey?: string;
   searchPlaceholder?: string;
   enableRowSelection?: boolean;
+  /**
+   * NOTE: accessible names for the selection checkboxes come from
+   * `createSelectColumn({ getRowLabel })`, which the consumer passes in
+   * `columns` — not from a prop here. Two ways to set one name is how they
+   * drift apart.
+   */
+  /** Noun used in the selection banner, e.g. "policy". */
+  selectionNoun?: string;
+  /** Its plural. Defaults to `selectionNoun + "s"` — pass it for anything English does not pluralise that way. */
+  selectionNounPlural?: string;
+  /**
+   * Reports the selection AND its scope.
+   *
+   * Branch on `allFilteredRowsSelected`: when it is true the user asked for
+   * every record matching the filters, and `selectedRowIds` holds only the
+   * loaded page — send the filter state to your bulk endpoint, not the ids.
+   */
+  onSelectionChange?: (selection: SelectionState) => void;
   enableColumnVisibility?: boolean;
   pageSize?: number;
   className?: string;
@@ -275,6 +294,9 @@ export function DataTable<TData extends RowData, TValue>({
   searchKey,
   searchPlaceholder = 'Search...',
   enableRowSelection = false,
+  selectionNoun = 'row',
+  selectionNounPlural,
+  onSelectionChange,
   enableColumnVisibility = false,
   pageSize = 10,
   className,
@@ -406,6 +428,32 @@ export function DataTable<TData extends RowData, TValue>({
   // row model only ever holds one page.
   const recordCount = manualPagination ? (rowCount ?? data.length) : data.length;
 
+  // The FILTERED total, which is what a select-all escalation covers — not
+  // recordCount. In manual mode the server's `rowCount` is already the count
+  // after its filters; in client mode the local filtered model knows it.
+  const totalFilteredCount = manualPagination
+    ? (rowCount ?? data.length)
+    : table.getFilteredRowModel().rows.length;
+
+  const selection = useSelectionScope(table, { totalFilteredCount });
+
+  // Reported through an effect, not during render: onSelectionChange is a
+  // consumer callback and calling it mid-render makes their setState a
+  // render-phase update of another component.
+  const onSelectionChangeRef = React.useRef(onSelectionChange);
+  onSelectionChangeRef.current = onSelectionChange;
+  const selectionKey = `${selection.selectedRowIds.join(',')}|${selection.allFilteredRowsSelected}|${selection.totalFilteredCount}`;
+  React.useEffect(() => {
+    onSelectionChangeRef.current?.({
+      selectedRowIds: selection.selectedRowIds,
+      selectedVisibleRows: selection.selectedVisibleRows,
+      allFilteredRowsSelected: selection.allFilteredRowsSelected,
+      totalFilteredCount: selection.totalFilteredCount,
+    });
+    // selectionKey collapses the parts that matter into one primitive, so the
+    // effect does not refire on every render from a fresh array identity.
+  }, [selectionKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <DataGrid
       table={table}
@@ -439,6 +487,8 @@ export function DataTable<TData extends RowData, TValue>({
           {toolbarActions}
         </DataGridToolbar>
       )}
+
+      {enableRowSelection && <DataGridSelectionBanner {...selection} itemNoun={selectionNoun} itemNounPlural={selectionNounPlural} />}
 
       {/* Table and footer share one bordered, rounded shell so the footer
           reads as part of the grid (MUI DataGrid's treatment) rather than a

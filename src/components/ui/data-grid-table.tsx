@@ -240,7 +240,13 @@ export function DataGridTable<TData extends RowData>({
   // surface.subtle (#f8f8f8) in light, so a selected row and a hovered row
   // were indistinguishable. surface.selected is the role whose own
   // description names this exact job.
-  const selectedBg = getRoleColor('surface.selected');
+  // surface.selected.subtle, not surface.selected. Everything in a row
+  // composites against this: a success badge on Sky Blue measures 4.16:1,
+  // under AA, and green1000 is the darkest green there is. The lighter tint
+  // restores that; the left accent bar below is what keeps selected
+  // distinguishable from hovered, since no tint satisfies both.
+  const selectedBg = getRoleColor('surface.selected.subtle');
+  const selectedEdge = getRoleColor('interactive.primary');
   // The header band. It used to equal the row background exactly, so the
   // column row floated with nothing anchoring it. surface.subtle is one step
   // off the panel in both modes (#f8f8f8 on white, #252525 on #1a1a1a).
@@ -249,7 +255,7 @@ export function DataGridTable<TData extends RowData>({
   // is #252525 in dark, and a band the same colour as its panel is not a band.
   const headerBg = getRoleColor('surface.subtle');
   const stripeBg = getRoleColor('surface.subtle');
-  const selectionBg = getRoleColor('surface.selected');
+  const selectionBg = getRoleColor('surface.selected.subtle');
 
   // Before anything is focused, TanStack reports tabIndex -1 for every cell —
   // correct for "there is no roving position yet", but it leaves the grid
@@ -599,6 +605,12 @@ export function DataGridTable<TData extends RowData>({
                 backgroundColor: rowBackground,
                 borderTop: `1px solid ${borderColor}`,
                 color: textColor,
+                // A left accent bar carries selection, because the tint alone
+                // cannot: any fill light enough to keep an in-row status badge
+                // above 4.5:1 is too close to the hover tint to distinguish.
+                // An inset shadow rather than a border so it adds no width and
+                // cannot shift the columns.
+                boxShadow: row.getIsSelected() ? `inset 3px 0 0 0 ${selectedEdge}` : undefined,
               }}
             >
               {row.getVisibleCells().map((cell) => {
