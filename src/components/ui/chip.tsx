@@ -60,7 +60,11 @@ function getToneRoles(tone: ChipTone): { bg: RoleName; fg: RoleName; border: Rol
     case 'danger':
       return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.fg' };
     case 'info':
-      return { bg: 'surface.accent', fg: 'text.primary', border: 'status.warning.fg' };
+      // interactive.primary, not status.warning.fg. Every other tone borders
+      // in its own colour; info alone borrowed warning's GOLD, which made an
+      // informational chip read as a caution. Matches Badge's info tone, which
+      // already uses interactive.primary as its border.
+      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
     default:
       return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
   }

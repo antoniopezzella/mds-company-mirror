@@ -33,14 +33,14 @@ const badgeVariants = cva(
     variants: {
       size: {
         /** Figma "Text Badge" spec (node-id 7584:27300): 24px tall, 8px padding, 8px radius, 14px text. */
-        md: 'h-6 rounded-sm px-2 text-sm',
+        md: 'h-6 rounded-lg px-2 text-sm',
         /**
          * Dense contexts where a 24px pill would dominate its row — e.g. the
          * per-step status pills in `Stepper`'s `showStatusBadge` layout.
          * NOT in the Figma spec yet (Figma defines only the 24px size);
          * raise a Figma-side variant request before leaning on this widely.
          */
-        sm: 'h-5 rounded-xs px-1.5 text-xs',
+        sm: 'h-5 rounded-md px-1.5 text-xs',
       },
     },
     defaultVariants: { size: 'md' },
@@ -54,6 +54,14 @@ interface ToneRoles {
   softBg: RoleName;
   softBorder: RoleName;
   softFg: RoleName;
+  /**
+   * Text for the `outline` variant, over the page rather than over a tint.
+   *
+   * The rule: the strongest TONAL colour that clears 4.5:1 against
+   * surface.default in **both** modes; text.primary where no tonal colour can.
+   * Only `warning` hits that wall — see its entry.
+   */
+  outlineFg: RoleName;
 }
 
 // Solid-fill colors below reuse the *.border role because it happens to
@@ -76,6 +84,8 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
     softBg: 'surface.accent',
     softBorder: 'interactive.primary',
     softFg: 'text.primary',
+    // 18.11 light / 11.03 dark — interactive.primary is already mode-aware.
+    outlineFg: 'interactive.primary',
   },
   success: {
     solidBg: 'status.success.border',
@@ -83,6 +93,7 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
     softBg: 'status.success.bg',
     softBorder: 'status.success.border',
     softFg: 'text.primary',
+    outlineFg: 'status.success.fg', // 5.12 light / 17.85 dark
   },
   warning: {
     solidBg: 'status.warning.border',
@@ -95,6 +106,17 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
     softBg: 'status.warning.bg',
     softBorder: 'status.warning.border',
     softFg: 'text.onLight',
+    // The one tone that cannot be tonal. status.warning.fg is gold1000
+    // (#cb7623) and measures **3.41:1** on white — under AA for the 12px text
+    // this variant uses. The gold ramp BOTTOMS OUT there: gold1000 is the
+    // darkest Figma anchor, so there is no darker gold to reach for, and
+    // inventing one would drift from the synced palette.
+    //
+    // text.primary instead (Midnight light / white dark, 18.11 / 19.03). The
+    // gold border still carries the tone — the colour cue survives, the
+    // illegible text does not. Same reasoning as softFg above, which reaches
+    // for text.onLight for the mirror-image reason.
+    outlineFg: 'text.primary',
   },
   danger: {
     solidBg: 'status.danger.border',
@@ -102,20 +124,42 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
     softBg: 'status.danger.bg',
     softBorder: 'status.danger.border',
     softFg: 'text.primary',
+    outlineFg: 'status.danger.fg', // 9.29 light / 16.27 dark
   },
 };
+
+export type BadgeVariant = 'outline' | 'soft' | 'solid';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {
   /** Figma "Type" property — which status color the badge represents. */
   tone?: BadgeTone;
-  /** Figma "Soft background" property. Ignored for `default` and `disabled`, which have one fixed treatment. */
+  /**
+   * Visual treatment. Ignored for `default` and `disabled`, which have one
+   * fixed treatment each.
+   *
+   * - `outline` (default) — transparent, tonal 1px border, tonal text.
+   * - `soft` — light tint + tonal border + dark text (Figma "Soft background").
+   * - `solid` — filled with the tone colour, light text.
+   */
+  variant?: BadgeVariant;
+  /**
+   * `@deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.` Use `variant`.
+   * `soft` maps to `variant="soft"` and `soft={false}` to `variant="solid"`,
+   * so existing call sites keep their exact appearance.
+   */
   soft?: boolean;
   /** Pill size. `md` (default) is the Figma spec; `sm` is a non-Figma dense variant. */
   size?: 'md' | 'sm';
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, tone = 'default', soft = false, size = 'md', style, ...props }, ref) => {
+  ({ className, tone = 'default', variant, soft, size = 'md', style, ...props }, ref) => {
+    // An explicit legacy `soft` still wins, so every existing call site renders
+    // exactly what it rendered before. Only call sites that passed NEITHER prop
+    // move — which is the default change, and nothing wider than that.
+    const resolved: BadgeVariant =
+      variant ?? (soft === undefined ? 'outline' : soft ? 'soft' : 'solid');
+
     let backgroundColor: string;
     let color: string;
     let borderColor: string | undefined;
@@ -140,9 +184,16 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       borderColor = undefined;
     } else {
       const roles = TONE_ROLES[tone];
-      if (soft) {
+      if (resolved === 'soft') {
         backgroundColor = getRoleColor(roles.softBg);
         color = getRoleColor(roles.softFg);
+        borderColor = getRoleColor(roles.softBorder);
+      } else if (resolved === 'outline') {
+        // Transparent, not a tint: the badge sits on whatever surface it is
+        // placed on — a table row, a card, a striped row — and any fixed tint
+        // would fight those. The border carries the tone.
+        backgroundColor = 'transparent';
+        color = getRoleColor(roles.outlineFg);
         borderColor = getRoleColor(roles.softBorder);
       } else {
         backgroundColor = roles.solidBg ? getRoleColor(roles.solidBg) : 'transparent';
@@ -154,7 +205,11 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         ref={ref}
-        className={cn(badgeVariants({ size }), tone === 'default' || (tone !== 'disabled' && soft) ? 'border' : '', className)}
+        className={cn(
+          badgeVariants({ size }),
+          tone === 'default' || (tone !== 'disabled' && resolved !== 'solid') ? 'border' : '',
+          className
+        )}
         style={{ backgroundColor, color, borderColor, ...style }}
         {...props}
       />
