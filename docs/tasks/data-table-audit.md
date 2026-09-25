@@ -215,6 +215,11 @@ ConsumerOwnedState, FullFeatured, FullToolbar, plus 4 DataState and 9 legacy `Ta
 `VirtualColumns`, `InfiniteScroll`, `Refreshing`, `PartialError`, `ReadOnly`,
 `PermissionRestricted`, `Responsive`, `Localization`.
 
+**Storybook IA (§41) — partially addressed 2026-09-25.** `Foundations/Choosing a table`
+now states the three-way choice, and all three story metas cross-reference it. The full
+§41 regrouping (by capability rather than by which API rendered it) is NOT done: retitling
+changes story IDs, which invalidates the visual baseline, so it needs its own pass.
+
 **None of the §40 enterprise reference patterns exist** — no Asset Management, Approval
 Workflow, Audit Log, Financial Reporting or Hierarchical Portfolio story. §41's Storybook
 IA is not reflected at all: everything sits flat under `Components/DataGrid` and
@@ -239,9 +244,13 @@ Not covered:
 
 ## UX inconsistencies found
 
-1. **Three ways to render a table.** `table.tsx` is deprecated (*remove after 0.8.0 /
-   2026-12-23*) but still has **5 app consumers and a Figma mapping**. The deprecation
-   clock is running against code nobody has moved.
+1. **Three ways to render a table.** *(Corrected 2026-09-25 — an earlier draft said
+   `table.tsx` was deprecated with a December deadline. It is not: the single
+   `@deprecated` in that file is on its `emptyMessage` PROP, not the component. There is
+   no deadline.)* The intent to retire it is recorded in `data-grid-edges.test.tsx:184`,
+   and its capabilities were ported for that purpose — but the deprecation was never
+   applied. One real gap remains first: `variant="bordered"` draws cell borders, which the
+   grid does not. It still has 5 app consumers and a Figma mapping.
 2. **`DataTable` has 28 props.** §53.7 says *"prefer composition over dozens of boolean
    props."* `DataGrid` is the answer to this and already exists — but `DataTable` is what
    3 of the 4 app consumers actually use.
@@ -258,7 +267,8 @@ Not covered:
 1. ~~**Select-all scope semantics** (§9)~~ — **done 2026-09-25**. `useSelectionScope` +
    `DataGridSelectionBanner`, wired into `DataTable`.
 2. ~~**Selection accessible names** (§33)~~ — **done**. `createSelectColumn({ getRowLabel })`.
-3. **Migrate the 5 `table.tsx` consumers** and delete it on schedule.
+3. **Retire `table.tsx`** — close the `bordered` gap, apply a component-level
+   deprecation (there is none today), migrate the 5 consumers, repoint the Figma mapping.
 
 > **Found while doing 1–2, and worth recording.** Adding a story that selects rows *and*
 > renders status badges made axe fail: `statusSuccessText` measured **4.16:1** on the

@@ -25,6 +25,17 @@ const meta: Meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+    docs: { description: { component: [
+      '**The default table.** Pass props, get a table.',
+      '',
+      '`DataTable` is a *preset* over [`DataGrid`](/docs/components-datagrid--docs) — it imports',
+      'and renders it. The two have **identical capabilities**; every grid feature is reachable',
+      'here through an `enable*` prop. Neither is the more powerful tier.',
+      '',
+      'Reach for `DataGrid` only when something outside the table must read or drive its state.',
+      '',
+      'See [Foundations -> Choosing a table](/docs/foundations-choosing-a-table--docs).',
+    ].join('\n') } },
   },
 };
 

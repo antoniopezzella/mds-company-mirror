@@ -1,0 +1,105 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Choosing a table" />
+
+# Choosing a table
+
+Three components render tabular data, and the difference between two of them is
+**not** what they can do. Reading their story lists side by side will not tell you
+which to reach for, so this page does.
+
+<div style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', margin: '24px 0' }}>
+  <div style={{ border: '1px solid var(--role-border-subtle, #e3e3e3)', borderRadius: 12, padding: 16 }}>
+    <h3 style={{ margin: '0 0 8px' }}><code>Table</code></h3>
+    <p style={{ margin: 0, fontSize: 14 }}>
+      A simple, read-oriented table. Its own implementation — no TanStack, no shared
+      engine.
+    </p>
+    <p style={{ margin: '8px 0 0', fontSize: 13, opacity: 0.75 }}>
+      Prefer <code>DataTable</code> for new work. See “Table’s future” below.
+    </p>
+  </div>
+  <div style={{ border: '1px solid var(--role-border-subtle, #e3e3e3)', borderRadius: 12, padding: 16 }}>
+    <h3 style={{ margin: '0 0 8px' }}><code>DataTable</code></h3>
+    <p style={{ margin: 0, fontSize: 14 }}>
+      The default choice. Pass props, get a table. Every capability the grid has is
+      reachable through an <code>enable*</code> prop.
+    </p>
+  </div>
+  <div style={{ border: '1px solid var(--role-border-subtle, #e3e3e3)', borderRadius: 12, padding: 16 }}>
+    <h3 style={{ margin: '0 0 8px' }}><code>DataGrid</code></h3>
+    <p style={{ margin: 0, fontSize: 14 }}>
+      The same engine, composed. Reach for it when <strong>you need the table
+      instance</strong> — not when you need more features.
+    </p>
+  </div>
+</div>
+
+## The thing that confuses everyone
+
+**`DataTable` and `DataGrid` are the same component with two API shapes.**
+
+`DataTable` imports `DataGrid` and renders it. It is a preset, not a lesser tier.
+There is no capability in one that is missing from the other — sorting, filtering,
+selection, pinning, reordering, resizing, virtualization, inline editing, cell
+ranges and clipboard are all available either way.
+
+So the question is never *“do I need more power?”*. It is:
+
+> **Does anything outside the table need to read or drive its state?**
+
+| | `DataTable` | `DataGrid` |
+| --- | --- | --- |
+| API | ~28 props | composed children |
+| Who owns the table instance | the component | **you** |
+| Read selection / filters / sorting directly | no — only via callbacks | yes |
+| Reorder, replace or omit parts | no | yes |
+| Capabilities | identical | identical |
+
+**Use `DataTable`** unless one of these is true:
+
+- a toolbar, header or side panel outside the table needs to read its state;
+- you need to drive the table from elsewhere (a saved view, a URL, another control);
+- you need to replace a part, or leave one out;
+- you want the toolbar somewhere other than above the table.
+
+**Then use `DataGrid`**, and see its `ConsumerOwnedState` story — that one story is the
+entire reason this API exists.
+
+## Reading the stories
+
+Because the two share an engine, several stories necessarily look alike. What each
+set is *for*:
+
+- **`Components/DataTable`** — the preset. Props in, table out. This is where
+  capabilities are demonstrated: selection, column visibility, server pagination,
+  inline editing, the state variants.
+- **`Components/DataGrid`** — composition. How the parts assemble, and what becomes
+  possible once you hold the instance.
+- **`Components/Table`** — the simple table. Nothing here is unique to it.
+
+A story appearing in both places is showing the same behaviour through two APIs, not
+two behaviours.
+
+## Table’s future
+
+`Table` shares no code with the other two. Every fix has to be made twice, and its
+capabilities were deliberately ported to the grid so it could be retired — see the
+`capabilities ported from table.tsx` suite in `data-grid-edges.test.tsx`.
+
+That retirement has **not** happened: only its `emptyMessage` prop carries a
+deprecation, not the component. One real gap remains before it can — `variant="bordered"`
+draws cell borders, which the grid does not yet do. Tracked in
+`docs/tasks/data-table-audit.md`.
+
+Until then: **do not start new work on `Table`.** Use `DataTable`.
+
+## When not to use a table at all
+
+Tables exist so people can compare the same attributes across many records. If that
+is not the task, something else is usually better:
+
+- one record at a time → a detail view;
+- few comparable attributes → a list or cards;
+- hierarchy matters more than comparison → a tree;
+- trend matters more than values → a chart.
