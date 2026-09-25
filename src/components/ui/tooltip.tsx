@@ -3,6 +3,7 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor, type RoleName } from '@/theme/roles';
+import { Z_INDEX } from './z-index';
 
 export type TooltipPlacement =
   | 'bottom-end'
@@ -114,12 +115,13 @@ export const Tooltip: React.FC<TooltipProps> = ({
               borderRadius: '6px',
               fontWeight: 500,
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-              // Matches the other portal-based shadcn components (select,
-              // dialog, dropdown-menu, etc.) — MUI's own z-index scale runs
-              // up to 1500 (Tooltip), and a bare 50 loses to any MUI Paper/
-              // Modal/Drawer with an explicit z-index, rendering this
-              // correctly-positioned but fully hidden behind it.
-              zIndex: 1500,
+              // Above overlays AND toasts. A tooltip cannot trap focus or
+              // block input, so nothing is hidden behind it. At the overlay
+              // layer it tied with the dialog containing it (DOM order
+              // silently deciding) and rendered behind any toast. A bare 50
+              // would lose to any MUI Paper/Modal/Drawer, whose own scale
+              // runs to 1500.
+              zIndex: Z_INDEX.tooltip,
               ...SIZE_STYLES[size],
             }}
           >
@@ -148,9 +150,9 @@ export const TooltipTrigger = TooltipPrimitive.Trigger;
  * primitives, which is the idiomatic usage.
  *
  * Styling is kept in sync with that wrapper deliberately: same surface, same
- * radius, same shadow, and the same 1500 overlay layer (`Z_INDEX.overlay`),
- * because MUI's own scale runs to 1500 and a bare `z-50` loses to any MUI
- * Paper/Modal/Drawer with an explicit z-index.
+ * radius, same shadow, and the same `Z_INDEX.tooltip` layer — above overlays
+ * and toasts, because a tooltip can never trap anything. A bare `z-50` would
+ * lose to any MUI Paper/Modal/Drawer, whose own scale runs to 1500.
  */
 export const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
@@ -161,7 +163,7 @@ export const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-[1500] overflow-hidden px-3 py-1.5 text-sm font-medium',
+        'z-[1700] overflow-hidden px-3 py-1.5 text-sm font-medium', // Z_INDEX.tooltip
         'data-[state=delayed-open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=delayed-open]:fade-in-0',
         className
       )}

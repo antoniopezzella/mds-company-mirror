@@ -161,7 +161,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
               <button
                 type="button"
                 onClick={() => toggleGroup(label)}
-                className="flex w-full items-center justify-between rounded px-2 py-2.5 text-left transition-colors"
+                className="flex w-full items-center justify-between rounded-lg px-2 py-2.5 text-left transition-colors"
                 style={{ color: textSecondary }}
               >
                 <span className="text-[13px] font-semibold uppercase tracking-wider">{label}</span>
@@ -175,7 +175,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                     return (
                       <div
                         key={n.id}
-                        className="relative rounded-sm border p-3.5"
+                        className="relative rounded-lg border p-3.5"
                         style={{
                           borderColor: borderDefault,
                           backgroundColor: n.unread ? getRoleColor('surface.accent') : surfaceDefault,

@@ -46,7 +46,7 @@ export interface MegaMenuProps {
 }
 
 const triggerClass =
-  'group flex items-center gap-1 rounded-xs px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 data-[state=open]:font-semibold';
+  'group flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 data-[state=open]:font-semibold';
 
 /**
  * Design System MegaMenu — top-level nav with hover/focus-activated
@@ -75,7 +75,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
               className="data-[motion=from-start]:animate-in data-[motion=from-end]:animate-in data-[motion=to-start]:animate-out data-[motion=to-end]:animate-out data-[motion=from-start]:slide-in-from-left-16 data-[motion=from-end]:slide-in-from-right-16 data-[motion=to-start]:slide-out-to-left-16 data-[motion=to-end]:slide-out-to-right-16"
             >
               <div
-                className="w-[min(90vw,900px)] rounded-sm border p-6 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+                className="w-[min(90vw,900px)] rounded-lg border p-6 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
                 style={{ backgroundColor: getRoleColor('surface.default'), borderColor }}
               >
                 {item.description && (
@@ -131,11 +131,11 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
           </NavigationMenuPrimitive.Item>
         ))}
         <NavigationMenuPrimitive.Indicator className="top-full z-10 flex h-2 items-end justify-center overflow-hidden transition-[width,transform_250ms_ease] data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in">
-          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-sm" style={{ backgroundColor: getRoleColor('surface.default'), border: `1px solid ${borderColor}` }} />
+          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-lg" style={{ backgroundColor: getRoleColor('surface.default'), border: `1px solid ${borderColor}` }} />
         </NavigationMenuPrimitive.Indicator>
       </NavigationMenuPrimitive.List>
       <div className="absolute left-0 top-full flex justify-center">
-        <NavigationMenuPrimitive.Viewport className="mt-2 origin-top-center overflow-hidden rounded-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90" />
+        <NavigationMenuPrimitive.Viewport className="mt-2 origin-top-center overflow-hidden rounded-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90" />
       </div>
     </NavigationMenuPrimitive.Root>
   );

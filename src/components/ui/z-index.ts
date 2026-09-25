@@ -24,8 +24,21 @@
  * Gaps of 100 leave room to insert a layer without renumbering.
  */
 export const Z_INDEX = {
-  /** Sticky table headers and pinned columns — in-flow, below everything. */
+  /**
+   * In-flow local stacking, base step — sticky table headers, pinned columns,
+   * full-bleed click targets. Below all page chrome.
+   */
   sticky: 10,
+  /**
+   * In-flow local stacking, second step. For the element that must win where
+   * two `sticky`-layer elements intersect: a sticky header crossing a pinned
+   * column, or an action row over a card's full-bleed click target.
+   *
+   * This layer is why `data-table.tsx` had `zIndex: 1` and `zIndex: 2` while
+   * `table.tsx` used `z-10` for the same job — the scale offered one local
+   * step where the job needs two, so the second one got invented locally.
+   */
+  stickyRaised: 20,
   /** Fixed page chrome: header, side navigation. */
   chrome: 40,
   /** Scrim behind an overlay. */
@@ -48,6 +61,7 @@ export type ZIndexLayer = keyof typeof Z_INDEX;
  */
 export const Z_CLASS: Record<ZIndexLayer, string> = {
   sticky: 'z-10',
+  stickyRaised: 'z-20',
   chrome: 'z-40',
   scrim: 'z-[1400]',
   overlay: 'z-[1500]',
