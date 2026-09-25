@@ -105,7 +105,7 @@ export const MDSDataGrid: React.FC<MDSDataGridProps> = ({ sx, ...props }) => {
             color: getRoleColor('border.default', { mode }),
           },
 
-          // Checkbox — mirrors src/components/Checkbox/Checkbox.tsx's own
+          // Checkbox — mirrors src/components/ui/checkbox.tsx's own
           // convention: unchecked border is Active Blue (interactive.secondary),
           // checked/indeterminate fill is brand Midnight Blue (interactive.primary).
           // Previously both states used interactive.secondary, so every checked

@@ -155,15 +155,19 @@ import DSTabs from '../../components/Tabs/Tabs';
 ---
 
 ### 7. Checkbox Component
-**Location**: `src/components/Checkbox/Checkbox.tsx`
+**Location**: `src/components/ui/checkbox.tsx`
+
+> The MUI `src/components/Checkbox/` was removed on 2026-09-25 — it had no
+> importers, and `ui/checkbox` carries the Figma-verified hover/active and
+> checked-disabled treatments it lacked.
 
 **Best Use Case**: Forms, filters, preferences
 
 **Implementation**:
 ```tsx
-import DSCheckbox from '../../components/Checkbox/Checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 
-<DSCheckbox
+<Checkbox
   label="Subscribe to newsletter"
   checked={subscribed}
   onChange={(e) => setSubscribed(e.target.checked)}
@@ -360,14 +364,14 @@ import DSCard from '../../components/Card/Card';
 ```tsx
 import DSTextField from '../../components/TextField/TextField';
 import DSSelect from '../../components/Select/Select';
-import DSCheckbox from '../../components/Checkbox/Checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 import DSButton from '../../components/Button/Button';
 
 <form>
   <DSTextField label="Name" required />
   <DSTextField label="Email" type="email" required />
   <DSSelect label="Industry" options={industries} />
-  <DSCheckbox label="Subscribe to newsletter" />
+  <Checkbox label="Subscribe to newsletter" />
   <DSButton variant="primary">Submit</DSButton>
 </form>
 ```
