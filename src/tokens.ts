@@ -125,6 +125,7 @@ export const tokens = {
   neutral750:  '#4a4a4a',   // ★ brand anchor
   neutral800:  '#3b3b3b',   // Figma anchor
   neutral900:  '#252525',   // interpolated
+  neutral925:  '#1a1a1a',   // interpolated — dark panel lift, between 900 and 950
   neutral950:  '#101010',   // Figma anchor
   neutral1000: '#000000',   // ★ brand anchor — pure black
 

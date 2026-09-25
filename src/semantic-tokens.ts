@@ -56,9 +56,30 @@ export const semanticColors = {
   surfaceAccentStrong:    ref('gray400'),          // #cfd0cd — Strong accent (was blueGray200)
   surfaceHero:            ref('blue1000'),          // #000f47 — Midnight Navy — dark hero sections
   surfaceDisabled:        ref('neutral200'),       // #e3e3e3 — Disabled state
+  /**
+   * A surface that sits ABOVE the page rather than flush with it.
+   *
+   * In light it is the same white as surfaceDefault — paper on paper needs no
+   * lift, the border does the work. In dark it is genuinely lighter than the
+   * page, which is the difference between a panel and a hole.
+   */
+  surfaceRaised:          ref('white'),            // #ffffff — same as the page in light
 
   // ── Borders ───────────────────────────────────────────────────────────────
-  borderSubtle:  ref('neutral250'),       // #dadada — Very light dividers
+  /**
+   * Hairline rules INSIDE a dense surface — table row separators, grid shells,
+   * list dividers.
+   *
+   * borderDefault (#878787) is validated at 3:1 as a UI *boundary* and is
+   * correct for the edge of an interactive control. Using it for every row of
+   * a 40-row table draws that mid-grey 40 times, which reads as a cage rather
+   * than as structure. This is the quieter token for rules that separate
+   * content the user is already inside.
+   *
+   * Not a substitute for borderDefault: anything that needs a 3:1 boundary
+   * (an input outline, a focusable control) must keep using that.
+   */
+  borderSubtle:  ref('neutral200'),       // #e3e3e3 — hairline rules inside a dense surface
   borderDefault: ref('neutral500'),       // #878787 — Standard borders
   borderStrong:  ref('neutral700'),       // #595959 — Strong emphasis borders
   borderFocus:   ref('focusBlue'),        // #3d7aff — Figma-verified: passes 3:1 vs every surface this system uses (light)
@@ -183,9 +204,19 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   surfaceAccentStrong:     tokens.gray700,                   // #8a8c88 (was blueGray700)
   surfaceHero:             tokens.gray950,                   // #3e4944 (was blueGray850)
   surfaceDisabled:         tokens.neutral800,                // #3b3b3b
+  // Deliberately NOT neutral900: surfaceSubtle already is #252525, and a panel
+  // whose header band matches the panel has no band. Three steps, not two —
+  // page #101010, panel #1a1a1a, band #252525.
+  surfaceRaised:           tokens.neutral925,                // #1a1a1a — between the page and surfaceSubtle
 
   // Borders (inverted)
-  borderSubtle:  tokens.neutral700,          // #595959
+  /**
+   * TRANSLUCENT, not a fixed grey. A hairline on dark has to composite over
+   * whatever surface it lands on — the page, a raised panel, a pinned cell —
+   * and a fixed grey cannot do that. This is the one place where borrowing
+   * light's approach would be wrong: #e4e4e4 on #101010 is a bright line.
+   */
+  borderSubtle:  tokens.shadesWhite10,       // rgba(255,255,255,0.10) — see the note above
   borderDefault: tokens.neutral500,          // #878787 (pivot — unchanged)
   borderStrong:  tokens.neutral250,          // #dadada
   borderFocus:   tokens.focusBlueDark,       // #5e9aff — Figma-verified: passes 3:1 vs every surface this system uses (dark)

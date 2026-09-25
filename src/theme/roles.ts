@@ -62,6 +62,7 @@ export type RoleName =
   | 'surface.subtle'
   | 'surface.disabled'
   | 'surface.accent'
+  | 'surface.raised'
   | 'surface.secondary'
   | 'surface.secondary.hover'
   | 'surface.selected'
@@ -70,6 +71,7 @@ export type RoleName =
   | 'surface.navigation.active'
   | 'surface.hero'
   | 'border.default'
+  | 'border.subtle'
   | 'border.strong'
   | 'focus.ring'
   | 'status.success.fg'
@@ -119,6 +121,10 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
   'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
   'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
+  'surface.raised': {
+    semantic: 'surfaceRaised',
+    description: 'A panel sitting above the page. Same as default in light; lifted in dark',
+  },
   'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
   'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
   'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint; hover is a neutral lift (surface.subtle), not this' },
@@ -127,6 +133,10 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
   'surface.hero': { semantic: 'surfaceHero', description: 'Hero brand background surface' },
   'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
+  'border.subtle': {
+    semantic: 'borderSubtle',
+    description: 'Hairline rules inside a dense surface — table rows, list dividers, grid shells',
+  },
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
   'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
   'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },

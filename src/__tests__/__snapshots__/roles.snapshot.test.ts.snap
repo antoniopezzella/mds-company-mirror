@@ -15,6 +15,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "borderStrong",
   },
   {
+    "dark": "rgba(255,255,255,0.10)",
+    "light": "#e3e3e3",
+    "role": "border.subtle",
+    "semantic": "borderSubtle",
+  },
+  {
     "dark": "#ffbf00",
     "light": "#ffbf00",
     "role": "brand.accent",
@@ -205,6 +211,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#1a2759",
     "role": "surface.navigation.hover",
     "semantic": "surfaceNavigationHover",
+  },
+  {
+    "dark": "#1a1a1a",
+    "light": "#ffffff",
+    "role": "surface.raised",
+    "semantic": "surfaceRaised",
   },
   {
     "dark": "#95caff",

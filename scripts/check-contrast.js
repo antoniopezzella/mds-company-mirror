@@ -16,11 +16,47 @@ const artifact = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
 const baseSem = artifact.semantic?.color || {};
 const darkOverrides = artifact.semantic?.modes?.dark || {};
 
-function hexToRgb(hex) {
-  const h = hex.replace('#','');
+/**
+ * Parses a hex or rgb()/rgba() colour to {r,g,b,a}.
+ *
+ * rgba() support is not cosmetic. `borderSubtle` is translucent white in dark
+ * mode — deliberately, so a hairline composites over whatever surface it lands
+ * on. The previous hex-only parser handed `parseInt('rgba(...', 16)` a NaN and
+ * every ratio computed from it came out NaN, which prints and passes rather
+ * than failing. A gate that cannot see a value must not silently approve it.
+ */
+function parseColor(value) {
+  const rgb = /^rgba?\(([^)]+)\)$/i.exec(String(value).trim());
+  if (rgb) {
+    const parts = rgb[1].split(',').map((p) => parseFloat(p.trim()));
+    const [r, g, b, a = 1] = parts;
+    if ([r, g, b].some(Number.isNaN)) {
+      throw new Error(`Unparseable colour: ${value}`);
+    }
+    return { r, g, b, a };
+  }
+  const h = String(value).replace('#','');
+  if (!/^[0-9a-f]{3}$|^[0-9a-f]{6}$/i.test(h)) {
+    throw new Error(`Unparseable colour: ${value}`);
+  }
   const full = h.length === 3 ? h.split('').map(c=>c+c).join('') : h;
   const int = parseInt(full,16);
-  return { r: (int>>16)&255, g: (int>>8)&255, b: int & 255 };
+  return { r: (int>>16)&255, g: (int>>8)&255, b: int & 255, a: 1 };
+}
+
+/** Flattens a translucent colour onto its backdrop — what the eye actually sees. */
+function over(fg, bg) {
+  if (fg.a >= 1) return fg;
+  return {
+    r: fg.r * fg.a + bg.r * (1 - fg.a),
+    g: fg.g * fg.a + bg.g * (1 - fg.a),
+    b: fg.b * fg.a + bg.b * (1 - fg.a),
+    a: 1,
+  };
+}
+
+function hexToRgb(hex) {
+  return parseColor(hex);
 }
 function luminanceChannel(c) {
   const v = c/255;
@@ -33,8 +69,11 @@ function relativeLuminance({r,g,b}) {
   return 0.2126*R + 0.7152*G + 0.0722*B;
 }
 function contrast(hex1, hex2) {
-  const L1 = relativeLuminance(hexToRgb(hex1));
-  const L2 = relativeLuminance(hexToRgb(hex2));
+  // The backdrop is flattened first (it may itself be translucent over white),
+  // then the foreground is composited onto it.
+  const bg = over(parseColor(hex2), { r: 255, g: 255, b: 255, a: 1 });
+  const L1 = relativeLuminance(over(parseColor(hex1), bg));
+  const L2 = relativeLuminance(bg);
   const lighter = Math.max(L1, L2);
   const darker = Math.min(L1, L2);
   return (lighter + 0.05) / (darker + 0.05);
@@ -48,6 +87,15 @@ const PAIRS = [
   // white textPrimary at 1.73:1 — exactly the regression this pair catches.
   { name: 'textPrimary on surfaceSubtle', fg: 'textPrimary', bg: 'surfaceSubtle', required: 4.5, warn: 4.5 },
   { name: 'textPrimary on surfaceSelected', fg: 'textPrimary', bg: 'surfaceSelected', required: 4.5, warn: 4.5 },
+  // The raised panel (grid shell, card) must hold body text as well as the
+  // page does — it is a reading surface, not decoration.
+  { name: 'textPrimary on surfaceRaised', fg: 'textPrimary', bg: 'surfaceRaised', required: 4.5, warn: 4.5 },
+  // borderSubtle is a decorative separator, not a UI boundary, so WCAG 1.4.11
+  // does not apply and this is NOT gated at 3:1 — that is borderDefault's job.
+  // It is tracked because the failure mode is the opposite one: a hairline that
+  // drifts too FAINT stops separating anything. Dark is translucent white, so
+  // this also exercises the compositing path above.
+  { name: 'borderSubtle vs surfaceRaised', fg: 'borderSubtle', bg: 'surfaceRaised', required: 1.1, warn: 1.2, informational: true },
   { name: 'textSecondary on surfaceDefault', fg: 'textSecondary', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
   { name: 'textOnInteractive on interactivePrimary', fg: 'textOnInteractive', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
   { name: 'textOnInteractive on interactiveDanger', fg: 'textOnInteractive', bg: 'interactiveDanger', required: 4.5, warn: 4.5 },
@@ -68,9 +116,14 @@ const PAIRS = [
   // line that a future token nudge could silently regress it.
   { name: 'textDisabled on surfaceDefault', fg: 'textDisabled', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
   { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
-  { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+  // Raised 3.0 -> 4.5: Badge's `outline` variant renders these as small text
+  // directly on the page, so AA for text applies, not the 3:1 non-text floor.
+  { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
+  // Stays at 3.0 — and this is exactly why Badge's warning outline uses
+  // text.primary instead: at 3.41 this colour cannot be body text, and the
+  // gold ramp has no darker step to promote.
   { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
 
   // Status text on its OWN background — the pairing components actually render
   // (Alert, Badge, Chip, Snackbar, StatusCard, Toast all put status text on the
