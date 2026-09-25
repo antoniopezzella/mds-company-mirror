@@ -1284,6 +1284,18 @@
         "hex": "#252525"
       }
     },
+    "neutral925": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.102,
+          0.102,
+          0.102
+        ],
+        "hex": "#1a1a1a"
+      }
+    },
     "neutral950": {
       "$type": "color",
       "$value": {
@@ -2569,9 +2581,13 @@
         "$type": "color",
         "$value": "{color.neutral200}"
       },
+      "surfaceRaised": {
+        "$type": "color",
+        "$value": "{color.white}"
+      },
       "borderSubtle": {
         "$type": "color",
-        "$value": "{color.neutral250}"
+        "$value": "{color.neutral200}"
       },
       "borderDefault": {
         "$type": "color",
@@ -2820,9 +2836,13 @@
         "$type": "color",
         "$value": "{color.neutral800}"
       },
+      "surfaceRaised": {
+        "$type": "color",
+        "$value": "{color.neutral925}"
+      },
       "borderSubtle": {
         "$type": "color",
-        "$value": "{color.neutral700}"
+        "$value": "{color.shadesWhite10}"
       },
       "borderDefault": {
         "$type": "color",
@@ -3038,6 +3058,10 @@
           "$type": "color",
           "$value": "{semantic.color.surfaceAccent}"
         },
+        "raised": {
+          "$type": "color",
+          "$value": "{semantic.color.surfaceRaised}"
+        },
         "secondary": {
           "$type": "color",
           "$value": "{semantic.color.brandSecondary}",
@@ -3071,6 +3095,10 @@
         "default": {
           "$type": "color",
           "$value": "{semantic.color.borderDefault}"
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{semantic.color.borderSubtle}"
         },
         "strong": {
           "$type": "color",
@@ -3254,6 +3282,10 @@
           "$type": "color",
           "$value": "{semanticDark.color.surfaceAccent}"
         },
+        "raised": {
+          "$type": "color",
+          "$value": "{semanticDark.color.surfaceRaised}"
+        },
         "secondary": {
           "$type": "color",
           "$value": "{semanticDark.color.brandSecondary}",
@@ -3287,6 +3319,10 @@
         "default": {
           "$type": "color",
           "$value": "{semanticDark.color.borderDefault}"
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{semanticDark.color.borderSubtle}"
         },
         "strong": {
           "$type": "color",

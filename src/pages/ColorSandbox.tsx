@@ -496,7 +496,7 @@ export default function ColorSandbox() {
         'surfaceDefault', 'surfaceSubtle', 'surfaceMuted', 'surfaceAccent',
         'surfaceSecondaryHover', 'surfaceNavigation', 'surfaceNavigationMode',
         'surfaceNavigationHover', 'surfaceNavigationActive', 'surfaceAccentStrong',
-        'surfaceHero', 'surfaceDisabled',
+        'surfaceHero', 'surfaceDisabled', 'surfaceRaised',
       ].map(semanticEntry),
       mode,
     },

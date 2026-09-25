@@ -106,6 +106,7 @@
   --primitive-neutral750: #4a4a4a;
   --primitive-neutral800: #3b3b3b;
   --primitive-neutral900: #252525;
+  --primitive-neutral925: #1a1a1a;
   --primitive-neutral950: #101010;
   --primitive-neutral1000: #000000;
   --primitive-white: #ffffff;
@@ -201,7 +202,8 @@
   --color-surface-accent-strong: #cfd0cd;
   --color-surface-hero: #000f47;
   --color-surface-disabled: #e3e3e3;
-  --color-border-subtle: #dadada;
+  --color-surface-raised: #ffffff;
+  --color-border-subtle: #e3e3e3;
   --color-border-default: #878787;
   --color-border-strong: #595959;
   --color-border-focus: #3d7aff;
@@ -270,7 +272,8 @@
   --color-surface-accent-strong: #8a8c88;
   --color-surface-hero: #3e4944;
   --color-surface-disabled: #3b3b3b;
-  --color-border-subtle: #595959;
+  --color-surface-raised: #1a1a1a;
+  --color-border-subtle: rgba(255,255,255,0.10);
   --color-border-default: #878787;
   --color-border-strong: #dadada;
   --color-border-focus: #5e9aff;

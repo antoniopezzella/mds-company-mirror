@@ -42,12 +42,13 @@ const GROUPS: Group[] = [
       { name: 'surfaceNavigationHover', description: 'Nav item hover overlay' },
       { name: 'surfaceHero',           description: 'Dark hero background' },
       { name: 'surfaceDisabled',       description: 'Disabled element surface' },
+      { name: 'surfaceRaised',         description: 'Panel above the page — lifted in dark, flush in light' },
     ],
   },
   {
     label: 'Borders',
     tokens: [
-      { name: 'borderSubtle',  description: 'Very light dividers' },
+      { name: 'borderSubtle',  description: 'Hairline rules inside a surface (translucent in dark)' },
       { name: 'borderDefault', description: 'Standard borders & outlines' },
       { name: 'borderStrong',  description: 'Emphasized borders' },
       { name: 'focusRing',     description: 'Focus ring / keyboard highlight' },
