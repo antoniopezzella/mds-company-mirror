@@ -25,7 +25,7 @@ figma.connect(ImageWithFallback, NODE_URL, {
       NA: 'auto',
     }),
   },
-  example: (props) => (
+  example: () => (
     <ImageWithFallback
       src="/image.jpg"
       alt="Placeholder image"

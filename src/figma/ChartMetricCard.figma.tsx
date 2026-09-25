@@ -12,7 +12,7 @@ figma.connect(ChartMetricCard, NODE_URL, {
     hasHyperlink: figma.boolean('Has Hyperlink'),
     hasLeftDecoration: figma.boolean('Has left decoration'),
   },
-  example: (props) => (
+  example: () => (
     <ChartMetricCard
       label="Metric Title"
       value="$1,234"

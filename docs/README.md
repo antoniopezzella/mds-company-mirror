@@ -60,6 +60,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 
 | Doc | For |
 |---|---|
+| [`tasks/data-grid-backlog.md`](./tasks/data-grid-backlog.md) | DataGrid — what is deliberately not built yet, and why |
 | [`tasks/implement-google-lighthouse.md`](./tasks/implement-google-lighthouse.md) | Lighthouse CI implementation task |
 
 ## Archive
