@@ -75,7 +75,13 @@ export interface ChipProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonEle
   variant?: ChipVariant;
   tone?: ChipTone;
   size?: ChipSize;
+  /**
+   * `@deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.` Use
+   * `FilterChip`, which carries selection in a checkmark and `aria-pressed`
+   * rather than an inset ring, and groups into a keyboard-navigable set.
+   */
   selectable?: boolean;
+  /** `@deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.` Use `FilterChip`. */
   selected?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onDelete?: () => void;
@@ -149,6 +155,28 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
     // Without a delete affordance the chip is a single control, so it stays a
     // plain <button> and `ref` points at it as before.
     if (!onDelete) {
+      // A chip with no action is NOT a control. It used to render a <button>
+      // regardless, so eight call sites shipped a focusable element announced
+      // as a button with nothing behind it — one of them had already been
+      // patched with tabIndex={-1}, which hides the tab stop but not the
+      // announcement. Static labels should move to `Badge`; until they do,
+      // this at least stops them lying to assistive technology.
+      // `disabled` counts as a control: WCAG 1.4.3 exempts text that is part
+      // of an INACTIVE user interface component, and the muted grey relies on
+      // that exemption. Demoting a disabled chip to a <span> turns it into
+      // ordinary text that fails contrast — which axe caught the moment this
+      // change landed.
+      if (!isInteractive && !disabled) {
+        return (
+          <span
+            className={chipClassName}
+            style={chipStyle}
+            {...(rest as React.HTMLAttributes<HTMLSpanElement>)}
+          >
+            {content}
+          </span>
+        );
+      }
       return (
         <button
           ref={ref}
