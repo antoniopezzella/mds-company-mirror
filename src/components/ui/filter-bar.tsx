@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { ControlSizeContext, useControlSize, type ControlSize } from './control-size';
 import { Button } from './button';
-import { Chip } from './chip';
+import { FilterChip, FilterChipSet } from './filter-chip';
 import { DSSelect, type DSSelectOption } from './select';
 import { DateRangePicker } from './date-picker';
 import { Input } from './input';
@@ -343,11 +343,18 @@ export function FilterBarChips({
       <span className="text-xs font-medium" style={{ color: getRoleColor('text.secondary') }}>
         Filtering by
       </span>
+      {/* One tab stop for the whole applied-filters row, not one per filter.
+          With eight filters applied this was eight Tab presses to get past a
+          region the user is not editing. */}
+      <FilterChipSet label="Applied filters">
       {filters.map((f) => (
-        <Chip
+        <FilterChip
           key={f.id}
           size="sm"
-          variant="outlined"
+          // Applied filters are, by definition, selected — so they carry the
+          // checkmark and aria-pressed="true". Chip's inset-ring "selected"
+          // state conveyed neither.
+          selected
           // The chip announces both halves: "Region: EMEA" is navigable,
           // "EMEA" on its own is not.
           label={
@@ -356,9 +363,11 @@ export function FilterBarChips({
               {f.value}
             </>
           }
-          onDelete={onRemove ? () => onRemove(f.id) : undefined}
+          removeLabel={`Remove filter ${f.label}: ${f.value}`}
+          onRemove={onRemove ? () => onRemove(f.id) : undefined}
         />
       ))}
+      </FilterChipSet>
       {onClearAll && (
         <Button variant="tertiary" size="sm" onClick={onClearAll}>
           <X className="size-3.5" aria-hidden="true" />

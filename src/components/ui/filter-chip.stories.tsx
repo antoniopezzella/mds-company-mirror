@@ -1,9 +1,9 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, screen, userEvent, within } from 'storybook/test';
 import { Briefcase, Globe } from 'lucide-react';
 
-import { FilterChip, FilterChipSet } from './filter-chip';
+import { FilterChip, FilterChipMenu, FilterChipSet } from './filter-chip';
 import { Badge } from './badge';
 import { Button } from './button';
 import { Stack } from './stack';
@@ -115,15 +115,69 @@ export const SelectionIsObvious: StoryObj = {
   ),
 };
 
-/** A chip that opens a menu of values rather than toggling on and off. */
+/**
+ * A chip that opens a **real menu** of values rather than toggling on and off.
+ *
+ * `hasMenu` on its own only draws the chevron — it opens nothing. That is a
+ * promise the control cannot keep, so the common case is wrapped up in
+ * `FilterChipMenu`, which composes the existing `DropdownMenu` (inheriting its
+ * focus trapping, type-ahead and Escape handling) with the chip as trigger.
+ *
+ * The chip's label summarises what is applied — "Region" when nothing is,
+ * "Region: EMEA" for one value, "Region: 3" beyond that — so the user never
+ * has to open it to find out what it is doing.
+ */
 export const WithValueMenu: StoryObj = {
-  render: () => (
-    <FilterChipSet label="Filter by attribute">
-      <FilterChip label="Region: EMEA" hasMenu />
-      <FilterChip label="Line: Property" hasMenu selected />
-      <FilterChip label="Broker: Any" hasMenu />
-    </FilterChipSet>
-  ),
+  render: function Render() {
+    const [region, setRegion] = React.useState<string[]>(['emea']);
+    const [line, setLine] = React.useState<string[]>([]);
+    return (
+      <FilterChipSet label="Filter by attribute">
+        <FilterChipMenu
+          label="Region"
+          value={region}
+          onValueChange={setRegion}
+          options={[
+            { value: 'emea', label: 'EMEA', count: 48 },
+            { value: 'amer', label: 'Americas', count: 62 },
+            { value: 'apac', label: 'APAC', count: 18 },
+          ]}
+        />
+        <FilterChipMenu
+          label="Line of business"
+          value={line}
+          onValueChange={setLine}
+          options={[
+            { value: 'property', label: 'Property', count: 31 },
+            { value: 'casualty', label: 'Casualty', count: 44 },
+            { value: 'cyber', label: 'Cyber', count: 12 },
+            { value: 'marine', label: 'Marine', disabled: true },
+          ]}
+        />
+      </FilterChipSet>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('the chip summarises what is applied without being opened', async () => {
+      await expect(canvas.getByRole('button', { name: /Region: EMEA/ })).toBeInTheDocument();
+    });
+    await step('it actually opens, and multi-select keeps it open', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: /Region: EMEA/ }));
+      const amer = await screen.findByRole('menuitemcheckbox', { name: /Americas/ });
+      await userEvent.click(amer);
+      // Still open — picking three values must not mean reopening three times.
+      await expect(screen.getByRole('menuitemcheckbox', { name: /APAC/ })).toBeInTheDocument();
+    });
+
+    await step('Escape closes it, and the label reports what is applied', async () => {
+      // The trigger is deliberately unreachable while the menu is open: Radix
+      // marks the rest of the page aria-hidden, which is correct and is why
+      // this assertion has to come after the menu closes.
+      await userEvent.keyboard('{Escape}');
+      await expect(await canvas.findByRole('button', { name: /Region: 2/ })).toBeInTheDocument();
+    });
+  },
 };
 
 /**
