@@ -101,4 +101,14 @@ export default tseslint.config([
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // Same shape as ThemeModeContext above: a provider and the hooks that read
+    // it are one unit. `useFormat()` exists precisely so components don't
+    // import the raw formatters and forget the locale — putting it in a
+    // separate file from the provider it reads would undercut that.
+    files: ['src/lib/format-context.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ], storybook.configs["flat/recommended"]);
