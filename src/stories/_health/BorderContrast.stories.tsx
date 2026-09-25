@@ -87,11 +87,11 @@ function ComponentSet() {
         <BubbleContent>Outline bubble — border-border on bubble-content</BubbleContent>
       </Bubble>
 
-      <div className="rounded-xs border border-border bg-background p-4">
+      <div className="rounded-md border border-border bg-background p-4">
         <Marker variant="border">Marker — variant=&quot;border&quot; (border-b border-border)</Marker>
       </div>
 
-      <div className="rounded-xs border border-border bg-background p-4">
+      <div className="rounded-md border border-border bg-background p-4">
         <Marker variant="separator">before/after separator</Marker>
       </div>
 
@@ -104,7 +104,7 @@ function ComponentSet() {
       <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md">
         ↓
       </div>
-      <div className="rounded-t-lg border-t border-border bg-background p-4 text-sm text-foreground">
+      <div className="rounded-t-xl border-t border-border bg-background p-4 text-sm text-foreground">
         Drawer content edge (border-border)
       </div>
     </div>

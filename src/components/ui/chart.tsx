@@ -186,7 +186,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
   return (
     <div
       ref={ref}
-      className={cn('grid min-w-[8rem] gap-1.5 rounded-sm border px-2.5 py-1.5 text-xs shadow-md', className)}
+      className={cn('grid min-w-[8rem] gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-md', className)}
       style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default'), color: getRoleColor('text.primary') }}
     >
       {!hideLabel && label !== undefined && (
@@ -201,7 +201,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
             <div key={index} className="flex w-full items-center gap-2">
               {!hideIndicator && (
                 <span
-                  className={cn('shrink-0 rounded-[2px]', indicator === 'dot' ? 'h-2.5 w-2.5' : 'h-1 w-3')}
+                  className={cn('shrink-0 rounded-md', indicator === 'dot' ? 'h-2.5 w-2.5' : 'h-1 w-3')}
                   style={{ backgroundColor: color }}
                 />
               )}
@@ -245,7 +245,7 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
         const itemConfig = config[key as string];
         return (
           <div key={String(key)} className="flex items-center gap-1.5 text-xs">
-            {!hideIcon && <span className="h-2.5 w-2.5 shrink-0 rounded-[2px]" style={{ backgroundColor: entry.color }} />}
+            {!hideIcon && <span className="h-2.5 w-2.5 shrink-0 rounded-md" style={{ backgroundColor: entry.color }} />}
             <span style={{ color: getRoleColor('text.secondary') }}>{itemConfig?.label ?? entry.value}</span>
           </div>
         );
