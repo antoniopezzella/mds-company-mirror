@@ -62,11 +62,16 @@ export interface StatCardProps
   /** Which direction is good news. Defaults to up-is-good. */
   deltaPolarity?: DeltaPolarity;
 
-  /** Pre-formatted change string. @deprecated Use `delta` — it derives direction. */
+  /**
+   * Pre-formatted change string.
+   * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23.
+   *  Use `delta` — it derives direction from the sign.
+   */
   change?: string;
   /**
    * Explicit trend direction.
-   * @deprecated Use `delta` (direction is derived) with `deltaPolarity`.
+   * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23.
+   *  Use `delta` (direction is derived) with `deltaPolarity`.
    * Kept because it can contradict the number it sits beside, which is a bug
    * this component has shipped — see the note on `deltaSentiment` below.
    */

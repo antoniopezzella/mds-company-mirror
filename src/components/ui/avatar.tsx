@@ -14,7 +14,8 @@ import { normalizeSize } from './prop-compat';
  */
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 
-/** @deprecated Use {@link AvatarSize} (`sm`/`md`/`lg`/`xl`). Removed at 1.0. */
+/** @deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.
+   *  Use {@link AvatarSize} (`sm`/`md`/`lg`/`xl`). */
 export type LegacyAvatarSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type AvatarVariant = 'circular' | 'rounded' | 'square';
 export type AvatarTone = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger';

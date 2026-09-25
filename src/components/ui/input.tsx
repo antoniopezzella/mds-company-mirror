@@ -37,7 +37,8 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
    * `InputGroup`/`ButtonGroup`, which defaults to `md`.
    */
   size?: ControlSize;
-  /** @deprecated Use `size`. Kept so existing call sites keep working. */
+  /** @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23.
+   *  Use `size`. Kept so existing call sites keep working. */
   inputSize?: ControlSize | 'small' | 'medium';
 }
 

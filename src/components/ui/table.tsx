@@ -63,7 +63,8 @@ export interface TableProps<T = object> {
   /** Replaces the empty state entirely. The canonical name across the system. */
   emptyState?: React.ReactNode;
   /**
-   * @deprecated Use `emptyState`, which takes a ReactNode and is the name
+   * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23.
+   *  Use `emptyState`, which takes a ReactNode and is the name
    * every other data surface uses. Still honoured: passing a string here is
    * equivalent to `emptyState={<string>}`.
    */
