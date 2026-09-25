@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { expect } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useTable, type SortingState, type ColumnFiltersState } from '@tanstack/react-table';
+import { useTable, type SortingState } from '@tanstack/react-table';
 
 import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
 import { DataGridTable } from './data-grid-table';
 import { DataGridToolbar } from './data-grid-toolbar';
 import { DataGridPagination } from './data-grid-pagination';
 import { dataGridFeatures, type DataGridColumnDef } from './data-grid-features';
+import { useDataGridTable } from './use-data-grid-table';
 import { createExpandColumn, createRowPinColumn, DataGridDetailPanel } from './data-grid-rows';
 import { Badge } from './badge';
 import { Button } from './button';
@@ -85,18 +86,10 @@ const columns: DataGridColumnDef<Policy>[] = [
 ];
 
 function Composed({ data = policies, loading = false }: { data?: Policy[]; loading?: boolean }) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  const table = useTable({
-    features: dataGridFeatures,
-    columns,
-    data,
-    state: { sorting, columnFilters },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    initialState: { pagination: { pageIndex: 0, pageSize: 5 } },
-  });
+  // The same setup DataTable uses. Before this hook existed, choosing
+  // composition meant hand-rolling the state wiring — which is how a
+  // hand-built grid ends up subtly different from the preset.
+  const table = useDataGridTable({ columns, data, pageSize: 5, pinFirstColumn: false });
 
   return (
     <DataGrid table={table} recordCount={data.length} loading={loading} searchKey="name">

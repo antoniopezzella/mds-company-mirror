@@ -1,21 +1,13 @@
 "use client"
 
 import * as React from 'react';
-import {
-  type ColumnFiltersState,
-  type ColumnOrderState,
-  type ColumnPinningState,
-  type ColumnVisibilityState,
-  type RowData,
-  type RowSelectionState,
-  type SortingState,
-  useTable,
-} from '@tanstack/react-table';
+import { type RowData } from '@tanstack/react-table';
 
 import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
-import { dataGridFeatures, type DataGridColumnDef } from './data-grid-features';
+import type { DataGridColumnDef } from './data-grid-features';
 import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
+import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
 import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
 import { DataGridToolbar } from './data-grid-toolbar';
@@ -337,91 +329,26 @@ export function DataTable<TData extends RowData, TValue>({
   loadError,
   onRetry,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-
-  // Faceted filters set an array of selected values and date filters set a
-  // {from,to} object; the default string matcher would match nothing for
-  // either, so those columns get the right filterFn unless the consumer
-  // already chose one. Both names are registered on the feature set (see
-  // data-grid-features.ts) — in v9 an unregistered name is a type error
-  // rather than a filter that silently matches nothing.
-  const resolvedColumns = React.useMemo(() => {
-    if (!facetedFilters?.length && !dateFilters?.length) return columns;
-    const facetIds = new Set(facetedFilters?.map((f) => f.columnId) ?? []);
-    const dateIds = new Set(dateFilters?.map((f) => f.columnId) ?? []);
-    return columns.map((c): DataGridColumnDef<TData, TValue> => {
-      const id = c.id ?? (c as { accessorKey?: string }).accessorKey;
-      if (!id || c.filterFn) return c;
-      if (facetIds.has(id)) return { ...c, filterFn: 'arrHas' as const };
-      if (dateIds.has(id)) return { ...c, filterFn: 'dateRange' as const };
-      return c;
-    });
-  }, [columns, facetedFilters, dateFilters]);
-
-  const firstColumnId = columns[0]?.id ?? (columns[0] as { accessorKey?: string })?.accessorKey;
-
-  // Real state, not a derived memo.
-  //
-  // This was `useMemo(() => ({ start: [firstColumnId], end: [] }))` — passed
-  // as controlled `state.columnPinning` with no setter, so TanStack could
-  // never change it. That was invisible while `pinFirstColumn` was the only
-  // way to pin anything; the moment the column menu offers "Pin to end", the
-  // control silently does nothing. Same for column order, which was not in
-  // state at all.
-  const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>(() => ({
-    start: pinFirstColumn && firstColumnId ? [firstColumnId] : [],
-    end: [],
-  }));
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([]);
-
-  // `pinFirstColumn` is the initial layout, so a change to it re-seeds — but
-  // only that leading pin, leaving anything the user pinned themselves alone.
-  React.useEffect(() => {
-    setColumnPinning((prev) => ({
-      ...prev,
-      start: pinFirstColumn && firstColumnId ? [firstColumnId] : prev.start.filter((id) => id !== firstColumnId),
-    }));
-  }, [pinFirstColumn, firstColumnId]);
-
-  const table = useTable({
-    features: dataGridFeatures,
+  // The instance setup lives in useDataGridTable so a DataGrid consumer can
+  // reach it too. It was private here, which meant choosing composition cost
+  // you ~166 lines of state wiring — see that file's header.
+  const table = useDataGridTable<TData, TValue>({
+    columns,
     data,
-    // TanStack types a table's `columns` as `ColumnDef<F, TData, unknown>[]`
-    // because one array holds columns of differing value types. `TValue` on
-    // DataTableProps is the per-column parameter, so the two are the same
-    // shape with a different generic position — v8 erased the difference,
-    // v9 does not.
-    columns: resolvedColumns as DataGridColumnDef<TData>[],
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
-    onColumnPinningChange: setColumnPinning,
-    onColumnOrderChange: setColumnOrder,
-    manualPagination,
-    pageCount: manualPagination ? pageCount : undefined,
+    facetedColumnIds: facetedFilters?.map((f) => f.columnId),
+    dateColumnIds: dateFilters?.map((f) => f.columnId),
+    pinFirstColumn,
+    pageSize,
     enableRowSelection,
-    enableMultiSort: true,
     enableColumnResizing,
     enableColumnPinning,
     enableRowPinning,
     enableCellSelection,
-    enableCellRangeSelection: enableCellSelection,
+    manualPagination,
+    pageCount,
     getSubRows,
-    // Without this, a detail panel is unreachable: `getCanExpand()` is
-    // "row has subRows" by default, so the toggle never renders for flat data.
-    getRowCanExpand: canExpandRow
-      ? (row) => canExpandRow(row.original)
-      : renderDetail
-        ? () => true
-        : undefined,
-    columnResizeMode: 'onChange',
-    state: { sorting, columnFilters, columnVisibility, rowSelection, columnPinning, columnOrder },
-    // v9's PaginationState is required whole; v8 accepted a partial.
-    initialState: { pagination: { pageIndex: 0, pageSize } },
+    canExpandRow,
+    hasDetailPanel: !!renderDetail,
   });
 
   // The footer's total: the server's count in manual mode, where the local
