@@ -1,6 +1,6 @@
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ThemeModeProvider, useThemeMode } from './ThemeModeContext';
+import { ThemeModeProvider, useThemeMode, __resetThemeMode } from './ThemeModeContext';
 
 // Helper component that renders the current mode and exposes a toggle button
 function ThemeModeConsumer() {
@@ -15,6 +15,7 @@ function ThemeModeConsumer() {
 
 describe('ThemeModeContext', () => {
   beforeEach(() => {
+    __resetThemeMode();
     localStorage.clear();
     // Reset matchMedia mock before each test
     Object.defineProperty(window, 'matchMedia', {
