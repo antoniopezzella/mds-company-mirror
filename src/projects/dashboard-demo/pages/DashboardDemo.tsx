@@ -1,3 +1,4 @@
+import type { DataGridColumnDef } from '../../../components/ui/data-grid-features';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,20 +7,11 @@ import { SideNavigation, type SideNavItem } from '../../../components/ui/side-na
 import { StatCard } from '../../../components/ui/stat-card';
 import { Button } from '../../../components/ui/button';
 import { Badge, type BadgeTone } from '../../../components/ui/badge';
-import {
-  FilterBar,
-  FilterBarActions,
-  FilterBarChips,
-  FilterBarDateRange,
-  FilterBarSelect,
-  type ActiveFilter,
-} from '../../../components/ui/filter-bar';
 import { PageHeading, PageShell } from '../../../components/ui/page-shell';
 import { Tabs, type TabItem } from '../../../components/ui/tabs';
 import { DataTable, createSelectColumn } from '../../../components/ui/data-table';
 import { NotificationsDrawer } from '../../../components/ui/notifications-drawer';
-import type { ColumnDef } from '@tanstack/react-table';
-import type { DateRange } from 'react-day-picker';
+
 import { getRoleColor } from '../../../theme/roles';
 import { useThemeMode } from '../../../theme/ThemeModeContext';
 
@@ -49,16 +41,17 @@ interface Claim {
   type: string;
   amount: string;
   status: 'Open' | 'In Review' | 'Closed';
+  region: 'Northeast' | 'Midwest' | 'West';
   filed: string;
 }
 
 const CLAIMS: Claim[] = [
-  { id: 'CLM-1042', policyholder: 'Beacon Capital Partners', type: 'Property', amount: '$482,000', status: 'Open', filed: '2026-08-01' },
-  { id: 'CLM-1041', policyholder: 'Harrow Logistics', type: 'Liability', amount: '$91,250', status: 'In Review', filed: '2026-07-29' },
-  { id: 'CLM-1039', policyholder: 'Vantage Manufacturing', type: 'Property', amount: '$1,204,500', status: 'Open', filed: '2026-07-24' },
-  { id: 'CLM-1037', policyholder: 'Northfield Retail Group', type: 'Business Interruption', amount: '$67,800', status: 'Closed', filed: '2026-07-18' },
-  { id: 'CLM-1033', policyholder: 'Beacon Capital Partners', type: 'Liability', amount: '$29,400', status: 'Closed', filed: '2026-07-09' },
-  { id: 'CLM-1031', policyholder: 'Coastal Freight Co.', type: 'Property', amount: '$358,900', status: 'In Review', filed: '2026-07-02' },
+  { id: 'CLM-1042', policyholder: 'Beacon Capital Partners', type: 'Property', amount: '$482,000', status: 'Open', region: 'Northeast', filed: '2026-08-01' },
+  { id: 'CLM-1041', policyholder: 'Harrow Logistics', type: 'Liability', amount: '$91,250', status: 'In Review', region: 'Midwest', filed: '2026-07-29' },
+  { id: 'CLM-1039', policyholder: 'Vantage Manufacturing', type: 'Property', amount: '$1,204,500', status: 'Open', region: 'Midwest', filed: '2026-07-24' },
+  { id: 'CLM-1037', policyholder: 'Northfield Retail Group', type: 'Business Interruption', amount: '$67,800', status: 'Closed', region: 'Northeast', filed: '2026-07-18' },
+  { id: 'CLM-1033', policyholder: 'Beacon Capital Partners', type: 'Liability', amount: '$29,400', status: 'Closed', region: 'West', filed: '2026-07-09' },
+  { id: 'CLM-1031', policyholder: 'Coastal Freight Co.', type: 'Property', amount: '$358,900', status: 'In Review', region: 'West', filed: '2026-07-02' },
 ];
 
 function StatusBadge({ status }: { status: Claim['status'] }) {
@@ -66,12 +59,13 @@ function StatusBadge({ status }: { status: Claim['status'] }) {
   return <Badge tone={tone}>{status}</Badge>;
 }
 
-const claimColumns: ColumnDef<Claim>[] = [
+const claimColumns: DataGridColumnDef<Claim>[] = [
   createSelectColumn<Claim>(),
   { accessorKey: 'id', header: 'Claim ID' },
   { accessorKey: 'policyholder', header: 'Policyholder' },
   { accessorKey: 'type', header: 'Type' },
   { accessorKey: 'amount', header: 'Amount' },
+  { accessorKey: 'region', header: 'Region' },
   {
     accessorKey: 'status',
     header: 'Status',
@@ -130,18 +124,6 @@ function claimsForTab(tabId: string): Claim[] {
   }
 }
 
-const REGION_OPTIONS = [
-  { value: 'ne', label: 'Northeast' },
-  { value: 'mw', label: 'Midwest' },
-  { value: 'w', label: 'West' },
-];
-
-const STATUS_OPTIONS = [
-  { value: 'Open', label: 'Open' },
-  { value: 'In Review', label: 'In review' },
-  { value: 'Closed', label: 'Closed' },
-];
-
 const DESKTOP_QUERY = '(min-width: 1024px)'; // Tailwind's `lg` — matches the breakpoint used below
 
 export function DashboardDemo() {
@@ -157,37 +139,22 @@ export function DashboardDemo() {
   const [sidebarOpen, setSidebarOpen] = React.useState(isDesktop);
   const [loading, setLoading] = React.useState(true);
   const [simulateError, setSimulateError] = React.useState(false);
-  const [region, setRegion] = React.useState<string | undefined>();
-  const [status, setStatus] = React.useState<string | undefined>();
-  const [range, setRange] = React.useState<DateRange | undefined>();
   const [activeTab, setActiveTab] = React.useState('recent');
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-  // Tabs narrow the set, then the filter bar narrows it further — so the
-  // table's own "no matching results" branch is reachable from the page.
-  const visibleClaims = React.useMemo(
-    () => claimsForTab(activeTab).filter((c) => (status ? c.status === status : true)),
-    [activeTab, status]
-  );
 
-  // What is currently narrowing the view, as the user would describe it.
-  // Without this the page silently hides rows and offers no explanation.
-  const activeFilters: ActiveFilter[] = [
-    region && { id: 'region', label: 'Region', value: REGION_OPTIONS.find((r) => r.value === region)!.label },
-    status && { id: 'status', label: 'Status', value: status },
-    range?.from && { id: 'range', label: 'Period', value: 'Custom range' },
-  ].filter(Boolean) as ActiveFilter[];
-
-  const removeFilter = (id: string) => {
-    if (id === 'region') setRegion(undefined);
-    if (id === 'status') setStatus(undefined);
-    if (id === 'range') setRange(undefined);
-  };
-
-  const clearFilters = () => {
-    setRegion(undefined);
-    setStatus(undefined);
-    setRange(undefined);
-  };
+  // Region / Status / Period used to be a separate FilterBar row above the
+  // table, holding page state the table knew nothing about. Two consequences:
+  //
+  //  - Only Status was ever applied. `Claim` had no `region` field at all, and
+  //    the date range was never read — both controls rendered, accepted input,
+  //    showed an active-filter chip, and filtered nothing.
+  //  - The row duplicated what the table's own toolbar already does, so the
+  //    page carried two filter vocabularies and two places to clear them.
+  //
+  // They are now faceted/date filters on the table itself, which makes the
+  // filtering real (TanStack applies it), gives each value a live count, and
+  // leaves one Reset instead of two.
+  const visibleClaims = React.useMemo(() => claimsForTab(activeTab), [activeTab]);
 
   const refresh = () => {
     setSimulateError(false);
@@ -328,67 +295,21 @@ export function DashboardDemo() {
             />
           </div>
 
-          {/*
-            Was a bespoke flex row of a raw Select + two Buttons — one of the
-            four hand-rolled filter rows in this repo that shared nothing, and
-            none of which showed the user what was actually filtering the view.
-
-            `simulateError` is here deliberately: the error state is the branch
-            no page in this repo could render before, so the demo needs a way
-            to actually show it.
-          */}
-          <FilterBar
-            className="mb-4"
-            size="sm"
-            onClearAll={clearFilters}
-            hasActiveFilters={activeFilters.length > 0}
-          >
-            <FilterBarSelect
-              label="Region"
-              options={REGION_OPTIONS}
-              value={region}
-              onChange={(v) => setRegion(String(v))}
-              placeholder="All regions"
-            />
-            <FilterBarSelect
-              label="Status"
-              options={STATUS_OPTIONS}
-              value={status}
-              onChange={(v) => setStatus(String(v))}
-              placeholder="Any status"
-            />
-            <FilterBarDateRange value={range} onChange={setRange} />
-            <FilterBarActions>
-              <Button variant="secondary" size="sm" onClick={refresh}>
-                Refresh
-              </Button>
-              <Button
-                variant="secondary"
-                tone={simulateError ? 'danger' : 'default'}
-                size="sm"
-                onClick={() => setSimulateError((v) => !v)}
-              >
-                {simulateError ? 'Clear error' : 'Simulate error'}
-              </Button>
-            </FilterBarActions>
-          </FilterBar>
-
-          <FilterBarChips
-            className="mb-4"
-            filters={activeFilters}
-            onRemove={removeFilter}
-            onClearAll={clearFilters}
-          />
-
           {/* `scrollable`: the 3 tab labels need ~590px at this size and
               won't wrap (same as MUI's own `standard` Tabs variant, which
               this mirrors) — `standard` here would silently overflow the
               page on anything narrower than that. */}
           <Tabs tabs={TABS} defaultActiveId="recent" onSelect={setActiveTab} variant="scrollable" className="mb-4" />
 
-          {/* The actual point of this page: DataTable with pinning + loading,
-              built and verified earlier this session, now exercised live.
-              `data` follows the active tab (see claimsForTab above). */}
+          {/* The full toolbar shape: search + faceted filters on the left,
+              Sort / Density / Export / Columns / page actions on the right.
+              Filtering lives with the data it filters, so there is one Reset,
+              one set of counts, and no page state to keep in sync.
+
+              `simulateError` stays deliberately — the error branch is the one
+              no page in this repo could render before, so the demo needs a way
+              to actually show it — but it now sits with the other toolbar
+              actions instead of in a filter row it never belonged in. */}
           <DataTable
             key={activeTab}
             columns={claimColumns}
@@ -400,9 +321,35 @@ export function DashboardDemo() {
             enableRowSelection
             searchKey="policyholder"
             searchPlaceholder="Search policyholder..."
+            facetedFilters={[
+              { columnId: 'status', title: 'Status' },
+              { columnId: 'region', title: 'Region' },
+              { columnId: 'type', title: 'Type' },
+            ]}
+            dateFilters={[{ columnId: 'filed', title: 'Period' }]}
+            enableSortList
+            enableDensityToggle
+            enableExport
+            exportFilename="claims"
             enableColumnVisibility
             pinFirstColumn
             pageSize={5}
+            toolbarActions={
+              <>
+                <Button variant="outline" size="sm" className="px-2 text-xs font-normal" onClick={refresh}>
+                  Refresh
+                </Button>
+                <Button
+                  variant="outline"
+                  tone={simulateError ? 'danger' : 'default'}
+                  size="sm"
+                  className="px-2 text-xs font-normal"
+                  onClick={() => setSimulateError((v) => !v)}
+                >
+                  {simulateError ? 'Clear error' : 'Simulate error'}
+                </Button>
+              </>
+            }
           />
     </PageShell>
   );

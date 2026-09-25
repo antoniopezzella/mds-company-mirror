@@ -51,17 +51,19 @@ export const guidance: Record<string, ComponentGuidance> = {
   },
   'filter-bar': {
     use: [
-      'Filters that drive the query and narrow the dataset before it reaches the table.',
-      'You need date presets, or chips showing the user what is currently narrowing their view.',
+      'Filters that narrow a WHOLE PAGE — several cards, a chart and a table all reading the same query.',
+      'The filter state is the page\'s, not one table\'s: it survives navigation, or goes in the URL.',
+      'You need date presets (Last 7 days / MTD / YTD) rather than a raw range.',
     ],
     avoid: [
-      { text: 'You are filtering within rows already fetched, per column — use DataTable\'s own faceted filters: ', relatedComponentId: 'data-table', relatedLabel: 'DataTable' },
+      { text: 'Everything it filters is one table. Put the filters in that table\'s toolbar instead — one Reset, live per-value counts, and no page state to keep in sync: ', relatedComponentId: 'data-table', relatedLabel: 'DataTable' },
       { text: 'There is a single control; a lone Select needs no bar around it.' },
     ],
   },
   'data-table': {
     use: [
       'Tabular data needing sorting, column filtering, selection or pagination.',
+      'Filters that only narrow THIS table — pass `facetedFilters` / `dateFilters` and let the toolbar own them.',
       'You want server-side pagination — pass `manualPagination` with `pageCount`.',
     ],
     avoid: [

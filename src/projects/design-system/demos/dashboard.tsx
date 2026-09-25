@@ -1,3 +1,4 @@
+import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 import * as React from 'react';
 import type { DateRange } from 'react-day-picker';
 
@@ -17,7 +18,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getRoleColor } from '@/theme/roles';
 import { useThemeMode } from '@/theme/ThemeModeContext';
-import type { ColumnDef } from '@tanstack/react-table';
+
 
 /**
  * Live demos for the dashboard category.
@@ -148,7 +149,7 @@ const CLAIMS: Claim[] = [
 export function DataTableDemo() {
   const [state, setState] = React.useState<'ready' | 'loading' | 'error' | 'empty'>('ready');
 
-  const columns: ColumnDef<Claim>[] = [
+  const columns: DataGridColumnDef<Claim>[] = [
     { accessorKey: 'id', header: 'Claim' },
     { accessorKey: 'client', header: 'Client' },
     { accessorKey: 'premium', header: 'Premium' },

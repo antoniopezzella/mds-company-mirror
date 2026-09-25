@@ -438,8 +438,9 @@ const Portfolio: React.FC = () => {
             <div className={styles.darkEyebrow}>Component Library</div>
             <h2 className={styles.darkTitle}>30+ Production Components</h2>
             <p className={styles.darkDesc}>
-              Every component is token-driven, WCAG 2.1 AA compliant,
-              documented in Storybook, and tested with Vitest.
+              Every component is token-driven, documented in Storybook, and
+              tested with Vitest — with axe-core gating every story at error
+              severity and all colour roles contrast-validated to WCAG 2.1 AA.
             </p>
           </Reveal>
         </div>
@@ -620,7 +621,7 @@ const Portfolio: React.FC = () => {
                   'aria-expanded on accordions & menus',
                   'aria-describedby on form fields with errors',
                   'role="dialog" + focus trap on modals',
-                  'Visible focus indicators — 3px offset ring',
+                  'Visible focus indicators — 2px ring, 2px offset',
                 ].map(item => (
                   <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 0', borderBottom: '1px solid rgba(0,15,71,0.06)', fontSize: 13, color: '#595959' }}>
                     <span style={{ color: '#64bc30', fontWeight: 700, flexShrink: 0 }}>✓</span>
@@ -816,7 +817,7 @@ const Portfolio: React.FC = () => {
               phase: 'Phase 4 · Integration',
               title: 'Platform Integration & Corporate LP',
               desc: 'Applied the design system across the Marsh dashboard, corporate landing page, and RESG asset management interface. Validated at scale with performance audits and accessibility reviews.',
-              outcomes: ['Lighthouse 95+ scores','Screen reader validated','Multi-product deployment'],
+              outcomes: ['Lighthouse 95+ scores','axe-core gated in CI','Multi-product deployment'],
             },
           ].map((item, i) => (
             <Reveal key={i} delay={i * 80}>
@@ -851,7 +852,7 @@ const Portfolio: React.FC = () => {
                 { num: 7, suffix: '', label: 'Color palettes,\n14 stops each', accent: true },
                 { num: 120, suffix: '+', label: 'Design tokens across\n3 abstraction layers', accent: false },
                 { num: 30, suffix: '+', label: 'Production-ready\ncomponents', accent: true },
-                { num: 100, suffix: '%', label: 'Components WCAG\n2.1 AA compliant', accent: false },
+                { num: 630, suffix: '', label: 'Storybook stories,\nevery one axe-gated', accent: false },
               ].map((m, i) => (
                 <div key={i} className={styles.metricCard}>
                   <div className={m.accent ? styles.metricNumAccent : styles.metricNum}>

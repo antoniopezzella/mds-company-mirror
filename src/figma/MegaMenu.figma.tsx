@@ -12,7 +12,7 @@ figma.connect(MegaMenu, NODE_URL, {
     hasFeaturedArticles: figma.boolean('Has Featured Articles'),
     hasTitle: figma.boolean('Has title'),
   },
-  example: (props) => (
+  example: () => (
     <MegaMenu isOpen onClose={() => {}} />
   ),
 });
