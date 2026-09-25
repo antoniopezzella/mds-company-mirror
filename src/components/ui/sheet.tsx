@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-[1500] bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-[1400] bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
@@ -78,7 +78,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Co
           glyph with no padding.
         */}
         <DialogPrimitive.Close
-          className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-xs transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
           style={
             {
               color: getRoleColor('text.secondary'),
