@@ -167,6 +167,12 @@ const UNSTABLE = [
   /^components-carousel/,         // Embla async measurement
   /^health-environment/,          // renders live environment data
   /^concepts-brand-website/,      // real video
+  // Streams tokens into a scrolling viewport, so the capture lands on whatever
+  // frame the animation happened to reach. Two runs of IDENTICAL code differed
+  // by 25k pixels (1.02%) — one mid-sentence with the "Streaming…" indicator
+  // up, the other finished and scrolled further down. Reported as a change
+  // during the radius migration and cost a round of investigation to clear.
+  /^components-messagescroller/,
 ];
 
 /** Below this share of differing pixels, a change is antialiasing rather than

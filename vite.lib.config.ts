@@ -101,6 +101,15 @@ export default defineConfig({
       include: [
         'src/index.ts',
         'src/components/ui/**/*',
+        // Everything index.ts re-exports must be listed here, not just the
+        // component tree. These three were missed when `src/lib/format.ts`
+        // was added and exported: the JS built fine, but dist-pkg/index.d.ts
+        // referenced five modules that had no .d.ts emitted, so every
+        // TypeScript consumer got TS2307 on `import { Button }`. See the
+        // dts-smoke step in ci.yml, which now type-checks the built entry.
+        'src/lib/**/*',
+        'src/tokens.ts',
+        'src/semantic-tokens.ts',
         'src/theme/roles.ts',
         'src/theme/RoleVarsProvider.tsx',
         'src/theme/ThemeModeContext.tsx',
