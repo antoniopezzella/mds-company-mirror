@@ -83,6 +83,7 @@ export * from './components/ui/data-grid-features';
 export * from './components/ui/data-grid';
 export * from './components/ui/data-grid-table';
 export * from './components/ui/data-grid-rows';
+export * from './components/ui/data-grid-selection';
 export * from './components/ui/data-grid-cell-selection';
 export * from './components/ui/data-grid-clipboard';
 export * from './components/ui/data-grid-cell-edit';

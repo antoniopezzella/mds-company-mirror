@@ -57,21 +57,46 @@ export type { CellEditParams };
  */
 
 /** Ready-made row-selection column — drop into a `columns` array. */
-export function createSelectColumn<TData extends RowData>(): DataGridColumnDef<TData> {
+export interface SelectColumnOptions<TData> {
+  /**
+   * Builds each checkbox's accessible name from the record — "Select Asset
+   * 10428", not "Select row 3".
+   *
+   * Strongly recommended. The default is positional, and position is the
+   * wrong identity for a row: it changes under sorting, filtering and
+   * pagination, so a screen-reader user gets a name that means something
+   * different every time the table reorders, and nothing that identifies the
+   * record they are about to act on.
+   */
+  getRowLabel?: (row: TData) => string;
+}
+
+export function createSelectColumn<TData extends RowData>(
+  { getRowLabel }: SelectColumnOptions<TData> = {}
+): DataGridColumnDef<TData> {
   return {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all rows"
+        // "on this page", not "all rows". This control calls
+        // toggleAllPageRowsSelected — it selects the PAGE — and announcing it
+        // as "all" is precisely the ambiguity that makes a subsequent bulk
+        // delete dangerous. Escalating to every filtered record is a separate,
+        // explicit action: see data-grid-selection.tsx.
+        aria-label="Select all rows on this page"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label={`Select row ${row.index + 1}`}
+        aria-label={
+          getRowLabel
+            ? `Select ${getRowLabel(row.original as TData)}`
+            : `Select row ${row.index + 1}`
+        }
       />
     ),
     enableSorting: false,
