@@ -19,6 +19,67 @@ export interface ComponentGuidance {
  * A component with no entry here simply renders no guidance block.
  */
 export const guidance: Record<string, ComponentGuidance> = {
+  'page-shell': {
+    use: [
+      'You are starting a dashboard page and need header + sidebar + content.',
+      'You want the skip link and the min-w-0 chain handled for you — a single missing min-w-0 makes a wide table scroll the whole page sideways.',
+    ],
+    avoid: [
+      { text: 'The page is a marketing or content page, not an application screen.' },
+      { text: 'You only need to stack a few sections — Stack and Inline cover that (see Storybook: Components/Stack).' },
+    ],
+  },
+  'stat-card': {
+    use: [
+      'A headline number a user scans before anything else.',
+      'You have a change versus a comparison period — pass `delta` and let the direction derive from its sign.',
+    ],
+    avoid: [
+      { text: 'The number needs no emphasis and belongs in a table row or list.' },
+      { text: 'You are showing a status rather than a metric — use ', relatedComponentId: 'badge', relatedLabel: 'Badge' },
+    ],
+  },
+  'data-state': {
+    use: [
+      'Any surface that renders fetched data — it must be able to say loading, failed, empty and ready.',
+      'You need to distinguish "no data at all" from "a filter excluded everything"; they need different words and different recovery actions.',
+    ],
+    avoid: [
+      { text: 'The content is static and cannot fail to load.' },
+      { text: 'You mean form validation — that is `error`/`invalid` on the field, a different axis entirely.' },
+    ],
+  },
+  'filter-bar': {
+    use: [
+      'Filters that drive the query and narrow the dataset before it reaches the table.',
+      'You need date presets, or chips showing the user what is currently narrowing their view.',
+    ],
+    avoid: [
+      { text: 'You are filtering within rows already fetched, per column — use DataTable\'s own faceted filters: ', relatedComponentId: 'data-table', relatedLabel: 'DataTable' },
+      { text: 'There is a single control; a lone Select needs no bar around it.' },
+    ],
+  },
+  'data-table': {
+    use: [
+      'Tabular data needing sorting, column filtering, selection or pagination.',
+      'You want server-side pagination — pass `manualPagination` with `pageCount`.',
+    ],
+    avoid: [
+      { text: 'The data is a simple list with no columns — use ', relatedComponentId: 'table', relatedLabel: 'Table' },
+      { text: 'You are rendering thousands of unpaginated rows; neither table virtualizes yet.' },
+    ],
+  },
+  sparkline: {
+    use: [
+      'Showing the shape of a trend beside a number, where the exact values do not matter.',
+      'Space is tight — a KPI tile, a table cell, a list row.',
+    ],
+    avoid: [
+      { text: 'The reader needs to read values off the chart — it has no axes, labels or tooltip.' },
+      { text: 'You need a real chart with a legend — use the Chart wrapper around Recharts.' },
+    ],
+  },
+
   button: {
     use: ['The action is the point of the screen or section: submit, confirm, continue.', 'You can name one primary action and demote the rest to secondary.'],
     avoid: [],

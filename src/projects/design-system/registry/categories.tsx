@@ -13,6 +13,14 @@ import {
 } from '../demos/foundations';
 import { ButtonDemo } from '../demos/actions';
 import {
+  KpiDemo,
+  DataStateDemo,
+  FilterBarDemo,
+  DataTableDemo,
+  SparklineDemo,
+  PageShellDemo,
+} from '../demos/dashboard';
+import {
   TextFieldDemo,
   TextareaDemo,
   SelectDemo,
@@ -366,6 +374,57 @@ export const categories: CategoryEntry[] = [
         summary: 'A file reference with upload/processing/error states.',
         sourcePath: 'src/components/ui/attachment.tsx',
         demo: AttachmentDemo,
+      },
+    ],
+  },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    path: '/design-system/dashboard',
+    description:
+      'The pieces a data-dense dashboard is built from. None of these appeared in this showcase before — it documented 39 entries, not one of which was a component a real dashboard depends on.',
+    components: [
+      {
+        id: 'page-shell',
+        title: 'PageShell',
+        summary: 'The page template: header, responsive sidebar, skip link, and the min-w-0 chain.',
+        sourcePath: 'src/components/ui/page-shell.tsx',
+        demo: PageShellDemo,
+      },
+      {
+        id: 'stat-card',
+        title: 'StatCard',
+        summary: 'The KPI tile. Formats its own value; delta direction is derived from the sign.',
+        sourcePath: 'src/components/ui/stat-card.tsx',
+        demo: KpiDemo,
+      },
+      {
+        id: 'data-state',
+        title: 'Data states',
+        summary: 'Loading, error, empty and ready — one vocabulary across every data surface.',
+        sourcePath: 'src/components/ui/data-state.tsx',
+        demo: DataStateDemo,
+      },
+      {
+        id: 'filter-bar',
+        title: 'FilterBar',
+        summary: 'Page-level filters with date presets and chips showing what is narrowing the view.',
+        sourcePath: 'src/components/ui/filter-bar.tsx',
+        demo: FilterBarDemo,
+      },
+      {
+        id: 'data-table',
+        title: 'DataTable',
+        summary: 'Sorting, filtering, selection, pagination and all four data states.',
+        sourcePath: 'src/components/ui/data-table.tsx',
+        demo: DataTableDemo,
+      },
+      {
+        id: 'sparkline',
+        title: 'Sparkline',
+        summary: 'A trend line small enough for a KPI tile, a table cell or a list row.',
+        sourcePath: 'src/components/ui/sparkline.tsx',
+        demo: SparklineDemo,
       },
     ],
   },
