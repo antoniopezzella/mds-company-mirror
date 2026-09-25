@@ -334,7 +334,8 @@ const DSButton: React.FC<DSButtonProps> = ({
   const height = size === 'sm' ? 32 : size === 'lg' ? 56 : 48;
   
   const sxBase: SxProps = {
-    borderRadius: '2px',
+    // Never a literal. Tailwind's stock scale, md = 6px = the control default.
+    borderRadius: 'var(--radius-md)',
     textTransform: 'none',
     fontFamily: 'var(--typo-button-font-family)',
     fontWeight: 'var(--typo-button-font-weight)',
@@ -635,7 +636,11 @@ export const lightTheme = createTheme({
     // ... all 6 shadow levels
   ],
   shape: {
-    borderRadius: 2, // 2px default for DS
+    // 6px, matching rounded-md (the control default). NOTE: this key was
+    // MISSING from src/theme.ts entirely until 2026-09-25, so every MUI component silently used MUI's
+    // own 4px default while this file documented 2px. Set on BOTH the light
+    // and dark themes, or the two disagree.
+    borderRadius: 6,
   },
 });
 
@@ -911,7 +916,7 @@ import { getRoleColor } from '@/theme/roles';
     p: 3,
     backgroundColor: getRoleColor('surface.accent'),
     color: getRoleColor('text.primary'),
-    borderRadius: '2px',
+    borderRadius: 'var(--radius-md)',
     '&:hover': {
       backgroundColor: getRoleColor('surface.subtle'),
     },
@@ -1401,7 +1406,21 @@ npm run roles:check:strict
 # Spacing-scale conformance — arbitrary values and off-scale steps
 npm run composition:check
 npm run composition:check:strict   # folded into governance:ci
+
+# Stacking-scale conformance — every z-index on the scale in ui/z-index.ts
+npm run zindex:check               # folded into governance:ci
+
+# The PUBLISHED artifact, not the source. Run after build:package.
+npm run pkg:types:check            # folded into build:package
 ```
+
+> **On `pkg:types:check` — why it exists.** Everything else above validates
+> `src/`. Nothing validated `dist-pkg/`, and the package shipped a release
+> whose `index.d.ts` referenced five modules with no `.d.ts` emitted: the
+> JavaScript worked, the types did not compile, and **all eight gates stayed
+> green**. If you add anything to `src/index.ts` that lives outside
+> `src/components/ui/`, you must also add its path to the dts `include` list
+> in `vite.lib.config.ts` — the JS build does not need the list, the types do.
 
 **What it checks:**
 - Components using `tokens.*` or `semanticColors.*` directly (FAIL)
@@ -1660,7 +1679,9 @@ npm run tokens:contrast:all          # WCAG checks
 
 # Governance
 npm run roles:check                  # Detect direct token usage
-npm run governance:ci                # Full governance report
+npm run zindex:check                 # Stacking values on the scale
+npm run pkg:types:check              # The published .d.ts actually compiles
+npm run governance:ci                # Full governance report (7 gates)
 
 # Testing
 npm test                             # Run Vitest tests

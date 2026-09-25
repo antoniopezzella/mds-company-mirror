@@ -43,7 +43,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * `tertiary` (no border of its own) plus the field classes, rather than
  * fighting `secondary`'s border-2 with an override.
  */
-const FIELD_TRIGGER = 'justify-start gap-2 rounded-xs font-normal';
+const FIELD_TRIGGER = 'justify-start gap-2 rounded-md font-normal';
 
 /**
  * Border is set in the style, not via a `border` class: the `tertiary`
@@ -218,7 +218,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
           <button
             type="button"
             aria-label="Open calendar"
-            className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-xs"
+            className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
             style={{ color: getRoleColor('text.secondary') }}
           >
             {/* Fixed 32px affordance inside the field — does not scale. */}
@@ -351,7 +351,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
             <button
               type="button"
               aria-label="Open calendar"
-              className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-xs"
+              className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
               style={{ color: getRoleColor('text.secondary') }}
             >
               <CalendarIcon className="h-4 w-4" />

@@ -25,7 +25,7 @@ function ThemeModeSegment() {
   };
 
   return (
-    <div className="flex items-center rounded-xs border p-0.5" style={{ borderColor: border }} role="group" aria-label="Color theme">
+    <div className="flex items-center rounded-md border p-0.5" style={{ borderColor: border }} role="group" aria-label="Color theme">
       {(['light', 'dark'] as const).map((option) => {
         const isActive = mode === option;
         const Icon = option === 'light' ? Sun : Moon;

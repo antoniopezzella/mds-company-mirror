@@ -25,7 +25,7 @@ import { useThemeMode } from '@/theme/ThemeModeContext';
 export function ChatDemo() {
   const { mode } = useThemeMode();
   return (
-    <div className="h-80 overflow-hidden rounded-sm border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+    <div className="h-80 overflow-hidden rounded-lg border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
       <MessageScrollerProvider>
         <MessageScroller>
           <MessageScrollerViewport>

@@ -215,17 +215,28 @@ prominent modals). Most surfaces sit at level 0–2; reaching for level
 
 ## Shapes
 
-Corners are small and consistent — this system does not use large,
-"friendly" rounded corners. The default is close to square (2px), with
-a couple of slightly larger steps (4px, 8px) for components that need
-a touch more softness. Nothing in the system uses pill-shaped buttons
-or heavily rounded cards; sharp, small-radius corners are part of the
-institutional, precise feel.
+Corners are consistent and moderate, on **Tailwind's stock scale**. The
+default is **6px** (`rounded-md`) for controls — inputs, buttons, chips,
+cells — rising to **8px** (`rounded-lg`) for badges and small surfaces
+and **12px** (`rounded-xl`) for cards and the data-grid shell. Nothing is pill-shaped, and nothing is heavily rounded; the
+system still reads as precise rather than playful, but it no longer
+reads as *sharp*.
+
+> **This changed on 2026-09-25.** The previous standard was 2px —
+> near-square — and is described in older material and in the Figma
+> library. The move was deliberate: at 2px the UI read as dated beside
+> contemporary dashboard tooling, and the near-square corner fought the
+> lighter border treatment introduced at the same time. Nothing is
+> configured — the values are Tailwind's own — and `npm run radius:check`
+> enforces which steps this system permits. Full detail in Storybook's
+> Foundations -> Spacing. **Figma has not moved yet** — until it does,
+> code is ahead of the library on radius, and that is a known, tracked
+> divergence rather than a drift to "fix" by reverting.
 
 ## Components
 
 - **Primary button:** Midnight Blue (`#000f47`) background, white
-  text, 2px radius, 48px height, Noto Sans Medium label. Hover darkens
+  text, 6px radius, 48px height, Noto Sans Medium label. Hover darkens
   slightly (`#021b6c`) rather than lightening — this system's
   interactive states generally get *darker* on hover in light mode
   (the opposite of many lighter-brand systems), consistent with navy
@@ -236,9 +247,11 @@ institutional, precise feel.
   secondary action is visually quieter, not just a different color of
   the same weight. Hover fills with the subtle surface tone
   (`#f8f8f8`), not a color shift.
-- **Card:** white or off-white surface, 2px radius, generous internal
+- **Card:** white or off-white surface, 12px radius, generous internal
   padding (24px+), low elevation (level 1–2 shadow, never level 4+ for
-  a plain content card).
+  a plain content card). The data-grid shell matches it exactly — the
+  two used to disagree (8px vs 2px), which showed whenever a card and a
+  grid sat side by side.
 
 ## Do's and Don'ts
 

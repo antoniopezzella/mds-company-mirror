@@ -65,7 +65,7 @@ export function HeaderDemo() {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const { mode } = useThemeMode();
   return (
-    <div className="overflow-hidden rounded-sm border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+    <div className="overflow-hidden rounded-lg border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
       <Header sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((v) => !v)} notificationCount={3} />
     </div>
   );
@@ -90,7 +90,7 @@ export function SideNavigationDemo() {
   const { mode } = useThemeMode();
   const items = SIDE_NAV_ITEMS.map((item) => ({ ...item, active: undefined }));
   return (
-    <div className="h-80 w-64 overflow-hidden rounded-sm border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
+    <div className="h-80 w-64 overflow-hidden rounded-lg border" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
       <SideNavigation items={items} currentPath={currentPath} onNavigate={setCurrentPath} variant="light" defaultOpenAll hideSupportCta />
     </div>
   );

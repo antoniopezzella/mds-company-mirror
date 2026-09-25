@@ -49,11 +49,11 @@
   --secondary-foreground: 227.3 100% 13.9%;       /* #000f47 - MDS: text.primary */
   
   /* Muted (Subtle backgrounds) */
-  --muted: 180 6.7% 97.1%;                       /* #f7f8f8 - MDS: surface.subtle */
+  --muted: 0 0% 97.3%;                       /* #f8f8f8 - MDS: surface.subtle */
   --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
   
   /* Accent (Gold - Brand Secondary) */
-  --accent: 43.1 100% 50%;                      /* #ffb700 Gold 750 - MDS: brand.accent */
+  --accent: 44.9 100% 50%;                      /* #ffbf00 Gold 750 - MDS: brand.accent */
   --accent-foreground: 217.8 100% 23.3%;          /* #002c77 - MDS: interactive.primary */
   
   /* Destructive (Error/Danger state) */
@@ -88,7 +88,11 @@
                                                   src/__tests__/ring-css-var.sync.test.ts */
   
   /* Border Radius */
-  --radius: 0.125rem;                         /* 2px - Marsh DS standard */
+  /* NOTE: there is deliberately no `--radius` here. It used to sit in this
+     block at 0.125rem and had ZERO consumers — Tailwind v4 inlines its own
+     `--radius` under `@theme default inline`, so this one fed nothing while
+     looking exactly like the lever that controls the scale. The real scale is
+     the `@theme` block in src/index.css and src/styles.package.css. */
   
   /* Chart Colors — validated categorical palette (dataviz skill:
      node scripts/validate_palette.js). Order (green, blue, gold, purple,

@@ -316,9 +316,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // rendered 16px regardless of size.
           'font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
           'font-bold tracking-normal',
-          // Border radius — `rounded-xs` IS 2px on Tailwind v4's stock scale,
+          // Border radius — `rounded-md` IS 2px on Tailwind v4's stock scale,
           // so the arbitrary value this used to carry is no longer needed.
-          'rounded-xs',
+          'rounded-md',
           // Loading opacity
           loading && 'opacity-80',
           className

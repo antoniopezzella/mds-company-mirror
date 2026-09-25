@@ -128,7 +128,7 @@ export const CustomStyling: Story = {
     // If an accent-backed MetricCard is ever wanted, the component needs to
     // let its label colour be overridden (or inherit) — that's a component
     // change, not something a story should paper over.
-    className: 'bg-muted rounded-sm border border-border',
+    className: 'bg-muted rounded-lg border border-border',
   },
 };
 
@@ -138,7 +138,7 @@ export const ResponsiveDemo: Story = {
   },
   render: () => (
     <div className="space-y-8 p-8 bg-background">
-      <div className="border-2 border-dashed border-border p-4 rounded-sm">
+      <div className="border-2 border-dashed border-border p-4 rounded-lg">
         <p className="text-sm text-muted-foreground mb-4 text-center">
           Resize your browser to see responsive font scaling
         </p>
@@ -164,7 +164,7 @@ export const DarkMode: Story = {
   // RoleVarsProvider and the html class together.
   globals: { colorMode: 'dark' },
   render: () => (
-    <div className="bg-background p-8 rounded-sm">
+    <div className="bg-background p-8 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <MetricCard value="150" label="Countries" />
         <MetricCard value="1,234" label="Policies" />

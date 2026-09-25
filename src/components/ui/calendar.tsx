@@ -61,7 +61,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       type="button"
       className={cn(
         'inline-flex h-9 w-9 items-center justify-center text-sm font-normal outline-hidden transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed',
-        isRangeMiddle ? 'rounded-none' : 'rounded-xs',
+        isRangeMiddle ? 'rounded-none' : 'rounded-md',
         className
       )}
       style={
@@ -118,9 +118,9 @@ function Calendar({ className, classNames, showOutsideDays = true, components, .
         [UI.CaptionLabel]: 'text-sm font-medium',
         [UI.Nav]: 'absolute inset-x-1 top-0 flex h-9 items-center justify-between',
         [UI.PreviousMonthButton]:
-          'inline-flex h-7 w-7 items-center justify-center rounded-xs transition-colors disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-50',
         [UI.NextMonthButton]:
-          'inline-flex h-7 w-7 items-center justify-center rounded-xs transition-colors disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-50',
         [UI.MonthGrid]: 'w-full border-collapse',
         [UI.Weekdays]: 'flex',
         [UI.Weekday]: 'w-9 text-[0.8rem] font-normal',

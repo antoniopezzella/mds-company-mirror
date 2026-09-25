@@ -23,7 +23,7 @@ export const Default: StoryObj = {
   render: () => (
     <div className="w-[320px]">
       <AspectRatio ratio={16 / 9}>
-        <img src="https://picsum.photos/seed/aspect1/640/360" alt="16:9" className="h-full w-full rounded-xs object-cover" />
+        <img src="https://picsum.photos/seed/aspect1/640/360" alt="16:9" className="h-full w-full rounded-md object-cover" />
       </AspectRatio>
     </div>
   ),
@@ -33,7 +33,7 @@ export const Square: StoryObj = {
   render: () => (
     <div className="w-[240px]">
       <AspectRatio ratio={1}>
-        <img src="https://picsum.photos/seed/aspect2/400/400" alt="1:1" className="h-full w-full rounded-xs object-cover" />
+        <img src="https://picsum.photos/seed/aspect2/400/400" alt="1:1" className="h-full w-full rounded-md object-cover" />
       </AspectRatio>
     </div>
   ),

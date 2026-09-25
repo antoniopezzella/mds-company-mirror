@@ -257,7 +257,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     }
                   }}
                   className={cn(
-                    'w-full flex items-center gap-3 px-3 py-3 rounded-xs',
+                    'w-full flex items-center gap-3 px-3 py-3 rounded-md',
                     'min-h-[48px]', // Accessibility: minimum touch target
                     'transition-colors duration-200',
                     'text-left',
@@ -326,7 +326,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               }
                             }}
                             className={cn(
-                              'w-full flex items-center px-3 py-2 rounded-xs',
+                              'w-full flex items-center px-3 py-2 rounded-md',
                               'min-h-[44px]', // Accessibility: minimum touch target
                               'transition-colors duration-200',
                               'text-left text-sm',
@@ -364,7 +364,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         {/* Support CTA */}
         {!hideSupportCta && (
           <div
-            className="p-3 m-2 rounded-xs"
+            className="p-3 m-2 rounded-md"
             style={{ backgroundColor: colors.ctaBg, color: colors.ctaText }}
           >
             <h3 className="text-lg font-semibold mb-2">

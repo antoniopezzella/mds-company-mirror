@@ -22,7 +22,7 @@ export default meta;
 
 export const Default: StoryObj = {
   render: () => (
-    <Command className="w-[320px] rounded-sm border shadow-md">
+    <Command className="w-[320px] rounded-lg border shadow-md">
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

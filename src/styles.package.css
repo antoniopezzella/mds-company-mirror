@@ -59,5 +59,42 @@
    an @import after another at-rule is silently dropped. */
 @import "tw-animate-css";
 
+/* ===== Corner radius =====================================================
+   There is deliberately NO radius configuration here. The repo uses
+   Tailwind's STOCK scale, unmodified:
+
+     rounded-md   6px  — controls: inputs, buttons, chips, cells
+     rounded-lg   8px  — badges, menu items, small surfaces
+     rounded-xl  12px  — cards, the data-grid shell, dialogs
+     rounded-2xl 16px  — large feature surfaces
+
+   Why nothing is overridden
+   -------------------------
+   Two earlier attempts both went wrong, in opposite directions:
+
+   1. A `borderRadius` override in tailwind.config.js rescaled the whole
+      ladder around `--radius: 2px`, computing `rounded-md` as
+      `calc(2px - 2px)` = 0 and driving `rounded-sm` negative. ~110
+      components silently rendered square while their class names said
+      otherwise.
+   2. An `@theme` block redefining `--radius-xs`…`--radius-xl` fixed that,
+      but made our class names disagree with the rest of the ecosystem:
+      `rounded-lg` meant 12px here and 8px everywhere else, so any snippet
+      copied from shadcn or the Tailwind docs rendered at the wrong size.
+      Worse, styles.package.css shipped that redefinition to CONSUMERS,
+      silently changing the meaning of `rounded-*` inside their own app —
+      the same category of mistake as imposing a CSS reset.
+
+   The stock scale already contains four of the five values this system
+   needs, so neither workaround is necessary. The one value it lacks (10px)
+   had exactly two call sites and was dropped.
+
+   The trade-off, stated honestly: there is no single lever any more. Moving
+   the brand radius means a scripted rename across ~190 call sites, verified
+   by `npm run radius:check`. That gate now enforces INTENT — only the four
+   steps above are permitted inside src/components/ui — which is what keeps
+   the scale coherent without an override.
+   ======================================================================= */
+
 /* Reuse the package content globs and the theme from the JS config. */
 @config "../tailwind.package.config.js";

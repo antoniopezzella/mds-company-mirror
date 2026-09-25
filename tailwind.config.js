@@ -34,12 +34,22 @@ export default {
         // `rounded-sm` to a negative value — which silently rendered ~110
         // components square.
         //
-        // Tailwind v4's stock scale removes the need entirely: its
-        // `rounded-xs` IS 0.125rem = 2px, exactly the Marsh DS standard, and
-        // `rounded-sm` is 4px. Components were remapped md->xs and lg->sm, so
-        // they keep their pixel values while using the stock scale. One less
-        // override to drift, and the class name now means the same thing here
-        // as it does in every other Tailwind codebase.
+        // Tailwind v4's stock scale removes the need entirely. Components
+        // were remapped md->xs and lg->sm onto it, so the class names mean
+        // the same thing here as in any other Tailwind codebase.
+        //
+        // The VALUES are now set once, in the `@theme` block of
+        // src/index.css and src/styles.package.css:
+        //
+        //   xs 6px  sm 8px  md 10px  lg 12px  xl 16px
+        //
+        // (raised 2026-09-25 from 2/4/6/8/12 — see docs/foundations/DESIGN.md)
+        //
+        // That is the ONLY lever. `rounded-xs` and friends dereference
+        // `--radius-*` at runtime, so changing the @theme block moves every
+        // call site at once. A `borderRadius` override here would go back to
+        // rescaling the whole ladder and reintroduce the collapse above;
+        // `npm run radius:check` gates the rest.
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

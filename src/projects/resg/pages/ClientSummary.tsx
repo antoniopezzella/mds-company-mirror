@@ -383,7 +383,7 @@ export function ClientSummary() {
 
           {/* Footer assumptions bar */}
           <div
-            className="flex items-start gap-2 rounded-xs border px-4 py-3 text-sm"
+            className="flex items-start gap-2 rounded-md border px-4 py-3 text-sm"
             style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.subtle'), color: getRoleColor('text.secondary') }}
           >
             <Info className="h-4 w-4 shrink-0 mt-0.5" />
