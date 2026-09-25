@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react';
-import { type RowData } from '@tanstack/react-table';
+import type { RowData, SortingState } from '@tanstack/react-table';
 
 import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
@@ -130,6 +130,11 @@ export interface DataTableProps<TData extends RowData, TValue> {
   onSelectionChange?: (selection: SelectionState) => void;
   enableColumnVisibility?: boolean;
   pageSize?: number;
+  /**
+   * The sort the table opens with. Replaces `Table`'s `defaultSortColumn` /
+   * `defaultSortDirection` pair; the user's first header click supersedes it.
+   */
+  initialSorting?: SortingState;
   className?: string;
   /** Data hasn't arrived yet — renders skeleton rows matching the column count instead of `data`. */
   loading?: boolean;
@@ -291,6 +296,7 @@ export function DataTable<TData extends RowData, TValue>({
   onSelectionChange,
   enableColumnVisibility = false,
   pageSize = 10,
+  initialSorting,
   className,
   loading = false,
   loadingRowCount,
@@ -339,6 +345,7 @@ export function DataTable<TData extends RowData, TValue>({
     dateColumnIds: dateFilters?.map((f) => f.columnId),
     pinFirstColumn,
     pageSize,
+    initialSorting,
     enableRowSelection,
     enableColumnResizing,
     enableColumnPinning,

@@ -55,6 +55,13 @@ export interface UseDataGridTableOptions<TData extends RowData, TValue = unknown
   /** Pins the leading column to the start. The initial layout, not a lock. */
   pinFirstColumn?: boolean;
   pageSize?: number;
+  /**
+   * The sort the table opens with — `Table`'s `defaultSortColumn` /
+   * `defaultSortDirection`, which had no grid equivalent.
+   *
+   * Initial, not controlled: the user's first click on a header replaces it.
+   */
+  initialSorting?: SortingState;
   enableRowSelection?: boolean;
   enableColumnResizing?: boolean;
   enableColumnPinning?: boolean;
@@ -78,6 +85,7 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
   dateColumnIds,
   pinFirstColumn = true,
   pageSize = 10,
+  initialSorting,
   enableRowSelection = false,
   enableColumnResizing = false,
   enableColumnPinning = false,
@@ -89,7 +97,7 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
   canExpandRow,
   hasDetailPanel = false,
 }: UseDataGridTableOptions<TData, TValue>): DataGridTableInstance<TData> {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(initialSorting ?? []);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});

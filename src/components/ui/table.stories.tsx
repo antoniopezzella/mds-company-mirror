@@ -17,6 +17,8 @@ const meta: Meta = {
   parameters: {
     layout: 'padded',
     docs: { description: { component: [
+      '> **Deprecated since 0.7.0 — removed after 0.8.0 (2026-12-23).** Use [`DataTable`](/docs/components-datatable--docs).',
+      '',
       '**The simple table** — a standalone implementation sharing no engine with `DataTable`',
       'or `DataGrid`.',
       '',

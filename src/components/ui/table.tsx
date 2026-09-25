@@ -352,6 +352,43 @@ function TableComponent<T extends object>({
   );
 }
 
+/**
+ * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23.
+ * Use `DataTable`, which renders the same shapes on the shared grid engine.
+ *
+ * Why this is going
+ * -----------------
+ * `Table` is a SECOND implementation. It shares no code with `DataTable` or
+ * `DataGrid` — its own sorting, its own pagination, its own selection, and no
+ * TanStack. Every fix therefore has to be made twice, and it is already
+ * losing that race: the ambiguous `aria-label="Select all rows"` and the
+ * positional `Select row N` were both fixed on the grid and both still sit in
+ * this file, because nothing connects them. It also has zero tests, against
+ * roughly ninety on the grid.
+ *
+ * There is no bundle argument for keeping it either — fifteen modules in
+ * `components/ui` already import TanStack, so any app using this system pays
+ * for it regardless.
+ *
+ * Migrating
+ * ---------
+ *   variant="bordered"      -> the default; DataGridContainer draws it
+ *   variant="borderless"    -> <DataGridContainer border={false}>
+ *   variant="striped"       -> striped
+ *   variant="compact"       -> defaultDensity="compact"
+ *   size                    -> defaultDensity
+ *   defaultSortColumn/-Direction -> initialSorting={[{ id, desc }]}
+ *   emptyMessage            -> emptyState
+ *   onRowSelect             -> enableRowSelection + onSelectionChange
+ *
+ * Two things do NOT carry over, deliberately:
+ *   - `hoverable={false}`. The grid always shows a hover affordance; a row you
+ *     can interact with should say so.
+ *   - `onSort`. With `DataGrid` the consumer holds the table instance and can
+ *     read sorting directly, which is strictly more capable than a callback.
+ *
+ * See Foundations -> Choosing a table.
+ */
 export const Table = TableComponent as <T extends object>(props: TableProps<T>) => React.ReactElement;
 
 export default Table;

@@ -267,8 +267,11 @@ Not covered:
 1. ~~**Select-all scope semantics** (§9)~~ — **done 2026-09-25**. `useSelectionScope` +
    `DataGridSelectionBanner`, wired into `DataTable`.
 2. ~~**Selection accessible names** (§33)~~ — **done**. `createSelectColumn({ getRowLabel })`.
-3. **Retire `table.tsx`** — close the `bordered` gap, apply a component-level
-   deprecation (there is none today), migrate the 5 consumers, repoint the Figma mapping.
+3. **Retire `table.tsx`** — ~~close the `bordered` gap~~ *(there was no gap:
+   `variant="bordered"` draws the OUTER border, which `DataGridContainer` has by default.
+   The only real gap was an opening sort, now `initialSorting`.)* ~~apply a
+   component-level deprecation~~ **done 2026-09-25**. Remaining: migrate the 5 consumers,
+   repoint the Figma mapping, delete after 0.8.0 / 2026-12-23.
 
 > **Found while doing 1–2, and worth recording.** Adding a story that selects rows *and*
 > renders status badges made axe fail: `statusSuccessText` measured **4.16:1** on the
