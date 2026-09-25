@@ -88,6 +88,7 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 | Toolbar | ✅ | `DataGridToolbar` |
 | Header / column header | ✅ | incl. grouped headers with correct `colspan` |
 | Row / cell | ✅ | |
+| **Numeric alignment** (§6) | ✅ | **2026-09-25** — numbers right-align automatically from `meta.type` or the value type; explicit `meta.align` still wins |
 | Footer | ✅ | `showFooter` renders `<tfoot>` from column `footer` |
 | Pagination | ✅ | `DataGridPagination` |
 

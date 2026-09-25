@@ -213,6 +213,49 @@ describe('capabilities ported from table.tsx', () => {
     expect(cells[0].className).toContain('text-left');
   });
 
+  it('right-aligns numbers WITHOUT being told to', () => {
+    // The rule: amounts and numbers align right. Relying on every author to
+    // remember meta.align guarantees some will not, and left-aligned currency
+    // in a column of varying magnitudes cannot be scanned.
+    const plain: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'name', header: 'Item' },
+      { accessorKey: 'qty', header: 'Qty' },     // numbers, nothing declared
+      { accessorKey: 'price', header: 'Price' }, // numbers, nothing declared
+    ];
+    render(<DataTable columns={plain} data={rows.slice(0, 2)} pinFirstColumn={false} />);
+    const table = screen.getByRole('table');
+    const headers = within(table).getAllByRole('columnheader');
+    expect(headers[0].className).toContain('text-left');   // text stays left
+    expect(headers[1].className).toContain('text-right');
+    expect(headers[2].className).toContain('text-right');
+
+    // Header and body must agree, or the column looks broken.
+    const cells = within(within(table).getAllByRole('row')[1]).getAllByRole('cell');
+    expect(cells[1].className).toContain('text-right');
+    expect(cells[2].className).toContain('text-right');
+  });
+
+  it('aligns by declared type when the value is not a raw number', () => {
+    // A formatted currency cell renders a string; the column is still numeric.
+    const typed: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'name', header: 'Item' },
+      { accessorKey: 'price', header: 'Premium', meta: { type: 'currency' }, cell: () => '$12,400' },
+    ];
+    render(<DataTable columns={typed} data={rows.slice(0, 2)} pinFirstColumn={false} />);
+    const headers = within(screen.getByRole('table')).getAllByRole('columnheader');
+    expect(headers[1].className).toContain('text-right');
+  });
+
+  it('lets an explicit align override the numeric default', () => {
+    const overridden: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'qty', header: 'Qty', meta: { align: 'center' } },
+    ];
+    render(<DataTable columns={overridden} data={rows.slice(0, 2)} pinFirstColumn={false} />);
+    const headers = within(screen.getByRole('table')).getAllByRole('columnheader');
+    expect(headers[0].className).toContain('text-center');
+    expect(headers[0].className).not.toContain('text-right');
+  });
+
   it('stripes alternate rows, but lets selection win over the stripe', () => {
     // Striping is decoration; selection is a state the user caused, so it has
     // to be the one that shows.

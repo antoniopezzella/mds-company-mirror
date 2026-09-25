@@ -143,6 +143,15 @@ export const dataGridFeatures = tableFeatures({
      */
     align?: 'left' | 'center' | 'right';
     /**
+     * What the column holds. Drives alignment, and is the hook for the wider
+     * data-type/formatting system the experience spec describes (§6).
+     *
+     * Numeric types align RIGHT automatically — digits only line up for
+     * comparison when their last significant figure does, which is the whole
+     * reason a table exists. Setting `align` explicitly still wins.
+     */
+    type?: 'text' | 'number' | 'currency' | 'percent' | 'date' | 'status' | 'boolean';
+    /**
      * Spreadsheet-mode editing for this column.
      *
      * Richer than `editable`, which is text-only and hands the consumer a
