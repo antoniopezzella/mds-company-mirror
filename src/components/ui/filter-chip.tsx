@@ -6,6 +6,14 @@ import { Check, ChevronDown, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './dropdown-menu';
 
 /**
  * FilterChip — a toggleable control that filters content.
@@ -81,9 +89,13 @@ export interface FilterChipProps
   /** Toggle handler. Receives the state the chip is moving TO. */
   onSelectedChange?: (selected: boolean) => void;
   /**
-   * Shows a trailing chevron for a chip that opens a menu of values rather
-   * than toggling — "Region: EMEA ▾". The chevron is decorative; the whole
-   * chip is the trigger, so there is still exactly one control.
+   * Shows a trailing chevron, marking this chip as the trigger for a menu of
+   * values rather than an on/off toggle.
+   *
+   * This renders the AFFORDANCE only — it does not open anything by itself.
+   * Either wrap the chip in a `DropdownMenuTrigger asChild`, or use
+   * `FilterChipMenu` below, which does that wiring for the common case.
+   * A chevron with no menu behind it is worse than no chevron at all.
    */
   hasMenu?: boolean;
   /**
@@ -290,6 +302,115 @@ export function FilterChipSet({ label, children, className, ...rest }: FilterChi
     >
       {children}
     </div>
+  );
+}
+
+
+export interface FilterChipOption {
+  value: string;
+  label: React.ReactNode;
+  /** Optional count shown right-aligned, e.g. how many rows match. */
+  count?: number;
+  disabled?: boolean;
+}
+
+export interface FilterChipMenuProps {
+  /** The filter's name — "Region". The selected values are appended for you. */
+  label: string;
+  options: FilterChipOption[];
+  /** Currently applied values. */
+  value: string[];
+  onValueChange: (value: string[]) => void;
+  /** Single-select collapses the menu to one choice. Defaults to multi. */
+  multiple?: boolean;
+  size?: FilterChipSize;
+  disabled?: boolean;
+  /** Text shown when nothing is applied. Defaults to the label alone. */
+  placeholder?: string;
+  className?: string;
+}
+
+/**
+ * A FilterChip that opens a menu of values — the "Region: EMEA ▾" pattern.
+ *
+ * This exists because `hasMenu` alone renders a chevron and nothing else, and
+ * a control that advertises a menu it does not have is a worse defect than a
+ * missing feature: the affordance is a promise.
+ *
+ * Composed from the existing `DropdownMenu` rather than hand-rolled, so it
+ * inherits Radix's focus trapping, type-ahead, Escape handling and portal
+ * behaviour. The chip itself is the trigger via `asChild`, which keeps the
+ * whole thing one control rather than a chip with a button glued to it.
+ *
+ * The summary line is the chip's label: "Region" when nothing is applied,
+ * "Region: EMEA" for one value, "Region: 3" beyond that. A chip that only ever
+ * said "Region" would force the user to open it to find out what it is doing.
+ */
+export function FilterChipMenu({
+  label,
+  options,
+  value,
+  onValueChange,
+  multiple = true,
+  size = 'md',
+  disabled = false,
+  placeholder,
+  className,
+}: FilterChipMenuProps) {
+  const applied = options.filter((o) => value.includes(o.value));
+  const summary =
+    applied.length === 0
+      ? (placeholder ?? label)
+      : applied.length === 1
+        ? `${label}: ${typeof applied[0].label === 'string' ? applied[0].label : applied[0].value}`
+        : `${label}: ${applied.length}`;
+
+  const toggle = (option: FilterChipOption) => {
+    if (!multiple) {
+      onValueChange(value.includes(option.value) ? [] : [option.value]);
+      return;
+    }
+    onValueChange(
+      value.includes(option.value) ? value.filter((v) => v !== option.value) : [...value, option.value]
+    );
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={disabled}>
+        <FilterChip
+          label={summary}
+          selected={applied.length > 0}
+          hasMenu
+          size={size}
+          disabled={disabled}
+          className={className}
+          // The chip is a menu trigger here, not a toggle: clicking must open
+          // the menu, so the toggle handler is deliberately absent. Radix adds
+          // aria-haspopup and aria-expanded on top of aria-pressed.
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="min-w-48">
+        <DropdownMenuLabel>{label}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {options.map((option) => (
+          <DropdownMenuCheckboxItem
+            key={option.value}
+            checked={value.includes(option.value)}
+            disabled={option.disabled}
+            // Without this the menu closes on every choice, which makes
+            // selecting three values a three-times-reopen chore.
+            onSelect={(e) => multiple && e.preventDefault()}
+            onCheckedChange={() => toggle(option)}
+          >
+            <span className="flex-1">{option.label}</span>
+            {option.count !== undefined && (
+              <span className="ml-2 tabular-nums text-xs opacity-60">{option.count}</span>
+            )}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

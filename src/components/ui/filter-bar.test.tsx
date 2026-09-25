@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import {
@@ -82,6 +82,28 @@ describe('FilterBarChips', () => {
     expect(deletes.length).toBeGreaterThanOrEqual(2);
     fireEvent.click(deletes[0]);
     expect(onRemove).toHaveBeenCalledWith('region');
+  });
+
+  it('is ONE tab stop for the whole row, not one per filter', () => {
+    // Eight applied filters used to cost eight Tab presses to get past a
+    // region the user is not editing. The chips now live in a role=toolbar
+    // with roving focus.
+    render(<FilterBarChips filters={filters} onRemove={() => {}} />);
+    const toolbar = screen.getByRole('toolbar', { name: 'Applied filters' });
+    const toggles = within(toolbar)
+      .getAllByRole('button')
+      .filter((b) => b.hasAttribute('aria-pressed'));
+    expect(toggles.length).toBeGreaterThanOrEqual(2);
+    expect(toggles.filter((b) => b.tabIndex === 0)).toHaveLength(1);
+  });
+
+  it('gives each remove control a name that says WHICH filter it clears', () => {
+    // "Remove" repeated five times tells a screen-reader user nothing about
+    // which one they are about to clear.
+    render(<FilterBarChips filters={filters} onRemove={() => {}} />);
+    expect(
+      screen.getByRole('button', { name: /Remove filter Region: EMEA/i })
+    ).toBeInTheDocument();
   });
 
   it('announces changes politely', () => {
