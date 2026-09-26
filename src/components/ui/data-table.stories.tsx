@@ -7,6 +7,7 @@ import { DataTable, createSelectColumn } from './data-table';
 import { createActionsColumn } from './data-grid-row-actions';
 import type { SelectionState } from './data-grid-selection';
 import { Badge } from './badge';
+import { formatCurrency } from '@/lib/format';
 import { Button } from './button';
 
 /**
@@ -46,18 +47,18 @@ interface Policy {
   id: number;
   name: string;
   status: string;
-  premium: string;
+  premium: number;
   renewalDate: string;
 }
 
 const policyData: Policy[] = [
-  { id: 1, name: 'Commercial Auto', status: 'Active', premium: '$12,400', renewalDate: '2026-03-14' },
-  { id: 2, name: 'General Liability', status: 'Active', premium: '$8,200', renewalDate: '2026-05-01' },
-  { id: 3, name: 'Cyber Liability', status: 'Pending', premium: '$15,900', renewalDate: '2026-01-22' },
-  { id: 4, name: 'Property', status: 'Active', premium: '$22,000', renewalDate: '2026-07-09' },
-  { id: 5, name: 'Workers Comp', status: 'Expired', premium: '$9,600', renewalDate: '2025-11-30' },
-  { id: 6, name: 'Umbrella', status: 'Active', premium: '$4,100', renewalDate: '2026-04-18' },
-  { id: 7, name: 'Marine Cargo', status: 'Pending', premium: '$11,750', renewalDate: '2026-02-27' },
+  { id: 1, name: 'Commercial Auto', status: 'Active', premium: 12400, renewalDate: '2026-03-14' },
+  { id: 2, name: 'General Liability', status: 'Active', premium: 8200, renewalDate: '2026-05-01' },
+  { id: 3, name: 'Cyber Liability', status: 'Pending', premium: 15900, renewalDate: '2026-01-22' },
+  { id: 4, name: 'Property', status: 'Active', premium: 22000, renewalDate: '2026-07-09' },
+  { id: 5, name: 'Workers Comp', status: 'Expired', premium: 9600, renewalDate: '2025-11-30' },
+  { id: 6, name: 'Umbrella', status: 'Active', premium: 4100, renewalDate: '2026-04-18' },
+  { id: 7, name: 'Marine Cargo', status: 'Pending', premium: 11750, renewalDate: '2026-02-27' },
 ];
 
 const baseColumns: DataGridColumnDef<Policy>[] = [
@@ -70,7 +71,16 @@ const baseColumns: DataGridColumnDef<Policy>[] = [
       return <Badge tone={value === 'Active' ? 'success' : value === 'Expired' ? 'danger' : 'default'}>{value}</Badge>;
     },
   },
-  { accessorKey: 'premium', header: 'Premium', enableSorting: true },
+  {
+    accessorKey: 'premium',
+    header: 'Premium',
+    enableSorting: true,
+    // `meta.type` does two jobs: it right-aligns the column (numbers only line
+    // up when their last digit does), and it is the hook the filter schema
+    // reads to say "over $500,000" rather than "over 500000".
+    meta: { type: 'currency' },
+    cell: ({ getValue }) => formatCurrency(getValue<number>()),
+  },
   { accessorKey: 'renewalDate', header: 'Renewal Date', enableSorting: true },
 ];
 
@@ -473,7 +483,7 @@ function generatePolicies(count: number): Policy[] {
       id: i + 1,
       name: `${type} #${i + 1}`,
       status,
-      premium: `$${premium.toLocaleString()}`,
+      premium,
       renewalDate: `2026-${month}-${day}`,
     };
   });
