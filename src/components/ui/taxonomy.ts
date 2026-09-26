@@ -160,6 +160,7 @@ export const TAXONOMY: Record<string, Tier> = {
   sheet: 'organism',
   'side-navigation': 'organism',
   table: 'organism',
+  'table-primitives': 'atom',
   toaster: 'organism',
   'website-header': 'organism',
 

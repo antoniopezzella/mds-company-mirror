@@ -12,6 +12,16 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from './input';
 import { Skeleton } from './skeleton';
 import { Z_INDEX } from './z-index';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './table-primitives';
 import { DENSITY_PADDING, useDataGrid } from './data-grid';
 import type { DataGridFeatures } from './data-grid-features';
 import {
@@ -52,7 +62,7 @@ export interface DataGridTableProps<TData extends RowData> {
   /**
    * Renders a master-detail panel under an expanded row.
    *
-   * Returns the panel's content; the grid supplies the `<tr>`/`<td colSpan>`
+   * Returns the panel's content; the grid supplies the `<TableRow>`/`<TableCell colSpan>`
    * around it. Pair with `createExpandColumn()` for the toggle.
    *
    * Independent of sub-rows: a row can have `subRows` (rendered as ordinary
@@ -73,7 +83,7 @@ export interface DataGridTableProps<TData extends RowData> {
    * Implemented with **spacer rows, not a transform**. A `transform` on any
    * ancestor creates a containing block, which silently kills `position:
    * sticky` on the header and on every pinned column — the single most likely
-   * way to break this table. Two zero-content `<tr>`s holding the height above
+   * way to break this table. Two zero-content `<TableRow>`s holding the height above
    * and below the window keep the layout honest and the table semantic.
    */
   enableVirtualization?: boolean;
@@ -82,12 +92,12 @@ export interface DataGridTableProps<TData extends RowData> {
   /** Rows rendered beyond the viewport on each side. */
   overscan?: number;
   /**
-   * Renders a `<tfoot>` from each column's `footer` definition — totals,
+   * Renders a `<TableFooter>` from each column's `footer` definition — totals,
    * counts, whatever the column says.
    *
    * Footer content is the consumer's, computed from
    * `table.getFilteredRowModel().rows` so it follows the filters rather than
-   * describing data the user cannot see. `<tfoot>` sits after `<tbody>` in
+   * describing data the user cannot see. `<TableFooter>` sits after `<TableBody>` in
    * the DOM regardless of where it is written, which is the correct reading
    * order for a summary.
    */
@@ -102,7 +112,7 @@ export interface DataGridTableProps<TData extends RowData> {
    */
   striped?: boolean;
   /**
-   * A `<caption>` describing the table.
+   * A `<TableCaption>` describing the table.
    *
    * The accessible name for the whole table, and the only one it can have:
    * `aria-label` on a `<table>` is far less reliably announced. `table.tsx`
@@ -288,7 +298,7 @@ export function DataGridTable<TData extends RowData>({
   };
 
   // Sticky cells detach from the row's own background during scroll, so a
-  // pinned cell must paint its own (it won't inherit through from the <tr>).
+  // pinned cell must paint its own (it won't inherit through from the <TableRow>).
   // The right-edge shadow marks where the pinned region ends.
   const getPinnedCellStyle = (
     column: {
@@ -562,7 +572,7 @@ export function DataGridTable<TData extends RowData>({
    * One data row, plus its detail row when expanded.
    *
    * Extracted so pinned rows can reuse it: row pinning renders three separate
-   * <tbody> sections (top / centre / bottom) and each needs identical rows.
+   * <TableBody> sections (top / centre / bottom) and each needs identical rows.
    */
   // Row activation is only offered outside grid mode — see the prop's note.
   const rowClickable = !!onRowClick && !enableCellSelection;
@@ -585,7 +595,7 @@ export function DataGridTable<TData extends RowData>({
     const detail = renderDetail && row.getIsExpanded() ? renderDetail(row) : null;
     return (
       <React.Fragment key={row.id}>
-            <tr
+            <TableRow
               key={row.id}
               // 1-based, header counts as row 1. Required once virtualization
               // means the DOM holds ~30 rows of a much larger set — without it
@@ -597,7 +607,7 @@ export function DataGridTable<TData extends RowData>({
               onMouseLeave={() => setHoveredRow(null)}
               // A tab stop, but NOT `role="button"`.
               //
-              // An explicit role on a <tr> overrides its implicit `row`, which
+              // An explicit role on a <TableRow> overrides its implicit `row`, which
               // removes it from the table's structure: `aria-required-children`
               // wants `row` children, `getAllByRole('row')` stops finding it,
               // and a screen reader loses the row/cell relationship entirely.
@@ -618,7 +628,7 @@ export function DataGridTable<TData extends RowData>({
                   ? (e) => {
                       // Enter and Space, the button convention — a click
                       // handler with no keyboard equivalent is a WCAG 2.1.1
-                      // failure that axe cannot see on a <tr>.
+                      // failure that axe cannot see on a <TableRow>.
                       if (e.key !== 'Enter' && e.key !== ' ') return;
                       if (fromInteractive(e.target)) return;
                       e.preventDefault();
@@ -647,7 +657,7 @@ export function DataGridTable<TData extends RowData>({
                 // In GRID mode that wrapper is an axe `nested-interactive`
                 // failure waiting to happen — the moment a cell renders a
                 // Button, a link or a Checkbox it is a button inside a button
-                // — and it is also unnecessary, because the <td> is already
+                // — and it is also unnecessary, because the <TableCell> is already
                 // the roving focus target carrying Enter/F2.
                 const gridEditable =
                   enableCellSelection && isColumnEditable(cell.column, row.original);
@@ -679,7 +689,7 @@ export function DataGridTable<TData extends RowData>({
                 };
 
                 return (
-                  <td
+                  <TableCell
                     key={cell.id}
                     className={cn(
                       'px-3 text-sm',
@@ -864,7 +874,7 @@ export function DataGridTable<TData extends RowData>({
                         className="h-8 w-full"
                       />
                     ) : gridEditable ? (
-                      // No wrapper in grid mode. The <td> already carries the
+                      // No wrapper in grid mode. The <TableCell> already carries the
                       // roving tabindex and the Enter/F2 handler, so wrapping
                       // the content in a button would add a second focus stop
                       // AND nest interactives when the cell renders a control
@@ -891,22 +901,22 @@ export function DataGridTable<TData extends RowData>({
                     ) : (
                       flexRender(cell.column.columnDef.cell, cell.getContext())
                     )}
-                  </td>
+                  </TableCell>
                 );
               })}
-            </tr>
+            </TableRow>
         {detail !== null && detail !== undefined && (
-          // A real <tr>/<td colSpan>, not a rowgroup trick: the detail panel
+          // A real <TableRow>/<TableCell colSpan>, not a rowgroup trick: the detail panel
           // has to stay inside the table's own row structure or a screen
           // reader loses its association with the row it belongs to.
-          <tr
+          <TableRow
             data-detail-row=""
             style={{ backgroundColor: rowBg, borderTop: `1px solid ${borderColor}`, color: textColor }}
           >
-            <td colSpan={visibleColumnCount} className="p-0">
+            <TableCell colSpan={visibleColumnCount} className="p-0">
               {detail}
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         )}
       </React.Fragment>
     );
@@ -921,7 +931,7 @@ export function DataGridTable<TData extends RowData>({
       <span aria-live="polite" className="sr-only">
         {announcement}
       </span>
-      <table
+      <Table
         className={cn('w-full border-collapse', className)}
         style={tableStyle}
         aria-busy={loading || undefined}
@@ -939,17 +949,17 @@ export function DataGridTable<TData extends RowData>({
           enableVirtualization || enableCellSelection ? visibleColumnCount : undefined
         }
       >
-        {/* The table's accessible name. A <caption> is announced reliably
+        {/* The table's accessible name. A <TableCaption> is announced reliably
             where an aria-label on a <table> is not, and it is visible, which
             helps everyone rather than only screen-reader users. */}
         {caption && (
-          <caption className="p-2 text-left text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <TableCaption className="p-2 text-left text-sm" style={{ color: getRoleColor('text.secondary') }}>
             {caption}
-          </caption>
+          </TableCaption>
         )}
-      <thead style={maxHeight ? { position: 'sticky', top: 0, zIndex: Z_INDEX.stickyRaised } : undefined}>
+      <TableHeader style={maxHeight ? { position: 'sticky', top: 0, zIndex: Z_INDEX.stickyRaised } : undefined}>
         {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id} style={{ backgroundColor: headerBg }}>
+          <TableRow key={headerGroup.id} style={{ backgroundColor: headerBg }}>
             {headerGroup.headers.map((header) => {
               const canSort = header.column.getCanSort();
               const canHide = header.column.getCanHide();
@@ -963,13 +973,16 @@ export function DataGridTable<TData extends RowData>({
               const canMoveEarlier = !header.column.getIsFirstColumn(pinnedRegion || 'center');
               const canMoveLater = !header.column.getIsLastColumn(pinnedRegion || 'center');
               return (
-                <th
+                <TableHead
                   key={header.id}
                   // colSpan matters for grouped headers: without it a group
                   // header sits over one column instead of spanning its leaves.
                   colSpan={header.colSpan > 1 ? header.colSpan : undefined}
                   className={cn(
-                    'relative h-10 px-3 text-sm font-medium',
+                    // h-10/px-3/text-sm/font-medium come from TableHead now.
+                    // `relative` is the grid's own: the resize handle is
+                    // absolutely positioned against this cell.
+                    'relative',
                     alignClass(resolveAlign(header.column))
                   )}
                   // aria-sort is what actually announces sort state to a screen
@@ -978,7 +991,7 @@ export function DataGridTable<TData extends RowData>({
                   style={{
                     color: textColor,
                     width: enableColumnResizing ? header.getSize() : undefined,
-                    // Ordered within the sticky <thead>'s own stacking context,
+                    // Ordered within the sticky <TableHeader>'s own stacking context,
                     // so only the relative order matters — but naming the
                     // scale's layers keeps the values checkable.
                     ...getPinnedCellStyle(
@@ -1149,44 +1162,44 @@ export function DataGridTable<TData extends RowData>({
                     />
                     /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
                   )}
-                </th>
+                </TableHead>
               );
             })}
-          </tr>
+          </TableRow>
         ))}
-      </thead>
-      {/* Pinned rows live in their own <tbody> so they can stick without
+      </TableHeader>
+      {/* Pinned rows live in their own <TableBody> so they can stick without
           leaving the table's row structure. Sticky needs a bounded scroll
           container to resolve against, which is what `maxHeight` provides —
           without it these render as ordinary leading/trailing rows, which is
           still the correct reading order. */}
       {topRows.length > 0 && status === 'ready' && !loading && (
-        <tbody
+        <TableBody
           data-pinned="top"
           style={maxHeight ? { position: 'sticky', top: headerHeight, zIndex: Z_INDEX.sticky } : undefined}
         >
           {topRows.map(renderRow)}
-        </tbody>
+        </TableBody>
       )}
-      <tbody>
+      <TableBody>
         {loading ? (
           // Skeleton rows are aria-hidden: a visual placeholder, not content.
           // Without it a screen reader narrates a grid of empty cells on every
           // load. `aria-busy` on the <table> is what conveys "loading".
           Array.from({ length: skeletonRowCount }).map((_, i) => (
-            <tr aria-hidden="true" key={`loading-${i}`} style={{ borderTop: `1px solid ${borderColor}` }}>
+            <TableRow aria-hidden="true" key={`loading-${i}`} style={{ borderTop: `1px solid ${borderColor}` }}>
               {Array.from({ length: visibleColumnCount }).map((__, colIndex) => (
-                <td key={colIndex} className={cn('px-3', cellPadding)}>
+                <TableCell key={colIndex} className={cellPadding}>
                   <Skeleton height={16} width={colIndex === 0 ? '60%' : '80%'} />
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))
         ) : status !== 'ready' ? (
-          <tr>
+          <TableRow>
             {/* `p-0`: DataState brings its own padding, so the cell must not
                 add a second layer around it. */}
-            <td colSpan={visibleColumnCount} className="p-0">
+            <TableCell colSpan={visibleColumnCount} className="p-0">
               <DataState
                 status={status}
                 loadError={loadError}
@@ -1196,32 +1209,32 @@ export function DataGridTable<TData extends RowData>({
                 onClearFilters={() => table.resetColumnFilters()}
                 name="DataGridTable"
               />
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ) : (
           enableVirtualization ? (
             <>
               {/* Spacer rows. `aria-hidden` because they are layout, not
                   content — a screen reader must not count them as rows. */}
               {padTop > 0 && (
-                <tr aria-hidden="true" style={{ height: padTop }}>
-                  <td colSpan={visibleColumnCount} className="p-0" />
-                </tr>
+                <TableRow aria-hidden="true" style={{ height: padTop }}>
+                  <TableCell colSpan={visibleColumnCount} className="p-0" />
+                </TableRow>
               )}
               {virtualItems.map((vi) => renderRow(centerRows[vi.index], vi.index))}
               {padBottom > 0 && (
-                <tr aria-hidden="true" style={{ height: padBottom }}>
-                  <td colSpan={visibleColumnCount} className="p-0" />
-                </tr>
+                <TableRow aria-hidden="true" style={{ height: padBottom }}>
+                  <TableCell colSpan={visibleColumnCount} className="p-0" />
+                </TableRow>
               )}
             </>
           ) : (
             centerRows.map((row, i) => renderRow(row, i))
           )
         )}
-        </tbody>
+        </TableBody>
       {showFooter && status === 'ready' && !loading && (
-        <tfoot
+        <TableFooter
           style={
             stickyFooter && maxHeight
               ? { position: 'sticky', bottom: 0, zIndex: Z_INDEX.stickyRaised }
@@ -1229,9 +1242,9 @@ export function DataGridTable<TData extends RowData>({
           }
         >
           {table.getFooterGroups().map((group) => (
-            <tr key={group.id} style={{ backgroundColor: headerBg, borderTop: `1px solid ${borderColor}` }}>
+            <TableRow key={group.id} style={{ backgroundColor: headerBg, borderTop: `1px solid ${borderColor}` }}>
               {group.headers.map((header) => (
-                <td
+                <TableCell
                   key={header.id}
                   className={cn(
                     'px-3 text-sm font-medium',
@@ -1247,21 +1260,21 @@ export function DataGridTable<TData extends RowData>({
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.footer, header.getContext())}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tfoot>
+        </TableFooter>
       )}
       {bottomRows.length > 0 && status === 'ready' && !loading && (
-        <tbody
+        <TableBody
           data-pinned="bottom"
           style={maxHeight ? { position: 'sticky', bottom: 0, zIndex: Z_INDEX.sticky } : undefined}
         >
           {bottomRows.map(renderRow)}
-        </tbody>
+        </TableBody>
       )}
-      </table>
+      </Table>
     </>
   );
 }
