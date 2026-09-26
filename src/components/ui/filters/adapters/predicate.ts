@@ -66,10 +66,9 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
     case 'is':
       // Loose on purpose for booleans and numbers arriving as strings from a
       // URL; strict comparison there would silently match nothing.
-      // eslint-disable-next-line eqeqeq
       return actual == expected;
     case 'is_not':
-      // eslint-disable-next-line eqeqeq
+      // Loose for the same reason as `is` above.
       return actual != expected;
 
     case 'contains':

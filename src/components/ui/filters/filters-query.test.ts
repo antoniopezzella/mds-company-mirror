@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   __resetFilterIds,
   addFilterNode,
+  canUngroupFilterNode,
   changeRuleField,
   changeRuleOperator,
   countFilterRules,
@@ -10,6 +11,8 @@ import {
   createFilterQuery,
   createFilterRule,
   duplicateFilterNode,
+  filterQueryDepth,
+  findParentGroup,
   flattenFilterConditions,
   getFilterNode,
   isFilterRuleComplete,
@@ -19,6 +22,8 @@ import {
   pruneEmptyGroups,
   removeFilterNode,
   setGroupCombinator,
+  ungroupFilterNode,
+  wrapFilterNodeInGroup,
 } from './filters-query';
 import { isFilterGroup, isFilterRule, type FilterGroup } from './filters-types';
 import { defaultOperatorFor, isOperatorValidFor, operatorsFor } from './filters-operators';
@@ -305,5 +310,92 @@ describe('operator validity helper', () => {
   it('reports compatibility per type', () => {
     expect(isOperatorValidFor('number', 'gt')).toBe(true);
     expect(isOperatorValidFor('select', 'gt')).toBe(false);
+  });
+});
+
+describe('tree shape utilities for the advanced builder (§21, §22)', () => {
+  const r = (path: string[]) => createFilterRule(path, { operator: 'is', value: 'x' });
+
+  it('measures depth with the root counting as one', () => {
+    expect(filterQueryDepth(createFilterQuery())).toBe(1);
+    expect(filterQueryDepth(createFilterQuery([r(['status'])]))).toBe(1);
+    expect(
+      filterQueryDepth(createFilterQuery([createFilterGroup('or', [r(['status'])])]))
+    ).toBe(2);
+    expect(
+      filterQueryDepth(
+        createFilterQuery([createFilterGroup('or', [createFilterGroup('and', [r(['status'])])])])
+      )
+    ).toBe(3);
+  });
+
+  it('finds the group directly containing a node', () => {
+    const inner = createFilterGroup('or', [r(['status'])]);
+    const q = createFilterQuery([r(['revenue']), inner]);
+    expect(findParentGroup(q, inner.id)?.id).toBe(q.id);
+    expect(findParentGroup(q, inner.rules[0].id)?.id).toBe(inner.id);
+    expect(findParentGroup(q, 'nope')).toBeUndefined();
+  });
+
+  it('wraps a rule in a group, keeping the rule intact', () => {
+    const rule = createFilterRule(['revenue'], { operator: 'gt', value: 10 });
+    const q = wrapFilterNodeInGroup(createFilterQuery([rule]), rule.id, 'or');
+    const group = q.rules[0] as FilterGroup;
+    expect(isFilterGroup(group)).toBe(true);
+    expect(group.combinator).toBe('or');
+    // Same id, operator and value — the user does not retype it (§22).
+    expect(group.rules[0]).toEqual(rule);
+  });
+});
+
+describe('ungrouping refuses to rewrite the query (§24)', () => {
+  const r = (id: string) => createFilterRule([id], { operator: 'is', value: 'x' });
+
+  it('refuses an OR group inside an AND parent', () => {
+    // (B OR C) lifted into AND becomes B AND C — a different query.
+    const inner = createFilterGroup('or', [r('status'), r('country')]);
+    const q = createFilterQuery([r('revenue'), inner]);
+    expect(canUngroupFilterNode(q, inner.id)).toBe(false);
+    expect(ungroupFilterNode(q, inner.id)).toEqual(q);
+  });
+
+  it('allows it when the combinators match, because AND is associative', () => {
+    const inner = createFilterGroup('and', [r('status'), r('country')]);
+    const q = createFilterQuery([r('revenue'), inner]);
+    expect(canUngroupFilterNode(q, inner.id)).toBe(true);
+    const after = ungroupFilterNode(q, inner.id);
+    expect(after.rules).toHaveLength(3);
+    expect(after.rules.every(isFilterRule)).toBe(true);
+  });
+
+  it('allows a single-child group regardless of combinator', () => {
+    const inner = createFilterGroup('or', [r('status')]);
+    const q = createFilterQuery([r('revenue'), inner]);
+    // One child has no combinator to disagree about.
+    expect(canUngroupFilterNode(q, inner.id)).toBe(true);
+  });
+
+  it('refuses a negated group, because the NOT has nowhere to go', () => {
+    const inner = createFilterGroup('and', [r('status'), r('country')]);
+    inner.negated = true;
+    const q = createFilterQuery([r('revenue'), inner]);
+    expect(canUngroupFilterNode(q, inner.id)).toBe(false);
+  });
+});
+
+describe('removal prunes only what it emptied', () => {
+  it('keeps an unrelated empty group the user is still building', () => {
+    const empty = createFilterGroup('or', []);
+    const rule = createFilterRule(['status'], { operator: 'is', value: 'x' });
+    const after = removeFilterNode(createFilterQuery([rule, empty]), rule.id);
+    expect(after.rules).toHaveLength(1);
+    expect(after.rules[0].id).toBe(empty.id);
+  });
+
+  it('still removes a group emptied by the removal itself', () => {
+    const rule = createFilterRule(['status'], { operator: 'is', value: 'x' });
+    const inner = createFilterGroup('or', [rule]);
+    const after = removeFilterNode(createFilterQuery([inner]), rule.id);
+    expect(after.rules).toHaveLength(0);
   });
 });

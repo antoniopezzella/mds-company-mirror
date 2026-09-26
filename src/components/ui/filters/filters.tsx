@@ -49,11 +49,19 @@ export interface FiltersProps {
   readOnly?: boolean;
   disabled?: boolean;
   className?: string;
+  /**
+   * Opens the advanced builder (§21). Supplying this turns §24's refusal into
+   * a ROUTE: "cannot be edited here" is only a fair thing to say when there is
+   * a here it can be edited. Without it the bar states the limitation and
+   * leaves the query intact, which is still better than flattening it.
+   */
+  onEditAdvanced?: () => void;
   messages?: Partial<{
     addFilter: string;
     clearAll: string;
     filters: string;
     advancedOnly: string;
+    editAdvanced: string;
   }>;
 }
 
@@ -63,6 +71,7 @@ const DEFAULTS = {
   filters: 'Filters',
   advancedOnly:
     'This query uses grouping or OR logic and cannot be edited here without changing its meaning.',
+  editAdvanced: 'Edit in advanced builder',
 };
 
 export function Filters({
@@ -74,6 +83,7 @@ export function Filters({
   readOnly = false,
   disabled = false,
   className,
+  onEditAdvanced,
   messages,
 }: FiltersProps) {
   const t = { ...DEFAULTS, ...messages };
@@ -127,13 +137,19 @@ export function Filters({
       <div ref={liveRef} role="status" aria-live="polite" className="sr-only" />
 
       {!flat && (
-        <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
-          {/* §24's critical rule: rendering A AND (B OR C) as three chips
-              would read as A AND B AND C — a different query. Rather than
-              flatten and lie, say so and leave editing to the advanced
-              builder. */}
-          {t.advancedOnly}
-        </p>
+        <>
+          <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+            {/* §24's critical rule: rendering A AND (B OR C) as three chips
+                would read as A AND B AND C — a different query. Rather than
+                flatten and lie, say so and hand it to the advanced builder. */}
+            {t.advancedOnly}
+          </p>
+          {onEditAdvanced && !readOnly && (
+            <Button variant="outline" size={size} disabled={disabled} onClick={onEditAdvanced}>
+              {t.editAdvanced}
+            </Button>
+          )}
+        </>
       )}
 
       {flat &&
