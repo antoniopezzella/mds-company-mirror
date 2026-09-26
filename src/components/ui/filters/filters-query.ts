@@ -139,8 +139,19 @@ export function changeRuleOperator(
   });
 }
 
+/**
+ * Whether a value is a RANGE — either bound is enough.
+ *
+ * Checking only `min`/`from` looked right and silently destroyed every
+ * open-ended range whose lower bound was blank. The editor emits both keys
+ * (`{ min: undefined, max: 9 }`), so `'min' in v` was true in memory — but
+ * `JSON.stringify` drops undefined keys, so the shared link carried
+ * `{"max":9}` and the recipient's parse rejected it as invalid. "Premium up
+ * to $9,000" worked on the sender's screen and nowhere else.
+ */
 function isRangeValue(v: FilterValue | undefined): boolean {
-  return typeof v === 'object' && v !== null && !Array.isArray(v) && ('min' in v || 'from' in v);
+  if (typeof v !== 'object' || v === null || Array.isArray(v)) return false;
+  return 'min' in v || 'max' in v || 'from' in v || 'to' in v;
 }
 
 /**
@@ -413,8 +424,15 @@ export function wrapFilterNodeInGroup(
  * rendered as three chips reads as `A AND B AND C`, which is a different
  * query. Rather than flatten and lie, the basic presentation asks this first
  * and routes anything nested or OR-combined to the advanced builder.
+ *
+ * A NEGATED RULE IS FINE. The concern is grouping and OR — losing a nested
+ * group's brackets changes the query, whereas `FiltersRule` renders negation
+ * as its own `NOT` segment and loses nothing. Refusing it here meant that
+ * negating one condition in the flat bar made every condition vanish, replaced
+ * by prose about "grouping or OR logic" that described something the user had
+ * not done — and made that NOT segment unreachable outside the builder.
  */
 export function isFlattenable(query: FilterQuery): boolean {
   if (query.combinator !== 'and' || query.negated) return false;
-  return query.rules.every((n) => isFilterRule(n) && !n.negated);
+  return query.rules.every(isFilterRule);
 }

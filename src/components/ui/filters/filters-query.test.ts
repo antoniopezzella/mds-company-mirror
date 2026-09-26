@@ -266,24 +266,37 @@ describe('the critical semantic guard (§24)', () => {
     expect(isFlattenable(q)).toBe(true);
   });
 
-  it('refuses a negated rule, which a plain chip cannot express', () => {
+  it('ACCEPTS a negated rule — the bar renders it as a NOT segment', () => {
+    // This asserted the opposite until a review caught the contradiction:
+    // `FiltersRule` draws a `NOT` segment for exactly this case, so the bar
+    // can express it and loses nothing. Refusing it made negating one
+    // condition wipe every condition from the bar and replace them with prose
+    // about "grouping or OR logic" — describing something the user had not
+    // done. §24's concern is grouping and OR, not negation.
     const q = createFilterQuery([
       createFilterRule(['status'], { operator: 'is', value: 'active', negated: true }),
     ]);
-    expect(isFlattenable(q)).toBe(false);
+    expect(isFlattenable(q)).toBe(true);
+  });
+
+  it('still refuses a negated ROOT, whose brackets have nowhere to go', () => {
+    const q = createFilterQuery([createFilterRule(['status'], { operator: 'is', value: 'a' })]);
+    expect(isFlattenable({ ...q, negated: true })).toBe(false);
   });
 
   it('refuses an OR root', () => {
-    const q = setGroupCombinator(
-      createFilterQuery([
-        createFilterRule(['status'], { operator: 'is', value: 'a' }),
-        createFilterRule(['country'], { operator: 'is', value: 'b' }),
-      ]),
-      'root',
-      'or'
-    );
-    const or = { ...q, combinator: 'or' as const };
+    // Previously passed the literal id 'root', which matches no node, then
+    // discarded the result and asserted on a hand-built object — so it tested
+    // neither `setGroupCombinator` nor the root path. Use the real id.
+    const base = createFilterQuery([
+      createFilterRule(['status'], { operator: 'is', value: 'a' }),
+      createFilterRule(['country'], { operator: 'is', value: 'b' }),
+    ]);
+    const or = setGroupCombinator(base, base.id, 'or');
+    expect(or.combinator).toBe('or');
     expect(isFlattenable(or)).toBe(false);
+    // And back again, so the root really is reachable in both directions.
+    expect(setGroupCombinator(or, or.id, 'and').combinator).toBe('and');
   });
 });
 
