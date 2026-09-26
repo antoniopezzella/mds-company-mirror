@@ -261,8 +261,10 @@ function Highlight({ text, ranges }: { text: string; ranges: Array<[number, numb
   return (
     <>
       {text.slice(0, start)}
+      {/* No radius: the background is transparent, so there are no corners to
+          round — the match is marked by weight and colour alone. */}
       <mark
-        className="rounded-xs bg-transparent font-semibold"
+        className="bg-transparent font-semibold"
         style={{ color: getRoleColor('interactive.primary') }}
       >
         {text.slice(start, end)}

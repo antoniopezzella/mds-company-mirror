@@ -43,13 +43,30 @@ const ALLOWED = new Set(Object.values(SCALE));
 // `z-auto` keyword. Negative values are not on the scale and are flagged.
 const ALWAYS_OK = new Set([0]);
 
-const files = fs
-  .readdirSync(DIR)
-  // z-index.ts is excluded: it *declares* the scale, so counting its own
-  // Z_CLASS literals as usage made every layer look adopted — `scrim` showed
-  // "1 site" while no component used it at all.
-  .filter((f) => /\.tsx?$/.test(f) && !/\.stories\.|\.test\.|^z-index\.ts$/.test(f))
-  .map((f) => path.join(DIR, f));
+/**
+ * Walks SUBDIRECTORIES too.
+ *
+ * This was a flat `readdirSync`, and `components/ui/filters/` — the first
+ * subdirectory ever added under `components/ui/` — was therefore invisible to
+ * it. The gate reported "104 modules checked" and passed while a banned class
+ * sat in a file it had never opened. A directory-shaped component is now the
+ * normal way to build a larger one here, so flat is simply wrong.
+ */
+function walkFiles(dir, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkFiles(full, out);
+    else if (/\.tsx?$/.test(entry.name)) out.push(full);
+  }
+  return out;
+}
+
+// z-index.ts is excluded: it *declares* the scale, so counting its own
+// Z_CLASS literals as usage made every layer look adopted — `scrim` showed
+// "1 site" while no component used it at all.
+const files = walkFiles(DIR).filter(
+  (f) => !/\.stories\.|\.test\.|^z-index\.ts$/.test(path.basename(f))
+);
 
 const violations = [];
 const unreadable = []; // computed values the checker cannot verify
