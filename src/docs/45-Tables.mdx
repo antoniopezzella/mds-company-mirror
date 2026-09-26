@@ -88,7 +88,35 @@ capabilities were deliberately ported to the grid so it could be retired — see
 `capabilities ported from table.tsx` suite in `data-grid-edges.test.tsx`.
 
 **It is now deprecated** — since 0.7.0, removed after 0.8.0 (2026-12-23). The last
-capability it had that the grid lacked was an opening sort, now `initialSorting`.
+capability it had that the grid lacked was an opening sort, now `initialSorting`, and as
+of 2026-09-26 it has **zero consumers**: the four app surfaces and the Figma Code Connect
+mapping all point at `DataTable`.
+
+It is not deleted yet, deliberately. `Table` has been a published export since 0.6.0 while
+its deprecation reads *"since 0.7.0"* — a version that has never shipped — so no consumer
+has actually been warned. Removing it now would break an API nobody was told about. It
+goes when 0.7.0 has carried the warning and 0.8.0 arrives.
+
+### The markup primitives
+
+The tier `Table` was pretending to be. `TableHeader`, `TableBody`, `TableFooter`,
+`TableRow`, `TableHead`, `TableCell` and `TableCaption` are exported now; the `Table` root
+itself joins them when the legacy engine is removed, because it currently owns that name.
+
+```tsx
+<table>
+  <TableHeader>
+    <TableRow><TableHead>Policy</TableHead><TableHead>Premium</TableHead></TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow><TableCell>Commercial Auto</TableCell><TableCell>$12,400</TableCell></TableRow>
+  </TableBody>
+</table>
+```
+
+They carry this system's styling and nothing else — no state, no sorting, no pagination.
+`DataGrid` is their first consumer, which is what keeps them honest: header height, cell
+padding and the type scale are defined there once rather than restated in the grid.
 
 The evidence that this was overdue: the ambiguous `aria-label="Select all rows"` and the
 positional `Select row N` were both fixed on the grid, and both still sit in `table.tsx`,
