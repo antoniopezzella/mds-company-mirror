@@ -4,7 +4,7 @@ import { getRoleColor } from '../../../theme/roles';
 import Header from '../../Header/Header';
 import Tabs from '../../ui/tabs';
 import { ChartMetricCard } from '../../ChartMetricCard/ChartMetricCard';
-import { Table } from '../../ui/table';
+import { DataTable } from '../../ui/data-table';
 import Alert from '../../ui/alert';
 import Button from '../../Button/Button';
 
@@ -24,7 +24,7 @@ export interface InsuranceDashboardProps {
  * - Header for navigation
  * - Tabs for content organization
  * - ChartMetricCard for KPIs
- * - Table for policy data
+ * - DataTable for policy data
  * - Panels for quick actions
  * - Alert for system notifications
  */
@@ -73,12 +73,12 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
 
   // Sample policy data for table
   const policyColumns = [
-    { key: 'policyNumber', header: 'Policy Number', width: '150px' },
-    { key: 'clientName', header: 'Client Name', width: '200px' },
-    { key: 'type', header: 'Type', width: '150px' },
-    { key: 'premium', header: 'Premium', width: '120px' },
-    { key: 'status', header: 'Status', width: '120px' },
-    { key: 'renewalDate', header: 'Renewal Date', width: '150px' },
+    { accessorKey: 'policyNumber', header: 'Policy Number', size: 150 },
+    { accessorKey: 'clientName', header: 'Client Name', size: 200 },
+    { accessorKey: 'type', header: 'Type', size: 150 },
+    { accessorKey: 'premium', header: 'Premium', size: 120 },
+    { accessorKey: 'status', header: 'Status', size: 120 },
+    { accessorKey: 'renewalDate', header: 'Renewal Date', size: 150 },
   ];
 
   const policyRows = [
@@ -291,7 +291,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                     Latest policy updates and renewals
                   </Typography>
                   <Box sx={{ mt: 2 }}>
-                    <Table
+                    <DataTable
                       columns={policyColumns.slice(0, 4)}
                       data={policyRows.slice(0, 3)}
                     />
@@ -313,7 +313,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
               >
                 Policies Requiring Attention
               </Typography>
-              <Table
+              <DataTable
                 columns={policyColumns}
                 data={policyRows.filter(p => p.status !== 'Active')}
               />
@@ -339,7 +339,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                 Create New Policy
               </Button>
             </Stack>
-            <Table
+            <DataTable
               columns={policyColumns}
               data={policyRows}
             />

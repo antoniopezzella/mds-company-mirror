@@ -6,7 +6,7 @@ import type { RowData, SortingState } from '@tanstack/react-table';
 import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
 import type { DataGridColumnDef } from './data-grid-features';
-import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
+import { DataGrid, DataGridContainer, DataGridScrollArea, type DataGridDensity } from './data-grid';
 import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
 import type { BulkAction } from './data-grid-bulk-actions';
@@ -177,6 +177,12 @@ export interface DataTableProps<TData extends RowData, TValue> {
   /** Adds a Density control (compact/standard/comfortable row height) to the toolbar row. Off by default. */
   enableDensityToggle?: boolean;
   /**
+   * Initial row density. `DataGrid` has always had this; the preset never
+   * passed it through, so a compact table was only reachable by letting the
+   * user toggle it — which is not the same as a table that IS compact.
+   */
+  defaultDensity?: DataGridDensity;
+  /**
    * Server-side pagination: `data` is assumed to already be just the
    * current page's rows, and `pageCount` (from the server) drives page
    * navigation instead of TanStack slicing `data` itself. Pass
@@ -321,6 +327,7 @@ export function DataTable<TData extends RowData, TValue>({
   enableExport = false,
   exportFilename = 'export',
   enableDensityToggle = false,
+  defaultDensity,
   manualPagination = false,
   pageCount,
   rowCount,
@@ -412,6 +419,7 @@ export function DataTable<TData extends RowData, TValue>({
       onRetry={onRetry}
       emptyState={emptyState}
       maxHeight={maxHeight}
+      defaultDensity={defaultDensity}
       searchKey={searchKey}
       className={className}
     >
