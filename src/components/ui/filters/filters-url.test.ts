@@ -171,6 +171,30 @@ describe('round trips', () => {
     ]);
   });
 
+  it('preserves an OPEN-ENDED range, in either direction', () => {
+    // The editor emits both keys (`{min: undefined, max: 9}`), so `'min' in v`
+    // was true in memory while JSON dropped it on the way out — "Premium up to
+    // $9,000" worked on the sender's screen and was rejected on the
+    // recipient's. Both bounds, both types, both directions.
+    const cases: Array<[string[], unknown]> = [
+      [['premium'], { min: undefined, max: 9 }],
+      [['premium'], { min: 5, max: undefined }],
+      [['renewal'], { from: undefined, to: '2026-02-01' }],
+      [['renewal'], { from: '2026-02-01', to: undefined }],
+    ];
+    for (const [path, value] of cases) {
+      const q = createFilterQuery([
+        createFilterRule(path, { operator: 'between', value: value as never }),
+      ]);
+      const back = parseFilterQuery(serializeFilterQuery(q), FIELDS);
+      expect({ value, dropped: back.dropped, kept: back.query.rules.length }).toEqual({
+        value,
+        dropped: [],
+        kept: 1,
+      });
+    }
+  });
+
   it('preserves every value shape', () => {
     const q = createFilterQuery([
       createFilterRule(['premium'], { operator: 'between', value: { min: 10, max: 20 } }),

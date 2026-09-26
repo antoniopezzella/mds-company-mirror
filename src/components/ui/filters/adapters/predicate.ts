@@ -33,7 +33,38 @@ const isEmpty = (v: unknown) =>
   v === null || v === undefined || v === '' || (Array.isArray(v) && v.length === 0);
 
 const text = (v: unknown) => String(v ?? '').toLowerCase();
-const num = (v: unknown) => (typeof v === 'number' ? v : Number(v));
+
+/**
+ * ABSENT IS NOT ZERO.
+ *
+ * `Number(null)`, `Number('')`, `Number(false)` and `Number([])` are all `0`,
+ * so a bare `Number()` here made "Premium under $100k" return every policy
+ * with no premium recorded — a wrong answer presented as fact. Anything that
+ * is not a number and not a numeric string becomes NaN, and the comparisons
+ * below refuse NaN outright.
+ */
+const num = (v: unknown): number => {
+  if (typeof v === 'number') return v;
+  if (v === null || v === undefined || typeof v === 'boolean' || Array.isArray(v)) return NaN;
+  if (typeof v === 'string' && v.trim() === '') return NaN;
+  return Number(v);
+};
+
+/**
+ * The loose comparison `is` uses, shared with the set operators.
+ *
+ * A select option may hold the number `1` while the grid row holds `"1"` —
+ * `FilterValue`'s own doc calls that ordinary, and a URL turns one into the
+ * other. `is` was loose and `any_of` strict, so the same intent gave opposite
+ * answers on the same data.
+ */
+// eslint-disable-next-line eqeqeq
+const same = (a: unknown, b: unknown): boolean => a == b;
+
+const hasSame = (haystack: unknown[], needle: unknown): boolean =>
+  haystack.some((v) => same(v, needle));
+
+const DATE_TYPES = new Set(['date', 'datetime', 'dateRange']);
 
 /**
  * Dates compare at DAY granularity, from a `YYYY-MM-DD` string parsed as
@@ -53,9 +84,10 @@ function day(v: unknown): number | undefined {
   return Number.isNaN(d.getTime()) ? undefined : new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 }
 
-function matchRule(rule: FilterRule, row: unknown): boolean {
+function matchRule(rule: FilterRule, row: unknown, type?: string): boolean {
   const actual = valueAt(row, rule.path);
   const expected = rule.value;
+  const isDate = type !== undefined && DATE_TYPES.has(type);
 
   switch (rule.operator) {
     case 'is_empty':
@@ -64,12 +96,17 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
       return !isEmpty(actual);
 
     case 'is':
-      // Loose on purpose for booleans and numbers arriving as strings from a
-      // URL; strict comparison there would silently match nothing.
-      return actual == expected;
-    case 'is_not':
-      // Loose for the same reason as `is` above.
-      return actual != expected;
+    case 'is_not': {
+      // On a DATE field, compare the day — every other date operator does,
+      // and comparing raw values meant a `datetime` column could never match
+      // `is` at all, while `on_or_before` matched the same row happily.
+      const equal = isDate
+        ? day(actual) !== undefined && day(actual) === day(expected)
+        // Loose on purpose for booleans and numbers arriving as strings from
+        // a URL; strict comparison there would silently match nothing.
+        : same(actual, expected);
+      return rule.operator === 'is' ? equal : !equal;
+    }
 
     case 'contains':
       return text(actual).includes(text(expected));
@@ -81,17 +118,25 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
       return text(actual).endsWith(text(expected));
 
     case 'eq':
-      return num(actual) === num(expected);
     case 'neq':
-      return num(actual) !== num(expected);
     case 'gt':
-      return num(actual) > num(expected);
     case 'gte':
-      return num(actual) >= num(expected);
     case 'lt':
-      return num(actual) < num(expected);
-    case 'lte':
-      return num(actual) <= num(expected);
+    case 'lte': {
+      const a = num(actual);
+      const b = num(expected);
+      // A row with nothing in the column is not "under 100", and it is not
+      // "not equal to 100" either — it has nothing to compare. Letting NaN
+      // fall through would put every blank row into `neq`'s results, since
+      // `NaN !== NaN` is true.
+      if (Number.isNaN(a) || Number.isNaN(b)) return false;
+      if (rule.operator === 'eq') return a === b;
+      if (rule.operator === 'neq') return a !== b;
+      if (rule.operator === 'gt') return a > b;
+      if (rule.operator === 'gte') return a >= b;
+      if (rule.operator === 'lt') return a < b;
+      return a <= b;
+    }
 
     case 'between':
     case 'not_between': {
@@ -117,9 +162,9 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
     }
 
     case 'any_of':
-      return Array.isArray(expected) && (expected as unknown[]).some((v) => v === actual);
+      return Array.isArray(expected) && hasSame(expected as unknown[], actual);
     case 'none_of':
-      return Array.isArray(expected) && !(expected as unknown[]).some((v) => v === actual);
+      return Array.isArray(expected) && !hasSame(expected as unknown[], actual);
 
     /**
      * §10.4 insists these stay distinct: `contains any [A,B]` is A OR B,
@@ -128,15 +173,15 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
      */
     case 'contains_any': {
       const have = Array.isArray(actual) ? actual : [actual];
-      return Array.isArray(expected) && (expected as unknown[]).some((v) => have.includes(v));
+      return Array.isArray(expected) && (expected as unknown[]).some((v) => hasSame(have, v));
     }
     case 'contains_all': {
       const have = Array.isArray(actual) ? actual : [actual];
-      return Array.isArray(expected) && (expected as unknown[]).every((v) => have.includes(v));
+      return Array.isArray(expected) && (expected as unknown[]).every((v) => hasSame(have, v));
     }
     case 'not_contains_any': {
       const have = Array.isArray(actual) ? actual : [actual];
-      return Array.isArray(expected) && !(expected as unknown[]).some((v) => have.includes(v));
+      return Array.isArray(expected) && !(expected as unknown[]).some((v) => hasSame(have, v));
     }
 
     case 'before':
@@ -149,8 +194,11 @@ function matchRule(rule: FilterRule, row: unknown): boolean {
       return (day(actual) ?? -Infinity) >= (day(expected) ?? Infinity);
 
     default:
-      // An operator this adapter does not know must not silently pass: that
-      // would widen the result set and look like the filter worked.
+      // Defence in depth only — `isFilterRuleComplete` rejects an unknown
+      // operator before `matchNode` gets here, so an unrecognised rule is
+      // SKIPPED (constraining nothing) rather than reaching this line. Worth
+      // knowing: the skip is what a custom `field.operators` entry currently
+      // hits, and it looks like the filter is set while it does nothing.
       return false;
   }
 }
@@ -168,7 +216,7 @@ function matchNode(node: FilterGroup | FilterRule, row: unknown, fields: FilterF
   }
 
   if (!isFilterRuleComplete(node, (p) => fieldTypeAt(fields, p))) return null;
-  const result = matchRule(node, row);
+  const result = matchRule(node, row, fieldTypeAt(fields, node.path));
   return node.negated ? !result : result;
 }
 
