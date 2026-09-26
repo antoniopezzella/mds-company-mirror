@@ -140,10 +140,41 @@ function isRangeValue(v: FilterValue | undefined): boolean {
   return typeof v === 'object' && v !== null && !Array.isArray(v) && ('min' in v || 'from' in v);
 }
 
+/**
+ * Removes a node, pruning ONLY the groups that THIS removal emptied.
+ *
+ * Not `pruneEmptyGroups`, which would also delete an unrelated empty group the
+ * user had just created and not yet filled in — removing a rule at the top
+ * would silently destroy a group being built three rows down. A group that
+ * lost its last child to this removal no longer means anything and does go.
+ */
 export function removeFilterNode(query: FilterQuery, id: string): FilterQuery {
   // The root always survives (§18).
   if (query.id === id) return { ...query, rules: [] };
-  return pruneEmptyGroups(mapNodes(query, (n) => (n.id === id ? null : n)));
+
+  const strip = (group: FilterGroup): { group: FilterGroup; removed: boolean } => {
+    let removed = false;
+    const rules: FilterNode[] = [];
+    for (const node of group.rules) {
+      if (node.id === id) {
+        removed = true;
+        continue;
+      }
+      if (isFilterGroup(node)) {
+        const inner = strip(node);
+        if (inner.removed) {
+          removed = true;
+          if (inner.group.rules.length === 0) continue;
+        }
+        rules.push(inner.group);
+        continue;
+      }
+      rules.push(node);
+    }
+    return { group: { ...group, rules }, removed };
+  };
+
+  return strip(query).group;
 }
 
 /** Deep clone with FRESH ids, so the copy is independently editable (§16, §22). */
@@ -270,6 +301,87 @@ export function flattenFilterConditions(
   };
   walk(query);
   return out;
+}
+
+/** The group directly containing `id`, or undefined for the root itself. */
+export function findParentGroup(query: FilterQuery, id: string): FilterGroup | undefined {
+  if (query.rules.some((n) => n.id === id)) return query;
+  for (const node of query.rules) {
+    if (isFilterGroup(node)) {
+      const found = findParentGroup(node, id);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Whether a group can be dissolved into its parent WITHOUT changing meaning.
+ *
+ * This is §24's problem again, one level down. Lifting `(B OR C)` into an AND
+ * parent yields `B AND C` — a different query, and one the user did not ask
+ * for. So ungroup is offered only when it is provably safe: a single child
+ * cannot change meaning, and matching combinators are associative. A negated
+ * group can never be lifted, because the NOT has nowhere to go.
+ */
+export function canUngroupFilterNode(query: FilterQuery, id: string): boolean {
+  const node = getFilterNode(query, id);
+  const parent = findParentGroup(query, id);
+  if (!node || !parent || !isFilterGroup(node) || node.negated) return false;
+  if (node.rules.length <= 1) return true;
+  return node.combinator === parent.combinator;
+}
+
+/** Dissolves a group into its parent. A no-op unless `canUngroupFilterNode`. */
+export function ungroupFilterNode(query: FilterQuery, id: string): FilterQuery {
+  if (!canUngroupFilterNode(query, id)) return query;
+  const lift = (group: FilterGroup): FilterGroup => {
+    const rules: FilterNode[] = [];
+    for (const node of group.rules) {
+      if (isFilterGroup(node) && node.id === id) {
+        rules.push(...node.rules);
+        continue;
+      }
+      rules.push(isFilterGroup(node) ? lift(node) : node);
+    }
+    return { ...group, rules };
+  };
+  return lift(query);
+}
+
+/**
+ * How deeply the tree nests — the root alone is 1.
+ *
+ * The builder needs this to STOP: indentation runs out of horizontal room
+ * around four levels, and a query nobody can read is not a query anyone can
+ * trust. §22 asks for a limit that is stated rather than silently enforced,
+ * so the builder disables "Add group" and says why instead of no-oping.
+ */
+export function filterQueryDepth(node: FilterNode): number {
+  if (isFilterRule(node)) return 0;
+  return 1 + Math.max(0, ...node.rules.map(filterQueryDepth));
+}
+
+/**
+ * Wraps one existing node in a new group — "group this condition with another".
+ *
+ * The inverse of dragging a rule into a group, and the only way to build
+ * `A AND (B OR C)` from `A AND B` without retyping B: B becomes the first
+ * member of a new OR group, keeping its id, operator and value intact.
+ */
+export function wrapFilterNodeInGroup(
+  query: FilterQuery,
+  id: string,
+  combinator: 'and' | 'or' = 'or'
+): FilterQuery {
+  const wrap = (group: FilterGroup): FilterGroup => ({
+    ...group,
+    rules: group.rules.map((node) => {
+      if (node.id === id) return createFilterGroup(combinator, [node]);
+      return isFilterGroup(node) ? wrap(node) : node;
+    }),
+  });
+  return wrap(query);
 }
 
 /**

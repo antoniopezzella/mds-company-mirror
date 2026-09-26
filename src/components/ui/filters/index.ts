@@ -14,5 +14,7 @@ export * from './filters-describe';
 export * from './filters-field-picker';
 export * from './filters-value-editor';
 export * from './filters-rule';
+export * from './filters-group';
+export * from './filters-builder';
 export * from './filters';
 export * from './adapters/predicate';

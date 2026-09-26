@@ -47,6 +47,12 @@ export interface FiltersRuleProps {
   onRemove: () => void;
   onDuplicate?: () => void;
   onNegate?: () => void;
+  /**
+   * Wrap this rule in a new OR group (§22). Offered only by the advanced
+   * builder — the flat bar has nowhere to render the result, and §24 forbids
+   * it pretending otherwise.
+   */
+  onGroup?: () => void;
   size?: 'sm' | 'md' | 'lg';
   readOnly?: boolean;
   disabled?: boolean;
@@ -59,6 +65,7 @@ export interface FiltersRuleProps {
     negate: string;
     more: string;
     not: string;
+    group: string;
   }>;
 }
 
@@ -70,6 +77,7 @@ const DEFAULTS = {
   negate: 'Negate',
   more: 'More actions',
   not: 'NOT',
+  group: 'Group with another condition',
 };
 
 export function FiltersRule({
@@ -81,6 +89,7 @@ export function FiltersRule({
   onRemove,
   onDuplicate,
   onNegate,
+  onGroup,
   size = 'sm',
   readOnly = false,
   disabled = false,
@@ -204,7 +213,7 @@ export function FiltersRule({
       )}
 
       {/* ACTIONS */}
-      {!inert && (onDuplicate || onNegate) && (
+      {!inert && (onDuplicate || onNegate || onGroup) && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             {/* `icon`, not children: Button's iconOnly branch renders
@@ -220,6 +229,7 @@ export function FiltersRule({
           <DropdownMenuContent align="end" className="min-w-36">
             {onDuplicate && <DropdownMenuItem onSelect={onDuplicate}>{t.duplicate}</DropdownMenuItem>}
             {onNegate && <DropdownMenuItem onSelect={onNegate}>{t.negate}</DropdownMenuItem>}
+            {onGroup && <DropdownMenuItem onSelect={onGroup}>{t.group}</DropdownMenuItem>}
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={onRemove} style={{ color: getRoleColor('status.danger.fg') }}>
               {t.remove}
