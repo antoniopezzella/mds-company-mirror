@@ -31,6 +31,33 @@ export const RoleVarsProvider: React.FC<RoleVarsProviderProps> = ({ mode = 'ligh
     return Object.fromEntries(entries) as React.CSSProperties;
   }, [mode]);
 
+  /**
+   * The same variables, mirrored onto the document root.
+   *
+   * The wrapper `<div>` below cannot reach PORTALLED content — Popover,
+   * DropdownMenu and Dialog all attach to `document.body`, outside this tree.
+   * Anything in a portal styled with `var(--role-*)` therefore resolved to
+   * nothing: a primary Button inside a popover rendered with NO background,
+   * which is white text on white, and axe caught it as a contrast failure the
+   * first time a story opened one.
+   *
+   * The div stays: it scopes a nested provider (a dark panel inside a light
+   * page) and keeps the previous behaviour for non-portalled content. Root is
+   * the fallback layer beneath it, so the nearest ancestor still wins.
+   *
+   * Guarded for SSR — there is no document on a server, and this component is
+   * mounted at the application root where that matters.
+   */
+  React.useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const applied = Object.entries(styleVars) as [string, string][];
+    for (const [name, value] of applied) root.style.setProperty(name, value);
+    return () => {
+      for (const [name] of applied) root.style.removeProperty(name);
+    };
+  }, [styleVars]);
+
   return <div style={styleVars}>{children}</div>;
 };
 

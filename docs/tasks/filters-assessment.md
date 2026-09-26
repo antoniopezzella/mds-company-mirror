@@ -62,8 +62,8 @@ Registered filter functions: `includesString`, `inNumberRange`, `inDateRange`, `
 | Single select | `FilterBarSelect` | `equals` | ✅ |
 | Multi-select | `DataTableFacetedFilter`, `FilterChipMenu` | `arrHas` | ✅ **twice** |
 | Date range | `FilterBarDateRange`, `DataTableDateFilter` | `dateRange` | ✅ **twice** |
-| **Number range** | — | `inNumberRange` ✅ | ⚠️ **logic exists, no control** |
-| **Boolean** | — | `equals` ✅ | ⚠️ **no control** |
+| Number range | `FilterNumberRange` | `inNumberRange` ✅ | ✅ **2026-09-25** |
+| Boolean | `FilterBoolean` (tri-state) | `equals` ✅ | ✅ **2026-09-25** |
 
 So: **two real gaps, and three capabilities implemented twice.**
 
@@ -160,8 +160,8 @@ most likely to be over-built: a condition builder nobody uses is worse than none
 
 | | work | why |
 |---|---|---|
-| **1** | `FilterField` schema + `resolveFilterFn(field)` | everything else doubles without it |
-| **2** | Number range + boolean controls | the only genuinely missing types |
+| ~~**1**~~ | ~~`FilterField` schema + `resolveFilterFn(field)`~~ **done 2026-09-25** | everything else doubles without it |
+| ~~**2**~~ | ~~Number range + boolean controls~~ **done 2026-09-25** — `FilterNumberRange`, `FilterBoolean` | the only genuinely missing types |
 | **3** | Point `FilterBar` and `DataGridToolbar` at the schema | removes the duplicate definitions rather than adding a third |
 | **4** | URL serialisation (§24) | cheap once the value shape is canonical |
 | **5** | Applied-filter summary with a result count | small, and the most visible to a user |

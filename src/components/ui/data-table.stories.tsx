@@ -79,7 +79,9 @@ const baseColumns: DataGridColumnDef<Policy>[] = [
     // up when their last digit does), and it is the hook the filter schema
     // reads to say "over $500,000" rather than "over 500000".
     meta: { type: 'currency' },
-    cell: ({ getValue }) => formatCurrency(getValue<number>()),
+    // decimals: 0 — whole premiums, so a column of ".00" is noise in a
+    // scan-heavy table. Precision stays available where it matters (§48).
+    cell: ({ getValue }) => formatCurrency(getValue<number>(), { decimals: 0 }),
   },
   { accessorKey: 'renewalDate', header: 'Renewal Date', enableSorting: true },
 ];

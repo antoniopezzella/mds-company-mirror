@@ -51,3 +51,44 @@ describe('RoleVarsProvider', () => {
     }
   });
 });
+
+describe('portalled content', () => {
+  it('mirrors the variables onto the document root', () => {
+    // The wrapper div cannot reach a portal — Popover, DropdownMenu and Dialog
+    // all attach to document.body. Anything in one styled with var(--role-*)
+    // resolved to nothing, so a primary Button inside a popover rendered with
+    // NO background: white text on white, which axe caught as a contrast
+    // failure the first time a story opened one.
+    const before = document.documentElement.style.getPropertyValue('--role-interactive-primary');
+    expect(before).toBe('');
+
+    const { unmount } = render(
+      <RoleVarsProvider mode="light">
+        <span>anything</span>
+      </RoleVarsProvider>
+    );
+    expect(document.documentElement.style.getPropertyValue('--role-interactive-primary')).not.toBe('');
+
+    // Cleaned up, so a test or a page that unmounts the provider does not
+    // leave one theme's variables behind for the next.
+    unmount();
+    expect(document.documentElement.style.getPropertyValue('--role-interactive-primary')).toBe('');
+  });
+
+  it('follows the mode', () => {
+    const { unmount } = render(
+      <RoleVarsProvider mode="light">
+        <span>a</span>
+      </RoleVarsProvider>
+    );
+    const light = document.documentElement.style.getPropertyValue('--role-surface-default');
+    unmount();
+
+    render(
+      <RoleVarsProvider mode="dark">
+        <span>a</span>
+      </RoleVarsProvider>
+    );
+    expect(document.documentElement.style.getPropertyValue('--role-surface-default')).not.toBe(light);
+  });
+});
