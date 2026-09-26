@@ -7,7 +7,12 @@ import {
   type FilterRule,
   type FilterValue,
 } from './filters-types';
-import { findOperator, isOperatorValidFor, type FilterFieldType } from './filters-operators';
+import {
+  findOperator,
+  isOperatorValidFor,
+  type FilterFieldType,
+  type FilterOperatorDefinition,
+} from './filters-operators';
 
 /**
  * Pure query utilities — §59.
@@ -130,14 +135,31 @@ export function changeRuleOperator(
     // A value-less operator must not keep a stale value hanging off the rule:
     // it would compile into the adapter as a condition the user never set.
     if (!def?.requiresValue) return { ...n, operator, value: undefined };
-    const shapeChanged =
-      !!def.isRange !== isRangeValue(n.value) || !!def.supportsMultiple !== Array.isArray(n.value);
-    return { ...n, operator, value: shapeChanged ? undefined : n.value };
+    return { ...n, operator, value: filterValueShapeMatches(def, n.value) ? n.value : undefined };
   });
 }
 
 function isRangeValue(v: FilterValue | undefined): boolean {
   return typeof v === 'object' && v !== null && !Array.isArray(v) && ('min' in v || 'from' in v);
+}
+
+/**
+ * Whether a value has the SHAPE an operator can accept.
+ *
+ * Shared by the operator switch above and by URL parsing, deliberately: both
+ * answer the same question, and two copies of it would drift the first time an
+ * operator flag is added. Shape only — whether `between`'s bounds are the
+ * right way round is the editor's job (§43), not this one's.
+ */
+export function filterValueShapeMatches(
+  def: FilterOperatorDefinition,
+  value: FilterValue | undefined
+): boolean {
+  if (!def.requiresValue) return value === undefined;
+  if (value === undefined) return false;
+  if (!!def.isRange !== isRangeValue(value)) return false;
+  if (!!def.supportsMultiple !== Array.isArray(value)) return false;
+  return true;
 }
 
 /**
