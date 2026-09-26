@@ -86,6 +86,13 @@ export * from './components/ui/data-grid-rows';
 export * from './components/ui/data-grid-selection';
 export * from './components/ui/data-grid-bulk-actions';
 export * from './components/ui/data-grid-row-actions';
+/**
+ * The query system (§1-74). Exported under a namespace because several names
+ * — FilterField, FilterOption — also exist on the older value-model modules
+ * below, which remain until their consumers migrate.
+ */
+export * as FiltersQuery from './components/ui/filters';
+export { Filters, FiltersRule, FiltersFieldPicker, FiltersValueEditor } from './components/ui/filters';
 export * from './components/ui/filter-schema';
 export * from './components/ui/filter-controls';
 export * from './components/ui/filter-field-control';

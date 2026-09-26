@@ -68,6 +68,7 @@ export const TAXONOMY: Record<string, Tier> = {
   'filter-chip': 'molecule',
   'filter-controls': 'molecule',
   'filter-field-control': 'molecule',
+  filters: 'organism',
   'image-with-fallback': 'atom',
   input: 'atom',
   label: 'atom',
