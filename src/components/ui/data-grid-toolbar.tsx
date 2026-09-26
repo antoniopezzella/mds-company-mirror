@@ -11,6 +11,8 @@ import { Input } from './input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 import { DataTableFacetedFilter, type FacetOption } from './data-table-faceted-filter';
 import { DataTableDateFilter } from './data-table-date-filter';
+import { FilterFieldControl } from './filter-field-control';
+import type { FilterField } from './filter-schema';
 import { DataTableSortList } from './data-table-sort-list';
 import { DENSITY_LABEL, useDataGrid, type DataGridDensity } from './data-grid';
 
@@ -22,8 +24,23 @@ function csvField(value: unknown): string {
 
 export interface DataGridToolbarProps {
   /** Multi-select filters, one per entry. Omit `options` to derive them with counts. */
+  /**
+   * Filters declared once, as a schema.
+   *
+   * Preferred over `facetedFilters` / `dateFilters`: those are two props of
+   * different shapes keyed by column id, so adding a field means editing both
+   * and neither can report the complete filter set. A `FilterField[]` drives
+   * the control, the chip label, the matcher and — when it lands — the URL
+   * parameter, from one definition.
+   *
+   * Values are read from and written to the column filters, so nothing else
+   * about the grid has to change.
+   */
+  fields?: FilterField[];
+  /** @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use `fields`. */
   facetedFilters?: { columnId: string; title: string; options?: FacetOption[] }[];
   /** Date-range filters — for columns a multi-select cannot serve. */
+  /** @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use `fields`. */
   dateFilters?: { columnId: string; title: string }[];
   searchPlaceholder?: string;
   /** Surfaces the multi-column sort as an editable list. */
@@ -51,6 +68,7 @@ export interface DataGridToolbarProps {
  * places naming the same column independently is how they drift apart.
  */
 export function DataGridToolbar<TData extends RowData>({
+  fields,
   facetedFilters,
   dateFilters,
   searchPlaceholder = 'Search...',
@@ -92,7 +110,10 @@ export function DataGridToolbar<TData extends RowData>({
   };
 
   return (
-    <div className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
+    // data-slot, as the other grid parts carry: the toolbar's controls share
+    // names with the column headers they filter ("Status", "Bound"), so both
+    // tests and consumers need a way to say which one they mean.
+    <div data-slot="data-grid-toolbar" className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
       <div className="flex flex-wrap items-center gap-2">
         {searchKey && (
           // Input has no adornment slot, so the clear control is positioned
@@ -124,6 +145,22 @@ export function DataGridToolbar<TData extends RowData>({
             )}
           </div>
         )}
+        {fields?.map((field) => {
+          const column = table.getColumn(field.id);
+          if (!column) return null;
+          return (
+            <FilterFieldControl
+              key={field.id}
+              field={field}
+              value={column.getFilterValue()}
+              // `setFilterValue` rather than local state: the column filter IS
+              // the source of truth, so a filter cleared from the applied-row
+              // and one cleared from its own control take the same path.
+              onValueChange={(v) => column.setFilterValue(v)}
+              size="sm"
+            />
+          );
+        })}
         {facetedFilters?.map((f) => (
           <DataTableFacetedFilter key={f.columnId} column={table.getColumn(f.columnId)} title={f.title} options={f.options} />
         ))}

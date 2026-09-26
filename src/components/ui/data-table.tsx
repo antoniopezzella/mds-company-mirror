@@ -10,6 +10,7 @@ import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
 import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
 import type { BulkAction } from './data-grid-bulk-actions';
+import type { FilterField } from './filter-schema';
 import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
 import { DataGridToolbar } from './data-grid-toolbar';
 import { DataGridPagination } from './data-grid-pagination';
@@ -135,6 +136,11 @@ export interface DataTableProps<TData extends RowData, TValue> {
    * count context cannot be separated from the button that acts on it.
    */
   bulkActions?: BulkAction[];
+  /**
+   * Filters declared once, as a schema — preferred over `facetedFilters` and
+   * `dateFilters`, which are two props of different shapes keyed by column id.
+   */
+  filterFields?: FilterField[];
   enableColumnVisibility?: boolean;
   pageSize?: number;
   /**
@@ -302,6 +308,7 @@ export function DataTable<TData extends RowData, TValue>({
   selectionNounPlural,
   onSelectionChange,
   bulkActions,
+  filterFields,
   enableColumnVisibility = false,
   pageSize = 10,
   initialSorting,
@@ -409,6 +416,7 @@ export function DataTable<TData extends RowData, TValue>({
       className={className}
     >
       {(searchKey ||
+        filterFields?.length ||
         enableColumnVisibility ||
         enableExport ||
         enableDensityToggle ||
@@ -417,6 +425,7 @@ export function DataTable<TData extends RowData, TValue>({
         toolbarActions ||
         enableSortList) && (
         <DataGridToolbar
+          fields={filterFields}
           facetedFilters={facetedFilters}
           dateFilters={dateFilters}
           searchPlaceholder={searchPlaceholder}

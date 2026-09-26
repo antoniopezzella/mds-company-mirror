@@ -3,7 +3,7 @@
 **Date:** 2026-09-25
 **Reference:** [reui.io/components/filters](https://reui.io/components/filters)
 **Related:** [`data-table-audit.md`](./data-table-audit.md) §8 · Storybook → Foundations → Choosing a table
-**Status:** Assessment. Nothing built.
+**Status:** Assessment. Steps 1–3 built (3 partially — `FilterBar` not yet migrated).
 
 ---
 
@@ -162,7 +162,7 @@ most likely to be over-built: a condition builder nobody uses is worse than none
 |---|---|---|
 | ~~**1**~~ | ~~`FilterField` schema + `resolveFilterFn(field)`~~ **done 2026-09-25** | everything else doubles without it |
 | ~~**2**~~ | ~~Number range + boolean controls~~ **done 2026-09-25** — `FilterNumberRange`, `FilterBoolean` | the only genuinely missing types |
-| **3** | Point `FilterBar` and `DataGridToolbar` at the schema | removes the duplicate definitions rather than adding a third |
+| ~~**3**~~ | ~~Point `DataGridToolbar` at the schema~~ **done 2026-09-25** — `fields` prop + `DataTable`'s `filterFields`; `facetedFilters`/`dateFilters` deprecated. **`FilterBar` still to do.** | removes the duplicate definitions rather than adding a third |
 | **4** | URL serialisation (§24) | cheap once the value shape is canonical |
 | **5** | Applied-filter summary with a result count | small, and the most visible to a user |
 | **6** | *(deferred)* condition builder §8.5 | build when a product needs it |
