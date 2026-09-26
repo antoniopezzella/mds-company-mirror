@@ -66,26 +66,62 @@ export function useFilterQuery<T>(
   const key = typeof syncToUrl === 'string' ? syncToUrl : FILTER_QUERY_PARAM;
   const enabled = syncToUrl !== false;
 
-  // Read the URL ONCE, in the initializer. Reading it in an effect would
-  // render the unfiltered rows first and then swap them, which reads as the
-  // page losing the recipient's filters for a frame.
-  const [initial] = React.useState(() => {
-    if (!enabled || typeof window === 'undefined') {
-      return { query: defaultQuery ?? createFilterQuery(), dropped: [] as FilterQueryDropped[] };
-    }
-    const raw = new URLSearchParams(window.location.search).get(key);
-    if (!raw) return { query: defaultQuery ?? createFilterQuery(), dropped: [] as FilterQueryDropped[] };
-    const parsed = parseFilterQuery(raw, fields);
-    return { query: parsed.query, dropped: parsed.dropped };
+  // The incoming link, read ONCE. Kept as the raw string because the schema
+  // may not have loaded yet — see the re-parse effect below.
+  const [incoming] = React.useState(() => {
+    if (!enabled || typeof window === 'undefined') return '';
+    return new URLSearchParams(window.location.search).get(key) ?? '';
   });
+
+  // Parsed in the INITIALIZER, not an effect: an effect would render the
+  // unfiltered rows first and then swap them, which reads as the page losing
+  // the recipient's filters for a frame.
+  const [initial] = React.useState(() =>
+    incoming
+      ? parseFilterQuery(incoming, fields)
+      : { query: defaultQuery ?? createFilterQuery(), dropped: [] as FilterQueryDropped[] }
+  );
 
   const [query, setQueryState] = React.useState<FilterQuery>(initial.query);
   const [dropped, setDropped] = React.useState<FilterQueryDropped[]>(initial.dropped);
+  /** Once the user edits, the link has been superseded and stops being re-read. */
+  const edited = React.useRef(false);
 
-  const serialized = React.useMemo(() => serializeFilterQuery(query), [query]);
+  /**
+   * Re-parse the link when the SCHEMA arrives.
+   *
+   * A schema fetched from a server is empty on the first render, so the
+   * initializer above drops every rule in the link. Without this the query
+   * stays empty and — because the write-back effect then deletes the key —
+   * the link is erased from the address bar and cannot be recovered by
+   * reloading. The user's shared view is simply gone.
+   *
+   * Comparing the SERIALIZED form before setting state is what makes this
+   * safe against a caller passing an inline `fields` array: an unchanged
+   * result sets no state, so there is no render loop.
+   */
+  React.useEffect(() => {
+    if (!incoming || edited.current) return;
+    const parsed = parseFilterQuery(incoming, fields);
+    const next = serializeFilterQuery(parsed.query, fields);
+    setQueryState((cur) => (serializeFilterQuery(cur, fields) === next ? cur : parsed.query));
+    setDropped((cur) =>
+      cur.length === parsed.dropped.length &&
+      cur.every((d, i) => d.raw === parsed.dropped[i].raw && d.reason === parsed.dropped[i].reason)
+        ? cur
+        : parsed.dropped
+    );
+  }, [incoming, fields]);
+
+  const serialized = React.useMemo(() => serializeFilterQuery(query, fields), [query, fields]);
 
   React.useEffect(() => {
     if (!enabled || typeof window === 'undefined') return;
+    // NEVER erase a link we could not understand. If the schema had not
+    // loaded when it arrived, deleting the key makes it unrecoverable — so
+    // the URL is left exactly as the sender wrote it until either the schema
+    // resolves it or the user edits the filters themselves.
+    if (!serialized && incoming && dropped.length) return;
     const params = new URLSearchParams(window.location.search);
     if (serialized) params.set(key, serialized);
     else params.delete(key);
@@ -96,9 +132,10 @@ export function useFilterQuery<T>(
     if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
       window.history.replaceState(window.history.state, '', next);
     }
-  }, [serialized, key, enabled]);
+  }, [serialized, key, enabled, incoming, dropped]);
 
   const setQuery = React.useCallback((next: FilterQuery) => {
+    edited.current = true;
     setQueryState(next);
     // A user edit answers whatever the incoming link got wrong, so the notice
     // stops applying the moment they touch it.

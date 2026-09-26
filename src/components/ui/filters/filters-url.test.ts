@@ -258,6 +258,32 @@ describe('drafts do not travel (§13)', () => {
     expect(serializeFilterQuery(q)).toBe('status:is:"Active"');
   });
 
+  it('omits a rule still missing its VALUE, when given the schema', () => {
+    // The builder is in this state after every field-then-operator choice.
+    // Emitting `status:is` made the reader report a dropped filter for work
+    // the user had not finished.
+    const q = createFilterQuery([
+      createFilterRule(['status'], { operator: 'is', value: 'Active' }),
+      createFilterRule(['premium'], { operator: 'gt' }),
+    ]);
+    expect(serializeFilterQuery(q, FIELDS)).toBe('status:is:"Active"');
+    // A value-LESS operator is complete and still travels.
+    const empty = createFilterQuery([createFilterRule(['premium'], { operator: 'is_empty' })]);
+    expect(serializeFilterQuery(empty, FIELDS)).toBe('premium:is_empty');
+  });
+
+  it('restores a value-less rule as a DRAFT, not as a dropped filter', () => {
+    // Defence for a hand-edited or half-saved link: field and operator are
+    // both valid, so this is unfinished work, not an error to blame on them.
+    const r = parseFilterQuery('status:is:"Active",premium:gt', FIELDS);
+    expect(r.ok).toBe(true);
+    expect(r.dropped).toHaveLength(0);
+    expect(r.query.rules).toHaveLength(2);
+    expect(r.query.rules[1]).toMatchObject({ path: ['premium'], operator: 'gt' });
+    // No `value` key at all, which is what an untouched draft looks like.
+    expect('value' in r.query.rules[1]).toBe(false);
+  });
+
   it('serializes an empty query to an empty string', () => {
     expect(serializeFilterQuery(createFilterQuery())).toBe('');
   });
@@ -269,6 +295,31 @@ describe('a link is untrusted input, and stale links are the common case', () =>
     expect(r.query.rules).toHaveLength(1);
     expect(r.ok).toBe(false);
     expect(r.dropped).toEqual([{ raw: 'ghost:is:"1"', reason: 'unknown-field' }]);
+  });
+
+  it('refuses a field the product has hidden or disabled', () => {
+    // The picker hides one and refuses the other, so a link naming either did
+    // not come from this UI. Honouring it would filter on a field that has
+    // been deliberately withdrawn.
+    const guarded: FilterField[] = [
+      { id: 'secret', label: 'Secret', type: 'text', hidden: true },
+      { id: 'off', label: 'Off', type: 'text', disabled: true },
+      {
+        id: 'group',
+        label: 'Group',
+        type: 'select',
+        hidden: true,
+        fields: [{ id: 'child', label: 'Child', type: 'text' }],
+      },
+    ];
+    for (const path of ['secret:is:"x"', 'off:is:"x"', 'group.child:is:"x"']) {
+      const r = parseFilterQuery(path, guarded);
+      expect({ path, rules: r.query.rules.length, reason: r.dropped[0]?.reason }).toEqual({
+        path,
+        rules: 0,
+        reason: 'not-filterable',
+      });
+    }
   });
 
   it('refuses a branch, which has no value to compare', () => {
