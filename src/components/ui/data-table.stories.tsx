@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
 
 import { DataTable, createSelectColumn } from './data-table';
+import { createActionsColumn } from './data-grid-row-actions';
 import type { SelectionState } from './data-grid-selection';
 import { Badge } from './badge';
 import { Button } from './button';
@@ -231,6 +232,69 @@ export const BulkActions: StoryObj = {
     await step('the handler receives the scope', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Export' }));
       await expect(canvas.getByTestId('log')).toHaveTextContent(/Export requested for 3 ids/);
+    });
+  },
+};
+
+/**
+ * **Row actions (§11).** Most of that section is about restraint: do not
+ * overload every row with visible buttons, promote at most one common action,
+ * and move the rest into overflow.
+ *
+ * So: one `View` button, everything else behind the menu, destructive items
+ * separated and confirmed.
+ *
+ * Each control is named after its record — "More actions for Commercial
+ * Auto", not forty buttons called "More actions". And acting on a row does not
+ * fire `onRowClick`: §34 lists that conflict explicitly, and this column is the
+ * case that breaks it if the markup drifts.
+ */
+export const RowActions: StoryObj = {
+  render: function Render() {
+    const [log, setLog] = useState('No action run yet.');
+    return (
+      <div className="flex flex-col gap-3">
+        <DataTable
+          columns={[
+            ...baseColumns,
+            createActionsColumn<Policy>({
+              getRowLabel: (p) => p.name,
+              primary: { label: 'View', onAction: (p) => setLog(`Viewing ${p.name}`) },
+              actions: [
+                { id: 'edit', label: 'Edit', onAction: (p) => setLog(`Editing ${p.name}`) },
+                {
+                  id: 'renew',
+                  label: 'Renew',
+                  disabled: (p) => p.status !== 'Active',
+                  disabledReason: 'Only active policies can be renewed',
+                  onAction: (p) => setLog(`Renewing ${p.name}`),
+                },
+                {
+                  id: 'delete',
+                  label: 'Delete',
+                  destructive: true,
+                  onAction: (p) => setLog(`Deleted ${p.name}`),
+                },
+              ],
+            }),
+          ]}
+          data={policyData}
+          pageSize={4}
+          onRowClick={(row) => setLog(`Row opened: ${row.original.name} (NOT fired by the action buttons)`)}
+        />
+        <p className="text-sm text-muted-foreground" data-testid="log">{log}</p>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('controls are named after their record', async () => {
+      await expect(canvas.getByRole('button', { name: 'View Commercial Auto' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'More actions for Commercial Auto' })).toBeInTheDocument();
+    });
+    await step('acting on a row does not also open the row', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'View Commercial Auto' }));
+      await expect(canvas.getByTestId('log')).toHaveTextContent('Viewing Commercial Auto');
     });
   },
 };
