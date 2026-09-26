@@ -6,6 +6,7 @@ import { Filters } from './filters';
 import { createFilterGroup, createFilterQuery, createFilterRule } from './filters-query';
 import { applyFilterQuery } from './adapters/predicate';
 import { filterQueryToSearchParams, parseFilterQuery } from './filters-url';
+import { useFilterQuery } from './use-filter-query';
 import { getRoleColor } from '@/theme/roles';
 import type { FilterField } from './filters-schema';
 import type { FilterQuery } from './filters-types';
@@ -350,5 +351,47 @@ export const StaleLink: StoryObj = {
     // The good rule survives; the two stale ones are named, not silently lost.
     await expect(canvas.getByRole('group', { name: 'Status is Active' })).toBeInTheDocument();
     await expect(canvas.getByTestId('dropped')).toHaveTextContent('unknown-field, invalid-operator');
+  },
+};
+
+/**
+ * **The integration (§56).** `Filters` sits in the toolbar's `filters` slot,
+ * and `useFilterQuery` turns the query into the rows passed as `data` — the
+ * whole wiring is two lines.
+ *
+ * A slot rather than a schema prop, because the query system owns its own
+ * state, drives rows through a pure predicate and serializes to a URL. None
+ * of that is the grid's business, and a prop here would mean the toolbar
+ * re-deriving all of it from a schema it does not own.
+ */
+export const InTheDataTableToolbar: StoryObj = {
+  render: function Render() {
+    const { query, setQuery, rows, count } = useFilterQuery(policies, { fields: FIELDS });
+    return (
+      <Stack gap={4}>
+        <DataTable
+          columns={columns}
+          data={rows}
+          pageSize={5}
+          pinFirstColumn={false}
+          filters={<Filters fields={FIELDS} query={query} onQueryChange={setQuery} />}
+        />
+        <p className="text-sm text-muted-foreground" data-testid="count">
+          {rows.length} of {policies.length} policies, {count} filter(s) applied
+        </p>
+      </Stack>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('the filter surface is in the toolbar', async () => {
+      await expect(canvas.getByRole('button', { name: /Add filter/ })).toBeInTheDocument();
+      await expect(canvas.getByTestId('count')).toHaveTextContent('5 of 5 policies, 0 filter(s)');
+    });
+    await step('adding a filter narrows the grid', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: /Add filter/ }));
+      await userEvent.click(await screen.findByRole('option', { name: 'Status' }));
+      await waitFor(() => expect(canvas.getByRole('group')).toBeInTheDocument());
+    });
   },
 };

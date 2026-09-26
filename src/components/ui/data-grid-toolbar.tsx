@@ -25,16 +25,26 @@ function csvField(value: unknown): string {
 export interface DataGridToolbarProps {
   /** Multi-select filters, one per entry. Omit `options` to derive them with counts. */
   /**
-   * Filters declared once, as a schema.
+   * Filter surface for the left of the toolbar — normally `<Filters>`.
    *
-   * Preferred over `facetedFilters` / `dateFilters`: those are two props of
-   * different shapes keyed by column id, so adding a field means editing both
-   * and neither can report the complete filter set. A `FilterField[]` drives
-   * the control, the chip label, the matcher and — when it lands — the URL
-   * parameter, from one definition.
+   * A SLOT rather than a schema prop, because the query system is deliberately
+   * decoupled: it owns its own state, drives the rows through a pure predicate
+   * and serializes to a URL, none of which the grid needs to know about. A
+   * prop here would mean this component re-deriving all of that from a schema
+   * it does not own.
    *
-   * Values are read from and written to the column filters, so nothing else
-   * about the grid has to change.
+   * Pair it with `useFilterQuery`, which turns the query into rows in one
+   * line, and pass those rows as the grid's `data`.
+   */
+  filters?: React.ReactNode;
+  /**
+   * Filters declared once, as a schema, written into the column filters.
+   *
+   * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use the
+   * `filters` slot with `<Filters>` from `components/ui/filters`. This prop
+   * is a VALUE model — a field and a value, no operator — so it cannot
+   * express "is not", "is any of" or "between", and cannot represent
+   * `A AND (B OR C)` at all.
    */
   fields?: FilterField[];
   /** @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use `fields`. */
@@ -68,6 +78,7 @@ export interface DataGridToolbarProps {
  * places naming the same column independently is how they drift apart.
  */
 export function DataGridToolbar<TData extends RowData>({
+  filters,
   fields,
   facetedFilters,
   dateFilters,
@@ -145,6 +156,7 @@ export function DataGridToolbar<TData extends RowData>({
             )}
           </div>
         )}
+        {filters}
         {fields?.map((field) => {
           const column = table.getColumn(field.id);
           if (!column) return null;
