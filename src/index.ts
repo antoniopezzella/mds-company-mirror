@@ -88,6 +88,7 @@ export * from './components/ui/data-grid-bulk-actions';
 export * from './components/ui/data-grid-row-actions';
 export * from './components/ui/filter-schema';
 export * from './components/ui/filter-controls';
+export * from './components/ui/filter-field-control';
 export * from './components/ui/use-data-grid-table';
 export * from './components/ui/data-grid-cell-selection';
 export * from './components/ui/data-grid-clipboard';
