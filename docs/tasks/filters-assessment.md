@@ -3,11 +3,37 @@
 **Date:** 2026-09-25
 **Reference:** [reui.io/components/filters](https://reui.io/components/filters)
 **Related:** [`data-table-audit.md`](./data-table-audit.md) §8 · Storybook → Foundations → Choosing a table
-**Status:** Assessment. Steps 1–3 built (3 partially — `FilterBar` not yet migrated).
+**Status:** Superseded in part — see *"The query model supersedes the value model"* below.
 
 ---
 
-## Headline
+## The query model supersedes the value model (2026-09-26)
+
+A second, far more demanding specification arrived — *Filters / Query Builder — Design
+System Component Requirements* (§1–74) — and it invalidates the foundation this document
+recommended.
+
+What was built here is a **value model**: `Record<fieldId, value>`. What the new spec
+requires is a **query model**: `FIELD → OPERATOR → VALUE`, held in a TREE with AND/OR
+groups and explicit negation. §72 states the principle directly:
+
+> DO NOT BUILD "FILTER CHIPS". BUILD A QUERY SYSTEM WITH FILTER CHIPS AS ONE
+> PRESENTATION OF IT.
+
+The value model cannot express "Premium is NOT between X and Y", cannot express
+`A AND (B OR C)`, and — the visible symptom, and the reason this was raised — cannot
+render `[ Status | is | Active | × ]` as three independently editable segments, because
+there is no operator segment to render. The UI complaint and the architectural gap were
+the same gap.
+
+`src/components/ui/filters/` now holds the canonical query model, the per-type operator
+definitions and the pure query utilities, with 29 unit tests. `filter-schema.ts` and the
+controls built on it remain in place and working; they become one *presentation* of the
+query rather than the source of truth.
+
+---
+
+## Headline (original, 2026-09-25 — retained for the reasoning that still holds)
 
 **We do not need a Filters component. We need a filter *schema*.**
 
