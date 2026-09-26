@@ -136,6 +136,7 @@ export const TAXONOMY: Record<string, Tier> = {
   'data-grid-pagination': 'organism',
   'data-grid-rows': 'molecule',
   'data-grid-bulk-actions': 'molecule',
+  'data-grid-row-actions': 'molecule',
   'data-grid-selection': 'molecule',
   'data-grid-table': 'organism',
   'data-grid-toolbar': 'organism',

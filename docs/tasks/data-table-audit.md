@@ -105,14 +105,14 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 | **Grouping** | **✗** | referenced only in comments as *not* implemented |
 | Expand | ✅ | `createExpandColumn` |
 
-### 03 Data management (§9–11) — **the weakest group**
+### 03 Data management (§9–11) — *was the weakest group; closed 2026-09-25 except row editing*
 
 | Capability | Status | Notes |
 |---|---|---|
 | Row selection / multi-select | ✅ | `createSelectColumn` |
 | **Select all FILTERED results** | **✗** | **P0.** No `allFilteredRowsSelected`, no scope UI |
 | Bulk actions (§10) | ✅ | **2026-09-25** — in the selection banner, with scope-aware confirmation, partial-success reporting and permission states |
-| **Row actions** (§11) | **✗** | no primary/contextual/overflow pattern |
+| Row actions (§11) | ✅ | **2026-09-25** — `createActionsColumn`: one primary button, the rest in overflow, destructive separated and confirmed |
 | Cell editing | ✅ | commit/discard, validation, rejection reporting |
 | **Row editing** (§15.2) | **✗** | |
 
@@ -290,7 +290,7 @@ Not covered:
 
 ### P1 — enterprise essentials
 1. ~~**Bulk actions** (§10)~~ — **done 2026-09-25**.
-2. **Row actions** (§11) — primary / contextual / overflow.
+2. ~~**Row actions** (§11)~~ — **done 2026-09-25**.
 3. **Saved views** (§18) — the largest gap; needs a serialisation format and a test.
 4. **Export scope** (§32) — the mechanism exists; it needs Current page / Selected rows /
    All filtered results, and must refuse to imply a dataset-wide export it cannot perform.
