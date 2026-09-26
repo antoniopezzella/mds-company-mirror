@@ -4,8 +4,14 @@ import {
   createFilterQuery,
   createFilterRule,
   filterValueShapeMatches,
+  isFilterRuleComplete,
 } from './filters-query';
-import { fieldTypeAt, getFilterField, isLeafField, type FilterField } from './filters-schema';
+import {
+  fieldTypeAt,
+  getFilterField,
+  isFieldAddressable,
+  type FilterField,
+} from './filters-schema';
 import {
   isFilterGroup,
   type FilterGroup,
@@ -75,29 +81,44 @@ function encodeValue(v: FilterValue): string {
 
 // ---------------------------------------------------------------- serialize
 
-export function serializeFilterQuery(query: FilterQuery): string {
-  const body = serializeBody(query);
+/**
+ * @param fields Optional, and worth passing. Without the schema this cannot
+ * tell `status:is_empty` (complete) from `status:is` (a draft missing its
+ * value), so it emits both — and the reader then reports the draft as a
+ * dropped filter. Pass the schema and drafts are left out, which is what
+ * §13 wants: the recipient should not open a half-built condition they did
+ * not build. `useFilterQuery` always passes it.
+ */
+export function serializeFilterQuery(query: FilterQuery, fields?: FilterField[]): string {
+  const body = serializeBody(query, fields);
   if (!body) return '';
   return query.negated ? `!(${body})` : body;
 }
 
-function serializeBody(group: FilterGroup): string {
+function serializeBody(group: FilterGroup, fields?: FilterField[]): string {
   const sep = group.combinator === 'or' ? '|' : ',';
   // Empties are FILTERED, not joined: a dropped draft left as an empty part
   // would emit `a:is:1,,b:is:2`, which no longer parses.
-  return group.rules.map(serializeNode).filter(Boolean).join(sep);
+  return group.rules
+    .map((n) => serializeNode(n, fields))
+    .filter(Boolean)
+    .join(sep);
 }
 
-function serializeNode(node: FilterNode): string {
+function serializeNode(node: FilterNode, fields?: FilterField[]): string {
   if (isFilterGroup(node)) {
-    const body = serializeBody(node);
+    const body = serializeBody(node, fields);
     // A group whose children were all drafts carries nothing.
     if (!body) return '';
     return `${node.negated ? '!' : ''}(${body})`;
   }
-  // A rule with no operator is a DRAFT (§13) and has no place in a link: the
-  // recipient would open a half-built condition they did not build.
+  // A rule with no operator is a DRAFT (§13) and has no place in a link.
   if (!node.operator) return '';
+  // With the schema, a rule still missing its value is a draft too — the
+  // builder is in that state after every field-then-operator selection, so
+  // without this any reload mid-edit showed a spurious "filters were
+  // dropped" notice for a filter the user was still writing.
+  if (fields && !isFilterRuleComplete(node, (p) => fieldTypeAt(fields, p))) return '';
   const head = `${node.negated ? '!' : ''}${node.path.join('.')}`;
   const body = `${head}:${node.operator}`;
   return node.value === undefined ? body : `${body}:${encodeValue(node.value)}`;
@@ -309,8 +330,9 @@ function parseNode(
     dropped.push({ raw, reason: 'unknown-field' });
     return null;
   }
-  if (!isLeafField(field)) {
-    // A branch is a container, not something with a value to compare.
+  if (!isFieldAddressable(fields, path)) {
+    // A branch, or a field the product has hidden or disabled — the picker
+    // cannot produce any of these, so a link naming one is stale or forged.
     dropped.push({ raw, reason: 'not-filterable' });
     return null;
   }
@@ -333,6 +355,13 @@ function parseNode(
       dropped.push({ raw, reason: 'invalid-value' });
       return null;
     }
+  } else if (def.requiresValue) {
+    // Field and operator both valid, value not chosen yet: that is a DRAFT
+    // (§13), which the model explicitly supports. It is restored as one —
+    // visible, editable, skipped by the predicate — rather than reported as
+    // a dropped filter, which would blame the user for their own unfinished
+    // work.
+    return createFilterRule(path, { operator, ...(negated ? { negated: true } : {}) });
   }
 
   if (!filterValueShapeMatches(def, value)) {

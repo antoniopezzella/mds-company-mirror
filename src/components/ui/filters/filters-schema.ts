@@ -106,6 +106,32 @@ export function getFilterField(fields: FilterField[], path: string[]): FilterFie
   return found;
 }
 
+/**
+ * Whether a path names something a user could actually have picked.
+ *
+ * The picker hides `hidden` fields and refuses `disabled` ones, so a query
+ * naming either did not come from this UI — it came from a hand-edited URL or
+ * a link made before the field was withdrawn. Honouring it would filter on a
+ * field the product has deliberately taken away, which is worse than dropping
+ * it and saying so.
+ *
+ * Checks every ANCESTOR too: hiding a parent hides its children, and checking
+ * only the leaf would let `risk.internal.score` through while `risk.internal`
+ * is hidden.
+ */
+export function isFieldAddressable(fields: FilterField[], path: string[]): boolean {
+  if (!path.length) return false;
+  let level = fields;
+  let found: FilterField | undefined;
+  for (const segment of path) {
+    found = level.find((f) => f.id === segment);
+    if (!found || found.hidden || found.disabled) return false;
+    level = found.fields ?? [];
+  }
+  // A branch is a container, not something with a value to compare.
+  return !!found && isLeafField(found);
+}
+
 /** The type at a path, for the query utilities' `typeOf` callback. */
 export function fieldTypeAt(fields: FilterField[], path: string[]): FilterFieldType | undefined {
   return getFilterField(fields, path)?.type;

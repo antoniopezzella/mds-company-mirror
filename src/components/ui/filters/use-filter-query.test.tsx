@@ -171,6 +171,54 @@ describe('URL sync (§37)', () => {
     expect(result.current.dropped).toHaveLength(0);
   });
 
+  it('SURVIVES a schema that loads after the link does', () => {
+    // A schema fetched from a server is empty on the first render. The link
+    // was being dropped against the empty schema and then ERASED from the
+    // address bar, so reloading could not recover it — the recipient's shared
+    // view was simply gone.
+    window.history.replaceState(null, '', '/policies?filter=status%3Ais%3A%22Expired%22');
+    const { result, rerender } = renderHook(
+      ({ fields }) => useFilterQuery(DATA, { fields, syncToUrl: true }),
+      { initialProps: { fields: [] as FilterField[] } }
+    );
+
+    // Nothing resolves yet — but the URL is left exactly as it arrived.
+    expect(result.current.rows).toHaveLength(3);
+    expect(decodeURIComponent(window.location.search)).toBe('?filter=status:is:"Expired"');
+
+    rerender({ fields: FIELDS });
+    expect(result.current.rows.map((r) => r.id)).toEqual([3]);
+    expect(result.current.dropped).toHaveLength(0);
+  });
+
+  it('does not loop when `fields` is a new array identity every render', () => {
+    window.history.replaceState(null, '', '/policies?filter=status%3Ais%3A%22Active%22');
+    let renders = 0;
+    const { rerender } = renderHook(() => {
+      renders += 1;
+      // The common caller mistake: an inline literal, new on every render.
+      return useFilterQuery(DATA, { fields: [...FIELDS], syncToUrl: true });
+    });
+    const after = renders;
+    rerender();
+    // Comparing the serialized form before setting state is what stops the
+    // re-parse effect from feeding itself.
+    expect(renders).toBeLessThanOrEqual(after + 2);
+  });
+
+  it('does not write a half-built rule into the URL', () => {
+    const { result } = renderHook(() =>
+      useFilterQuery(DATA, { fields: FIELDS, syncToUrl: true })
+    );
+    act(() => {
+      result.current.setQuery(
+        createFilterQuery([createFilterRule(['premium'], { operator: 'gt' })])
+      );
+    });
+    // Reloading mid-edit used to show "1 filter could not be applied".
+    expect(window.location.search).toBe('');
+  });
+
   it('prefers the link over defaultQuery, because the link is the request', () => {
     window.history.replaceState(null, '', '/policies?filter=status%3Ais%3A%22Expired%22');
     const { result } = renderHook(() =>
