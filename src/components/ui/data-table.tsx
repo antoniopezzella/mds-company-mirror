@@ -5,7 +5,7 @@ import type { RowData, SortingState } from '@tanstack/react-table';
 
 import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
-import type { DataGridColumnDef } from './data-grid-features';
+import type { DataGridColumnDef, DataGridTableInstance } from './data-grid-features';
 import { DataGrid, DataGridContainer, DataGridScrollArea, type DataGridDensity } from './data-grid';
 import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
@@ -135,6 +135,25 @@ export interface DataTableProps<TData extends RowData, TValue> {
    * alongside the count and scope — never in a bar of their own, so the
    * count context cannot be separated from the button that acts on it.
    */
+  /**
+   * Own the table instance instead of letting this component build one.
+   *
+   * Every other prop keeps working — that is the whole point. Reading the
+   * selection or the active filters from OUTSIDE the table used to mean
+   * abandoning the preset and hand-assembling `DataGrid`'s four children,
+   * which is a steep price for wanting the state rather than a different
+   * layout.
+   *
+   *     const table = useDataGridTable({ columns, data });
+   *     <DataTable table={table} columns={columns} data={data} enableExport />
+   *
+   * Build it with `useDataGridTable` so it carries this system's defaults: a
+   * bare `useTable` would be missing the filter-fn resolution and the pinning
+   * state that make the grid behave correctly.
+   *
+   * Reach for `DataGrid` instead when the PARTS need rearranging.
+   */
+  table?: DataGridTableInstance<TData>;
   bulkActions?: BulkAction[];
   /**
    * Filters declared once, as a schema — preferred over `facetedFilters` and
@@ -304,8 +323,23 @@ export interface DataTableProps<TData extends RowData, TValue> {
   onRetry?: () => void;
 }
 
-export function DataTable<TData extends RowData, TValue>({
-  columns,
+/**
+ * Props the VIEW needs. Everything except the instance, which either comes
+ * from the caller or is built by DataTable below.
+ */
+type DataTableViewProps<TData extends RowData, TValue> = DataTableProps<TData, TValue> & {
+  table: DataGridTableInstance<TData>;
+};
+
+/**
+ * The preset arrangement: toolbar, selection banner, shell, table, footer.
+ *
+ * Split out so the instance can come from either direction without a
+ * conditional hook — and, more to the point, without building a TanStack
+ * instance on every render and discarding it when the caller supplied one.
+ */
+function DataTableView<TData extends RowData, TValue>({
+  table,
   data,
   searchKey,
   searchPlaceholder = 'Search...',
@@ -316,20 +350,15 @@ export function DataTable<TData extends RowData, TValue>({
   bulkActions,
   filterFields,
   enableColumnVisibility = false,
-  pageSize = 10,
-  initialSorting,
   className,
   loading = false,
   loadingRowCount,
-  pinFirstColumn = true,
-  enableColumnResizing = false,
   maxHeight,
   enableExport = false,
   exportFilename = 'export',
   enableDensityToggle = false,
   defaultDensity,
   manualPagination = false,
-  pageCount,
   rowCount,
   onPaginationChange,
   emptyState,
@@ -338,12 +367,8 @@ export function DataTable<TData extends RowData, TValue>({
   dateFilters,
   toolbarActions,
   enableSortList = false,
-  enableColumnPinning = false,
   enableColumnReorder = false,
   renderDetail,
-  canExpandRow,
-  getSubRows,
-  enableRowPinning = false,
   enableVirtualization = false,
   estimateRowSize,
   showFooter = false,
@@ -356,30 +381,11 @@ export function DataTable<TData extends RowData, TValue>({
   onRowClick,
   loadError,
   onRetry,
-}: DataTableProps<TData, TValue>) {
+
+}: DataTableViewProps<TData, TValue>) {
   // The instance setup lives in useDataGridTable so a DataGrid consumer can
   // reach it too. It was private here, which meant choosing composition cost
   // you ~166 lines of state wiring — see that file's header.
-  const table = useDataGridTable<TData, TValue>({
-    columns,
-    data,
-    facetedColumnIds: facetedFilters?.map((f) => f.columnId),
-    dateColumnIds: dateFilters?.map((f) => f.columnId),
-    pinFirstColumn,
-    pageSize,
-    initialSorting,
-    enableRowSelection,
-    enableColumnResizing,
-    enableColumnPinning,
-    enableRowPinning,
-    enableCellSelection,
-    manualPagination,
-    pageCount,
-    getSubRows,
-    canExpandRow,
-    hasDetailPanel: !!renderDetail,
-  });
-
   // The footer's total: the server's count in manual mode, where the local
   // row model only ever holds one page.
   const recordCount = manualPagination ? (rowCount ?? data.length) : data.length;
@@ -483,6 +489,59 @@ export function DataTable<TData extends RowData, TValue>({
       </DataGridContainer>
     </DataGrid>
   );
+}
+
+/**
+ * The table.
+ *
+ * Pass `columns` and `data` and it builds and owns the instance — the common
+ * case. Pass `table` as well and you own it instead, while every other prop
+ * keeps working: that is the point of the escape hatch. Reading the selection
+ * or the active filters from outside the table previously meant abandoning
+ * the preset entirely and hand-assembling `DataGrid`'s four children.
+ *
+ *     const table = useDataGridTable({ columns, data });
+ *     const picked = table.getSelectedRowModel().rows;      // outside
+ *     <DataTable table={table} columns={columns} data={data} enableExport />
+ *
+ * `DataGrid` is still the answer when the PARTS need rearranging — a toolbar
+ * below the table, a replaced footer, a piece left out. This covers the far
+ * more common case of wanting the state, not a different layout.
+ */
+export function DataTable<TData extends RowData, TValue>(
+  props: DataTableProps<TData, TValue>
+) {
+  return props.table ? (
+    <DataTableView<TData, TValue> {...props} table={props.table} />
+  ) : (
+    <DataTableSelfManaged<TData, TValue> {...props} />
+  );
+}
+
+/** Builds the instance, then renders the same view. */
+function DataTableSelfManaged<TData extends RowData, TValue>(
+  props: DataTableProps<TData, TValue>
+) {
+  const table = useDataGridTable<TData, TValue>({
+    columns: props.columns,
+    data: props.data,
+    facetedColumnIds: props.facetedFilters?.map((f) => f.columnId),
+    dateColumnIds: props.dateFilters?.map((f) => f.columnId),
+    pinFirstColumn: props.pinFirstColumn,
+    pageSize: props.pageSize,
+    initialSorting: props.initialSorting,
+    enableRowSelection: props.enableRowSelection,
+    enableColumnResizing: props.enableColumnResizing,
+    enableColumnPinning: props.enableColumnPinning,
+    enableRowPinning: props.enableRowPinning,
+    enableCellSelection: props.enableCellSelection,
+    manualPagination: props.manualPagination,
+    pageCount: props.pageCount,
+    getSubRows: props.getSubRows,
+    canExpandRow: props.canExpandRow,
+    hasDetailPanel: !!props.renderDetail,
+  });
+  return <DataTableView<TData, TValue> {...props} table={table} />;
 }
 
 export default DataTable;
