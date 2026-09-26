@@ -101,7 +101,7 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 | Multi-column sort | ✅ | `enableMultiSort: true` (`data-table.tsx:360`) |
 | Column filter | ✅ | |
 | Faceted filter | ✅ | with counts |
-| **Advanced filter** (§8.5) | **✗** | no condition builder, no operator set |
+| **Advanced filter** (§8.5) | **✗** | no condition builder, no operator set — see [`filters-assessment.md`](./filters-assessment.md), which recommends deferring it |
 | **Grouping** | **✗** | referenced only in comments as *not* implemented |
 | Expand | ✅ | `createExpandColumn` |
 
