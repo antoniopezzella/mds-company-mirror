@@ -156,10 +156,24 @@ export interface DataTableProps<TData extends RowData, TValue> {
   table?: DataGridTableInstance<TData>;
   bulkActions?: BulkAction[];
   /**
-   * Filters declared once, as a schema — preferred over `facetedFilters` and
-   * `dateFilters`, which are two props of different shapes keyed by column id.
+   * Filters declared once, as a schema, written into the column filters.
+   *
+   * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use the
+   * `filters` slot below with `<Filters>` from `components/ui/filters`. This
+   * prop is a VALUE model — a field and a value, no operator — so it cannot
+   * express "is not", "is any of" or "between", and cannot represent
+   * `A AND (B OR C)` at all.
    */
   filterFields?: FilterField[];
+  /**
+   * Filter surface for the left of the toolbar — normally `<Filters>`, paired
+   * with `useFilterQuery` to turn the query into the `data` passed here.
+   *
+   * Supersedes `filterFields`: the query system carries an OPERATOR per
+   * condition, so it can say "is not", "is any of" and "between", and can
+   * hold `A AND (B OR C)`. The value model behind `filterFields` cannot.
+   */
+  filters?: React.ReactNode;
   enableColumnVisibility?: boolean;
   pageSize?: number;
   /**
@@ -349,6 +363,7 @@ function DataTableView<TData extends RowData, TValue>({
   onSelectionChange,
   bulkActions,
   filterFields,
+  filters,
   enableColumnVisibility = false,
   className,
   loading = false,
@@ -430,6 +445,7 @@ function DataTableView<TData extends RowData, TValue>({
       className={className}
     >
       {(searchKey ||
+        filters ||
         filterFields?.length ||
         enableColumnVisibility ||
         enableExport ||
@@ -439,6 +455,7 @@ function DataTableView<TData extends RowData, TValue>({
         toolbarActions ||
         enableSortList) && (
         <DataGridToolbar
+          filters={filters}
           fields={filterFields}
           facetedFilters={facetedFilters}
           dateFilters={dateFilters}

@@ -12,6 +12,7 @@ export * from './filters-query';
 export * from './filters-schema';
 export * from './filters-describe';
 export * from './filters-url';
+export * from './use-filter-query';
 export * from './filters-field-picker';
 export * from './filters-value-editor';
 export * from './filters-rule';
