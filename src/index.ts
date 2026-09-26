@@ -144,7 +144,32 @@ export * from './components/ui/stat-card';
 export * from './components/ui/status-card';
 export * from './components/ui/stepper';
 export * from './components/ui/switch';
+/**
+ * The legacy table engine. Deprecated, but still the published `Table` — see
+ * the note below.
+ */
 export * from './components/ui/table';
+/**
+ * The markup primitives.
+ *
+ * `Table` itself is NOT re-exported here: that name currently belongs to the
+ * deprecated engine above, which has been a published export since 0.6.0
+ * while its deprecation is dated "since 0.7.0" — a version that has never
+ * shipped. No consumer has been warned yet, so taking the name now would
+ * break an API nobody was told about.
+ *
+ * The other seven have no such conflict and are useful immediately. `Table`
+ * joins them when the legacy engine is removed after 0.8.0.
+ */
+export {
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './components/ui/table-primitives';
 export * from './components/ui/tabs';
 export * from './components/ui/taxonomy';
 export * from './components/ui/z-index';
