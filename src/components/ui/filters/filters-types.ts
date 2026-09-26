@@ -27,6 +27,9 @@ export type FilterValue =
   | null
   | string[]
   | number[]
+  // A select's options may mix the two — `{ value: 1 }` beside
+  // `{ value: 'all' }` is ordinary in a real schema.
+  | Array<string | number>
   | { from?: string; to?: string }
   | { min?: number; max?: number }
   | Record<string, unknown>;

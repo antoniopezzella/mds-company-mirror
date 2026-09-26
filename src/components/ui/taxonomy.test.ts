@@ -11,13 +11,28 @@ import { CONTESTED, TAXONOMY, TIERS, byTier, tierOf, type Tier } from './taxonom
 
 const UI_DIR = path.join(process.cwd(), 'src/components/ui');
 
-/** Component modules on disk: .tsx files that aren't stories or tests. */
+/**
+ * Component modules on disk.
+ *
+ * A component is either a `.tsx` file or a DIRECTORY with an index — the
+ * latter is how a component large enough to warrant its own files ships
+ * (`filters/` was the first). Counting only loose files let a whole
+ * directory-shaped component escape classification entirely, which is
+ * precisely what the taxonomy exists to prevent.
+ */
 function componentsOnDisk(): string[] {
-  return fs
-    .readdirSync(UI_DIR)
-    .filter((f) => f.endsWith('.tsx') && !/\.(stories|test)\.tsx$/.test(f))
-    .map((f) => f.replace(/\.tsx$/, ''))
-    .sort();
+  const entries = fs.readdirSync(UI_DIR, { withFileTypes: true });
+  const files = entries
+    .filter((e) => e.isFile() && e.name.endsWith('.tsx') && !/\.(stories|test)\.tsx$/.test(e.name))
+    .map((e) => e.name.replace(/\.tsx$/, ''));
+  const dirs = entries
+    .filter(
+      (e) =>
+        e.isDirectory() &&
+        ['index.ts', 'index.tsx'].some((i) => fs.existsSync(path.join(UI_DIR, e.name, i)))
+    )
+    .map((e) => e.name);
+  return [...files, ...dirs].sort();
 }
 
 describe('taxonomy', () => {
