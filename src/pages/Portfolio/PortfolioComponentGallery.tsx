@@ -14,8 +14,8 @@ import { Stepper } from '../../components/ui/stepper';
 import { Accordion } from '../../components/ui/accordion';
 import { BadgeAnchor as Badge } from '../../components/ui/badge-anchor';
 import { Chip } from '../../components/ui/chip';
-import { Table } from '../../components/ui/table';
-import type { TableColumn } from '../../components/ui/table';
+import { DataTable, createSelectColumn } from '../../components/ui/data-table';
+import type { DataGridColumnDef } from '../../components/ui/data-grid-features';
 import DSTextField from '../../components/TextField/TextField';
 import { DSSelect } from '../../components/ui/select';
 
@@ -62,24 +62,25 @@ const statusTone = (status: PolicyRow['status']): 'success' | 'warning' | 'dange
   }
 };
 
-const policyColumns: TableColumn<PolicyRow>[] = [
-  { key: 'ref',       header: 'Policy Ref',   sortable: true, width: '140px' },
-  { key: 'client',    header: 'Client',        sortable: true },
-  { key: 'coverage',  header: 'Coverage Type', sortable: true },
-  { key: 'premium',   header: 'Premium',       sortable: true, align: 'right' },
-  {
-    key: 'status', header: 'Status', sortable: true, align: 'center',
-    render: (_val, row) => (
+const policyColumns: DataGridColumnDef<PolicyRow>[] = [
+  // The grid draws the selection column from the column list rather than from
+  // a `selectable` prop, so `enableRowSelection` alone renders no checkbox.
+  // Named for the record, not the row index.
+  createSelectColumn<PolicyRow>({ getRowLabel: (p) => p.ref }),
+  { accessorKey: 'ref', header: 'Policy Ref', enableSorting: true, size: 140 },
+  { accessorKey: 'client', header: 'Client', enableSorting: true },
+  { accessorKey: 'coverage', header: 'Coverage Type', enableSorting: true },
+  { accessorKey: 'premium', header: 'Premium', meta: { align: 'right' }, enableSorting: true },
+  { accessorKey: 'status', header: 'Status', cell: ({ row: r }) => { const row = r.original; return (
       <Chip
         label={row.status}
         tone={statusTone(row.status)}
         size="sm"
         variant="filled"
       />
-    ),
-  },
-  { key: 'effective', header: 'Effective', sortable: true },
-  { key: 'broker',    header: 'Broker' },
+    ); }, meta: { align: 'center' }, enableSorting: true },
+  { accessorKey: 'effective', header: 'Effective', enableSorting: true },
+  { accessorKey: 'broker', header: 'Broker' },
 ];
 
 // ── Category nav config ───────────────────────────────────────────────────
@@ -248,18 +249,18 @@ function DataPanel() {
           { name: 'text.primary', color: '#000f47' },
         ]}
       >
-        <Table<PolicyRow>
+        <DataTable<PolicyRow, unknown>
           columns={policyColumns}
           data={policyData}
-          variant="striped"
-          size="sm"
-          hoverable
-          sortable
-          stickyHeader
-          maxHeight="340px"
-          selectable
-          pagination={{ enabled: true, pageSize: 5, showItemsRange: true, showTotalItems: true }}
+          striped
+          defaultDensity="compact"
+          // stickyHeader is implied by maxHeight on the grid: the header
+          // sticks within the scroll area it creates.
+          maxHeight={340}
+          enableRowSelection
+          pageSize={5}
           caption="Marsh McLennan — Active Policy Portfolio"
+          pinFirstColumn={false}
         />
       </DemoCard>
 

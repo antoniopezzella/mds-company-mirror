@@ -3,7 +3,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, 
 import { Avatar } from '@/components/ui/avatar';
 import { Badge, type BadgeTone } from '@/components/ui/badge';
 import { Chip } from '@/components/ui/chip';
-import { Table, type TableColumn } from '@/components/ui/table';
+import { DataTable } from '@/components/ui/data-table';
+import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { getRoleColor } from '@/theme/roles';
@@ -114,15 +115,17 @@ const CLAIM_ROWS: ClaimRow[] = [
   { id: 'CLM-1027', policy: 'MB-0042', status: 'Closed', amount: '$48,900' },
 ];
 
-const CLAIM_COLUMNS: TableColumn<ClaimRow>[] = [
-  { key: 'id', header: 'Claim', sortable: true },
-  { key: 'policy', header: 'Policy', sortable: true },
-  { key: 'status', header: 'Status' },
-  { key: 'amount', header: 'Amount', align: 'right' },
+const CLAIM_COLUMNS: DataGridColumnDef<ClaimRow>[] = [
+  { accessorKey: 'id', header: 'Claim', enableSorting: true },
+  { accessorKey: 'policy', header: 'Policy', enableSorting: true },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'amount', header: 'Amount', meta: { align: 'right' } },
 ];
 
 export function TableDemo() {
-  return <Table columns={CLAIM_COLUMNS} data={CLAIM_ROWS} sortable hoverable variant="striped" />;
+  // `sortable` is per-column on the grid (enableSorting), `hoverable` is
+  // always on, and `variant="striped"` is the `striped` prop.
+  return <DataTable columns={CLAIM_COLUMNS} data={CLAIM_ROWS} striped pinFirstColumn={false} />;
 }
 
 export function SkeletonDemo() {

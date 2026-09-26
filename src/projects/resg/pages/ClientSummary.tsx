@@ -8,7 +8,8 @@ import { StatCard } from '../../../components/ui/stat-card';
 import Chip from '../../../components/ui/chip';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/select';
 import { Tabs, type TabItem } from '../../../components/ui/tabs';
-import { Table, type TableColumn } from '../../../components/ui/table';
+import { DataTable } from '../../../components/ui/data-table';
+import type { DataGridColumnDef } from '../../../components/ui/data-grid-features';
 import { Card, CardHeader, CardTitle, CardContent } from '../../../components/ui/card';
 import { Tooltip } from '../../../components/ui/tooltip';
 import { DatePicker } from '../../../components/ui/date-picker';
@@ -186,29 +187,29 @@ export function ClientSummary() {
     return () => mql.removeEventListener('change', handleChange);
   }, []);
 
-  const boundPremiumColumns: TableColumn<BoundPremiumRow>[] = [
-    { key: 'productLine', header: 'Product Line', render: (v, row) => <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span> },
-    { key: 'atRenewal', header: 'At Renewal', render: (v, row) => <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span> },
-    { key: 'currentInForce', header: 'Current In-force', render: (v, row) => <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span> },
-    { key: 'change', header: 'Change', render: (v, row) => <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span> },
-    { key: 'changePct', header: 'Change %', render: (v, row) => <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span> },
+  const boundPremiumColumns: DataGridColumnDef<BoundPremiumRow>[] = [
+    { accessorKey: 'productLine', header: 'Product Line', cell: ({ getValue, row: r }) => { const v = getValue(); const row = r.original; return <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span>; } },
+    { accessorKey: 'atRenewal', header: 'At Renewal', cell: ({ getValue, row: r }) => { const v = getValue(); const row = r.original; return <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span>; } },
+    { accessorKey: 'currentInForce', header: 'Current In-force', cell: ({ getValue, row: r }) => { const v = getValue(); const row = r.original; return <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span>; } },
+    { accessorKey: 'change', header: 'Change', cell: ({ getValue, row: r }) => { const v = getValue(); const row = r.original; return <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span>; } },
+    { accessorKey: 'changePct', header: 'Change %', cell: ({ getValue, row: r }) => { const v = getValue(); const row = r.original; return <span className={row.isTotal ? 'font-semibold' : undefined}>{v as string}</span>; } },
   ];
 
-  const catRiskColumns: TableColumn<CatRiskRow>[] = [
-    { key: 'exposure', header: 'Exposure' },
-    { key: 'atRenewal', header: 'At Renewal' },
-    { key: 'currentInForce', header: 'Current In-force' },
-    { key: 'change', header: 'Change' },
-    { key: 'changePct', header: 'Change %' },
+  const catRiskColumns: DataGridColumnDef<CatRiskRow>[] = [
+    { accessorKey: 'exposure', header: 'Exposure' },
+    { accessorKey: 'atRenewal', header: 'At Renewal' },
+    { accessorKey: 'currentInForce', header: 'Current In-force' },
+    { accessorKey: 'change', header: 'Change' },
+    { accessorKey: 'changePct', header: 'Change %' },
   ];
 
-  const casualtyColumns: TableColumn<CasualtyExposureRow>[] = [
-    { key: 'exposure', header: 'Exposure' },
-    { key: 'atRenewal', header: 'At Renewal (Current Term Inception)' },
-    { key: 'added', header: 'Added Since Renewal (Approved Bound Only)' },
-    { key: 'deleted', header: 'Deleted Since Renewal (Approved Bound Only)', render: (v) => renderDelta(v as string) },
-    { key: 'currentInForce', header: 'Current In-force (Current Term)' },
-    { key: 'change', header: 'Change vs Renewal', render: (v) => renderDelta(v as string) },
+  const casualtyColumns: DataGridColumnDef<CasualtyExposureRow>[] = [
+    { accessorKey: 'exposure', header: 'Exposure' },
+    { accessorKey: 'atRenewal', header: 'At Renewal (Current Term Inception)' },
+    { accessorKey: 'added', header: 'Added Since Renewal (Approved Bound Only)' },
+    { accessorKey: 'deleted', header: 'Deleted Since Renewal (Approved Bound Only)', cell: ({ getValue, row: _r }) => { const v = getValue(); return renderDelta(v as string); } },
+    { accessorKey: 'currentInForce', header: 'Current In-force (Current Term)' },
+    { accessorKey: 'change', header: 'Change vs Renewal', cell: ({ getValue, row: _r }) => { const v = getValue(); return renderDelta(v as string); } },
   ];
 
   return (
@@ -354,7 +355,7 @@ export function ClientSummary() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Table columns={boundPremiumColumns} data={BOUND_PREMIUM_ROWS} variant="bordered" size="sm" />
+                <DataTable columns={boundPremiumColumns} data={BOUND_PREMIUM_ROWS} defaultDensity="compact" pinFirstColumn={false} />
               </CardContent>
             </Card>
             <Card>
@@ -364,7 +365,7 @@ export function ClientSummary() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-2">
-                <Table columns={catRiskColumns} data={CAT_RISK_ROWS} variant="bordered" size="sm" />
+                <DataTable columns={catRiskColumns} data={CAT_RISK_ROWS} defaultDensity="compact" pinFirstColumn={false} />
                 <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>All values are Bound TIVs only.</p>
               </CardContent>
             </Card>
@@ -376,7 +377,7 @@ export function ClientSummary() {
               <CardTitle className="text-base">Casualty Exposure (Bound Values)</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              <Table columns={casualtyColumns} data={CASUALTY_EXPOSURE_ROWS} variant="bordered" size="sm" />
+              <DataTable columns={casualtyColumns} data={CASUALTY_EXPOSURE_ROWS} defaultDensity="compact" pinFirstColumn={false} />
               <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>Casualty exposure values represent Bound values only.</p>
             </CardContent>
           </Card>
