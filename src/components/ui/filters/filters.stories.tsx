@@ -5,6 +5,8 @@ import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 import { Filters } from './filters';
 import { createFilterGroup, createFilterQuery, createFilterRule } from './filters-query';
 import { applyFilterQuery } from './adapters/predicate';
+import { filterQueryToSearchParams, parseFilterQuery } from './filters-url';
+import { getRoleColor } from '@/theme/roles';
 import type { FilterField } from './filters-schema';
 import type { FilterQuery } from './filters-types';
 import { DataTable } from '../data-table';
@@ -254,5 +256,99 @@ export const WithADataTable: StoryObj = {
       await userEvent.click(await screen.findByRole('option', { name: 'Status' }));
       await waitFor(() => expect(canvas.getByRole('group')).toBeInTheDocument());
     });
+  },
+};
+
+/**
+ * **A filtered view you can send to someone (§37).** The query lives in the
+ * URL, so "look at this" is a link rather than "apply these six filters
+ * yourself" — which is how two people end up reading different numbers off
+ * the same screen.
+ *
+ * The structure stays readable: `,` is AND, `|` is OR, parentheses group.
+ * Values are JSON so a text field holding `123` comes back as the string
+ * `"123"` and not the number.
+ */
+export const ShareableLink: StoryObj = {
+  render: function Render() {
+    const [query, setQuery] = React.useState<FilterQuery>(() =>
+      createFilterQuery([createFilterRule(['status'], { operator: 'is', value: 'Active' })])
+    );
+    // Shown decoded, which is what a browser puts in the address bar.
+    const link = decodeURIComponent(`/policies?${filterQueryToSearchParams(query).toString()}`);
+    const rows = applyFilterQuery(policies, query, FIELDS);
+    return (
+      <Stack gap={4}>
+        <Filters fields={FIELDS} query={query} onQueryChange={setQuery} />
+        <code
+          data-testid="link"
+          className="block overflow-x-auto rounded-md px-3 py-2 text-xs"
+          style={{
+            backgroundColor: getRoleColor('surface.subtle'),
+            color: getRoleColor('text.secondary'),
+          }}
+        >
+          {link}
+        </code>
+        <p className="text-sm text-muted-foreground" data-testid="count">
+          {rows.length} of {policies.length} policies
+        </p>
+      </Stack>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('the query is in the link', async () => {
+      await expect(canvas.getByTestId('link')).toHaveTextContent('status:is:"Active"');
+    });
+    await step('clearing it removes the key rather than leaving ?filter=', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Clear all' }));
+      await waitFor(() => expect(canvas.getByTestId('link')).toHaveTextContent('/policies?'));
+      await expect(canvas.getByTestId('link')).not.toHaveTextContent('filter=');
+    });
+  },
+};
+
+/**
+ * **A link made last quarter, opened today.** The schema moved on: one field
+ * was removed, and one is now a number so `contains` no longer applies. Both
+ * are **dropped and reported** rather than repaired — showing the recipient a
+ * repaired query would show them different rows than the sender saw.
+ */
+export const StaleLink: StoryObj = {
+  render: function Render() {
+    // `ghost` no longer exists; `premium` is a number, so `contains` is gone.
+    const incoming = 'status:is:"Active",ghost:is:"1",premium:contains:"10"';
+    const parsed = parseFilterQuery(incoming, FIELDS);
+    const rows = applyFilterQuery(policies, parsed.query, FIELDS);
+    return (
+      <Stack gap={4}>
+        <code
+          className="block overflow-x-auto rounded-md px-3 py-2 text-xs"
+          style={{
+            backgroundColor: getRoleColor('surface.subtle'),
+            color: getRoleColor('text.secondary'),
+          }}
+        >
+          ?filter={incoming}
+        </code>
+        <Filters fields={FIELDS} defaultQuery={parsed.query} />
+        {!parsed.ok && (
+          <p className="text-sm" data-testid="dropped" style={{ color: getRoleColor('text.secondary') }}>
+            {parsed.dropped.length} filter(s) from this link could not be applied:{' '}
+            {parsed.dropped.map((d) => d.reason).join(', ')}.
+          </p>
+        )}
+        <p className="text-sm text-muted-foreground" data-testid="count">
+          {rows.length} of {policies.length} policies
+        </p>
+      </Stack>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // The good rule survives; the two stale ones are named, not silently lost.
+    await expect(canvas.getByRole('group', { name: 'Status is Active' })).toBeInTheDocument();
+    await expect(canvas.getByTestId('dropped')).toHaveTextContent('unknown-field, invalid-operator');
   },
 };
