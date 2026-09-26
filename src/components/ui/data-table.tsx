@@ -9,6 +9,7 @@ import type { DataGridColumnDef } from './data-grid-features';
 import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
 import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
+import type { BulkAction } from './data-grid-bulk-actions';
 import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
 import { DataGridToolbar } from './data-grid-toolbar';
 import { DataGridPagination } from './data-grid-pagination';
@@ -128,6 +129,12 @@ export interface DataTableProps<TData extends RowData, TValue> {
    * loaded page — send the filter state to your bulk endpoint, not the ids.
    */
   onSelectionChange?: (selection: SelectionState) => void;
+  /**
+   * Actions applied to the selection, rendered in the selection banner
+   * alongside the count and scope — never in a bar of their own, so the
+   * count context cannot be separated from the button that acts on it.
+   */
+  bulkActions?: BulkAction[];
   enableColumnVisibility?: boolean;
   pageSize?: number;
   /**
@@ -294,6 +301,7 @@ export function DataTable<TData extends RowData, TValue>({
   selectionNoun = 'row',
   selectionNounPlural,
   onSelectionChange,
+  bulkActions,
   enableColumnVisibility = false,
   pageSize = 10,
   initialSorting,
@@ -422,7 +430,12 @@ export function DataTable<TData extends RowData, TValue>({
         </DataGridToolbar>
       )}
 
-      {enableRowSelection && <DataGridSelectionBanner {...selection} itemNoun={selectionNoun} itemNounPlural={selectionNounPlural} />}
+      {enableRowSelection && <DataGridSelectionBanner
+          {...selection}
+          itemNoun={selectionNoun}
+          itemNounPlural={selectionNounPlural}
+          actions={bulkActions}
+        />}
 
       {/* Table and footer share one bordered, rounded shell so the footer
           reads as part of the grid (MUI DataGrid's treatment) rather than a
