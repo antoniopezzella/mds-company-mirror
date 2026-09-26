@@ -111,7 +111,7 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 |---|---|---|
 | Row selection / multi-select | ✅ | `createSelectColumn` |
 | **Select all FILTERED results** | **✗** | **P0.** No `allFilteredRowsSelected`, no scope UI |
-| **Bulk actions** (§10) | **✗** | no selection-context action bar |
+| Bulk actions (§10) | ✅ | **2026-09-25** — in the selection banner, with scope-aware confirmation, partial-success reporting and permission states |
 | **Row actions** (§11) | **✗** | no primary/contextual/overflow pattern |
 | Cell editing | ✅ | commit/discard, validation, rejection reporting |
 | **Row editing** (§15.2) | **✗** | |
@@ -289,7 +289,7 @@ Not covered:
 > status text on a *selected* row was never checked.
 
 ### P1 — enterprise essentials
-1. **Bulk actions** (§10) — depends on P0.1.
+1. ~~**Bulk actions** (§10)~~ — **done 2026-09-25**.
 2. **Row actions** (§11) — primary / contextual / overflow.
 3. **Saved views** (§18) — the largest gap; needs a serialisation format and a test.
 4. **Export scope** (§32) — the mechanism exists; it needs Current page / Selected rows /

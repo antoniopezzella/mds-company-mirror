@@ -6,6 +6,7 @@ import type { RowData } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
+import { DataGridBulkActions, type BulkAction } from './data-grid-bulk-actions';
 import type { DataGridTableInstance } from './data-grid-features';
 
 /**
@@ -120,6 +121,15 @@ export interface DataGridSelectionBannerProps extends UseSelectionScopeResult {
    * how "7 policys" ships. Pass it whenever the default does not apply.
    */
   itemNounPlural?: string;
+  /**
+   * Actions for the selection, rendered inside this banner rather than in a
+   * bar of their own.
+   *
+   * Together deliberately: the spec's first requirement for bulk actions is
+   * "do not hide the selected-count context", and a separate bar is exactly
+   * how the count and the button that acts on it end up in different places.
+   */
+  actions?: BulkAction[];
   className?: string;
 }
 
@@ -132,6 +142,7 @@ export interface DataGridSelectionBannerProps extends UseSelectionScopeResult {
  * without focus moving.
  */
 export function DataGridSelectionBanner({
+  selectedRowIds,
   selectedVisibleRows,
   allFilteredRowsSelected,
   totalFilteredCount,
@@ -140,6 +151,7 @@ export function DataGridSelectionBanner({
   clearSelection,
   itemNoun = 'row',
   itemNounPlural,
+  actions,
   className,
 }: DataGridSelectionBannerProps) {
   if (selectedVisibleRows === 0 && !allFilteredRowsSelected) return null;
@@ -165,6 +177,14 @@ export function DataGridSelectionBanner({
             <strong>All {plural(totalFilteredCount)}</strong> matching the current filters are
             selected.
           </span>
+          {actions?.length ? (
+            <DataGridBulkActions
+              actions={actions}
+              selection={{ selectedRowIds, selectedVisibleRows, allFilteredRowsSelected, totalFilteredCount }}
+              itemNoun={itemNoun}
+              itemNounPlural={itemNounPlural}
+            />
+          ) : null}
           <Button variant="tertiary" size="sm" onClick={clearSelection}>
             Clear selection
           </Button>
@@ -179,6 +199,14 @@ export function DataGridSelectionBanner({
               Select all {totalFilteredCount.toLocaleString()} results
             </Button>
           )}
+          {actions?.length ? (
+            <DataGridBulkActions
+              actions={actions}
+              selection={{ selectedRowIds, selectedVisibleRows, allFilteredRowsSelected, totalFilteredCount }}
+              itemNoun={itemNoun}
+              itemNounPlural={itemNounPlural}
+            />
+          ) : null}
           <Button variant="tertiary" size="sm" onClick={clearSelection}>
             Clear selection
           </Button>

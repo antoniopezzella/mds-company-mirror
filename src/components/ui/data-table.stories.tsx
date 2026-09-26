@@ -153,6 +153,88 @@ export const SelectAllResults: StoryObj = {
   },
 };
 
+/**
+ * **Bulk actions (§10).** Selection exists to enable an operation; until this
+ * landed, it enabled reporting that one *could* happen.
+ *
+ * The actions live inside the selection banner rather than a bar of their own,
+ * because the first requirement is that the count context is not hidden from
+ * the button that acts on it.
+ *
+ * Three things here are easy to leave out and are why this is a component:
+ *
+ * - **Scope in the confirmation.** Escalate to "all results" and the dialog
+ *   changes from "Delete 3 selected policies?" to "Delete all N policies
+ *   matching the current filters?". The copy is generated from the live
+ *   selection, so it cannot drift from what the handler receives.
+ * - **Partial success.** "Assign" here fails one record on purpose. Bulk
+ *   operations half-fail routinely, and a success toast after that is a lie.
+ * - **Permissions.** "Delete" is disabled with a reason, rather than absent.
+ */
+export const BulkActions: StoryObj = {
+  render: function Render() {
+    const [log, setLog] = useState<string>('No action run yet.');
+    return (
+      <div className="flex flex-col gap-3">
+        <DataTable
+          columns={[createSelectColumn<Policy>({ getRowLabel: (p) => p.name }), ...baseColumns]}
+          data={policyData}
+          enableRowSelection
+          selectionNoun="policy"
+          selectionNounPlural="policies"
+          pageSize={3}
+          bulkActions={[
+            {
+              id: 'export',
+              label: 'Export',
+              onAction: (s) =>
+                setLog(
+                  s.allFilteredRowsSelected
+                    ? `Export requested for all ${s.totalFilteredCount} filtered policies (send the FILTERS to the server, not the ids).`
+                    : `Export requested for ${s.selectedRowIds.length} ids: ${s.selectedRowIds.join(', ')}`
+                ),
+            },
+            {
+              id: 'assign',
+              label: 'Assign',
+              onAction: (s) => {
+                setLog(`Assign ran against ${s.selectedRowIds.length} policies.`);
+                return { succeeded: Math.max(s.selectedRowIds.length - 1, 0), failed: [{ id: 'POL-2', reason: 'Locked by another user' }] };
+              },
+            },
+            {
+              id: 'delete',
+              label: 'Delete',
+              destructive: true,
+              disabled: true,
+              disabledReason: 'You cannot delete bound policies',
+              onAction: () => {},
+            },
+          ]}
+        />
+        <p className="text-sm text-muted-foreground" data-testid="log">{log}</p>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('actions appear only once something is selected', async () => {
+      await expect(canvas.queryByRole('button', { name: 'Export' })).toBeNull();
+      await userEvent.click(canvas.getByRole('checkbox', { name: 'Select all rows on this page' }));
+      await expect(canvas.getByRole('button', { name: 'Export' })).toBeInTheDocument();
+    });
+    await step('a disabled action explains itself instead of vanishing', async () => {
+      const del = canvas.getByRole('button', { name: 'Delete' });
+      await expect(del).toBeDisabled();
+      await expect(del).toHaveAttribute('title', 'You cannot delete bound policies');
+    });
+    await step('the handler receives the scope', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Export' }));
+      await expect(canvas.getByTestId('log')).toHaveTextContent(/Export requested for 3 ids/);
+    });
+  },
+};
+
 export const WithColumnVisibility: StoryObj = {
   render: () => (
     <DataTable columns={baseColumns} data={policyData} searchKey="name" enableColumnVisibility pageSize={5} />
