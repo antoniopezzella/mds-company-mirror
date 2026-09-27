@@ -92,7 +92,26 @@ export * from './components/ui/data-grid-row-actions';
  * below, which remain until their consumers migrate.
  */
 export * as FiltersQuery from './components/ui/filters';
-export { Filters, FiltersRule, FiltersFieldPicker, FiltersValueEditor } from './components/ui/filters';
+/*
+ * The flat list is the surface a consumer actually reaches for. It previously
+ * promoted `FiltersRule` and `FiltersValueEditor` — internals of the bar —
+ * while `useFilterQuery` and `FiltersBuilder` were namespace-only. That was
+ * backwards twice over: the hook's own doc calls it "the one-line way to wire
+ * filters up", and `Filters.onEditAdvanced` exists specifically to route a
+ * user to the builder, so the advertised destination was not in the surface.
+ *
+ * It also cost the hook its lint coverage — `eslint-plugin-react-hooks` does
+ * not recognise `FiltersQuery.useFilterQuery()` as a hook call, so none of
+ * the rules-of-hooks checks applied to the primary entry point.
+ *
+ * Internals stay reachable through the namespace.
+ */
+export {
+  Filters,
+  FiltersBuilder,
+  FiltersFieldPicker,
+  useFilterQuery,
+} from './components/ui/filters';
 export * from './components/ui/filter-schema';
 export * from './components/ui/filter-controls';
 export * from './components/ui/filter-field-control';

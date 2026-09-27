@@ -18,6 +18,7 @@ import {
 } from '../dropdown-menu';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersRule } from './filters-rule';
+import type { FiltersValueEditorProps } from './filters-value-editor';
 import type { FilterField } from './filters-schema';
 import { isFilterGroup, type FilterGroup } from './filters-types';
 
@@ -101,6 +102,14 @@ export interface FiltersGroupProps extends FiltersGroupHandlers {
   depth: number;
   maxDepth: number;
   isRoot?: boolean;
+  /**
+   * Custom value editors, keyed by a field's `editor` name (§11).
+   *
+   * The mechanism existed in `FiltersValueEditor` and was unreachable: no
+   * component threaded it, so `field.editor` was inert unless a consumer
+   * bypassed the whole component and rendered the editor themselves.
+   */
+  editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
   size?: 'sm' | 'md' | 'lg';
   readOnly?: boolean;
   disabled?: boolean;
@@ -114,6 +123,7 @@ export function FiltersGroup({
   depth,
   maxDepth,
   isRoot = false,
+  editors,
   size = 'sm',
   readOnly = false,
   disabled = false,
@@ -230,6 +240,7 @@ export function FiltersGroup({
                 fields={fields}
                 depth={depth + 1}
                 maxDepth={maxDepth}
+                editors={editors}
                 size={size}
                 readOnly={readOnly}
                 disabled={disabled}
@@ -239,6 +250,7 @@ export function FiltersGroup({
               <FiltersRule
                 rule={node}
                 fields={fields}
+                editors={editors}
                 size={size}
                 readOnly={readOnly}
                 disabled={disabled}

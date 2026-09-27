@@ -1,6 +1,6 @@
 import type * as React from 'react';
 
-import type { FilterOperatorDefinition, FilterFieldType } from './filters-operators';
+import type { FilterFieldType } from './filters-operators';
 
 /**
  * The field schema — §6.
@@ -18,18 +18,23 @@ export interface FilterOption {
   metadata?: Record<string, unknown>;
 }
 
-/**
- * Loads options from a server — §28.
+/*
+ * NOT DECLARED HERE, deliberately: `loadOptions` (§28, remote options) and
+ * `operators` (§9, a per-field operator override).
  *
- * Takes an AbortSignal because the obvious implementation (fire a request per
- * keystroke, render whatever returns last) shows the results of "Acm" after
- * the results of "Acme" whenever the network reorders them.
+ * Both were declared with documentation describing behaviour that did not
+ * exist. `operators` was the worse of the two because the picker OFFERED a
+ * custom operator: selecting one produced a rule that reverted to reading
+ * "Select condition" and silently filtered nothing, since `findOperator`,
+ * `isFilterRuleComplete`, the URL parser and the predicate adapter all
+ * resolve against the closed `OPERATORS_BY_TYPE`.
+ *
+ * A type is cheap and a working feature is not. Supporting custom operators
+ * means the query layer resolving operators by PATH rather than by type, and
+ * the adapter gaining a matcher extension point — its `switch` has no case to
+ * run. Remote options mean loading, error and abort states in the editor.
+ * Both are real features; neither is a field on an interface.
  */
-export type FilterOptionLoader = (args: {
-  search: string;
-  cursor?: string;
-  signal?: AbortSignal;
-}) => Promise<{ options: FilterOption[]; nextCursor?: string }>;
 
 export interface FilterField {
   id: string;
@@ -38,14 +43,14 @@ export interface FilterField {
   description?: string;
   placeholder?: string;
   icon?: React.ReactNode;
-  /** Overrides the type's default operator set (§9). */
-  operators?: FilterOperatorDefinition[];
   options?: FilterOption[];
-  /** Remote options. Takes precedence over `options` when present (§28). */
-  loadOptions?: FilterOptionLoader;
   /** Child attributes — `Location > Country` (§7). */
   fields?: FilterField[];
-  /** Names a registered custom editor (§11). */
+  /**
+   * Names a custom editor registered through `Filters`/`FiltersBuilder`'s
+   * `editors` prop (§11) — a user picker, a location picker, anything the
+   * built-in controls cannot express.
+   */
   editor?: string;
   /** Unit for numeric display. Not a stored value — formatting only (§44). */
   unit?: 'number' | 'currency' | 'percent';

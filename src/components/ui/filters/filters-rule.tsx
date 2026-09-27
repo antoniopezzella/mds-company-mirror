@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '../dropdown-menu';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
-import { FiltersValueEditor } from './filters-value-editor';
+import { FiltersValueEditor, type FiltersValueEditorProps } from './filters-value-editor';
 import { findOperator, operatorsFor } from './filters-operators';
 import { fieldPathLabel, getFilterField, type FilterField } from './filters-schema';
 import { describeRuleValue } from './filters-describe';
@@ -53,6 +53,14 @@ export interface FiltersRuleProps {
    * it pretending otherwise.
    */
   onGroup?: () => void;
+  /**
+   * Custom value editors, keyed by a field's `editor` name (§11).
+   *
+   * The mechanism existed in `FiltersValueEditor` and was unreachable: no
+   * component threaded it, so `field.editor` was inert unless a consumer
+   * bypassed the whole component and rendered the editor themselves.
+   */
+  editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
   size?: 'sm' | 'md' | 'lg';
   readOnly?: boolean;
   disabled?: boolean;
@@ -90,6 +98,7 @@ export function FiltersRule({
   onDuplicate,
   onNegate,
   onGroup,
+  editors,
   size = 'sm',
   readOnly = false,
   disabled = false,
@@ -102,7 +111,7 @@ export function FiltersRule({
 
   const field = getFilterField(fields, rule.path);
   const label = field ? fieldPathLabel(fields, rule.path) : rule.path.join(' › ');
-  const operators = field ? (field.operators ?? operatorsFor(field.type)) : [];
+  const operators = field ? operatorsFor(field.type) : [];
   const operatorDef = field ? findOperator(field.type, rule.operator) : undefined;
   const needsValue = operatorDef?.requiresValue ?? false;
 
@@ -214,6 +223,7 @@ export function FiltersRule({
             <FiltersValueEditor
               field={field}
               operator={operatorDef}
+              editors={editors}
               value={rule.value}
               onChange={(v) => onChangeValue(v)}
               onDone={() => setValueOpen(false)}

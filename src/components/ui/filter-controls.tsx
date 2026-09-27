@@ -26,6 +26,18 @@ import { describeFilterValue, type FilterField, type FilterUnit } from './filter
  *
  * Both use the `FilterChip` trigger so a filter bar reads as one row of
  * filters rather than a mix of chips and bare buttons.
+  * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use
+ * `components/ui/filters` — the query system.
+ *
+ * This is a VALUE model: a field and a value, with no operator. It therefore
+ * cannot express "is not", "is any of" or "between", and cannot represent
+ * `A AND (B OR C)` at all. The query system carries an operator per condition
+ * and holds a tree, which is also what lets it serialise to a URL.
+ *
+ * Still live because `DataGridToolbar.fields` and `DataTable.filterFields`
+ * consume it; both carry the same removal promise. `FilterBar` and
+ * `FilterChip` are NOT deprecated — the first is layout primitives and the
+ * second is a toggle, and neither is superseded by a query builder.
  */
 
 /** A popover, not a DropdownMenu. Menu items capture typing, so a menu containing
