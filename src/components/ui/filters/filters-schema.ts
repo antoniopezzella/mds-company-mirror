@@ -177,9 +177,17 @@ export function searchFields(fields: FilterField[], query: string): FieldSearchR
   const results: FieldSearchResult[] = [];
   for (const entry of all) {
     const label = entry.field.label;
-    const index = label.toLowerCase().indexOf(term);
+    const lower = label.toLowerCase();
+    const index = lower.indexOf(term);
     if (index !== -1) {
-      results.push({ ...entry, matches: [[index, index + term.length]] });
+      // A range computed on the lowercased string only addresses the original
+      // when lowercasing preserved length. It does not always: 'İ' lowercases
+      // to two code units, so "İstanbul office" produced a range that sliced
+      // the wrong characters and could run past a shorter label. Where the
+      // lengths disagree, match without highlighting rather than highlight
+      // the wrong span.
+      const safe = lower.length === label.length;
+      results.push({ ...entry, matches: safe ? [[index, index + term.length]] : [] });
       continue;
     }
     // An alias or an ancestor label still makes this a match — searching

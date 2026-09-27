@@ -34,6 +34,21 @@ const DATA: Policy[] = [
   { id: 3, status: 'Expired', premium: 15900 },
 ];
 
+describe('change metadata reaches the caller', () => {
+  it('forwards the reason, which cannot be reconstructed by diffing trees', () => {
+    // `setQuery` declared a `meta` argument and silently dropped it, so the
+    // one seam a consumer wires `onQueryChange` to lost the reason entirely.
+    const seen: Array<string | undefined> = [];
+    const { result } = renderHook(() =>
+      useFilterQuery(DATA, { fields: FIELDS, onChange: (_q, m) => seen.push(m?.reason) })
+    );
+    act(() => {
+      result.current.setQuery(createFilterQuery([]), { reason: 'clear' });
+    });
+    expect(seen).toEqual(['clear']);
+  });
+});
+
 describe('rows follow the query', () => {
   it('returns everything when nothing is set', () => {
     const { result } = renderHook(() => useFilterQuery(DATA, { fields: FIELDS }));
@@ -217,6 +232,26 @@ describe('URL sync (§37)', () => {
     });
     // Reloading mid-edit used to show "1 filter could not be applied".
     expect(window.location.search).toBe('');
+  });
+
+  it('follows browser Back instead of silently disagreeing with the URL', () => {
+    // Back and Forward change the URL without re-rendering the hook, so the
+    // query and the address bar drifted apart after either one.
+    const { result } = renderHook(() =>
+      useFilterQuery(DATA, { fields: FIELDS, syncToUrl: true })
+    );
+    act(() => {
+      result.current.setQuery(
+        createFilterQuery([createFilterRule(['status'], { operator: 'is', value: 'Expired' })])
+      );
+    });
+    expect(result.current.rows.map((r) => r.id)).toEqual([3]);
+
+    act(() => {
+      window.history.replaceState(null, '', '/policies');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    expect(result.current.rows).toHaveLength(3);
   });
 
   it('prefers the link over defaultQuery, because the link is the request', () => {

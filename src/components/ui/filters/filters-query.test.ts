@@ -17,6 +17,7 @@ import {
   getFilterNode,
   isFilterRuleComplete,
   isFlattenable,
+  filterValueShapeMatches,
   moveFilterNode,
   negateFilterNode,
   pruneEmptyGroups,
@@ -26,7 +27,7 @@ import {
   wrapFilterNodeInGroup,
 } from './filters-query';
 import { isFilterGroup, isFilterRule, type FilterGroup } from './filters-types';
-import { defaultOperatorFor, isOperatorValidFor, operatorsFor } from './filters-operators';
+import { defaultOperatorFor, findOperator, isOperatorValidFor, operatorsFor } from './filters-operators';
 import type { FilterFieldType } from './filters-operators';
 
 /** A tiny schema: status is a select, revenue a number, country a select. */
@@ -410,5 +411,44 @@ describe('removal prunes only what it emptied', () => {
     const inner = createFilterGroup('or', [rule]);
     const after = removeFilterNode(createFilterQuery([inner]), rule.id);
     expect(after.rules).toHaveLength(0);
+  });
+});
+
+describe('moveFilterNode MOVES rather than swaps', () => {
+  const r = (id: string) => createFilterRule([id], { operator: 'is', value: 'x' });
+
+  it('shifts the others up when moving more than one place', () => {
+    // Swapping is the same as moving for ±1 — all the builder uses today —
+    // and quite different beyond it: move(a, 2) used to give [c,b,a].
+    const [a, b, c] = ['a', 'b', 'c'].map(r);
+    const q = createFilterQuery([a, b, c]);
+    expect(moveFilterNode(q, a.id, 2).rules.map((n) => n.id)).toEqual([b.id, c.id, a.id]);
+  });
+
+  it('reorders inside a nested group', () => {
+    const [a, b] = ['a', 'b'].map(r);
+    const inner = createFilterGroup('or', [a, b]);
+    const after = moveFilterNode(createFilterQuery([inner]), a.id, 1).rules[0] as FilterGroup;
+    expect(after.rules.map((n) => n.id)).toEqual([b.id, a.id]);
+  });
+
+  it('refuses to run off either end', () => {
+    const [a, b] = ['a', 'b'].map(r);
+    const q = createFilterQuery([a, b]);
+    expect(moveFilterNode(q, a.id, -1).rules.map((n) => n.id)).toEqual([a.id, b.id]);
+    expect(moveFilterNode(q, b.id, 1).rules.map((n) => n.id)).toEqual([a.id, b.id]);
+  });
+});
+
+describe('filterValueShapeMatches agrees with isFilterRuleComplete', () => {
+  it('rejects the absent values that wear a type', () => {
+    // Accepting these here while completeness rejected them let a URL report
+    // ok:true for a rule that could never execute.
+    const eq = findOperator('number', 'eq')!;
+    const many = findOperator('multiselect', 'contains_any')!;
+    expect(filterValueShapeMatches(eq, null as never)).toBe(false);
+    expect(filterValueShapeMatches(eq, '' as never)).toBe(false);
+    expect(filterValueShapeMatches(many, [] as never)).toBe(false);
+    expect(filterValueShapeMatches(eq, 0)).toBe(true);
   });
 });

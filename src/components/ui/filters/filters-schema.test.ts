@@ -240,3 +240,23 @@ describe('the predicate adapter (§31)', () => {
     expect(predicate(rows[0])).toBe(false);
   });
 });
+
+describe('search highlight ranges address the ORIGINAL label', () => {
+  it('never slices the wrong characters when lowercasing changes length', () => {
+    // 'İ' lowercases to two code units, so a range computed on the lowercased
+    // string addressed the wrong span of the original and could run past the
+    // end of a shorter label.
+    const fields: FilterField[] = [{ id: 'o', label: 'İstanbul office', type: 'text' }];
+    const [hit] = searchFields(fields, 'stanbul');
+    expect(hit).toBeTruthy();
+    for (const [start, end] of hit.matches) {
+      expect(hit.field.label.slice(start, end).toLowerCase()).toContain('stanbul');
+    }
+  });
+
+  it('still highlights normally when lowercasing is length-preserving', () => {
+    const fields: FilterField[] = [{ id: 'p', label: 'Premium', type: 'number' }];
+    const [hit] = searchFields(fields, 'emi');
+    expect(hit.field.label.slice(...hit.matches[0])).toBe('emi');
+  });
+});

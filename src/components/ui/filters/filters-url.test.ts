@@ -377,6 +377,23 @@ describe('an ambiguous link is refused, not guessed', () => {
     expect(parseFilterQuery('premium', FIELDS).dropped[0].reason).toBe('malformed');
   });
 
+  it('refuses a non-finite number rather than letting it become null', () => {
+    // JSON.stringify(Infinity) is "null", so re-serializing turned a rule
+    // matching zero rows into one matching every row — a filter inverting
+    // itself across one round trip.
+    const r = parseFilterQuery('premium:eq:1e999', FIELDS);
+    expect(r.ok).toBe(false);
+    expect(r.dropped[0].reason).toBe('invalid-value');
+    // Nested inside a range, too.
+    expect(parseFilterQuery('premium:between:{"min":1e999}', FIELDS).ok).toBe(false);
+  });
+
+  it('does not report ok for a rule that can never execute', () => {
+    const r = parseFilterQuery('premium:eq:null', FIELDS);
+    expect(r.ok).toBe(false);
+    expect(r.query.rules).toHaveLength(0);
+  });
+
   it('reads an empty string as no filters, not as an error', () => {
     const r = parseFilterQuery('', FIELDS);
     expect(r.ok).toBe(true);
