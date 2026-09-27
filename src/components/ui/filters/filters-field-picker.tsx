@@ -209,6 +209,16 @@ export function FiltersFieldPicker({
         </button>
       )}
 
+      {/* OUTSIDE the listbox. A `role="listbox"` whose only child is a
+          paragraph fails axe's aria-required-children — it must contain
+          `option` or `group` children and nothing else. The empty list stays
+          rendered so `aria-controls` still resolves to a real element. */}
+      {count === 0 && (
+        <p className="px-2 py-3 text-sm" style={{ color: muted }}>
+          {emptyLabel(term)}
+        </p>
+      )}
+
       <div
         id="filters-field-list"
         ref={listRef}
@@ -216,12 +226,6 @@ export function FiltersFieldPicker({
         aria-label="Filters"
         className="max-h-64 overflow-y-auto"
       >
-        {count === 0 && (
-          <p className="px-2 py-3 text-sm" style={{ color: muted }}>
-            {emptyLabel(term)}
-          </p>
-        )}
-
         {searching
           ? results.map((hit, i) => (
               <Option
