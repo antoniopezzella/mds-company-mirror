@@ -58,7 +58,6 @@ const num = (v: unknown): number => {
  * other. `is` was loose and `any_of` strict, so the same intent gave opposite
  * answers on the same data.
  */
-// eslint-disable-next-line eqeqeq
 const same = (a: unknown, b: unknown): boolean => a == b;
 
 const hasSame = (haystack: unknown[], needle: unknown): boolean =>

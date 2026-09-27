@@ -131,7 +131,11 @@
     "props:check:strict": "node scripts/check-prop-vocab.js --strict",
     "props:check:json": "node scripts/check-prop-vocab.js --json",
     "deprecations:check": "node scripts/check-deprecations.js",
-    "deprecations:check:json": "node scripts/check-deprecations.js --json"
+    "deprecations:check:json": "node scripts/check-deprecations.js --json",
+    "ds:score": "node scripts/ds-health-score.js",
+    "ds:score:record": "node scripts/ds-health-score.js --record",
+    "ds:compare": "node scripts/ds-health-score.js --compare",
+    "ds:backfill": "node scripts/ds-health-score.js --backfill --weeks 26"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
