@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -81,7 +81,25 @@ describe('the combinator belongs to the GROUP, not to each row (§21)', () => {
     render(<FiltersBuilder fields={FIELDS} defaultQuery={threeRules()} />);
     // Three dropdowns showing the same value would imply three independent
     // choices the model cannot represent.
-    expect(screen.getAllByRole('button', { name: 'How these conditions combine' })).toHaveLength(1);
+    expect(screen.getAllByRole('button', { name: /How these conditions combine/ })).toHaveLength(1);
+  });
+
+  it('announces its CURRENT VALUE, not just what it is for', () => {
+    render(<FiltersBuilder fields={FIELDS} defaultQuery={threeRules()} />);
+    // A bare "How these conditions combine" overrode the visible "And", so a
+    // screen-reader user could not tell which way the group was set — and a
+    // nested query announced two controls with the identical name.
+    expect(
+      screen.getByRole('button', { name: 'How these conditions combine: And' })
+    ).toBeInTheDocument();
+  });
+
+  it('marks the current choice in the menu', () => {
+    render(<FiltersBuilder fields={FIELDS} defaultQuery={threeRules()} />);
+    openMenu(/How these conditions combine/);
+    // Plain `menuitem` marked neither option as the one in effect.
+    const items = screen.getAllByRole('menuitemradio');
+    expect(items.map((i) => i.getAttribute('aria-checked'))).toEqual(['true', 'false']);
   });
 
   it('labels the first row "Where" and repeats the word as inert text after', () => {
@@ -102,8 +120,8 @@ describe('the combinator belongs to the GROUP, not to each row (§21)', () => {
     render(
       <FiltersBuilder fields={FIELDS} defaultQuery={threeRules()} onQueryChange={onQueryChange} />
     );
-    openMenu('How these conditions combine');
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Or' }));
+    openMenu(/How these conditions combine/);
+    fireEvent.click(screen.getByRole('menuitemradio', { name: 'Or' }));
 
     const [query, meta] = onQueryChange.mock.calls.at(-1)!;
     expect(meta.reason).toBe('combinator');
@@ -212,7 +230,7 @@ describe('read-only (§39)', () => {
     expect(screen.getByRole('group', { name: 'Any of the following' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Add condition' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Add group' })).toBeNull();
-    expect(screen.queryByRole('button', { name: 'How these conditions combine' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /How these conditions combine/ })).toBeNull();
   });
 });
 
@@ -221,5 +239,40 @@ describe('the count is conditions, not nodes (§25)', () => {
     render(<FiltersBuilder fields={FIELDS} defaultQuery={nested()} />);
     // The group is structure, not a filter the user set.
     expect(screen.getByText('3 conditions')).toBeInTheDocument();
+  });
+});
+
+describe('focus never falls to the document body', () => {
+  it('restores focus after removing a rule', async () => {
+    render(
+      <FiltersBuilder
+        fields={FIELDS}
+        defaultQuery={createFilterQuery([rule(['status'], 'is', 'Active')])}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Status filter' }));
+    // The builder restored nothing, so a keyboard user restarted from the top
+    // of the document and a screen-reader user was dropped out entirely.
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Add condition' })).toHaveFocus()
+    );
+  });
+
+  it('restores focus after Clear all', async () => {
+    render(
+      <FiltersBuilder
+        fields={FIELDS}
+        defaultQuery={createFilterQuery([rule(['status'], 'is', 'Active')])}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Add condition' })).toHaveFocus()
+    );
+  });
+
+  it('names its region with a role that can carry a label', () => {
+    render(<FiltersBuilder fields={FIELDS} />);
+    expect(screen.getByRole('search', { name: 'Advanced filters' })).toBeInTheDocument();
   });
 });
