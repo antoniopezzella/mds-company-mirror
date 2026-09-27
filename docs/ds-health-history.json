@@ -1,0 +1,755 @@
+{
+  "rubricVersion": 1,
+  "runs": [
+    {
+      "rev": "cd3211a",
+      "sha": "cd3211a",
+      "date": "2026-05-22",
+      "rubricVersion": 1,
+      "score": 26,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/4"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 100,
+          "detail": "4/4"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "62 across 4"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "75"
+        }
+      ],
+      "metrics": {
+        "uiModules": 4,
+        "withTest": 0,
+        "withStory": 4,
+        "hexLiterals": 62,
+        "primitives": 165,
+        "semantics": 61,
+        "roles": 41,
+        "tokenDocDrift": 75,
+        "rootDocs": 75,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 0
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "84a9d66",
+      "sha": "84a9d66",
+      "date": "2026-06-24",
+      "rubricVersion": 1,
+      "score": 26,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/4"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 100,
+          "detail": "4/4"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "62 across 4"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "75"
+        }
+      ],
+      "metrics": {
+        "uiModules": 4,
+        "withTest": 0,
+        "withStory": 4,
+        "hexLiterals": 62,
+        "primitives": 165,
+        "semantics": 62,
+        "roles": 42,
+        "tokenDocDrift": 75,
+        "rootDocs": 75,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 0
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "82ff084",
+      "sha": "82ff084",
+      "date": "2026-07-01",
+      "rubricVersion": 1,
+      "score": 26,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/4"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 100,
+          "detail": "4/4"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "62 across 4"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "75"
+        }
+      ],
+      "metrics": {
+        "uiModules": 4,
+        "withTest": 0,
+        "withStory": 4,
+        "hexLiterals": 62,
+        "primitives": 165,
+        "semantics": 62,
+        "roles": 42,
+        "tokenDocDrift": 75,
+        "rootDocs": 75,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 0
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "197e2d0",
+      "sha": "197e2d0",
+      "date": "2026-07-24",
+      "rubricVersion": 1,
+      "score": 26,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/5"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 100,
+          "detail": "5/5"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "63 across 5"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "75"
+        }
+      ],
+      "metrics": {
+        "uiModules": 5,
+        "withTest": 0,
+        "withStory": 5,
+        "hexLiterals": 63,
+        "primitives": 165,
+        "semantics": 62,
+        "roles": 42,
+        "tokenDocDrift": 75,
+        "rootDocs": 75,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 0
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "4726f8c",
+      "sha": "4726f8c",
+      "date": "2026-08-06",
+      "rubricVersion": 1,
+      "score": 25,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/57"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 91,
+          "detail": "52/57"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "64 across 57"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "75"
+        }
+      ],
+      "metrics": {
+        "uiModules": 57,
+        "withTest": 0,
+        "withStory": 52,
+        "hexLiterals": 64,
+        "primitives": 165,
+        "semantics": 62,
+        "roles": 42,
+        "tokenDocDrift": 75,
+        "rootDocs": 75,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 0
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "f8ebbf9",
+      "sha": "f8ebbf9",
+      "date": "2026-08-21",
+      "rubricVersion": 1,
+      "score": 24,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/69"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 88,
+          "detail": "61/69"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "90 across 69"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 0,
+          "detail": "75 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "76"
+        }
+      ],
+      "metrics": {
+        "uiModules": 69,
+        "withTest": 0,
+        "withStory": 61,
+        "hexLiterals": 90,
+        "primitives": 165,
+        "semantics": 62,
+        "roles": 42,
+        "tokenDocDrift": 75,
+        "rootDocs": 76,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 70
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "82749f1",
+      "sha": "82749f1",
+      "date": "2026-09-03",
+      "rubricVersion": 1,
+      "score": 35,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 0,
+          "detail": "0/69"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 88,
+          "detail": "61/69"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "90 across 69"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 92,
+          "detail": "2 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "76"
+        }
+      ],
+      "metrics": {
+        "uiModules": 69,
+        "withTest": 0,
+        "withStory": 61,
+        "hexLiterals": 90,
+        "primitives": 167,
+        "semantics": 63,
+        "roles": 42,
+        "tokenDocDrift": 2,
+        "rootDocs": 76,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 70
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "77ac05c",
+      "sha": "77ac05c",
+      "date": "2026-09-10",
+      "rubricVersion": 1,
+      "score": 40,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 23,
+          "detail": "16/70"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 87,
+          "detail": "61/70"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "91 across 70"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 92,
+          "detail": "2 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 0,
+          "detail": "76"
+        }
+      ],
+      "metrics": {
+        "uiModules": 70,
+        "withTest": 16,
+        "withStory": 61,
+        "hexLiterals": 91,
+        "primitives": 167,
+        "semantics": 63,
+        "roles": 42,
+        "tokenDocDrift": 2,
+        "rootDocs": 76,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 69
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "aa6d0c5",
+      "sha": "aa6d0c5",
+      "date": "2026-09-18",
+      "rubricVersion": 1,
+      "score": 44,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 33,
+          "detail": "24/73"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 84,
+          "detail": "61/73"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 35,
+          "detail": "todo"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 25,
+          "detail": "1/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 0,
+          "detail": "91 across 73"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 44,
+          "detail": "14 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 100,
+          "detail": "6"
+        }
+      ],
+      "metrics": {
+        "uiModules": 73,
+        "withTest": 24,
+        "withStory": 61,
+        "hexLiterals": 91,
+        "primitives": 175,
+        "semantics": 66,
+        "roles": 47,
+        "tokenDocDrift": 14,
+        "rootDocs": 6,
+        "a11yGate": "todo",
+        "gatesRecursive": 1,
+        "gatesPresent": 1,
+        "deprecations": 0,
+        "publicExports": 77
+      },
+      "lineage": "ancestry"
+    },
+    {
+      "rev": "5064722",
+      "sha": "5064722",
+      "date": "2026-09-26",
+      "rubricVersion": 1,
+      "score": 60,
+      "parts": [
+        {
+          "id": "test_coverage",
+          "label": "Modules with a dedicated test",
+          "weight": 22,
+          "score": 47,
+          "detail": "56/118"
+        },
+        {
+          "id": "story_coverage",
+          "label": "Modules with a story",
+          "weight": 18,
+          "score": 60,
+          "detail": "71/118"
+        },
+        {
+          "id": "a11y_enforcement",
+          "label": "Accessibility gate",
+          "weight": 15,
+          "score": 100,
+          "detail": "error"
+        },
+        {
+          "id": "gate_reach",
+          "label": "Gates that walk subdirectories",
+          "weight": 12,
+          "score": 100,
+          "detail": "4/4"
+        },
+        {
+          "id": "colour_discipline",
+          "label": "Hardcoded hex in components",
+          "weight": 13,
+          "score": 8,
+          "detail": "109 across 118"
+        },
+        {
+          "id": "token_doc_accuracy",
+          "label": "Documented token counts match reality",
+          "weight": 12,
+          "score": 20,
+          "detail": "20 off"
+        },
+        {
+          "id": "doc_sprawl",
+          "label": "Loose .md files at the repo root",
+          "weight": 8,
+          "score": 100,
+          "detail": "6"
+        }
+      ],
+      "metrics": {
+        "uiModules": 118,
+        "withTest": 56,
+        "withStory": 71,
+        "hexLiterals": 109,
+        "primitives": 176,
+        "semantics": 68,
+        "roles": 50,
+        "tokenDocDrift": 20,
+        "rootDocs": 6,
+        "a11yGate": "error",
+        "gatesRecursive": 4,
+        "gatesPresent": 4,
+        "deprecations": 14,
+        "publicExports": 113
+      },
+      "lineage": "ancestry"
+    }
+  ]
+}
