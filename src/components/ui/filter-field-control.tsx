@@ -25,6 +25,18 @@ import type { FilterField } from './filter-schema';
  * caller owns the value and decides what a change means — a local `setState`,
  * a column filter, a server query, a URL parameter. That is what makes the
  * same definition usable in all four places.
+  * @deprecated since 0.7.0; remove after 0.8.0 / 2026-12-23. Use
+ * `components/ui/filters` — the query system.
+ *
+ * This is a VALUE model: a field and a value, with no operator. It therefore
+ * cannot express "is not", "is any of" or "between", and cannot represent
+ * `A AND (B OR C)` at all. The query system carries an operator per condition
+ * and holds a tree, which is also what lets it serialise to a URL.
+ *
+ * Still live because `DataGridToolbar.fields` and `DataTable.filterFields`
+ * consume it; both carry the same removal promise. `FilterBar` and
+ * `FilterChip` are NOT deprecated — the first is layout primitives and the
+ * second is a toggle, and neither is superseded by a query builder.
  */
 
 export interface FilterFieldControlProps {

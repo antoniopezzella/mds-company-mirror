@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from '../button';
 import { FiltersGroup, type FiltersGroupMessages } from './filters-group';
+import type { FiltersValueEditorProps } from './filters-value-editor';
 import {
   addFilterNode,
   canUngroupFilterNode,
@@ -52,6 +53,14 @@ export interface FiltersBuilderProps {
   onQueryChange?: (query: FilterQuery, meta: FilterQueryChangeMeta) => void;
   /** Nesting levels allowed, root included. Default 3. */
   maxDepth?: number;
+  /**
+   * Custom value editors, keyed by a field's `editor` name (§11).
+   *
+   * The mechanism existed in `FiltersValueEditor` and was unreachable: no
+   * component threaded it, so `field.editor` was inert unless a consumer
+   * bypassed the whole component and rendered the editor themselves.
+   */
+  editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
   size?: 'sm' | 'md' | 'lg';
   readOnly?: boolean;
   disabled?: boolean;
@@ -80,6 +89,7 @@ export function FiltersBuilder({
   defaultQuery,
   onQueryChange,
   maxDepth = 3,
+  editors,
   size = 'sm',
   readOnly = false,
   disabled = false,
@@ -231,6 +241,7 @@ export function FiltersBuilder({
         depth={1}
         maxDepth={maxDepth}
         isRoot
+        editors={editors}
         size={size}
         readOnly={readOnly}
         disabled={disabled}

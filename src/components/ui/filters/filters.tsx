@@ -9,6 +9,7 @@ import { Button } from '../button';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersRule } from './filters-rule';
+import type { FiltersValueEditorProps } from './filters-value-editor';
 import {
   addFilterNode,
   countFilterRules,
@@ -56,6 +57,15 @@ export interface FiltersProps {
    * leaves the query intact, which is still better than flattening it.
    */
   onEditAdvanced?: () => void;
+  /**
+   * Custom value editors, keyed by a field's `editor` name (§11).
+   *
+   * The mechanism existed in `FiltersValueEditor` and was unreachable: no
+   * component threaded it, so `field.editor` was inert unless a consumer
+   * bypassed the whole component and rendered the editor themselves.
+   */
+  editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
+
   messages?: Partial<{
     addFilter: string;
     clearAll: string;
@@ -84,6 +94,7 @@ export function Filters({
   disabled = false,
   className,
   onEditAdvanced,
+  editors,
   messages,
 }: FiltersProps) {
   const t = { ...DEFAULTS, ...messages };
@@ -174,6 +185,7 @@ export function Filters({
             rule={rule}
             fields={fields}
             size={size}
+            editors={editors}
             readOnly={readOnly}
             disabled={disabled}
             onChangeField={(path) => {

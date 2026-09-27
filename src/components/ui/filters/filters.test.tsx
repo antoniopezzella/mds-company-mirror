@@ -299,3 +299,47 @@ describe('accessibility the axe gate cannot see', () => {
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('is not'));
   });
 });
+
+describe('custom value editors (§11)', () => {
+  it('renders a registered editor in place of the built-in control', () => {
+    // The mechanism lived in FiltersValueEditor and nothing threaded the prop,
+    // so `field.editor` was inert unless a consumer bypassed the component
+    // entirely and rendered the editor themselves.
+    const fields: FilterField[] = [
+      { id: 'owner', label: 'Owner', type: 'text', editor: 'user-picker' },
+    ];
+    render(
+      <Filters
+        fields={fields}
+        editors={{
+          'user-picker': ({ onChange }) => (
+            <button type="button" onClick={() => onChange('ada')}>
+              Pick a user
+            </button>
+          ),
+        }}
+        defaultQuery={createFilterQuery([
+          createFilterRule(['owner'], { operator: 'is', value: 'ada' }),
+        ])}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Value: ada' }));
+    expect(screen.getByRole('button', { name: 'Pick a user' })).toBeInTheDocument();
+  });
+
+  it('falls back to the built-in control when no editor is registered', () => {
+    const fields: FilterField[] = [
+      { id: 'owner', label: 'Owner', type: 'text', editor: 'user-picker' },
+    ];
+    render(
+      <Filters
+        fields={fields}
+        defaultQuery={createFilterQuery([
+          createFilterRule(['owner'], { operator: 'is', value: 'ada' }),
+        ])}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Value: ada' }));
+    expect(screen.getByRole('textbox', { name: /Owner value/ })).toBeInTheDocument();
+  });
+});
