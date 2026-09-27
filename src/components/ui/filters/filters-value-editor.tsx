@@ -77,6 +77,49 @@ export function FiltersValueEditor(props: FiltersValueEditorProps) {
   }
 }
 
+/**
+ * Roving tabindex + arrow keys for a list of radio/checkbox rows.
+ *
+ * These were declared `role="radiogroup"` with `role="radio"` children and
+ * behaved like neither: every row was a native button with an implicit
+ * tabindex of 0, so a three-option Status filter took three Tab presses to
+ * cross, and arrow keys did nothing. The APG asks for exactly one tab stop
+ * with arrows moving within it, which is also what a user pressing Down
+ * already expects.
+ */
+function useRovingList(length: number, selectedIndex: number) {
+  const [active, setActive] = React.useState(() => (selectedIndex >= 0 ? selectedIndex : 0));
+  const refs = React.useRef<Array<HTMLButtonElement | null>>([]);
+
+  React.useEffect(() => {
+    if (active >= length) setActive(Math.max(0, length - 1));
+  }, [length, active]);
+
+  const focus = (i: number) => {
+    setActive(i);
+    requestAnimationFrame(() => refs.current[i]?.focus());
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      focus((active + 1) % length);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      focus((active - 1 + length) % length);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      focus(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      focus(length - 1);
+    }
+  };
+
+  return { active, setActive, refs, onKeyDown };
+}
+
 /** Free text or a single number/date. Commits on Apply, not per keystroke. */
 function SingleInput({
   field,
@@ -236,18 +279,34 @@ function DateRangeEditor({ field, value, onChange, onDone }: FiltersValueEditorP
 }
 
 function BooleanEditor({ field, value, onChange, onDone }: FiltersValueEditorProps) {
+  const options = [true, false];
+  const roving = useRovingList(options.length, options.findIndex((v) => v === value));
   const pick = (v: boolean) => {
     onChange(v);
     onDone?.();
   };
   return (
-    <div className="flex w-40 flex-col gap-1" role="radiogroup" aria-label={field.label}>
-      {[true, false].map((v) => (
+    <div
+      className="flex w-40 flex-col gap-1"
+      role="radiogroup"
+      aria-label={field.label}
+    >
+      {options.map((v, i) => (
         <button
           key={String(v)}
           type="button"
           role="radio"
+          ref={(el) => {
+            roving.refs.current[i] = el;
+          }}
           aria-checked={value === v}
+          tabIndex={roving.active === i ? 0 : -1}
+          onFocus={() => roving.setActive(i)}
+          // On the radios rather than the group: the group holds a roving
+          // tabindex and is never itself focusable, so a handler there would
+          // only ever fire by bubbling — and jsx-a11y is right to call an
+          // unfocusable element with a key handler a mistake.
+          onKeyDown={roving.onKeyDown}
           onClick={() => pick(v)}
           className="flex items-center justify-between rounded-md px-2 py-1.5 text-left text-sm"
           style={{ backgroundColor: value === v ? getRoleColor('surface.subtle') : undefined }}
@@ -291,6 +350,11 @@ function OptionsEditor({
     onChange(next.length ? next : undefined);
   };
 
+  const roving = useRovingList(
+    shown.length,
+    shown.findIndex((o) => selected.includes(o.value))
+  );
+
   return (
     <div className="flex w-56 flex-col gap-2">
       {options.length > 8 && (
@@ -312,14 +376,20 @@ function OptionsEditor({
             No options
           </p>
         )}
-        {shown.map((option) => {
+        {shown.map((option, i) => {
           const on = selected.includes(option.value);
           return (
             <button
               key={String(option.value)}
               type="button"
               role={multiple ? 'checkbox' : 'radio'}
+              ref={(el) => {
+                roving.refs.current[i] = el;
+              }}
               aria-checked={on}
+              tabIndex={roving.active === i ? 0 : -1}
+              onFocus={() => roving.setActive(i)}
+              onKeyDown={roving.onKeyDown}
               disabled={option.disabled}
               onClick={() => toggle(option)}
               className={cn(

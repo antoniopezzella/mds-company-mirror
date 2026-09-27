@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
-import { FiltersFieldPicker } from './filters-field-picker';
+import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersValueEditor } from './filters-value-editor';
 import { findOperator, operatorsFor } from './filters-operators';
 import { fieldPathLabel, getFilterField, type FilterField } from './filters-schema';
@@ -97,6 +97,7 @@ export function FiltersRule({
 }: FiltersRuleProps) {
   const t = { ...DEFAULTS, ...messages };
   const [fieldOpen, setFieldOpen] = React.useState(false);
+  const pickerRef = React.useRef<FieldPickerHandle | null>(null);
   const [valueOpen, setValueOpen] = React.useState(false);
 
   const field = getFilterField(fields, rule.path);
@@ -147,14 +148,23 @@ export function FiltersRule({
             <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-auto p-2" aria-label="Choose a field">
+        <PopoverContent
+          align="start"
+          className="w-auto p-2"
+          aria-label="Choose a field"
+          onEscapeKeyDown={(e) => {
+            // The picker backs out one level first; only an Escape it does
+            // NOT consume should close the popover.
+            if (pickerRef.current?.handleEscape()) e.preventDefault();
+          }}
+        >
           <FiltersFieldPicker
             fields={fields}
+            handleRef={pickerRef}
             onSelect={(path) => {
               onChangeField(path);
               setFieldOpen(false);
             }}
-            onClose={() => setFieldOpen(false)}
           />
         </PopoverContent>
       </Popover>

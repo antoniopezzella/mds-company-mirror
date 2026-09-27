@@ -23,8 +23,8 @@ import {
   updateFilterRule,
   wrapFilterNodeInGroup,
 } from './filters-query';
-import { defaultOperatorFor } from './filters-operators';
-import { fieldTypeAt, type FilterField } from './filters-schema';
+import { defaultOperatorFor, findOperator } from './filters-operators';
+import { fieldPathLabel, fieldTypeAt, type FilterField } from './filters-schema';
 import type { FilterQuery, FilterQueryChangeMeta } from './filters-types';
 
 /**
@@ -91,6 +91,8 @@ export function FiltersBuilder({
     () => defaultQuery ?? createFilterQuery()
   );
   const liveRef = React.useRef<HTMLDivElement>(null);
+  /** "Clear all" unmounts itself, so focus needs somewhere to land. */
+  const rootAddRef = React.useRef<HTMLButtonElement>(null);
 
   const isControlled = controlled !== undefined;
   const query = isControlled ? controlled : internal;
@@ -118,7 +120,8 @@ export function FiltersBuilder({
         nodeId: rule.id,
         fieldPath: path,
       });
-      announce(`Condition added: ${path[path.length - 1]}.`);
+      // The label, not the raw id — this said "Condition added: status."
+      announce(`Condition added: ${fieldPathLabel(fields, path)}.`);
     },
 
     onAddGroup: (groupId: string) => {
@@ -150,6 +153,7 @@ export function FiltersBuilder({
 
     onNegateNode: (id: string) => {
       commit(negateFilterNode(query, id), { reason: 'negate', nodeId: id });
+      announce('Negation toggled.');
     },
 
     onUngroup: (id: string) => {
@@ -181,6 +185,13 @@ export function FiltersBuilder({
         nodeId: id,
         fieldPath: rule,
       });
+      if (rule) {
+        announce(
+          `${fieldPathLabel(fields, rule)} condition changed to ${
+            findOperator(type ?? 'text', operator)?.label ?? operator
+          }.`
+        );
+      }
     },
 
     onChangeValue: (id: string, value: unknown) => {
@@ -197,6 +208,17 @@ export function FiltersBuilder({
     <div
       data-slot="filters-builder"
       className={cn('flex flex-col gap-3', className)}
+      // `role` is required for the label to exist at all: the implicit role
+      // of a bare div is `generic`, which prohibits naming, so assistive tech
+      // skipped this region entirely and nothing announced that a filter area
+      // was present. axe does not flag it.
+      //
+      // `search` rather than `group`, matching `FilterBar`: this IS a filter
+      // region, and `group` collided with the `role="group"` each condition
+      // already uses, which would have made "find the conditions" ambiguous
+      // for both tests and screen readers. Each instance needs a DISTINCT
+      // label or axe's landmark-unique rule fires.
+      role="search"
       aria-label={t.builder}
     >
       <div ref={liveRef} role="status" aria-live="polite" className="sr-only" />
@@ -205,6 +227,7 @@ export function FiltersBuilder({
         {...handlers}
         group={query}
         fields={fields}
+        addRef={rootAddRef}
         depth={1}
         maxDepth={maxDepth}
         isRoot
@@ -229,6 +252,7 @@ export function FiltersBuilder({
               onClick={() => {
                 commit(createFilterQuery(), { reason: 'clear' });
                 announce('All filters cleared.');
+                requestAnimationFrame(() => rootAddRef.current?.focus());
               }}
             >
               {t.clearAll}

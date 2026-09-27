@@ -11,10 +11,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
-import { FiltersFieldPicker } from './filters-field-picker';
+import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersRule } from './filters-rule';
 import type { FilterField } from './filters-schema';
 import { isFilterGroup, type FilterGroup } from './filters-types';
@@ -92,6 +94,8 @@ export interface FiltersGroupHandlers {
 
 export interface FiltersGroupProps extends FiltersGroupHandlers {
   group: FilterGroup;
+  /** The root group forwards this so "Clear all" has somewhere to land. */
+  addRef?: React.Ref<HTMLButtonElement>;
   fields: FilterField[];
   /** 1 for the root. */
   depth: number;
@@ -106,6 +110,7 @@ export interface FiltersGroupProps extends FiltersGroupHandlers {
 export function FiltersGroup({
   group,
   fields,
+  addRef,
   depth,
   maxDepth,
   isRoot = false,
@@ -117,7 +122,22 @@ export function FiltersGroup({
 }: FiltersGroupProps) {
   const t = { ...FILTERS_GROUP_MESSAGES, ...messages };
   const [addingTo, setAddingTo] = React.useState(false);
+  const pickerRef = React.useRef<FieldPickerHandle | null>(null);
   const inert = readOnly || disabled;
+
+  /**
+   * Removing anything destroys the element that has focus, and the builder
+   * restored none of it — focus fell to `<body>`, so the next Tab restarted
+   * from the top of the document and a screen-reader user was dropped out of
+   * the builder entirely. Focus lands on this group's own "Add condition",
+   * which is the nearest stable thing to the row that just went.
+   */
+  const ownAddRef = React.useRef<HTMLButtonElement>(null);
+  const restoreFocus = () => requestAnimationFrame(() => ownAddRef.current?.focus());
+  const removeAndRestore = (id: string) => {
+    h.onRemoveNode(id);
+    restoreFocus();
+  };
 
   const word = group.combinator === 'and' ? t.and : t.or;
   // Screen readers get the relationship spelled out, because the visual
@@ -228,7 +248,7 @@ export function FiltersGroup({
                 onDuplicate={() => h.onDuplicateNode(node.id)}
                 onNegate={() => h.onNegateNode(node.id)}
                 onGroup={atLimit ? undefined : () => h.onWrapInGroup(node.id)}
-                onRemove={() => h.onRemoveNode(node.id)}
+                onRemove={() => removeAndRestore(node.id)}
               />
             )}
           </div>
@@ -239,19 +259,32 @@ export function FiltersGroup({
         <div className={cn('flex items-center gap-2', !isRoot ? 'ps-0' : 'ps-20')}>
           <Popover open={addingTo} onOpenChange={setAddingTo}>
             <PopoverTrigger asChild>
-              <Button variant="tertiary" size={size}>
+              <Button
+                ref={mergeRefs(ownAddRef, addRef)}
+                variant="tertiary"
+                size={size}
+              >
                 <Plus className="size-3.5" aria-hidden="true" />
                 {t.addCondition}
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-auto p-2" aria-label={t.addCondition}>
+            <PopoverContent
+              align="start"
+              className="w-auto p-2"
+              aria-label={t.addCondition}
+              onEscapeKeyDown={(e) => {
+                // The picker backs out one level first; only an Escape it does
+                // NOT consume should close the popover.
+                if (pickerRef.current?.handleEscape()) e.preventDefault();
+              }}
+            >
               <FiltersFieldPicker
                 fields={fields}
+                handleRef={pickerRef}
                 onSelect={(path) => {
                   h.onAddRule(group.id, path);
                   setAddingTo(false);
                 }}
-                onClose={() => setAddingTo(false)}
               />
             </PopoverContent>
           </Popover>
@@ -342,18 +375,45 @@ function CombinatorControl({
   andLabel: string;
   orLabel: string;
 }) {
+  const current = combinator === 'and' ? andLabel : orLabel;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" aria-label={label} className="w-full justify-between">
-          {combinator === 'and' ? andLabel : orLabel}
+        <Button
+          variant="outline"
+          size="sm"
+          // The label INCLUDES the current value. A bare "How these conditions
+          // combine" overrode the visible "And"/"Or", so a screen-reader user
+          // could not tell which one the group was set to — and a nested query
+          // announced two controls with the identical name.
+          aria-label={`${label}: ${current}`}
+          className="w-full justify-between"
+        >
+          {current}
           <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-28">
-        <DropdownMenuItem onSelect={() => onChange('and')}>{andLabel}</DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => onChange('or')}>{orLabel}</DropdownMenuItem>
+        {/* Radio items, not plain ones: this is a choice between two states
+            with one currently set, and plain `menuitem` marks neither. */}
+        <DropdownMenuRadioGroup
+          value={combinator}
+          onValueChange={(v) => onChange(v as 'and' | 'or')}
+        >
+          <DropdownMenuRadioItem value="and">{andLabel}</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="or">{orLabel}</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+/** Lets one element feed both a local ref and a forwarded one. */
+function mergeRefs<T>(...refs: Array<React.Ref<T> | undefined>) {
+  return (value: T) => {
+    for (const ref of refs) {
+      if (typeof ref === 'function') ref(value);
+      else if (ref && typeof ref === 'object') (ref as React.MutableRefObject<T>).current = value;
+    }
+  };
 }

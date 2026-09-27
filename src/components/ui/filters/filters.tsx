@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from '../button';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
-import { FiltersFieldPicker } from './filters-field-picker';
+import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersRule } from './filters-rule';
 import {
   addFilterNode,
@@ -22,8 +22,8 @@ import {
   removeFilterNode,
   updateFilterRule,
 } from './filters-query';
-import { defaultOperatorFor } from './filters-operators';
-import { fieldTypeAt, type FilterField } from './filters-schema';
+import { defaultOperatorFor, findOperator } from './filters-operators';
+import { fieldPathLabel, fieldTypeAt, type FilterField } from './filters-schema';
 import { isFilterRule, type FilterQuery, type FilterQueryChangeMeta, type FilterRule } from './filters-types';
 
 /**
@@ -90,6 +90,7 @@ export function Filters({
   const [internal, setInternal] = React.useState<FilterQuery>(() => defaultQuery ?? createFilterQuery());
   const [adding, setAdding] = React.useState(false);
   const addRef = React.useRef<HTMLButtonElement>(null);
+  const pickerRef = React.useRef<FieldPickerHandle | null>(null);
   const liveRef = React.useRef<HTMLDivElement>(null);
 
   // Controlled when `query` is supplied — and then there is NO competing
@@ -120,7 +121,10 @@ export function Filters({
       operator: type ? defaultOperatorFor(type) : undefined,
     });
     commit(addFilterNode(query, rule), { reason: 'add', nodeId: rule.id, fieldPath: path });
-    announce(`Filter added: ${path[path.length - 1]}.`);
+    // The LABEL, not the raw id — this announced "Filter added: status." and,
+    // for a nested field, the bare leaf id while the rule it created was
+    // labelled "Location › Country".
+    announce(`Filter added: ${fieldPathLabel(fields, path)}.`);
     setAdding(false);
   };
 
@@ -130,6 +134,17 @@ export function Filters({
     <div
       data-slot="filters"
       className={cn('flex flex-wrap items-center gap-2', className)}
+      // `role` is required for the label to exist at all: the implicit role
+      // of a bare div is `generic`, which prohibits naming, so assistive tech
+      // skipped this region entirely and nothing announced that a filter area
+      // was present. axe does not flag it.
+      //
+      // `search` rather than `group`, matching `FilterBar`: this IS a filter
+      // region, and `group` collided with the `role="group"` each condition
+      // already uses, which would have made "find the conditions" ambiguous
+      // for both tests and screen readers. Each instance needs a DISTINCT
+      // label or axe's landmark-unique rule fires.
+      role="search"
       aria-label={t.filters}
     >
       {/* Polite, not assertive: a filter change is worth knowing about but
@@ -176,6 +191,14 @@ export function Filters({
                 nodeId: rule.id,
                 fieldPath: rule.path,
               });
+              // The focused button's own label changes under the user, and a
+              // changed label does not re-announce. Without this the two most
+              // common edits in the whole UI produced silence.
+              announce(
+                `${fieldPathLabel(fields, rule.path)} condition changed to ${
+                  findOperator(type ?? 'text', operator)?.label ?? operator
+                }.`
+              );
             }}
             onChangeValue={(value) => {
               commit(updateFilterRule(query, rule.id, { value: value as never }), {
@@ -183,13 +206,18 @@ export function Filters({
                 nodeId: rule.id,
                 fieldPath: rule.path,
               });
+              announce(`${fieldPathLabel(fields, rule.path)} value set.`);
             }}
             onDuplicate={() => {
               commit(duplicateFilterNode(query, rule.id), { reason: 'duplicate', nodeId: rule.id });
               announce('Filter duplicated.');
             }}
             onNegate={() => {
+              const next = !rule.negated;
               commit(negateFilterNode(query, rule.id), { reason: 'negate', nodeId: rule.id });
+              announce(
+                `${fieldPathLabel(fields, rule.path)} ${next ? 'negated' : 'no longer negated'}.`
+              );
             }}
             onRemove={() => {
               commit(removeFilterNode(query, rule.id), { reason: 'remove', nodeId: rule.id });
@@ -208,8 +236,21 @@ export function Filters({
               {t.addFilter}
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-auto p-2" aria-label={t.addFilter}>
-            <FiltersFieldPicker fields={fields} onSelect={addField} onClose={() => setAdding(false)} />
+          <PopoverContent
+            align="start"
+            className="w-auto p-2"
+            aria-label={t.addFilter}
+            onEscapeKeyDown={(e) => {
+              // The picker backs out one level first; only an Escape it does
+              // NOT consume should close the popover.
+              if (pickerRef.current?.handleEscape()) e.preventDefault();
+            }}
+          >
+            <FiltersFieldPicker
+              fields={fields}
+              handleRef={pickerRef}
+              onSelect={addField}
+            />
           </PopoverContent>
         </Popover>
       )}
@@ -222,6 +263,9 @@ export function Filters({
           onClick={() => {
             commit(createFilterQuery(), { reason: 'clear' });
             announce('All filters cleared.');
+            // This button unmounts itself — it only renders while `count > 0`
+            // — so without this, focus fell to `<body>`.
+            requestAnimationFrame(() => addRef.current?.focus());
           }}
         >
           {t.clearAll}

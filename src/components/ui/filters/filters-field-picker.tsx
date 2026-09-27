@@ -28,10 +28,32 @@ import {
  * unusable without one.
  */
 
+/**
+ * Lets the surrounding Popover ask whether Escape was already used.
+ *
+ * `stopPropagation` in the picker's own keydown is NOT enough: Radix's
+ * dismissable layer listens on `document`, so by the time a React handler
+ * runs the decision to close has effectively been taken. `onEscapeKeyDown` on
+ * `PopoverContent` is the supported way to veto it, and that lives on the
+ * parent — hence this handle.
+ */
+export interface FieldPickerHandle {
+  /** True when the picker consumed Escape by backing out a level. */
+  handleEscape: () => boolean;
+}
+
 export interface FiltersFieldPickerProps {
   fields: FilterField[];
   onSelect: (path: string[]) => void;
-  onClose?: () => void;
+  /**
+   * Populated by the picker; pass it to `PopoverContent.onEscapeKeyDown`.
+   *
+   * There is deliberately no `onClose`: the picker no longer closes itself.
+   * An Escape it does not consume falls through to Radix, which dismisses the
+   * popover and fires `onOpenChange` — the parents already wire that, so a
+   * second close path would just be a way for the two to disagree.
+   */
+  handleRef?: React.MutableRefObject<FieldPickerHandle | null>;
   /** Copy, so nothing user-facing is hardcoded (§53). */
   searchPlaceholder?: string;
   emptyLabel?: (term: string) => string;
@@ -41,7 +63,7 @@ export interface FiltersFieldPickerProps {
 export function FiltersFieldPicker({
   fields,
   onSelect,
-  onClose,
+  handleRef,
   searchPlaceholder = 'Search filters…',
   emptyLabel = (t) => `No filters found for “${t}”`,
   className,
@@ -52,6 +74,30 @@ export function FiltersFieldPicker({
   const listRef = React.useRef<HTMLDivElement>(null);
 
   const searching = term.trim().length > 0;
+
+  // Kept in a ref so the handle below always sees current state without the
+  // parent re-subscribing on every keystroke.
+  const state = React.useRef({ searching, depth: path.length });
+  state.current = { searching, depth: path.length };
+
+  React.useImperativeHandle(
+    handleRef as React.Ref<FieldPickerHandle>,
+    () => ({
+      handleEscape: () => {
+        const { searching: s, depth } = state.current;
+        if (s) {
+          setTerm('');
+          return true;
+        }
+        if (depth) {
+          setPath((cur) => cur.slice(0, -1));
+          return true;
+        }
+        return false;
+      },
+    }),
+    []
+  );
   const results = React.useMemo(() => (searching ? searchFields(fields, term) : []), [fields, term, searching]);
   const browse = React.useMemo(() => (searching ? [] : fieldsAtPath(fields, path)), [fields, path, searching]);
   const count = searching ? results.length : browse.length;
@@ -60,6 +106,22 @@ export function FiltersFieldPicker({
   // pointing at row 7 of a 3-row list is how Enter selects the wrong field.
   const level = path.join('.');
   React.useEffect(() => setActive(0), [term, level]);
+
+  /**
+   * Keep the highlighted option on screen.
+   *
+   * The list caps at `max-h-64`, so arrowing past the visible window left the
+   * highlight invisible while Enter selected something the user could not
+   * see. Invisible with a schema small enough to fit — which is exactly why
+   * it survived review until someone forced an overflow.
+   *
+   * `block: 'nearest'` scrolls the minimum needed, so the list does not jump
+   * when the option is already visible.
+   */
+  React.useEffect(() => {
+    const el = listRef.current?.querySelector<HTMLElement>(`#filters-field-${active}`);
+    el?.scrollIntoView({ block: 'nearest' });
+  }, [active, term, level]);
 
   const choose = (index: number) => {
     if (searching) {
@@ -98,19 +160,12 @@ export function FiltersFieldPicker({
     } else if (e.key === 'Enter') {
       e.preventDefault();
       choose(active);
-    } else if (e.key === 'Escape') {
-      // Escape backs out one level before closing, so a user three levels
-      // deep is not thrown all the way out by a single keystroke.
-      if (!searching && path.length) {
-        e.preventDefault();
-        setPath(path.slice(0, -1));
-      } else if (searching) {
-        e.preventDefault();
-        setTerm('');
-      } else {
-        onClose?.();
-      }
     }
+    // Escape is NOT handled here. Radix's dismissable layer listens on
+    // `document`, so a React handler cannot reliably veto the close — the
+    // popover owns that decision through `onEscapeKeyDown`, which calls
+    // `handleEscape` above. Handling it in both places would back out two
+    // levels per keypress.
   };
 
   const muted = getRoleColor('text.secondary');
@@ -136,6 +191,7 @@ export function FiltersFieldPicker({
           // highlight moves.
           role="combobox"
           aria-expanded
+          aria-autocomplete="list"
           aria-controls="filters-field-list"
           aria-activedescendant={count ? `filters-field-${active}` : undefined}
           className="h-8 ps-8"

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -252,5 +252,50 @@ describe('announcements (§47.4)', () => {
     render(<Filters fields={FIELDS} />);
     const live = screen.getByRole('status');
     expect(live).toHaveAttribute('aria-live', 'polite');
+  });
+});
+
+describe('accessibility the axe gate cannot see', () => {
+  const oneRule = () =>
+    createFilterQuery([createFilterRule(['status'], { operator: 'is', value: 'active' })]);
+
+  it('names its region with a role that can actually carry a label', () => {
+    // An aria-label on a bare div is dropped: the implicit role is `generic`,
+    // which prohibits naming, so AT skipped the whole filter area.
+    render(<Filters fields={FIELDS} />);
+    expect(screen.getByRole('search', { name: 'Filters' })).toBeInTheDocument();
+  });
+
+  it('puts focus somewhere real after Clear all unmounts itself', async () => {
+    render(<Filters fields={FIELDS} defaultQuery={oneRule()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+    // Otherwise focus falls to <body> and the next Tab restarts from the top
+    // of the document.
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /Add filter/ })).toHaveFocus()
+    );
+  });
+
+  it('announces additions by LABEL, not by raw field id', async () => {
+    render(<Filters fields={FIELDS} />);
+    fireEvent.click(screen.getByRole('button', { name: /Add filter/ }));
+    // Nested, so reach it by search — the case where the raw id is least
+    // informative, since it announces "flood" for "Risk › CAT › Flood".
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'flood' } });
+    fireEvent.mouseDown(screen.getByRole('option', { name: /Flood/ }));
+    // Was "Filter added: flood." — the bare leaf id, while the rule it created
+    // was labelled "Risk › CAT › Flood".
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('Risk › CAT › Flood')
+    );
+  });
+
+  it('announces an operator change, which is otherwise silent', async () => {
+    render(<Filters fields={FIELDS} defaultQuery={oneRule()} />);
+    openMenu('Condition: is');
+    fireEvent.click(screen.getByRole('menuitem', { name: 'is not' }));
+    // The focused button's own label changes under the user, and a changed
+    // label does not re-announce.
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('is not'));
   });
 });
