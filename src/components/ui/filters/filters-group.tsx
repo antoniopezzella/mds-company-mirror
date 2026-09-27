@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '../dropdown-menu';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
-import { FiltersRule } from './filters-rule';
+import { FiltersRule, type FiltersRuleProps } from './filters-rule';
 import type { FiltersValueEditorProps } from './filters-value-editor';
 import type { FilterField } from './filters-schema';
 import { isFilterGroup, type FilterGroup } from './filters-types';
@@ -113,7 +113,7 @@ export interface FiltersGroupProps extends FiltersGroupHandlers {
   size?: 'sm' | 'md' | 'lg';
   readOnly?: boolean;
   disabled?: boolean;
-  messages?: Partial<FiltersGroupMessages>;
+  messages?: Partial<FiltersGroupMessages & NonNullable<FiltersRuleProps['messages']>>;
 }
 
 export function FiltersGroup({
@@ -252,6 +252,7 @@ export function FiltersGroup({
                 fields={fields}
                 editors={editors}
                 size={size}
+                messages={messages}
                 readOnly={readOnly}
                 disabled={disabled}
                 onChangeField={(path) => h.onChangeField(node.id, path)}
@@ -293,6 +294,7 @@ export function FiltersGroup({
               <FiltersFieldPicker
                 fields={fields}
                 handleRef={pickerRef}
+                searchPlaceholder={messages?.searchPlaceholder}
                 onSelect={(path) => {
                   h.onAddRule(group.id, path);
                   setAddingTo(false);

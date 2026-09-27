@@ -74,6 +74,7 @@ export interface FiltersRuleProps {
     more: string;
     not: string;
     group: string;
+    searchPlaceholder: string;
   }>;
 }
 
@@ -170,6 +171,7 @@ export function FiltersRule({
           <FiltersFieldPicker
             fields={fields}
             handleRef={pickerRef}
+            searchPlaceholder={messages?.searchPlaceholder}
             onSelect={(path) => {
               onChangeField(path);
               setFieldOpen(false);
