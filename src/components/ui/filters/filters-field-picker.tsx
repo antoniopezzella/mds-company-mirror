@@ -64,10 +64,13 @@ export function FiltersFieldPicker({
   fields,
   onSelect,
   handleRef,
-  searchPlaceholder = 'Search filters…',
+  searchPlaceholder: searchPlaceholderProp,
   emptyLabel = (t) => `No filters found for “${t}”`,
   className,
 }: FiltersFieldPickerProps) {
+  // Defaulted here rather than in the signature so a parent may forward an
+  // undefined `messages.searchPlaceholder` without blanking the label.
+  const searchPlaceholder = searchPlaceholderProp ?? 'Search filters…';
   const [term, setTerm] = React.useState('');
   const [path, setPath] = React.useState<string[]>([]);
   const [active, setActive] = React.useState(0);

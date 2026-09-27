@@ -8,7 +8,7 @@ import { getRoleColor } from '@/theme/roles';
 import { Button } from '../button';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
-import { FiltersRule } from './filters-rule';
+import { FiltersRule, type FiltersRuleProps } from './filters-rule';
 import type { FiltersValueEditorProps } from './filters-value-editor';
 import {
   addFilterNode,
@@ -66,13 +66,25 @@ export interface FiltersProps {
    */
   editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
 
-  messages?: Partial<{
-    addFilter: string;
-    clearAll: string;
-    filters: string;
-    advancedOnly: string;
-    editAdvanced: string;
-  }>;
+  /**
+   * Every user-facing string, in one object (§53).
+   *
+   * It used to reach only the five below: `FiltersRule`'s own ~8 strings and
+   * `FiltersFieldPicker`'s copy props were never passed, so roughly 25 of 30
+   * were unreachable and a translated filter bar still said "Select
+   * condition" in English. The type now spans the children it renders, and
+   * the extras are forwarded.
+   */
+  messages?: Partial<
+    {
+      addFilter: string;
+      clearAll: string;
+      filters: string;
+      advancedOnly: string;
+      editAdvanced: string;
+      searchPlaceholder: string;
+    } & NonNullable<FiltersRuleProps['messages']>
+  >;
 }
 
 const DEFAULTS = {
@@ -185,6 +197,7 @@ export function Filters({
             rule={rule}
             fields={fields}
             size={size}
+            messages={messages}
             editors={editors}
             readOnly={readOnly}
             disabled={disabled}
@@ -261,6 +274,7 @@ export function Filters({
             <FiltersFieldPicker
               fields={fields}
               handleRef={pickerRef}
+              searchPlaceholder={messages?.searchPlaceholder}
               onSelect={addField}
             />
           </PopoverContent>

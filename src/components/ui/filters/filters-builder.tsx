@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from '../button';
 import { FiltersGroup, type FiltersGroupMessages } from './filters-group';
+import type { FiltersRuleProps } from './filters-rule';
 import type { FiltersValueEditorProps } from './filters-value-editor';
 import {
   addFilterNode,
@@ -66,7 +67,8 @@ export interface FiltersBuilderProps {
   disabled?: boolean;
   className?: string;
   messages?: Partial<
-    FiltersGroupMessages & {
+    FiltersGroupMessages &
+      NonNullable<FiltersRuleProps['messages']> & {
       clearAll: string;
       summaryOne: string;
       /** `{count}` is substituted. */

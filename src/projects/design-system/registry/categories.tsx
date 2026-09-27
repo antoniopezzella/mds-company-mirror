@@ -16,6 +16,7 @@ import {
   KpiDemo,
   DataStateDemo,
   FilterBarDemo,
+  FiltersDemo,
   DataTableDemo,
   SparklineDemo,
   PageShellDemo,
@@ -411,6 +412,14 @@ export const categories: CategoryEntry[] = [
         summary: 'Page-level filters with date presets and chips showing what is narrowing the view.',
         sourcePath: 'src/components/ui/filter-bar.tsx',
         demo: FilterBarDemo,
+      },
+      {
+        id: 'filters',
+        title: 'Filters',
+        summary:
+          'A query system: every condition carries an operator, so it can say "is not", "is any of" and "between" — and be shared as a URL.',
+        sourcePath: 'src/components/ui/filters/filters.tsx',
+        demo: FiltersDemo,
       },
       {
         id: 'data-table',

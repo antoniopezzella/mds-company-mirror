@@ -230,3 +230,65 @@ export function PageShellDemo() {
     </Stack>
   );
 }
+
+const QUERY_FIELDS: FilterField[] = [
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'Active', label: 'Active' },
+      { value: 'Pending', label: 'Pending' },
+      { value: 'Expired', label: 'Expired' },
+    ],
+  },
+  { id: 'premium', label: 'Premium', type: 'number', unit: 'currency' },
+  {
+    id: 'location',
+    label: 'Location',
+    type: 'select',
+    fields: [
+      {
+        id: 'country',
+        label: 'Country',
+        type: 'select',
+        options: [
+          { value: 'BR', label: 'Brazil' },
+          { value: 'MX', label: 'Mexico' },
+          { value: 'US', label: 'United States' },
+        ],
+      },
+    ],
+  },
+  { id: 'tiv', label: 'Total insured value', type: 'number', unit: 'currency', aliases: ['TIV'] },
+];
+
+const QUERY_ROWS = [
+  { id: 1, name: 'Commercial Auto', status: 'Active', premium: 12400 },
+  { id: 2, name: 'General Liability', status: 'Active', premium: 8200 },
+  { id: 3, name: 'Cyber Liability', status: 'Pending', premium: 15900 },
+  { id: 4, name: 'Property', status: 'Expired', premium: 22000 },
+];
+
+/**
+ * The query system — conditions as segmented button groups, each carrying its
+ * own operator, driving the rows through a pure predicate.
+ */
+export function FiltersDemo() {
+  const { query, setQuery, rows, count } = useFilterQuery(QUERY_ROWS, { fields: QUERY_FIELDS });
+  return (
+    <Stack gap={4}>
+      <Filters fields={QUERY_FIELDS} query={query} onQueryChange={setQuery} />
+      <p className="text-sm text-muted-foreground">
+        {rows.length} of {QUERY_ROWS.length} policies · {count} condition(s)
+      </p>
+      <ul className="text-sm">
+        {rows.map((r) => (
+          <li key={r.id}>
+            {r.name} — {r.status}
+          </li>
+        ))}
+      </ul>
+    </Stack>
+  );
+}

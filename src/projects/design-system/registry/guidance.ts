@@ -49,6 +49,19 @@ export const guidance: Record<string, ComponentGuidance> = {
       { text: 'You mean form validation — that is `error`/`invalid` on the field, a different axis entirely.' },
     ],
   },
+  filters: {
+    use: [
+      'A condition needs an OPERATOR — "is not", "is any of", "between", "is empty". A label-and-value control cannot express any of them.',
+      'The filtered view has to be shareable. The query serialises to a readable URL and is re-validated against the live schema on the way back in.',
+      'The schema is nested or large. Fields drill in, and search reaches every level, so "flood" finds Risk › CAT › Flood from the top.',
+      'You need OR or grouping: `A AND (B OR C)` is a different query from `A AND B AND C`, and the advanced builder is the only surface that can edit it.',
+    ],
+    avoid: [
+      { text: 'Every filter is a simple equality and always will be. A row of Selects is less machinery: ', relatedComponentId: 'filter-bar', relatedLabel: 'FilterBar' },
+      { text: 'You want a handful of toggles the user flips on and off, not conditions they compose. That is a chip set, not a query builder.' },
+      { text: 'Everything you are filtering is one table and the conditions are per-column with counts. Use the table toolbar\'s faceted filters: ', relatedComponentId: 'data-table', relatedLabel: 'DataTable' },
+    ],
+  },
   'filter-bar': {
     use: [
       'Filters that narrow a WHOLE PAGE — several cards, a chart and a table all reading the same query.',

@@ -343,3 +343,36 @@ describe('custom value editors (§11)', () => {
     expect(screen.getByRole('textbox', { name: /Owner value/ })).toBeInTheDocument();
   });
 });
+
+describe('copy reaches the children it renders (§53)', () => {
+  it('translates the rule and the picker, not just the bar', () => {
+    // `messages` used to stop at the bar's own five strings: FiltersRule's
+    // were never passed, so a translated filter bar still read "Select
+    // condition" in English.
+    render(
+      <Filters
+        fields={FIELDS}
+        defaultQuery={createFilterQuery([createFilterRule(['status'])])}
+        messages={{
+          addFilter: 'Ajouter un filtre',
+          selectCondition: 'Choisir une condition',
+          remove: 'Supprimer',
+          searchPlaceholder: 'Rechercher…',
+        }}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Ajouter un filtre' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Choisir une condition' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Supprimer/ })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Ajouter un filtre' }));
+    expect(screen.getByRole('combobox', { name: 'Rechercher…' })).toBeInTheDocument();
+  });
+
+  it('keeps the built-in copy for anything not overridden', () => {
+    render(<Filters fields={FIELDS} messages={{ addFilter: 'Ajouter un filtre' }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Ajouter un filtre' }));
+    // A forwarded `undefined` must not blank the placeholder.
+    expect(screen.getByRole('combobox', { name: /Search filters/ })).toBeInTheDocument();
+  });
+});
