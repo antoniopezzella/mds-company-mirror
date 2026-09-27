@@ -29,8 +29,11 @@ export function describeValue(value: FilterValue | undefined, field?: FilterFiel
 
   if (Array.isArray(value)) {
     if (!value.length) return '';
+    // String-coerced, matching the scalar path below. Strict `===` here meant
+    // a multi-select chip lost its labels whenever the stored type and the
+    // option type differed — which a URL round trip routinely causes.
     const label = (v: unknown) =>
-      field?.options?.find((o) => o.value === v)?.label ?? String(v);
+      field?.options?.find((o) => String(o.value) === String(v))?.label ?? String(v);
     // Two labels fit; five are longer than the column being filtered, and
     // §27 asks for a compact form rather than a chip that wraps the toolbar.
     if (value.length <= 2) return value.map(label).join(', ');
@@ -55,11 +58,15 @@ export function describeValue(value: FilterValue | undefined, field?: FilterFiel
     return value ? (field?.trueLabel ?? 'Yes') : (field?.falseLabel ?? 'No');
   }
 
-  if (typeof value === 'number') return unit(value);
-
-  // A select stores the option value; show the label a human chose.
+  // A select stores the option value; show the label a human chose. This is
+  // checked BEFORE the numeric branch: a select whose options hold numbers
+  // (`{ value: 1, label: 'Tier one' }`) otherwise short-circuited to number
+  // formatting and rendered a bare "1", while the same value inside an array
+  // resolved correctly — the two paths disagreed on the same data.
   const option = field?.options?.find((o) => String(o.value) === String(value));
   if (option) return option.label;
+
+  if (typeof value === 'number') return unit(value);
 
   if (field?.type === 'date' || field?.type === 'datetime') return formatDate(value);
   return String(value);

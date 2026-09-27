@@ -355,6 +355,14 @@ function parseNode(
       dropped.push({ raw, reason: 'invalid-value' });
       return null;
     }
+    // `JSON.stringify(Infinity)` is `"null"`, so a non-finite number that got
+    // in here would re-serialize to `null` and the NEXT parse would read it
+    // as a rule matching every row — a filter silently inverting itself
+    // across one round trip.
+    if (!isFinite(value)) {
+      dropped.push({ raw, reason: 'invalid-value' });
+      return null;
+    }
   } else if (def.requiresValue) {
     // Field and operator both valid, value not chosen yet: that is a DRAFT
     // (§13), which the model explicitly supports. It is restored as one —
@@ -371,6 +379,16 @@ function parseNode(
   }
 
   return createFilterRule(path, { operator, value, ...(negated ? { negated: true } : {}) });
+}
+
+/** Deep check: any non-finite number anywhere in the value. */
+function isFinite(value: FilterValue | undefined): boolean {
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.every((v) => isFinite(v as FilterValue));
+  if (value && typeof value === 'object') {
+    return Object.values(value).every((v) => isFinite(v as FilterValue));
+  }
+  return true;
 }
 
 // ------------------------------------------------------------- URL plumbing

@@ -167,7 +167,12 @@ export function filterValueShapeMatches(
   value: FilterValue | undefined
 ): boolean {
   if (!def.requiresValue) return value === undefined;
-  if (value === undefined) return false;
+  // `null` and `''` are absent values wearing a type. Accepting them here
+  // while `isFilterRuleComplete` rejected them let a URL report `ok: true`
+  // for a rule that could never execute — it sat in the tree as an invisible
+  // permanent draft with nothing telling the user.
+  if (value === undefined || value === null || value === '') return false;
+  if (Array.isArray(value) && value.length === 0) return false;
   if (!!def.isRange !== isRangeValue(value)) return false;
   if (!!def.supportsMultiple !== Array.isArray(value)) return false;
   return true;
@@ -243,6 +248,14 @@ export function setGroupCombinator(
   return mapNodes(query, (n) => (isFilterGroup(n) && n.id === id ? { ...n, combinator } : n));
 }
 
+/**
+ * Moves a node `delta` places within its group, clamped to the ends.
+ *
+ * A MOVE, not a swap. Swapping is the same thing for ±1 — which is all the
+ * builder uses today — and quite different for anything larger: `move(a, 2)`
+ * on `[a,b,c]` gave `[c,b,a]` rather than `[b,c,a]`. Drag-to-reorder would
+ * have inherited that silently.
+ */
 export function moveFilterNode(query: FilterQuery, id: string, delta: number): FilterQuery {
   const reorder = (group: FilterGroup): FilterGroup => {
     const i = group.rules.findIndex((n) => n.id === id);
@@ -250,7 +263,8 @@ export function moveFilterNode(query: FilterQuery, id: string, delta: number): F
       const j = i + delta;
       if (j < 0 || j >= group.rules.length) return group;
       const rules = [...group.rules];
-      [rules[i], rules[j]] = [rules[j], rules[i]];
+      const [moved] = rules.splice(i, 1);
+      rules.splice(j, 0, moved);
       return { ...group, rules };
     }
     return { ...group, rules: group.rules.map((n) => (isFilterGroup(n) ? reorder(n) : n)) };

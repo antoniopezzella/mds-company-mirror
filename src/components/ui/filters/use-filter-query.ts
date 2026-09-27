@@ -39,6 +39,16 @@ export interface UseFilterQueryOptions {
    * pass `query`/`onQueryChange` to `Filters` instead.
    */
   syncToUrl?: boolean | string;
+  /**
+   * Observes every change, with the REASON it happened (§34).
+   *
+   * Exists so `setQuery`'s `meta` argument is actually consumed. It was
+   * declared in the returned type and silently dropped, which made the whole
+   * point of `FilterQueryChangeMeta` — that a reason cannot be reconstructed
+   * afterwards by diffing two trees — unreachable at the one seam a consumer
+   * wires `onQueryChange` to.
+   */
+  onChange?: (query: FilterQuery, meta?: FilterQueryChangeMeta) => void;
 }
 
 export interface UseFilterQueryResult<T> {
@@ -61,7 +71,7 @@ export interface UseFilterQueryResult<T> {
 
 export function useFilterQuery<T>(
   data: T[],
-  { fields, defaultQuery, syncToUrl = false }: UseFilterQueryOptions
+  { fields, defaultQuery, syncToUrl = false, onChange }: UseFilterQueryOptions
 ): UseFilterQueryResult<T> {
   const key = typeof syncToUrl === 'string' ? syncToUrl : FILTER_QUERY_PARAM;
   const enabled = syncToUrl !== false;
@@ -134,13 +144,35 @@ export function useFilterQuery<T>(
     }
   }, [serialized, key, enabled, incoming, dropped]);
 
-  const setQuery = React.useCallback((next: FilterQuery) => {
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
+
+  const setQuery = React.useCallback((next: FilterQuery, meta?: FilterQueryChangeMeta) => {
     edited.current = true;
     setQueryState(next);
     // A user edit answers whatever the incoming link got wrong, so the notice
     // stops applying the moment they touch it.
     setDropped((d) => (d.length ? [] : d));
+    onChangeRef.current?.(next, meta);
   }, []);
+
+  /**
+   * Browser Back and Forward change the URL without re-rendering this hook,
+   * so the query and the address bar silently disagreed after either one.
+   * Re-read on `popstate` and adopt whatever the URL now says — the URL is
+   * the thing the user just navigated to.
+   */
+  React.useEffect(() => {
+    if (!enabled || typeof window === 'undefined') return;
+    const onPop = () => {
+      const raw = new URLSearchParams(window.location.search).get(key) ?? '';
+      const parsed = parseFilterQuery(raw, fields);
+      setQueryState(parsed.query);
+      setDropped(parsed.dropped);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [enabled, key, fields]);
 
   const typeOf = React.useCallback((path: string[]) => fieldTypeAt(fields, path), [fields]);
 
