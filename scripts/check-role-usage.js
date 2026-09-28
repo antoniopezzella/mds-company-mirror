@@ -78,11 +78,40 @@ for (const file of componentFiles) {
   // (palette swatches, token fixtures).
   if (/roles-allow-hex-file/.test(rawText)) continue;
   const raw = rawText.split('\n');
+  // Block-comment state has to be tracked ACROSS lines, and trailing `//`
+  // stripped, or the sweep counts documentation as drift. It previously only
+  // skipped comment-ONLY lines, so it missed `{/* … #ceecff … */}` (starts
+  // with `{`), trailing notes like `foo, // dark is #95caff`, and any
+  // continuation line of a block comment that does not begin with `*`.
+  //
+  // That was 38 of 109 reported literals across this component set — a third
+  // of the number, and every one of them a comment explaining a contrast
+  // ratio. Measuring prose as though it were colour made the figure useless
+  // for deciding anything.
+  let inBlock = false;
   raw.forEach((line, i) => {
-    if (/^\s*(\/\/|\*|\/\*)/.test(line)) return; // comment-only line
+    let code = '';
+    for (let c = 0; c < line.length; c += 1) {
+      if (inBlock) {
+        if (line.startsWith('*/', c)) {
+          inBlock = false;
+          c += 1;
+        }
+        continue;
+      }
+      if (line.startsWith('/*', c)) {
+        inBlock = true;
+        c += 1;
+        continue;
+      }
+      if (line.startsWith('//', c)) break; // rest of the line is a comment
+      code += line[c];
+    }
+    if (!code.trim()) return;
+
     const allowed = /roles-allow-hex/.test(line) || /roles-allow-hex/.test(raw[i - 1] ?? '');
     if (allowed) return;
-    const hits = line.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g);
+    const hits = code.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g);
     if (hits) for (const h of hits) hardcoded.push({ file: rel, line: i + 1, match: h });
   });
 }
