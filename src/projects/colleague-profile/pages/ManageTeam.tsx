@@ -146,35 +146,34 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
       },
       createActionsColumn<TeamMember>({
         getRowLabel: (member) => member.name,
-        // In the OVERFLOW menu, not as a `primary` button.
+        // A PROMOTED, icon-only action rather than a one-item overflow menu.
         //
-        // `primary` always renders icon AND label, so a promoted delete would
-        // print "Remove from team" eight times down the column — which is
-        // what squeezed the Clients header into "Clie...". The source screen
-        // uses a bare trash icon per row; a destructive action behind a menu
-        // is better than either, because it cannot be hit by a mis-aimed
-        // click, and it keeps the confirmation step `primary` would also give.
-        actions: [
-          {
-            id: 'remove',
-            label: 'Remove from team',
-            icon: <Trash2 className="size-4" aria-hidden="true" />,
-            // Destructive gets a confirmation as well as the red treatment —
-            // colour on its own is not a safeguard.
-            destructive: true,
-            confirmTitle: 'Remove this member?',
-            confirmDescription:
-              'They lose access to this team and its clients. Their own client assignments are not affected.',
-            confirmLabel: 'Remove',
-            // DISABLED with a reason, not hidden — the opposite of the
-            // page-level actions. The overflow menu still has to exist, and
-            // an empty menu tells the user less than one that names who is
-            // allowed to do this.
-            disabled: !canRemove,
-            disabledReason: deniedReason('member:remove'),
-            onSelect: () => undefined,
-          },
-        ],
+        // It went behind a ⋮ first, because `primary` used to render icon AND
+        // label and printed "Remove from team" down the whole column. `primary`
+        // now takes `iconOnly`, so the action can be what the source screen
+        // shows — a trash icon on each row — without that cost. A menu holding
+        // a single item is a click of ceremony in front of the only thing
+        // inside it.
+        primary: {
+          label: 'Remove from team',
+          icon: <Trash2 className="size-4" aria-hidden="true" />,
+          iconOnly: true,
+          // Destructive gets a confirmation as well as the red treatment —
+          // colour on its own is not a safeguard, and this is now a
+          // single-click target rather than two.
+          destructive: true,
+          confirmTitle: 'Remove this member?',
+          confirmDescription:
+            'They lose access to this team and its clients. Their own client assignments are not affected.',
+          confirmLabel: 'Remove',
+          // DISABLED with a reason, not hidden — the opposite treatment to the
+          // page-level actions. A control that vanishes per row makes the
+          // column ragged and leaves the user wondering whether that row is
+          // special; one that explains itself does not.
+          disabled: !canRemove,
+          disabledReason: deniedReason('member:remove'),
+          onAction: () => undefined,
+        },
       }),
     ],
     [canRemove]

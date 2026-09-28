@@ -12,6 +12,7 @@ import {
   FilterBarSelect,
   type ActiveFilter,
 } from '@/components/ui/filter-bar';
+import { Filters, useFilterQuery, type FilterField } from '@/components/ui/filters';
 import { Sparkline } from '@/components/ui/sparkline';
 import { Stack } from '@/components/ui/stack';
 import { Card, CardContent } from '@/components/ui/card';
@@ -283,7 +284,7 @@ export function FiltersDemo() {
         {rows.length} of {QUERY_ROWS.length} policies · {count} condition(s)
       </p>
       <ul className="text-sm">
-        {rows.map((r) => (
+        {rows.map((r: (typeof QUERY_ROWS)[number]) => (
           <li key={r.id}>
             {r.name} — {r.status}
           </li>

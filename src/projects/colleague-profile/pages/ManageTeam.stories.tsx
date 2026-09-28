@@ -71,25 +71,31 @@ export const Default: StoryObj = {
 };
 
 /**
- * Each row's overflow menu is named for its own member, and the destructive
- * action sits inside it rather than as a bare icon per row.
+ * Every row carries a visible delete control, named for its own member.
+ *
+ * It spent a round behind an overflow menu, because `primary` rendered icon
+ * AND label and printed "Remove from team" down the whole column. `primary`
+ * takes `iconOnly` now, so the action is the trash icon the source screen
+ * shows — and the menu trigger it replaced was rendering as an EMPTY button
+ * anyway (see the fix in data-grid-row-actions.tsx).
  */
 export const RowActionsAreNamed: StoryObj = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('the menu trigger names its row', async () => {
-      // Eight identically-named triggers would tell a screen-reader user
+    await step('each row names its own control', async () => {
+      // Eight identically-named buttons would tell a screen-reader user
       // nothing about which row they are on.
-      await expect(
-        canvas.getByRole('button', { name: /Alison Lane/i })
-      ).toBeInTheDocument();
+      const remove = canvas.getByRole('button', { name: 'Remove from team Alison Lane' });
+      await expect(remove).toBeInTheDocument();
+      // The bug this story now pins: an accessible name is not evidence of a
+      // visible control.
+      await expect(remove.querySelector('svg')).toBeInTheDocument();
     });
 
-    await step('remove is behind the menu, not a bare icon in every row', async () => {
-      // A destructive action one mis-aimed click away in all eight rows is
-      // the thing this arrangement avoids.
-      await expect(canvas.queryByRole('button', { name: /^Remove from team/i })).toBeNull();
+    await step('the label is announced, not printed down the column', async () => {
+      const remove = canvas.getByRole('button', { name: 'Remove from team Alison Lane' });
+      await expect(remove).not.toHaveTextContent('Remove');
     });
   },
 };
