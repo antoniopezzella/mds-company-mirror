@@ -77,12 +77,11 @@ export const NAV_ITEMS: SideNavItem[] = [
   },
 ];
 
-/** Roles the signed-in colleague can act as. */
-export const ROLE_OPTIONS = [
-  { value: 'team-manager', label: 'Team Manager' },
-  { value: 'colleague', label: 'Colleague' },
-  { value: 'administrator', label: 'Administrator' },
-];
+/*
+ * Roles moved to `roles.ts`, which pairs each one with the capabilities it
+ * grants. A bare list of labels could not gate anything, and a switcher that
+ * only relabels the header is a control that looks like it does something.
+ */
 
 /** Team-set filter for the toolbar. */
 export const TEAM_FILTER_OPTIONS = [

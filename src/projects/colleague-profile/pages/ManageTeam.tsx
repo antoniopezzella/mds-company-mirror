@@ -15,6 +15,8 @@ import { getRoleColor } from '@/theme/roles';
 import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 
 import { ColleagueShell } from '../components/ColleagueShell';
+import { useColleagueRole } from '../role-context';
+import { deniedReason } from '../roles';
 import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
 
 /**
@@ -78,10 +80,23 @@ function RolesCell({ member }: { member: TeamMember }) {
   );
 }
 
+/** See the note in ColleagueProfile: the content must sit INSIDE the shell's
+ *  RoleProvider, so the component that renders the shell cannot read the role. */
 export function ManageTeam() {
   const { teamId } = useParams<{ teamId: string }>();
-
   const team = TEAMS.find((t) => t.id === teamId) ?? TEAMS[0];
+
+  return (
+    <ColleagueShell currentPath="/colleague-profile">
+      <TeamContent team={team} />
+    </ColleagueShell>
+  );
+}
+
+function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
+  const { can } = useColleagueRole();
+
+  const canRemove = can('member:remove');
 
   const columns = React.useMemo<DataGridColumnDef<TeamMember>[]>(
     () => [
@@ -151,12 +166,18 @@ export function ManageTeam() {
             confirmDescription:
               'They lose access to this team and its clients. Their own client assignments are not affected.',
             confirmLabel: 'Remove',
+            // DISABLED with a reason, not hidden — the opposite of the
+            // page-level actions. The overflow menu still has to exist, and
+            // an empty menu tells the user less than one that names who is
+            // allowed to do this.
+            disabled: !canRemove,
+            disabledReason: deniedReason('member:remove'),
             onSelect: () => undefined,
           },
         ],
       }),
     ],
-    []
+    [canRemove]
   );
 
   const memberView = (
@@ -221,21 +242,23 @@ export function ManageTeam() {
   ];
 
   return (
-    <ColleagueShell currentPath="/colleague-profile" activeTeamId={team.id}>
+    <>
       <PageHeading
         title={team.name}
         description={`${TEAM_MEMBERS.length} active team members · ${TEAM_CLIENT_COUNT} Clients`}
         actions={
-          <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
-            Add Member
-          </Button>
+          can('member:add') ? (
+            <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
+              Add Member
+            </Button>
+          ) : undefined
         }
       />
 
       <div className="mt-6">
         <Tabs tabs={tabs} defaultActiveId="members" />
       </div>
-    </ColleagueShell>
+    </>
   );
 }
 

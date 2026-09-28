@@ -11,7 +11,8 @@ import { getRoleColor } from '@/theme/roles';
 
 import { ColleagueShell } from '../components/ColleagueShell';
 import { TeamCard } from '../components/TeamCard';
-import { ROLE_OPTIONS, TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
+import { useColleagueRole } from '../role-context';
+import { TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
 
 /**
  * Colleague Profile — "My Teams".
@@ -20,16 +21,32 @@ import { ROLE_OPTIONS, TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
  * nothing else. The chrome — header, rail, team switcher — lives in
  * `ColleagueShell`; this file is the page.
  *
- * "Switch Role" still sits in the page TOOLBAR rather than the app chrome.
- * The rail now has a `header` slot, but it holds the team switcher, and
- * stacking a second unrelated control under it would make the rail a
- * junk drawer. `Header` still has no actions slot, which is where this
- * actually belongs.
+ * The role switcher has moved to the rail, where it belongs — it spent two
+ * rounds in this page's toolbar, which was app-level state sitting among
+ * page-level filters. `SideNavigation`'s new `header` slot is its home.
+ *
+ * Role now GATES this page: a Team Member sees no Create or Delegate.
  */
 
+/**
+ * The page renders the shell; the CONTENT reads the role.
+ *
+ * `RoleProvider` lives inside `ColleagueShell`, so anything calling
+ * `useColleagueRole` has to be a descendant of it — the component that
+ * renders the shell is not. Splitting the body out is what puts the hook on
+ * the right side of that boundary.
+ */
 export function ColleagueProfile() {
+  return (
+    <ColleagueShell currentPath="/colleague-profile">
+      <MyTeamsContent />
+    </ColleagueShell>
+  );
+}
+
+function MyTeamsContent() {
   const navigate = useNavigate();
-  const [role, setRole] = React.useState<string | number>('team-manager');
+  const { can } = useColleagueRole();
   const [teamFilter, setTeamFilter] = React.useState<string | number>('all');
   const [search, setSearch] = React.useState('');
 
@@ -45,18 +62,27 @@ export function ColleagueProfile() {
   const handleManage = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
 
   return (
-    <ColleagueShell currentPath="/colleague-profile">
+    <>
       <PageHeading
         title="My Teams"
         description={`Teams you manage — ${TEAMS.length} teams`}
         actions={
+          // HIDDEN rather than disabled. A page-level action a role can never
+          // perform is not a locked door, it is a door that does not exist —
+          // and a toolbar of greyed-out buttons is noise a Team Member would
+          // have to read past on every visit. Row-level actions take the
+          // opposite treatment; see ManageTeam.
           <>
-            <Button variant="secondary" size="md" startIcon={<UserPlus className="size-4" />}>
-              Delegate Team
-            </Button>
-            <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
-              Create Team
-            </Button>
+            {can('team:delegate') && (
+              <Button variant="secondary" size="md" startIcon={<UserPlus className="size-4" />}>
+                Delegate Team
+              </Button>
+            )}
+            {can('team:create') && (
+              <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
+                Create Team
+              </Button>
+            )}
           </>
         }
       />
@@ -82,16 +108,6 @@ export function ColleagueProfile() {
             aria-label="Filter teams"
           />
 
-          {/* See the note at the top of this file — this belongs in the app
-              chrome, and there is no slot for it. */}
-          <DSSelect
-            label="Viewing as"
-            options={ROLE_OPTIONS}
-            value={role}
-            onChange={setRole}
-            size="md"
-            className="ms-auto"
-          />
         </Inline>
 
         {/* A SECTION with its own h2, because `PageHeading` renders an h1 and
@@ -121,7 +137,7 @@ export function ColleagueProfile() {
           )}
         </section>
       </Stack>
-    </ColleagueShell>
+    </>
   );
 }
 

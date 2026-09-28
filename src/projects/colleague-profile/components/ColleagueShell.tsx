@@ -7,8 +7,11 @@ import { PageShell } from '@/components/ui/page-shell';
 import { getRoleColor } from '@/theme/roles';
 import { useThemeMode } from '@/theme/ThemeModeContext';
 
-import { TeamSwitcher } from './TeamSwitcher';
-import { NAV_ITEMS, TEAMS, type Team } from '../data';
+import { RoleSwitcher } from './RoleSwitcher';
+import { RoleProvider } from '../RoleContext';
+import { useColleagueRole } from '../role-context';
+import { roleLabel } from '../roles';
+import { NAV_ITEMS } from '../data';
 
 /**
  * The Colleague Profile app shell — header, rail, content.
@@ -17,9 +20,13 @@ import { NAV_ITEMS, TEAMS, type Team } from '../data';
  * collapsed rail and the team switcher were about to exist twice, and two
  * copies of a `matchMedia` listener are two chances to fix only one of them.
  *
- * The rail's `header` slot carries the switcher and `collapsed` drives the
- * icon-only state — both added to `SideNavigation` for this, and available to
- * any other app that wants them.
+ * The rail's `header` slot carries the ROLE switcher and `collapsed` drives
+ * the icon-only state — both added to `SideNavigation` for this, and
+ * available to any other app that wants them.
+ *
+ * Role lives in a context rather than props: the switcher is inside the
+ * rail and the actions it gates are page content, so threading it would mean
+ * every page taking a prop it only forwards.
  */
 
 const DESKTOP_QUERY = '(min-width: 1024px)'; // Tailwind's `lg`
@@ -28,15 +35,24 @@ export interface ColleagueShellProps {
   children: React.ReactNode;
   /** Highlights the matching rail item. */
   currentPath?: string;
-  /** The team the switcher shows as current. */
-  activeTeamId?: string;
 }
 
-export function ColleagueShell({
+const USER = { name: 'Antonio Pezzella', initials: 'AP', organization: 'Marsh' };
+
+/** Wraps the shell in the role context its switcher and screens both read. */
+export function ColleagueShell(props: ColleagueShellProps) {
+  return (
+    <RoleProvider>
+      <ColleagueShellInner {...props} />
+    </RoleProvider>
+  );
+}
+
+function ColleagueShellInner({
   children,
   currentPath = '/colleague-profile',
-  activeTeamId = TEAMS[0].id,
 }: ColleagueShellProps) {
+  const { role, setRole } = useColleagueRole();
   const navigate = useNavigate();
   const { mode, toggleMode } = useThemeMode();
 
@@ -62,8 +78,6 @@ export function ColleagueShell({
     return () => mql.removeEventListener('change', handleChange);
   }, []);
 
-  const selectTeam = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
-
   return (
     <PageShell
       className="mds-dashboard"
@@ -80,10 +94,13 @@ export function ColleagueShell({
             isDesktop ? setCollapsed((v) => !v) : setSidebarOpen((v) => !v)
           }
           user={{
-            name: 'Antonio Pezzella',
-            role: 'Team Manager',
-            organization: 'Marsh',
-            initials: 'AP',
+            name: USER.name,
+            // Follows the switcher: the header showing "Team Manager" while
+            // the rail says Team Member would leave the user guessing which
+            // one the screen is obeying.
+            role: roleLabel(role),
+            organization: USER.organization,
+            initials: USER.initials,
           }}
           colorMode={mode}
           onColorModeChange={toggleMode}
@@ -105,13 +122,13 @@ export function ColleagueShell({
             collapsed={collapsed}
             onCollapsedChange={setCollapsed}
             header={
-              <TeamSwitcher
-                teams={TEAMS}
-                activeTeamId={activeTeamId}
+              <RoleSwitcher
+                userName={USER.name}
+                userInitials={USER.initials}
+                role={role}
+                onRoleChange={setRole}
                 collapsed={collapsed}
-                onSelect={selectTeam}
-                onAddTeam={() => undefined}
-                // Deliberate: ⌘1–9 are the browser's tab shortcuts, so
+                // Deliberate: ⌘1–3 are the browser's tab shortcuts, so
                 // claiming them is a decision, not a default. Inside a
                 // focused app it is a fair trade.
                 enableShortcuts
