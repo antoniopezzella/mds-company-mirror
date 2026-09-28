@@ -86,7 +86,16 @@ DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end', className)}
+    // `flex-wrap`, and `min-w-0` on the content that feeds it: without them
+    // a footer with three actions — or two long labels — is a single row
+    // wider than the dialog, and everything overflows rather than wrapping.
+    // The visible symptom is not the buttons: the dialog clips, so the BODY
+    // TEXT gets cut off mid-sentence and the cause looks unrelated.
+    // Inert when the actions already fit, which is the common case.
+    className={cn(
+      'flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:flex-wrap sm:justify-end',
+      className
+    )}
     style={{ borderColor: getRoleColor('border.default') }}
     {...props}
   />
