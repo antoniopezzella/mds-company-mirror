@@ -232,3 +232,102 @@ describe('restraint', () => {
     expect(screen.queryByRole('button', { name: /More actions/ })).toBeNull();
   });
 });
+
+describe('the controls actually render something', () => {
+  /**
+   * These exist because an accessible name is not evidence of a visible
+   * control. The overflow trigger shipped as an empty 32x32 button — the icon
+   * was passed as a CHILD, and `Button`'s `iconOnly` branch renders
+   * `icon ?? startIcon ?? endIcon` and discards children (button.tsx:343).
+   * Every test above passed: the name was right, the button was there, and
+   * there was nothing inside it. To a user the feature was simply missing.
+   */
+  it('renders an icon inside the overflow trigger, not an empty button', () => {
+    render(
+      <DataTable
+        columns={withActions(
+          createActionsColumn<Policy>({
+            getRowLabel: (r) => r.name,
+            actions: [{ id: 'edit', label: 'Edit', onAction: vi.fn() }],
+          })
+        )}
+        data={rows}
+        pinFirstColumn={false}
+      />
+    );
+    const trigger = screen.getByRole('button', { name: 'More actions for Commercial Auto' });
+    expect(trigger.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('renders an icon-only primary action as an icon, with the name intact', () => {
+    render(
+      <DataTable
+        columns={withActions(
+          createActionsColumn<Policy>({
+            getRowLabel: (r) => r.name,
+            primary: {
+              label: 'Remove',
+              icon: <svg data-testid="trash" />,
+              iconOnly: true,
+              onAction: vi.fn(),
+            },
+          })
+        )}
+        data={rows}
+        pinFirstColumn={false}
+      />
+    );
+    const button = screen.getByRole('button', { name: 'Remove Commercial Auto' });
+    // The icon is drawn...
+    expect(within(button).getByTestId('trash')).toBeInTheDocument();
+    // ...and the label is NOT printed down the column, only announced.
+    expect(button).not.toHaveTextContent('Remove');
+  });
+
+  it('still prints the label when the primary action is not icon-only', () => {
+    render(
+      <DataTable
+        columns={withActions(
+          createActionsColumn<Policy>({
+            getRowLabel: (r) => r.name,
+            primary: { label: 'Edit', onAction: vi.fn() },
+          })
+        )}
+        data={rows}
+        pinFirstColumn={false}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Edit Commercial Auto' })).toHaveTextContent('Edit');
+  });
+
+  it('an icon-only destructive action still confirms before running', () => {
+    const onSelect = vi.fn();
+    render(
+      <DataTable
+        columns={withActions(
+          createActionsColumn<Policy>({
+            getRowLabel: (r) => r.name,
+            primary: {
+              label: 'Remove',
+              icon: <svg data-testid="trash" />,
+              iconOnly: true,
+              destructive: true,
+              onAction: onSelect,
+            },
+          })
+        )}
+        data={rows}
+        pinFirstColumn={false}
+      />
+    );
+    // Losing the label must not lose the safeguard — it is now a
+    // single-click target rather than two.
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Commercial Auto' }));
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole('dialog')).toHaveTextContent('Remove Commercial Auto?');
+
+    // ...and confirming it still runs, with the row.
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    expect(onSelect).toHaveBeenCalledWith(rows[0]);
+  });
+});

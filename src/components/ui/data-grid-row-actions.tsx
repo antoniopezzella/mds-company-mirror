@@ -54,6 +54,19 @@ export interface RowAction<TData> {
   confirmTitle?: string;
   confirmDescription?: string;
   confirmLabel?: string;
+  /**
+   * Render the promoted action as an ICON alone.
+   *
+   * A promoted action normally shows its icon and its label, which is right
+   * for "Edit" or "View". It is wrong for one repeated verb down a column:
+   * forty rows reading "Remove from team" is forty copies of a word the
+   * column header already implies, and it squeezes the columns that carry
+   * data. The label still names the control through `aria-label`, so nothing
+   * is lost to a screen reader.
+   *
+   * Only meaningful on `primary`.
+   */
+  iconOnly?: boolean;
   /** Not permitted, or not applicable to this row. */
   disabled?: boolean | ((row: TData) => boolean);
   /** Why. Surfaced as a title, so the reason is discoverable rather than guessed. */
@@ -178,9 +191,20 @@ function RowActionsCell<TData>({
             // "View" tell a screen-reader user nothing about which one.
             aria-label={`${primaryAction.label} ${label}`}
             onClick={() => activate(primaryAction)}
+            // Destructive gets the danger colour whether or not it is
+            // icon-only — the confirmation is the safeguard, the colour is
+            // the warning that one is coming.
+            style={primaryAction.destructive ? { color: getRoleColor('status.danger.fg') } : undefined}
+            {...(primaryAction.iconOnly
+              ? { iconOnly: true, icon: primaryAction.icon }
+              : {})}
           >
-            {primaryAction.icon}
-            {primaryAction.label}
+            {!primaryAction.iconOnly && (
+              <>
+                {primaryAction.icon}
+                {primaryAction.label}
+              </>
+            )}
           </Button>
         )}
 
@@ -191,10 +215,15 @@ function RowActionsCell<TData>({
                 variant="ghost"
                 size="sm"
                 iconOnly
+                // `icon`, NOT a child. Button's iconOnly branch renders
+                // `icon ?? startIcon ?? endIcon` and discards children
+                // (button.tsx:343), so the icon passed as a child here
+                // rendered an empty 32x32 button with no error — every
+                // overflow menu in every DataTable had an invisible trigger,
+                // which is indistinguishable from the feature being absent.
+                icon={<MoreVertical className="size-4" aria-hidden="true" />}
                 aria-label={`More actions for ${label}`}
-              >
-                <MoreVertical className="size-4" aria-hidden="true" />
-              </Button>
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
               {visible.map((action, i) => {
