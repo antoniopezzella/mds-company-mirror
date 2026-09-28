@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, screen, userEvent, within } from 'storybook/test';
 import {
   Menubar,
   MenubarCheckboxItem,
@@ -79,7 +80,22 @@ export const Default: StoryObj = {
         </MenubarContent>
       </MenubarMenu>
     </Menubar>
-  ),
+  ),  /*
+   * OPENS a menu. Without this the story rendered only the bar of triggers,
+   * so the component measured 50% statements and 0% FUNCTIONS — no item,
+   * separator, shortcut or submenu was ever executed, and axe only ever saw
+   * the closed state.
+   */
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('open the File menu', async () => {
+      await userEvent.click(canvas.getByRole('menuitem', { name: 'File' }));
+    });
+    await step('its items render', async () => {
+      const open = await screen.findByRole('menu');
+      await expect(within(open).getAllByRole('menuitem').length).toBeGreaterThan(0);
+    });
+  },
 };
 
 export const WithSubmenuAndRadioGroup: StoryObj = {
