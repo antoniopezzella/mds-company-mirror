@@ -104,8 +104,19 @@ export const KeyboardOrder: StoryObj = {
       // the rail now, which is where app-level state belongs.
       await expect(canvas.queryByRole('combobox', { name: /Viewing as/ })).toBeNull();
     });
-    await step('each card action names its own team', async () => {
-      await expect(canvas.getByRole('button', { name: 'Manage Design Team' })).toBeInTheDocument();
+    await step('each card IS the link to its team', async () => {
+      // Replaced the old "Manage Team" button: every card led to the same
+      // place, so a button was a second, smaller target for what the whole
+      // card already meant.
+      await expect(
+        canvas.getByRole('link', { name: 'Design Team' })
+      ).toHaveAttribute('href', '/colleague-profile/teams/design-team');
+    });
+
+    await step('Transfer remains a separate control, not nested in the link', async () => {
+      const link = canvas.getByRole('link', { name: 'Design Team' });
+      const transfer = canvas.getByRole('button', { name: 'Transfer Design Team' });
+      await expect(link.contains(transfer)).toBe(false);
     });
   },
 };

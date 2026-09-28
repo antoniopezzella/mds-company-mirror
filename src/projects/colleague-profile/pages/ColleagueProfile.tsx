@@ -59,7 +59,7 @@ function MyTeamsContent() {
     });
   }, [search, teamFilter]);
 
-  const handleManage = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
+  const handleTransfer = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
 
   return (
     <>
@@ -130,7 +130,13 @@ function MyTeamsContent() {
             <ul className="grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
               {teams.map((team) => (
                 <li key={team.id}>
-                  <TeamCard team={team} onManage={handleManage} onTransfer={handleManage} />
+                  <TeamCard
+                    team={team}
+                    manageHref={`/colleague-profile/teams/${team.id}`}
+                    // Undefined rather than disabled when the role cannot
+                    // transfer — the card then renders no footer at all.
+                    onTransfer={can('team:transfer') ? handleTransfer : undefined}
+                  />
                 </li>
               ))}
             </ul>
