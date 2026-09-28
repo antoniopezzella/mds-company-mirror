@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ManageTeam } from './ManageTeam';
 
@@ -107,6 +107,60 @@ export const UnbuiltTabs: StoryObj = {
     await step('switch to Team Setup', async () => {
       await userEvent.click(canvas.getByRole('tab', { name: 'Team Setup' }));
       await expect(await canvas.findByText(/not in this rebuild/i)).toBeInTheDocument();
+    });
+  },
+};
+
+/**
+ * **Removing a member is a choice, not a confirmation.** Two outcomes — keep
+ * their client allocations or clear them — so a plain "are you sure?" would
+ * be a speed bump in front of the question that actually matters.
+ *
+ * Cancel is added: the source screen offers only an X, which makes the safe
+ * path the least obvious control on a dialog whose two obvious controls both
+ * destroy something.
+ */
+export const RemoveMemberDialogStory: StoryObj = {
+  name: 'Remove member dialog',
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('open it from the row', async () => {
+      await userEvent.click(
+        canvas.getByRole('button', { name: 'Remove from team Alison Lane' })
+      );
+    });
+
+    await step('it names the member and offers BOTH outcomes', async () => {
+      const dialog = await screen.findByRole('dialog');
+      await expect(within(dialog).getByText('Alison Lane')).toBeInTheDocument();
+      await expect(
+        within(dialog).getByRole('button', { name: 'Remove Member Only' })
+      ).toBeInTheDocument();
+      await expect(
+        within(dialog).getByRole('button', { name: 'Remove Member and Assignments' })
+      ).toBeInTheDocument();
+    });
+
+    await step('and a way to change your mind', async () => {
+      const dialog = screen.getByRole('dialog');
+      // The source screen has only an X. Two destructive buttons and no
+      // visible "do nothing" puts the safe path behind the least obvious
+      // control on the dialog.
+      await expect(within(dialog).getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    });
+
+    await step('it states the consequence, not just the choice', async () => {
+      const dialog = screen.getByRole('dialog');
+      // "keep or clear" names the choice; "5 clients" names what is at stake.
+      await expect(within(dialog).getByText(/5 clients/)).toBeInTheDocument();
+    });
+
+    await step('cancel closes it, having done nothing', async () => {
+      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+      // The row is still there.
+      await expect(canvas.getByText('Alison Lane')).toBeInTheDocument();
     });
   },
 };

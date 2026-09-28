@@ -8,13 +8,13 @@ import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, type TabItem } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
-import { createActionsColumn } from '@/components/ui/data-grid-row-actions';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { Inline, Stack } from '@/components/ui/stack';
 import { getRoleColor } from '@/theme/roles';
 import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 
 import { ColleagueShell } from '../components/ColleagueShell';
+import { RemoveMemberDialog } from '../components/RemoveMemberDialog';
 import { useColleagueRole } from '../role-context';
 import { deniedReason } from '../roles';
 import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
@@ -97,6 +97,7 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
   const { can } = useColleagueRole();
 
   const canRemove = can('member:remove');
+  const [removing, setRemoving] = React.useState<TeamMember | null>(null);
 
   const columns = React.useMemo<DataGridColumnDef<TeamMember>[]>(
     () => [
@@ -144,37 +145,43 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
         // alignment from the column's meta rather than each cell restating it.
         meta: { type: 'number' },
       },
-      createActionsColumn<TeamMember>({
-        getRowLabel: (member) => member.name,
-        // A PROMOTED, icon-only action rather than a one-item overflow menu.
-        //
-        // It went behind a ⋮ first, because `primary` used to render icon AND
-        // label and printed "Remove from team" down the whole column. `primary`
-        // now takes `iconOnly`, so the action can be what the source screen
-        // shows — a trash icon on each row — without that cost. A menu holding
-        // a single item is a click of ceremony in front of the only thing
-        // inside it.
-        primary: {
-          label: 'Remove from team',
-          icon: <Trash2 className="size-4" aria-hidden="true" />,
-          iconOnly: true,
-          // Destructive gets a confirmation as well as the red treatment —
-          // colour on its own is not a safeguard, and this is now a
-          // single-click target rather than two.
-          destructive: true,
-          confirmTitle: 'Remove this member?',
-          confirmDescription:
-            'They lose access to this team and its clients. Their own client assignments are not affected.',
-          confirmLabel: 'Remove',
-          // DISABLED with a reason, not hidden — the opposite treatment to the
-          // page-level actions. A control that vanishes per row makes the
-          // column ragged and leaves the user wondering whether that row is
-          // special; one that explains itself does not.
-          disabled: !canRemove,
-          disabledReason: deniedReason('member:remove'),
-          onAction: () => undefined,
+      {
+        // Defined here rather than via `createActionsColumn`, because its
+        // `destructive` flag also brings its built-in "are you sure?"
+        // confirm — and the question here is not whether, it is WHICH of two
+        // outcomes. The conventions it would have given are kept by hand: an
+        // accessible-but-invisible header, right alignment, and a control
+        // named after its own row.
+        id: 'actions',
+        // A visible header over a column of icon buttons is noise, but an
+        // empty <th> fails axe's empty-table-header rule.
+        header: () => <span className="sr-only">Actions</span>,
+        meta: { align: 'right' },
+        enableSorting: false,
+        enableHiding: false,
+        enableResizing: false,
+        cell: ({ row }) => {
+          const member = row.original;
+          return (
+            <Button
+              variant="ghost"
+              size="sm"
+              iconOnly
+              // `icon`, NOT a child — Button's iconOnly branch discards
+              // children (button.tsx:343), which is what made this control
+              // render as an empty box the first time round.
+              icon={<Trash2 className="size-4" aria-hidden="true" />}
+              // Named for the row: eight buttons called "Remove from team"
+              // tell a screen-reader user nothing about which one.
+              aria-label={`Remove from team ${member.name}`}
+              disabled={!canRemove}
+              title={canRemove ? undefined : deniedReason('member:remove')}
+              style={{ color: getRoleColor('status.danger.fg') }}
+              onClick={() => setRemoving(member)}
+            />
+          );
         },
-      }),
+      },
     ],
     [canRemove]
   );
@@ -257,6 +264,12 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
       <div className="mt-6">
         <Tabs tabs={tabs} defaultActiveId="members" />
       </div>
+
+      <RemoveMemberDialog
+        member={removing}
+        onClose={() => setRemoving(null)}
+        onRemove={() => undefined}
+      />
     </>
   );
 }
