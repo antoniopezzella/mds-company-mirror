@@ -1,0 +1,299 @@
+import * as React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Plus, Trash2, UsersRound } from 'lucide-react';
+
+import { Header } from '@/components/ui/header';
+import { SideNavigation } from '@/components/ui/side-navigation';
+import { PageHeading, PageShell } from '@/components/ui/page-shell';
+import { Button } from '@/components/ui/button';
+import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, type TabItem } from '@/components/ui/tabs';
+import { DataTable } from '@/components/ui/data-table';
+import { createActionsColumn } from '@/components/ui/data-grid-row-actions';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
+import { Inline, Stack } from '@/components/ui/stack';
+import { getRoleColor } from '@/theme/roles';
+import { useThemeMode } from '@/theme/ThemeModeContext';
+import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
+
+import { NAV_ITEMS, TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
+
+/**
+ * Colleague Profile — a single team.
+ *
+ * Where "Manage Team" goes from the My Teams grid.
+ *
+ * The member table is `DataTable` doing what it already does: search, CSV
+ * export, pagination with a page-size control, right-aligned numerics and a
+ * row-actions column that names each control after its row. None of that is
+ * rebuilt here — the screen is a column definition and a tab set.
+ */
+
+const DESKTOP_QUERY = '(min-width: 1024px)';
+
+/** How many role chips fit before the rest become a count. */
+const VISIBLE_ROLES = 3;
+
+function MemberCell({ member }: { member: TeamMember }) {
+  return (
+    <Inline gap={3} wrap={false}>
+      <Avatar initials={member.initials} size="sm" tone="primary" alt="" />
+      <Stack gap={0}>
+        <span className="font-semibold">{member.name}</span>
+        <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+          ID: {member.colleagueId}
+        </span>
+      </Stack>
+    </Inline>
+  );
+}
+
+function RolesCell({ member }: { member: TeamMember }) {
+  if (member.roles.length === 0) {
+    // An em dash, with the meaning spelled out for anyone not seeing it.
+    return (
+      <span style={{ color: getRoleColor('text.secondary') }}>
+        <span aria-hidden="true">—</span>
+        <span className="sr-only">No roles assigned</span>
+      </span>
+    );
+  }
+
+  const shown = member.roles.slice(0, VISIBLE_ROLES);
+  const hidden = member.roleCount - shown.length;
+
+  return (
+    <Inline gap={1}>
+      {shown.map((role) => (
+        <Badge key={role} tone="info" variant="soft" size="sm">
+          {role}
+        </Badge>
+      ))}
+      {hidden > 0 && (
+        // The overflow count reads as a number on its own — "+37" beside three
+        // chips is only meaningful if you already worked out what it counts.
+        <Badge tone="default" variant="soft" size="sm">
+          <span aria-hidden="true">+{hidden}</span>
+          <span className="sr-only">and {hidden} more roles</span>
+        </Badge>
+      )}
+    </Inline>
+  );
+}
+
+export function ManageTeam() {
+  const navigate = useNavigate();
+  const { teamId } = useParams<{ teamId: string }>();
+  const { mode, toggleMode } = useThemeMode();
+
+  const team = TEAMS.find((t) => t.id === teamId) ?? TEAMS[0];
+
+  const [isDesktop, setIsDesktop] = React.useState(
+    () => typeof window !== 'undefined' && window.matchMedia(DESKTOP_QUERY).matches
+  );
+  const [sidebarOpen, setSidebarOpen] = React.useState(isDesktop);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(DESKTOP_QUERY);
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDesktop(e.matches);
+      setSidebarOpen(e.matches);
+    };
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, []);
+
+  const columns = React.useMemo<DataGridColumnDef<TeamMember>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'Team member',
+        cell: ({ row }) => <MemberCell member={row.original} />,
+      },
+      {
+        accessorKey: 'location',
+        header: 'Location',
+        cell: ({ row }) => (
+          <Stack gap={0}>
+            <span>{row.original.location}</span>
+            {row.original.locationDetail && (
+              <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+                {row.original.locationDetail}
+              </span>
+            )}
+          </Stack>
+        ),
+      },
+      {
+        accessorKey: 'jobTitle',
+        header: 'Job title',
+        cell: ({ row }) => (
+          <Stack gap={0}>
+            <span>{row.original.jobTitle}</span>
+            <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+              {row.original.jobCode}
+            </span>
+          </Stack>
+        ),
+      },
+      {
+        id: 'roles',
+        header: 'Role',
+        enableSorting: false,
+        cell: ({ row }) => <RolesCell member={row.original} />,
+      },
+      {
+        accessorKey: 'clients',
+        header: 'Clients',
+        // `type: 'number'` is what right-aligns it — the grid resolves
+        // alignment from the column's meta rather than each cell restating it.
+        meta: { type: 'number' },
+      },
+      createActionsColumn<TeamMember>({
+        getRowLabel: (member) => member.name,
+        // In the OVERFLOW menu, not as a `primary` button.
+        //
+        // `primary` always renders icon AND label, so a promoted delete would
+        // print "Remove from team" eight times down the column — which is
+        // what squeezed the Clients header into "Clie...". The source screen
+        // uses a bare trash icon per row; a destructive action behind a menu
+        // is better than either, because it cannot be hit by a mis-aimed
+        // click, and it keeps the confirmation step `primary` would also give.
+        actions: [
+          {
+            id: 'remove',
+            label: 'Remove from team',
+            icon: <Trash2 className="size-4" aria-hidden="true" />,
+            // Destructive gets a confirmation as well as the red treatment —
+            // colour on its own is not a safeguard.
+            destructive: true,
+            confirmTitle: 'Remove this member?',
+            confirmDescription:
+              'They lose access to this team and its clients. Their own client assignments are not affected.',
+            confirmLabel: 'Remove',
+            onSelect: () => undefined,
+          },
+        ],
+      }),
+    ],
+    []
+  );
+
+  const memberView = (
+    <DataTable
+      columns={columns}
+      data={TEAM_MEMBERS}
+      searchKey="name"
+      searchPlaceholder="Search by name, title, or location..."
+      enableExport
+      exportFilename={`${team.name} members`}
+      // The source screen offers 15 per page; `Pagination` ships
+      // [10, 25, 50, 100] and `DataTable` does not expose `pageSizeOptions`,
+      // so 15 would render a select whose value is not one of its own
+      // options. Left at the default rather than adding a prop to a shared
+      // component for one screen.
+      pinFirstColumn={false}
+    />
+  );
+
+  /**
+   * The other three tabs are IA, not scope.
+   *
+   * They exist on the source screen, so dropping them would misrepresent the
+   * navigation — but inventing plausible-looking content for them would be
+   * worse than saying plainly that they are not part of this rebuild.
+   */
+  const notBuilt = (title: string, description: string) => (
+    <Empty className="max-w-md">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <UsersRound />
+        </EmptyMedia>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{description}</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+
+  const tabs: TabItem[] = [
+    { id: 'members', title: 'Member View', content: memberView },
+    {
+      id: 'clients',
+      title: 'Client Pivot View',
+      content: notBuilt(
+        'Client pivot not in this rebuild',
+        'The same members, grouped by the clients they serve rather than by person.'
+      ),
+    },
+    {
+      id: 'setup',
+      title: 'Team Setup',
+      content: notBuilt('Team setup not in this rebuild', 'Team name, capacity and specialties.'),
+    },
+    {
+      id: 'delegate',
+      title: 'Delegate',
+      content: notBuilt(
+        'Delegation not in this rebuild',
+        'Hand management of this team to another colleague.'
+      ),
+    },
+  ];
+
+  return (
+    <PageShell
+      className="mds-dashboard"
+      style={{ backgroundColor: getRoleColor('surface.subtle') }}
+      sidebarOpen={sidebarOpen && !isDesktop}
+      onSidebarClose={() => setSidebarOpen(false)}
+      header={
+        <Header
+          sidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((v) => !v)}
+          user={{
+            name: 'Antonio Pezzella',
+            role: 'Team Manager',
+            organization: 'Marsh',
+            initials: 'AP',
+          }}
+          colorMode={mode}
+          onColorModeChange={toggleMode}
+          onNotificationsClick={() => undefined}
+          notificationCount={3}
+          onSignOut={() => navigate('/')}
+        />
+      }
+      sidebar={
+        sidebarOpen ? (
+          <SideNavigation
+            items={NAV_ITEMS}
+            variant="light"
+            currentPath="/colleague-profile"
+            onNavigate={(path) => navigate(path)}
+            onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
+            hideSupportCta
+            ariaLabel="Colleague Profile"
+            className="fixed inset-y-0 left-0 z-50 w-64 shrink-0 border-r border-border lg:static lg:z-auto"
+          />
+        ) : undefined
+      }
+    >
+      <PageHeading
+        title={team.name}
+        description={`${TEAM_MEMBERS.length} active team members · ${TEAM_CLIENT_COUNT} Clients`}
+        actions={
+          <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
+            Add Member
+          </Button>
+        }
+      />
+
+      <div className="mt-6">
+        <Tabs tabs={tabs} defaultActiveId="members" />
+      </div>
+    </PageShell>
+  );
+}
+
+export default ManageTeam;

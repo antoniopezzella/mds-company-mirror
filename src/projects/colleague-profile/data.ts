@@ -90,3 +90,131 @@ export const TEAM_FILTER_OPTIONS = [
   { value: 'owned', label: 'Teams I own' },
   { value: 'delegated', label: 'Delegated to me' },
 ];
+
+/**
+ * A person on a team.
+ *
+ * `roleCount` is the TOTAL number of roles, which can exceed `roles.length` —
+ * the table shows the first few and counts the rest, the same way the source
+ * screen does with its "+37". Keeping both means the overflow figure is a
+ * fact rather than something the view computes from a truncated list.
+ */
+export interface TeamMember {
+  id: string;
+  name: string;
+  colleagueId: string;
+  initials: string;
+  location: string;
+  /** Street-level detail, shown under the location when present. */
+  locationDetail?: string;
+  jobTitle: string;
+  /** Internal job code — US001, BE001, and so on. */
+  jobCode: string;
+  roles: string[];
+  roleCount: number;
+  clients: number;
+}
+
+export const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: '1367578',
+    name: 'Alison Lane',
+    colleagueId: '1367578',
+    initials: 'AL',
+    location: 'San Francisco - Embarcadero',
+    jobTitle: 'Supervisor - Project Management',
+    jobCode: 'US001',
+    roles: ['Account Executive', 'Account Advisory Rep'],
+    roleCount: 2,
+    clients: 5,
+  },
+  {
+    id: '1236464',
+    name: 'Chloë Dewals',
+    colleagueId: '1236464',
+    initials: 'CD',
+    location: 'Antwerp',
+    locationDetail: 'Antwerp - Uitbreidingstraat 72',
+    jobTitle: 'Senior Coordinator - Claims Advisory',
+    jobCode: 'BE001',
+    roles: ['Claims Advisor'],
+    roleCount: 1,
+    clients: 1,
+  },
+  {
+    id: '772731',
+    name: 'David Seigel',
+    colleagueId: '772731',
+    initials: 'DS',
+    location: 'Chicago - 155 Wacker',
+    jobTitle: 'Health Actuary - Senior Leader',
+    jobCode: 'US048',
+    roles: ['Account Associate CE'],
+    roleCount: 1,
+    clients: 2,
+  },
+  {
+    id: '1222047',
+    name: 'Jason Kim',
+    colleagueId: '1222047',
+    initials: 'JK',
+    location: 'Chicago - 155 Wacker',
+    jobTitle: 'Health Actuary - Associate I',
+    jobCode: 'US048',
+    roles: [],
+    roleCount: 0,
+    clients: 0,
+  },
+  {
+    id: '1250688',
+    name: 'Joseph Quintano',
+    colleagueId: '1250688',
+    initials: 'JQ',
+    location: 'Morristown - South',
+    jobTitle: 'Strategy & Planning - Senior Specialist',
+    jobCode: 'US001',
+    roles: ['Bus Profile Ops US Colleague'],
+    roleCount: 1,
+    clients: 1,
+  },
+  {
+    id: '635161',
+    name: 'Marc Crane',
+    colleagueId: '635161',
+    initials: 'MC',
+    location: 'San Antonio - Colonnade',
+    jobTitle: 'Sales Leader II',
+    jobCode: 'US001',
+    roles: [],
+    roleCount: 0,
+    clients: 0,
+  },
+  {
+    id: '853835',
+    name: 'Simon Kuenzler',
+    colleagueId: '853835',
+    initials: 'SK',
+    location: 'NCL Zurich - Forch NC',
+    jobTitle: 'Assistant - Insurance Operations',
+    jobCode: 'US005',
+    roles: [],
+    roleCount: 0,
+    clients: 0,
+  },
+  {
+    id: '1342273',
+    name: 'Zack Zizza',
+    colleagueId: '1342273',
+    initials: 'ZZ',
+    location: 'Boston - High St',
+    jobTitle: 'Supervisor - Project Management',
+    jobCode: 'US001',
+    roles: ['Account Executive', 'Placement Broker Rep', 'Broker PS'],
+    roleCount: 40,
+    clients: 8,
+  },
+];
+
+/** Client count for the team header. Not derivable from members — a client
+ *  served by two colleagues is one client, not two. */
+export const TEAM_CLIENT_COUNT = 21;

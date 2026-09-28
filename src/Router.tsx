@@ -26,6 +26,7 @@ const GoToMarket = lazy(() => import('./pages/GoToMarket/GoToMarket'));
 const InsuranceDashboard = lazy(() => import('./projects/insurance-dashboard').then(m => ({ default: m.InsuranceDashboardDefault })));
 const DashboardDemo = lazy(() => import('./projects/dashboard-demo').then(m => ({ default: m.DashboardDemoDefault })));
 const ColleagueProfile = lazy(() => import('./projects/colleague-profile').then(m => ({ default: m.ColleagueProfileDefault })));
+const ColleagueManageTeam = lazy(() => import('./projects/colleague-profile').then(m => ({ default: m.ManageTeamDefault })));
 const MarshOneNewExperience = lazy(() => import('./pages/ai-personalized-experience/AIPersonalizedExperience'));
 const TypographyDemo = lazy(() => import('./projects/marsh-one/TypographyDemo'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -91,6 +92,7 @@ const Router: React.FC = () => (
         <Route path="/insurance-dashboard" element={<InsuranceDashboard />} />
         <Route path="/dashboard-demo" element={<DashboardDemo />} />
         <Route path="/colleague-profile" element={<ColleagueProfile />} />
+        <Route path="/colleague-profile/teams/:teamId" element={<ColleagueManageTeam />} />
         <Route path="/marshone-new-experience" element={<MarshOneNewExperience />} />
         <Route path="/typography-demo" element={<TypographyDemo />} />
         <Route path="/login" element={<LoginPage />} />
