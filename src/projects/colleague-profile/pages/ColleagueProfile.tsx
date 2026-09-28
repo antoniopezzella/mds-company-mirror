@@ -101,16 +101,26 @@ export function ColleagueProfile() {
         sidebarOpen ? (
           <SideNavigation
             items={NAV_ITEMS}
-            variant="dark"
-            // Sky-blue rail rather than the navy one, so it reads as a
-            // distinct surface from the navy header above it.
-            colorScheme="secondary"
+            // Light rail — a white surface under the navy header.
+            //
+            // No `colorScheme` here on purpose: it is dead under
+            // `variant="light"`. The light branch returns before the
+            // colour-scheme logic is reached (side-navigation.tsx:140), so
+            // passing one would read as configuration that does nothing.
+            variant="light"
             currentPath="/colleague-profile"
             onNavigate={(path) => navigate(path)}
             onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
             hideSupportCta
             ariaLabel="Colleague Profile"
-            className="fixed inset-y-0 left-0 z-50 w-72 shrink-0 lg:static lg:z-auto lg:w-auto"
+            // w-64 is the component's own convention — it sets no width
+            // itself, and 6 of its 8 stories use this one.
+            //
+            // `border-r` matters more than it looks: the light rail is
+            // `surface.default` (white) and the page is `surface.subtle`
+            // (#f7f8f8). Without a rule the two are one unit apart and the
+            // rail has no edge at all.
+            className="fixed inset-y-0 left-0 z-50 w-64 shrink-0 border-r border-border lg:static lg:z-auto"
           />
         ) : undefined
       }
