@@ -47,8 +47,14 @@ const HISTORY = path.join(root, 'docs/ds-health-history.json');
 /**
  * Bump on ANY change to what a metric means or how it is weighted.
  * A score is only comparable to another score of the same rubric version.
+ *
+ * v2 — `colour_discipline` now ignores hex inside comments and files carrying
+ * `roles-allow-hex-file`, matching `check-role-usage.js`. v1 scored 8/100 on
+ * that axis by counting documentation and one file of formally tracked debt,
+ * so v1 and v2 numbers are NOT comparable. History is re-derived rather than
+ * migrated — which is the reason every run keeps its raw metrics.
  */
-export const RUBRIC_VERSION = 1;
+export const RUBRIC_VERSION = 2;
 
 // ---------------------------------------------------------------------------
 // Reading the repo — at HEAD, or at any revision, without touching the tree
@@ -121,10 +127,48 @@ function measure(rev) {
   const withTest = impl.filter((f) => testNames.has(base(f))).length;
   const withStory = impl.filter((f) => storyNames.has(base(f))).length;
 
-  // Hardcoded colour literals in the component set — the governance gate
-  // reports these without failing, so they are a drift number, not a pass/fail.
+  /*
+   * Hardcoded colour literals — DRIFT only, honouring the same annotations
+   * `check-role-usage.js` does.
+   *
+   * The first version counted every `#rrggbb` in the file. That scored 8/100
+   * and was measuring the wrong thing twice over: it counted hex inside
+   * COMMENTS (a note reading "on white this is 3.2:1" is documentation, not a
+   * colour), and it counted `button.tsx`, which carries a
+   * `roles-allow-hex-file` marker and a comment explaining that its
+   * hover/active states have no roles yet and are tracked debt awaiting a
+   * token request. Scoring a deliberate, documented, already-dispositioned
+   * decision as a failure makes the metric an argument against following the
+   * repo's own governance process.
+   */
   let hex = 0;
-  for (const f of impl) hex += count(read(rev, f), /#[0-9a-fA-F]{6}\b/g);
+  for (const f of impl) {
+    const src = read(rev, f);
+    if (!src || /roles-allow-hex-file/.test(src)) continue;
+    let inBlock = false;
+    const lines = src.split('\n');
+    lines.forEach((line, i) => {
+      let code = '';
+      for (let c = 0; c < line.length; c += 1) {
+        if (inBlock) {
+          if (line.startsWith('*/', c)) {
+            inBlock = false;
+            c += 1;
+          }
+          continue;
+        }
+        if (line.startsWith('/*', c)) {
+          inBlock = true;
+          c += 1;
+          continue;
+        }
+        if (line.startsWith('//', c)) break;
+        code += line[c];
+      }
+      if (/roles-allow-hex/.test(line) || /roles-allow-hex/.test(lines[i - 1] ?? '')) return;
+      hex += (code.match(/#[0-9a-fA-F]{6}\b/g) ?? []).length;
+    });
+  }
 
   // Token-system size, counted from the source of truth rather than any doc.
   const primitives = count(read(rev, 'src/tokens.ts'), /^\s+[a-zA-Z][a-zA-Z0-9]*:\s*'/gm);

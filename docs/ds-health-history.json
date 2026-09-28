@@ -1,11 +1,11 @@
 {
-  "rubricVersion": 1,
+  "rubricVersion": 2,
   "runs": [
     {
       "rev": "cd3211a",
       "sha": "cd3211a",
       "date": "2026-05-22",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 26,
       "parts": [
         {
@@ -41,7 +41,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "62 across 4"
+          "detail": "56 across 4"
         },
         {
           "id": "token_doc_accuracy",
@@ -62,7 +62,7 @@
         "uiModules": 4,
         "withTest": 0,
         "withStory": 4,
-        "hexLiterals": 62,
+        "hexLiterals": 56,
         "primitives": 165,
         "semantics": 61,
         "roles": 41,
@@ -80,7 +80,7 @@
       "rev": "84a9d66",
       "sha": "84a9d66",
       "date": "2026-06-24",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 26,
       "parts": [
         {
@@ -116,7 +116,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "62 across 4"
+          "detail": "56 across 4"
         },
         {
           "id": "token_doc_accuracy",
@@ -137,7 +137,7 @@
         "uiModules": 4,
         "withTest": 0,
         "withStory": 4,
-        "hexLiterals": 62,
+        "hexLiterals": 56,
         "primitives": 165,
         "semantics": 62,
         "roles": 42,
@@ -155,7 +155,7 @@
       "rev": "82ff084",
       "sha": "82ff084",
       "date": "2026-07-01",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 26,
       "parts": [
         {
@@ -191,7 +191,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "62 across 4"
+          "detail": "56 across 4"
         },
         {
           "id": "token_doc_accuracy",
@@ -212,7 +212,7 @@
         "uiModules": 4,
         "withTest": 0,
         "withStory": 4,
-        "hexLiterals": 62,
+        "hexLiterals": 56,
         "primitives": 165,
         "semantics": 62,
         "roles": 42,
@@ -230,7 +230,7 @@
       "rev": "197e2d0",
       "sha": "197e2d0",
       "date": "2026-07-24",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 26,
       "parts": [
         {
@@ -266,7 +266,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "63 across 5"
+          "detail": "56 across 5"
         },
         {
           "id": "token_doc_accuracy",
@@ -287,7 +287,7 @@
         "uiModules": 5,
         "withTest": 0,
         "withStory": 5,
-        "hexLiterals": 63,
+        "hexLiterals": 56,
         "primitives": 165,
         "semantics": 62,
         "roles": 42,
@@ -305,7 +305,7 @@
       "rev": "4726f8c",
       "sha": "4726f8c",
       "date": "2026-08-06",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 25,
       "parts": [
         {
@@ -341,7 +341,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "64 across 57"
+          "detail": "57 across 57"
         },
         {
           "id": "token_doc_accuracy",
@@ -362,7 +362,7 @@
         "uiModules": 57,
         "withTest": 0,
         "withStory": 52,
-        "hexLiterals": 64,
+        "hexLiterals": 57,
         "primitives": 165,
         "semantics": 62,
         "roles": 42,
@@ -380,7 +380,7 @@
       "rev": "f8ebbf9",
       "sha": "f8ebbf9",
       "date": "2026-08-21",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 24,
       "parts": [
         {
@@ -416,7 +416,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "90 across 69"
+          "detail": "83 across 69"
         },
         {
           "id": "token_doc_accuracy",
@@ -437,7 +437,7 @@
         "uiModules": 69,
         "withTest": 0,
         "withStory": 61,
-        "hexLiterals": 90,
+        "hexLiterals": 83,
         "primitives": 165,
         "semantics": 62,
         "roles": 42,
@@ -455,7 +455,7 @@
       "rev": "82749f1",
       "sha": "82749f1",
       "date": "2026-09-03",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 35,
       "parts": [
         {
@@ -491,7 +491,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "90 across 69"
+          "detail": "83 across 69"
         },
         {
           "id": "token_doc_accuracy",
@@ -512,7 +512,7 @@
         "uiModules": 69,
         "withTest": 0,
         "withStory": 61,
-        "hexLiterals": 90,
+        "hexLiterals": 83,
         "primitives": 167,
         "semantics": 63,
         "roles": 42,
@@ -530,7 +530,7 @@
       "rev": "77ac05c",
       "sha": "77ac05c",
       "date": "2026-09-10",
-      "rubricVersion": 1,
+      "rubricVersion": 2,
       "score": 40,
       "parts": [
         {
@@ -566,7 +566,7 @@
           "label": "Hardcoded hex in components",
           "weight": 13,
           "score": 0,
-          "detail": "91 across 70"
+          "detail": "82 across 70"
         },
         {
           "id": "token_doc_accuracy",
@@ -587,7 +587,7 @@
         "uiModules": 70,
         "withTest": 16,
         "withStory": 61,
-        "hexLiterals": 91,
+        "hexLiterals": 82,
         "primitives": 167,
         "semantics": 63,
         "roles": 42,
@@ -605,8 +605,8 @@
       "rev": "aa6d0c5",
       "sha": "aa6d0c5",
       "date": "2026-09-18",
-      "rubricVersion": 1,
-      "score": 44,
+      "rubricVersion": 2,
+      "score": 57,
       "parts": [
         {
           "id": "test_coverage",
@@ -640,8 +640,8 @@
           "id": "colour_discipline",
           "label": "Hardcoded hex in components",
           "weight": 13,
-          "score": 0,
-          "detail": "91 across 73"
+          "score": 100,
+          "detail": "0 across 73"
         },
         {
           "id": "token_doc_accuracy",
@@ -662,7 +662,7 @@
         "uiModules": 73,
         "withTest": 24,
         "withStory": 61,
-        "hexLiterals": 91,
+        "hexLiterals": 0,
         "primitives": 175,
         "semantics": 66,
         "roles": 47,
@@ -677,25 +677,25 @@
       "lineage": "ancestry"
     },
     {
-      "rev": "5064722",
-      "sha": "5064722",
-      "date": "2026-09-26",
-      "rubricVersion": 1,
-      "score": 60,
+      "rev": "eeab06b",
+      "sha": "eeab06b",
+      "date": "2026-09-27",
+      "rubricVersion": 2,
+      "score": 82,
       "parts": [
         {
           "id": "test_coverage",
           "label": "Modules with a dedicated test",
           "weight": 22,
-          "score": 47,
-          "detail": "56/118"
+          "score": 50,
+          "detail": "59/118"
         },
         {
           "id": "story_coverage",
           "label": "Modules with a story",
           "weight": 18,
-          "score": 60,
-          "detail": "71/118"
+          "score": 62,
+          "detail": "73/118"
         },
         {
           "id": "a11y_enforcement",
@@ -715,15 +715,15 @@
           "id": "colour_discipline",
           "label": "Hardcoded hex in components",
           "weight": 13,
-          "score": 8,
-          "detail": "109 across 118"
+          "score": 100,
+          "detail": "0 across 118"
         },
         {
           "id": "token_doc_accuracy",
           "label": "Documented token counts match reality",
           "weight": 12,
-          "score": 20,
-          "detail": "20 off"
+          "score": 100,
+          "detail": "0 off"
         },
         {
           "id": "doc_sprawl",
@@ -735,18 +735,18 @@
       ],
       "metrics": {
         "uiModules": 118,
-        "withTest": 56,
-        "withStory": 71,
-        "hexLiterals": 109,
+        "withTest": 59,
+        "withStory": 73,
+        "hexLiterals": 0,
         "primitives": 176,
         "semantics": 68,
         "roles": 50,
-        "tokenDocDrift": 20,
+        "tokenDocDrift": 0,
         "rootDocs": 6,
         "a11yGate": "error",
         "gatesRecursive": 4,
         "gatesPresent": 4,
-        "deprecations": 14,
+        "deprecations": 17,
         "publicExports": 113
       },
       "lineage": "ancestry"
