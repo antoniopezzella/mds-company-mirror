@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, screen, userEvent, within } from 'storybook/test';
 import { Copy, Pencil, Trash2 } from 'lucide-react';
 import {
   ContextMenu,
@@ -49,6 +50,26 @@ export const Default: StoryObj = {
       </ContextMenuContent>
     </ContextMenu>
   ),
+  /*
+   * OPENS the menu. Without this the story rendered only the trigger, so the
+   * component measured 41% statements and 0% FUNCTIONS — every item, the
+   * checkbox and radio groups, the separators and the shortcut rendering were
+   * never executed, and axe never saw the surface where the accessibility
+   * risk actually lives.
+   */
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('right-click the target', async () => {
+      await userEvent.pointer({
+        keys: '[MouseRight]',
+        target: canvas.getByText(/Right-click/i),
+      });
+    });
+    await step('the menu and its items render', async () => {
+      const menu = await screen.findByRole('menu');
+      await expect(within(menu).getAllByRole('menuitem').length).toBeGreaterThan(0);
+    });
+  },
 };
 
 export const PolicyRowActions: StoryObj = {
