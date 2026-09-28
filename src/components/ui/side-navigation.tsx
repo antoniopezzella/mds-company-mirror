@@ -5,6 +5,7 @@ import { ChevronDown, ChevronRight, LayoutDashboard, FileText, Shield, Clipboard
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { getRoleColor } from '@/theme/roles';
+import { Tooltip } from './tooltip';
 import { useThemeMode } from '@/theme/ThemeModeContext';
 
 export interface SideNavItem {
@@ -19,6 +20,30 @@ export interface SideNavItem {
    *  explicit opt-in, replacing a prior hardcoded label-string check that
    *  only recognized one specific mock client's name. */
   sectionHeader?: boolean;
+}
+
+/**
+ * Applies a tooltip only when the rail is collapsed.
+ *
+ * Kept as a component rather than an inline ternary so the button below is
+ * written once — duplicating that JSX for the two states is how the two
+ * copies drift.
+ */
+function SideNavItemTooltip({
+  label,
+  enabled,
+  children,
+}: {
+  label: string;
+  enabled: boolean;
+  children: React.ReactElement;
+}) {
+  if (!enabled) return children;
+  return (
+    <Tooltip title={label} placement="right" enterDelay={200}>
+      {children}
+    </Tooltip>
+  );
 }
 
 export interface SideNavigationProps {
@@ -37,6 +62,30 @@ export interface SideNavigationProps {
   navigateOnGroupClick?: boolean;
   /** Hides the "Need help? / Contact support" footer box. Default false (today's behavior, unchanged). */
   hideSupportCta?: boolean;
+  /**
+   * Content pinned above the nav list — a team switcher, a logo, a search box.
+   *
+   * The rail had no way to carry any of these, so every app that wanted one
+   * hand-rolled a wrapper and the divider ended up in a different place each
+   * time. Rendered above the existing divider, so an app that passes nothing
+   * looks exactly as it did.
+   */
+  header?: React.ReactNode;
+  /**
+   * Icon-only rail (§ collapse-to-icons).
+   *
+   * Controlled, because the collapsed width has to agree with whatever
+   * layout the page is running — a rail that collapsed itself would leave a
+   * `lg:w-64` grid column holding a 64px rail. Pair with
+   * `onCollapsedChange`.
+   *
+   * Collapsing HIDES sub-items rather than shrinking them: there is no room
+   * to show hierarchy at 64px, and a tree with its indentation removed reads
+   * as a flat list of unrelated things. Activating a group while collapsed
+   * expands the rail first.
+   */
+  collapsed?: boolean;
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 function slugify(text: string) {
@@ -84,6 +133,9 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       defaultOpenAll = false,
       navigateOnGroupClick = false,
       hideSupportCta = false,
+      header,
+      collapsed = false,
+      onCollapsedChange,
     },
     ref
   ) => {
@@ -187,7 +239,12 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       <nav
         ref={ref}
         aria-label={ariaLabel}
-        className={cn('flex flex-col h-full', className)}
+        data-collapsed={collapsed || undefined}
+        // `className` before the collapsed width so the collapsed state WINS
+        // a caller's `w-64` — tailwind-merge resolves the later of two
+        // conflicting widths, and a rail that stayed 256px wide while
+        // rendering icon-only content would just be a column of gaps.
+        className={cn('flex flex-col h-full', className, collapsed && 'w-16')}
         style={{
           backgroundColor: colors.navBg,
           color: colors.navText,
@@ -205,6 +262,8 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
           '--sn-border': colors.border,
         } as React.CSSProperties}
       >
+        {header && <div className={cn('p-2', collapsed && 'px-1')}>{header}</div>}
+
         {/* Divider */}
         <div className="border-t opacity-30" style={{ borderColor: colors.border }} />
 
@@ -221,10 +280,18 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
 
             return (
               <li key={item.label}>
+                {/* Wrapped in a Tooltip only when collapsed: at 64px the label
+                    is gone from the page, so hover/focus is the only way left to
+                    read what an icon means. Expanded, the label is right there
+                    and a tooltip repeating it is noise. */}
+                <SideNavItemTooltip label={item.label} enabled={collapsed}>
                 <button
                   id={headerId}
                   onClick={() => {
                     if (isGroup) {
+                      // Expanding a group inside a 64px rail has nowhere to
+                      // put the children, so opening one opens the rail too.
+                      if (collapsed) onCollapsedChange?.(false);
                       handleGroupClick(item.label);
                       if (navigateOnGroupClick) navigateTo(item.path);
                       return;
@@ -256,8 +323,13 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                       handleGroupClick(item.label);
                     }
                   }}
+                  // The label is the visible text when expanded and the
+                  // ONLY name when collapsed, so it has to move into
+                  // aria-label rather than vanish with the span.
+                  aria-label={collapsed ? item.label : undefined}
                   className={cn(
                     'w-full flex items-center gap-3 px-3 py-3 rounded-md',
+                    collapsed && 'justify-center gap-0 px-0',
                     'min-h-[48px]', // Accessibility: minimum touch target
                     'transition-colors duration-200',
                     'text-left',
@@ -277,28 +349,31 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   <span className="flex-shrink-0">
                     {icon}
                   </span>
-                  <span className={cn(
-                    'flex-1',
-                    isItemActive || (variant === 'light' && isSectionHeader) ? 'font-semibold' : 'font-normal'
-                  )}>
-                    {item.label}
-                  </span>
-                  {item.dot && (
+                  {!collapsed && (
+                    <span className={cn(
+                      'flex-1',
+                      isItemActive || (variant === 'light' && isSectionHeader) ? 'font-semibold' : 'font-normal'
+                    )}>
+                      {item.label}
+                    </span>
+                  )}
+                  {!collapsed && item.dot && (
                     <span
                       aria-hidden="true"
                       className="mr-1 h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: getRoleColor('status.warning.fg') }}
                     />
                   )}
-                  {isGroup && (
+                  {!collapsed && isGroup && (
                     <span className="flex-shrink-0">
                       {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                     </span>
                   )}
                 </button>
+                </SideNavItemTooltip>
 
                 {/* Collapsible sub-items with visual connecting lines */}
-                {isGroup && isOpen && (
+                {isGroup && isOpen && !collapsed && (
                   <ul
                     id={panelId}
                     role="group"
@@ -362,7 +437,9 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         </ul>
 
         {/* Support CTA */}
-        {!hideSupportCta && (
+        {/* Also hidden when collapsed: the CTA is a padded card with two lines
+            of copy, which has nowhere to go at 64px. */}
+        {!hideSupportCta && !collapsed && (
           <div
             className="p-3 m-2 rounded-md"
             style={{ backgroundColor: colors.ctaBg, color: colors.ctaText }}

@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Plus, Trash2, UsersRound } from 'lucide-react';
 
-import { Header } from '@/components/ui/header';
-import { SideNavigation } from '@/components/ui/side-navigation';
-import { PageHeading, PageShell } from '@/components/ui/page-shell';
+import { PageHeading } from '@/components/ui/page-shell';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -14,10 +12,10 @@ import { createActionsColumn } from '@/components/ui/data-grid-row-actions';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { Inline, Stack } from '@/components/ui/stack';
 import { getRoleColor } from '@/theme/roles';
-import { useThemeMode } from '@/theme/ThemeModeContext';
 import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 
-import { NAV_ITEMS, TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
+import { ColleagueShell } from '../components/ColleagueShell';
+import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
 
 /**
  * Colleague Profile — a single team.
@@ -29,8 +27,6 @@ import { NAV_ITEMS, TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } fr
  * row-actions column that names each control after its row. None of that is
  * rebuilt here — the screen is a column definition and a tab set.
  */
-
-const DESKTOP_QUERY = '(min-width: 1024px)';
 
 /** How many role chips fit before the rest become a count. */
 const VISIBLE_ROLES = 3;
@@ -83,26 +79,9 @@ function RolesCell({ member }: { member: TeamMember }) {
 }
 
 export function ManageTeam() {
-  const navigate = useNavigate();
   const { teamId } = useParams<{ teamId: string }>();
-  const { mode, toggleMode } = useThemeMode();
 
   const team = TEAMS.find((t) => t.id === teamId) ?? TEAMS[0];
-
-  const [isDesktop, setIsDesktop] = React.useState(
-    () => typeof window !== 'undefined' && window.matchMedia(DESKTOP_QUERY).matches
-  );
-  const [sidebarOpen, setSidebarOpen] = React.useState(isDesktop);
-
-  React.useEffect(() => {
-    const mql = window.matchMedia(DESKTOP_QUERY);
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsDesktop(e.matches);
-      setSidebarOpen(e.matches);
-    };
-    mql.addEventListener('change', handleChange);
-    return () => mql.removeEventListener('change', handleChange);
-  }, []);
 
   const columns = React.useMemo<DataGridColumnDef<TeamMember>[]>(
     () => [
@@ -242,43 +221,7 @@ export function ManageTeam() {
   ];
 
   return (
-    <PageShell
-      className="mds-dashboard"
-      style={{ backgroundColor: getRoleColor('surface.subtle') }}
-      sidebarOpen={sidebarOpen && !isDesktop}
-      onSidebarClose={() => setSidebarOpen(false)}
-      header={
-        <Header
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen((v) => !v)}
-          user={{
-            name: 'Antonio Pezzella',
-            role: 'Team Manager',
-            organization: 'Marsh',
-            initials: 'AP',
-          }}
-          colorMode={mode}
-          onColorModeChange={toggleMode}
-          onNotificationsClick={() => undefined}
-          notificationCount={3}
-          onSignOut={() => navigate('/')}
-        />
-      }
-      sidebar={
-        sidebarOpen ? (
-          <SideNavigation
-            items={NAV_ITEMS}
-            variant="light"
-            currentPath="/colleague-profile"
-            onNavigate={(path) => navigate(path)}
-            onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
-            hideSupportCta
-            ariaLabel="Colleague Profile"
-            className="fixed inset-y-0 left-0 z-50 w-64 shrink-0 border-r border-border lg:static lg:z-auto"
-          />
-        ) : undefined
-      }
-    >
+    <ColleagueShell currentPath="/colleague-profile" activeTeamId={team.id}>
       <PageHeading
         title={team.name}
         description={`${TEAM_MEMBERS.length} active team members · ${TEAM_CLIENT_COUNT} Clients`}
@@ -292,7 +235,7 @@ export function ManageTeam() {
       <div className="mt-6">
         <Tabs tabs={tabs} defaultActiveId="members" />
       </div>
-    </PageShell>
+    </ColleagueShell>
   );
 }
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MemoryRouter } from 'react-router-dom';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ColleagueProfile } from './ColleagueProfile';
 
@@ -53,9 +53,12 @@ export const Default: StoryObj = {
     });
 
     await step('all three teams render', async () => {
-      await expect(canvas.getByText('AAAA Grant C - Test')).toBeInTheDocument();
-      await expect(canvas.getByText('Design Team')).toBeInTheDocument();
-      await expect(canvas.getByText('Justin Johnson - US/C Construction')).toBeInTheDocument();
+      // Scoped to the grid: the rail's team switcher shows the current team's
+      // name too, so an unscoped getByText now matches twice.
+      const grid = within(canvas.getByRole('region', { name: 'Teams you manage' }));
+      await expect(grid.getByText('AAAA Grant C - Test')).toBeInTheDocument();
+      await expect(grid.getByText('Design Team')).toBeInTheDocument();
+      await expect(grid.getByText('Justin Johnson - US/C Construction')).toBeInTheDocument();
     });
 
     await step('the over-capacity team is flagged, not just coloured', async () => {
@@ -72,8 +75,12 @@ export const Searching: StoryObj = {
 
     await step('narrow to one team', async () => {
       await userEvent.type(search, 'Design');
-      await expect(canvas.getByText('Design Team')).toBeInTheDocument();
-      await expect(canvas.queryByText('AAAA Grant C - Test')).toBeNull();
+      const grid = within(canvas.getByRole('region', { name: 'Teams you manage' }));
+      await expect(grid.getByText('Design Team')).toBeInTheDocument();
+      // Scoped: the switcher still shows the ACTIVE team regardless of the
+      // grid's filter, which is correct — filtering a list should not change
+      // which team you are managing.
+      await expect(grid.queryByText('AAAA Grant C - Test')).toBeNull();
     });
 
     await step('an empty result says so rather than showing a blank grid', async () => {
@@ -97,6 +104,36 @@ export const KeyboardOrder: StoryObj = {
     });
     await step('each card action names its own team', async () => {
       await expect(canvas.getByRole('button', { name: 'Manage Design Team' })).toBeInTheDocument();
+    });
+  },
+};
+
+/** The rail carries a team switcher, and ⌘1…⌘9 actually switch. */
+export const TeamSwitcherInRail: StoryObj = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('the switcher names the current team and says what it does', async () => {
+      await expect(
+        canvas.getByRole('button', { name: /Current team: AAAA Grant C - Test\. Switch team/ })
+      ).toBeInTheDocument();
+    });
+
+    await step('it lists every team, with working shortcut hints', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: /Switch team/ }));
+      const menu = await screen.findByRole('menu');
+      await expect(within(menu).getAllByRole('menuitem').length).toBeGreaterThan(3);
+      // The hints only render when the binding exists — see TeamSwitcher.
+      await expect(within(menu).getByText('⌘1')).toBeInTheDocument();
+    });
+
+    await step('close it before the run ends', async () => {
+      // An open Radix menu puts aria-hidden on the rest of the page, so a play
+      // function that stops here fails axe's aria-hidden-focus. Waiting for
+      // the menu to actually go is the difference between closing it and
+      // merely asking it to close.
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
     });
   },
 };

@@ -2,63 +2,36 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, UserPlus } from 'lucide-react';
 
-import { Header } from '@/components/ui/header';
-import { SideNavigation } from '@/components/ui/side-navigation';
-import { PageHeading, PageShell } from '@/components/ui/page-shell';
+import { PageHeading } from '@/components/ui/page-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DSSelect } from '@/components/ui/select';
 import { Inline, Stack } from '@/components/ui/stack';
 import { getRoleColor } from '@/theme/roles';
-import { useThemeMode } from '@/theme/ThemeModeContext';
 
+import { ColleagueShell } from '../components/ColleagueShell';
 import { TeamCard } from '../components/TeamCard';
-import { NAV_ITEMS, ROLE_OPTIONS, TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
+import { ROLE_OPTIONS, TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
 
 /**
  * Colleague Profile — "My Teams".
  *
  * Rebuilt from a UAT screenshot, taking its INFORMATION ARCHITECTURE and
- * nothing else. The screenshot's own chrome — a white header with a wordmark,
- * a rail with a pinned Switch Role / Notifications / Sign Out block — has no
- * equivalent in this design system, and inventing one was explicitly out of
- * scope. So:
+ * nothing else. The chrome — header, rail, team switcher — lives in
+ * `ColleagueShell`; this file is the page.
  *
- *  - the navy `Header` carries identity, notifications and sign-out, which is
- *    where this system already puts them;
- *  - the rail is the sky-blue scheme (`colorScheme="secondary"`);
- *  - "Switch Role" has no home in the app chrome — neither `Header` nor
- *    `SideNavigation` exposes a slot for it — so it sits in the page toolbar.
- *    That is a compromise, not a design: app-level state among page-level
- *    filters. The fix is an actions slot on `Header`, deliberately not built
- *    here.
+ * "Switch Role" still sits in the page TOOLBAR rather than the app chrome.
+ * The rail now has a `header` slot, but it holds the team switcher, and
+ * stacking a second unrelated control under it would make the rail a
+ * junk drawer. `Header` still has no actions slot, which is where this
+ * actually belongs.
  */
-
-const DESKTOP_QUERY = '(min-width: 1024px)'; // Tailwind's `lg` — matches the classes below
 
 export function ColleagueProfile() {
   const navigate = useNavigate();
-  const { mode, toggleMode } = useThemeMode();
-
-  const [isDesktop, setIsDesktop] = React.useState(
-    () => typeof window !== 'undefined' && window.matchMedia(DESKTOP_QUERY).matches
-  );
-  const [sidebarOpen, setSidebarOpen] = React.useState(isDesktop);
   const [role, setRole] = React.useState<string | number>('team-manager');
   const [teamFilter, setTeamFilter] = React.useState<string | number>('all');
   const [search, setSearch] = React.useState('');
-
-  // Only auto-corrects `sidebarOpen` on an actual breakpoint CROSSING, not on
-  // every resize event, so it does not fight a manual toggle mid-viewport.
-  React.useEffect(() => {
-    const mql = window.matchMedia(DESKTOP_QUERY);
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsDesktop(e.matches);
-      setSidebarOpen(e.matches);
-    };
-    mql.addEventListener('change', handleChange);
-    return () => mql.removeEventListener('change', handleChange);
-  }, []);
 
   const teams = React.useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -72,59 +45,7 @@ export function ColleagueProfile() {
   const handleManage = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
 
   return (
-    // `mds-dashboard` switches h1-h6 to Noto Sans 700 (styles/_typography.scss).
-    // Without it this inherits the marketing default — Marsh Serif at weight
-    // 400 — which is a display face for hero copy, not an app screen.
-    <PageShell
-      className="mds-dashboard"
-      style={{ backgroundColor: getRoleColor('surface.subtle') }}
-      sidebarOpen={sidebarOpen && !isDesktop}
-      onSidebarClose={() => setSidebarOpen(false)}
-      header={
-        <Header
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen((v) => !v)}
-          user={{
-            name: 'Antonio Pezzella',
-            role: ROLE_OPTIONS.find((r) => r.value === role)?.label,
-            organization: 'Marsh',
-            initials: 'AP',
-          }}
-          colorMode={mode}
-          onColorModeChange={toggleMode}
-          onNotificationsClick={() => undefined}
-          notificationCount={3}
-          onSignOut={() => navigate('/')}
-        />
-      }
-      sidebar={
-        sidebarOpen ? (
-          <SideNavigation
-            items={NAV_ITEMS}
-            // Light rail — a white surface under the navy header.
-            //
-            // No `colorScheme` here on purpose: it is dead under
-            // `variant="light"`. The light branch returns before the
-            // colour-scheme logic is reached (side-navigation.tsx:140), so
-            // passing one would read as configuration that does nothing.
-            variant="light"
-            currentPath="/colleague-profile"
-            onNavigate={(path) => navigate(path)}
-            onClose={!isDesktop ? () => setSidebarOpen(false) : undefined}
-            hideSupportCta
-            ariaLabel="Colleague Profile"
-            // w-64 is the component's own convention — it sets no width
-            // itself, and 6 of its 8 stories use this one.
-            //
-            // `border-r` matters more than it looks: the light rail is
-            // `surface.default` (white) and the page is `surface.subtle`
-            // (#f7f8f8). Without a rule the two are one unit apart and the
-            // rail has no edge at all.
-            className="fixed inset-y-0 left-0 z-50 w-64 shrink-0 border-r border-border lg:static lg:z-auto"
-          />
-        ) : undefined
-      }
-    >
+    <ColleagueShell currentPath="/colleague-profile">
       <PageHeading
         title="My Teams"
         description={`Teams you manage — ${TEAMS.length} teams`}
@@ -200,7 +121,7 @@ export function ColleagueProfile() {
           )}
         </section>
       </Stack>
-    </PageShell>
+    </ColleagueShell>
   );
 }
 
