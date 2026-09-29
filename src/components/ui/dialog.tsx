@@ -167,6 +167,16 @@ export interface ModalProps {
   children?: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
+  /**
+   * Where focus lands when the dialog opens.
+   *
+   * Radix focuses the first focusable element by default, which is right
+   * almost always — and wrong for a dialog whose footer is entirely
+   * destructive, where it means Enter destroys something the instant the
+   * dialog appears. Call `preventDefault()` and focus the content itself to
+   * put the user at the top with nothing armed.
+   */
+  onOpenAutoFocus?: DialogContentProps['onOpenAutoFocus'];
 }
 
 /**
@@ -196,10 +206,15 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   className,
+  onOpenAutoFocus,
 }) => {
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent size={resolveModalSize(size)} className={className}>
+      <DialogContent
+        size={resolveModalSize(size)}
+        className={className}
+        onOpenAutoFocus={onOpenAutoFocus}
+      >
         {hasHeader && (title || description) && (
           <DialogHeader>
             {title && <DialogTitle>{title}</DialogTitle>}

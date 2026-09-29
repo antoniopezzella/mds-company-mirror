@@ -40,22 +40,20 @@ export function RemoveMemberDialog({ member, onClose, onRemove }: RemoveMemberDi
       // than clipping if a translation makes them longer still.
       size="md"
       title="Remove team member"
+      // Both footer buttons destroy something, so the default — focus the
+      // first one — would arm Enter the moment the dialog opens. Focus the
+      // dialog itself instead: Escape and the X still dismiss, Tab still
+      // reaches both actions, and nothing happens on a stray keypress.
+      onOpenAutoFocus={(e) => {
+        e.preventDefault();
+        (e.currentTarget as HTMLElement).focus();
+      }}
       footer={
         <>
-          {/* CANCEL IS ADDED, and the source screen has none.
-
-              Two destructive buttons and an X in the corner means the only
-              way to change your mind is the least obvious control on the
-              dialog — and the two that ARE obvious both destroy something.
-              The safe path should be at least as reachable as the unsafe
-              ones. Escape and the X still work; this just makes "do nothing"
-              visible.
-
-              First in the DOM, so it is also the first thing tabbed to. */}
-          <Button variant="tertiary" size="md" onClick={onClose}>
-            Cancel
-          </Button>
-
+          {/* No Cancel, per the source design. Escape and the X in the
+              header both still dismiss, so there IS a way out — it is just
+              not a footer button. See `onOpenAutoFocus` below for the part
+              that matters once the footer is destructive-only. */}
           <Button
             variant="secondary"
             destructive

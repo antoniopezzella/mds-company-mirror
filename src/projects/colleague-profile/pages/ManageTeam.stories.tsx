@@ -116,9 +116,10 @@ export const UnbuiltTabs: StoryObj = {
  * their client allocations or clear them — so a plain "are you sure?" would
  * be a speed bump in front of the question that actually matters.
  *
- * Cancel is added: the source screen offers only an X, which makes the safe
- * path the least obvious control on a dialog whose two obvious controls both
- * destroy something.
+ * No Cancel button, per the design. Escape and the X still dismiss — and
+ * because BOTH footer buttons are destructive, focus opens on the dialog
+ * itself rather than the first action, so Enter does not destroy anything
+ * the instant it appears.
  */
 export const RemoveMemberDialogStory: StoryObj = {
   name: 'Remove member dialog',
@@ -142,12 +143,13 @@ export const RemoveMemberDialogStory: StoryObj = {
       ).toBeInTheDocument();
     });
 
-    await step('and a way to change your mind', async () => {
+    await step('Enter is not armed on open', async () => {
       const dialog = screen.getByRole('dialog');
-      // The source screen has only an X. Two destructive buttons and no
-      // visible "do nothing" puts the safe path behind the least obvious
-      // control on the dialog.
-      await expect(within(dialog).getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+      // Both actions destroy something, so focusing the first one by default
+      // would mean a stray Enter removes the member. Focus sits on the
+      // dialog instead.
+      await expect(dialog).toHaveFocus();
+      await expect(within(dialog).queryByRole('button', { name: 'Cancel' })).toBeNull();
     });
 
     await step('it states the consequence, not just the choice', async () => {
@@ -156,10 +158,10 @@ export const RemoveMemberDialogStory: StoryObj = {
       await expect(within(dialog).getByText(/5 clients/)).toBeInTheDocument();
     });
 
-    await step('cancel closes it, having done nothing', async () => {
-      await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    await step('Escape closes it, having done nothing', async () => {
+      // The way out, now that there is no Cancel button.
+      await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
-      // The row is still there.
       await expect(canvas.getByText('Alison Lane')).toBeInTheDocument();
     });
   },
