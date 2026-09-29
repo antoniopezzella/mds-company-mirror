@@ -15,6 +15,7 @@ import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 
 import { ColleagueShell } from '../components/ColleagueShell';
 import { RemoveMemberDialog } from '../components/RemoveMemberDialog';
+import { AddMemberDialog } from '../components/AddMemberDialog';
 import { useColleagueRole } from '../role-context';
 import { deniedReason } from '../roles';
 import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
@@ -98,6 +99,7 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
 
   const canRemove = can('member:remove');
   const [removing, setRemoving] = React.useState<TeamMember | null>(null);
+  const [adding, setAdding] = React.useState(false);
 
   const columns = React.useMemo<DataGridColumnDef<TeamMember>[]>(
     () => [
@@ -254,7 +256,12 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
         description={`${TEAM_MEMBERS.length} active team members · ${TEAM_CLIENT_COUNT} Clients`}
         actions={
           can('member:add') ? (
-            <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
+            <Button
+              variant="primary"
+              size="md"
+              startIcon={<Plus className="size-4" />}
+              onClick={() => setAdding(true)}
+            >
               Add Member
             </Button>
           ) : undefined
@@ -264,6 +271,15 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
       <div className="mt-6">
         <Tabs tabs={tabs} defaultActiveId="members" />
       </div>
+
+      <AddMemberDialog
+        open={adding}
+        onClose={() => setAdding(false)}
+        // Everyone already here is shown in the directory and disabled,
+        // rather than filtered out — see the note in AddMemberDialog.
+        existingMemberIds={TEAM_MEMBERS.map((m) => m.id)}
+        onAdd={() => undefined}
+      />
 
       <RemoveMemberDialog
         member={removing}

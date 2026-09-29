@@ -217,3 +217,83 @@ export const TEAM_MEMBERS: TeamMember[] = [
 /** Client count for the team header. Not derivable from members — a client
  *  served by two colleagues is one client, not two. */
 export const TEAM_CLIENT_COUNT = 21;
+
+/**
+ * A colleague in the Workday directory — the pool you add members from.
+ *
+ * Emails span marsh.com, oliverwyman.com and mercer.com: the directory is
+ * MMC-wide, not Marsh-only, which is exactly why the result rows have to show
+ * the address. "Antonio" returns three people and the domain is often the
+ * fastest way to tell which one you meant.
+ */
+export interface DirectoryColleague {
+  id: string;
+  name: string;
+  email: string;
+  initials: string;
+  jobTitle: string;
+  location: string;
+}
+
+export const DIRECTORY: DirectoryColleague[] = [
+  {
+    id: '2041881',
+    name: 'Antonio Nicoletti',
+    email: 'Antonio.Nicoletti@oliverwyman.com',
+    initials: 'AN',
+    jobTitle: 'Strategy Consulting - Engagement Manager',
+    location: 'Milan - Broletto',
+  },
+  {
+    id: '2113507',
+    name: 'Antonio Aguilar Martin',
+    email: 'antonio.aguilarmartin@marsh.com',
+    initials: 'AA',
+    jobTitle: 'Client Relationship Management - Specialist',
+    location: 'Madrid - Burgos',
+  },
+  {
+    id: '1990422',
+    name: 'Corinne Fantoni',
+    email: 'corinne.fantoni@mercer.com',
+    initials: 'CF',
+    jobTitle: 'Health & Benefits - Consultant',
+    location: 'Paris - La Défense',
+  },
+  {
+    id: '1774310',
+    name: 'Antonia Reyes',
+    email: 'antonia.reyes@marsh.com',
+    initials: 'AR',
+    jobTitle: 'Placement - Senior Broker',
+    location: 'Mexico City - Reforma',
+  },
+  {
+    id: '1522904',
+    name: 'Priya Raman',
+    email: 'priya.raman@marsh.com',
+    initials: 'PR',
+    jobTitle: 'Risk Analytics - Lead Analyst',
+    location: 'London - Tower Place',
+  },
+  {
+    id: '1348866',
+    name: 'Tomas Berg',
+    email: 'tomas.berg@marsh.com',
+    initials: 'TB',
+    jobTitle: 'Claims Advocacy - Manager',
+    location: 'Stockholm - Klarabergsviadukten',
+  },
+  // Deliberately already on the team, so the "already a member" state is
+  // reachable. A directory that hides existing members looks tidier and
+  // leaves the user wondering why someone they can see in Workday is
+  // missing from the search.
+  {
+    id: '1367578',
+    name: 'Alison Lane',
+    email: 'alison.lane@marsh.com',
+    initials: 'AL',
+    jobTitle: 'Supervisor - Project Management',
+    location: 'San Francisco - Embarcadero',
+  },
+];

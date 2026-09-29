@@ -166,3 +166,79 @@ export const RemoveMemberDialogStory: StoryObj = {
     });
   },
 };
+
+/**
+ * **Add members** — search the MMC-wide directory, tick as many as you want,
+ * review the queue, commit once.
+ *
+ * Four changes from the live screen: no nested "Search Workday Directory"
+ * panel (the modal title and the field label already say it twice); someone
+ * already on the team is shown and disabled rather than hidden; one selection
+ * indicator instead of a tick *and* a checkbox; and arrow keys work.
+ */
+export const AddMembers: StoryObj = {
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('open it', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Add Member' }));
+      await screen.findByRole('dialog');
+    });
+
+    await step('nothing is queued yet, so there is nothing to commit', async () => {
+      const dialog = screen.getByRole('dialog');
+      await expect(
+        within(dialog).getByRole('button', { name: 'Add members to team' })
+      ).toBeDisabled();
+    });
+
+    await step('searching finds people across all three firms', async () => {
+      const dialog = screen.getByRole('dialog');
+      await userEvent.type(within(dialog).getByRole('combobox'), 'antoni');
+      const list = await within(dialog).findByRole('listbox');
+      // The domain is often the fastest way to tell two Antonios apart,
+      // which is why the row carries the email.
+      await expect(within(list).getByText(/oliverwyman\.com/)).toBeInTheDocument();
+    });
+
+    await step('ticking two of them queues both', async () => {
+      const list = within(screen.getByRole('dialog')).getByRole('listbox');
+      await userEvent.click(within(list).getByText('Antonio Nicoletti'));
+      await userEvent.click(within(list).getByText('Antonio Aguilar Martin'));
+
+      const dialog = screen.getByRole('dialog');
+      await expect(within(dialog).getByText('2 members queued to add')).toBeInTheDocument();
+      // The button says what it will do rather than asking you to remember.
+      await expect(
+        within(dialog).getByRole('button', { name: 'Add 2 members to team' })
+      ).toBeEnabled();
+    });
+
+    await step('one can be taken back out of the queue', async () => {
+      const dialog = screen.getByRole('dialog');
+      await userEvent.click(
+        within(dialog).getByRole('button', { name: 'Remove Antonio Nicoletti from the queue' })
+      );
+      await expect(
+        within(dialog).getByRole('button', { name: 'Add 1 member to team' })
+      ).toBeInTheDocument();
+    });
+
+    await step('someone already on the team is shown, not hidden', async () => {
+      const dialog = screen.getByRole('dialog');
+      const input = within(dialog).getByRole('combobox');
+      await userEvent.clear(input);
+      await userEvent.type(input, 'alison');
+      const list = await within(dialog).findByRole('listbox');
+      // Filtering her out looks tidier and leaves the user wondering why a
+      // colleague they can see in Workday is missing here.
+      await expect(within(list).getByText('Already a member')).toBeInTheDocument();
+      await expect(within(list).getByRole('option')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    await step('close before the run ends', async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+  },
+};
