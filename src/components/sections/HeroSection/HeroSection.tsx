@@ -108,7 +108,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   onClick={cta.onClick}
                   style={{
                     backgroundColor: getRoleColor('interactive.primary'),
-                    color: getRoleColor('text.inverse'),
+                    // text.onPrimary, not text.inverse — same 1.73:1 dark
+                    // failure as BusinessCard's CTA had.
+                    color: getRoleColor('text.onPrimary'),
                   }}
                 >
                   {cta.text}

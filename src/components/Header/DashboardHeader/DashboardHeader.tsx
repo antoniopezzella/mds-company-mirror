@@ -53,7 +53,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
     }
     return {
       backgroundColor: getRoleColor('surface.secondary', { mode: systemMode }),
-      color: getRoleColor('text.primary', { mode: systemMode })
+      // text.onLight, not text.primary. surface.secondary is Sky, which stays
+      // light in both modes, but text.primary FLIPS to white in dark → 1.73:1.
+      // onLight is the mode-invariant Midnight for exactly this case: 14.72/10.50.
+      color: getRoleColor('text.onLight', { mode: systemMode })
     };
   };
 

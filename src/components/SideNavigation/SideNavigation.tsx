@@ -107,7 +107,9 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
           ctaBg: getRoleColor('surface.subtle'),
           ctaText: getRoleColor('text.primary'),
           ctaBtnBg: getRoleColor('interactive.secondary'),
-          ctaBtnText: getRoleColor('text.onAccent'),
+          // onInteractive, not onAccent: interactive.secondary lightens to
+          // #95caff in dark, where a fixed near-white is 1.73:1.
+          ctaBtnText: getRoleColor('text.onInteractive'),
           ctaBtnHover: getRoleColor('interactive.secondary.hover')
         };
       }
@@ -126,7 +128,8 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
         ctaBg: getRoleColor('surface.navigation'),
         ctaText: getRoleColor('text.onHero'),
         ctaBtnBg: getRoleColor('interactive.secondary'),
-        ctaBtnText: getRoleColor('text.onAccent'),
+        // onInteractive, not onAccent — see the light-variant branch above.
+        ctaBtnText: getRoleColor('text.onInteractive'),
         ctaBtnHover: getRoleColor('interactive.secondary.hover')
       };
     },
