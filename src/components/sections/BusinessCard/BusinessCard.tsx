@@ -68,7 +68,9 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
         onClick={cta.onClick}
         style={{
           backgroundColor: getRoleColor('interactive.primary'),
-          color: getRoleColor('text.inverse'),
+          // text.onPrimary, not text.inverse (a synonym of text.onAccent):
+          // interactive.primary lightens to #95caff in dark → 1.73:1.
+          color: getRoleColor('text.onPrimary'),
         }}
       >
         {cta.text}

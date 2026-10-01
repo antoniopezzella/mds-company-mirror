@@ -55,6 +55,22 @@ const ENFORCED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
   ['text.onInteractive', 'status.danger.border', 4.5],
   ['text.onLight', 'status.warning.border', 4.5],
   ['text.onLight', 'status.warning.bg', 4.5],
+
+  // ── Added 2026-10-01, after ten shipped sites were found pairing a fixed
+  // near-white foreground with a fill that LIGHTENS in dark mode.
+  //
+  // Every one of them was a developer guessing which foreground belongs on a
+  // background, because nothing stated it. The worst was a white lock icon on
+  // gold at 1.65:1 in BOTH modes (LoginPage) — never once visible — and a
+  // notification count at 2.78:1 in dark, in a shipped ui/ component.
+  //
+  // These pairs are the regression guard for that fix. The durable answer is
+  // ROLE_PAIRS; this list is the floor beneath it.
+  ['text.onPrimary', 'interactive.primary', 4.5],      // was text.onAccent  → 1.73 dark
+  ['text.onInteractive', 'interactive.secondary', 4.5], // was text.onAccent  → 1.73 dark
+  ['text.onLight', 'brand.accent', 4.5],                // was text.onAccent  → 1.65 BOTH
+  ['text.onLight', 'surface.secondary', 4.5],           // was text.primary   → 1.73 dark
+  ['text.primary', 'surface.subtle', 4.5],              // was status.warning.fg → 3.21 light
 ];
 
 const MONITORED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [

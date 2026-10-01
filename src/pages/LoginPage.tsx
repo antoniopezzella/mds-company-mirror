@@ -110,7 +110,13 @@ const LoginPage: React.FC = () => {
             mb: 2,
           }}
         >
-          <LockOutlinedIcon sx={{ color: getRoleColor('text.onAccent', { mode }), fontSize: 24 }} />
+          {/* text.onLight, NOT text.onAccent. The circle behind this is
+              brandAccent (gold #ffbf00), which is mode-INVARIANT — so its
+              foreground must be too. onAccent is near-white and measured
+              1.65:1 on gold in BOTH modes: this lock icon has never been
+              visible. onLight is the mode-invariant Midnight intended for
+              exactly these surfaces: 10.96:1. */}
+          <LockOutlinedIcon sx={{ color: getRoleColor('text.onLight', { mode }), fontSize: 24 }} />
         </Box>
         <Typography
           sx={{

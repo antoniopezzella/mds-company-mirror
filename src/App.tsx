@@ -448,7 +448,11 @@ function App() {
                                 const v = params.value as string;
                                 const roleMap: Record<string, { bg: string; fg: string }> = {
                                   Open:       { bg: 'status.warning.bg', fg: 'status.warning.fg' },
-                                  'In Review':{ bg: 'interactive.primary', fg: 'text.onAccent' },
+                                  // text.onPrimary is the role that pairs with
+                                  // interactive.primary. text.onAccent is a fixed
+                                  // near-white, and this fill lightens to #95caff
+                                  // in dark — 1.73:1.
+                                  'In Review':{ bg: 'interactive.primary', fg: 'text.onPrimary' },
                                   Settled:    { bg: 'status.success.bg', fg: 'status.success.fg' },
                                   Denied:     { bg: 'status.danger.bg', fg: 'status.danger.fg' },
                                 };

@@ -193,7 +193,9 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
             sx={{
               alignSelf: 'flex-start',
               backgroundColor: getRoleColor('interactive.primary'),
-              color: getRoleColor('text.onAccent'),
+              // text.onPrimary pairs with interactive.primary; onAccent is a
+              // fixed near-white and this fill lightens in dark (1.73:1).
+              color: getRoleColor('text.onPrimary'),
               textTransform: 'none',
               px: 3,
               py: 1.5,
