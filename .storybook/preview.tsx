@@ -151,12 +151,18 @@ export const parameters: Preview['parameters'] = {
           'Contrast',
           'Documentation-Guidelines',
         ],
-        // New reference section for raw MUI component examples before DS customization
-        'MUI Reference',
-        // Ensure other top-level groups appear after Foundations in this order
+        // Components first — this is the product. Everything MUI sorts below
+        // it, and both MUI groups are hidden from the sidebar entirely by
+        // .storybook/manager.ts, because neither is in the public API.
         'Components',
+        'Projects',
         'Website',
         'Docs',
+        // Raw MUI examples and the 11 pre-migration components. Listed last
+        // so that if either is ever un-hidden it lands beneath the real set
+        // rather than above it — which is where 'MUI Reference' sat before.
+        'MUI Reference',
+        'Legacy (MUI)',
         'Debug',
         'Archive',
       ],
