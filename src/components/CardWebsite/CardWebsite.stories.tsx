@@ -69,31 +69,33 @@ export default meta;
 type Story = StoryObj<typeof CardWebsite>;
 
 const DEMO_PROPS = {
-  title: 'Lorem ipsum dolor sit amet consectetur. Dolor nec tincidunt tortor magna habitant nec nam.',
-  description:
-    'The global insurance market index is our proprietary measure of global commercial insurance premium pricing.',
-  category: 'Category',
-  timestamp: 'MM/DD/YYYY',
-  // /images/insight-card.jpg did not exist — a 404 on every story using
-  // DEMO_PROPS (eight of them), rendering a broken-image icon. There is no
-  // onError fallback on the <img>, so nothing masked it.
-  imageSrc: '/images/journey-global-risks.jpg',
-  imageAlt: 'Satellite view of a tropical cyclone approaching a coastline',
-  href: '#',
-};
-
-// Real production content for the primary/hero card — matches Marsh1DER.tsx's
-// RISK_CARDS exactly (first item, "Cyber Risk"), rendered with hideCategories
-// the same way the real "Find the risks that matter to your business" section
-// does, so this story matches production rather than generic placeholder copy.
-const REAL_HERO_PROPS = {
+  // THE APPROVED CARD. These are the exact props CarouselSection passes in
+  // "Real production: Risk Areas Carousel" — which is the signed-off website
+  // card experience — taken from Marsh1DER.tsx's RISK_CARDS (first item).
+  //
+  // The stories previously showed a kitchen-sink configuration that exists
+  // nowhere in production: lorem-ipsum title, a category/timestamp header and
+  // a description all at once. CardWebsite was rendering that correctly — its
+  // defaults are content-driven (`hasHeader = Boolean(category || timestamp)`,
+  // `hasDescription = Boolean(description)`) — so the component was never
+  // wrong. It just looked wrong, because the demo asked for everything at
+  // once and the real section asks for almost none of it.
+  //
+  // `category` is deliberately absent: the carousel passes `hideCategories`,
+  // which strips category and categoryIcon before they reach the card. Adding
+  // one here would reintroduce the header row that made these look off.
   title: 'Cyber Risk',
   description: 'Navigate the evolving threat landscape with tailored cyber insurance and risk advisory.',
   imageSrc: '/images/journey-bloomberg.jpg',
   imageAlt: 'Cyber Risk',
+  layout: 'vertical' as const,
+  aspectRatio: '1:1' as const,
   href: '#',
-  hasHeader: false, // hideCategories in production
 };
+
+// Kept as a named alias: DEMO_PROPS now IS the production card, so the two
+// no longer differ. Retained so existing story references keep working.
+const REAL_HERO_PROPS = DEMO_PROPS;
 
 // ─── Surfaces ────────────────────────────────────────────────────────────────
 
@@ -267,8 +269,13 @@ export const NoDescription: Story = {
   args: { ...DEMO_PROPS, hasDescription: false },
 };
 
-export const NoHeader: Story = {
-  args: { ...DEMO_PROPS, hasHeader: false },
+// The header row (category + timestamp) is OFF in the approved card, so this
+// story shows it ON — the opposite of its name, and the useful direction now.
+// `hasHeader` is content-driven (`Boolean(category || timestamp)`), so passing
+// the content is what turns it on; the flag alone cannot.
+export const WithHeaderRow: Story = {
+  name: 'With header row (category + date)',
+  args: { ...DEMO_PROPS, category: 'Insurance', timestamp: '03/14/2026' },
 };
 
 export const NoCta: Story = {
