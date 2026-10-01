@@ -27,7 +27,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 ┌─────────────────────────────────────────────────────────────┐
 │ PRIMITIVES (src/tokens.ts)                                  │
 │ Raw palette values: #000f47, #ceecff, 4px, 8px, etc.       │
-│ 176 tokens across Blue, Gold, Green, Red, Purple, Gray,     │
+│ 178 tokens across Blue, Gold, Green, Red, Purple, Gray,     │
 │ Neutral palettes + Static + Utilities + Shades              │
 └──────────────────────┬──────────────────────────────────────┘
                        │ references
@@ -36,7 +36,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ SEMANTICS (src/semantic-tokens.ts)                          │
 │ Intent-based aliases: brandPrimary, textSecondary,          │
 │ surfaceDefault, interactivePrimaryHover, statusSuccessBg    │
-│ 68 tokens with light + dark mode overrides                  │
+│ 72 tokens with light + dark mode overrides                  │
 └──────────────────────┬──────────────────────────────────────┘
                        │ referenced by
                        ▼
@@ -44,7 +44,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ ROLES (src/theme/roles.ts)                                  │
 │ Component consumption API: text.primary, surface.accent,    │
 │ interactive.primary.hover, status.success.bg                │
-│ 50 roles — the ONLY API components should use               │
+│ 54 roles — the ONLY API components should use               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -67,7 +67,7 @@ export const tokens = {
 
 **Naming:** `[palette][scale]` where scale = 50, 100, 200, ..., 1000, 1100  
 **Source:** Synced from Figma "Primitive Colors" collection  
-**Count:** 176 color tokens + spacing + shadow primitives
+**Count:** 178 color tokens + spacing + shadow primitives
 
 > Counts here are checked mechanically by `npm run ds:score` (the
 > `token_doc_accuracy` metric). They drifted to 9/5/6 out before that gate
@@ -110,7 +110,7 @@ export const semanticDarkOverrides = {
 
 **Naming:** `[category][Intent][State]` (camelCase)  
 **Categories:** `brand`, `text`, `surface`, `border`, `interactive`, `status`  
-**Count:** 68 semantic tokens  
+**Count:** 72 semantic tokens  
 **Dark Mode:** Defined in `semanticDarkOverrides` object
 
 #### **Roles (`src/theme/roles.ts`)**
@@ -156,7 +156,7 @@ export function getRoleColor(role: RoleName, mode: 'light' | 'dark' = 'light'): 
 
 **Naming:** `[category].[element][.variant][.state]` (kebab-case with dots)  
 **Examples:** `text.primary`, `surface.navigation.hover`, `interactive.danger.active`  
-**Count:** 50 roles (growing as components need them)  
+**Count:** 54 roles (growing as components need them)  
 **Usage:** Components use `getRoleColor('role.name')` ONLY
 
 ### Critical Rules for Token Usage

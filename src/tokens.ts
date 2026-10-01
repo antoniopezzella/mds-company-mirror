@@ -96,7 +96,7 @@ export const tokens = {
   gray150:  '#faf7f4',   // ★ Figma anchor — added 2026-09-15 (finer granularity, Figma has this step; MDS didn't)
   gray200:  '#f9f9f9',   // interpolated
   gray250:  '#f7f8f8',   // ★ Figma anchor
-  gray300:  '#eaebea',   // interpolated
+  gray300:  '#ebe7e2',   // ★ Figma anchor — corrected from interpolated #eaebea (Neutral/Gray/300). Button shipped this value as a literal because the ramp had drifted off it.
   gray350:  '#dedbd6',   // ★ Figma anchor — added 2026-09-15
   gray400:  '#cfd0cd',   // interpolated
   gray450:  '#c5c2bd',   // ★ Figma anchor — added 2026-09-15
@@ -104,7 +104,7 @@ export const tokens = {
   gray550:  '#adaaa5',   // ★ Figma anchor — added 2026-09-15
   gray600:  '#9c9e9a',   // interpolated
   gray650:  '#94918c',   // ★ Figma anchor — added 2026-09-15
-  gray700:  '#8a8c88',   // interpolated
+  gray700:  '#878580',   // ★ Figma anchor — corrected from interpolated #8a8c88 (Neutral/Gray/700). Same story as gray300 above.
   gray750:  '#787b78',   // ★ Figma anchor
   gray800:  '#6a6e6b',   // interpolated
   gray850:  '#62615c',   // ★ Figma anchor — added 2026-09-15
@@ -133,8 +133,19 @@ export const tokens = {
   white: '#ffffff',
   black: '#000000',
 
+  // ── TRAFFIC / CRIMSON ─────────────────────────────────────────────────────
+  // Figma's destructive ramp, which is NOT the `red*` ramp above — that one
+  // maps to a different Figma family. Only the 600 step had been imported
+  // (as `statusCritical` below); 700 and 800 existed in Figma with
+  // `mdsToken: null` in figma-variable-map.json, so Button, which needs the
+  // full ramp for hover and active, had nowhere to point and shipped them as
+  // literals. The `red800`/`red900` the danger roles used instead are marked
+  // "interpolated" — invented values that never matched the design.
+  crimson700: '#9a1c1f',   // ★ Figma anchor — Traffic/Crimson 700
+  crimson800: '#691315',   // ★ Figma anchor — Traffic/Crimson 800
+
   // ── UTILITIES ─────────────────────────────────────────────────────────────
-  statusCritical: '#c53532',   // Figma Utilities/Critical
+  statusCritical: '#c53532',   // Figma Utilities/Critical (= Traffic/Crimson 600 - default)
   statusWarning:  '#cb7e03',   // Figma Utilities/Warning
   statusSuccess:  '#14853d',   // Figma Utilities/Success
   statusInfo:     '#6fb4ff',   // → blue500
