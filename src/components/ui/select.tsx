@@ -43,7 +43,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex w-full items-center justify-between gap-2 rounded-md border font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      'box-border flex w-full items-center justify-between gap-2 rounded-md border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
       CONTROL_HEIGHT[resolvedSize],
       CONTROL_PX[resolvedSize],
       CONTROL_TEXT[resolvedSize],
@@ -152,6 +152,11 @@ const SelectItem = React.forwardRef<
       className
     )}
     style={{ color: getRoleColor('text.primary') }}
+    // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
+    // came last a consumer passing their own handler REPLACED the one below
+    // and the highlight never fired — while the `props.on*?.(e)` chain-call
+    // inside it, written for exactly that case, became dead code.
+    {...props}
     onFocus={(e) => {
       (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor('surface.subtle');
       props.onFocus?.(e);
@@ -160,7 +165,6 @@ const SelectItem = React.forwardRef<
       (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
       props.onBlur?.(e);
     }}
-    {...props}
   >
     <span className="absolute right-2 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
@@ -340,7 +344,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
       {label && (
         <label
           htmlFor={generatedId}
-          className="font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium"
+          className="font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium"
           style={{ color: getRoleColor('text.secondary') }}
         >
           {label}
@@ -350,7 +354,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
       {helperText && (
         <span
           id={helperId}
-          className="font-[var(--typo-caption-font-family,_Noto_Sans,_sans-serif)] text-xs"
+          className="font-[family-name:var(--typo-caption-font-family,_Noto_Sans,_sans-serif)] text-xs"
           style={{ color: helperColor }}
         >
           {helperText}

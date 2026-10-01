@@ -1,8 +1,28 @@
 "use client"
 
-// roles-allow-hex-file — the literals below are tracked debt, not drift:
-// hover/active/disabled states have no roles yet, and each block documents
-// what it's waiting on. Remove this marker once those roles exist.
+// roles-allow-hex-file — and the list is now short and deliberate.
+//
+// This file used to carry 71 hex literals because hover/active/disabled had
+// no roles. They do now (2026-09-30): the primary ramp moved to the values
+// this file was already shipping, danger moved onto Figma's Traffic/Crimson
+// ramp, and interactive.disabled.bg/.fg were added. Every one of those, plus
+// every `dark:` colour override that existed only to hand-maintain the second
+// mode, is gone — a role resolves per-mode on its own.
+//
+// What is left, and why each stays:
+//   1. primary's `text-[#ceecff] dark:text-[#000f47]` — a genuine token gap.
+//      No role flips Sky-on-Midnight to Midnight-on-Sky; see the note on the
+//      variant itself.
+//   2. The two `inverse*` variants — mode-INVARIANT by design (always
+//      light-on-dark, for use over imagery and dark heroes). Giving them
+//      roles would make them theme-responsive, which is the opposite of
+//      their purpose.
+//   3. `rgba(0,0,0,0.08)` / `0.03` and their white counterparts — translucent
+//      washes over whatever sits behind the button, not palette values. A
+//      role would have to be opaque.
+//
+// Removing this marker needs (1) resolved with a design decision; (2) and (3)
+// are not debt and should keep an exemption whatever happens to (1).
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
@@ -22,58 +42,63 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // PRIMARY - Midnight Blue (role: interactive.primary) - Dashboards & standard CTAs
-        // bg now reads the CSS-var bridge (RoleVarsProvider), which already
-        // resolves to interactivePrimary's light/dark value — no dark:bg
-        // override needed. text-[#ceecff]/dark:text-[#000f47] stay literal
-        // for now (they pair with the #ceecff fix, batch 3).
+        //
+        // text.onPrimary, NOT text.primary — the first is the label on a
+        // primary fill (Sky, flipping to Midnight), the second is body text
+        // (Midnight). Writing text.primary here renders navy on navy at
+        // 1.00:1 and nothing catches it, since both are real role names.
+        //
+        // This pair was `text-[#ceecff] dark:text-[#000f47]` until the role
+        // existed: text.onHero does not flip and text.onInteractive is white,
+        // so neither could express Sky-on-Midnight. The last colour literal
+        // and the last dark: override in this variant went with it.
         primary:
-          'bg-[var(--role-interactive-primary)] text-[#ceecff] shadow-none hover:bg-[#082d9e] active:bg-[#0b4bff] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
-          'dark:text-[#000f47] dark:hover:bg-[#bbe1ff] dark:active:bg-[#d8f0ff] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+          'bg-[var(--role-interactive-primary)] text-[var(--role-text-onPrimary)] shadow-none hover:bg-[var(--role-interactive-primary-hover)] active:bg-[var(--role-interactive-primary-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
 
         // PRIMARY ALT - Gold (role: brand.accent) - Hero/Marketing CTAs
-        // brandAccent, interactiveAccentHover, and interactiveAccentActive
-        // are all deliberately unchanged in semanticDarkOverrides ("unchanged
-        // — CTA stays") — no dark: needed for any of the three, so the
-        // CSS-var bridge (RoleVarsProvider) resolves correctly as-is.
+        // brandAccent and its hover/active are deliberately unchanged in
+        // semanticDarkOverrides ("unchanged — CTA stays"), so the gold is
+        // mode-invariant by design rather than by omission.
         primaryAlt:
-          'bg-[var(--role-brand-accent)] text-[#000f47] shadow-none hover:bg-[var(--role-interactive-accent-hover)] active:bg-[var(--role-interactive-accent-active)] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
-          'dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+          'bg-[var(--role-brand-accent)] text-[var(--role-text-onLight)] shadow-none hover:bg-[var(--role-interactive-accent-hover)] active:bg-[var(--role-interactive-accent-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
 
         // SECONDARY - Outline with midnight blue border (role: interactive.primary)
         secondary:
-          'bg-transparent text-[var(--role-interactive-primary)] border-2 border-[var(--role-interactive-primary)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] hover:border-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] active:border-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
-          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:hover:border-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:active:border-[#d8f0ff] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
+          'bg-transparent text-[var(--role-interactive-primary)] border-2 border-[var(--role-interactive-primary)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] hover:border-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] active:border-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] disabled:border-[var(--role-interactive-disabled-fg)] ' +
+          // The only dark: left on this variant. These are translucent WASHES
+          // over whatever is behind the button, not palette colours — a role
+          // would have to be opaque, and the light/dark flip is black-vs-white
+          // ink, which no single token can express.
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
 
         // TERTIARY - Transparent/Ghost (role: interactive.primary)
         tertiary:
-          'bg-transparent text-[var(--role-interactive-primary)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#082d9e] active:bg-[rgba(0,0,0,0.03)] active:text-[#0b4bff] disabled:bg-transparent disabled:text-[#878580] ' +
-          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#bbe1ff] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#d8f0ff] dark:disabled:text-[#878787]',
+          'bg-transparent text-[var(--role-interactive-primary)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] ' +
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
 
-        // DESTRUCTIVE - Red/Danger (applied when destructive=true)
-        // NOTE: the text var below is --role-text-onInteractive, camelCase.
-        // RoleVarsProvider derives var names with role.replaceAll('.', '-'),
-        // so `text.onInteractive` becomes `--role-text-onInteractive` — it does
-        // NOT kebab-case the segment. This read `--role-text-on-interactive`
-        // for a while, which resolves to nothing, so the colour silently fell
-        // back to the inherited text colour (#000f47 navy) on the red fill:
-        // 3.38:1, and wrong in the real app, not just in tests.
-        // dark: values from semanticDarkOverrides.interactiveDanger*.
-        // text uses the CSS-var bridge (text.onInteractive), not a literal —
-        // statusDanger's dark value (#ff6b6b) is a light red that fails
-        // contrast against a fixed white (2.78:1); the role resolves to
-        // white in light mode, Midnight in dark, correctly for both (5.34/
-        // 6.53:1) with no manual dark: override needed.
+        // DESTRUCTIVE - Traffic/Crimson (applied when destructive=true)
+        //
+        // NOTE the camelCase in --role-text-onInteractive. RoleVarsProvider
+        // derives var names with role.replaceAll('.', '-') and does NOT
+        // kebab-case the segments. This read `--role-text-on-interactive` for
+        // a while, which resolves to nothing, so the colour silently fell back
+        // to inherited navy on the red fill: 3.38:1, wrong in the real app and
+        // not just in tests. Same trap applies to every var below.
+        //
+        // text.onInteractive rather than a literal white: statusDanger's dark
+        // value (#ff6b6b) is a light red that fails against fixed white
+        // (2.78:1). The role gives white in light and Midnight in dark —
+        // 5.34:1 and 6.53:1 — with no manual override.
         destructivePrimary:
-          'bg-[#c53532] text-[var(--role-text-onInteractive)] shadow-none hover:bg-[#9a1c1f] active:bg-[#691315] disabled:bg-[#ebe7e2] disabled:text-[#878580] ' +
-          'dark:bg-[#ff6b6b] dark:hover:bg-[#ff9d9d] dark:active:bg-[#ffe8e8] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#878787]',
+          'bg-[var(--role-interactive-danger)] text-[var(--role-text-onInteractive)] shadow-none hover:bg-[var(--role-interactive-danger-hover)] active:bg-[var(--role-interactive-danger-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
 
         destructiveSecondary:
-          'bg-transparent text-[#9a1c1f] border-2 border-[#c53532] hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] hover:border-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] active:border-[#691315] disabled:bg-transparent disabled:text-[#878580] disabled:border-[#878580] ' +
-          'dark:text-[#ff6b6b] dark:border-[#ff6b6b] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#ff9d9d] dark:hover:border-[#ff9d9d] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#ffe8e8] dark:active:border-[#ffe8e8] dark:disabled:text-[#878787] dark:disabled:border-[#878787]',
+          'bg-transparent text-[var(--role-interactive-danger-hover)] border-2 border-[var(--role-interactive-danger)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] hover:border-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] active:border-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] disabled:border-[var(--role-interactive-disabled-fg)] ' +
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
 
         destructiveTertiary:
-          'bg-transparent text-[#9a1c1f] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[#9a1c1f] active:bg-[rgba(0,0,0,0.03)] active:text-[#691315] disabled:bg-transparent disabled:text-[#878580] ' +
-          'dark:text-[#ff6b6b] dark:hover:bg-[rgba(255,255,255,0.08)] dark:hover:text-[#ff9d9d] dark:active:bg-[rgba(255,255,255,0.03)] dark:active:text-[#ffe8e8] dark:disabled:text-[#878787]',
+          'bg-transparent text-[var(--role-interactive-danger-hover)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] ' +
+          'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
         
         // INVERSE variants (for dark backgrounds)
         // text-[#000f47] here stays literal — always-navy-on-white text has
@@ -314,7 +339,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // this line, and because `cn()` is twMerge the later class won: the
           // size variant's `text-sm` was silently discarded and every button
           // rendered 16px regardless of size.
-          'font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
+          'font-[family-name:var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
           'font-bold tracking-normal',
           // Border radius — `rounded-md` IS 2px on Tailwind v4's stock scale,
           // so the arbitrary value this used to carry is no longer needed.

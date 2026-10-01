@@ -111,7 +111,7 @@ export const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttri
     <p
       ref={ref}
       className={cn(
-        'mb-1 font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-bold leading-tight',
+        'mb-1 font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-bold leading-tight',
         className
       )}
       {...props}
@@ -122,7 +122,7 @@ AlertTitle.displayName = 'AlertTitle';
 
 export const AlertDescription = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div className={cn('font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)} ref={ref} {...props} />
+    <div className={cn('font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)} ref={ref} {...props} />
   )
 );
 AlertDescription.displayName = 'AlertDescription';

@@ -83,7 +83,7 @@ export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaEleme
         {helperText && (
           <span
             id={helperId}
-            className="font-[var(--typo-caption-font-family,_Noto_Sans,_sans-serif)] text-xs"
+            className="font-[family-name:var(--typo-caption-font-family,_Noto_Sans,_sans-serif)] text-xs"
             style={{ color: helperColor }}
           >
             {helperText}

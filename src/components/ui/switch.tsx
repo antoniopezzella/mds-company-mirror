@@ -35,7 +35,7 @@ const switchThumbVariants = cva(
 );
 
 const switchLabelVariants = cva(
-  'select-none font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
+  'select-none font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
 );
 
 function getInteractiveRole(

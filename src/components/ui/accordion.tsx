@@ -129,14 +129,14 @@ export const Accordion: React.FC<AccordionProps> = ({
             {item.icon && <span className="flex shrink-0">{item.icon}</span>}
             <span className="flex-1">
               <span
-                className="block font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold"
+                className="block font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold"
                 style={{ color: getRoleColor(item.disabled ? 'text.disabled' : 'text.primary') }}
               >
                 {item.title}
               </span>
               {item.subtitle && (
                 <span
-                  className="mt-1 block font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm"
+                  className="mt-1 block font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm"
                   style={{ color: getRoleColor('text.secondary') }}
                 >
                   {item.subtitle}
@@ -151,7 +151,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         </AccordionPrimitive.Header>
         <AccordionPrimitive.Content className={cn(accordionContentVariants({ variant }))}>
           <div
-            className="border-t pt-4 font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base"
+            className="border-t pt-4 font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base"
             style={{ borderColor: getRoleColor('border.default'), color: getRoleColor('text.primary') }}
           >
             {item.content}

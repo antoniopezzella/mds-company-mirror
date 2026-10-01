@@ -28,7 +28,7 @@ import { getRoleColor, type RoleName } from '@/theme/roles';
 export type BadgeTone = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'disabled';
 
 const badgeVariants = cva(
-  'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-[var(--typo-body-font-family,_Noto_Sans,_sans-serif)] font-normal transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2',
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap font-[family-name:var(--typo-body-font-family,_Noto_Sans,_sans-serif)] font-normal transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2',
   {
     variants: {
       size: {

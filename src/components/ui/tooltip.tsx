@@ -62,7 +62,11 @@ function getToneColors(tone: TooltipTone): { bg: RoleName; fg: RoleName } {
       // 4.5; surface.subtle's dark value (#252525) gives 12.46:1.
       return { bg: 'surface.subtle', fg: 'status.info.fg' };
     case 'warning':
-      return { bg: 'surface.subtle', fg: 'status.warning.fg' };
+      // text.primary, not status.warning.fg. Gold on the light subtle surface
+      // is 3.21:1 — fine as an accent, unreadable as the label. This is the
+      // same call badge.tsx makes for its warning outline, and for the same
+      // reason: gold1000 is the darkest gold there is. 17.06 / 15.33.
+      return { bg: 'surface.subtle', fg: 'text.primary' };
     case 'danger':
       return { bg: 'status.danger.bg', fg: 'status.danger.fg' };
     case 'success':

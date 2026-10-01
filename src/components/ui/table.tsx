@@ -192,7 +192,9 @@ function TableComponent<T extends object>({
   const headerBg = getRoleColor('surface.subtle');
   const rowBg = getRoleColor('surface.default');
   const stripeBg = getRoleColor('surface.subtle');
-  const hoverBg = getRoleColor('surface.subtle');
+  // Sky Blue in light, unchanged in dark. headerBg and stripeBg above keep the
+  // neutral lift deliberately — only the hovered row goes brand.
+  const hoverBg = getRoleColor('surface.row.hover');
   const selectedBg = getRoleColor('surface.accent');
   const textColor = getRoleColor('text.primary');
   const mutedColor = getRoleColor('text.secondary');

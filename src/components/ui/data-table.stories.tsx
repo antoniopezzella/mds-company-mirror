@@ -68,7 +68,14 @@ const baseColumns: DataGridColumnDef<Policy>[] = [
     header: 'Status',
     cell: ({ getValue }) => {
       const value = getValue<string>();
-      return <Badge tone={value === 'Active' ? 'success' : value === 'Expired' ? 'danger' : 'default'}>{value}</Badge>;
+      // `soft` so the badge carries its own background — see the note in
+      // data-grid.stories.tsx: row hover is Sky Blue and a transparent
+      // outline badge's success green is 4.16:1 on it.
+      return (
+        <Badge variant="soft" tone={value === 'Active' ? 'success' : value === 'Expired' ? 'danger' : 'default'}>
+          {value}
+        </Badge>
+      );
     },
   },
   {

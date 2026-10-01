@@ -165,7 +165,7 @@ export const PageHeading = React.forwardRef<HTMLDivElement, PageHeadingProps>(
     >
       <Stack gap={1} className="min-w-0">
         <h1
-          className="font-[var(--typo-h1-font-family,_Noto_Sans,_sans-serif)] text-2xl font-bold"
+          className="font-[family-name:var(--typo-h1-font-family,_Noto_Sans,_sans-serif)] text-2xl font-bold"
           style={{ color: getRoleColor('text.primary') }}
         >
           {title}

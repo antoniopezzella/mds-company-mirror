@@ -53,7 +53,7 @@ export type FilterChipSize = 'sm' | 'md' | 'lg';
 const filterChipVariants = cva(
   [
     'inline-flex items-center rounded-full',
-    'font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] font-medium',
+    'font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] font-medium',
     'transition-colors',
     'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
     'disabled:cursor-not-allowed disabled:opacity-50',
