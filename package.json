@@ -135,7 +135,8 @@
     "ds:score": "node scripts/ds-health-score.js",
     "ds:score:record": "node scripts/ds-health-score.js --record",
     "ds:compare": "node scripts/ds-health-score.js --compare",
-    "ds:backfill": "node scripts/ds-health-score.js --backfill --weeks 26"
+    "ds:backfill": "node scripts/ds-health-score.js --backfill --weeks 26",
+    "stories:audit": "node scripts/audit-stories.js"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

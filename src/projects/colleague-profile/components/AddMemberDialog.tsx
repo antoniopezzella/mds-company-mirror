@@ -68,10 +68,26 @@ export function AddMemberDialog({ open, onClose, existingMemberIds, onAdd }: Add
 
   React.useEffect(() => setActive(0), [term]);
 
+  // Scrolls the LIST, not whatever happens to be scrollable above it.
+  // `scrollIntoView` walks the whole ancestor chain, so it also scrolled the
+  // dialog — which was the visible half of the padding bug: it slid the
+  // content sideways under the padding on every arrow key. Even with the
+  // dialog no longer overflowing horizontally, it would still yank the body's
+  // vertical scroll while the user is only moving a highlight.
   React.useEffect(() => {
-    listRef.current?.querySelector<HTMLElement>(`#add-member-${active}`)?.scrollIntoView({
-      block: 'nearest',
-    });
+    const list = listRef.current;
+    const option = list?.querySelector<HTMLElement>(`#add-member-${active}`);
+    if (!list || !option) return;
+    // Rect deltas, not `offsetTop` — that is measured from the nearest
+    // POSITIONED ancestor, and the list is static, so it would report
+    // distances from the dialog instead.
+    const listBox = list.getBoundingClientRect();
+    const optionBox = option.getBoundingClientRect();
+    if (optionBox.top < listBox.top) {
+      list.scrollTop -= listBox.top - optionBox.top;
+    } else if (optionBox.bottom > listBox.bottom) {
+      list.scrollTop += optionBox.bottom - listBox.bottom;
+    }
   }, [active, term]);
 
   const isQueued = (c: DirectoryColleague) => queued.some((q) => q.id === c.id);

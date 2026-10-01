@@ -181,3 +181,142 @@ The two systems don't need shared components to present one design language — 
 **Longer-term (the Atlas conversation):**
 - Propose token-layer sharing to the Atlas team as the near-term unification move
 - Revisit full component-level cross-framework unification only if there's demonstrated demand beyond Mercer's initial interest
+
+---
+
+## 2026-09-30 — four-agent verified audit
+
+Re-run against `chore/tailwind-v4-migration` @ `74ec2b1`, v0.6.0. Four parallel
+audits (packaging, component API, token layer, docs/a11y), every claim
+re-verified by hand before landing here. **Findings below are VERIFIED by
+command unless marked otherwise.**
+
+### Readiness verdict
+
+**Internal Marsh dashboard adoption: ready.** Cross-brand / Atlas foundation:
+**not yet — roughly two weeks of packaging work away, one quarter from
+multi-brand.**
+
+### What the 2026-09-23 entry above gets wrong
+
+Its headline — "the package ships no CSS" — **was fixed the same day it was
+written** (`50c305a`). `dist-pkg/styles.css` now ships at 111,410 bytes,
+CI-gated. Anyone reading that section today concludes the package doesn't
+work, which is false. Two further stale claims: hosted Storybook **is** live
+(verified HTTP 200), and the "package ships both MUI and shadcn" worry is
+resolved — `dist-pkg/` contains **0** files referencing `@mui`/`@emotion`, and
+MUI is devDependencies-only.
+
+**Why this keeps happening:** CLAUDE.md's token counts are *mechanically*
+gated (`ds:score`'s `token_doc_accuracy`, currently 0 off) and stay accurate.
+This document's prose is gated by nothing.
+
+### The one blocker that matters
+
+**The shipped stylesheet references 5 `--role-*` custom properties and defines
+none of them.** Found independently by two agents, verified directly:
+
+```
+$ grep -o "var(--role-[a-zA-Z-]*)" dist-pkg/styles.css | sort -u   # 5
+$ grep -c -- "--role-[a-z-]*:" dist-pkg/styles.css                 # 0
+$ grep -c -- "--role-[a-z]" dist/theme.css                         # 0
+```
+
+Those five are Button's fill colours. `--role-*` has **zero CSS definition
+sites anywhere** in `src/`, `dist/` or `dist-pkg/` — the only mechanism that
+ever sets them is `document.documentElement.style.setProperty()` in a
+`useEffect` inside `src/theme/RoleVarsProvider.tsx:55`. A React component.
+
+`src/main.tsx` and `.storybook/preview.tsx` both mount that provider, so the
+dev app, Storybook, and every a11y and visual test have the variables defined.
+**The artifact does not.** A consumer following `README.package.md` gets an
+invisible primary button (measured 1.23:1).
+
+This is the exact failure `check-package-types.js` exists to prevent for
+types: every gate validates the SOURCE, nothing validates the ARTIFACT.
+`check-package-css.js` asserts 6 hardcoded utility names and cannot see it.
+
+**Fix: ~2 hours.** Emit a `:root`/`.dark` role block from `build-tokens.js`,
+import it from `styles.package.css`, and extend `check-package-css.js` to fail
+when any `var(--x)` in the output has no definition.
+
+### Ranked gaps
+
+| # | Gap | Sev | Effort |
+|---|---|---|---|
+| 1 | `--role-*` referenced but never defined in any shipped CSS | Blocker | ~2h |
+| 2 | npm renders `README.md` (never mentions `styles.css`); the correct `README.package.md` ships but is never shown | Blocker | ~1h |
+| 3 | `files` excludes `dist/` — token artifacts are in **no** release artifact; every token subpath returns `ERR_PACKAGE_PATH_NOT_EXPORTED` | Blocker | ~XS |
+| 4 | `UNLICENSED` + personal GitHub namespace; CODEOWNERS is one person | Blocker | org access |
+| 5 | Deprecation policy anchored to an unshipped release — 12 of 17 headers say `since 0.7.0` at v0.6.0, all sharing one hardcoded date. `check-deprecations.js:103` never checks `since <= current` | Major | ~4h |
+| 6 | 0 of 93 modules carry a maturity label, while 48 have no test and 21 no story — `questionnaire` and `button` look identical to a consumer | Major | ~1d + labelling |
+| 7 | Every Storybook story renders inside MUI (`preview.tsx:39`, global decorator) — the shadcn set has never been verified to render without it, and axe has only run inside it | Major | ~1d |
+| 8 | 27 Radix packages in `dependencies`, 0 in `peerDependencies` — verified duplicate nested install | Major | ~0.5d |
+| 9 | CI never runs `--coverage`, so the declared thresholds gate nothing; `tsconfig.app.json` excludes test files from typechecking | Major | ~S |
+| 10 | a11y **testing** is real and gated; a11y **posture** is absent — no VPAT, 2 of 93 stories document a keyboard/ARIA contract | Major | M–L |
+| 11 | 10 of 30 Figma Code Connect mappings target unexported legacy MUI components; Code Connect has never been published (no workflow references it) | Major | ~1d |
+| 12 | 13 distinct `tone` vocabularies across two prop names; the declared canonical `Tone` in `prop-compat.ts:49` is used by **zero** components. `props:check` reads call-site values, never declarations, so it is structurally blind to this | Major | ~3d |
+| 13 | `Button`'s `tone="success"` is a **dead prop** — declared at `button.tsx:146`, zero implementation | Minor | ~2h |
+| 14 | 260 sourcemaps = 2.79MB of a 4.26MB package | Minor | ~1h |
+
+### Atlas: the strategic position holds, with stronger evidence
+
+Stock **Style Dictionary — no MDS custom formats — consumes
+`dist/tokens.tokens.json` directly**, resolving the full
+primitive→semantic→role chain into 408 CSS custom properties plus SCSS. 428
+tokens, all three tiers, light and dark. That is the strongest possible
+evidence for sharing the token layer rather than reimplementing components.
+
+But **do not repeat the line at line 161 that the artifacts are "consumable by
+Angular today with no rework."** The file that is genuinely complete
+(`tokens.tokens.json`) is unpublished; the two files that are named
+(`tokens.json`, `theme.css`) omit the role tier entirely. Honest framing:
+**two weeks of packaging work from Angular-consumable.**
+
+**5 of 11 gates transfer to Atlas as code** (they read `dist/tokens.json` via
+`fs` with zero framework knowledge): `validate-tokens`, `diff-tokens`,
+`validate-tokens-dtcg`, `check-contrast`, `check-deprecations`. The other 6
+transfer as *policy*, not code. `check-contrast.js` is the most persuasive
+artifact to put in front of the Atlas team — a brand-governed,
+contrast-validated token source is a stronger pitch than shared components.
+
+### Multi-brand: the real cost, corrected
+
+The "~15 brand refs in the semantic tier" figure above is too low. Verified
+counts: **37 semantic definitions** are brand-identity-coupled (25 light of
+69, 12 dark of 60). `textPrimary → blue1000` means **body text is brand navy,
+not a neutral** — a rebrand moves body copy.
+
+But the semantic tier is **not** the binding constraint. **580
+`getRoleColor()` calls across 74 modules resolve to literal hex written into
+React inline `style={{}}` props**, which outrank any consumer stylesheet. Plus
+**111 hardcoded hex literals in 11 shipped modules — 81 in `button.tsx`
+alone**, under a `roles-allow-hex-file` exemption that hides them from
+`roles:check`. 5 of those hexes are off-palette entirely, present in no tier,
+so no token change of any kind can reach them.
+
+And the primitives are named by **hue** (`blue1000`, `gold750`). Mercer cannot
+override `blue1000` — their brand colour isn't blue. Ramp-slot renaming is the
+largest single cost, because hue names are load-bearing for the Figma sync
+scripts and 19 SCSS files.
+
+**So what would Mercer fork today? Not a config — the source.** The 51-role
+interface and the whole `dist/` pipeline survive untouched: the *architecture*
+supports multi-brand, the *implementation* has no seam for it.
+
+Corroborating evidence that a brand change is expensive here: a half-finished
+navy migration is live right now. `tokens:check-vars` reports `--primary` at
+`#002c77` while role `interactive.primary` is `#000f47` — **two Marsh navies
+rendering simultaneously**, one hue, mid-flight, for months.
+
+### Recommended next move
+
+Split the token layer into its own versioned artifact (`@mmc/design-tokens`:
+`tokens.tokens.json` + generated `theme.css`/`roles.css`), released on its own
+semver, reusing the `deprecations:check` removal-window machinery that already
+works. MDS then consumes its own token package exactly as Atlas would. That
+one move converts gaps 1, 3 and the token-versioning problem into a real
+contract, and makes the shared-token pitch concrete rather than aspirational.
+
+**Do gaps 1–3 regardless of what Atlas decides.** Gap 1 is a live defect for
+the existing React consumer today.
