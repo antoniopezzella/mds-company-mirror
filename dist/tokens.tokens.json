@@ -965,11 +965,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.9176,
           0.9216,
-          0.9176
+          0.9059,
+          0.8863
         ],
-        "hex": "#eaebea"
+        "hex": "#ebe7e2"
       }
     },
     "gray350": {
@@ -1061,11 +1061,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.5412,
-          0.549,
-          0.5333
+          0.5294,
+          0.5216,
+          0.502
         ],
-        "hex": "#8a8c88"
+        "hex": "#878580"
       }
     },
     "gray750": {
@@ -1342,6 +1342,30 @@
           0
         ],
         "hex": "#000000"
+      }
+    },
+    "crimson700": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.1098,
+          0.1216
+        ],
+        "hex": "#9a1c1f"
+      }
+    },
+    "crimson800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4118,
+          0.0745,
+          0.0824
+        ],
+        "hex": "#691315"
       }
     },
     "statusCritical": {
@@ -2517,6 +2541,10 @@
         "$type": "color",
         "$value": "{color.blue250}"
       },
+      "textOnPrimary": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
       "textDisabled": {
         "$type": "color",
         "$value": "{color.neutral600}"
@@ -2548,6 +2576,10 @@
       "surfaceSecondaryHover": {
         "$type": "color",
         "$value": "{color.blue100}"
+      },
+      "surfaceRowHover": {
+        "$type": "color",
+        "$value": "{color.blue250}"
       },
       "surfaceSelected": {
         "$type": "color",
@@ -2619,15 +2651,23 @@
       },
       "interactivePrimaryHover": {
         "$type": "color",
-        "$value": "{color.blue950}"
+        "$value": "{color.blue900}"
       },
       "interactivePrimaryActive": {
         "$type": "color",
-        "$value": "{color.blue900}"
+        "$value": "{color.blue750}"
       },
       "interactivePrimaryDisabled": {
         "$type": "color",
         "$value": "{color.neutral250}"
+      },
+      "interactiveDisabledBg": {
+        "$type": "color",
+        "$value": "{color.gray300}"
+      },
+      "interactiveDisabledFg": {
+        "$type": "color",
+        "$value": "{color.gray700}"
       },
       "interactiveAccentHover": {
         "$type": "color",
@@ -2734,15 +2774,15 @@
       },
       "interactiveDanger": {
         "$type": "color",
-        "$value": "{color.red800}"
+        "$value": "{color.statusCritical}"
       },
       "interactiveDangerHover": {
         "$type": "color",
-        "$value": "{color.red900}"
+        "$value": "{color.crimson700}"
       },
       "interactiveDangerActive": {
         "$type": "color",
-        "$value": "{color.red1000}"
+        "$value": "{color.crimson800}"
       },
       "textOnDanger": {
         "$type": "color",
@@ -2781,6 +2821,14 @@
         "$value": "{color.white}"
       },
       "textOnInteractive": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "textOnPrimary": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "textOnDanger": {
         "$type": "color",
         "$value": "{color.blue1000}"
       },
@@ -2823,6 +2871,10 @@
       "surfaceNavigationActive": {
         "$type": "color",
         "$value": "{color.neutral800}"
+      },
+      "surfaceRowHover": {
+        "$type": "color",
+        "$value": "{color.neutral900}"
       },
       "surfaceSelected": {
         "$type": "color",
@@ -2899,6 +2951,14 @@
       "interactivePrimaryDisabled": {
         "$type": "color",
         "$value": "{color.neutral800}"
+      },
+      "interactiveDisabledBg": {
+        "$type": "color",
+        "$value": "{color.neutral800}"
+      },
+      "interactiveDisabledFg": {
+        "$type": "color",
+        "$value": "{color.neutral500}"
       },
       "interactiveSecondary": {
         "$type": "color",
@@ -3036,6 +3096,10 @@
           "$type": "color",
           "$value": "{semantic.color.textOnHero}"
         },
+        "onPrimary": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnPrimary}"
+        },
         "onDanger": {
           "$type": "color",
           "$value": "{semantic.color.textOnDanger}"
@@ -3085,6 +3149,12 @@
           },
           "$type": "color",
           "$value": "{semantic.color.surfaceSelected}"
+        },
+        "row": {
+          "hover": {
+            "$type": "color",
+            "$value": "{semantic.color.surfaceRowHover}"
+          }
         },
         "navigation": {
           "$type": "color",
@@ -3175,6 +3245,16 @@
             "$type": "color",
             "$value": "{semantic.color.interactiveDangerActive}"
           }
+        },
+        "disabled": {
+          "bg": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveDisabledBg}"
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{semantic.color.interactiveDisabledFg}"
+          }
         }
       },
       "status": {
@@ -3264,9 +3344,13 @@
           "$type": "color",
           "$value": "{semantic.color.textOnHero}"
         },
+        "onPrimary": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnPrimary}"
+        },
         "onDanger": {
           "$type": "color",
-          "$value": "{semantic.color.textOnDanger}"
+          "$value": "{semanticDark.color.textOnDanger}"
         },
         "onLight": {
           "$type": "color",
@@ -3313,6 +3397,12 @@
           },
           "$type": "color",
           "$value": "{semanticDark.color.surfaceSelected}"
+        },
+        "row": {
+          "hover": {
+            "$type": "color",
+            "$value": "{semanticDark.color.surfaceRowHover}"
+          }
         },
         "navigation": {
           "$type": "color",
@@ -3402,6 +3492,16 @@
           "active": {
             "$type": "color",
             "$value": "{semanticDark.color.interactiveDangerActive}"
+          }
+        },
+        "disabled": {
+          "bg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveDisabledBg}"
+          },
+          "fg": {
+            "$type": "color",
+            "$value": "{semanticDark.color.interactiveDisabledFg}"
           }
         }
       },
