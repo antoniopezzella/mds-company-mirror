@@ -7,7 +7,7 @@ import * as chrono from 'chrono-node';
 import type { DateRange, DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
-import { CONTROL_ICON, useControlSize, type ControlSize } from './control-size';
+import { CONTROL_ICON, CONTROL_RADIUS, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { Calendar } from './calendar';
@@ -43,7 +43,8 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * `tertiary` (no border of its own) plus the field classes, rather than
  * fighting `secondary`'s border-2 with an override.
  */
-const FIELD_TRIGGER = 'justify-start gap-2 rounded-md font-normal';
+// Radius via CONTROL_RADIUS so the field matches Input/Select beside it.
+const FIELD_TRIGGER = `justify-start gap-2 ${CONTROL_RADIUS} font-normal`;
 
 /**
  * Border is set in the style, not via a `border` class: the `tertiary`

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { CONTROL_HEIGHT, CONTROL_ICON, CONTROL_PX, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
+import { CONTROL_HEIGHT, CONTROL_ICON, CONTROL_PX, CONTROL_RADIUS, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor } from '@/theme/roles';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -85,7 +85,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
             // ship. So `.mds-root` is powerless over native controls no matter
             // its specificity, and this trigger rendered its label in Arial
             // beside Noto Sans fields. Input/Textarea/Select already declare it.
-            'box-border flex w-full items-center justify-between gap-2 rounded-md border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'box-border flex w-full items-center justify-between gap-2 border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            CONTROL_RADIUS,
             CONTROL_HEIGHT[resolvedSize],
             CONTROL_PX[resolvedSize],
             CONTROL_TEXT[resolvedSize],

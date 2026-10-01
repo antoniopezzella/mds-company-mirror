@@ -57,12 +57,21 @@ const DOCS = 'src/docs/30-Spacing.mdx';
 /**
  * The steps this design system assigns a meaning to, plus the two keywords.
  *
- * Deliberately NOT every step Tailwind ships: `xs`, `sm`, `3xl` and `4xl` are
- * valid Tailwind and invalid here. Allowing them would let a sixth corner size
- * in without anyone deciding it should exist.
+ * Deliberately NOT every step Tailwind ships: `xs`, `3xl` and `4xl` are valid
+ * Tailwind and invalid here. Allowing them would let another corner size in
+ * without anyone deciding it should exist.
+ *
+ * `sm` (4px) was admitted on 2026-10-01 as the CONTROL step, by decision, not
+ * drift — controls were visibly too round at 6px. It is applied through
+ * CONTROL_RADIUS in control-size.ts, so retuning stays a one-line edit.
  */
 const INTENT = {
-  md: 'controls: inputs, buttons, chips, cells',
+  // 4px. The control family only, and sourced from CONTROL_RADIUS in
+  // control-size.ts rather than written per component — that constant is the
+  // single lever for retuning it. Added 2026-10-01 when controls moved from
+  // 6px to 4px; `md` stays below for the surfaces that are NOT controls.
+  sm: 'controls: inputs, buttons, selects, comboboxes',
+  md: 'chips, cells, menu items and other small surfaces',
   lg: 'badges, menu items, small surfaces',
   xl: 'cards, the data-grid shell, dialogs',
   '2xl': 'large feature surfaces',
@@ -177,7 +186,7 @@ for (const rel of ENTRYPOINTS) {
 // The docs win arguments with whoever reads them next — including agents. If
 // 30-Spacing.mdx says a step is one size and the stock scale says another,
 // someone will "fix" working code to match the table.
-const PX = { md: 6, lg: 8, xl: 12, '2xl': 16 };
+const PX = { sm: 4, md: 6, lg: 8, xl: 12, '2xl': 16 };
 const docsDrift = [];
 const docsAbs = path.join(root, DOCS);
 if (fs.existsSync(docsAbs)) {

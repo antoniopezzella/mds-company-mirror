@@ -10,6 +10,7 @@ import {
   CONTROL_HEIGHT,
   CONTROL_ICON,
   CONTROL_PX,
+  CONTROL_RADIUS,
   CONTROL_TEXT,
   useControlSize,
   type ControlSize,
@@ -43,7 +44,10 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'box-border flex w-full items-center justify-between gap-2 rounded-md border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      'box-border flex w-full items-center justify-between gap-2 border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+      // The TRIGGER only. SelectContent and SelectItem keep rounded-md —
+      // they are a surface and its menu items, not the control.
+      CONTROL_RADIUS,
       CONTROL_HEIGHT[resolvedSize],
       CONTROL_PX[resolvedSize],
       CONTROL_TEXT[resolvedSize],
