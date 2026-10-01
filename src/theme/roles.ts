@@ -55,6 +55,11 @@ export type RoleName =
   | 'text.onAccent'
   | 'text.onInteractive'
   | 'text.onHero'
+  // ⚠️ `text.onPrimary` is NOT `text.primary`. One is the label ON a primary
+  // fill (Sky, flipping to Midnight); the other is body text (Midnight).
+  // Writing `text.primary` on a primary button gives navy on navy at 1.00:1
+  // and no gate catches it, because both are valid role names.
+  | 'text.onPrimary'
   | 'text.onDanger'
   | 'text.onLight'
   | 'text.disabled'
@@ -65,6 +70,7 @@ export type RoleName =
   | 'surface.raised'
   | 'surface.secondary'
   | 'surface.secondary.hover'
+  | 'surface.row.hover'
   | 'surface.selected'
   | 'surface.selected.subtle'
   | 'surface.navigation'
@@ -98,7 +104,9 @@ export type RoleName =
   | 'interactive.secondary.active'
   | 'interactive.danger'
   | 'interactive.danger.hover'
-  | 'interactive.danger.active';
+  | 'interactive.danger.active'
+  | 'interactive.disabled.bg'
+  | 'interactive.disabled.fg';
 
 interface RoleMapEntry {
   semantic: SemanticColorName;
@@ -114,7 +122,12 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'text.inverse': { semantic: 'textOnAccent', description: 'Text on accent or inverse surfaces' },
   'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
   'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
-  'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface' },
+  'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface — mode-INVARIANT Sky, because hero surfaces stay dark in both modes. For a label on interactive.primary, which does flip, use text.onPrimary' },
+  'text.onPrimary': {
+    semantic: 'textOnPrimary',
+    description:
+      'Label on interactive.primary — Sky in light, Midnight in dark, flipping with the fill beneath it (14.72:1 / 10.50:1). NOT text.primary, which is body text',
+  },
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
   'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
@@ -132,7 +145,12 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
     semantic: 'surfaceSelectedSubtle',
     description: 'Selected row/list-item fill — lighter than surface.selected so in-row content keeps its contrast',
   },
-  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint; hover is a neutral lift (surface.subtle), not this' },
+  'surface.row.hover': {
+    semantic: 'surfaceRowHover',
+    description:
+      'Hovered table row — Sky Blue in light, unchanged neutral in dark. Status badges inside a row must set variant="soft"/"solid": the default outline badge is transparent and a success badge measures 4.16:1 on Sky, under AA',
+  },
+  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint. Row hover is surface.row.hover (also Sky), so the two are told apart by the selected row\'s left accent bar, not by hue' },
   'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
   'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
@@ -167,7 +185,17 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'interactive.secondary.active': { semantic: 'interactiveSecondaryActive', description: 'Secondary interactive active' },
   'interactive.danger': { semantic: 'interactiveDanger', description: 'Destructive interactive base' },
   'interactive.danger.hover': { semantic: 'interactiveDangerHover', description: 'Destructive hover' },
-  'interactive.danger.active': { semantic: 'interactiveDangerActive', description: 'Destructive active' }
+  'interactive.danger.active': { semantic: 'interactiveDangerActive', description: 'Destructive active' },
+  'interactive.disabled.bg': {
+    semantic: 'interactiveDisabledBg',
+    description:
+      "Disabled fill for interactive controls. Separate from surface.disabled, which is the general disabled surface — this one is Figma's Neutral/Gray/300 and is what every Button variant uses",
+  },
+  'interactive.disabled.fg': {
+    semantic: 'interactiveDisabledFg',
+    description:
+      'Disabled label/icon on interactive.disabled.bg. Separate from text.disabled for the same reason. The pair measures below 4.5:1 by design — WCAG 1.4.3 exempts inactive controls',
+  }
 };
 
 export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }

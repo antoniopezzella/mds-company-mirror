@@ -34,6 +34,22 @@ export const semanticColors = {
   // wants textOnAccent).
   textOnInteractive: ref('white'),        // Light mode: interactive.primary/secondary/danger are dark — white works
   textOnHero:    ref('blue250'),          // #ceecff — Sky Blue text on dark hero surfaces (transparent header)
+  /**
+   * Label on `interactivePrimary` — Marsh's Sky-on-Midnight pairing, which
+   * FLIPS to Midnight-on-Sky in dark because interactivePrimary itself flips
+   * (#000f47 → #95caff). 14.72:1 light, 10.50:1 dark.
+   *
+   * It exists because neither neighbour could do the job:
+   *   · textOnHero is #ceecff in BOTH modes — it does not flip, so in dark it
+   *     would put pale blue on #95caff. (It is right for hero surfaces, which
+   *     stay dark in both modes, and has 45 consumers depending on that.)
+   *   · textOnInteractive flips correctly but is WHITE in light, losing the
+   *     Sky pairing. It is what sits on danger/accent fills; 21 consumers.
+   *
+   * Button's primary variant hardcoded `#ceecff`/`dark:#000f47` for months
+   * precisely because this had no name.
+   */
+  textOnPrimary: ref('blue250'),          // #ceecff — Sky on Midnight (flips; see dark overrides)
   textDisabled:  ref('neutral600'),       // #767676 — Disabled text
   textOnLight:   ref('blue1000'),         // Dark text on light backgrounds
   textOnDark:    ref('white'),            // White text on dark backgrounds
@@ -44,9 +60,31 @@ export const semanticColors = {
   surfaceMuted:           ref('neutral200'),       // #e3e3e3 — Muted backgrounds
   surfaceAccent:          ref('gray250'),          // #f7f8f8 — Warm accent (was blueGray75)
   surfaceSecondaryHover:  ref('blue100'),          // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
-  // Selected row / list item on a default surface. Hover deliberately has no
-  // token here — it's a neutral lift (surfaceSubtle), so that "passing over"
-  // and "chosen" don't both read as brand blue.
+  /**
+   * Hovered TABLE ROW. Sky Blue in light, unchanged neutral in dark.
+   *
+   * This reverses an earlier decision — hover used to be a neutral lift
+   * (surfaceSubtle) specifically so that "passing over" and "chosen" did not
+   * both read as brand blue. Sky was chosen deliberately over that objection;
+   * the state hierarchy is now carried by the selected row's LEFT ACCENT BAR
+   * rather than by hue, since hover is the stronger tint of the two.
+   *
+   * ⚠️ CONTRAST HAZARD, and it is not gated. Everything in a hovered row
+   * composites against #ceecff, and Badge's DEFAULT variant (`outline`) is
+   * transparent. A success badge's #2f7d32 measures **4.16:1** on Sky —
+   * under AA — and green1000 is the darkest anchor in the ramp, so there is
+   * no darker green to promote. Status badges inside a row must therefore
+   * carry their own background (`variant="soft"` or `"solid"`); the ones
+   * this repo owns were moved over with this token. A consumer that drops a
+   * default outline badge into a row will still fail, and no check will
+   * catch it.
+   *
+   * Dark mode is deliberately identical to surfaceSubtle (#252525) — the
+   * brief was light-mode only, and light's Sky would be near-white against
+   * dark's white textPrimary.
+   */
+  surfaceRowHover:        ref('blue250'),          // #ceecff — Sky Blue; hovered table row
+  // Selected row / list item on a default surface.
   surfaceSelected:        ref('blue250'),          // #ceecff — Sky Blue; selected row/item
   /**
    * The selected state for a DENSE surface — a table row, a list item —
@@ -105,10 +143,33 @@ export const semanticColors = {
   focusRing:     ref('focusBlue'),        // #3d7aff — Alias for borderFocus (roles.ts)
 
   // ── Interactive — Primary (Midnight / CTA) ────────────────────────────────
+  // The ramp LIGHTENS with interaction intensity: Midnight → 900 → 750.
+  //
+  // Hover/active moved one step out (2026-09-30) to the values Button has
+  // always shipped. Figma names blue750 "Primary Palette/Blue/750 (Active)"
+  // and Button used it; the roles pointed at blue900 and blue950 instead, so
+  // the ramp stopped one step short of the step Figma literally labels
+  // Active. Button is unchanged by this — the roles moved to it.
+  //
+  // The old trailing comments here read #021b6c / #042791 and were stale:
+  // the 2026-09-15 Figma re-sync moved blue900/blue950 (see tokens.ts:20-21)
+  // and nobody updated them. That staleness is very likely why
+  // docs/tasks/button-token-request.md was raised claiming #082d9e "isn't a
+  // defined token at all" when it had become one two weeks earlier.
   interactivePrimary:         ref('blue1000'),      // #000f47 — Midnight Blue
-  interactivePrimaryHover:    ref('blue950'),       // #021b6c — Slightly lighter for hover
-  interactivePrimaryActive:   ref('blue900'),       // #042791 — Lighter active state
+  interactivePrimaryHover:    ref('blue900'),       // #082d9e — Blue/900
+  interactivePrimaryActive:   ref('blue750'),       // #0b4bff — Blue/750 (Active)
   interactivePrimaryDisabled: ref('neutral250'),    // #dadada
+
+  // ── Interactive — Disabled (shared by every Button variant) ───────────────
+  // Deliberately separate from textDisabled/surfaceDisabled, which stay as
+  // they are. Those are the GENERAL disabled treatment; repointing them to
+  // these Figma values would drop disabled text on white from 4.54:1 to
+  // 3.69:1 across the whole system for the sake of one component.
+  //
+  // Dark matches what Button already shipped as literals.
+  interactiveDisabledBg: ref('gray300'),            // #ebe7e2 — Neutral/Gray/300
+  interactiveDisabledFg: ref('gray700'),            // #878580 — Neutral/Gray/700
 
   // ── Interactive — Accent (Gold / primaryAlt Button hover-active) ──────────
   // Base color is brandAccent (gold750) — these are only the hover/active
@@ -154,14 +215,21 @@ export const semanticColors = {
   statusInfoBorder: ref('blue500'),            // #6fb4ff
   statusInfoText:   ref('blue1000'),           // #000f47
 
-  // ── Interactive — Danger (Red) ────────────────────────────────────────────
-  // red800, not red750: red750 (#e53935) is too mid-toned for white text to
-  // clear 4.5:1 against (4.23:1 measured) — one step darker passes at 4.90:1
-  // and is a barely-perceptible shift, improving (never regressing) every
-  // other consumer's contrast too (borders, danger-state fills).
-  interactiveDanger:       ref('red800'),       // #d33330
-  interactiveDangerHover:  ref('red900'),       // #af2625
-  interactiveDangerActive: ref('red1000'),      // #8b1a1a
+  // ── Interactive — Danger (Traffic/Crimson) ────────────────────────────────
+  // Moved off the `red*` ramp (2026-09-30) onto Figma's Traffic/Crimson ramp,
+  // which is the destructive family — `red*` maps to a different Figma group
+  // entirely. The three values this used (red800/900/1000) were marked
+  // "interpolated": invented steps that matched no Figma anchor, while Button
+  // had been shipping the real Crimson ramp as hardcoded literals because
+  // 700 and 800 were never imported.
+  //
+  // White-on-danger contrast IMPROVES with this: 4.90:1 → 5.34:1. The
+  // previous note here argued red800 over red750 on exactly that basis;
+  // Crimson 600 wins the same argument by a wider margin and is the value
+  // Figma labels "default".
+  interactiveDanger:       ref('statusCritical'), // #c53532 — Traffic/Crimson 600 - default
+  interactiveDangerHover:  ref('crimson700'),     // #9a1c1f — Traffic/Crimson 700
+  interactiveDangerActive: ref('crimson800'),     // #691315 — Traffic/Crimson 800
   textOnDanger:            ref('white'),        // White text on red
 } as const;
 
@@ -185,6 +253,18 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // following textOnAccent's white. Passes 10.50:1+ against the whole
   // interactive.primary/secondary/danger dark-mode family.
   textOnInteractive: tokens.blue1000,        // #000f47
+  // The flip that is the whole point of this token: interactivePrimary goes
+  // from Midnight to #95caff in dark, so its label has to go the other way.
+  textOnPrimary:     tokens.blue1000,        // #000f47 — Midnight on Sky
+  // BUG FIX (2026-09-30). textOnDanger was `white` in BOTH modes while every
+  // danger surface flips light in dark — status.danger.fg goes #8b1a1a →
+  // #ffe8e8. Its one consumer, stepper.tsx:157, rendered a white error glyph
+  // on a near-white fill at **1.17:1** — invisible, confirmed in a browser.
+  //
+  // Same value and reasoning as textOnInteractive, which button.tsx had
+  // already switched to for exactly this hazard (see its destructive block).
+  // 15.49:1 on status.danger.fg, 6.53:1 on dark interactive.danger.
+  textOnDanger:      tokens.blue1000,        // #000f47 — was white, see above
   textOnLight:   tokens.blue1000,            // unchanged (rare context)
   textOnDark:    tokens.neutral50,           // #f8f8f8
   textDisabled:  tokens.neutral500,          // #878787
@@ -218,6 +298,10 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // The light-mode Sky Blue would be near-white here and fail against dark
   // mode's white textPrimary (1.73:1), so selection uses the navy step the
   // navigation surfaces already use.
+  // Row hover stays exactly where it was in dark: the brief was light-mode
+  // only. Same value as surfaceSubtle by intent, NOT by accident — if that
+  // ever diverges, this should follow it rather than drift.
+  surfaceRowHover:         tokens.neutral900,                // #252525 — unchanged from surfaceSubtle
   surfaceSelected:         tokens.blue975,                   // #1a2759 — white on it: 14.20:1
   // Dark needs no lightening: status text inverts to the near-white end of
   // each ramp, so it clears easily on the navy. Same value as surfaceSelected.
@@ -248,6 +332,12 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   interactivePrimaryHover:    tokens.blue300,        // #bbe1ff
   interactivePrimaryActive:   tokens.blue200,        // #d8f0ff
   interactivePrimaryDisabled: tokens.neutral800,     // #3b3b3b
+
+  // Disabled, dark. Exactly the values Button already hand-wrote as its
+  // `dark:disabled:` literals — this just gives them a name, so the dark
+  // variant stops being a second place to keep in sync by hand.
+  interactiveDisabledBg: tokens.neutral800,          // #3b3b3b
+  interactiveDisabledFg: tokens.neutral500,          // #878787
 
   // Interactive Secondary (Blue — lightened for dark bg)
   interactiveSecondary:        tokens.blue400,        // #95caff

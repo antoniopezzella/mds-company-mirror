@@ -1,10 +1,61 @@
 # Token request — Button interaction states
 
-**Status:** Draft, awaiting Design Lead review
+**Status:** ✅ **Resolved 2026-09-30.** Approved by the Design Lead and
+implemented. Kept rather than deleted because the reasoning below — in
+particular the "do NOT swap" section — still governs the three literals that
+remain in `button.tsx`.
 **Raised:** 2026-09-28
-**Blocks:** removing `roles-allow-hex-file` from `src/components/ui/button.tsx`
+**Blocks:** ~~removing `roles-allow-hex-file` from `src/components/ui/button.tsx`~~
+— the marker is now narrowed to three deliberate exceptions rather than 71
+literals; see the file header.
 **Process:** [`docs/TOKEN_REQUEST_PROCESS.md`](../TOKEN_REQUEST_PROCESS.md) ·
 file as `.github/ISSUE_TEMPLATE/token-request-semantic.md` once approved
+
+---
+
+## Resolution — 2026-09-30
+
+**One principle decided all three groups: where Button and the token system
+disagreed, Button was right.** In every case Button shipped a real Figma
+anchor and the token layer pointed at an *interpolated* value — a step the
+ramp invented between anchors. So the roles moved to Button, not the reverse,
+and Button is visually unchanged by this work.
+
+| Group | Resolution |
+|---|---|
+| Primary hover/active | `interactivePrimaryHover` → `blue900` (#082d9e), `interactivePrimaryActive` → `blue750` (#0b4bff). Figma names blue750 "Primary Palette/Blue/750 **(Active)**" — the roles had stopped one step short of the step Figma labels Active. |
+| Disabled | New `interactive.disabled.bg/.fg` → #ebe7e2 / #878580. `text.disabled` and `surface.disabled` deliberately **unchanged**: repointing them would have dropped disabled text on white from 4.54:1 to 3.69:1 system-wide for one component's benefit. |
+| Destructive | Moved off `red*` onto Figma's **Traffic/Crimson** ramp: #c53532 / #9a1c1f / #691315. White-on-danger contrast *improved* 4.90:1 → 5.34:1. |
+
+**Four primitives were the actual root cause.** `#ebe7e2`, `#878580`,
+`#9a1c1f` and `#691315` all existed in `src/figma-variable-map.json` with
+`"mdsToken": null` — named Figma variables (`Neutral/Gray/300`, `Gray/700`,
+`Traffic/Crimson 700`, `800`) that were never imported. Button hardcoded them
+because there was genuinely nowhere to point. Two were imported as new
+`crimson*` tokens; the other two were *corrections* to `gray300`/`gray700`,
+which had drifted to interpolated values (#eaebea, #8a8c88).
+
+**Outcome in `button.tsx`:** 71 hex literals → 6, and ~30 `dark:` colour
+overrides → 1. The `dark:` collapse is the real prize: a role resolves
+per-mode on its own, so the hand-maintained second copy of every colour
+simply stopped being necessary.
+
+**Button's interaction states are now contrast-gated** in
+`scripts/check-contrast.js` — they were invisible to every gate while they
+were literals, which is how the ramp drifted for months with CI green.
+
+### The one item NOT resolved
+
+Group 5 below ("do NOT swap") stands. Primary's
+`text-[#ceecff] dark:text-[#000f47]` stays literal because **no role expresses
+it**: `text.onHero` is #ceecff in *both* modes (it would put pale blue on dark
+mode's #95caff), and `text.onInteractive` flips correctly but is white, which
+loses the Marsh Sky-on-Midnight pairing. What is missing is a flipping
+counterpart to `text.onHero`. That remains a real, open token gap.
+
+---
+
+## Original request (2026-09-28) — retained for the reasoning
 
 ---
 
@@ -18,6 +69,16 @@ deliberately — `docs/SHADCN_MIGRATION_STATUS.md:34` records the reasoning:
 > (`#082d9e`/`#0b4bff` in light mode) that don't match any existing role
 > (`interactive.primary.hover`/`.active` resolve to different colors,
 > `#021b6c`/`#042791`), and `#082d9e` isn't a defined token at all.
+
+> ⚠️ **That quote was already stale when this request was raised.** The
+> 2026-09-15 Figma re-sync moved the ramp — `blue900` became `#082d9e` and
+> `blue950` became `#06206e` (`src/tokens.ts:20-21`) — so `#082d9e` *was* a
+> defined token two weeks before this was written. The trailing comments in
+> `semantic-tokens.ts` still read `#021b6c`/`#042791` and were never updated,
+> which is almost certainly where the mistaken premise came from. Both the
+> premise and those comments were fixed on 2026-09-30. The lesson is in the
+> contrast: the token *counts* in CLAUDE.md are mechanically gated and stay
+> true, while a hex in a trailing comment is gated by nothing.
 
 So this is not drift and not something to silently clean up. Rewiring Button
 to the nearest existing role would **change the primary button's hover colour

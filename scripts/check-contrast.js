@@ -124,6 +124,38 @@ const PAIRS = [
   // currently passes (4.54/5.30) but light mode is close enough to the 4.5
   // line that a future token nudge could silently regress it.
   { name: 'textDisabled on surfaceDefault', fg: 'textDisabled', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
+  // ── Button's interaction states ───────────────────────────────────────────
+  // Added 2026-09-30, when these stopped being hardcoded hex in button.tsx and
+  // became roles. While they were literals no gate could see them at all, so
+  // the ramp could drift (and had — hover/active sat one step off the Figma
+  // anchors for months) with every check green.
+  //
+  // interactivePrimaryHover/Active carry the button's own text, which is
+  // Sky in light and Midnight in dark. textOnHero is #ceecff in BOTH modes,
+  // so it is the right fg to test the light side against; the dark side is
+  // covered by textOnInteractive on interactivePrimary above.
+  // The label on a primary button, in both modes. This is the pair that had
+  // no token at all until 2026-09-30 — Button hardcoded it — so nothing could
+  // check it. textOnPrimary flips with the fill beneath it, which is the
+  // whole reason it exists separately from textOnHero.
+  { name: 'textOnPrimary on interactivePrimary', fg: 'textOnPrimary', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
+  // And the fixed one: textOnDanger was white in both modes while every
+  // danger surface flips light in dark, so Stepper's error glyph rendered at
+  // 1.17:1 — invisible. Gated now so it cannot silently return.
+  { name: 'textOnDanger on statusDangerText', fg: 'textOnDanger', bg: 'statusDangerText', required: 4.5, warn: 4.5 },
+  // textOnPrimary, NOT textOnHero. These were briefly written against
+  // textOnHero, which does not flip: in dark it put #ceecff on the #bbe1ff
+  // hover fill at 1.11:1. The gate caught it. The fg here has to be the same
+  // role the component actually uses, or the pair tests a combination that
+  // never renders.
+  { name: 'textOnPrimary on interactivePrimaryHover', fg: 'textOnPrimary', bg: 'interactivePrimaryHover', required: 4.5, warn: 4.5 },
+  { name: 'textOnPrimary on interactivePrimaryActive', fg: 'textOnPrimary', bg: 'interactivePrimaryActive', required: 4.5, warn: 4.5 },
+  { name: 'textOnInteractive on interactiveDangerHover', fg: 'textOnInteractive', bg: 'interactiveDangerHover', required: 4.5, warn: 4.5 },
+  { name: 'textOnInteractive on interactiveDangerActive', fg: 'textOnInteractive', bg: 'interactiveDangerActive', required: 4.5, warn: 4.5 },
+  // Informational, same WCAG 1.4.3 exemption as textDisabled above: this pair
+  // measures ~2.99:1 light and is MEANT to read as unavailable. Tracked so the
+  // number is visible rather than unknown, not gated.
+  { name: 'interactiveDisabledFg on interactiveDisabledBg', fg: 'interactiveDisabledFg', bg: 'interactiveDisabledBg', required: 4.5, warn: 4.5, informational: true },
   { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
   // Raised 3.0 -> 4.5: Badge's `outline` variant renders these as small text
   // directly on the page, so AA for text applies, not the 3:1 non-text floor.

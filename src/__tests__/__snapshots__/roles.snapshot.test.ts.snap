@@ -46,21 +46,33 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#ff6b6b",
-    "light": "#d33330",
+    "light": "#c53532",
     "role": "interactive.danger",
     "semantic": "interactiveDanger",
   },
   {
     "dark": "#ffe8e8",
-    "light": "#8b1a1a",
+    "light": "#691315",
     "role": "interactive.danger.active",
     "semantic": "interactiveDangerActive",
   },
   {
     "dark": "#ff9d9d",
-    "light": "#af2625",
+    "light": "#9a1c1f",
     "role": "interactive.danger.hover",
     "semantic": "interactiveDangerHover",
+  },
+  {
+    "dark": "#3b3b3b",
+    "light": "#ebe7e2",
+    "role": "interactive.disabled.bg",
+    "semantic": "interactiveDisabledBg",
+  },
+  {
+    "dark": "#878787",
+    "light": "#878580",
+    "role": "interactive.disabled.fg",
+    "semantic": "interactiveDisabledFg",
   },
   {
     "dark": "#95caff",
@@ -70,13 +82,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#d8f0ff",
-    "light": "#082d9e",
+    "light": "#0b4bff",
     "role": "interactive.primary.active",
     "semantic": "interactivePrimaryActive",
   },
   {
     "dark": "#bbe1ff",
-    "light": "#06206e",
+    "light": "#082d9e",
     "role": "interactive.primary.hover",
     "semantic": "interactivePrimaryHover",
   },
@@ -219,6 +231,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceRaised",
   },
   {
+    "dark": "#252525",
+    "light": "#ceecff",
+    "role": "surface.row.hover",
+    "semantic": "surfaceRowHover",
+  },
+  {
     "dark": "#95caff",
     "light": "#ceecff",
     "role": "surface.secondary",
@@ -267,7 +285,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "textOnAccent",
   },
   {
-    "dark": "#ffffff",
+    "dark": "#000f47",
     "light": "#ffffff",
     "role": "text.onDanger",
     "semantic": "textOnDanger",
@@ -289,6 +307,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "light": "#000f47",
     "role": "text.onLight",
     "semantic": "textOnLight",
+  },
+  {
+    "dark": "#000f47",
+    "light": "#ceecff",
+    "role": "text.onPrimary",
+    "semantic": "textOnPrimary",
   },
   {
     "dark": "#ffffff",
