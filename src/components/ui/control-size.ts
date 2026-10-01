@@ -74,6 +74,38 @@ export const CONTROL_ICON: Record<ControlSize, string> = {
   lg: 'size-5', // 20px
 };
 
+/**
+ * Corner radius for controls — THE one place to retune it.
+ *
+ * Deliberately NOT size-scaled: a 32px and a 48px button sitting in the same
+ * row with different corner radii reads as a mistake, not a hierarchy. One
+ * value for the whole control family.
+ *
+ * Why it lives here and not in a theme config
+ * -------------------------------------------
+ * A global radius lever has been tried twice in this repo and failed twice,
+ * in opposite directions (see the Corner radius note in `src/index.css`):
+ *
+ *   1. A `borderRadius` override in tailwind.config.js rescaled the whole
+ *      ladder around `--radius`, computing `rounded-md` as `calc(2px - 2px)`
+ *      = 0. ~110 components silently rendered square while their class names
+ *      still said `rounded-md`.
+ *   2. An `@theme` block redefining `--radius-*` fixed that but changed what
+ *      `rounded-lg` MEANS — here and, because styles.package.css ships it,
+ *      inside every consumer's own app too. Same category of mistake as
+ *      imposing a CSS reset.
+ *
+ * This constant avoids both: it is a plain Tailwind class on the stock
+ * scale, applied only to controls. `rounded-*` keeps its standard meaning
+ * everywhere else, nothing is redefined for consumers, and retuning is a
+ * one-line edit here rather than a rename across ~190 call sites.
+ *
+ * Must stay a string literal — Tailwind's scanner is plain text and a
+ * computed class generates no CSS. Permitted values are enforced by
+ * `npm run radius:check`.
+ */
+export const CONTROL_RADIUS = 'rounded-sm'; // 4px
+
 /** Everything a single-line control needs, in one string. */
 export function controlSizeClasses(size: ControlSize): string {
   return `${CONTROL_HEIGHT[size]} ${CONTROL_PX[size]} ${CONTROL_TEXT[size]}`;

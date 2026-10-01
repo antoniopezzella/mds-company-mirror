@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { CONTROL_PX, CONTROL_PY, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
+import { CONTROL_PX, CONTROL_PY, CONTROL_RADIUS, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
 import { getRoleColor, type RoleName } from '@/theme/roles';
 import type { InputTone } from './input';
 
@@ -43,7 +43,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         ref={ref}
         disabled={disabled}
         className={cn(
-          'box-border flex min-h-[80px] w-full rounded-md border bg-transparent font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] shadow-xs transition-colors placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          'box-border flex min-h-[80px] w-full border bg-transparent font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] shadow-xs transition-colors placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          CONTROL_RADIUS,
           CONTROL_PX[resolvedSize],
           CONTROL_PY[resolvedSize],
           CONTROL_TEXT[resolvedSize],

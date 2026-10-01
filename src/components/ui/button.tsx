@@ -29,7 +29,7 @@ import { cva } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { useControlSize, type ControlSize } from './control-size';
+import { CONTROL_RADIUS, useControlSize, type ControlSize } from './control-size';
 
 /**
  * Button variants using class-variance-authority
@@ -341,9 +341,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // rendered 16px regardless of size.
           'font-[family-name:var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
           'font-bold tracking-normal',
-          // Border radius — `rounded-md` IS 2px on Tailwind v4's stock scale,
-          // so the arbitrary value this used to carry is no longer needed.
-          'rounded-md',
+          // Corner radius comes from CONTROL_RADIUS so a button and a field
+          // beside it always agree. The comment here used to claim
+          // `rounded-md` IS 2px on Tailwind's stock scale — it is 6px
+          // (`xs` is 2, `sm` is 4, `md` is 6), so buttons shipped at more
+          // than twice the intended radius for as long as that was believed.
+          CONTROL_RADIUS,
           // Loading opacity
           loading && 'opacity-80',
           className
