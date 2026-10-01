@@ -47,8 +47,81 @@ components render with the right markup and no styling at all:
 import '@antoniopezzella/marsh-design-system/styles.css';
 ```
 
-This is required, and it is the whole setup. **You do not need Tailwind in your
-project** — the stylesheet is pre-compiled and self-contained.
+**You do not need Tailwind in your project** — the stylesheet is pre-compiled
+and self-contained.
+
+**Then wrap your app in `mds-root`:**
+
+```tsx
+<div className="mds-root">
+  <App />
+</div>
+```
+
+This gives everything inside it two things the package will not set globally:
+the design system's `font-family`, and `box-sizing: border-box`.
+
+It is opt-in on purpose. A component library is a guest in your app and has no
+business writing rules at `body` or `*` scope — so the package ships no CSS
+reset. The cost of that choice is that the two inherited properties components
+rely on have to come from somewhere, and `mds-root` is that somewhere, scoped
+to a subtree you choose. Specificity is held at 0 for descendants, so your own
+`font-family` or `box-sizing` on anything inside still wins.
+
+**If you skip it:** text falls back to your app's font — or, if your app sets
+none, the browser's default serif. Controls still size correctly (`Input`,
+`Textarea`, `Select`, `Combobox`, `Dialog` set `box-border` and their own font
+on themselves), but spacing and colour elsewhere may be off.
+
+> **Overlays need it on `<body>`, not on your app root.** `Dialog`, `Popover`,
+> `Sheet`, `Select` and `Tooltip` render through a React portal attached to
+> `document.body` — *outside* any wrapper you place inside your app. Wrapping
+> `<App/>` alone does not reach them, and their body text will inherit from
+> `body`.
+>
+> Put the class on `<body>` itself to cover both:
+>
+> ```html
+> <body class="mds-root">
+> ```
+>
+> or set the two properties on `body` in your own CSS, which is equivalent:
+>
+> ```css
+> body { font-family: 'Noto Sans', sans-serif; color: #000f47; }
+> ```
+>
+> The components' own titles and descriptions carry their own styling either
+> way — this affects arbitrary children you render inside an overlay.
+
+### Fonts
+
+**The package ships no font files and no `@font-face` rules** — fonts are
+licensed assets and a library should not make that decision for you. The
+stacks resolve to `'Noto Sans', sans-serif`, so without Noto Sans available you
+get your platform's default sans.
+
+To get the intended typography, self-host [Noto Sans](https://fonts.google.com/noto/specimen/Noto+Sans)
+(SIL Open Font License) and declare it:
+
+```css
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('/fonts/NotoSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+/* repeat for 500 / 600 / 700 */
+```
+
+Retarget the whole library from one place by redefining the variable:
+
+```css
+.mds-root { --typo-body1-font-family: 'Your Font', sans-serif; }
+```
+
+MMC Display and Marsh Serif are **not** redistributable here — obtain them
+through Marsh McLennan brand channels.
 
 <details>
 <summary>Why a stylesheet is needed at all, if the components use Tailwind</summary>

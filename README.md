@@ -2,9 +2,32 @@
 
 ![Contrast Status Badge](./contrast-badge.svg)
 
-**🌐 Live Storybook:** Deploy for free with [Netlify](https://netlify.com) or [Vercel](https://vercel.com)
+**🌐 Live Storybook:** <https://marsh-design-system.vercel.app/storybook/>
 
-> Interactive component library and design system documentation with **AI-powered insurance assistant**. Auto-deploys on every push to `main`.
+> React component library and governed design tokens for Marsh B2B dashboards.
+> Three-tier tokens (primitives → semantics → roles), shadcn/Radix + Tailwind v4,
+> and CI gates enforcing WCAG AA contrast and token discipline.
+
+### Using MDS in another project
+
+This README is the **contributor** guide — for building and governing the system
+itself. If you want to *consume* MDS in an app, the install, the required
+stylesheet import, and the setup steps are in
+**[README.package.md](./README.package.md)**.
+
+The short version:
+
+```bash
+npm install @antoniopezzella/marsh-design-system
+```
+
+```tsx
+import '@antoniopezzella/marsh-design-system/styles.css';
+```
+
+**You do not need Tailwind** — the stylesheet is pre-compiled and
+self-contained. See [README.package.md](./README.package.md) for the
+`mds-root` wrapper and fonts, both of which you want.
 
 ---
 
