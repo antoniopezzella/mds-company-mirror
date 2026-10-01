@@ -84,6 +84,11 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
           '--tw-ring-color': getRoleColor('focus.ring'),
         } as React.CSSProperties
       }
+      // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
+      // came last a consumer passing their own handler REPLACED the one below
+      // and the highlight never fired — while the `props.on*?.(e)` chain-call
+      // inside it, written for exactly that case, became dead code.
+      {...props}
       onMouseEnter={(e) => {
         if (!modifiers.selected && !modifiers.disabled) {
           (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor('surface.subtle');
@@ -96,7 +101,6 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
         }
         props.onMouseLeave?.(e);
       }}
-      {...props}
     />
   );
 }

@@ -88,7 +88,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitive.Action
     ref={ref}
     className={cn(
-      'inline-flex shrink-0 items-center justify-center rounded-md border bg-transparent px-3 py-1.5 font-[var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex shrink-0 items-center justify-center rounded-md border bg-transparent px-3 py-1.5 font-[family-name:var(--typo-button-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold uppercase tracking-wide transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className
     )}
     style={{ borderColor: 'currentColor', color: 'inherit' }}
@@ -122,7 +122,7 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitive.Title
     ref={ref}
-    className={cn('font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold', className)}
+    className={cn('font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-semibold', className)}
     {...props}
   />
 ));
@@ -134,7 +134,7 @@ const ToastDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitive.Description
     ref={ref}
-    className={cn('font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm opacity-90', className)}
+    className={cn('font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm opacity-90', className)}
     {...props}
   />
 ));

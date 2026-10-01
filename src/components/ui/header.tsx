@@ -183,7 +183,11 @@ export const Header: React.FC<HeaderProps> = ({
           {notificationCount > 0 && (
             <span
               className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-semibold"
-              style={{ backgroundColor: getRoleColor('interactive.danger'), color: getRoleColor('text.onAccent') }}
+              // text.onInteractive, NOT text.onAccent. onAccent is a fixed
+              // near-white; interactive.danger LIGHTENS to #ff6b6b in dark, so
+              // white-on-it measured 2.78:1 and the count was unreadable.
+              // onInteractive flips to Midnight in dark: 5.34 / 6.53.
+              style={{ backgroundColor: getRoleColor('interactive.danger'), color: getRoleColor('text.onInteractive') }}
             >
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>

@@ -75,15 +75,15 @@ const radioControlVariants = cva(
 const radioIndicatorVariants = cva('flex items-center justify-center');
 
 const radioLabelVariants = cva(
-  'select-none font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
+  'select-none font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
 );
 
 const radioGroupLabelVariants = cva(
-  'font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold leading-6 tracking-normal'
+  'font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold leading-6 tracking-normal'
 );
 
 const radioGroupHelperVariants = cva(
-  'font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm font-normal leading-5 tracking-normal'
+  'font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm font-normal leading-5 tracking-normal'
 );
 
 function getInteractiveRole(

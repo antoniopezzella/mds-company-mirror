@@ -117,6 +117,11 @@ const MenubarItem = React.forwardRef<
       className
     )}
     style={{ color: getRoleColor(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
+    // came last a consumer passing their own handler REPLACED the one below
+    // and the highlight never fired — while the `props.on*?.(e)` chain-call
+    // inside it, written for exactly that case, became dead code.
+    {...props}
     onFocus={(e) => {
       (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor(
         tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
@@ -127,7 +132,6 @@ const MenubarItem = React.forwardRef<
       (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
       props.onBlur?.(e);
     }}
-    {...props}
   />
 ));
 MenubarItem.displayName = MenubarPrimitive.Item.displayName;

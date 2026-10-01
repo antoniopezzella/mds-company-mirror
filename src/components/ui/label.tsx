@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
 
 const labelVariants = cva(
-  'font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+  'font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 );
 
 const Label = React.forwardRef<

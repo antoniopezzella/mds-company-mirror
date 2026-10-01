@@ -78,7 +78,15 @@ const columns: DataGridColumnDef<Policy>[] = [
       // Pending is a caution, not a neutral label — and it is the only tone
       // that exercises the warning path, whose outline text deliberately is NOT
       // gold (see badge.tsx: status.warning.fg measures 3.41:1 on white).
-      return <Badge tone={v === 'Active' ? 'success' : v === 'Expired' ? 'danger' : 'warning'}>{v}</Badge>;
+      // `soft`, not the default `outline`: an outline badge is transparent, so
+      // its text composites on the ROW, and row hover is Sky Blue — where
+      // success green measures 4.16:1, under AA. A badge that carries its own
+      // background is unaffected by whatever the row is doing.
+      return (
+        <Badge variant="soft" tone={v === 'Active' ? 'success' : v === 'Expired' ? 'danger' : 'warning'}>
+          {v}
+        </Badge>
+      );
     },
   },
   { accessorKey: 'premium', header: 'Premium', enableSorting: true },

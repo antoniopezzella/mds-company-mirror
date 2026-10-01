@@ -49,14 +49,14 @@ const checkboxControlVariants = cva(
 const checkboxIndicatorVariants = cva('flex h-4 w-4 items-center justify-center');
 
 const checkboxLabelVariants = cva(
-  'select-none font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
+  'select-none font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-normal leading-6 tracking-normal peer-disabled:cursor-not-allowed'
 );
 
 /* The 28px indent is derived from the control's geometry — the 16px checkbox
    plus the 12px gap — so the helper text lines up under the label rather than
    under the box. It tracks the checkbox, not the spacing scale. */
 const checkboxHelperVariants = cva(
-  'ml-7 flex min-h-5 items-start gap-1 font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm font-normal leading-5 tracking-normal' // spacing-allow
+  'ml-7 flex min-h-5 items-start gap-1 font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm font-normal leading-5 tracking-normal' // spacing-allow
 );
 
 const checkboxHelperIconVariants = cva('mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center');

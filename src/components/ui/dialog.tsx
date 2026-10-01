@@ -55,7 +55,24 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          'fixed left-1/2 top-1/2 z-[1500] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg p-6 shadow-lg duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          'box-border fixed left-1/2 top-1/2 z-[1500] grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg p-6 shadow-lg duration-150 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+          // Direct children get `min-width: 0`, or ONE long unbreakable string
+          // anywhere inside silently widens the whole dialog.
+          //
+          // Grid/flex items default to `min-width: auto`, which resolves to
+          // their min-content size. A `truncate` span is `white-space: nowrap`,
+          // so its min-content is the FULL text — an email, a URL, a policy
+          // number. `min-w-0` on that span lets it shrink once a width is
+          // known, but it does not lower its ancestors' min-content, so the
+          // demand propagates all the way up and the dialog's column refuses
+          // to go below it. Measured: a 464px content box forced to 508px.
+          //
+          // The symptom does not look like this. The dialog stays 512px, so
+          // it becomes horizontally scrollable instead — and anything that
+          // calls `scrollIntoView` inside it then scrolls that axis, sliding
+          // the content sideways under the padding. It reads as "the modal
+          // has padding issues on the left".
+          '[&>*]:min-w-0',
           SIZE_CLASSES[size],
           size === 'fullscreen' ? 'max-h-screen overflow-y-auto' : 'max-h-[85vh] overflow-y-auto',
           className
@@ -66,7 +83,16 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
         {children}
         {!hideCloseButton && (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 rounded-md opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
+            // `size-9` around an `h-5` icon, NOT a bare icon. The glyph alone
+            // was the whole hit target — 20×20 measured, under WCAG 2.5.8's
+            // 24×24 minimum, and the hardest thing on the dialog to hit on a
+            // touchscreen despite being the only way out of some of them.
+            //
+            // `right-2` with a 36px box puts the icon's centre at 8+18=26px,
+            // exactly where `right-4` with a 20px box put it — the target
+            // grew, nothing moved. `DialogHeader`'s `pr-12` is the matching
+            // clearance (the box now reaches 44px in).
+            className="absolute right-2 top-2 flex size-9 items-center justify-center rounded-md opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{ color: getRoleColor('text.secondary') }}
             aria-label="Close"
           >
@@ -80,7 +106,10 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col gap-1.5 pr-8', className)} {...props} />
+  // `pr-12` clears the close button, which reaches 44px in from the right
+  // edge now that it carries a real 36×36 hit target. At `pr-8` a long title
+  // ran under the X.
+  <div className={cn('flex flex-col gap-1.5 pr-12', className)} {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
@@ -108,7 +137,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('font-[var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-semibold leading-none', className)}
+    className={cn('font-[family-name:var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-semibold leading-none', className)}
     style={{ color: getRoleColor('text.primary') }}
     {...props}
   />
@@ -121,7 +150,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('font-[var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)}
+    className={cn('font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)}
     style={{ color: getRoleColor('text.secondary') }}
     {...props}
   />
@@ -212,7 +241,17 @@ export const Modal: React.FC<ModalProps> = ({
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
         size={resolveModalSize(size)}
-        className={className}
+        // The BODY scrolls, not the dialog. `DialogContent` alone caps at
+        // `max-h-[85vh] overflow-y-auto`, which scrolls the whole box — so on
+        // a short viewport the title scrolls out of view and the primary
+        // action ends up below the fold, on a dialog that looks complete.
+        // Measured at 620px tall: the CTA sat outside the viewport entirely.
+        //
+        // `flex flex-col` beats the base `grid` through tailwind-merge (same
+        // `display` group), and `overflow-y-hidden` beats `overflow-y-auto`
+        // for the same reason — `overflow-hidden` would NOT, since tw-merge
+        // files `overflow` and `overflow-y` separately and both would survive.
+        className={cn('flex flex-col overflow-y-hidden', className)}
         onOpenAutoFocus={onOpenAutoFocus}
       >
         {hasHeader && (title || description) && (
@@ -221,7 +260,12 @@ export const Modal: React.FC<ModalProps> = ({
             {description && <DialogDescription>{description}</DialogDescription>}
           </DialogHeader>
         )}
-        {children}
+        {/* `min-h-0` is what actually lets this shrink — a flex item's
+            automatic minimum is its content, so without it the body refuses
+            to shrink and pushes the footer out of the box instead. */}
+        {children != null && (
+          <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+        )}
         {hasFooter && footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>
     </Dialog>

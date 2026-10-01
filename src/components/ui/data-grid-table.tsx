@@ -245,7 +245,10 @@ export function DataGridTable<TData extends RowData>({
   const textColor = getRoleColor('text.primary');
   const activeColor = getRoleColor('interactive.primary');
   const rowBg = getRoleColor('surface.raised');
-  const hoverBg = getRoleColor('surface.subtle');
+  // Sky Blue in light (#ceecff), unchanged #252525 in dark. Its own role, not
+  // surface.subtle, because stripeBg and headerBg below still want the neutral
+  // lift and must NOT follow hover into brand blue.
+  const hoverBg = getRoleColor('surface.row.hover');
   // surface.selected, not surface.accent: accent (#f7f8f8) is one unit from
   // surface.subtle (#f8f8f8) in light, so a selected row and a hovered row
   // were indistinguishable. surface.selected is the role whose own

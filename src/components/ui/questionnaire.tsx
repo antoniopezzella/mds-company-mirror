@@ -88,7 +88,7 @@ function QuestionnaireTitle({
     <QuestionnairePrimitive.Title
       data-slot="questionnaire-title"
       className={cn(
-        "font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold leading-6 text-foreground",
+        "font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold leading-6 text-foreground",
         className
       )}
       {...props}

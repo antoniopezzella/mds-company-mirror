@@ -47,7 +47,11 @@ const policyColumns: TableColumn<Policy>[] = [
     key: 'status',
     header: 'Status',
     render: (value) => (
-      <Badge tone={value === 'Active' ? 'success' : 'default'}>{value as string}</Badge>
+      // `soft` so the badge carries its own background — row hover is Sky
+      // Blue, where a transparent outline badge's success green is 4.16:1.
+      <Badge variant="soft" tone={value === 'Active' ? 'success' : 'default'}>
+        {value as string}
+      </Badge>
     ),
   },
   { key: 'premium', header: 'Premium', align: 'right', sortable: true },
