@@ -10,8 +10,8 @@ describe('CardWebsite', () => {
         category="Report"
         timestamp="15 Jun 2025"
         datetime="2025-06-15"
-        imageSrc="/images/insight-card.jpg"
-        imageAlt="An aerial view of a city skyline at dusk"
+        imageSrc="/images/journey-global-risks.jpg"
+        imageAlt="Satellite view of a tropical cyclone approaching a coastline"
       />
     );
 

@@ -74,8 +74,11 @@ const DEMO_PROPS = {
     'The global insurance market index is our proprietary measure of global commercial insurance premium pricing.',
   category: 'Category',
   timestamp: 'MM/DD/YYYY',
-  imageSrc: '/images/insight-card.jpg',
-  imageAlt: 'Marsh insight image',
+  // /images/insight-card.jpg did not exist — a 404 on every story using
+  // DEMO_PROPS (eight of them), rendering a broken-image icon. There is no
+  // onError fallback on the <img>, so nothing masked it.
+  imageSrc: '/images/journey-global-risks.jpg',
+  imageAlt: 'Satellite view of a tropical cyclone approaching a coastline',
   href: '#',
 };
 
