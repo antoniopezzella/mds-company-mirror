@@ -1,0 +1,66 @@
+/* The opt-in base layer for the PUBLISHED package.
+ *
+ * The problem this solves
+ * -----------------------
+ * The package deliberately ships no preflight — a library must not impose a
+ * global reset on its host app, and `styles.package.css` says so. But the
+ * components were quietly RELYING on one anyway:
+ *
+ *   · 29 of 93 components render text and declare no `font-family`, so they
+ *     inherit from `<body>`. In this repo three different things set that
+ *     (MUI's theme, _typography.scss, Tailwind preflight); in a consumer app
+ *     nothing does, so text fell back to the UA default — serif.
+ *   · `box-border` appears on exactly ONE of 93 components. Without
+ *     `box-sizing: border-box`, `Input`'s `w-full` + `px-3` + `border`
+ *     measures outward: a 44px control in a design system whose `md` size is
+ *     40px, and a DialogContent 560px wide against its own 512px max-width.
+ *
+ * Neither is visible in Storybook or the dev app, because both load the
+ * repo's own global CSS. That is exactly why they survived the v4 migration.
+ *
+ * The approach: OPT-IN, not imposed
+ * ---------------------------------
+ * A consumer wraps their app (or any subtree) once:
+ *
+ *     <div className="mds-root">…</div>
+ *
+ * Inside that element the library gets the two things it needs. Outside it,
+ * the consumer's own styles are untouched — no `*` selector at document
+ * scope, no `body` rule, nothing the package has no business setting.
+ *
+ * Why `:where()` on the descendant rule: it holds specificity at 0, so a
+ * consumer's own `box-sizing` or `font-family` on any element inside still
+ * wins without needing `!important`. The opt-in should be a floor, not a
+ * ceiling.
+ *
+ * This is a safety net, not a licence to keep omitting these. The controls
+ * whose geometry is measurably wrong without it (`input`, `textarea`,
+ * `select`, `combobox`) also set `box-border` on themselves, so they are
+ * correct even for a consumer who never opts in.
+ */
+.mds-root {
+  box-sizing: border-box;
+  /* Resolves through typography-variables.css, which ships alongside this.
+     A consumer retargets the whole library by redefining that one variable. */
+  font-family: var(--typo-body1-font-family, 'Noto Sans', sans-serif);
+  /* The colour floor. Omitting this was a real bug: `CardContent` and
+     `DialogContent` pass no `color`, so they inherited the UA black — which
+     on dark mode's #101010 page measured **1.1:1**. The same argument that
+     justified the font-family line applies verbatim to colour, and only half
+     of it was done the first time. */
+  color: var(--role-text-primary, #000f47);
+}
+
+/* Written as two rules, not one selector list. Lightning CSS (`--minify`)
+   rewrites `:where(*, *::before, *::after)` down to `:where(*)`, which does
+   not match pseudo-elements — verified in the built artifact, where a
+   `::before` inside .mds-root computed `content-box`. Splitting them
+   survives minification. */
+.mds-root :where(*) {
+  box-sizing: border-box;
+}
+
+.mds-root :where(*)::before,
+.mds-root :where(*)::after {
+  box-sizing: border-box;
+}

@@ -68,4 +68,73 @@ if (bytes < MIN_BYTES) {
   process.exit(1);
 }
 
-console.log(`✓ package stylesheet OK — ${bytes} bytes, all load-bearing rules present.`);
+// ── Every var() must resolve ───────────────────────────────────────────────
+// The presence checks above are deliberately dumb, and that dumbness shipped
+// a real bug: `dist-pkg/styles.css` referenced five `--role-*` properties
+// (Button's fill colours) and defined none of them, because the only thing
+// that ever set `--role-*` was a useEffect in RoleVarsProvider — a React
+// component the package does not ship. Every check in this repo validated the
+// SOURCE; nothing validated the ARTIFACT, which is the same hole
+// check-package-types.js exists to plug for types.
+//
+// A consumer following README.package.md got a primary button with no
+// background, and all nine gates stayed green.
+const defined = new Set([...css.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((m) => m[1]));
+const referenced = new Map();
+for (const m of css.matchAll(/var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,|\))/g)) {
+  referenced.set(m[1], (referenced.get(m[1]) ?? 0) + 1);
+}
+
+// A `var(--x, fallback)` is legitimately undefined-tolerant, so only consider
+// references that would resolve to nothing.
+const dangling = [...referenced.keys()].filter((name) => {
+  if (defined.has(name)) return false;
+  const withFallback = new RegExp(`var\\(\\s*${name}\\s*,`);
+  return !withFallback.test(css);
+});
+
+// Two tiers, because not every undefined reference is a defect.
+//
+// HARD FAIL — `--role-*`. These are the design system's own contract and the
+// package cannot assume RoleVarsProvider is mounted, so they must be defined
+// by a stylesheet we ship. This is the class that actually broke.
+//
+// REPORT ONLY — everything else. Three legitimate kinds live here:
+//   · component-local vars (`--switch-focus-ring`, `--sn-active-bg`), set by
+//     the same component's inline style in the same render it is read;
+//   · `--radix-*` and `--tw-*`, set on the element at runtime by Radix and
+//     Tailwind respectively;
+//   · scanner artifacts — Tailwind's content scan is plain text, so a
+//     documentation example like `p-[var(--x)]` in src/docs/30-Spacing.mdx
+//     becomes a real rule in the output. Harmless bloat, worth seeing.
+const ROLE_PREFIX = '--role-';
+const danglingRoles = dangling.filter((n) => n.startsWith(ROLE_PREFIX));
+const danglingOther = dangling.filter((n) => !n.startsWith(ROLE_PREFIX));
+
+if (danglingRoles.length) {
+  console.error(`\n✗ check-package-css: ${danglingRoles.length} role variable(s) referenced but never defined\n`);
+  for (const name of danglingRoles.sort()) {
+    console.error(`  ${name.padEnd(40)} ${referenced.get(name)} reference(s), 0 definitions`);
+  }
+  console.error('\n  These resolve to nothing in a consumer app — the property silently does');
+  console.error('  not apply, so you get a transparent background rather than an error,');
+  console.error('  and every other gate stays green.');
+  console.error('\n  Roles must be defined by a stylesheet the package SHIPS');
+  console.error('  (src/styles/roles.generated.css, emitted by scripts/build-tokens.js),');
+  console.error('  never only by RoleVarsProvider — that is a React component the');
+  console.error('  package does not ship, and this is exactly how Button came to render');
+  console.error('  with no background for consumers.\n');
+  process.exit(1);
+}
+
+const roleCount = [...defined].filter((n) => n.startsWith(ROLE_PREFIX)).length;
+console.log(
+  `✓ package stylesheet OK — ${bytes} bytes, all load-bearing rules present, ` +
+    `${roleCount} role var(s) defined, every --role-* reference resolves.`
+);
+if (danglingOther.length) {
+  console.log(
+    `  ℹ ${danglingOther.length} non-role var(s) are set at runtime or by the content scanner ` +
+      '(informational, not a failure).'
+  );
+}
