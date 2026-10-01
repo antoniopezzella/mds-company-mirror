@@ -2,6 +2,109 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.7.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.6.0...v0.7.0) (2026-10-01)
+
+### Features
+
+* **components:** add a header slot and collapse-to-icons to SideNavigation ([8354f22](https://github.com/antoniopezzella/marsh-design-system/commit/8354f22161fdee2c567195ed5dfb9f3697f15b03))
+* **components:** add bulk actions — the operation half of selection ([6cd3f71](https://github.com/antoniopezzella/marsh-design-system/commit/6cd3f71f8b66de00d684051d37da2b9fbc6cd38c))
+* **components:** add data formatting, closing the dashboard's largest gap ([81c95b0](https://github.com/antoniopezzella/marsh-design-system/commit/81c95b0ea122c677a96eda91148642ec5c6ac8b8))
+* **components:** add FilterBar, and fix two contrast/landmark bugs it exposed ([e014d4e](https://github.com/antoniopezzella/marsh-design-system/commit/e014d4e93e2dbc8e3a1139739f1630ebbcde8fe0))
+* **components:** add FilterChip, and stop Chip rendering fake buttons ([058e7df](https://github.com/antoniopezzella/marsh-design-system/commit/058e7df615695174eaaf3bf98bc1709f1d76aa3b))
+* **components:** add number-range and boolean filters, and fix a portal bug they exposed ([68ec984](https://github.com/antoniopezzella/marsh-design-system/commit/68ec98444a1a95e6bc3c9ea61bb05e16459e1628))
+* **components:** add row actions, closing §3.03 ([a1a3a7e](https://github.com/antoniopezzella/marsh-design-system/commit/a1a3a7e62e26a3348bc38365b194edd9ae5c6732))
+* **components:** add the advanced builder with nested groups ([d56c7be](https://github.com/antoniopezzella/marsh-design-system/commit/d56c7bef6d7d5f7aef3be63efed15d09a6b1f5a8))
+* **components:** add the canonical filter query model, operators and utilities ([b297618](https://github.com/antoniopezzella/marsh-design-system/commit/b297618c543beda906605bf2fb83ce5f9cd67752))
+* **components:** add the Colleague Profile manage-team screen ([b28a429](https://github.com/antoniopezzella/marsh-design-system/commit/b28a429660f95a21b4ec43a0ca312b74f8db36b2))
+* **components:** add the filter schema — one definition, many renderers ([b035768](https://github.com/antoniopezzella/marsh-design-system/commit/b0357682671bc49ef18ef7f89388ece40ccc2919))
+* **components:** add the four-state data contract, closing P0-2 ([1ff69c0](https://github.com/antoniopezzella/marsh-design-system/commit/1ff69c070b670e7a65e2a85eb234bf2a35d3aaed))
+* **components:** add the table markup primitives, and put the grid on them ([c908caf](https://github.com/antoniopezzella/marsh-design-system/commit/c908caf8f63e50fa0704d1b0364a1dfcfa1a54ed))
+* **components:** adopt formatters in StatCard and derive delta direction ([6ef9d2f](https://github.com/antoniopezzella/marsh-design-system/commit/6ef9d2fac8b3ec67a9c55082406053ab97427339))
+* **components:** build the add-team-members dialog ([74ec2b1](https://github.com/antoniopezzella/marsh-design-system/commit/74ec2b13b34148c7cb17348401c91d0e31564d6b))
+* **components:** build the filter query system with segmented conditions ([8b8d87f](https://github.com/antoniopezzella/marsh-design-system/commit/8b8d87fcfc2462545be2c1995ad2fbec89458702))
+* **components:** build the two-outcome remove-member dialog ([8423318](https://github.com/antoniopezzella/marsh-design-system/commit/84233183629bbef9004d025318048e6ecf27a70c))
+* **components:** default Badge to an outline treatment ([be118b4](https://github.com/antoniopezzella/marsh-design-system/commit/be118b44836cd76d0093c940dae4e18607443eca))
+* **components:** deprecate Table, and add the one capability it had that the grid lacked ([55d78dd](https://github.com/antoniopezzella/marsh-design-system/commit/55d78dd4558c3c1a9ad7c40372430fd937336083))
+* **components:** drive grid filters from the schema ([a965c8d](https://github.com/antoniopezzella/marsh-design-system/commit/a965c8de80ebb825da77c0b58b0508a5d6f9cb0a))
+* **components:** export the table primitives, and hold off deleting the legacy Table ([2361c0d](https://github.com/antoniopezzella/marsh-design-system/commit/2361c0d1c59591366fdbb6411ea4c1e98a297943))
+* **components:** finish the data-state retrofit across Table, Chart and List ([f5d38b2](https://github.com/antoniopezzella/marsh-design-system/commit/f5d38b2d5fa4f3d1f1bb4f8a8d28337a34e796b6))
+* **components:** give the menu chip a real menu, and adopt it in FilterBar ([75e1cf6](https://github.com/antoniopezzella/marsh-design-system/commit/75e1cf65b0bf61be651c757fbfd9bdd70b9abb15))
+* **components:** let DataTable take a caller-owned table instance ([05d5d5c](https://github.com/antoniopezzella/marsh-design-system/commit/05d5d5c428abb8f0f2f526feb5fa4e4e9e621b80))
+* **components:** make a filtered view shareable as a URL ([fd99570](https://github.com/antoniopezzella/marsh-design-system/commit/fd995707e8f30c5172c57e460a7b00b463819e3f))
+* **components:** make the rail's role switcher gate what the screens offer ([c0bd8cb](https://github.com/antoniopezzella/marsh-design-system/commit/c0bd8cbe4426a06087a195f7fff6918eba651b56))
+* **components:** make the team card itself the link ([a8d1940](https://github.com/antoniopezzella/marsh-design-system/commit/a8d194013436ccb3426e53d50d7733f7665c4834))
+* **components:** match Card's radius to the data-grid shell ([209e1e8](https://github.com/antoniopezzella/marsh-design-system/commit/209e1e828dfe59bdd790f8905f1c740d21370285))
+* **components:** put the query system in the gallery and make its copy reach ([eeab06b](https://github.com/antoniopezzella/marsh-design-system/commit/eeab06b23869f3e2edf5f29834929df73b68911d))
+* **components:** rebuild dashboard-demo on PageShell, FilterBar and the data states ([5e190ec](https://github.com/antoniopezzella/marsh-design-system/commit/5e190ecb04340e047e22fbe443cf61ebc5ff39f5))
+* **components:** rebuild on TanStack v9 with a composable API ([3b8d25f](https://github.com/antoniopezzella/marsh-design-system/commit/3b8d25f5ab2ff81a732e81ecc07bc176d6a8d13e))
+* **components:** rebuild the Colleague Profile My Teams screen on the DS ([24fc237](https://github.com/antoniopezzella/marsh-design-system/commit/24fc23773af46516da9b58ae97e33b5c1ce044ed))
+* **components:** right-align numbers automatically ([bae8d4d](https://github.com/antoniopezzella/marsh-design-system/commit/bae8d4dc465a8c686de06a6f003e0dfc37953239))
+* **components:** wire the new grid into exports and the taxonomy ([d15a282](https://github.com/antoniopezzella/marsh-design-system/commit/d15a28208c6c564bb12f5ebdf8c84d3cf61f54dc))
+* **components:** wire the query system into the grid toolbar ([a8e6b9d](https://github.com/antoniopezzella/marsh-design-system/commit/a8e6b9d17e41fbbf481e29a0b60921ff090338c7))
+* **governance:** score design-system health on a frozen, comparable rubric ([6ec3482](https://github.com/antoniopezzella/marsh-design-system/commit/6ec34820092701c601172cd10a4284076b4699ea))
+* **storybook:** document the dashboard components in the live showcase ([9dcc73a](https://github.com/antoniopezzella/marsh-design-system/commit/9dcc73ac2218aef05367a8cc0fe28a524c1b8e1d))
+* **tokens:** add border.subtle and surface.raised roles ([691ec2f](https://github.com/antoniopezzella/marsh-design-system/commit/691ec2fcc1aa2c98639fbfd9ec840150fe7a407e))
+
+### Bug Fixes
+
+* **a11y:** repair seven filter defects axe cannot see ([e5963d7](https://github.com/antoniopezzella/marsh-design-system/commit/e5963d735a10283902ee70649f416f7917222c43))
+* **a11y:** stop screen readers narrating skeleton rows as empty table cells ([6e79599](https://github.com/antoniopezzella/marsh-design-system/commit/6e79599d38dff22b0d0cbe19be0c07bf9eaf6173))
+* **components:** close four P0/P1s — z-index, token drift, a11y claims, coverage ([0abfdb7](https://github.com/antoniopezzella/marsh-design-system/commit/0abfdb7df379c6429d7858b66143d5ca9c1aee3d))
+* **components:** close seven correctness gaps found by the review ([4f18620](https://github.com/antoniopezzella/marsh-design-system/commit/4f186201552df5bbb5aafd74e50b4a232bc65753))
+* **components:** correct four filter operators that returned wrong rows ([b09b865](https://github.com/antoniopezzella/marsh-design-system/commit/b09b865983e884d87968271adf7dcf7d62b8f4c1))
+* **components:** correct ten foreground/background pairings ([a2d3274](https://github.com/antoniopezzella/marsh-design-system/commit/a2d32743d45c09ee7c84f931c324dfa308cc4f7d))
+* **components:** drop Cancel from the remove-member dialog ([6f711a4](https://github.com/antoniopezzella/marsh-design-system/commit/6f711a4d1b67fe326c614bce68349b1529f4cf52))
+* **components:** emit font-family, add box-sizing, make Button role-driven ([d3ac317](https://github.com/antoniopezzella/marsh-design-system/commit/d3ac317ca627589369aa7142062c84b8568ab68d))
+* **components:** make select-all scope explicit, and name checkboxes after records ([04e6125](https://github.com/antoniopezzella/marsh-design-system/commit/04e612511bddbc6c6154b197826be6edbbfc4736))
+* **components:** put every stacking value on the z-index scale ([49baf69](https://github.com/antoniopezzella/marsh-design-system/commit/49baf69ff18fe564a4423cb63257841d0d235252))
+* **components:** replace bare `rounded` and hardcoded radius values ([d3a9847](https://github.com/antoniopezzella/marsh-design-system/commit/d3a9847fc96516caa1db200dd82985546dc1c747))
+* **components:** row action buttons rendered empty, and tsc was checking nothing ([dc757a9](https://github.com/antoniopezzella/marsh-design-system/commit/dc757a948879abd6ee660b0be904498af014f395))
+* **components:** stop shared filter links losing or inventing filters ([95525e0](https://github.com/antoniopezzella/marsh-design-system/commit/95525e04f6f2672260d2783fe294a7d5b3b46b61))
+* **components:** two accessibility defects in FilterChip ([07f6d3f](https://github.com/antoniopezzella/marsh-design-system/commit/07f6d3f9c15f2f161671ae7c93b9b6d43c8c9d25))
+* **components:** wire select-all scope into DataTable, and fix a contrast regression it exposed ([9fd3590](https://github.com/antoniopezzella/marsh-design-system/commit/9fd3590fe9d7f3d7dd6c895da5dc94617d5d129f))
+* **governance:** make the radius and stacking gates walk subdirectories ([5064722](https://github.com/antoniopezzella/marsh-design-system/commit/5064722669b7fa80b5095cbc2a1a136b2835f215))
+* **governance:** stop scoring documentation and tracked debt as colour drift ([fdef339](https://github.com/antoniopezzella/marsh-design-system/commit/fdef339250a74b8f64c049ab25a2a9615d9ac03e))
+* **package:** define role and typography vars in the shipped stylesheet ([32c272e](https://github.com/antoniopezzella/marsh-design-system/commit/32c272e5d480f0e199bf45f924663857a1d6f1fd))
+* **release:** strip false issue links from closes/fixes/resolves too ([e340b64](https://github.com/antoniopezzella/marsh-design-system/commit/e340b645cfed1b5461bf08b27d2f8993755c8645)), references [#hex](https://github.com/antoniopezzella/marsh-design-system/issues/hex)
+* **repo:** repair 8 broken Figma bindings and typecheck them from now on ([d1ffac7](https://github.com/antoniopezzella/marsh-design-system/commit/d1ffac77511705b528d9206db6205f770558aaee))
+* **theme:** make ThemeModeContext safe under SSR ([f960814](https://github.com/antoniopezzella/marsh-design-system/commit/f96081434479d22e9b3e1b8a18b90332553244d6))
+* **tokens:** align roles to Figma anchors; add disabled, onPrimary, Crimson ([6364c6b](https://github.com/antoniopezzella/marsh-design-system/commit/6364c6ba034d5c0ea1d2cd6d959b499b1cb7ef62))
+
+### Refactoring
+
+* **components:** extract useDataGridTable so composition stops costing more ([43d22a9](https://github.com/antoniopezzella/marsh-design-system/commit/43d22a99ac25067668ee140829b0064be12c4b37))
+* **components:** make the filter extension points real or remove them ([4c0c7e5](https://github.com/antoniopezzella/marsh-design-system/commit/4c0c7e5ecac560fc1f6fc833d7d0a4c20731698a))
+* **components:** move every Table consumer to DataTable ([2931875](https://github.com/antoniopezzella/marsh-design-system/commit/2931875fa18b616606b9fd49c7e1c4c2bf6e15e7))
+* **theme:** move radius onto Tailwind's stock scale ([d04ba7f](https://github.com/antoniopezzella/marsh-design-system/commit/d04ba7f6dccacdff603f8b464f64b91f681fd0ac))
+
+### Styling
+
+* **components:** switch the Colleague Profile rail to the light variant ([003d86e](https://github.com/antoniopezzella/marsh-design-system/commit/003d86ec3070b61d16d2197b5b04bb26ebc0af39))
+
+### Documentation
+
+* assess filters against reui — the gap is a schema, not a component ([e188c1f](https://github.com/antoniopezzella/marsh-design-system/commit/e188c1f43b5e21c7cc91abfbfb9aa781625095c7))
+* audit DataTable/DataGrid against the Experience Specification ([66c89d5](https://github.com/antoniopezzella/marsh-design-system/commit/66c89d5676e571edc7b65abba2d8806608bc2de2))
+* correct overstated accessibility claims and refresh guidance ([947232b](https://github.com/antoniopezzella/marsh-design-system/commit/947232b4c4faa6ce0940a8b089f32d3991d85129))
+* **governance:** write the deprecation window the code already promised ([3851dd6](https://github.com/antoniopezzella/marsh-design-system/commit/3851dd64b63b31244effb1763cfdaea9815afefc))
+* **storybook:** explain which table to use, and why two of them look alike ([d15b378](https://github.com/antoniopezzella/marsh-design-system/commit/d15b3787503e970b0066ab13185a5f7e27de780b))
+
+### Continuous Integration
+
+* **build:** gate the publish workflow ([313d2e0](https://github.com/antoniopezzella/marsh-design-system/commit/313d2e0f500f85718abe9b61c600b37768306bf8))
+
+### Tests
+
+* **components:** cover the filter internals nobody could see ([5a0bbc5](https://github.com/antoniopezzella/marsh-design-system/commit/5a0bbc5762fbd272c3821b417387a9f51608a214))
+* **components:** test the toast queue, and open the menus the stories never opened ([ff705f9](https://github.com/antoniopezzella/marsh-design-system/commit/ff705f933286ddb067925c677f6c4fc63a500fcc))
+
+### Chores
+
+* **components:** remove the legacy MUI Checkbox ([ccb9f04](https://github.com/antoniopezzella/marsh-design-system/commit/ccb9f045508f05737cca2f3d7999404371da64e9))
+* **governance:** add package-type, z-index and visual-baseline gates ([e32fcb5](https://github.com/antoniopezzella/marsh-design-system/commit/e32fcb57d88b2230bb80f21b07b0d6410952f276))
+* **repo:** add verification agent, story audit, and consumer docs ([666269d](https://github.com/antoniopezzella/marsh-design-system/commit/666269d5ddb2adf398e7f5dcdd5611e2054f27cf))
+* **tokens:** regenerate the intermediate token build output ([b449d06](https://github.com/antoniopezzella/marsh-design-system/commit/b449d06cda07a7efda0c33228d76d464a2639915))
+
 ## [0.6.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.5.0...v0.6.0) (2026-09-24)
 
 ### ⚠ BREAKING CHANGES
