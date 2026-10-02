@@ -43,7 +43,41 @@ const REQUIRED = [
   { sel: '.flex-col{', why: 'static layout utilities — utilities layer missing' },
   { sel: '--spacing:', why: 'the spacing scale variable — theme layer missing' },
   { sel: '.animate-in{', why: 'tw-animate-css — its @import was dropped (must precede @config)' },
+
+  // The custom utilities from src/styles/component-utilities.css. These were
+  // defined only in src/index.css — the APP stylesheet, which this package
+  // never imports — so message-scroller's edge fade and attachment's shimmer
+  // shipped as class names with no CSS behind them, while looking correct in
+  // Storybook and the dev app. Nothing caught it: every gate validated the
+  // source, and the source was fine.
+  { sel: '.scroll-fade-b{', why: 'scroll-fade-b — component-utilities.css not imported by styles.package.css' },
+  { sel: '.scroll-fade-x{', why: 'scroll-fade-x — component-utilities.css not imported by styles.package.css' },
+  { sel: '.shimmer{', why: 'shimmer — component-utilities.css not imported by styles.package.css' },
+  { sel: '@keyframes shimmer{', why: 'the shimmer animation — keyframes must sit OUTSIDE @utility' },
+
+  // Dark mode must stay bound to the `.dark` CLASS. If `@config` (or the
+  // `@custom-variant dark` that backs it up) is ever lost, `dark:` utilities
+  // do not fail — they silently rebind to `prefers-color-scheme`, which for a
+  // published stylesheet means consumers' dark styles start following their
+  // users' OS setting instead of the consumer's own theme class. Verified by
+  // compiling all three forms at v4.3.3. Asserted both ways round, because the
+  // failure replaces one selector with the other rather than removing it.
+  { sel: ':is(.dark *)', why: 'class-based dark mode — @custom-variant dark / @config lost' },
 ];
+
+/**
+ * The inverse of the dark-mode entry above: its presence, not its absence, is
+ * the defect. A media-query-driven dark mode in a LIBRARY stylesheet overrides
+ * the host app's own theming and cannot be turned off by the consumer.
+ */
+const FORBIDDEN = [
+  {
+    sel: 'prefers-color-scheme',
+    why: 'dark: utilities rebound to the OS preference — `@custom-variant dark (&:is(.dark *))` is missing',
+  },
+];
+
+const forbidden = FORBIDDEN.filter((r) => css.includes(r.sel));
 
 const missing = REQUIRED.filter((r) => !css.includes(r.sel));
 
@@ -52,10 +86,12 @@ const missing = REQUIRED.filter((r) => !css.includes(r.sel));
 // even when the presence checks somehow pass.
 const MIN_BYTES = 90_000;
 
-if (missing.length) {
-  console.error(`\n✗ check-package-css: dist-pkg/styles.css is incomplete (${bytes} bytes)\n`);
-  for (const m of missing) console.error(`  missing ${m.sel.padEnd(14)} → ${m.why}`);
-  console.error('\n  The build did NOT fail — Tailwind drops rules it cannot resolve.');
+if (missing.length || forbidden.length) {
+  console.error(`\n✗ check-package-css: dist-pkg/styles.css is incorrect (${bytes} bytes)\n`);
+  for (const m of missing) console.error(`  missing   ${m.sel.padEnd(22)} → ${m.why}`);
+  for (const f of forbidden) console.error(`  forbidden ${f.sel.padEnd(22)} → ${f.why}`);
+  console.error('\n  The build did NOT fail — Tailwind drops rules it cannot resolve,');
+  console.error('  and rebinds variants it cannot bind, without erroring.');
   console.error('  See .claude/skills/tailwind/SKILL.md → "The package build".\n');
   process.exit(1);
 }

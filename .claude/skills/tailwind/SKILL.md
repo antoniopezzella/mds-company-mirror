@@ -198,11 +198,21 @@ ships a **pre-compiled stylesheet** — a consumer's build never sees this repo'
 class names. Change styling in `src/components/ui/` and `npm run build:css`
 must run, or consumers get unstyled markup.
 
-**Escaping in the output is not what you'd guess.** `font-[var(--typo-body1-font-family,_Noto_Sans,_sans-serif)]`
-is written to CSS with commas as `\2c ` (hex escape **plus a space**), not `\,`.
-A naive grep of built CSS will report a false miss. This produced two wrong
-"missing class" conclusions during the migration. Unescape properly, or search
-for a distinctive substring.
+**Escaping in the output is not what you'd guess — but it is not `\2c` either.**
+This entry previously claimed commas compile to `\2c ` (hex escape plus a
+space). **That is wrong at v4.3.3**, and the claim caused the very false miss it
+warned about. Verified two ways: `grep -c '\2c' dist-pkg/styles.css` → **0**,
+and the real selector reads
+
+```
+.font-\[family-name\:var\(--typo-body1-font-family\,_Noto_Sans\,_sans-serif\)\]
+```
+
+Commas are `\,`. The nuance worth knowing is a different one: **underscores
+stay underscores in the selector but become spaces in the value.** The same
+rule compiles to `font-family: var(--typo-body1-font-family, Noto Sans,
+sans-serif)`. So grep the *selector* with underscores, and grep the *value*
+with spaces — that mismatch is what makes these searches fail.
 
 ### 2. `cn()` cannot beat an inline style
 

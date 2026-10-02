@@ -1,0 +1,109 @@
+/**
+ * Custom utility classes used by exported components.
+ *
+ * Why this file exists
+ * --------------------
+ * These four utilities (`scroll-fade-b`, `scroll-fade-x`, `shimmer`, plus the
+ * `::-webkit-scrollbar` half of `scrollbar-none`/`scrollbar-thin`) used to live
+ * in a `@layer utilities` block inside src/index.css. That had two defects,
+ * both silent:
+ *
+ *   1. index.css is the APP stylesheet. styles.package.css never imported it,
+ *      so none of these rules reached consumers. Measured in the shipped
+ *      artifact before this fix: `scroll-fade-b` 0 occurrences, `scroll-fade-x`
+ *      0, `mask-image` 0. message-scroller.tsx and attachment.tsx both render
+ *      the class names, so the edge fade simply did not exist for anyone who
+ *      installed the package — while looking correct in Storybook and the dev
+ *      app, which do load index.css.
+ *
+ *   2. A class declared in `@layer utilities` CANNOT take variants. Verified by
+ *      compiling both forms at v4.3.3: with `@layer utilities`,
+ *      `group-data-[state=processing]/attachment:shimmer` emits ZERO rules;
+ *      with `@utility`, it emits the rule correctly. attachment.tsx:116 uses
+ *      exactly that variant twice, so the shimmer on uploading/processing
+ *      attachment titles never animated — in the app as well as the package.
+ *      `@layer utilities` also appends at the END of the layer (line 4051 of
+ *      4100 in a probe build) instead of being sorted into place, so such a
+ *      class outranks every built-in utility and cannot be overridden.
+ *
+ * So: `@utility`, in a file BOTH stylesheets import. Same "imported, not
+ * duplicated" rule the token/role/typography tiers already follow — there is
+ * one definition, and the package cannot drift from the app.
+ *
+ * The comment this replaces claimed `@utility` was "unsupported on this
+ * project's Tailwind 3.4.19". The project is on 4.3.3 and has been for some
+ * time; `@utility` is the documented way to declare a custom utility.
+ *
+ * NOTE on the scrollbar utilities: stock Tailwind v4.3.3 already provides
+ * `scrollbar-none`, `scrollbar-thin` and `scrollbar-gutter-stable` (verified
+ * by compiling a bare `@import "tailwindcss"`), so `scrollbar-gutter-stable`
+ * is NOT redefined here — it needs nothing added. The two below are redefined
+ * only to ADD the `::-webkit-scrollbar` fallback, because `scrollbar-width`
+ * is unsupported before Chrome 121 / Safari 18.2. They are supersets of the
+ * stock rule, not a change to what the class means.
+ */
+
+/* Vertical edge fade — message-scroller.tsx's scroll viewport. */
+@utility scroll-fade-b {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+}
+
+/* Horizontal counterpart — attachment.tsx's AttachmentGroup, a horizontally
+   scrolling row of file/image chips. */
+@utility scroll-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+}
+
+/* Animated text sheen for in-progress states. Applied via a group variant in
+   attachment.tsx, which is why this MUST be `@utility` and not `@layer`. */
+@utility shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted-foreground) / 0.4) 0%,
+    hsl(var(--foreground)) 50%,
+    hsl(var(--muted-foreground) / 0.4) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Keyframes are a plain at-rule, not a utility — they belong outside
+   `@utility` and are referenced by name above. */
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* `-ms-overflow-style` retained from the original block for old Edge; the
+   nested pseudo-element is the one that matters on WebKit. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+}

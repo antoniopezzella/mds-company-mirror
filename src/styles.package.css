@@ -77,6 +77,18 @@
    an @import after another at-rule is silently dropped. */
 @import "tw-animate-css";
 
+/* The custom utilities exported components reference: `scroll-fade-b`
+   (message-scroller), `scroll-fade-x` (attachment), `shimmer` (attachment's
+   in-progress title), and the `::-webkit-scrollbar` fallbacks.
+
+   Until this import they were defined ONLY in src/index.css — the app
+   stylesheet, which this file does not load — so the package shipped those
+   class names on its components with no CSS behind them. Measured in
+   dist-pkg/styles.css before the fix: `scroll-fade-b` 0, `scroll-fade-x` 0,
+   `mask-image` 0. Same shape as the `--role-*` and `--typo-*` gaps above:
+   correct in Storybook, absent in the artifact. */
+@import './styles/component-utilities.css';
+
 /* ===== Corner radius =====================================================
    There is deliberately NO radius configuration here. The repo uses
    Tailwind's STOCK scale, unmodified:
@@ -116,3 +128,14 @@
 
 /* Reuse the package content globs and the theme from the JS config. */
 @config "../tailwind.package.config.js";
+
+/* Class-based dark mode, declared in CSS as well as in the JS config.
+
+   Currently a NO-OP — `@config` (via `darkMode: ['class']`) and this line
+   compile to the identical `:is(.dark *)` selector at v4.3.3, verified by
+   building both forms. It matters for the day `@config` is removed: without
+   it, `dark:` utilities silently rebind to `prefers-color-scheme` instead of
+   failing, which for a PUBLISHED stylesheet means every consumer's dark styles
+   would start following their users' OS setting rather than the consumer's own
+   theme class. No build error, no gate. Zero cost to declare now. */
+@custom-variant dark (&:is(.dark *));
