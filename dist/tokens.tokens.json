@@ -2890,7 +2890,7 @@
       },
       "surfaceHero": {
         "$type": "color",
-        "$value": "{color.gray950}"
+        "$value": "{color.blue1000}"
       },
       "surfaceDisabled": {
         "$type": "color",

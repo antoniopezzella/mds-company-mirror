@@ -334,7 +334,7 @@
   --color-surface-navigation-hover: #252525;
   --color-surface-navigation-active: #3b3b3b;
   --color-surface-accent-strong: #878580;
-  --color-surface-hero: #3e4944;
+  --color-surface-hero: #000f47;
   --color-surface-disabled: #3b3b3b;
   --color-surface-raised: #1a1a1a;
   --color-border-subtle: rgba(255,255,255,0.10);
@@ -401,7 +401,7 @@
   --role-surface-navigation: #101010;
   --role-surface-navigation-hover: #252525;
   --role-surface-navigation-active: #3b3b3b;
-  --role-surface-hero: #3e4944;
+  --role-surface-hero: #000f47;
   --role-border-default: #878787;
   --role-border-subtle: rgba(255,255,255,0.10);
   --role-border-strong: #dadada;
@@ -463,7 +463,7 @@
   --color-surface-navigation-hover: #252525;
   --color-surface-navigation-active: #3b3b3b;
   --color-surface-accent-strong: #878580;
-  --color-surface-hero: #3e4944;
+  --color-surface-hero: #000f47;
   --color-surface-disabled: #3b3b3b;
   --color-surface-raised: #1a1a1a;
   --color-border-subtle: rgba(255,255,255,0.10);
@@ -530,7 +530,7 @@
   --role-surface-navigation: #101010;
   --role-surface-navigation-hover: #252525;
   --role-surface-navigation-active: #3b3b3b;
-  --role-surface-hero: #3e4944;
+  --role-surface-hero: #000f47;
   --role-border-default: #878787;
   --role-border-subtle: rgba(255,255,255,0.10);
   --role-border-strong: #dadada;

@@ -306,8 +306,29 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // Dark needs no lightening: status text inverts to the near-white end of
   // each ramp, so it clears easily on the navy. Same value as surfaceSelected.
   surfaceSelectedSubtle:   tokens.blue975,                   // #1a2759
-  surfaceAccentStrong:     tokens.gray700,                   // #8a8c88 (was blueGray700)
-  surfaceHero:             tokens.gray950,                   // #3e4944 (was blueGray850)
+  surfaceAccentStrong:     tokens.gray700,                   // #878580 (was blueGray700)
+  // The hero surface is the BRAND surface, and the brand colour does not
+  // change between modes — so this holds blue1000 in dark exactly as in light.
+  //
+  // It previously pointed at gray950 (#3e4944), collateral damage from the
+  // blueGray palette removal: gray950 is an INTERPOLATED value (a gap-filler
+  // in a warm ramp, never a Figma anchor), so Marsh's hero rendered sage green
+  // in dark mode. No gate caught it — text.onHero on it is 7.61:1, well past
+  // AA, and the role→semantic→primitive chain was structurally valid.
+  //
+  // Stated honestly, because it is a real trade-off and was the reason the
+  // lighter value existed: against the dark page (#101010) this sits at
+  // 1.05:1, so the hero does not read as a distinct BAND the way it does in
+  // light. That is accepted deliberately — hero sections carry their own
+  // imagery, gradients and type, and brand fidelity was judged to matter more
+  // than section separation. Do NOT "fix" that by reaching for a neutral ramp
+  // again; if separation is ever needed, blue990 (#333f6b, ~white@20% over
+  // blue1000) is the on-brand lever at 1.87:1.
+  //
+  // NOTE: this is deliberately NOT an alias of the `brandPrimary` SEMANTIC,
+  // which overrides to #ffffff in dark — aliasing it would paint the hero
+  // white. It is the primitive.
+  surfaceHero:             tokens.blue1000,                  // #000f47 — brand navy, both modes
   surfaceDisabled:         tokens.neutral800,                // #3b3b3b
   // Deliberately NOT neutral900: surfaceSubtle already is #252525, and a panel
   // whose header band matches the panel has no band. Three steps, not two —

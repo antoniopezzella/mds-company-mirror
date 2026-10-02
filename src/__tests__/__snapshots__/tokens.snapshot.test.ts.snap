@@ -306,7 +306,7 @@ exports[`design tokens snapshots > semantic dark overrides > semantic-dark-overr
   "surfaceAccentStrong": "#878580",
   "surfaceDefault": "#101010",
   "surfaceDisabled": "#3b3b3b",
-  "surfaceHero": "#3e4944",
+  "surfaceHero": "#000f47",
   "surfaceMuted": "#3b3b3b",
   "surfaceNavigation": "#101010",
   "surfaceNavigationActive": "#3b3b3b",
