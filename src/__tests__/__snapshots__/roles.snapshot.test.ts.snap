@@ -201,7 +201,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "surfaceDisabled",
   },
   {
-    "dark": "#3e4944",
+    "dark": "#000f47",
     "light": "#000f47",
     "role": "surface.hero",
     "semantic": "surfaceHero",
