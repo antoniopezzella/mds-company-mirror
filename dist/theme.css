@@ -324,7 +324,7 @@
   --color-surface-default: #101010;
   --color-surface-subtle: #252525;
   --color-surface-muted: #3b3b3b;
-  --color-surface-accent: #303c37;
+  --color-surface-accent: #252525;
   --color-surface-secondary-hover: #ebf7ff;
   --color-surface-row-hover: #252525;
   --color-surface-selected: #1a2759;
@@ -391,7 +391,7 @@
   --role-surface-default: #101010;
   --role-surface-subtle: #252525;
   --role-surface-disabled: #3b3b3b;
-  --role-surface-accent: #303c37;
+  --role-surface-accent: #252525;
   --role-surface-raised: #1a1a1a;
   --role-surface-secondary: #95caff;
   --role-surface-secondary-hover: #ebf7ff;
@@ -453,7 +453,7 @@
   --color-surface-default: #101010;
   --color-surface-subtle: #252525;
   --color-surface-muted: #3b3b3b;
-  --color-surface-accent: #303c37;
+  --color-surface-accent: #252525;
   --color-surface-secondary-hover: #ebf7ff;
   --color-surface-row-hover: #252525;
   --color-surface-selected: #1a2759;
@@ -520,7 +520,7 @@
   --role-surface-default: #101010;
   --role-surface-subtle: #252525;
   --role-surface-disabled: #3b3b3b;
-  --role-surface-accent: #303c37;
+  --role-surface-accent: #252525;
   --role-surface-raised: #1a1a1a;
   --role-surface-secondary: #95caff;
   --role-surface-secondary-hover: #ebf7ff;

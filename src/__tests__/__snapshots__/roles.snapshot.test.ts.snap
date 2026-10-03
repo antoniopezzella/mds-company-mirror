@@ -183,7 +183,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "statusWarningText",
   },
   {
-    "dark": "#303c37",
+    "dark": "#252525",
     "light": "#f7f8f8",
     "role": "surface.accent",
     "semantic": "surfaceAccent",

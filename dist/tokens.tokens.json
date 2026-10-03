@@ -2858,7 +2858,7 @@
       },
       "surfaceAccent": {
         "$type": "color",
-        "$value": "{color.gray1000}"
+        "$value": "{color.neutral900}"
       },
       "surfaceNavigation": {
         "$type": "color",
