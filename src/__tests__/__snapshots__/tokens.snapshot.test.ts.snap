@@ -302,7 +302,7 @@ exports[`design tokens snapshots > semantic dark overrides > semantic-dark-overr
   "statusWarningBg": "#cb7623",
   "statusWarningBorder": "#ffd98a",
   "statusWarningText": "#fff2da",
-  "surfaceAccent": "#303c37",
+  "surfaceAccent": "#252525",
   "surfaceAccentStrong": "#878580",
   "surfaceDefault": "#101010",
   "surfaceDisabled": "#3b3b3b",

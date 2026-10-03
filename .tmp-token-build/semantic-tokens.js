@@ -257,7 +257,19 @@ export const semanticDarkOverrides = {
     // ABOVE it — a mid-grey slab rather than a subtle tint, which is why accent
     // surfaces (notification cards, chips) read as washed out in dark mode.
     // gray1000 keeps the same gray family as light's gray250 at a +3.6 lift.
-    surfaceAccent: tokens.gray1000, // #303c37 (was gray800 #6a6e6b)
+    // Was gray1000 (#303c37) — a Figma anchor, but a visibly GREEN one: hue 155,
+    // saturation 0.11. The gray ramp's anchors drift in hue along their length,
+    // near-neutral at the light end (gray250 #f7f8f8) and green at the dark end
+    // (gray850 #62615c, gray1000 #303c37). The tint is imperceptible where these
+    // values get chosen and obvious where they land, which is also how
+    // surfaceHero became sage: gray950 was INTERPOLATED between two green
+    // anchors.
+    //
+    // neutral900 is not an invented value — in light, surfaceAccent (#f7f8f8)
+    // and surfaceSubtle (#f8f8f8) are already one unit apart, and neutral900 is
+    // exactly surfaceSubtle's dark value. This mirrors the light-mode
+    // relationship rather than inventing a new one.
+    surfaceAccent: tokens.neutral900, // #252525 — true neutral (was gray1000 #303c37, green)
     // App chrome goes NEUTRAL in dark mode rather than staying midnight blue.
     //
     // Keeping the brand navy looked deliberate but failed in practice: #000f47
