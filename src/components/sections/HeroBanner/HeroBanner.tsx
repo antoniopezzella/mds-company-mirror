@@ -441,7 +441,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     // At >=992px the side-by-side split layout below already has enough
     // vertical centering to clear the header, so no offset is needed there.
     pt: { xs: '64px', md: 0 },
-    backgroundColor: isDark ? getRoleColor('interactive.primary') : getRoleColor('surface.default'),
+    // `surface.hero`, NOT `interactive.primary`.
+    //
+    // interactive.primary is a BUTTON FILL role and is designed to flip:
+    // #000f47 in light, #95caff (pale sky) in dark. The hero's text is
+    // text.onHero (#ceecff, mode-invariant), so in dark this rendered sky-on-sky
+    // at 1.40:1 and failed axe on every story — 16 of the 17 here, and 16 of the
+    // 87 failures in the whole `npm run test:dark` run.
+    //
+    // surface.hero is #000f47 in BOTH modes precisely because hero surfaces stay
+    // dark (see roles.ts on text.onHero). #ceecff on it is 14.72:1.
+    backgroundColor: isDark ? getRoleColor('surface.hero') : getRoleColor('surface.default'),
     position: 'relative',
     overflow: 'hidden',
     '@media (min-width: 992px)': {
@@ -514,7 +524,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: isDark ? '#ceecff' : textSecondaryColor,
+              color: textSecondaryColor, // dark resolves to text.onHero already (see above)
               fontSize: '16px',
               fontFamily: 'var(--typo-body1-font-family)',
               fontWeight: 400,
@@ -539,7 +549,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           variant="h1"
           component="h1"
           sx={{
-            color: isDark ? '#ceecff' : textPrimaryColor,
+            color: isDark ? getRoleColor('text.onHero') : textPrimaryColor,
             mb: subtitle ? 2 : description ? 3 : 4,
             maxWidth: '640px',
             fontFamily: 'var(--typo-hero-h1-font-family)',
@@ -588,7 +598,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           variant="h2"
           component="h2"
           sx={{
-            color: isDark ? '#ceecff' : textPrimaryColor,
+            color: isDark ? getRoleColor('text.onHero') : textPrimaryColor,
             mb: description ? 1 : 3,
             fontSize: { xs: '18px', md: '22px' }, // Fluid responsive size
             fontWeight: 700,
@@ -612,7 +622,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             ref={descriptionRef}
             variant="body1"
             sx={{
-              color: isDark ? '#ceecff' : textSecondaryColor,
+              color: textSecondaryColor, // dark resolves to text.onHero already (see above)
               mb: 0,
               mt: description && subtitle ? 2 : 0,
               maxWidth: '640px',
