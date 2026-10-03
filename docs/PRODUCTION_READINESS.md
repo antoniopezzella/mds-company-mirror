@@ -148,10 +148,23 @@ hard to fake, and weaker in the places that are easy to defer.**
 an SSR crash in `ThemeModeProvider`, an ungated publish workflow, an inert
 `FormatProvider`, and six lint errors at HEAD. See the headline above.
 
+> **Update 2026-10-03 — dark mode is now measurable, and it is not green.**
+> `npm run test:dark` runs the same story suite with `colorMode: 'dark'`. First
+> run: **87 failed tests across 23 story files, 677 axe `color-contrast`
+> violations**, versus 0 in the light pass. Two-thirds trace to ONE pairing bug
+> — `#ceecff` foreground on a `#95caff` background at **1.40:1**, 449
+> occurrences — where `text.onHero` (identical in both modes) sits on a surface
+> that lightens to `blue400` in dark. The remainder: `#ffffff` on `#ebe7e2`
+> (1.23:1, 84×), light-mode `textSecondary` `#595959` on the `#101010` page
+> (2.71:1, 26×), and surfaces still white in dark (1.39:1, 16×).
+> This backlog was always there; nothing could see it. Triage before promoting
+> the command into `governance:ci`.
+
 **A caution about the accessibility green light.** The axe gate is the best thing
 in this repo and it is being read as broader assurance than it provides. It now
-covers **630 stories** — but 628 of them render light mode only, so *dark-mode
-component contrast is effectively unverified*; the suite forces reduced motion,
+covers **630 stories** — and until 2026-10-03 all but 2 of them rendered light
+mode only, so *dark-mode component contrast was effectively unverified* (see the
+update above); the suite forces reduced motion,
 so the animated path is never sampled; and axe cannot check focus visibility at
 all. Automated coverage is roughly a third of WCAG at the best of times. Green
 here means "no detectable violation in a static, light-mode, reduced-motion
@@ -455,7 +468,7 @@ audit.
 | **Cross-browser** | The story suite runs **chromium only** (`vitest.config.ts` browser instances). No Firefox or WebKit coverage, so no Safari-specific layout or focus behaviour is verified. |
 | **Animated-path accessibility** | The suite forces reduced motion globally for a documented and correct reason (axe mis-reads mid-flight opacity as contrast failures). The consequence is that **the non-reduced-motion path is never axe-tested**. |
 | **Screen-reader behaviour** | No NVDA/JAWS/VoiceOver pass is possible here. Automated axe covers roughly a third of WCAG; focus order, meaningful sequence and error identification remain unverified. The unsubstantiated VoiceOver/"screen reader validated" claims in `Portfolio.tsx` were corrected at run 3. |
-| **Dark-mode rendered contrast** | Only **2 of 630** axe-checked stories opt into dark mode (`stat-card.stories.tsx:295`, `metric-card.stories.tsx:165`) — and both exist *because* dark contrast bugs were found there. Token-level dark contrast is enforced; rendered dark contrast is not. |
+| **Dark-mode rendered contrast** | ~~Only **2 of 630** axe-checked stories opt into dark mode (`stat-card.stories.tsx:295`, `metric-card.stories.tsx:165`) — and both exist *because* dark contrast bugs were found there. Token-level dark contrast is enforced; rendered dark contrast is not.~~ — **Partly resolved 2026-10-03:** `npm run test:dark` (`vitest.dark.config.ts`) now re-runs the whole story suite with `initialGlobals: { colorMode: 'dark' }`, so every story is axe-checked in dark. It is **not yet in `governance:ci`** because the first run surfaced a real backlog — see below. |
 | **Focus visibility (WCAG 2.4.7)** | Axe does not check focus indication at all, so the gate gives zero signal. `getFocusRingSx` (`src/theme/focusRing.ts`) is used by **0 of 79** `ui/` components; **45** have no focus styling and fall back to the UA outline. |
 | **ARIA semantic truthfulness** | Axe validates ARIA syntax, not whether it is true. `MegaMenu.tsx:117` declares `aria-modal="true"` with no focus trap and no accessible name — syntactically valid, semantically false. No tool here can catch that class of defect. |
 | **Accessibility conformance record** | No VPAT or ACR exists, so there is nothing to hand to procurement. |
