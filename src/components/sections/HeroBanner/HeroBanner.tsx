@@ -483,8 +483,18 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   };
 
   // Typography color based on variant
-  const textPrimaryColor = isDark ? getRoleColor('text.inverse') : getRoleColor('text.primary');
-  const textSecondaryColor = isDark ? getRoleColor('text.onHero') : getRoleColor('text.secondary');
+  // Hero foreground colours. Named `hero*` rather than `text*Color` because
+  // they are NOT the global text roles: in dark the hero sits on
+  // `surface.hero` (#000f47 in BOTH modes), so the foreground is the
+  // mode-invariant `text.onHero`, not the flipping `text.secondary`. In light
+  // the hero sits on `surface.default`, so the ordinary page roles apply.
+  //
+  // This asymmetry is the design, not an oversight: a foreground that flips on
+  // a background that doesn't is what caused the 1.40:1 failure fixed above.
+  // For the same reason `text.onPrimary` is NOT usable here — it flips to
+  // #000f47 in dark, which on #000f47 is 1.00:1, i.e. invisible.
+  const heroText = isDark ? getRoleColor('text.onHero') : getRoleColor('text.primary');
+  const heroTextMuted = isDark ? getRoleColor('text.onHero') : getRoleColor('text.secondary');
   const isSplitMediaLeft = layout === 'split' && imagePosition === 'left';
   const isSplitMediaRight = layout === 'split' && imagePosition === 'right';
   const contentColumnClassName = 'col-12 col-lg-6';
@@ -524,7 +534,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: textSecondaryColor, // dark resolves to text.onHero already (see above)
+              color: heroTextMuted,
               fontSize: '16px',
               fontFamily: 'var(--typo-body1-font-family)',
               fontWeight: 400,
@@ -549,7 +559,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           variant="h1"
           component="h1"
           sx={{
-            color: isDark ? getRoleColor('text.onHero') : textPrimaryColor,
+            color: heroText,
             mb: subtitle ? 2 : description ? 3 : 4,
             maxWidth: '640px',
             fontFamily: 'var(--typo-hero-h1-font-family)',
@@ -598,7 +608,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           variant="h2"
           component="h2"
           sx={{
-            color: isDark ? getRoleColor('text.onHero') : textPrimaryColor,
+            color: heroText,
             mb: description ? 1 : 3,
             fontSize: { xs: '18px', md: '22px' }, // Fluid responsive size
             fontWeight: 700,
@@ -622,7 +632,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             ref={descriptionRef}
             variant="body1"
             sx={{
-              color: textSecondaryColor, // dark resolves to text.onHero already (see above)
+              color: heroTextMuted,
               mb: 0,
               mt: description && subtitle ? 2 : 0,
               maxWidth: '640px',
