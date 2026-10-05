@@ -3111,6 +3111,10 @@
         "disabled": {
           "$type": "color",
           "$value": "{semantic.color.textDisabled}"
+        },
+        "placeholder": {
+          "$type": "color",
+          "$value": "{semantic.color.textTertiary}"
         }
       },
       "surface": {
@@ -3359,6 +3363,10 @@
         "disabled": {
           "$type": "color",
           "$value": "{semanticDark.color.textDisabled}"
+        },
+        "placeholder": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textTertiary}"
         }
       },
       "surface": {

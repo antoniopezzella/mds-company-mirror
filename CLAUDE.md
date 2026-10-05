@@ -44,7 +44,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ ROLES (src/theme/roles.ts)                                  │
 │ Component consumption API: text.primary, surface.accent,    │
 │ interactive.primary.hover, status.success.bg                │
-│ 54 roles — the ONLY API components should use               │
+│ 55 roles — the ONLY API components should use               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -156,7 +156,7 @@ export function getRoleColor(role: RoleName, mode: 'light' | 'dark' = 'light'): 
 
 **Naming:** `[category].[element][.variant][.state]` (kebab-case with dots)  
 **Examples:** `text.primary`, `surface.navigation.hover`, `interactive.danger.active`  
-**Count:** 54 roles (growing as components need them)  
+**Count:** 55 roles (growing as components need them)  
 **Usage:** Components use `getRoleColor('role.name')` ONLY
 
 ### Critical Rules for Token Usage
@@ -222,44 +222,77 @@ const theme = createTheme({
 
 ### Typography Tokens (`src/styles/_typography.scss`)
 
+### Two typography contexts — this is the part to get right
+
+There is **one set of `--typo-*` variables and two contexts that redefine
+them.** Headings change face AND weight between the two; body text never does.
+
+| | Headings (`display`, `h1`–`h6`) | Body, UI, buttons |
+|---|---|---|
+| **Marketing / website** | **Marsh Serif**, weight **400** | Noto Sans 400 |
+| **Dashboard / product** | **Noto Sans**, weight **700** | Noto Sans 400 |
+
+**`:root` defaults to the MARKETING scale.** Dashboard is opt-in — a product
+screen that forgets to declare its context silently renders Marsh Serif
+headings. That is the single most likely typography bug in this repo.
+
 ```scss
-// CSS variables (single source of truth)
-:root {
-  /* Headings (MMC Display Bold) */
-  --typo-h1-font-family: 'MMC Display', sans-serif;
-  --typo-h1-font-weight: 700;
-  --typo-h1-font-size: clamp(28px, calc(20px + 2.22vw), 36px); // Fluid
-  --typo-h1-line-height: 1.25;
-  --typo-h1-letter-spacing: -0.01em;
-  
-  /* Body (Noto Sans) */
-  --typo-body1-font-family: 'Noto Sans', sans-serif;
-  --typo-body1-font-weight: 400;
-  --typo-body1-font-size: clamp(15px, calc(14.32px + 0.19vw), 16px);
-  --typo-body1-line-height: 1.6;
-  --typo-body1-letter-spacing: 0em;
-  
-  /* Buttons */
-  --typo-button-font-family: 'Noto Sans', sans-serif;
-  --typo-button-font-weight: 500;
-  --typo-button-font-size: 16px;
-  --typo-button-line-height: 24px;
-  --typo-button-letter-spacing: 0em;
+// src/styles/_typography.scss
+$font-family-body:      'Noto Sans', sans-serif;   // body, UI, buttons — both contexts
+$font-family-display:   'Marsh Serif', serif;      // marketing headings
+$font-family-dashboard: 'Noto Sans', sans-serif;   // dashboard headings
+
+:root { /* MARKETING is the default */
+  --typo-h1-font-family: #{$font-family-display};  // Marsh Serif
+  --typo-h1-font-weight: 400;
+  --typo-h1-font-size: #{fluid(28, 36)};           // clamp(), 360–1536px
+  --typo-body1-font-family: #{$font-family-body};  // Noto Sans — context-independent
+  --typo-button-font-family: #{$font-family-body}; // Noto Sans 500
 }
+
+.mds-dashboard,
+[data-typography-context='dashboard'] {            // opt in, per subtree
+  --typo-h1-font-family: #{$font-family-dashboard}; // Noto Sans
+  --typo-h1-font-weight: 700;                       // …and h2–h6, display
+}
+
+.mds-marketing,
+[data-typography-context='marketing'] { /* explicit marketing, same as :root */ }
 ```
 
-**Font Families:**
-- **Headings (h1-h4):** `MMC Display` (bold display font for brand voice)
-- **Small headings (h5-h6) & UI:** `Noto Sans` (readable sans-serif)
+**How to select a context:** add `className="mds-dashboard"` (or the
+`data-typography-context` attribute) to the subtree root. `PageShell` already
+applies it — `src/components/ui/page-shell.tsx:78` — so anything built on
+`PageShell` is correct by default and needs nothing.
+
+Because these are plain CSS variables inherited through the DOM, the context
+must be re-applied inside anything that **portals out of the subtree**. Radix
+portals render to `document.body`, which is why `notifications-drawer.tsx:99`
+repeats `mds-dashboard` with a comment explaining it is deliberate. Copy that
+pattern for any new portalled surface (Sheet, Dialog, Popover) in a dashboard.
+
+**8 call sites** currently declare a context, including `App.tsx:97` and
+`PageShell`.
+
+> `MMC Display` is **not** the heading face. This section said so until
+> 2026-10-03 and was wrong; the font still appears in four files
+> (`src/index.css` `@font-face`, `CardWebsite.tsx`, `NotificationsDrawer.tsx`,
+> `go-to-market.css`) but nothing in `_typography.scss` references it. The
+> display face is **Marsh Serif**, which is also what Atlas uses — see
+> [`docs/ATLAS_TOKEN_COMPARISON.md`](./docs/ATLAS_TOKEN_COMPARISON.md) §6.
 
 **Usage in MUI (`src/theme.ts`):**
 ```typescript
 const typography = {
   h1: {
     fontFamily: 'var(--typo-h1-font-family)',
-    fontWeight: 700,
+    // Every field is a var() — NEVER a literal. Hardcoding `fontWeight: 700`
+    // here would pin h1 to the dashboard weight and break the marketing
+    // context, because the context switch works by redefining the variable.
+    fontWeight: 'var(--typo-h1-font-weight)',
     fontSize: 'var(--typo-h1-font-size)',
     lineHeight: 'var(--typo-h1-line-height)',
+    letterSpacing: 'var(--typo-h1-letter-spacing)',
   },
   body1: {
     fontFamily: 'var(--typo-body1-font-family)',
@@ -268,7 +301,8 @@ const typography = {
 };
 ```
 
-**Scale:** Dashboard scale (1.2 ratio) for clear hierarchy  
+**Scale:** two scales, selected by context (see the table above) — marketing
+headings in Marsh Serif 400, dashboard headings in Noto Sans 700.
 **Responsive:** Fluid typography using `clamp()` for 360px-1536px viewports
 
 ---

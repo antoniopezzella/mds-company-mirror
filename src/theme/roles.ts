@@ -63,6 +63,7 @@ export type RoleName =
   | 'text.onDanger'
   | 'text.onLight'
   | 'text.disabled'
+  | 'text.placeholder'
   | 'surface.default'
   | 'surface.subtle'
   | 'surface.disabled'
@@ -131,6 +132,20 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
   'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
+  'text.placeholder': {
+    semantic: 'textTertiary',
+    description:
+      'Placeholder text in empty inputs. Distinct from text.disabled — a placeholder ' +
+      'sits in an ENABLED field and must stay legible; disabled text is deliberately ' +
+      'de-emphasised and is WCAG 1.4.3-exempt. Also distinct from text.secondary, ' +
+      'which is real content.\n\n' +
+      'Promotes `textTertiary`, which has existed since the Figma sync (bound to ' +
+      '"V3/Text & icon/Placeholder" in figma-variable-map-semantic.json) but was ' +
+      'reachable from no role. Because of that, input.tsx, textarea.tsx, command.tsx ' +
+      'and input-group.tsx each faked it with `placeholder:opacity-70` or `-60` — ' +
+      'three different values, none of them the token, each dimming whatever colour ' +
+      'happened to be inherited rather than using the specified placeholder colour.',
+  },
   'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
   'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
   'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },

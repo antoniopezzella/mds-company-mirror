@@ -315,6 +315,12 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "textOnPrimary",
   },
   {
+    "dark": "#c4c4c4",
+    "light": "#767676",
+    "role": "text.placeholder",
+    "semantic": "textTertiary",
+  },
+  {
     "dark": "#ffffff",
     "light": "#000f47",
     "role": "text.primary",
