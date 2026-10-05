@@ -146,8 +146,16 @@ export const HeroBannerGrid: React.FC<HeroBannerGridProps> = ({
   const [vimeoFailed, setVimeoFailed] = useState(false);
   const vimeoPlayerRef = useRef<Player | null>(null);
 
+  // The source's own aspect ratio, measured from the player once it resolves.
+  // Load-bearing, not cosmetic — see the long comment above `.mediaCover
+  // iframe` in the stylesheet. The SCSS default (16:15) is right for the
+  // current 960×900 asset and wrong for anything else; this overrides it with
+  // the real ratio so any source fills, which is what the 16:9 case needs.
+  const [vimeoRatio, setVimeoRatio] = useState<number | null>(null);
+
   useEffect(() => {
     setVimeoFailed(false);
+    setVimeoRatio(null);
     if (!vimeoId || !iframeRef.current) return;
 
     const player = new Player(iframeRef.current);
@@ -165,7 +173,11 @@ export const HeroBannerGrid: React.FC<HeroBannerGridProps> = ({
     // based checks rather than leaving the hero silently broken.
     player.ready()
       .then(() => player.getDuration())
-      .then(() => { settled = true; })
+      .then(() => {
+        settled = true;
+        return Promise.all([player.getVideoWidth(), player.getVideoHeight()]);
+      })
+      .then(([w, h]) => { if (w > 0 && h > 0) setVimeoRatio(w / h); })
       .catch(fail);
     const timeoutId = window.setTimeout(fail, 6000);
 
@@ -371,7 +383,16 @@ export const HeroBannerGrid: React.FC<HeroBannerGridProps> = ({
   const renderMedia = () => {
     if (vimeoId && !vimeoFailed) {
       return (
-        <div className={styles.mediaCover}>
+        <div
+          className={styles.mediaCover}
+          // Feeds the measured source ratio to the cover-sizing rule in the
+          // stylesheet. Omitted until the player answers, so the SCSS keeps
+          // its own default for that first paint.
+          style={vimeoRatio ? ({
+            '--vimeo-cover-w': (vimeoRatio * 100).toFixed(3),
+            '--vimeo-cover-h': (100 / vimeoRatio).toFixed(3),
+          } as React.CSSProperties) : undefined}
+        >
           <iframe
             ref={iframeRef}
             src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}

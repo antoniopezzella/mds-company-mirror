@@ -34,16 +34,26 @@ box of any shape and the embed simply occupies it, with the player deciding
 what to do with the video inside. So sizing the iframe to the container is not
 enough on its own.
 
-The working arrangement is **two cover operations stacked**:
+**Vimeo's player never crops.** Verified by inspecting its DOM directly (not
+guessable from outside — it is a cross-origin iframe): the player's internal
+`<video>` uses `object-fit: contain`. Whatever box our iframe presents, the
+player letterboxes or pillarboxes inside it to preserve the source's native
+ratio. That is a hard external constraint — we do not own that document and no
+CSS of ours can override it. `background=1` does **not** change this; it is
+chrome removal and autoplay behaviour, not a cover.
 
-1. **Inside the iframe** — `background=1` makes Vimeo's player scale the source
-   to fill the iframe and crop the excess. This is why the source's own aspect
-   ratio does not matter (see §7).
-2. **Outside the iframe** — the CSS below sizes that iframe to 16:9 and makes it
-   larger than the container in whichever dimension falls short, centres it, and
-   clips the overflow.
+So there is only **one** cover operation, and it is ours:
 
-Remove either and non-16:9 sources letterbox.
+> Size the iframe to the **source's own aspect ratio**, scale it up until it
+> overscans the container on whichever axis falls short, centre it, and clip.
+
+Because the iframe's box then matches the video's ratio, the player's
+contain-fit fills it completely by definition — zero internal letterbox — and
+`overflow: hidden` on the container clips the overscanned edges. Same
+undistorted crop-to-fill as `object-fit: cover` anywhere else.
+
+**The source ratio is therefore load-bearing, and must not be hardcoded.** See
+§3.3 and the regression recorded in §7.
 
 ## 3. The solution
 
@@ -94,24 +104,55 @@ ships inside a library whose host page's CSS we do not control.
 
 ### 3.3 The sizing expression
 
-```tsx
-style={{
-  width:  'max(100%, 177.77cqh)',
-  height: 'max(56.25cqw, 100%)',
-}}
-```
-
-Read it as: *be at least as wide as a 16:9 box of the container's height, and
-at least as tall as a 16:9 box of the container's width — and never smaller
-than the container itself.*
+The two constants are the **source's** ratio `R` expressed both ways — not
+16:9, and not any other fixed guess:
 
 | number | derivation |
 |---|---|
-| `177.77` | 16 ÷ 9 × 100 — width needed per unit of height |
-| `56.25` | 9 ÷ 16 × 100 — height needed per unit of width |
+| `R × 100` | width needed per unit of height |
+| `100 ÷ R` | height needed per unit of width |
 
-`max(…, 100%)` is the floor that guarantees coverage when the container is
-already wider or taller than 16:9.
+```tsx
+width:  `max(100%, ${(R * 100).toFixed(3)}cqh)`,
+height: `max(${(100 / R).toFixed(3)}cqw, 100%)`,
+```
+
+Read it as: *be at least as wide as an R-shaped box of the container's height,
+and at least as tall as an R-shaped box of the container's width — and never
+smaller than the container itself.* `max(…, 100%)` is the floor that guarantees
+coverage when the container is already wider or taller than `R`.
+
+**`R` is measured at runtime, never hardcoded.** The component already attaches
+a Player.js instance for failure detection (§5); the same `ready()` chain asks
+for the real dimensions:
+
+```ts
+player.ready()
+  .then(() => player.getDuration())
+  .then(() => Promise.all([player.getVideoWidth(), player.getVideoHeight()]))
+  .then(([w, h]) => { if (w > 0 && h > 0) setVimeoRatio(w / h); })
+  .catch(fail);
+```
+
+Until the player answers, a default renders the first paint — `16/9` in
+`HeroBanner`, the current 960×900 asset's `16/15` in `HeroBannerGrid` (that one
+is a SCSS fallback, overridden via the `--vimeo-cover-w` / `--vimeo-cover-h`
+custom properties). The default only affects those first frames; the measured
+value governs everything after.
+
+**Do not "simplify" this back to a literal.** A hardcoded ratio works for
+exactly one source and fails silently for every other — which is precisely what
+happened, in both directions, in §7.
+
+### Why oversizing alone cannot rescue a wrong ratio
+
+Under `contain`, inflating a box whose *shape* is wrong does not shrink the
+letterbox — it grows it proportionally. Measured: widening the box from 430px
+to 568px at one viewport took the pillarbox from ~44px/side to ~113px/side,
+with the painted video unchanged at 341×320 either way. Dropping the oversizing
+entirely (plain `100%`/`100%`) stops making it worse but still leaves a visible
+border wherever the container's shape differs from the source's. Only matching
+the ratio removes it.
 
 **`cqw`/`cqh`, not `vw`/`vh` — this is the part that was a bug.** The original
 implementation used viewport units, which assume *container ≈ viewport*. That
@@ -128,7 +169,8 @@ so the same expression is correct in both layouts.
 | `overflow: hidden` on `.mediaCover` | the only thing clipping the overscan |
 | `transform: translate(-50%, -50%)` | centres the overscan; without it the video crops from one edge |
 | `.mediaCover iframe` as a descendant selector | the iframe is rendered by Vimeo's embed; we do not control its class |
-| `background=1` in the player URL | **Load-bearing, not cosmetic.** It is the *inner* cover: Vimeo scales the source to fill the iframe and crops. Without it a non-16:9 source letterboxes inside the iframe and no outer CSS can recover it. Also gives chrome-less rendering with `controls=0`, `title=0`, `byline=0`, `portrait=0` |
+| the iframe's ratio matches the **source's** ratio | the whole technique. The player contains rather than crops, so a mismatched iframe shape letterboxes inside the iframe and no outer CSS can recover it |
+| `background=1` in the player URL | chrome-less rendering and autoplay behaviour, alongside `controls=0`, `title=0`, `byline=0`, `portrait=0`. **It is not a cover** — an earlier version of this document claimed it was, and that error is what produced the §7 regression |
 | `muted=1` + `playsinline=1` | required for autoplay on iOS and by browser autoplay policy |
 | Player.js attaches to the **existing** iframe | `new Player(iframeRef.current)` — constructing a player instead would let Vimeo build its own iframe and discard this sizing entirely |
 
@@ -176,21 +218,43 @@ it, a failed embed renders nothing.
   evergreen browsers; there is no graceful degradation path if it is absent —
   `cqh` would resolve to 0 and the iframe would fall back to `min-height: 100%`,
   which letterboxes rather than breaking outright.
-- **Source aspect ratio is NOT a constraint** — verified live. The constants
-  describe the *iframe's* shape, not the source's. Two cover operations stack:
-  Vimeo's `background=1` covers the iframe with the video, then this CSS covers
-  the container with the iframe. Measured in the harness with the 960×900
-  source (ID `1146072483`): split renders a **720×912 portrait** container with
-  a **1621×912** iframe — exactly 16:9 — and the video fills it with no bars.
-  A 4:3 or vertical source works the same way.
+- **Corrected 2026-10-05 — source aspect ratio IS the constraint.** An earlier
+  revision of this document asserted the opposite ("source aspect ratio is NOT
+  a constraint — verified live"). That was wrong, and the way it was wrong is
+  worth recording, because the same trap is easy to fall back into.
 
-  The real caveat is that the **two crops compound**: a near-square source in a
-  wide container is cropped by Vimeo *and* again by `.mediaCover`, so more of
-  the frame is lost than either step implies. Choose sources with the subject
-  away from the edges.
-- **Not extracted.** The technique is duplicated at two call sites in
-  `HeroBanner.tsx` (split and background) rather than shared. Any change must
-  be made in both.
+  The verification behind the claim was **geometric only**: it measured the
+  iframe's box from the host page and confirmed it covered the container.
+  Measurement from outside a cross-origin iframe cannot see what the player
+  paints *inside* that box, so it could not detect the letterbox and silently
+  "confirmed" a false premise.
+
+  The symptom was reported by eye, on a device, by a human: at 768px wide,
+  `HeroBanner` with the 960×900 source (ID `1146072483`) presented a 768×432
+  16:9 iframe, inside which the player contained the near-square source to
+  **461px wide** — pillarbox bars across the remaining 307px. Desktop split
+  masked it by accident: there the contained video happened to come out wider
+  than the narrow column, so it looked correct.
+
+  Both components carried the mirror-image version of this bug at once:
+  `HeroBanner` hardcoded 16:9 (correct for a 16:9 source, broken for 960×900);
+  `HeroBannerGrid` hardcoded 16:15 (correct for 960×900, broken for 16:9).
+  Each had been "verified" against the one asset it was tuned for. Both now
+  measure the ratio at runtime (§3.3) and were re-checked across both sources
+  × {390, 768, 1024, 1440} — 16 of 16 covering.
+
+  **The compounding caveat stands and is unchanged**: the subject should sit
+  away from the frame edges, because a near-square source in a wide container
+  loses a lot of frame to the crop.
+- **Still verified by eye, not by test.** There is no automated coverage of
+  acceptance criteria 1–5. Geometry can be asserted from the host page — and
+  should be, since that is what the 16-case sweep above did — but *paint*
+  cannot, which is exactly the gap that let the original error stand. Treat a
+  geometric pass as necessary and not sufficient; look at it on a device.
+- **Not extracted across components.** `HeroBanner` and `HeroBannerGrid`
+  implement the technique separately (one in `sx`, one in SCSS driven by custom
+  properties). Within each component it is now shared between the two layouts,
+  but a change still has to be made in both files.
 - **No automated test covers it.** There is no `HeroBanner.test.tsx`; the only
   coverage is 17 axe-gated stories, which do not assert geometry. Acceptance
   criteria 1–5 are currently verified by eye.
