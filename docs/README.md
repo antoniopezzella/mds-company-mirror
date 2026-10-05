@@ -36,6 +36,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`guides/PERFORMANCE_MONITORING.md`](./guides/PERFORMANCE_MONITORING.md) | RUM / Web Vitals |
 | [`guides/LIGHTHOUSE_GUIDE.md`](./guides/LIGHTHOUSE_GUIDE.md) | Lighthouse audits |
 | [`guides/WORKFLOW_GUIDE.md`](./guides/WORKFLOW_GUIDE.md) | General contributor workflow |
+| [`guides/RESPONSIVE_VIMEO_COVER.md`](./guides/RESPONSIVE_VIMEO_COVER.md) | Making a fixed-ratio Vimeo iframe fill an arbitrary container — `object-fit: cover` doesn't apply to iframes. **Read before touching HeroBanner's media sizing**: the container-query units fix a real bug and the constraints list says what not to change |
 | [`guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md`](./guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md), [`guides/MARSH_ONE_QUICKSTART.md`](./guides/MARSH_ONE_QUICKSTART.md) | The Marsh One project specifically |
 | [`guides/INSURANCE_DASHBOARD_QUICKSTART.md`](./guides/INSURANCE_DASHBOARD_QUICKSTART.md) | The Insurance Dashboard project specifically |
 
