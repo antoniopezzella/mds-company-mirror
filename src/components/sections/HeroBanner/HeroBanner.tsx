@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { getRoleColor } from '../../../theme/roles';
 import type { SxProps } from '@mui/material/styles';
@@ -183,8 +183,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const [vimeoFailed, setVimeoFailed] = useState(false);
   const vimeoPlayerRef = useRef<Player | null>(null);
 
+  // The source's own aspect ratio, measured from the player once it resolves.
+  // This is NOT cosmetic — see the cover-sizing comment below. 16:9 is the
+  // starting assumption only because it is the overwhelmingly common case and
+  // something has to be rendered before the player answers.
+  const [vimeoRatio, setVimeoRatio] = useState(16 / 9);
+
   useEffect(() => {
     setVimeoFailed(false);
+    setVimeoRatio(16 / 9);
     if (!vimeoId || !iframeRef.current) return;
 
     const player = new Player(iframeRef.current);
@@ -202,7 +209,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     // based checks rather than leaving the hero silently broken.
     player.ready()
       .then(() => player.getDuration())
-      .then(() => { settled = true; })
+      .then(() => {
+        settled = true;
+        return Promise.all([player.getVideoWidth(), player.getVideoHeight()]);
+      })
+      .then(([w, h]) => { if (w > 0 && h > 0) setVimeoRatio(w / h); })
       .catch(fail);
     const timeoutId = window.setTimeout(fail, 6000);
 
@@ -212,6 +223,34 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       player.destroy().catch(() => {});
     };
   }, [vimeoId]);
+
+  // Cover-fill sizing for the Vimeo iframe — shared by both layouts so the two
+  // call sites cannot drift apart.
+  //
+  // The iframe must carry the SOURCE's aspect ratio, not a hardcoded 16:9.
+  // `background=1` does NOT crop the source to the iframe, it *contains* it:
+  // give a 960x900 source a 16:9 iframe and the player letterboxes inside the
+  // iframe, which no amount of outer overscan can recover. Measured at 768px
+  // wide: a 768x432 iframe painted the video 461px wide — pillarbox bars for
+  // the remaining 307px. Desktop split hid it by accident (the contained video
+  // happened to come out wider than the narrow column), which is why this only
+  // showed up on mobile/tablet.
+  const vimeoCoverStyle = useMemo<React.CSSProperties>(() => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    // cqw/cqh (container query units) resolve against this iframe's actual
+    // containing block (mediaCover, sized via containerType:'size') instead of
+    // the raw viewport — vw/vh assumed the container ≈ the viewport, true for
+    // the full-bleed background layout but not the ~half-width split column,
+    // where it rendered a ~1.5x oversized iframe.
+    width: `max(100%, ${(vimeoRatio * 100).toFixed(3)}cqh)`,
+    height: `max(${(100 / vimeoRatio).toFixed(3)}cqw, 100%)`,
+    minHeight: '100%',
+    minWidth: '100%',
+    transform: 'translate(-50%, -50%)',
+    border: 'none',
+  }), [vimeoRatio]);
 
   // Refs for GSAP animations
   const containerRef = useRef<HTMLDivElement>(null);
@@ -775,23 +814,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <iframe
               ref={iframeRef}
               src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                // cqw/cqh (container query units) resolve against this
-                // iframe's actual containing block (mediaCover, sized via
-                // containerType:'size' above) instead of the raw viewport —
-                // vw/vh assumed the container ≈ the viewport, true for the
-                // full-bleed background layout but not the ~half-width split
-                // column, where it rendered a ~1.5x oversized iframe.
-                width: 'max(100%, 177.77cqh)',
-                height: 'max(56.25cqw, 100%)',
-                minHeight: '100%',
-                minWidth: '100%',
-                transform: 'translate(-50%, -50%)',
-                border: 'none',
-              }}
+              style={vimeoCoverStyle}
               allow="autoplay; fullscreen; picture-in-picture"
               title={imageAlt}
               frameBorder="0"
@@ -940,17 +963,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <iframe
                 ref={iframeRef}
                 src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: 'max(100%, 177.77cqh)',
-                  height: 'max(56.25cqw, 100%)',
-                  minHeight: '100%',
-                  minWidth: '100%',
-                  transform: 'translate(-50%, -50%)',
-                  border: 'none',
-                }}
+                style={vimeoCoverStyle}
                 allow="autoplay; fullscreen; picture-in-picture"
                 title={imageAlt}
                 frameBorder="0"

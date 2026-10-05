@@ -254,8 +254,15 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: max(100%, 106.667cqh);
-  height: max(93.75cqw, 100%);
+  // The two numbers are the source's ratio expressed both ways: width needed
+  // per unit of height, and height needed per unit of width. The component
+  // measures the real ratio from Player.js (`getVideoWidth`/`getVideoHeight`)
+  // and sets these custom properties on `.mediaCover`, which is what makes
+  // this work for ANY source rather than only the one it was tuned for. The
+  // fallbacks are the current 960×900 asset (16:15), used for the first paint
+  // before the player answers.
+  width: max(100%, calc(var(--vimeo-cover-w, 106.667) * 1cqh));
+  height: max(calc(var(--vimeo-cover-h, 93.75) * 1cqw), 100%);
   min-width: 100%;
   min-height: 100%;
   transform: translate(-50%, -50%);
