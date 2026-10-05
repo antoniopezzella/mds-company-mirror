@@ -24,6 +24,7 @@
   --role-text-onDanger: #ffffff;
   --role-text-onLight: #000f47;
   --role-text-disabled: #767676;
+  --role-text-placeholder: #767676;
   --role-surface-default: #ffffff;
   --role-surface-subtle: #f8f8f8;
   --role-surface-disabled: #e3e3e3;
@@ -84,6 +85,7 @@
   --role-text-onDanger: #000f47;
   --role-text-onLight: #000f47;
   --role-text-disabled: #878787;
+  --role-text-placeholder: #c4c4c4;
   --role-surface-default: #101010;
   --role-surface-subtle: #252525;
   --role-surface-disabled: #3b3b3b;
