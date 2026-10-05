@@ -29,13 +29,21 @@ every viewport from 390px to 1600px.
 `<img>`, `<video>`, `<canvas>`. An `<iframe>` is not sized that way, so the
 one-line answer available for a `<video>` element does not exist here.
 
-A Vimeo player is also **fixed-ratio**: it renders 16:9 regardless of the box
-you give it. Force it to a 4:3 box and you get bars; stretch it and the video
-distorts.
+A Vimeo iframe is also **ratio-indifferent in the wrong direction**: give it a
+box of any shape and the embed simply occupies it, with the player deciding
+what to do with the video inside. So sizing the iframe to the container is not
+enough on its own.
 
-So the only route is the classic cover technique: **make the iframe larger than
-its container in whichever dimension is short, centre it, and clip the
-overflow.**
+The working arrangement is **two cover operations stacked**:
+
+1. **Inside the iframe** — `background=1` makes Vimeo's player scale the source
+   to fill the iframe and crop the excess. This is why the source's own aspect
+   ratio does not matter (see §7).
+2. **Outside the iframe** — the CSS below sizes that iframe to 16:9 and makes it
+   larger than the container in whichever dimension falls short, centres it, and
+   clips the overflow.
+
+Remove either and non-16:9 sources letterbox.
 
 ## 3. The solution
 
@@ -120,7 +128,7 @@ so the same expression is correct in both layouts.
 | `overflow: hidden` on `.mediaCover` | the only thing clipping the overscan |
 | `transform: translate(-50%, -50%)` | centres the overscan; without it the video crops from one edge |
 | `.mediaCover iframe` as a descendant selector | the iframe is rendered by Vimeo's embed; we do not control its class |
-| `background=1` in the player URL | Vimeo's chrome-less mode; combined with `controls=0`, `title=0`, `byline=0`, `portrait=0` |
+| `background=1` in the player URL | **Load-bearing, not cosmetic.** It is the *inner* cover: Vimeo scales the source to fill the iframe and crops. Without it a non-16:9 source letterboxes inside the iframe and no outer CSS can recover it. Also gives chrome-less rendering with `controls=0`, `title=0`, `byline=0`, `portrait=0` |
 | `muted=1` + `playsinline=1` | required for autoplay on iOS and by browser autoplay policy |
 | Player.js attaches to the **existing** iframe | `new Player(iframeRef.current)` — constructing a player instead would let Vimeo build its own iframe and discard this sizing entirely |
 
@@ -168,8 +176,18 @@ it, a failed embed renders nothing.
   evergreen browsers; there is no graceful degradation path if it is absent —
   `cqh` would resolve to 0 and the iframe would fall back to `min-height: 100%`,
   which letterboxes rather than breaking outright.
-- **Assumes 16:9 source.** The constants are hard-coded. A 4:3 or vertical
-  source needs different numbers; nothing validates this.
+- **Source aspect ratio is NOT a constraint** — verified live. The constants
+  describe the *iframe's* shape, not the source's. Two cover operations stack:
+  Vimeo's `background=1` covers the iframe with the video, then this CSS covers
+  the container with the iframe. Measured in the harness with the 960×900
+  source (ID `1146072483`): split renders a **720×912 portrait** container with
+  a **1621×912** iframe — exactly 16:9 — and the video fills it with no bars.
+  A 4:3 or vertical source works the same way.
+
+  The real caveat is that the **two crops compound**: a near-square source in a
+  wide container is cropped by Vimeo *and* again by `.mediaCover`, so more of
+  the frame is lost than either step implies. Choose sources with the subject
+  away from the edges.
 - **Not extracted.** The technique is duplicated at two call sites in
   `HeroBanner.tsx` (split and background) rather than shared. Any change must
   be made in both.
