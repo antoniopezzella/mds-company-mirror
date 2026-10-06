@@ -227,6 +227,18 @@
       ]
     },
     {
+      "name": "shadows",
+      "type": "registry:lib",
+      "title": "Shadows",
+      "description": "Canonical elevation tokens — six levels, each with its semantic usage. Imported by DataGrid for its sticky-column hint.",
+      "files": [
+        {
+          "path": "src/shadows.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "use-data-grid-table",
       "type": "registry:lib",
       "title": "useDataGridTable",
@@ -353,8 +365,9 @@
         "class-variance-authority"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens"
+        "mds-tokens",
+        "prop-compat",
+        "utils"
       ],
       "files": [
         {
@@ -387,9 +400,10 @@
       "title": "Badge Anchor",
       "description": "Corner-pin positioning wrapper around Badge (notification-count overlay pattern).",
       "registryDependencies": [
-        "utils",
+        "badge",
         "mds-tokens",
-        "badge"
+        "prop-compat",
+        "utils"
       ],
       "files": [
         {
@@ -443,6 +457,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "control-size",
         "utils"
       ],
       "files": [
@@ -461,10 +476,11 @@
         "class-variance-authority"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "button",
-        "separator"
+        "control-size",
+        "mds-tokens",
+        "separator",
+        "utils"
       ],
       "files": [
         {
@@ -537,8 +553,9 @@
         "recharts"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens"
+        "data-state",
+        "mds-tokens",
+        "utils"
       ],
       "files": [
         {
@@ -609,10 +626,11 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "command",
-        "popover"
+        "control-size",
+        "mds-tokens",
+        "popover",
+        "utils"
       ],
       "files": [
         {
@@ -669,7 +687,10 @@
         "@tanstack/react-table"
       ],
       "registryDependencies": [
+        "data-grid-features",
         "data-state",
+        "mds-tokens",
+        "shadows",
         "utils"
       ],
       "files": [
@@ -688,6 +709,7 @@
         "button",
         "data-grid-selection",
         "dialog",
+        "mds-tokens",
         "spinner",
         "utils"
       ],
@@ -705,6 +727,7 @@
       "description": "Inline cell editing for grid cells.",
       "registryDependencies": [
         "input",
+        "mds-tokens",
         "textarea",
         "utils"
       ],
@@ -725,6 +748,7 @@
       ],
       "registryDependencies": [
         "data-grid",
+        "mds-tokens",
         "pagination",
         "utils"
       ],
@@ -746,8 +770,10 @@
       ],
       "registryDependencies": [
         "button",
+        "data-grid-features",
         "dialog",
-        "dropdown-menu"
+        "dropdown-menu",
+        "mds-tokens"
       ],
       "files": [
         {
@@ -766,6 +792,8 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "data-grid-features",
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -786,6 +814,8 @@
       "registryDependencies": [
         "button",
         "data-grid-bulk-actions",
+        "data-grid-features",
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -808,12 +838,16 @@
       "registryDependencies": [
         "data-grid",
         "data-grid-cell-edit",
+        "data-grid-cell-selection",
+        "data-grid-features",
         "data-state",
         "dropdown-menu",
         "input",
+        "mds-tokens",
         "skeleton",
         "table-primitives",
-        "utils"
+        "utils",
+        "z-index"
       ],
       "files": [
         {
@@ -839,7 +873,9 @@
         "data-table-sort-list",
         "dropdown-menu",
         "filter-field-control",
+        "filter-schema",
         "input",
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -879,13 +915,23 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "checkbox",
+        "data-grid",
+        "data-grid-bulk-actions",
+        "data-grid-features",
+        "data-grid-pagination",
+        "data-grid-selection",
+        "data-grid-table",
+        "data-grid-toolbar",
+        "data-table-faceted-filter",
+        "dropdown-menu",
+        "filter-schema",
         "input",
+        "mds-tokens",
         "pagination",
         "skeleton",
-        "dropdown-menu"
+        "use-data-grid-table",
+        "utils"
       ],
       "files": [
         {
@@ -909,6 +955,9 @@
         "badge",
         "button",
         "calendar",
+        "data-grid-features",
+        "data-grid-filter-fns",
+        "format",
         "popover"
       ],
       "files": [
@@ -931,6 +980,8 @@
         "badge",
         "button",
         "command",
+        "data-grid-features",
+        "mds-tokens",
         "popover",
         "utils"
       ],
@@ -953,6 +1004,8 @@
       "registryDependencies": [
         "badge",
         "button",
+        "data-grid-features",
+        "mds-tokens",
         "popover"
       ],
       "files": [
@@ -974,12 +1027,13 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "button",
         "calendar",
+        "control-size",
         "input",
-        "popover"
+        "mds-tokens",
+        "popover",
+        "utils"
       ],
       "files": [
         {
@@ -1071,6 +1125,7 @@
       ],
       "registryDependencies": [
         "button",
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -1111,9 +1166,11 @@
       ],
       "registryDependencies": [
         "button",
+        "control-size",
         "date-picker",
         "filter-chip",
         "input",
+        "mds-tokens",
         "select",
         "stack",
         "utils"
@@ -1136,6 +1193,7 @@
       ],
       "registryDependencies": [
         "dropdown-menu",
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -1154,6 +1212,7 @@
         "button",
         "dropdown-menu",
         "filter-chip",
+        "filter-schema",
         "input",
         "label",
         "popover"
@@ -1177,6 +1236,7 @@
         "filter-bar",
         "filter-chip",
         "filter-controls",
+        "filter-schema",
         "input"
       ],
       "files": [
@@ -1198,12 +1258,18 @@
         "button",
         "button-group",
         "dropdown-menu",
+        "format",
         "input",
         "label",
+        "mds-tokens",
         "popover",
         "utils"
       ],
       "files": [
+        {
+          "path": "src/components/ui/filters/adapters/predicate.ts",
+          "type": "registry:ui"
+        },
         {
           "path": "src/components/ui/filters/filters-builder.tsx",
           "type": "registry:ui"
@@ -1328,8 +1394,10 @@
       "title": "Input",
       "description": "Text input with tone-driven validation coloring (default/error/success/warning).",
       "registryDependencies": [
-        "utils",
-        "mds-tokens"
+        "control-size",
+        "mds-tokens",
+        "prop-compat",
+        "utils"
       ],
       "files": [
         {
@@ -1346,9 +1414,10 @@
         "class-variance-authority"
       ],
       "registryDependencies": [
-        "utils",
+        "button",
+        "control-size",
         "mds-tokens",
-        "button"
+        "utils"
       ],
       "files": [
         {
@@ -1400,9 +1469,10 @@
       "type": "registry:ui",
       "title": "List",
       "registryDependencies": [
-        "utils",
+        "checkbox",
+        "data-state",
         "mds-tokens",
-        "checkbox"
+        "utils"
       ],
       "files": [
         {
@@ -1540,6 +1610,7 @@
       "title": "PageShell",
       "description": "The dashboard page template: header, content width, and the dashboard typography context.",
       "registryDependencies": [
+        "mds-tokens",
         "stack",
         "utils"
       ],
@@ -1690,8 +1761,10 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens"
+        "control-size",
+        "mds-tokens",
+        "prop-compat",
+        "utils"
       ],
       "files": [
         {
@@ -1746,10 +1819,11 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "button",
-        "theme-mode-context"
+        "mds-tokens",
+        "theme-mode-context",
+        "tooltip",
+        "utils"
       ],
       "files": [
         {
@@ -1801,6 +1875,7 @@
       "title": "Sparkline",
       "description": "A tiny trend line for inside a KPI tile, table cell or list row.",
       "registryDependencies": [
+        "mds-tokens",
         "utils"
       ],
       "files": [
@@ -1853,6 +1928,13 @@
         "lucide-react"
       ],
       "registryDependencies": [
+        "data-state",
+        "error-state",
+        "format",
+        "format-context",
+        "mds-tokens",
+        "skeleton",
+        "sparkline",
         "utils"
       ],
       "files": [
@@ -1925,11 +2007,12 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "checkbox",
+        "data-state",
+        "mds-tokens",
+        "pagination",
         "skeleton",
-        "pagination"
+        "utils"
       ],
       "files": [
         {
@@ -1977,11 +2060,12 @@
       "type": "registry:ui",
       "title": "Text Field",
       "registryDependencies": [
-        "utils",
-        "mds-tokens",
         "input",
         "label",
-        "textarea"
+        "mds-tokens",
+        "prop-compat",
+        "textarea",
+        "utils"
       ],
       "files": [
         {
@@ -1995,9 +2079,10 @@
       "type": "registry:ui",
       "title": "Textarea",
       "registryDependencies": [
-        "utils",
+        "control-size",
+        "input",
         "mds-tokens",
-        "input"
+        "utils"
       ],
       "files": [
         {
@@ -2087,7 +2172,9 @@
         "@radix-ui/react-tooltip"
       ],
       "registryDependencies": [
-        "mds-tokens"
+        "mds-tokens",
+        "utils",
+        "z-index"
       ],
       "files": [
         {
