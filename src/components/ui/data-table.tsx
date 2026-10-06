@@ -177,6 +177,19 @@ export interface DataTableProps<TData extends RowData, TValue> {
   enableColumnVisibility?: boolean;
   pageSize?: number;
   /**
+   * Page sizes offered in the footer's picker. Omit to take `Pagination`'s
+   * own default of `[10, 25, 50, 100]`.
+   *
+   * Pass this whenever `pageSize` is not one of those four — otherwise the
+   * select renders a value that is not among its own options. `DataGridPagination`
+   * and `Pagination` have both always supported it; `DataTable` simply never
+   * forwarded it, which is why ManageTeam's member table sits at the default
+   * instead of the 15/page its source screen specifies.
+   */
+  pageSizeOptions?: number[];
+  /** Label before the page-size picker. Defaults to `Rows per page:`. */
+  rowsLabel?: string;
+  /**
    * The sort the table opens with. Replaces `Table`'s `defaultSortColumn` /
    * `defaultSortDirection` pair; the user's first header click supersedes it.
    */
@@ -375,6 +388,8 @@ function DataTableView<TData extends RowData, TValue>({
   defaultDensity,
   manualPagination = false,
   rowCount,
+  pageSizeOptions,
+  rowsLabel,
   onPaginationChange,
   emptyState,
   onCellEdit,
@@ -501,6 +516,8 @@ function DataTableView<TData extends RowData, TValue>({
         </DataGridScrollArea>
         <DataGridPagination
           showSelectedCount={enableRowSelection}
+          pageSizeOptions={pageSizeOptions}
+          {...(rowsLabel === undefined ? {} : { rowsLabel })}
           onPaginationChange={onPaginationChange}
         />
       </DataGridContainer>
