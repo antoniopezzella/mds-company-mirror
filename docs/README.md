@@ -45,6 +45,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | Doc | For |
 |---|---|
 | [`OPERATIONS.md`](./OPERATIONS.md) | **Start here when something is broken.** What's running, how it deploys, how to roll back, how to diagnose a failed deploy or a misbehaving AI endpoint, and the known weaknesses |
+| [`ROADMAP.md`](./ROADMAP.md) | **The plan.** Every open item from the audit mapped to four goals, against the target of Carbon's *one core, several expressions* model. Supersedes `PRODUCTION_READINESS.md` §(d) — that file is the audit (what is true), this is the plan (what we do about it) |
 | [`GOVERNANCE.md`](./GOVERNANCE.md) | Visual map of all four governance systems (token/role, CI gates, documentation, branches) with a flowchart for each — start here before the individual detailed docs below |
 | [`DEPLOYMENT.md`](./DEPLOYMENT.md) | Pointer to `OPERATIONS.md`; kept because it's linked from elsewhere. Its old procedures were wrong and are documented as such |
 | [`FIGMA_CODE_CONNECT_GUIDE.md`](./FIGMA_CODE_CONNECT_GUIDE.md) | Real component source shown in Figma Dev Mode |
