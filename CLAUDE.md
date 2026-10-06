@@ -151,10 +151,17 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
 // the role layer reads the `.dark` class at call time.
 export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): string {
   const entry = ROLE_MAP[role];
-  const colors = mode === 'dark' 
-    ? { ...semanticColors, ...semanticDarkOverrides } 
-    : semanticColors;
-  return colors[entry.semantic];
+  if (!entry) throw new Error(`Unknown role: ${role}`);
+  // An explicit `mode` wins — the MUI side threads one from ThemeModeContext.
+  // Callers that omit it, which is most of the shadcn set, fall back to the
+  // `dark` class on <html>. That fallback is what makes dark mode work across
+  // the library without threading `mode` through every call site.
+  const mode = options.mode || currentDomMode();
+  const base = semanticColors[entry.semantic];
+  if (mode === 'dark' && entry.semantic in semanticDarkOverrides) {
+    return semanticDarkOverrides[entry.semantic] || base;
+  }
+  return base;
 }
 ```
 

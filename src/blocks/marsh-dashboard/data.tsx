@@ -26,15 +26,30 @@ export interface SummaryStat {
   value: number;
   /** Read by `StatCard` through `FormatProvider` — do not pre-format. */
   format: FormatKind;
-  /** Period-over-period change, as a ratio. `0.082` renders as +8.2%. */
+  /**
+   * Period-over-period change, **as a percentage, not a ratio** — `8.2` renders
+   * as `+8.2%`.
+   *
+   * This file asserted the opposite until 2026-10-06 and supplied ratios, so
+   * three of the four cards rendered `0.0%` and the renewal rate rendered
+   * `0.9%` instead of `91.4%`. `src/lib/format.ts:249` states the rule and
+   * calls silently multiplying by 100 "the single most common percentage bug";
+   * the starter template shipped it. The story below now asserts the rendered
+   * strings, which is what would have caught it.
+   */
   delta?: number;
+  /** Passed straight to the formatter. `decimals: 0` drops `.00` on a KPI. */
+  formatOptions?: { decimals?: number };
 }
 
 export const SUMMARY: SummaryStat[] = [
-  { label: 'Gross written premium', value: 48_200_000, format: 'currency', delta: 0.082 },
-  { label: 'Active policies', value: 1_284, format: 'number', delta: 0.021 },
-  { label: 'Renewal rate', value: 0.914, format: 'percent', delta: -0.006 },
-  { label: 'Clients', value: 317, format: 'number', delta: 0.044 },
+  // `decimals: 0` — the default is 2, and `$48,200,000.00` on an eight-figure
+  // headline is noise.
+  { label: 'Gross written premium', value: 48_200_000, format: 'currency', delta: 8.2, formatOptions: { decimals: 0 } },
+  { label: 'Active policies', value: 1_284, format: 'number', delta: 2.1 },
+  // 91.4 — a percentage. `0.914` would render as `0.9%`.
+  { label: 'Renewal rate', value: 91.4, format: 'percent', delta: -0.6 },
+  { label: 'Clients', value: 317, format: 'number', delta: 4.4 },
 ];
 
 export interface Policy {

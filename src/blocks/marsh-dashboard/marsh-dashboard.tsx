@@ -10,6 +10,7 @@ import { PageHeading, PageShell } from '@/components/ui/page-shell';
 import { SideNavigation } from '@/components/ui/side-navigation';
 import { Stack } from '@/components/ui/stack';
 import { StatCard } from '@/components/ui/stat-card';
+import { formatCurrency, formatDate } from '@/lib/format';
 import { FormatProvider } from '@/lib/format-context';
 
 import { DASHBOARD_NAV, POLICIES, SUMMARY, type Policy } from './data';
@@ -70,17 +71,25 @@ const columns: DataGridColumnDef<Policy>[] = [
     // gap (see docs/PRODUCTION_READINESS.md, P0-12); when it closes, delete
     // this `cell` and the column formats from `meta.type` + FormatProvider.
     meta: { type: 'currency' },
-    cell: ({ row }) =>
-      row.original.premium.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-      }),
+    // `formatCurrency`, not a hand-rolled `toLocaleString` — the whole point of
+    // `lib/format` is that every surface renders money the same way.
+    cell: ({ row }) => formatCurrency(row.original.premium, { decimals: 0 }),
   },
-  { accessorKey: 'renewal', header: 'Renewal', meta: { type: 'date' } },
+  {
+    accessorKey: 'renewal',
+    header: 'Renewal',
+    // Same story as `premium`: `meta.type` aligns, it does not format, so the
+    // cell formats itself. Without this the column shipped a raw `2027-01-15`.
+    meta: { type: 'date' },
+    cell: ({ row }) => formatDate(row.original.renewal),
+  },
 ];
 
 export interface MarshDashboardProps {
+  /** BCP-47 locale for every formatted value. Defaults to `en-US`. */
+  locale?: string;
+  /** ISO 4217 currency for every money value. Defaults to `USD`. */
+  currency?: string;
   /** Swap for your own fetch state. */
   loading?: boolean;
   /** Non-null renders the error state in place of the table. */
@@ -88,12 +97,25 @@ export interface MarshDashboardProps {
   onRetry?: () => void;
 }
 
-export function MarshDashboard({ loading = false, error = null, onRetry }: MarshDashboardProps) {
+export function MarshDashboard({
+  locale = 'en-US',
+  currency = 'USD',
+  loading = false,
+  error = null,
+  onRetry,
+}: MarshDashboardProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
     // Locale and currency declared once for every descendant that formats.
-    <FormatProvider locale="en-US" currency="USD">
+    //
+    // THIS BLOCK PASSES THE DEFAULTS, so deleting the provider changes nothing
+    // on screen today — it is here to show you WHERE to put it. Change these
+    // two values and every StatCard follows; that is the capability. A version
+    // of this file shipped claiming to demonstrate ambient formatting while
+    // being a provable no-op, and its own test passed with the provider
+    // removed. The story now asserts a non-default locale to keep it honest.
+    <FormatProvider locale={locale} currency={currency}>
       <PageShell
         header={
           <Header
@@ -134,6 +156,7 @@ export function MarshDashboard({ loading = false, error = null, onRetry }: Marsh
                   label={stat.label}
                   value={stat.value}
                   format={stat.format}
+                  formatOptions={stat.formatOptions}
                   delta={stat.delta}
                   deltaFormat="percent"
                   loading={loading}
