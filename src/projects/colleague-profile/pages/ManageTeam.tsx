@@ -16,6 +16,7 @@ import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 import { ColleagueShell } from '../components/ColleagueShell';
 import { RemoveMemberDialog } from '../components/RemoveMemberDialog';
 import { AddMemberDialog } from '../components/AddMemberDialog';
+import { ClientPivotView } from '../components/ClientPivotView';
 import { useColleagueRole } from '../role-context';
 import { deniedReason } from '../roles';
 import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
@@ -226,14 +227,7 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
 
   const tabs: TabItem[] = [
     { id: 'members', title: 'Member View', content: memberView },
-    {
-      id: 'clients',
-      title: 'Client Pivot View',
-      content: notBuilt(
-        'Client pivot not in this rebuild',
-        'The same members, grouped by the clients they serve rather than by person.'
-      ),
-    },
+    { id: 'clients', title: 'Client Pivot View', content: <ClientPivotView /> },
     {
       id: 'setup',
       title: 'Team Setup',

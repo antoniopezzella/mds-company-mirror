@@ -3,6 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ManageTeam } from './ManageTeam';
+import { TEAM_CLIENT_COUNT, TEAM_MEMBERS } from '../data';
 
 const meta: Meta<typeof ManageTeam> = {
   title: 'Projects/Colleague Profile/Manage Team',
@@ -50,7 +51,16 @@ export const Default: StoryObj = {
       await expect(
         canvas.getByRole('heading', { name: 'AAAA Grant C - Test', level: 1 })
       ).toBeInTheDocument();
-      await expect(canvas.getByText(/8 active team members · 21 Clients/)).toBeInTheDocument();
+      // Derived from the fixtures rather than hardcoded. The literal said
+      // `21 Clients` while TEAM_CLIENT_COUNT was a hand-maintained constant;
+      // once the count became CLIENTS.length the two disagreed, and a test
+      // asserting a number the data no longer produces is a test that has to
+      // be edited every time the fixture changes.
+      await expect(
+        canvas.getByText(
+          `${TEAM_MEMBERS.length} active team members · ${TEAM_CLIENT_COUNT} Clients`
+        )
+      ).toBeInTheDocument();
     });
 
     await step('every member is listed', async () => {

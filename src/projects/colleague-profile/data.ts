@@ -214,9 +214,113 @@ export const TEAM_MEMBERS: TeamMember[] = [
   },
 ];
 
-/** Client count for the team header. Not derivable from members — a client
- *  served by two colleagues is one client, not two. */
-export const TEAM_CLIENT_COUNT = 21;
+/**
+ * A client the team serves.
+ *
+ * `cn` is the Marsh client number and it is the identifier people actually
+ * use — it leads the label everywhere, because two clients can share a trading
+ * name and the CN never does. `sic` is the SIC description rather than the
+ * code, since the code means nothing to a reader.
+ */
+export interface Client {
+  /** Marsh client number, e.g. `CN101173280`. The primary identifier. */
+  cn: string;
+  name: string;
+  /** SIC *description*, not the code. */
+  sic: string;
+  /** Head-office city. Absent for a few records in the source system. */
+  city?: string;
+}
+
+export const CLIENTS: Client[] = [
+  { cn: 'CN101173280', name: 'Centrica Us Holdings Inc.', sic: 'Miscellaneous retail stores, nec', city: 'Wilmington' },
+  { cn: 'CN101188033', name: 'Cleco Corporate Holdings Llc', sic: 'Electric services', city: 'Pineville' },
+  { cn: 'CN101219531', name: 'Durham Coca-Cola Bottling Company', sic: 'Bottled and canned soft drinks' },
+  { cn: 'CN101188148', name: 'FMC Corporation', sic: 'Agricultural chemicals', city: 'Philadelphia' },
+  { cn: 'CN101358004', name: 'Hilton International Co.', sic: 'Hotels and motels' },
+  { cn: 'CN101204417', name: 'Ingersoll-Rand Company', sic: 'Air and gas compressors', city: 'Davidson' },
+  { cn: 'CN101233905', name: 'Kellanova Operating Co.', sic: 'Cereal breakfast foods', city: 'Chicago' },
+  { cn: 'CN101177642', name: 'Lennox Industries Inc.', sic: 'Heating equipment, except electric', city: 'Richardson' },
+  { cn: 'CN101290118', name: 'Masco Corporation', sic: 'Millwork, veneer, plywood', city: 'Livonia' },
+  { cn: 'CN101311870', name: 'Nordson Corporation', sic: 'Special industry machinery', city: 'Westlake' },
+  { cn: 'CN101266394', name: 'Olin Winchester Llc', sic: 'Ordnance and accessories', city: 'East Alton' },
+  { cn: 'CN101249053', name: 'PPG Architectural Finishes Inc.', sic: 'Paints and allied products', city: 'Pittsburgh' },
+  { cn: 'CN101302776', name: 'Quanta Services Inc.', sic: 'Electrical work', city: 'Houston' },
+  { cn: 'CN101195528', name: 'Rockwell Automation Inc.', sic: 'Industrial instruments', city: 'Milwaukee' },
+  { cn: 'CN101341209', name: 'Stanley Black & Decker Inc.', sic: 'Hand and edge tools', city: 'New Britain' },
+  { cn: 'CN101228860', name: 'Trane Technologies Company Llc', sic: 'Refrigeration and heating equipment', city: 'Dublin' },
+  { cn: 'CN101374431', name: 'Vulcan Construction Materials Llc', sic: 'Construction sand and gravel', city: 'Birmingham' },
+];
+
+/**
+ * One colleague's assignment to one client.
+ *
+ * THE TEAM NAME HERE IS NOT NECESSARILY THE TEAM YOU ARE VIEWING. A client is
+ * served by whoever is assigned to it, and those people reach it through their
+ * own teams — so the pivot legitimately shows members from teams other than
+ * this one, each labelled with the team the assignment came through. That is
+ * the whole reason this view exists separately from Member View: pivoting on
+ * the client crosses team boundaries, pivoting on the person does not.
+ *
+ * `chair` is the Primary/Secondary distinction the source screen shows beside
+ * the role. Exactly one Primary per client is the business rule; the data
+ * below honours it, and `assignmentsForClient` does not enforce it, because a
+ * UI that silently hides a data problem is worse than one that shows it.
+ */
+export interface ClientAssignment {
+  clientCn: string;
+  memberId: string;
+  /** The team through which this person is assigned — may not be this team. */
+  teamName: string;
+  /** Where the assignment record came from, shown under the team name. */
+  source: string;
+  /** e.g. 'Client Representative', 'Associate Account Executive'. */
+  role: string;
+  chair: 'Primary' | 'Secondary';
+}
+
+export const CLIENT_ASSIGNMENTS: ClientAssignment[] = [
+  { clientCn: 'CN101173280', memberId: '1367578', teamName: 'Justin Johnson - US/C Construction', source: 'Colleague Profile', role: 'Client Representative', chair: 'Secondary' },
+  { clientCn: 'CN101173280', memberId: '1250688', teamName: 'Design Team', source: 'Colleague Profile', role: 'Associate Account Executive', chair: 'Primary' },
+  { clientCn: 'CN101188033', memberId: '772731', teamName: 'Design Team', source: 'Colleague Profile', role: 'Account Executive', chair: 'Primary' },
+  { clientCn: 'CN101188033', memberId: '1222047', teamName: 'Design Team', source: 'Colleague Profile', role: 'Health Actuary', chair: 'Secondary' },
+  { clientCn: 'CN101188033', memberId: '635161', teamName: 'AAAA Grant C - Test', source: 'Workday', role: 'Sales Leader', chair: 'Secondary' },
+  { clientCn: 'CN101219531', memberId: '1342273', teamName: 'Design Team', source: 'Colleague Profile', role: 'Client Representative', chair: 'Primary' },
+  { clientCn: 'CN101188148', memberId: '853835', teamName: 'Justin Johnson - US/C Construction', source: 'Colleague Profile', role: 'Insurance Operations', chair: 'Primary' },
+  { clientCn: 'CN101188148', memberId: '1236464', teamName: 'Design Team', source: 'Colleague Profile', role: 'Claims Advisory', chair: 'Secondary' },
+  { clientCn: 'CN101358004', memberId: '635161', teamName: 'AAAA Grant C - Test', source: 'Colleague Profile', role: 'Sales Leader', chair: 'Primary' },
+  { clientCn: 'CN101204417', memberId: '1367578', teamName: 'Justin Johnson - US/C Construction', source: 'Colleague Profile', role: 'Project Management', chair: 'Primary' },
+  { clientCn: 'CN101233905', memberId: '772731', teamName: 'Design Team', source: 'Workday', role: 'Account Executive', chair: 'Primary' },
+  { clientCn: 'CN101233905', memberId: '1342273', teamName: 'Design Team', source: 'Colleague Profile', role: 'Client Representative', chair: 'Secondary' },
+  { clientCn: 'CN101177642', memberId: '1222047', teamName: 'Design Team', source: 'Colleague Profile', role: 'Health Actuary', chair: 'Primary' },
+  { clientCn: 'CN101290118', memberId: '1250688', teamName: 'Design Team', source: 'Colleague Profile', role: 'Strategy & Planning', chair: 'Primary' },
+  { clientCn: 'CN101311870', memberId: '853835', teamName: 'Justin Johnson - US/C Construction', source: 'Colleague Profile', role: 'Insurance Operations', chair: 'Primary' },
+  { clientCn: 'CN101266394', memberId: '1236464', teamName: 'Design Team', source: 'Colleague Profile', role: 'Claims Advisory', chair: 'Primary' },
+  { clientCn: 'CN101249053', memberId: '635161', teamName: 'AAAA Grant C - Test', source: 'Colleague Profile', role: 'Sales Leader', chair: 'Primary' },
+  { clientCn: 'CN101302776', memberId: '1342273', teamName: 'Design Team', source: 'Colleague Profile', role: 'Project Management', chair: 'Primary' },
+  { clientCn: 'CN101195528', memberId: '1367578', teamName: 'Justin Johnson - US/C Construction', source: 'Colleague Profile', role: 'Project Management', chair: 'Primary' },
+  { clientCn: 'CN101341209', memberId: '772731', teamName: 'Design Team', source: 'Colleague Profile', role: 'Account Executive', chair: 'Primary' },
+  { clientCn: 'CN101228860', memberId: '1250688', teamName: 'Design Team', source: 'Workday', role: 'Strategy & Planning', chair: 'Primary' },
+  // CN101374431 (Vulcan) is deliberately unassigned — the empty state on the
+  // right-hand panel is a real state, and with no unassigned client in the
+  // fixture it would never be seen.
+];
+
+/** Every assignment for one client, Primary first — the order people expect. */
+export function assignmentsForClient(cn: string): ClientAssignment[] {
+  return CLIENT_ASSIGNMENTS.filter((a) => a.clientCn === cn).sort((a, b) =>
+    a.chair === b.chair ? 0 : a.chair === 'Primary' ? -1 : 1
+  );
+}
+
+/**
+ * Client count for the team header. Derived, not a literal: it was hardcoded
+ * to 21 while CLIENTS held a different number, and a header that disagrees
+ * with the list beneath it is the kind of thing nobody notices until a demo.
+ * Still not derivable from members — a client served by two colleagues is one
+ * client, not two.
+ */
+export const TEAM_CLIENT_COUNT = CLIENTS.length;
 
 /**
  * A colleague in the Workday directory — the pool you add members from.
