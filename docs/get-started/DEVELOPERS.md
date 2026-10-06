@@ -155,7 +155,7 @@ pnpm dlx shadcn@latest add antoniopezzella/marsh-design-system/date-picker
 
 This pulls the real `date-picker.tsx` source into your project's `src/components/ui/`, plus everything it depends on automatically — `calendar`, `popover`, `button`, `input`, the `utils` helper, and MDS's own token layer (`tokens.ts` → `semantic-tokens.ts` → `theme/roles.ts`, shipped as the `mds-tokens` registry item) — so `getRoleColor()` calls inside the copied component resolve correctly from day one, rather than importing from a path that doesn't exist in your project.
 
-**Coverage:** all 71 components in `src/components/ui/`, plus 5 foundation items real components depend on (`utils`, `mds-tokens`, `theme-mode-context`, `marsh-logo`, `use-toast`) — **76 items total**. Each item's `dependencies`/`registryDependencies` were derived from that file's actual imports. Validate the registry itself with:
+**Coverage:** all **94** components in `src/components/ui/`, plus 5 foundation items real components depend on (`utils`, `mds-tokens`, `theme-mode-context`, `marsh-logo`, `use-toast`) — **99 items total**. Completeness is enforced by `npm run registry:check` on every PR, which compares the registry against the filesystem; `shadcn registry validate` only checks the file's schema. Before that check existed this line said "all 71 components" while 23 were missing — the whole DataGrid family, the whole filter system, `page-shell`, `stack`, `data-state`, `error-state`, `sparkline` and `table-primitives`. Each item's `dependencies`/`registryDependencies` were derived from that file's actual imports. Validate the registry itself with:
 
 ```bash
 npx shadcn@latest registry validate

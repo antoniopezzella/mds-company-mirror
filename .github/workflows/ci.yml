@@ -57,6 +57,12 @@ jobs:
       - name: Unit & interaction tests
         run: npm test
 
+      # Asserts the axe gate above is actually running. It silently checked
+      # nothing once (vitest.config.ts:120-128) and a green suite looked
+      # identical to a disabled one. Reuses the browser this job already has.
+      - name: Accessibility gate self-test
+        run: npm run a11y:gate:check
+
       - name: Build (type + bundle)
         run: npm run build
 
@@ -68,8 +74,15 @@ jobs:
       - name: Build publishable package
         run: npm run build:package
 
+      # `registry validate` only checks that the FILE is well-formed. It will
+      # happily pass a registry missing a quarter of the library — which is
+      # exactly what happened: 71 listed against 94 on disk. This second step
+      # checks it against the filesystem.
       - name: Validate shadcn registry
         run: npx -y shadcn@latest registry validate
+
+      - name: Registry completeness
+        run: npm run registry:check
 
       - name: Build Storybook (optional)
         run: npm run build-storybook
