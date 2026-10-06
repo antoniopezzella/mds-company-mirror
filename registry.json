@@ -4,6 +4,40 @@
   "homepage": "https://github.com/antoniopezzella/marsh-design-system",
   "items": [
     {
+      "name": "marsh-dashboard",
+      "type": "registry:block",
+      "title": "Marsh Dashboard",
+      "description": "A whole dashboard page: PageShell frame, KPI row, searchable data table, and the loading/error states. Copy it and replace the data.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "data-grid-features",
+        "data-table",
+        "error-state",
+        "format",
+        "format-context",
+        "header",
+        "page-shell",
+        "side-navigation",
+        "stack",
+        "stat-card",
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/blocks/marsh-dashboard/marsh-dashboard.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "src/blocks/marsh-dashboard/data.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "marsh-logo",
       "type": "registry:file",
       "title": "Marsh logo asset",
@@ -43,6 +77,124 @@
       ]
     },
     {
+      "name": "control-size",
+      "type": "registry:lib",
+      "title": "Control Size",
+      "description": "The shared size scale for buttons and fields — sm 32 / md 40 / lg 48, plus CONTROL_RADIUS and the group context.",
+      "files": [
+        {
+          "path": "src/components/ui/control-size.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "data-grid-cell-selection",
+      "type": "registry:lib",
+      "title": "Data Grid Cell Selection",
+      "description": "Cell and range selection state for the data grid.",
+      "dependencies": [
+        "@tanstack/react-table"
+      ],
+      "registryDependencies": [
+        "data-grid-clipboard",
+        "data-grid-features"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-grid-cell-selection.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "data-grid-clipboard",
+      "type": "registry:lib",
+      "title": "Data Grid Clipboard",
+      "description": "Clipboard read/write for grid cell ranges.",
+      "files": [
+        {
+          "path": "src/components/ui/data-grid-clipboard.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "data-grid-features",
+      "type": "registry:lib",
+      "title": "Data Grid Features",
+      "description": "The TanStack feature set and column-def types every DataTable/DataGrid consumer imports.",
+      "dependencies": [
+        "@tanstack/react-table"
+      ],
+      "registryDependencies": [
+        "data-grid-filter-fns"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-grid-features.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "data-grid-filter-fns",
+      "type": "registry:lib",
+      "title": "Data Grid Filter Fns",
+      "description": "Filter functions registered on the grid — faceted, date-range and text matching.",
+      "registryDependencies": [
+        "format"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-grid-filter-fns.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "filter-schema",
+      "type": "registry:lib",
+      "title": "Filter Schema",
+      "description": "Field, operator and value types for the filter query system.",
+      "registryDependencies": [
+        "format"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/filter-schema.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "format",
+      "type": "registry:lib",
+      "title": "Format",
+      "description": "Locale-aware currency, number, percent, compact and date formatters.",
+      "files": [
+        {
+          "path": "src/lib/format.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "format-context",
+      "type": "registry:lib",
+      "title": "Format Context",
+      "description": "FormatProvider and the hooks that read ambient locale/currency config.",
+      "registryDependencies": [
+        "format"
+      ],
+      "files": [
+        {
+          "path": "src/lib/format-context.tsx",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "mds-tokens",
       "type": "registry:lib",
       "title": "MDS design tokens",
@@ -63,6 +215,36 @@
       ]
     },
     {
+      "name": "prop-compat",
+      "type": "registry:lib",
+      "title": "Prop Compat",
+      "description": "Normalises legacy size/tone spellings to the canonical scale.",
+      "files": [
+        {
+          "path": "src/components/ui/prop-compat.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "use-data-grid-table",
+      "type": "registry:lib",
+      "title": "useDataGridTable",
+      "description": "The hook that builds the grid table instance.",
+      "dependencies": [
+        "@tanstack/react-table"
+      ],
+      "registryDependencies": [
+        "data-grid-features"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/use-data-grid-table.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
       "title": "cn() utility",
@@ -74,6 +256,18 @@
       "files": [
         {
           "path": "src/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "z-index",
+      "type": "registry:lib",
+      "title": "Z-Index Scale",
+      "description": "The stacking scale — sticky, chrome, scrim, overlay, toast, tooltip.",
+      "files": [
+        {
+          "path": "src/components/ui/z-index.ts",
           "type": "registry:lib"
         }
       ]
