@@ -140,7 +140,8 @@
     "stories:audit": "node scripts/audit-stories.js",
     "a11y:gate:check": "node scripts/check-a11y-gate.js",
     "registry:check": "node scripts/check-registry.js",
-    "registry:suggest": "node scripts/check-registry.js --suggest"
+    "registry:suggest": "node scripts/check-registry.js --suggest",
+    "registry:fix": "node scripts/check-registry.js --fix"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

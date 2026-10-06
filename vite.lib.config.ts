@@ -110,6 +110,9 @@ export default defineConfig({
         'src/lib/**/*',
         'src/tokens.ts',
         'src/semantic-tokens.ts',
+        // data-grid.tsx imports this; without it dist-pkg ships shadows.mjs
+        // and shadows.cjs with no .d.ts — the Run-3 P0 mechanism, latent.
+        'src/shadows.ts',
         'src/theme/roles.ts',
         'src/theme/RoleVarsProvider.tsx',
         'src/theme/ThemeModeContext.tsx',

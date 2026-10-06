@@ -85,12 +85,12 @@ trusts the docs — without asking the maintainer.
 
 ### Done since the audit
 
-- **Registry entries completed — but the install path is STILL BROKEN.** 111
-  items now exist and nothing is stale, gated on every PR. But Run 5 found the
-  gate checks entry *existence*, never the dependency *graph*: `data-table`
-  declares 7 deps and imports 11, and **30 of 111 items under-declare (51
-  edges)**. `npx shadcn add data-table` still does not compile. See
-  `PRODUCTION_READINESS.md` P0-R.
+- **Registry is now a real install path.** 112 items, and the gate checks the
+  dependency *graph*, not just the index: every internal import must resolve to
+  a file the item ships or declares. That found **75 under-declared edges
+  across 38 items** (`data-table` declared 7 and imported 11) and **2 files
+  owned by no item**. All closed; `npm run registry:fix` re-derives edges.
+  Proven by deleting an edge and an owner — exit 1 on each, naming the item.
 - **First block shipped — and it ships four wrong numbers.** `marsh-dashboard`
   renders renewal rate as `0.9%` instead of `91.4%` and three deltas as `0%`,
   because `data.tsx` supplies ratios to a formatter that takes percentages.
