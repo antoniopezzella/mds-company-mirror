@@ -85,9 +85,27 @@ try {
     // Distinguish "the test failed" (what we want) from "the harness broke".
     const out = `${err.stdout ?? ''}${err.stderr ?? ''}`;
     if (err.status === undefined) throw err;
-    if (!/Test Files\s+\d+ failed/.test(out) && !/\d+ failed/.test(out)) {
-      console.error('check-a11y-gate: vitest exited non-zero but reported no test failure.');
-      console.error('This is a harness problem, not a gate result. Raw output:\n');
+    const reportedAFailure = /Test Files\s+\d+ failed/.test(out) || /\d+ failed/.test(out);
+    // ATTRIBUTION, not just "something went red".
+    //
+    // Matching only "N failed" made every failure mode look like a healthy
+    // gate: a compile error in the generated probe, an addon upgrade changing
+    // the Meta shape, a Playwright crash. All of those print "the gate caught
+    // it" while axe could be entirely dead — which is precisely the ambiguity
+    // this script exists to remove, reproduced one level up.
+    const blamedAxe = /button-name/.test(out);
+    if (!reportedAFailure || !blamedAxe) {
+      console.error(
+        reportedAFailure
+          ? 'check-a11y-gate: the probe failed, but NOT for the reason it was written.'
+          : 'check-a11y-gate: vitest exited non-zero but reported no test failure.'
+      );
+      console.error(
+        reportedAFailure
+          ? 'Expected the failure to name axe\'s `button-name` rule. It did not, so this\n' +
+            'tells us nothing about whether the gate is alive. Raw output:\n'
+          : 'This is a harness problem, not a gate result. Raw output:\n'
+      );
       console.error(out.slice(-2000));
       cleanup();
       process.exit(2);
