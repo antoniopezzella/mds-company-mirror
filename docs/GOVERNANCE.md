@@ -55,7 +55,7 @@ flowchart TD
 |---|---|
 | `npm run roles:check:strict` | Any component importing `tokens.*` or `semanticColors.*` directly, or using deprecated tokens |
 | `npm run tokens:check` | Token build succeeds, no unauthorized primitive diff, DTCG export valid, WCAG contrast on every enforced pair |
-| `npm run governance:ci` | `roles:check` + contrast, bundled into one strict report — this is what `governance.yml` runs in CI |
+| `npm run governance:ci` | **9** gates bundled into one strict run — this is what `governance.yml` runs in CI. `roles:check:strict` is one of them **as of 2026-10-06**; before that this row claimed it was included and it was not, while the script itself had been parsing 6 of 55 role names since `6364c6b` and failing silently |
 
 Full architecture, naming rule, and dark-mode mechanics: [`foundations/TOKENS.md`](./foundations/TOKENS.md).
 

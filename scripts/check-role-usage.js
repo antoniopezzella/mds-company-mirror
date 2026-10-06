@@ -138,14 +138,35 @@ for (const file of componentFiles) {
 // other governance scripts take to avoid a build step. dist/tokens.json is not
 // an option here: it carries primitives and semantics, not roles.
 const publishedRoleVars = (() => {
-  const rolesSrc = fs.readFileSync(path.join(root, 'src', 'theme', 'roles.ts'), 'utf8');
-  const union = rolesSrc.slice(
-    rolesSrc.indexOf('export type RoleName'),
-    rolesSrc.indexOf(';', rolesSrc.indexOf('export type RoleName'))
+  // Comments are stripped BEFORE slicing, not after. The union is annotated
+  // with prose, and prose contains semicolons: a comment inside the union
+  // reading "(Sky, flipping to Midnight); the other is body text" truncated
+  // this slice at that semicolon for three weeks, so the parser saw 6 of 55
+  // roles and reported the other 49 as unknown. The check still "ran"; it just
+  // could not find anything. See the floor below.
+  const rolesSrc = stripComments(
+    fs.readFileSync(path.join(root, 'src', 'theme', 'roles.ts'), 'utf8')
   );
+  const start = rolesSrc.indexOf('export type RoleName');
+  const union = rolesSrc.slice(start, rolesSrc.indexOf(';', start));
   const names = [...union.matchAll(/'([a-zA-Z][a-zA-Z0-9.]*)'/g)].map((m) => m[1]);
+
+  // A floor, not a zero-check. The original guard only fired on 0 names, which
+  // is why a 6-name parse sailed through: a partial parse is the failure mode
+  // this script actually has, and it is indistinguishable from success unless
+  // the count is asserted. Cross-check against ROLE_MAP, the other place every
+  // role is listed, so the two have to disagree before this passes wrongly.
+  const mapEntries = (rolesSrc.match(/^\s*'[a-zA-Z][a-zA-Z0-9.]*':\s*\{/gm) ?? []).length;
   if (names.length === 0) {
     console.error('check-role-usage: could not parse RoleName union from src/theme/roles.ts');
+    process.exit(2);
+  }
+  if (mapEntries > 0 && names.length < mapEntries) {
+    console.error(
+      `check-role-usage: parsed only ${names.length} role name(s) from the RoleName ` +
+        `union, but ROLE_MAP defines ${mapEntries}. The union parse is truncating — ` +
+        `check src/theme/roles.ts for a stray ';' the comment stripper did not remove.`
+    );
     process.exit(2);
   }
   return new Set(names.map((role) => `--role-${role.replaceAll('.', '-')}`));
@@ -166,9 +187,17 @@ const danglingVars = [];
         // that trips on its own documentation is useless. Line numbers are
         // preserved because stripComments only blanks comment text, and a
         // block comment spanning lines collapses; close enough for a pointer.
-        const src = stripComments(fs.readFileSync(full, 'utf8'));
+        const raw = fs.readFileSync(full, 'utf8');
+        const src = stripComments(raw);
+        // The annotation has to be read from the RAW line, because the
+        // annotation IS a comment and stripComments would eat it first.
+        const rawLines = raw.split(/\r?\n/);
         const rel = path.relative(root, full);
         src.split(/\r?\n/).forEach((line, i) => {
+          // A dangling name is sometimes the point: the regression tests that
+          // guard this very bug class have to name the wrong form in order to
+          // assert it is absent. Same annotation convention as roles-allow-hex.
+          if (/roles-allow-dangling/.test(rawLines[i] ?? '')) return;
           for (const m of line.matchAll(/--role-[A-Za-z0-9-]+/g)) {
             if (!publishedRoleVars.has(m[0])) {
               // Suggest the published name that differs only in case/dashes.
