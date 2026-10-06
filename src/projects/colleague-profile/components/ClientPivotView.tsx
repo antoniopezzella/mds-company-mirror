@@ -11,16 +11,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import { DataTable } from '@/components/ui/data-table';
+import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 import { Pagination } from '@/components/ui/pagination';
 import { Inline, Stack } from '@/components/ui/stack';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table-primitives';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Tooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
@@ -120,28 +114,56 @@ function ClientListItem({
   );
 }
 
-function AssignmentRow({ assignment }: { assignment: ClientAssignment }) {
-  const member = MEMBERS_BY_ID.get(assignment.memberId);
+/**
+ * A row is a *member seen through an assignment*, so the sortable table needs
+ * one flat shape rather than the assignment alone. Sorting on a derived
+ * `name`/`teamName`/`chair` is why this is flattened here instead of the cells
+ * reaching into two objects.
+ */
+interface AssignmentRow {
+  assignment: ClientAssignment;
+  member: TeamMember | undefined;
+  /** Sort keys. `memberId` stands in when the colleague has left the roster. */
+  name: string;
+  teamName: string;
+  chair: ClientAssignment['chair'];
+  role: string;
+}
 
-  // An assignment pointing at a colleague who is no longer in the roster is a
-  // real data state (people leave). Showing the id rather than dropping the
-  // row keeps the count honest and gives support something to search on.
-  if (!member) {
-    return (
-      <TableRow>
-        <TableCell colSpan={3}>
+function toRows(assignments: ClientAssignment[]): AssignmentRow[] {
+  return assignments.map((assignment) => {
+    const member = MEMBERS_BY_ID.get(assignment.memberId);
+    return {
+      assignment,
+      member,
+      name: member?.name ?? assignment.memberId,
+      teamName: assignment.teamName,
+      chair: assignment.chair,
+      role: assignment.role,
+    };
+  });
+}
+
+const ASSIGNMENT_COLUMNS: DataGridColumnDef<AssignmentRow>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Team member',
+    cell: ({ row }) => {
+      const { member, assignment } = row.original;
+
+      // An assignment pointing at a colleague no longer in the roster is a
+      // real data state (people leave). Showing the id rather than dropping
+      // the row keeps the count honest and gives support something to search.
+      if (!member) {
+        return (
           <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
             Unknown colleague ({assignment.memberId}) — assignment retained
           </span>
-        </TableCell>
-      </TableRow>
-    );
-  }
+        );
+      }
 
-  return (
-    <TableRow>
-      <TableCell>
-        <Inline gap={2} className="items-center">
+      return (
+        <Inline gap={2} className="items-center" wrap={false}>
           <Avatar initials={member.initials} size="sm" alt="" />
           <Stack gap={0}>
             <span className="text-sm font-medium" style={{ color: getRoleColor('text.primary') }}>
@@ -150,43 +172,62 @@ function AssignmentRow({ assignment }: { assignment: ClientAssignment }) {
             <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
               {member.jobTitle}
             </span>
-            <Inline gap={1} className="items-center">
-              <MapPin className="size-3 shrink-0" aria-hidden style={{ color: getRoleColor('text.secondary') }} />
+            <Inline gap={1} className="items-center" wrap={false}>
+              <MapPin
+                className="size-3 shrink-0"
+                aria-hidden="true"
+                style={{ color: getRoleColor('text.secondary') }}
+              />
               <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
-                {member.locationDetail ? `${member.location} - ${member.locationDetail}` : member.location}
+                {member.locationDetail
+                  ? `${member.location} - ${member.locationDetail}`
+                  : member.location}
               </span>
             </Inline>
           </Stack>
         </Inline>
-      </TableCell>
-
-      <TableCell>
-        <Stack gap={0}>
-          <span className="text-sm" style={{ color: getRoleColor('text.primary') }}>
-            {assignment.teamName}
-          </span>
-          <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
-            Source: {assignment.source}
-          </span>
-        </Stack>
-      </TableCell>
-
-      <TableCell className="text-right">
-        <Inline gap={2} className="justify-end">
+      );
+    },
+  },
+  {
+    accessorKey: 'teamName',
+    header: 'Team name',
+    cell: ({ row }) => (
+      <Stack gap={0}>
+        <span className="text-sm" style={{ color: getRoleColor('text.primary') }}>
+          {row.original.teamName}
+        </span>
+        <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+          Source: {row.original.assignment.source}
+        </span>
+      </Stack>
+    ),
+  },
+  {
+    accessorKey: 'chair',
+    header: 'Role / Chair',
+    // Sorts on `chair`, not `role`: Primary-vs-Secondary is the ordering
+    // anyone actually wants from this column, and `assignmentsForClient`
+    // already opens Primary-first for the same reason.
+    meta: { align: 'right' },
+    cell: ({ row }) => {
+      const { role, chair } = row.original;
+      return (
+        <Inline gap={2} className="justify-end" wrap={false}>
           <Badge tone="info" variant="solid">
-            {assignment.role}
+            {role}
           </Badge>
-          {/* Primary is the one that carries weight, so it is the one that gets
-              a filled treatment. Secondary stays outline rather than a second
-              solid pill competing with the role beside it. */}
-          <Badge tone={assignment.chair === 'Primary' ? 'info' : 'default'} variant="outline">
-            {assignment.chair}
+          {/* Primary carries the weight, so Primary gets the stronger tone.
+              Secondary stays neutral rather than a second pill competing
+              with the role beside it. */}
+          <Badge tone={chair === 'Primary' ? 'info' : 'default'} variant="outline">
+            {chair}
           </Badge>
         </Inline>
-      </TableCell>
-    </TableRow>
-  );
-}
+      );
+    },
+  },
+];
 
 export interface ClientPivotViewProps {
   /** Pre-selected client CN. Defaults to the first client. */
@@ -199,8 +240,6 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
   const [clientPage, setClientPage] = React.useState(1);
   const [selectedCn, setSelectedCn] = React.useState(defaultClientCn ?? CLIENTS[0]?.cn ?? '');
   const [revision, setRevision] = React.useState<'live' | 'history'>('live');
-  const [memberPage, setMemberPage] = React.useState(1);
-  const [membersPerPage, setMembersPerPage] = React.useState(DEFAULT_MEMBERS_PER_PAGE);
 
   // Matches CN or name, because people search by either and the CN is the
   // thing they paste from another system.
@@ -224,16 +263,17 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
   );
 
   const selected = CLIENTS.find((c) => c.cn === selectedCn) ?? null;
-  const assignments = selected ? assignmentsForClient(selected.cn) : [];
-
-  React.useEffect(() => {
-    setMemberPage(1);
-  }, [selectedCn, membersPerPage]);
-
-  const pagedAssignments = assignments.slice(
-    (memberPage - 1) * membersPerPage,
-    memberPage * membersPerPage
+  // Memoised on the CN rather than computed inline: a fresh array each render
+  // would make `rows` below recompute every time, and `DataTable` re-sort.
+  const assignments = React.useMemo(
+    () => (selected ? assignmentsForClient(selected.cn) : []),
+    [selected]
   );
+
+  // Keyed on the client below, so `DataTable` remounts on selection and its
+  // internal page resets. Cheaper and harder to get wrong than mirroring its
+  // pagination state out here just to reset it.
+  const rows = React.useMemo(() => toRows(assignments), [assignments]);
 
   return (
     <div className={cn('flex flex-col gap-4 lg:flex-row lg:items-start', className)}>
@@ -420,38 +460,25 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
                   </Empty>
                 </div>
               ) : (
-                <>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Team member</TableHead>
-                        <TableHead>Team name</TableHead>
-                        <TableHead className="text-right">Role / Chair</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {pagedAssignments.map((a) => (
-                        <AssignmentRow key={`${a.clientCn}-${a.memberId}`} assignment={a} />
-                      ))}
-                    </TableBody>
-                  </Table>
-
-                  <div
-                    className="border-t px-4 py-2"
-                    style={{ borderColor: getRoleColor('border.default') }}
-                  >
-                    <Pagination
-                      currentPage={memberPage}
-                      totalItems={assignments.length}
-                      pageSize={membersPerPage}
-                      pageSizeOptions={MEMBERS_PER_PAGE_OPTIONS}
-                      onPageChange={setMemberPage}
-                      onPageSizeChange={setMembersPerPage}
-                      rowsLabel="Results per page:"
-                      itemLabel=""
-                    />
-                  </div>
-                </>
+                // `DataTable` rather than the Table primitives: it brings
+                // sortable headers, which a three-column assignment list wants
+                // and hand-rolled markup would have to reimplement. Every
+                // toolbar feature is opt-in, so omitting them all renders the
+                // table and its footer alone — no search, export or density
+                // chrome this panel has no use for.
+                <DataTable
+                  key={selected.cn}
+                  columns={ASSIGNMENT_COLUMNS}
+                  data={rows}
+                  pageSize={DEFAULT_MEMBERS_PER_PAGE}
+                  // Required because `pageSize` is 5, which is not one of
+                  // Pagination's stock [10, 25, 50, 100] — without it the
+                  // picker shows a value absent from its own options.
+                  pageSizeOptions={MEMBERS_PER_PAGE_OPTIONS}
+                  rowsLabel="Results per page:"
+                  initialSorting={[{ id: 'chair', desc: false }]}
+                  pinFirstColumn={false}
+                />
               )}
             </Card>
           </>

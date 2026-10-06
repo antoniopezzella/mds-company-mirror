@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ClientPivotView } from './ClientPivotView';
 
@@ -88,6 +88,42 @@ export const SearchingByCn: Story = {
     await userEvent.clear(search);
     await userEvent.type(search, 'no-such-client');
     await expect(await canvas.findByText(/No client matches/)).toBeInTheDocument();
+  },
+};
+
+/**
+ * The assignments table is `DataTable`, so its headers sort. Cleco is the
+ * useful fixture: three colleagues, so an ordering is actually observable.
+ *
+ * Note the menu items are `menuitemcheckbox`, not `menuitem` — a check for
+ * `menuitem` matches only "Hide" and makes a working sort look broken.
+ */
+export const SortingTheAssignments: Story = {
+  args: { defaultClientCn: 'CN101188033' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const names = () =>
+      Array.from(canvasElement.querySelectorAll('table tbody tr td:first-child')).map(
+        (td) => (td.textContent ?? '').match(/[A-Z][a-z]+ [A-Z][a-z]+/)?.[0] ?? ''
+      );
+
+    await expect(await canvas.findByText('3 members')).toBeInTheDocument();
+    const ascending = names();
+
+    await userEvent.click(canvas.getAllByRole('button', { name: /Team member/i })[0]);
+    await userEvent.click(await screen.findByRole('menuitemcheckbox', { name: /Desc/i }));
+
+    await waitFor(() => expect(names()).toEqual([...ascending].reverse()));
+
+    // The menu must be dismissed before the story settles. A checkbox item
+    // does NOT close a Radix dropdown, and while it is open Radix marks the
+    // rest of the page `aria-hidden` — which the axe gate correctly fails as
+    // `aria-hidden-focus`, because that hidden subtree still holds focusable
+    // controls. Leaving it open makes a passing screen look inaccessible.
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(document.querySelector('[data-aria-hidden="true"]')).toBeNull()
+    );
   },
 };
 
