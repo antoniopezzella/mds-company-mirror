@@ -1,6 +1,6 @@
 # MDS roadmap — four goals
 
-**Last updated:** 2026-10-06 · **Measured at:** `4343b98`
+**Last updated:** 2026-10-06 (corrected after Run 5) · **Measured at:** `d06b80b`
 **Supersedes:** the 30/60/90 list in [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md) §(d), which is now a pointer here. That document is the **audit** — what is true today, scored. This one is the **plan** — what we are doing about it, and why.
 
 Every open item from Run 4 of the audit maps to exactly one of the four goals
@@ -19,38 +19,52 @@ surfaces. Goal 1 is the only thing standing between here and that.
 **Done means:** a second expression exists, built by changing scoped CSS
 variables, with zero component edits.
 
-### The thing almost nobody notices: this already works, for typography
+### CORRECTED 2026-10-06 (Run 5) — the mechanism does not ship
 
-`src/styles/_typography.scss` is Carbon's model, implemented and shipping:
-`:root` carries the core, `.mds-dashboard` redefines **15 variables**, and
-**25 components** read `var(--typo-*)` without knowing which context they are
-in. Marsh Serif headings in marketing, Noto Sans 700 in product — one
-component set, two expressions, selected by a class on a subtree.
+An earlier revision of this section called the typography context "proven, in
+production, and the thing to generalise". **That was wrong, and it was the
+load-bearing claim of this document.** Measured at `d06b80b`:
 
-**That is the whole mechanism.** It is proven, in production, and it is the
-thing to generalise.
+```
+mds-dashboard in dist-pkg/styles.css : 0
+mds-marketing in dist-pkg/styles.css : 0
+--typo-* vars shipped                : 15 of ~105 (font-family only)
+.mds-marketing call sites            : 0   (and it restates :root verbatim)
+portalled surfaces re-applying scope : 1 of 10
+```
 
-### Why colour cannot do the same thing today
+`src/styles.package.css` imports `typography-variables.css` — a flat, unscoped
+`:root`. Only `global.scss` and `.storybook/preview.tsx` import the file that
+has the scopes. So `--typo-h1-font-family` is **Marsh Serif in the app and Noto
+Sans in the package**: the same variable, opposite defaults.
 
-| | typography | colour |
-|---|---:|---:|
-| variables published | 15 per context | **110** (55 roles × light/dark) |
-| components reading the variable | **25** | **3** |
-| components resolving a value instead | — | **115** |
-| call sites resolving to hex | — | **580** |
+Three structural holes, all of which the colour conversion would inherit:
 
-`getRoleColor()` returns a resolved hex string into an inline `style={{}}`.
-An inline style outranks every stylesheet, so **no scope can override it** —
-not `.mds-dashboard`, not `.dark`, not a brand class. The role tier already
-publishes all 55 roles statically in both modes; almost nothing consumes them
-that way.
+1. **It is absent from the artifact consumers install.** A consumer adding
+   `className="mds-dashboard"` gets nothing; no selector matches.
+2. **There is no neutral core.** `:root` *is* the marketing expression, so every
+   unscoped surface is silently opted into it. Carbon Core is neutral and each
+   expression layers onto it. And `.mds-marketing` is a no-op at 0 call sites —
+   one expression plus a default, not two.
+3. **It does not survive a portal.** 10 `ui/` modules portal to `document.body`
+   and lose the scope by construction; **1** re-applies it. `CLAUDE.md:270`
+   prescribes the fix and no gate enforces it.
 
-So the work is **unwinding, not inventing**. `button.tsx` is the worked
-example and the conversion is mechanical.
+**This reorders the plan.** Fix the three holes in typography first — **15
+variables, 8 call sites, effort S** — and the mechanism is validated. Start with
+colour instead and you rediscover all three across **110 role variables and 515
+call sites**, at **L**.
+
+> The authoring API is a separate question and remains open. An ambient context
+> is invisible at the call site, which is a real objection to using it as the
+> way developers write headings. The *mechanism* (scoped variables) and the
+> *API* (how you ask for a heading) are independent choices; nothing here
+> settles the second.
 
 | Work | Effort | Note |
 |---|---|---|
-| Convert `getRoleColor()` → `var(--role-*)` across 115 components | **L** | Highest-traffic first. Track the inline-style count down from 580 |
+| **Fix the three typography holes first** | **S** | 15 vars, 8 call sites. Validates the mechanism before betting the colour tier on it |
+| Convert `getRoleColor()` → `var(--role-*)` across 71 modules | **L** | Only after the above. Highest-traffic first; track inline styles down from 272 |
 | Define what a Marsh "expression" is, and name the first two | **S** | A decision, not code. Is AEM an expression or a delivery target? |
 | Add an expression scope (`.mds-<expression>`) redefining role vars | **S** | Trivial *after* the conversion; impossible before it |
 | A gate that fails on a new `getRoleColor()` in an inline style | **S** | Stops the hole being re-dug while it is being filled |
@@ -71,12 +85,16 @@ trusts the docs — without asking the maintainer.
 
 ### Done since the audit
 
-- **Registry is a real install path.** It listed 71 of 94 components, and the
-  eleven shared modules a copied component needs — `data-grid-features.ts`
-  among them — were absent entirely, so `npx shadcn add data-table` produced
-  code that did not compile. Now 111 items, every dependency resolving, gated
-  by `npm run registry:check` on every PR.
-- **First block shipped.** `marsh-dashboard` — a whole page you copy and edit.
+- **Registry entries completed — but the install path is STILL BROKEN.** 111
+  items now exist and nothing is stale, gated on every PR. But Run 5 found the
+  gate checks entry *existence*, never the dependency *graph*: `data-table`
+  declares 7 deps and imports 11, and **30 of 111 items under-declare (51
+  edges)**. `npx shadcn add data-table` still does not compile. See
+  `PRODUCTION_READINESS.md` P0-R.
+- **First block shipped — and it ships four wrong numbers.** `marsh-dashboard`
+  renders renewal rate as `0.9%` instead of `91.4%` and three deltas as `0%`,
+  because `data.tsx` supplies ratios to a formatter that takes percentages.
+  Three green gates missed it. See P0-B. **Fix before anyone copies it.**
 - **Role-usage gate fixed and actually running.** It had been parsing 6 of 55
   role names and appearing in no workflow.
 - **a11y gate self-tests.** It silently checked nothing once; now a deliberate
@@ -102,8 +120,8 @@ trusts the docs — without asking the maintainer.
 | Clear the 14 `ui/` dark-mode failures, then gate `test:dark` on that subset | **M** | 71 failures total; 14 are in shipped components, the rest legacy MUI |
 | Bring chart colours into the token pipeline | **M** | 10 hand-written values outside it; `grep -c chart dist/tokens.json` → 0. Series colour is exactly what needs contrast validation |
 | Warn when `pageSize` is large and `maxHeight` absent | **S** | Virtualization is opt-in: `<DataTable pageSize={1000}/>` silently gives 5,062 DOM nodes and a 222 ms sort |
-| `forwardRef` on the load-bearing modules | **M** | 33 public modules expose no ref path; 14 more only under React 19, while the peer range is `^18 \|\| ^19` |
-| Apply `.mds-dashboard` to the 11 portalled surfaces + a gate | **S** | 12 portal to `document.body`; 1 re-applies the context. A dialog in a dashboard renders its heading in Marsh Serif |
+| `forwardRef` on the load-bearing modules | **M** | **30** public modules expose no ref path (Run 4 said 33; three were Radix aliases that forward natively). Peer range is `^18 \|\| ^19` |\| ^19` |
+| Apply the context to the portalled surfaces + a gate | **S** | **10** portal to `document.body`; **1** re-applies it. A dialog in a dashboard renders its heading in Marsh Serif. This is typography hole #3 |
 
 ---
 
@@ -128,8 +146,9 @@ Goals are not phases — Goal 3 can run in parallel with anything. But two
 orderings are forced:
 
 1. **Goal 1's conversion gates Goal 1's everything else.** Expression scopes,
-   alpha and per-expression blocks are all cheap *after* the 580 call sites
-   move, and impossible before.
+   alpha and per-expression blocks are all cheap *after* the 515 call sites
+   move, and impossible before. **And the typography holes gate the conversion** —
+   fixing them for an S is what proves the mechanism is worth the L.
 2. **Goal 4's org move gates Goal 2's adoption.** A team can evaluate the
    system now; it cannot depend on it until distribution leaves a personal
    account.
@@ -150,7 +169,7 @@ Suggested order if one person is doing this:
 Re-run `/audit` to re-measure. The numbers in this document are the baseline:
 
 ```
-expressions   typography: 25 components on var(--typo-*)  ·  colour: 3 on var(--role-*), 580 hex call sites
+expressions   typography: 6 context-sensitive components, ships in NOTHING  ·  colour: 2 on var(--role-*), 515 hex call sites
 adoption      registry 111 items · blocks 1 · described 27/93 · argTypes 33/93 · maturity labels 0/94
 job           dark failures 71 (14 shipped) · chart tokens ungoverned · meta.type aligns but does not format
 survival      contributors 2 · releases 8 · gates 11 · coverage gate never run · visual regression absent
