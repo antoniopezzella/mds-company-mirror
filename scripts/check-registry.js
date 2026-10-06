@@ -39,6 +39,19 @@ const suggest = process.argv.includes('--suggest');
 const stripComments = (source) =>
   source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
 
+const LIB_DIR = path.join(root, 'src', 'lib');
+
+/**
+ * Modules that are deliberately NOT installable, with the reason.
+ *
+ * Keep this list tiny and justified. "It is not a component" is not a reason —
+ * `data-grid-features.ts` is not a component either, and every `DataTable`
+ * consumer imports it.
+ */
+const NOT_INSTALLABLE = {
+  taxonomy: 'A classification manifest for this repo\'s own tooling and gallery. No shipped component imports it.',
+};
+
 /**
  * Components on disk. A component is a `.tsx` file OR a directory with an
  * index — `filters/` is the first of the latter, and counting only loose files
@@ -60,10 +73,50 @@ function componentsOnDisk() {
   return [...files, ...dirs].sort();
 }
 
+/**
+ * Non-component modules that a copied component still needs on disk.
+ *
+ * Counting only `.tsx` is how `data-grid-features.ts` stayed missing after the
+ * first pass of this check: `npx shadcn add data-table` copied a file importing
+ * `./data-grid-features`, that file did not come, and the install did not
+ * compile. A registry that lists every component and none of their shared
+ * modules is not an install path.
+ *
+ * `src/lib` is included for the same reason — `utils` was already an item, but
+ * `format` and `format-context` were not, while `StatCard` imports both.
+ */
+function supportModulesOnDisk() {
+  const scan = (dir, prefix) =>
+    fs
+      .readdirSync(dir, { withFileTypes: true })
+      .filter(
+        (e) =>
+          e.isFile() &&
+          /\.tsx?$/.test(e.name) &&
+          !/\.(stories|test)\.tsx?$/.test(e.name) &&
+          !e.name.endsWith('.d.ts')
+      )
+      .map((e) => ({ name: e.name.replace(/\.tsx?$/, ''), dir: prefix }));
+
+  const ui = scan(UI_DIR, 'src/components/ui').filter(
+    (m) => !fs.existsSync(path.join(UI_DIR, `${m.name}.tsx`))
+  );
+  const lib = fs.existsSync(LIB_DIR) ? scan(LIB_DIR, 'src/lib') : [];
+  return [...ui, ...lib]
+    .filter((m) => !(m.name in NOT_INSTALLABLE))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 /** Files that make up a component — one `.tsx`, or every source file in a directory. */
 function filesFor(name) {
   const asFile = path.join(UI_DIR, `${name}.tsx`);
   if (fs.existsSync(asFile)) return [`src/components/ui/${name}.tsx`];
+  // Support modules: a bare .ts/.tsx in ui/ or lib/.
+  for (const [dir, prefix] of [[UI_DIR, 'src/components/ui'], [LIB_DIR, 'src/lib']]) {
+    for (const ext of ['.ts', '.tsx']) {
+      if (fs.existsSync(path.join(dir, `${name}${ext}`))) return [`${prefix}/${name}${ext}`];
+    }
+  }
   const dir = path.join(UI_DIR, name);
   return fs
     .readdirSync(dir)
@@ -77,6 +130,18 @@ function filesFor(name) {
  * module's actual imports. Bare specifiers become npm `dependencies`; sibling
  * ui modules and `@/lib/utils` become `registryDependencies`.
  */
+let _installable;
+/** Every name a registryDependency may legitimately point at. */
+function installableNames() {
+  if (!_installable) {
+    _installable = new Set([
+      ...componentsOnDisk(),
+      ...supportModulesOnDisk().map((m) => m.name),
+    ]);
+  }
+  return _installable;
+}
+
 function depsFor(name) {
   const npm = new Set();
   const registry = new Set();
@@ -90,12 +155,14 @@ function depsFor(name) {
     for (const m of src.matchAll(/^\s*(?:import|export)\b[^;]*?\bfrom\s+['"]([^'"]+)['"]/gm)) {
       const spec = m[1];
       if (spec === 'react' || spec === 'react-dom' || spec.startsWith('react/')) continue;
-      if (spec.startsWith('@/lib/utils') || spec === './lib/utils') { registry.add('utils'); continue; }
-      if (spec.startsWith('@/components/ui/') || spec.startsWith('./') || spec.startsWith('../')) {
+      if (spec.startsWith('@/lib/') || spec.startsWith('@/components/ui/') ||
+          spec.startsWith('./') || spec.startsWith('../')) {
         const base = path.basename(spec).replace(/\.(tsx?|js)$/, '');
         // A relative import inside a directory component points at a sibling
         // file, not another registry item — those ship together in `files`.
-        if (base !== name && componentsOnDisk().includes(base)) registry.add(base);
+        // Support modules DO count: data-grid-features.ts is not a component
+        // and a copy that omits it does not compile.
+        if (base !== name && installableNames().has(base)) registry.add(base);
         continue;
       }
       if (spec.startsWith('@/')) continue; // other internal aliases: not registry items
@@ -116,17 +183,19 @@ try {
 
 const listed = new Set(registry.items.map((i) => i.name));
 const disk = componentsOnDisk();
-const missing = disk.filter((c) => !listed.has(c));
+const support = supportModulesOnDisk();
+const missing = [...disk, ...support.map((m) => m.name)].filter((c) => !listed.has(c));
 const stale = registry.items
   .filter((i) => i.type === 'registry:ui' && !disk.includes(i.name))
   .map((i) => i.name);
 
 console.log('\nRegistry completeness\n');
-console.log(`  components on disk : ${disk.length}`);
-console.log(`  listed in registry : ${disk.length - missing.length}`);
+console.log(`  components on disk      : ${disk.length}`);
+console.log(`  support modules on disk : ${support.length}  (shared .ts in ui/ and lib/)`);
+console.log(`  listed in registry      : ${disk.length + support.length - missing.length}`);
 
 if (missing.length === 0 && stale.length === 0) {
-  console.log('\n✓ Every component on disk has a registry entry, and none is stale.\n');
+  console.log('\n✓ Everything a copied component needs has a registry entry, and none is stale.\n');
   process.exit(0);
 }
 

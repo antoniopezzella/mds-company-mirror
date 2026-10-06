@@ -11,6 +11,7 @@ const config: StorybookConfig = {
     '../src/components/**/*.docs.mdx',
     '../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/projects/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/blocks/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/_health/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/generated/**/*.stories.@(js|jsx|mjs|ts|tsx)'
   ,

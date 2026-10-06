@@ -208,7 +208,7 @@ this file disagree, **this file wins**:
 | Generic shadcn says | Here |
 | --- | --- |
 | Style with `className` | 54 of 73 components use inline `style={{}}`; className loses (above) |
-| `rounded-md` is the default radius | `rounded-xs` = 2px is the Marsh standard; `rounded-sm` = 4px |
+| `rounded-md` is the default radius | **Controls are `rounded-sm` = 4px** (`CONTROL_RADIUS`, `control-size.ts:107`). Everything else stays on the stock scale — `md` 6px · `lg` 8px · `xl` 12px · `2xl` 16px, enforced by `npm run radius:check` across 119 modules. This row claimed `rounded-xs` = 2px was the standard until 2026-10-06; it never was, and nothing in the code or the gate agreed with it |
 | `size="default"` | `sm` / `md` / `lg` / `xl`, normalised by `prop-compat.ts` |
 | `variant="destructive"` for everything | Actions use `tone="danger"`; **form fields use `error`** — different axes, deliberately |
 | Components are self-contained | Changing `src/components/ui/` styling requires `npm run build:css`, or consumers get unstyled markup |
