@@ -1,19 +1,15 @@
 # Production readiness audit
 
-**Last audited:** 2026-10-06 · **Commit:** `3840fc2` · **Run:** 4 (see Score history) · **Auditor:** staff-level design-systems review
+**Last audited:** 2026-10-06 · **Commit:** `d06b80b` · **Run:** 5 (see Score history) · **Auditor:** staff-level design-systems review
 **Audience:** IT Development Lead, deciding whether other teams adopt this system
-**Method:** three independent parallel sub-agents (areas 1/2/10, 3/4/5/7, 6/8/9), consolidated; every score-driving finding re-verified first-hand against HEAD
+**Method:** three independent parallel sub-agents (areas 1/2/10, 3/4/5/7, 6/8/9), consolidated; every score-driving finding re-verified first-hand
 **Re-run with:** `/audit` (see `.claude/commands/audit.md`)
 
-> **Scope note.** This audits the **shadcn/Radix component set** in `src/components/ui/`
-> and the package built from it — the half that is published and intended for reuse.
-> **The denominator moved this run: 79 → 93 modules** (94 taxonomy entries, counting
-> the directory-shaped `filters/`). Fourteen modules landed in the 82 commits since
-> run 3. Ratios below are therefore not directly comparable to run 3's without
-> accounting for that, and where a ratio fell while the absolute count rose, this
-> report says so.
-
----
+> **Run 5 exists because six commits landed between Run 4 and it, on the same
+> day.** The agents were instructed not to take those commits on trust. That
+> instruction earned its keep: two of the six do what they claim, one is
+> inert, one ships visible defects, and one works against the roadmap written
+> hours earlier.
 
 ## Score history
 
@@ -23,6 +19,7 @@
 | 2 | 2026-09-24 | `1481270` | **2.1 / 3** | Tailwind v4 migration; composition layer added; control sizes unified. 2 of 6 P0s closed, 1 narrowed. |
 | 3 | 2026-09-25 | `9dcc73a` | **2.2 / 3** | Dashboard foundations shipped. 5 of run-2's P0s closed. **Three new P0s introduced in the same window**, all because nothing validated the published artifact. |
 | 4 | 2026-10-06 | `3840fc2` | **2.0 / 3** | 82 commits. Run-3's artifact P0s verified closed and holding. Substantial real gains (tests 1,295 → 1,835; interaction tests ~5 → 147; row virtualization shipped and measured). **Score fell because area 7 dropped 3 → 2 on verified documentation defects, and nine areas held.** See "Why the score fell while the system improved". |
+| 5 | 2026-10-06 | `d06b80b` | **2.0 / 3** | Same day, six commits later. Two gates genuinely fixed and **proven by mutation** (`85f038d`, and the a11y self-test). But the registry fix did not fix the registry — `npx shadcn add data-table` still does not compile — and the new starter block renders **four wrong numbers** with three green gates. **No area moved.** Two Run-4 findings were withdrawn as wrong. |
 
 ### Why the score fell while the system improved
 
@@ -89,52 +86,130 @@ is one line.
 
 ## (a) Executive summary
 
-**Verdict: adopt for Marsh-branded React dashboards inside this org's control; do not yet
-recommend as a shared cross-project dependency.** The engineering is better than a
-typical shadcn port — the artifact-level type gate, the package-stylesheet gate, the
-dual-window deprecation check and the honest self-assessment in
-`MAINSTREAM_REUSE_ASSESSMENT.md` are all real and all stronger than claimed-but-unenforced.
-The blockers to cross-project adoption are **two structural items and one documentation
-class**, none of which is component quality.
+**Verdict, unchanged from Run 4: adopt for Marsh-branded dashboards inside this
+org's control; do not yet recommend as a shared cross-project dependency.**
+No area moved in Run 5. What changed is the quality of the evidence about *why*.
 
-**1. Distribution is personal, not organisational.** The package publishes to GitHub
-Packages under the `@antoniopezzella` scope from a private repo. `README.package.md:11-14`
-states it: *"there is no anonymous install path today."* Every consuming team needs a PAT
-and a per-project `.npmrc`. All 11 `CODEOWNERS` entries are one person; 352 of 353 commits
-are one author. **No other team can adopt this durably until it moves to a Marsh-owned org.**
+### The six commits of 2026-10-06, verified rather than trusted
 
-**2. Multi-brand is not a configuration away.** `ResolveRoleOptions` (`src/theme/roles.ts:219`)
-carries only `mode` — no brand parameter — and `getRoleColor()` returns **resolved hex**.
-There are **515 calls across 71 of 104 shipped modules**, feeding **272 inline `style={{}}`
-sites** that no consumer stylesheet can override. Only 2 modules use the overridable
-`var(--role-*)` path, which the role tier already publishes statically for all 55 roles in
-both modes. A non-Marsh-branded team forks the source, not a config. `button.tsx` is the
-proven template for unwinding this; it has been applied to 2 of 104 modules.
+| commit | claim | verdict |
+|---|---|---|
+| `85f038d` | role gate sees all 55 roles, runs in CI | **True, and exemplary.** Proven red-on-break; the ROLE_MAP floor guard fires on a bare `;`. The model for the rest |
+| `cecadfd` (a11y half) | the axe gate self-tests | **True.** Probe runs, cleans up in `finally`, wired at `ci.yml:62`. The repo's first mutation test of a gate |
+| `cecadfd`+`4343b98` (registry half) | "make the registry installable" | **False.** See P0-R below |
+| `4343b98` (the block) | a copyable starter encoding best practice | **Ships four wrong numbers.** See P0-B |
+| `57f262d`/`5bb5f2c` | new screen + `pageSizeOptions` forwarding | Forwarding correct, 190/190 table tests green. But **+22 `getRoleColor()` and +19 inline styles**, against the same day's stated top priority |
+| `d06b80b` (the roadmap) | typography proves the expressions model | **Overstated.** See P0-T |
 
-**3. The documents an adopting team reads first are wrong in three places.** The
-quick-start misstates CI enforcement (P0-13), claims registry coverage of "all 71
-components" when the registry holds 71 of 93 and silently omits `PageShell`, `Stack` and
-the entire DataGrid and filter families (P1-4), and `CLAUDE.md:148` documents a
-`getRoleColor` signature that does not compile. These are all **S**.
+### P0-R — the registry fix did not fix the registry
 
-**The one P0 in the component surface** is that the data grid declares a formatting system
-it does not have: `meta.type` accepts `currency | date | percent | number`, and the only
-functional use of it maps to **text alignment**. A consumer declares a column `currency`
-and renders `137000`, right-aligned. For a system whose stated primary use case is
-data-dense dashboards, every adopting team hand-rolls the formatting a design system
-exists to standardise.
+`npx shadcn add data-table` still produces code that does not compile.
 
-**The cross-cutting lesson, third run running:** the gates validate something *adjacent*
-to what matters. Run 3's P0 was green gates over a broken artifact. This run: a gate that
-parses 6 of 55 inputs and runs nowhere; a `meta.type` test that supplies its own
-`cell: () => '$12,400'` so it structurally cannot observe that the system does not format;
-a coverage gate whose thresholds have never been evaluated because the run fails and
-writes no report. **The highest-leverage investment here is not more tests — it is a small
-set of self-tests that deliberately break a thing and assert the gate goes red.** The repo
-already has this instinct (`vitest.config.ts:96-110` records proving the axe gate with a
-deliberate-violation probe); it is not automated.
+```
+data-table declares 7 registryDependencies; imports 11 local modules.
+MISSING: data-grid, data-grid-table, data-grid-features, data-grid-toolbar,
+         data-grid-pagination, data-grid-selection, data-grid-bulk-actions,
+         data-table-faceted-filter, use-data-grid-table, filter-schema
+Repo-wide: 30 of 111 items under-declare; 51 missing edges.
+```
 
----
+`scripts/check-registry.js` checks **entry existence and staleness, never the
+dependency graph**. `depsFor()` computes the right answer and is reachable only
+under `--suggest`, for *missing* items — dead code at HEAD. It also never scans
+`src/blocks/`, so it cannot fail on the item shipped beside it.
+
+The gate's own docstring says it exists because *"`npx shadcn add data-table`
+copied a file importing `./data-grid-features`, that file did not come, and the
+install did not compile."* **That exact failure is live, and the gate prints ✓.**
+
+`stat-card` likewise declares only `utils` while importing `format-context` — so
+the ambient-formatting capability the block advertises does not install either.
+
+### P0-B — the starter block renders four wrong numbers
+
+`src/lib/format.ts:249` states, in bold, that `formatPercent` **takes a
+percentage, not a ratio**, and warns that *"silently multiplying by 100 is the
+single most common percentage bug."* `src/blocks/marsh-dashboard/data.tsx:29`
+asserts the opposite and supplies ratios.
+
+```
+Renewal rate      renders 0.9%   should be 91.4%     (100× out)
+GWP delta         renders 0.1%   should be +8.2%
+Active policies   renders   0%   should be +2.1%
+Clients           renders   0%   should be +4.4%
+```
+
+The `renewal` column declares `meta: { type: 'date' }` with no `cell`, so it
+ships a raw `2027-01-15`. **All three gates pass** — `tsc`, axe, and three
+`play` tests — because the story asserts heading levels and one currency
+*substring*, and nothing about any delta or percent.
+
+A starter template is the highest-leverage artefact in a design system: it is
+copied, not read. This one teaches the canonical percentage bug, teaches that
+`meta.type` is decoration, and mounts `<FormatProvider locale="en-US"
+currency="USD">` — **the exact default values**, a measured no-op whose own test
+passes with the provider deleted.
+
+### P0-T — the expressions mechanism does not ship
+
+`docs/ROADMAP.md` calls the typography context "proven, in production, and the
+thing to generalise". Measured:
+
+```
+mds-dashboard in dist-pkg/styles.css : 0
+mds-marketing in dist-pkg/styles.css : 0
+--typo-* vars shipped                : 15 of ~105 (font-family only)
+.mds-marketing call sites            : 0   (and it restates :root verbatim)
+[data-typography-context] call sites : 0
+portalled surfaces re-applying scope : 1 of 10
+```
+
+`src/styles.package.css` imports `typography-variables.css`, a **flat unscoped
+`:root`**; only `.storybook/preview.tsx` and `global.scss` import the file with
+the scopes. So the same variable has **opposite defaults** in app and package —
+`--typo-h1-font-family` is Marsh Serif in the app, Noto Sans in `dist-pkg`.
+
+There is **one expression plus a default, and the default is itself an
+expression** (`:root` = marketing). Carbon Core is neutral; this is not. A
+consumer adding `className="mds-dashboard"` gets nothing — no selector matches.
+
+**Consequence for the plan:** the colour conversion would inherit all three
+holes — absent from the artifact, no neutral core, does not survive a portal.
+Fixing them in typography first (**15 variables, 8 call sites**) validates the
+mechanism for an **S**, instead of rediscovering them across **110 role
+variables and 515 call sites** for an **L**. This reorders the roadmap.
+
+### Two Run-4 findings withdrawn as wrong
+
+Recorded because an audit that never retracts is not measuring.
+
+- **"25 interactive modules have no focus styling."** Really **1**
+  (`command.tsx:67`). The grep missed Radix `data-[highlighted]` and cmdk
+  `data-[selected]`. Focus visibility is in good shape.
+- **"`getFocusRingSx` has 0 `ui/` consumers and is unexported."** A category
+  error: it returns an MUI `sx` object and `ui/` is Tailwind-only. Its two MUI
+  consumers are its entire intended scope.
+
+### The pattern, now at six instances
+
+Every one is a gate validating something *adjacent* to what matters:
+
+| # | gate | what it actually checked |
+|---|---|---|
+| 1 | Vimeo cover | geometry, not paint |
+| 2 | `meta.type` test | its own hand-formatted value |
+| 3 | role-usage gate | 6 of 55 inputs |
+| 4 | coverage gate | never ran at all |
+| 5 | registry gate | entry existence, not the dependency graph |
+| 6 | block story | a currency substring, not the format |
+
+And the a11y self-test added today shares it: it matches any `/\d+ failed/` and
+**never greps for `button-name`**, so a compile error in the probe reads as a
+healthy gate. One line fixes it.
+
+**The antidote is in the repo now, exactly once.** `check-a11y-gate.js` is a
+mutation test — break the thing, assert the gate goes red. That instinct, applied
+to the other five, is worth more than any item on the roadmap.
 
 ## (b) Scorecard
 
