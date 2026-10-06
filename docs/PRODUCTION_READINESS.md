@@ -210,6 +210,16 @@ pinning `~0.4.0` at version 0.7.0 (**S**) · pre-commit covers 2 of 8 gates, no 
 
 ## (d) 30 / 60 / 90-day plan
 
+> **Superseded 2026-10-06 by [`ROADMAP.md`](./ROADMAP.md).** Every open item
+> below is now mapped to one of four goals there, against the strategic target
+> of Carbon's *one core, several expressions* model. This document stays the
+> **audit** — what is true, scored, with evidence. The roadmap is the **plan**.
+> Two competing plans is one too many, so changes go there.
+>
+> The list below is kept as the record of what run 4 recommended at the time.
+> Items 1, 3 and 5 landed the same day; see the roadmap's "Done since the
+> audit" for what changed.
+
 Sequenced by dependency, not effort.
 
 ### 30 days — restore the governance that is claimed, and stop the bleeding
