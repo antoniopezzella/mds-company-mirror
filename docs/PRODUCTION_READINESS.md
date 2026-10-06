@@ -285,15 +285,22 @@ pinning `~0.4.0` at version 0.7.0 (**S**) · pre-commit covers 2 of 8 gates, no 
 
 ## (d) 30 / 60 / 90-day plan
 
-> **Superseded 2026-10-06 by [`ROADMAP.md`](./ROADMAP.md).** Every open item
-> below is now mapped to one of four goals there, against the strategic target
-> of Carbon's *one core, several expressions* model. This document stays the
-> **audit** — what is true, scored, with evidence. The roadmap is the **plan**.
-> Two competing plans is one too many, so changes go there.
->
-> The list below is kept as the record of what run 4 recommended at the time.
-> Items 1, 3 and 5 landed the same day; see the roadmap's "Done since the
-> audit" for what changed.
+> **Superseded by [`ROADMAP.md`](./ROADMAP.md).** This document is the **audit**
+> — what is true, scored, with evidence. The roadmap is the **plan**. Changes go
+> there; the list below is kept only as the record of what Run 4 recommended.
+
+**Status of those six items, re-verified at Run 5.** An earlier version of this
+note said "items 1, 3 and 5 landed the same day." That was wrong about item 3
+and overstated item 5:
+
+| # | Run-4 recommendation | Status at `d06b80b` |
+|---|---|---|
+| 1 | Fix the role-usage parse, add it to `governance:ci` | **Done, and proven by mutation.** Parses 55/55, exits 0, red-on-break, floor guard fires. The best work of the day |
+| 2 | Correct the docs an adopter reads first | **Partial.** `GOVERNANCE.md:58` fixed and accurate. `CLAUDE.md` signature fixed but the snippet body still references a removed `mode` param. `DEVELOPERS.md:57` is now true — but `:158` was corrected to "99 items" when the registry holds **111**. `README.package.md:239,246` untouched |
+| 3 | Add a registry completeness test | **NOT done.** A test landed and runs in CI, but it checks entry *existence*, never the dependency *graph*. 30 of 111 items under-declare, 51 edges. `npx shadcn add data-table` still does not compile. See P0-R |
+| 4 | Make `test:coverage` runnable, then gate it | **Not started.** Still exits 1 and writes no report; thresholds remain 19.9 pp below actual |
+| 5 | Add a deliberate-violation probe so the axe gate self-tests | **Done, with a flaw.** The probe is real and in CI — the repo's only mutation test. But it matches any `/\d+ failed/` and never greps for `button-name`, so a compile error in the probe reads as a healthy gate. One line fixes it |
+| 6 | Warn on large `pageSize` without `maxHeight` | **Not started.** `enableVirtualization` still has 0 adopters |
 
 Sequenced by dependency, not effort.
 

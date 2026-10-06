@@ -97,8 +97,11 @@ trusts the docs — without asking the maintainer.
   Three green gates missed it. See P0-B. **Fix before anyone copies it.**
 - **Role-usage gate fixed and actually running.** It had been parsing 6 of 55
   role names and appearing in no workflow.
-- **a11y gate self-tests.** It silently checked nothing once; now a deliberate
-  violation must make it go red.
+- **a11y gate self-tests — the repo's only mutation test.** It silently checked
+  nothing once; a deliberate violation now has to make it go red, and that runs
+  on every PR. One flaw: it matches any `/\d+ failed/` and never greps for
+  `button-name`, so a compile error in the probe reads as a healthy gate. One
+  line fixes it.
 
 | Work | Effort | Note |
 |---|---|---|
