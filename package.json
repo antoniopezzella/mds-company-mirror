@@ -92,7 +92,7 @@
     "governance:report": "node scripts/report-governance.js",
     "governance:report:json": "node scripts/report-governance.js --json",
     "governance:report:strict": "node scripts/report-governance.js --strict --json",
-    "governance:ci": "npm run tokens:build && npm run governance:report:strict && npm run props:check:strict && npm run composition:check:strict && npm run zindex:check && npm run radius:check && npm run tokens:check-vars:strict && npm run deprecations:check",
+    "governance:ci": "npm run tokens:build && npm run governance:report:strict && npm run roles:check:strict && npm run props:check:strict && npm run composition:check:strict && npm run zindex:check && npm run radius:check && npm run tokens:check-vars:strict && npm run deprecations:check",
     "governance:badge": "npm run governance:report:strict > governance-report.json && node scripts/generate-governance-badge.js governance-report.json",
     "automation:validate": "node scripts/automation/ai-design-validator.js",
     "automation:validate:test": "node scripts/automation/ai-design-validator.js --test",

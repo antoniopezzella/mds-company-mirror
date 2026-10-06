@@ -145,7 +145,11 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
 };
 
 // Utility function for components
-export function getRoleColor(role: RoleName, mode: 'light' | 'dark' = 'light'): string {
+// NOTE the second parameter is an OPTIONS OBJECT, not a bare mode string.
+// This file documented `mode: 'light' | 'dark'` until 2026-10-06; that
+// signature does not compile. Omitting the argument is the normal case —
+// the role layer reads the `.dark` class at call time.
+export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): string {
   const entry = ROLE_MAP[role];
   const colors = mode === 'dark' 
     ? { ...semanticColors, ...semanticDarkOverrides } 

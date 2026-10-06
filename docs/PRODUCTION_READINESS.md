@@ -1,22 +1,17 @@
 # Production readiness audit
 
-**Last audited:** 2026-09-25 · **Commit:** `9dcc73a` · **Run:** 3 (see Score history) · **Auditor:** staff-level design-systems review
+**Last audited:** 2026-10-06 · **Commit:** `3840fc2` · **Run:** 4 (see Score history) · **Auditor:** staff-level design-systems review
 **Audience:** IT Development Lead, deciding whether other teams adopt this system
-**Method:** three independent parallel sub-agents (areas 1/2/10, 3/4/5/7, 6/8/9), consolidated; every P0 re-verified first-hand against HEAD
+**Method:** three independent parallel sub-agents (areas 1/2/10, 3/4/5/7, 6/8/9), consolidated; every score-driving finding re-verified first-hand against HEAD
 **Re-run with:** `/audit` (see `.claude/commands/audit.md`)
 
 > **Scope note.** This audits the **shadcn/Radix component set** in `src/components/ui/`
-> (**79** modules — runs 1–2 used a stale denominator of 73/75) and the package
-> built from it — the half that is published and intended for reuse. The repo
-> also contains an older MUI track and marketing-site components; those are
-> called out only where they collide with the reusable half.
-
-> **Run-3 method note.** Run 2 was single-threaded — a verification pass rather
-> than an independent re-audit, as that run's own §(e) recorded. Run 3 restores
-> the parallel-subagent method `audit.md` prescribes, and it mattered: the
-> independent agents found **three P0s in work completed during run 2**, none of
-> which the eight green CI gates reported, and corrected four numbers run 2
-> stated too favourably.
+> and the package built from it — the half that is published and intended for reuse.
+> **The denominator moved this run: 79 → 93 modules** (94 taxonomy entries, counting
+> the directory-shaped `filters/`). Fourteen modules landed in the 82 commits since
+> run 3. Ratios below are therefore not directly comparable to run 3's without
+> accounting for that, and where a ratio fell while the absolute count rose, this
+> report says so.
 
 ---
 
@@ -25,551 +20,333 @@
 | Run | Date | Commit | Overall | Notes |
 |---|---|---|---|---|
 | 1 | 2026-09-23 | `847ceec` | **1.9 / 3** | Baseline. Packaging repaired same-day (6 blocking defects fixed). |
-| 2 | 2026-09-24 | `1481270` | **2.1 / 3** | Tailwind v4 migration; composition layer added; control sizes unified. 2 of 6 P0s closed, 1 narrowed. Two P0s were *found and fixed* in this window that did not exist at run 1. |
-| 3 | 2026-09-25 | `9dcc73a` | **2.2 / 3** | Dashboard foundations shipped (formatters, four-state contract, FilterBar). 5 of run-2's P0s closed. **But three new P0s were introduced in the same window**, all in the same blind spot: nothing validated the published artifact. See below. |
+| 2 | 2026-09-24 | `1481270` | **2.1 / 3** | Tailwind v4 migration; composition layer added; control sizes unified. 2 of 6 P0s closed, 1 narrowed. |
+| 3 | 2026-09-25 | `9dcc73a` | **2.2 / 3** | Dashboard foundations shipped. 5 of run-2's P0s closed. **Three new P0s introduced in the same window**, all because nothing validated the published artifact. |
+| 4 | 2026-10-06 | `3840fc2` | **2.0 / 3** | 82 commits. Run-3's artifact P0s verified closed and holding. Substantial real gains (tests 1,295 → 1,835; interaction tests ~5 → 147; row virtualization shipped and measured). **Score fell because area 7 dropped 3 → 2 on verified documentation defects, and nine areas held.** See "Why the score fell while the system improved". |
 
-**Movement since run 2:** area 8 (dashboard readiness) +0 despite substantial
-work — the components were built but not adopted, which is a different failure
-than "missing" and is why the score did not move. Areas 4 and 5 each +1. Area 1
-dropped from 3 to 2 on the packaging regression described next.
+### Why the score fell while the system improved
 
-### The run-3 headline: every gate was green and the package was broken
+This needs stating plainly, because the headline number is misleading on its own.
 
-Three independent agents converged on one structural finding. Quoting agent A:
+**What genuinely improved, measured:** test count 1,295 → **1,835** across 223 files;
+Storybook interaction tests ~5 → **147 `play` blocks**; axe coverage 630 → **706** story
+entries; unit-test line coverage 48.98% → **64.89%**; dark-mode failures 87 → **71**;
+and row virtualization now exists and works — **174 DOM nodes vs 5,062** at 1,000 rows,
+a 29× reduction with a 24× faster mount.
 
-> A team running `npm install` gets a library whose JavaScript works, whose
-> types do not compile, and whose theme provider crashes their server render —
-> none of which any of the eight green gates would report.
+**Why no area rose anyway.** Each held for a cited, specific reason, not inertia. The
+recurring shape: *a capability was built but not adopted, or a gate exists but does not
+run.* Area 8 is the clearest case — it did not move at run 3 for exactly this reason, and
+the reason is **unchanged**: `FormatProvider` still has 1 consumer, `PageShell` still 2.
 
-All three had the same root cause: **every gate validated the source; nothing
-validated the artifact.**
+**Why area 7 fell.** Its 3 rested on the type layer, which re-earns a 3 on every measure
+(`strict`, `tsc -b --force` clean in 42s, **0** real `any`/`as any`, 113 published
+re-exports proven to resolve). But the DX half tells an adopting team things that are
+not true — see P0-13 and P1-4. A quick-start that misstates what CI enforces is not
+exemplary, and the adoption decision rests on that document.
 
-| | What was green | What was actually true |
-|---|---|---|
-| `npx tsc -b` | ✓ | checks `src/`, never `dist-pkg/` |
-| `npm test` | ✓ 1,200 passing | runs source through Vite; never imports the build |
-| `npm run build:package` | ✓ | Rollup resolves JS fine; says nothing about types |
-| `check-package-css.js` | ✓ | checks CSS, not types |
+### The run-4 headline: three independent agents, one dead gate
 
-`dist-pkg/index.d.ts` referenced five modules with no `.d.ts` emitted
-(`lib/format`, `lib/format-context`, `lib/utils`, `tokens`, `semantic-tokens`),
-so `import { Button }` raised TS2307 for every TypeScript consumer. Introduced
-in `81c95b0` by adding `src/lib/format.ts` to `src/index.ts` without extending
-the dts `include` list in `vite.lib.config.ts` — a list whose own comment at
-`:105-109` describes precisely this failure mode.
+All three sub-agents converged, unprompted, on the same root cause — the same pattern
+run 3 produced. Verified first-hand:
 
-**All three are now closed**, along with the lint failures at HEAD, and each is
-guarded by a gate that was verified to fail on the original bug rather than
-assumed to work:
+```
+$ node -e "…slice roles.ts from 'export type RoleName' to first ';'…"
+names parsed by first-semicolon slice: 6
+actual union members:                 55
+terminating text: "the label ON a primary\n  // fill (Sky, flipping to Midnight);"
 
-| Fix | Guard | Failure proven? |
-|---|---|---|
-| dts `include` extended | `scripts/check-package-types.js`, chained into `build:package` | yes — deleted `lib/format.d.ts`, exit 1 with the right message; restored, exit 0 |
-| `ThemeModeProvider` SSR crash | `ThemeModeContext.ssr.test.tsx` (`@vitest-environment node`) | yes — old implementation throws `ReferenceError: localStorage is not defined`; new passes |
-| `FormatProvider` inert | `format-context.test.tsx` | yes — 4 of 5 StatCard assertions fail without the wiring |
-| `publish-package.yml` ungated | lint + tsc + tests + governance added before `npm publish` | n/a (workflow) |
+$ node scripts/check-role-usage.js --strict ; echo $?
+1
+$ grep -rln "roles:check\|check-role-usage" .github/workflows/ .husky/ | wc -l
+0
+```
 
-#### Run 2's own movement notes, kept for provenance
+`scripts/check-role-usage.js:142-145` derives the valid role set by slicing
+`src/theme/roles.ts` from `export type RoleName` to **the first `;`**. Commit `6364c6b`
+(after run 3) added a prose comment *inside* the union containing a semicolon —
+*"(Sky, flipping to Midnight);"* — truncating the slice. The parser reads **6 of 55**
+role names and flags the other 49 as unknown.
 
-**Movement since run 1:** areas 3 (API quality) and 7 (type safety & DX) each
-+1. Everything else held. The two areas that did not move — 4 (Radix/z-index)
-and 8 (dashboard readiness) — are now the binding constraints, and both are
-concentrated in a small number of specific, cheap fixes rather than anything
-architectural.
+| commit | names parsed | actual union members |
+|---|---:|---:|
+| `9dcc73a` (run 3) | 47 | 46 |
+| `6364c6b` | **6** | 53 |
+| `3840fc2` (HEAD) | **6** | 55 |
 
-**Two defects were introduced and fixed inside run 2's window.** Neither
-existed at run 1, and both are worth recording because neither would have been
-caught by any gate that existed then — the same pattern that produced run 3's
-three P0s:
+It therefore **exits 1 at HEAD**, reports ~172 findings of which **0 are actionable**,
+and **appears in no workflow or hook**. Meanwhile `docs/GOVERNANCE.md:58` states
+*"`npm run governance:ci` | `roles:check` + contrast … this is what `governance.yml` runs
+in CI"*, and `docs/get-started/DEVELOPERS.md:57` tells adopting teams
+*"enforced by `npm run roles:check` (`roles:check:strict` in CI)"*. Verified: `governance:ci`
+chains eight commands and `roles:check` is not among them.
 
-- The **published stylesheet shipped with zero padding, margin and gap rules**
-  after the Tailwind v4 migration. `styles.package.css` imported
-  `tailwindcss/utilities` without `tailwindcss/theme`; v4 derives the spacing
-  scale from `--spacing` at build time, so Tailwind silently *dropped* every
-  rule it could not resolve rather than erroring. Build exit 0, file still
-  71 kB, still contained `.flex-col`. Now fixed and guarded by
-  `scripts/check-package-css.js`, chained into `build:css`.
-- **Message bubbles rendered at 80% of their own content width**, because a
-  v4-only variant (`*:data-slot:self-end`) started compiling and collapsed a
-  flex parent to shrink-to-fit, changing what `max-w-[80%]` was a percentage
-  *of*. Found by the visual baseline, which is the tool run 1 recorded as
-  "scaffolded but not running".
+The gate's own header says it exists because this bug class "shipped three times" and was
+"found by an accessibility audit, not by any gate." **It cannot find a fourth.** The fix
+is one line.
 
 ---
 
 ## (a) Executive summary
 
-**Verdict at run 3: ready for internal dashboard adoption.** All eleven P0s
-raised across three runs are closed and verified at HEAD, and the package now
-validates its own published artifact. **Do not yet position it as the
-cross-brand foundation** — one architectural decision (§2) makes multi-brand
-theming impossible without a large refactor, and that should be decided before
-more teams build on it.
+**Verdict: adopt for Marsh-branded React dashboards inside this org's control; do not yet
+recommend as a shared cross-project dependency.** The engineering is better than a
+typical shadcn port — the artifact-level type gate, the package-stylesheet gate, the
+dual-window deprecation check and the honest self-assessment in
+`MAINSTREAM_REUSE_ASSESSMENT.md` are all real and all stronger than claimed-but-unenforced.
+The blockers to cross-project adoption are **two structural items and one documentation
+class**, none of which is component quality.
 
-> **Read the P1 list before quoting the verdict.** Run 3's three P0s were all
-> introduced *after* run 2 declared the same areas healthy, and none were
-> visible to CI. The system is in good shape; the evidence that it stays in
-> good shape is thinner than the number of green checks implies.
+**1. Distribution is personal, not organisational.** The package publishes to GitHub
+Packages under the `@antoniopezzella` scope from a private repo. `README.package.md:11-14`
+states it: *"there is no anonymous install path today."* Every consuming team needs a PAT
+and a per-project `.npmrc`. All 11 `CODEOWNERS` entries are one person; 352 of 353 commits
+are one author. **No other team can adopt this durably until it moves to a Marsh-owned org.**
 
-The system is **stronger than its component count suggests in the places that are
-hard to fake, and weaker in the places that are easy to defer.**
+**2. Multi-brand is not a configuration away.** `ResolveRoleOptions` (`src/theme/roles.ts:219`)
+carries only `mode` — no brand parameter — and `getRoleColor()` returns **resolved hex**.
+There are **515 calls across 71 of 104 shipped modules**, feeding **272 inline `style={{}}`
+sites** that no consumer stylesheet can override. Only 2 modules use the overridable
+`var(--role-*)` path, which the role tier already publishes statically for all 55 roles in
+both modes. A non-Marsh-branded team forks the source, not a config. `button.tsx` is the
+proven template for unwinding this; it has been applied to 2 of 104 modules.
 
-**What is genuinely good, and better than a typical shadcn port:**
+**3. The documents an adopting team reads first are wrong in three places.** The
+quick-start misstates CI enforcement (P0-13), claims registry coverage of "all 71
+components" when the registry holds 71 of 93 and silently omits `PageShell`, `Stack` and
+the entire DataGrid and filter families (P1-4), and `CLAUDE.md:148` documents a
+`getRoleColor` signature that does not compile. These are all **S**.
 
-- **Accessibility automation is exemplary.** `.storybook/preview.tsx:120` sets
-  `a11y: { test: 'error' }`, so an axe violation in any of 630 story entries
-  **fails the build**. The contrast gate (`scripts/check-contrast.js`) checks 20
-  pairs across **both** light and dark, and has demonstrably been strengthened in
-  response to a real escape (`check-contrast.js:75-84`). Most systems claim this;
-  this one enforces it.
-- **The token pipeline is real.** `npm run tokens:validate-dtcg` →
-  *413 tokens, 215 aliases, 198 literals, DTCG-conformant*. Aliases outnumbering
-  literals proves the primitive→semantic→role chain survives export rather than
-  flattening.
-- **The data table is close to MUI X Community parity** — multi-sort with a
-  management UI, faceted filters with derived counts, server-side pagination,
-  keyboard-accessible column resizing, CSV export, inline cell editing, and a
-  two-mode empty state that distinguishes "no data" from "no matches".
-- **Packaging now matches or beats all four benchmark systems** (MUI 9.4.0,
-  Carbon 1.116.0, Polaris 13.9.5, Primer 38.40.0) on every structural dimension
-  measured — after six blocking defects were found and fixed on the audit date.
+**The one P0 in the component surface** is that the data grid declares a formatting system
+it does not have: `meta.type` accepts `currency | date | percent | number`, and the only
+functional use of it maps to **text alignment**. A consumer declares a column `currency`
+and renders `137000`, right-aligned. For a system whose stated primary use case is
+data-dense dashboards, every adopting team hand-rolls the formatting a design system
+exists to standardise.
 
-**What blocked production at runs 1–2, and where each stands now:**
-
-| # | Blocker | Status at run 3 |
-|---|---|---|
-| 1 | No formatting utilities (§8) | **closed** — `src/lib/format.ts`, and as of run 3 actually consumed by `StatCard` via `FormatProvider` |
-| 2 | No data-error state (§8) | **closed** — `data-state.tsx` / `error-state.tsx`, four-state contract across 5 surfaces |
-| 3 | Toasts behind every overlay (§4) | **closed** — `toast.tsx:31` `z-[1600]`; the whole stacking scale is now CI-enforced |
-| 4 | CSS-var layer drifted (§2) | **closed** — 34/34 self-consistent, and now checked against the role layer too |
-| 5 | Unevidenced a11y claims (§5) | **closed** — all four remaining claims corrected; the "3px offset ring" one was disprovable from source |
-
-**What run 3 added and closed inside its own window:** broken published types,
-an SSR crash in `ThemeModeProvider`, an ungated publish workflow, an inert
-`FormatProvider`, and six lint errors at HEAD. See the headline above.
-
-> **Update 2026-10-03 — dark mode is now measurable, and it is not green.**
-> `npm run test:dark` runs the same story suite with `colorMode: 'dark'`. First
-> run: **87 failed tests across 23 story files, 677 axe `color-contrast`
-> violations**, versus 0 in the light pass. Two-thirds trace to ONE pairing bug
-> — `#ceecff` foreground on a `#95caff` background at **1.40:1**, 449
-> occurrences — where `text.onHero` (identical in both modes) sits on a surface
-> that lightens to `blue400` in dark. The remainder: `#ffffff` on `#ebe7e2`
-> (1.23:1, 84×), light-mode `textSecondary` `#595959` on the `#101010` page
-> (2.71:1, 26×), and surfaces still white in dark (1.39:1, 16×).
-> This backlog was always there; nothing could see it. Triage before promoting
-> the command into `governance:ci`.
-
-**A caution about the accessibility green light.** The axe gate is the best thing
-in this repo and it is being read as broader assurance than it provides. It now
-covers **630 stories** — and until 2026-10-03 all but 2 of them rendered light
-mode only, so *dark-mode component contrast was effectively unverified* (see the
-update above); the suite forces reduced motion,
-so the animated path is never sampled; and axe cannot check focus visibility at
-all. Automated coverage is roughly a third of WCAG at the best of times. Green
-here means "no detectable violation in a static, light-mode, reduced-motion
-render" — which is worth having, and is not the same as accessible.
-
-*Run 2:* the 451 excluded lines now execute (P0-6 closed), and the gate earned
-its keep twice this window — catching a heading-order break and a Select with
-no accessible name, both in newly written code, before either merged.
-
-**The strategic question, separate from the P0s:** most components resolve
-colour by calling `getRoleColor()`, which returns a **hex string** computed at
-render. Only 2 use `var(--role-*)`. That decision makes brand-switching a
-re-render rather than a cascade change, makes `className` unable to override
-component colour, and makes SSR always paint light mode. It is not a defect —
-it works — but it is the single thing standing between this and a multi-brand
-platform, and unwinding it touches 133 files.
+**The cross-cutting lesson, third run running:** the gates validate something *adjacent*
+to what matters. Run 3's P0 was green gates over a broken artifact. This run: a gate that
+parses 6 of 55 inputs and runs nowhere; a `meta.type` test that supplies its own
+`cell: () => '$12,400'` so it structurally cannot observe that the system does not format;
+a coverage gate whose thresholds have never been evaluated because the run fails and
+writes no report. **The highest-leverage investment here is not more tests — it is a small
+set of self-tests that deliberately break a thing and assert the gate goes red.** The repo
+already has this instinct (`vitest.config.ts:96-110` records proving the axe gate with a
+deliberate-violation probe); it is not automated.
 
 ---
 
 ## (b) Scorecard
 
-Run 3 scores. `(2→3)` marks movement since run 2. Denominator is **79**
-modules; figures re-derived at HEAD, not carried forward.
+Run 4 scores. `(3→2)` marks movement since run 3. Denominator is **93 modules** (94
+taxonomy entries) unless stated; run 3 used 79.
 
 | # | Area | Score | One-line justification |
 |---|---|:---:|---|
-| 1 | Architecture & packaging | **2** `(3→2)` | Deps and tree-shaking still clean, but the package **shipped with a broken `index.d.ts`** — five re-exported modules had no `.d.ts` emitted, so every TS consumer got TS2307 while all gates stayed green. Fixed and now gated by `check-package-types.js`; the score reflects that nothing validated the artifact for a full release cycle. |
-| 2 | Tokens & theming | **2** | DTCG pipeline good. The hand-written CSS-var layer is now self-consistent (34/34) **and** checked against the role layer it claims to project — a check that did not exist before and immediately found 4 divergences, 2 of them plain typos (now fixed), 2 a recorded brand migration. Still no multi-brand mechanism. |
-| 3 | Component API quality | **2** | Shared control scale used by **9** modules with a working cascade, 79/79 taxonomy, CI-gated `size` deprecation record. But `forwardRef` on 39/79, public `asChild` on **6/79** (run 2 said 15 — that counted files containing the string, 9 of which only pass it to an internal Radix trigger), and 5/6/3/4/3 competing prop names for primary text, secondary text, icons, empty and error. Only `loading` is genuinely unified. |
-| 4 | Radix usage | **2** `(1→2)` | Toast-above-overlay fixed and real. z-index went from "scale with zero importers" to an **enforced** scale: `scripts/check-z-index.js` fails on any off-scale value, all six layers now have real adoption, tooltips moved 1500→1700 (they were below toasts and tied with the dialogs containing them), scrims 1500→1400. `TooltipContent` still cannot be composed — no Radix `Root` is exported. |
-| 5 | Accessibility | **2** | Axe gate verified real end-to-end across **630** story entries and running in CI. Portfolio's four remaining unevidenced claims corrected — including a "3px offset ring" the code disproves (43 × `ring-2`; `focusRing.ts` is 2px + 2px). Still: **45/79** components have no focus styling, `getFocusRingSx` has 0 `ui/` consumers, 2/630 stories render dark, and the gate has no self-test after silently no-op'ing once. |
-| 6 | Testing | **2** | **1,295 tests / 185 files** in a real browser with axe gating. Coverage block now configured — but **no workflow runs it**, so the thresholds are inert. No test file is type-checked (`tsconfig.app.json` excludes them all). Interaction tests ~5/103. |
-| 7 | Type safety & DX | **3** | `strict: true`, `tsc -b` clean, **0 `any`** and **0 `as any`** in `ui/`, `gap` compile-time enforced to the DS scale with a CI gate covering the `className` escape hatch. 5 agent skills, tested 79-entry taxonomy. 0/79 maturity labels remain. |
-| 8 | **Dashboard readiness** ⭐ | **2** | Formatters, the four-state contract, StatCard delta/polarity/sparkline and FilterBar all shipped — the run-2 P0s are closed. The score does not move because the state changed from *missing* to **built but not adopted**: `FormatProvider` reached zero components until this run wired it, and `PageShell` has 2 consumers. |
-| 9 | Performance | **2** | Small bundles (median 3.6 kB), verified tree-shaking; still no virtualization and no memoization in either table. Unchanged. |
-| 10 | Governance & CI | **2** | Now **7** gates on every PR (z-index and role-agreement added) plus a package-types guard, and `publish-package.yml` no longer goes from `npm ci` straight to `npm publish`. Bus factor of **1** remains. The deprecation window is now machine-checked. |
+| 1 | Architecture & packaging | **2** | Run 3's cause is **closed and verified** — `check-package-types.js` runs in CI *and* before publish, passes, and would still catch that bug. Held at 2 because the package is installable only via a PAT against a personal account on a private repo, and `src/shadows.ts` ships `.mjs`/`.cjs` with **no `.d.ts`** — latent, since nothing in `dist-pkg` references it in a type position. |
+| 2 | Tokens & theming | **2** | DTCG pipeline sound (**445** tokens, 244 aliases) and the shipped stylesheet now statically defines all **55** role vars, gated. Held by the dangling-var detector regressing to **6/55** names, and multi-brand unchanged at **515** hex-resolving call sites in 71 modules. Hardcoded colour is far better than the repo's own docs claim: **15 literals in 2 modules**, not "111 in 11". |
+| 3 | Component API quality | **2** | Taxonomy **94/94** test-gated, `cn()` clean (**0/99** concatenate `className`), control scale at 10 modules, `Card`/`Badge`/`Chip` gained `forwardRef`. But the ratio fell **49% → 41%** as 20 modules landed without it, **33** public modules expose no ref path on any React version, `asChild` is still **6**, and the prop-vocab gate's declaration blindness now has two live instances (`attachment.tsx:24-29`, `toggle.tsx:23-27`). |
+| 4 | Radix usage | **2** | Enforced 7-layer z-index scale (40 sites, subdirectory-aware) and a correct wrap/alias split — **40** behavioural aliases, **0** raw visual primitives. But `TooltipContent` still cannot be composed (no `Root` exported, **0** tests), Base UI entered as a **second overlay vendor** for one component (`drawer.tsx:4`), and `collisionPadding`/`avoidCollisions` appear **0** times repo-wide. |
+| 5 | Accessibility | **2** | axe gates **706** story entries in CI, and `d5255f5` added a dark pass that measures a real backlog: **71** failing entries, of which **14 are in `ui/`** — the published-surface backlog is 14, not 71. But that pass exits 1 and is **in no workflow**, `getFocusRingSx` has **0** `ui/` consumers and is unexported, **25** interactive modules have no focus styling, the gate still has no self-test, and **0** lines in `ui/` or `dist-pkg/styles.css` honour `prefers-reduced-motion` while 11 modules animate. |
+| 6 | Testing | **2** | **1,835 tests / 223 files** in a real browser, interaction tests **~5 → 147 `play` blocks**, coverage 48.98% → **64.89%**. But `npm run test:coverage` **fails 2 tests and writes no report at all**, so thresholds have never been evaluated; visual regression has two dormant mechanisms and no baseline; chromium only. |
+| 7 | Type safety & DX | **2** `(3→2)` | The type layer re-earns a 3 — `strict`, `tsc -b --force` clean in 42s, **0** real `any`/`as any`, `gap` compile-time enforced, 113 re-exports proven. The DX half does not: the quick-start misstates CI enforcement for a command that **exits 1**, claims "all 71 components" when the registry covers 71 of 93, and **112 test files are type-checked by nothing**. |
+| 8 | **Dashboard readiness** ⭐ | **2** | The table is now near-exemplary — 13 TanStack v9 features and **real virtualization: 174 DOM nodes vs 5,062 at 1k rows**. The score does not move because run 3's exact crux is **unchanged**: `FormatProvider` **1** consumer, `PageShell` **2**, and the grid **does not format at all** — `meta.type` declares `currency` and is used only to right-align. |
+| 9 | Performance | **2** | Median chunk **3,621 B** across 130, CSS **19,316 B gzipped**, and run 3's "no virtualization" is **false at HEAD**. But `React.memo`/`useCallback` are **0 across all 7 table files**, virtualization is **off by default** and silently so, and there is **no perf gate of any kind** (`lighthouse.yml.disabled` since Nov 2025). |
+| 10 | Governance & CI | **2** | `governance:ci` green across **8** commands, publish workflow gated, deprecation window machine-checked (14 entries, dual version+date). Held by a gate that fails and runs nowhere, a **false claim** in `GOVERNANCE.md:58`, and bus factor **1**. |
 
-**Overall: 2.2 / 3** (simple mean). ⭐ = weighted heaviest per the brief.
+**Overall: 2.0 / 3** (simple mean). ⭐ = weighted heaviest per the brief.
 
 ---
 
 ## (c) Prioritised gaps
 
-### Status at run 3 (2026-09-25, `9dcc73a`)
+### P0 — blocks production adoption
 
-Verified individually against HEAD, not carried forward on trust. **Run 2's own
-status table was stale** — it listed P0-1, P0-2 and P0-3 as open when all three
-were closed at HEAD, which would have sent a reader to re-do finished work.
+| # | Finding | Evidence | Effort |
+|---|---|---|---|
+| **P0-12** | **The data grid declares a formatting system it does not have.** `meta.type` accepts `'text' \| 'number' \| 'currency' \| 'percent' \| 'date' \| 'status' \| 'boolean'`, described in-comment as *"the data-type/formatting system the experience spec describes (§6)"*. The **only** functional use maps it to text alignment. The table family never imports a formatter — `lib/format.ts`'s 9 formatters reach `stat-card`, `filter-schema` and `filters-describe` only. A column declared `currency` renders `137000`, right-aligned. **No gate catches it**: the single test touching `meta.type` (`data-grid-edges.test.tsx:262`) passes `cell: () => '$12,400'`, so it formats the value itself and structurally cannot observe that the system does not. | `data-grid-features.ts:153` (declaration), `data-grid-table.tsx:514` (sole use, alignment) | **M** |
+| **P0-13** | **The quick-start states a CI enforcement that does not exist, for a command that fails.** `DEVELOPERS.md:57`: *"enforced by `npm run roles:check` (`roles:check:strict` in CI)"*; `GOVERNANCE.md:58` repeats it. Verified: `roles:check` is in **no** workflow or hook, and exits **1** at HEAD because `check-role-usage.js:142-145` parses **6 of 55** roles (a `;` inside a prose comment terminates the slice). This is P0 not for severity but for position: it is the document an adopting team reads first, and it misdescribes the governance that is the system's main claim. | `check-role-usage.js:142-145`; `roles.ts:62`; `DEVELOPERS.md:57`; `GOVERNANCE.md:58` | **S** |
 
-| Gap | Status | Evidence |
-|---|---|---|
-| P0-1 formatters | **CLOSED** | `src/lib/format.ts` + `format-context.tsx` + `format.test.ts`; **and now actually consumed** — see P0-11 |
-| P0-2 data-error state | **CLOSED** | `data-state.tsx`, `error-state.tsx`; four-state contract across 5 surfaces |
-| P0-3 toasts behind overlays | **CLOSED** | `toast.tsx:31` is `z-[1600]` vs 12 overlay sites at 1500 |
-| P0-4 CSS-var drift | **CLOSED** | 34/34 self-consistent, **plus** a new role-agreement check that found 4 more |
-| P0-5 unsubstantiated a11y claims | **CLOSED** | all four remaining claims corrected this run; see below |
-| P0-6 451 excluded a11y tests | **CLOSED** | exclusion removed; both files run |
-| **P0-8 broken published types** | **CLOSED** | *new in run 3*; `check-package-types.js`, proven to fail on the bug |
-| **P0-9 SSR crash in ThemeModeProvider** | **CLOSED** | *new in run 3*; `useSyncExternalStore`, node-environment regression test |
-| **P0-10 publish workflow ungated** | **CLOSED** | *new in run 3*; lint + tsc + tests + governance now precede `npm publish` |
-| **P0-11 FormatProvider inert** | **CLOSED** | *new in run 3*; StatCard reads ambient config, 9 tests |
-| **P1-13 HEAD fails `npm run lint`** | **CLOSED** | *new in run 3*; 6 errors, now 0 |
-| P1-12 coverage misconfigured | **half-closed** | config exists; **no workflow runs `--coverage`**, so thresholds are inert |
-| P1-3 TooltipContent unusable | **open** | styled, but no Radix `Root` exported — cannot be composed |
-| P2-4 density/size vocabulary | **mostly closed** | one control scale, 9 modules, group cascade |
+### P1 — fix before recommending cross-project
 
-#### Corrections to run 2's own claims
+| # | Finding | Evidence | Effort |
+|---|---|---|---|
+| P1-1 | **Distribution is a personal account.** PAT-only install, private repo, `@antoniopezzella` scope, 11/11 CODEOWNERS one person, 352/353 commits one author. | `package.json:2,11`; `README.package.md:11-14`; `.github/CODEOWNERS` | **L** (org) |
+| P1-2 | **Multi-brand impossible without a fork.** `ResolveRoleOptions` has no brand param; **515** `getRoleColor()` calls in **71 of 104** shipped modules resolve to hex inside **272** inline styles. Only 2 modules use `var(--role-*)`. | `roles.ts:219,230-243` | **L** |
+| P1-3 | **Dark mode measured, not gated.** `test:dark` exits 1 — 71 failing entries, **14 in `ui/`** across 9 modules. In no workflow. `header.tsx:125-126` pairs `surface.secondary` with `text.primary` → **1.72:1** in dark. | `vitest.dark.config.ts:43,67`; `roles.generated.css` dark block | **M** |
+| P1-4 | **Registry drifted 22 modules behind and the doc says otherwise.** `DEVELOPERS.md:158` claims "all 71 components"; registry holds 71 `registry:ui` items against **93** modules. Absent: the whole DataGrid family, the whole filter system, `page-shell`, `stack`, `data-state`, `error-state`, `sparkline`. All landed since run 3; nothing noticed. `registry validate` checks schema only. | `registry.json`; `DEVELOPERS.md:158` | **S** |
+| P1-5 | **Coverage gate cannot be switched on as-is.** `npm run test:coverage` **fails** — 2 instrumentation-induced 5s timeouts — so **no report is written** and thresholds have never been evaluated. Thresholds also sit ~20 points below actuals. | `vitest.config.ts:46-51`; `tabs.test.tsx`, `WorkspaceCard.test.tsx` | **S** |
+| P1-6 | **The fast path is opt-in; the slow path is the accidental one.** `enableVirtualization` defaults **false** and requires `maxHeight`. `<DataTable data={rows} pageSize={1000} />` gives **5,062 DOM nodes and a 222 ms sort**, with no warning. | `data-grid-table.tsx:185`; `data-table.tsx:387` | **S** (dev warn) |
+| P1-7 | **No performance gate of any kind.** No size-limit, no bundle budget; `lighthouse.yml.disabled` since 2025-11-13. Every number in area 9 can regress silently. | `.github/workflows/` | **S** |
+| P1-8 | **Dashboard typography lost in 11 of 12 portalled surfaces.** `.mds-dashboard` is a CSS-var scope; 12 components portal to `document.body`, **1** re-applies it. A dialog opened from a dashboard renders its heading in Marsh Serif 400, not Noto Sans 700. `CLAUDE.md:271-272` already prescribes the fix. | `notifications-drawer.tsx:104` (the only one); `_typography.scss:136-154` | **S** |
+| P1-9 | **Chart colours ship ungoverned.** 10 hand-written values outside the token pipeline — `grep -c chart dist/tokens.json` → **0**; absent from `build-tokens.js`, `check-contrast.js`, `check-token-variables.js`. Series colours are exactly what needs contrast and colour-blind validation. `ChartContainer` has **0** consumers; `ChartMetricCard.tsx:2` imports recharts directly. | `token-variables.css:103-107,152-156` | **M** |
+| P1-10 | **33 public modules expose no ref path**, including `data-table`, `data-grid`, `tabs`, `pagination`, `combobox`, `date-picker`. A further 14 forward a ref **only under React 19**, while `package.json` declares `^18 || ^19` with nothing documenting the difference. | `package.json` peer range; 41/99 use `forwardRef` | **M** |
+| P1-11 | **The prop-vocab gate is declaration-blind**, with two live instances: `attachment.tsx` declares `size: {default, sm, xs}`; `toggle.tsx` declares `size: {default, sm, lg}` with `h-9` — off the 32/40/48 scale. `props:check` reports green against both. | `check-prop-vocab.js:217-237`; `control-size.ts:36-40` | **M** |
+| P1-12 | **The axe gate still has no self-test**, one run after a silent no-op was discovered. Collateral evidence is now stronger (the dark pass produced 418+ findings through the identical plugin path), but a regression confined to the light config stays silent. | `src/stories/_health/` — 4 stories, none a deliberate violation | **S** |
+| P1-13 | **A second overlay primitive vendor shipped for one component.** `@base-ui/react` is a runtime dependency; consumers get two focus traps, two portals, two dismiss stacks alongside 27 Radix packages. Documented and coherent — but it is a maintenance inheritance. | `drawer.tsx:4`; `package.json` | **M** |
+| P1-14 | **`TooltipContent` still cannot be composed** — no Radix `Root` exported, `Tooltip` is taken by the opinionated wrapper, **0** tests reference it. Unchanged from run 3. | `tooltip.tsx:141-142,161-185` | **S** |
+| P1-15 | **Bus factor 1**, in code and process. `CODEOWNERS:5-6` is candid: *"A single personal owner is a bus factor, not a review process."* | `.github/CODEOWNERS` | **L** (org) |
 
-Run 3's agents disputed four figures. All four checks were re-run first-hand
-and the agents were right:
+### P2 — worth doing, not blocking
 
-| Run 2 said | Actually |
-|---|---|
-| "`asChild` 5→15" | **6** components declare it as a public prop; the other 9 only pass it to an internal Radix trigger |
-| "Adds `z-index.ts` — a real scale" | the file had **zero importers** and was not exported; two comments referenced it |
-| "Tooltips sit above toasts" | tooltips were at **1500**, toasts at 1600 — the opposite |
-| "75 modules" | **79** |
-
-A fifth is about a gate I wrote: `check-token-variables.js` compared each HSL
-triplet to **the hex in its own comment**, never to `roles.ts`. It reported
-"✓ every triplet decodes to its stated hex" while four variables rendered a
-different colour than the role they named. It now checks both, and the
-distinction is documented in the script.
-
-#### Correction: P0-5 was overstated at run 1
-
-Run 1 claimed "**zero** focus-trap implementations, **zero** skip links". Both
-halves are wrong, and the audit's own method says to report the narrower
-version:
-
-- **Focus trapping is real.** `dialog.tsx` and `sheet.tsx` build on
-  `@radix-ui/react-dialog`, which traps focus natively. Run 1 grepped for
-  hand-rolled traps and missed that the library provides it. That part of the
-  product-page claim is substantiated.
-- **Skip links exist**, in `CarouselSection.tsx` and `GoToMarket.tsx:553`.
-
-What survives is narrower but still real: "skip-links implemented
-**throughout**" is false for the dashboard product the page advertises —
-`PageShell`, the template every new dashboard page now uses, has **none**. And
-"Tested with axe-core and VoiceOver" is half-substantiated: axe-core
-demonstrably gates 630 stories; the only VoiceOver evidence is a *claim* in an
-archived doc (`docs/archive/HEADER_ACCESSIBILITY_REPORT.md:142`), not a test
-artefact — no dated session, no findings, no tooling output.
-
-It stays P0 because a public page making accessibility claims the repo cannot
-evidence is a compliance exposure regardless of how many sub-claims are true.
-The fix is now smaller than run 1 implied: correct one sentence, and add a
-skip link to `PageShell`.
-
-### P0 — open at run 3
-
-**None.** All eleven P0s raised across runs 1–3 are closed and verified at
-HEAD. That is a real milestone, and it is also the point at which the
-interesting question stops being "what is broken" and becomes "what would tell
-us if it broke again" — which is what the P1 list below is mostly about.
-
-### P1 — open at run 3
-
-Ranked. Every row re-verified first-hand at `9dcc73a`.
-
-| # | Gap | Evidence | Effort |
-|---|---|---|:---:|
-| P1-14 | **`TooltipContent` cannot be composed.** The name `Tooltip` is taken by the opinionated `title`-taking wrapper, so no Radix `Root` is exported. The idiomatic `<Tooltip><TooltipTrigger/><TooltipContent/></Tooltip>` hands two children to a Slot and throws `React.Children.only`. Exported publicly, exercised by zero tests and zero stories. | `tooltip.tsx:86,104,135-136`; `tooltip.test.tsx` has 0 matches for `TooltipContent` | **S** |
-| P1-15 | **Focus visibility is largely absent and entirely unmeasured.** 45/79 components have no focus styling and fall back to the UA outline; `getFocusRingSx` has **0** consumers in `ui/`. Axe does not check WCAG 2.4.7 at all, so the green gate is silent on it. | counts at HEAD; `src/theme/focusRing.ts` | **M** |
-| P1-16 | **The axe gate has no self-test.** It silently ran zero checks once already — a `setProjectAnnotations()` call made addon-vitest skip provisioning, and a story with deliberate contrast and button-name violations **passed**. The only evidence it works today is a prose comment. One probe story would close it. | `vitest.config.ts:~119-128`; `ls src/stories/_health/` has no violation probe | **S** |
-| P1-17 | **Coverage thresholds are configured and never enforced.** Four thresholds set; no workflow invokes `--coverage`. | `vitest.config.ts:41-46` vs `ci.yml:57` (`npm test`) | **S** |
-| P1-18 | **No test file is type-checked.** `tsconfig.app.json:32-41` excludes every `*.test.*`/`*.spec.*`, and no other project includes them — ~1,295 tests transpile unchecked. A test passing a prop that does not exist compiles, runs and passes. | `tsconfig.app.json`, `tsconfig.json` | **S** |
-| P1-19 | **Four components hardcode heading levels with no escape.** `card.tsx:74` `<h3>`, `mega-menu.tsx:89` `<h4>`, `side-navigation.tsx:370` `<h3>`, `status-card.tsx:67` `<h3>`. A `<Card>` inside a `PageShell` skips `h1`→`h3`. `stat-card.tsx:98` already demonstrates the fix. | grep at HEAD | **S** |
-| P1-20 | **`asChild` on 6/79, `forwardRef` on 39/79.** `Badge`, `Card`, `Chip`, `Breadcrumbs` — the four the 60-day plan names — have neither. Consumers cannot render a Card as a link or measure a DataTable. | counts at HEAD | **M** |
-| P1-21 | **Prop vocabulary is ungated outside legacy `size` spellings.** `TONE_ALIASES = {}` by design; the gate checks call sites, not declarations, so a new component declaring `size?: 'xs' \| 'cozy'` passes green. 5 names for primary text, 6 for secondary, 4 for empty, 3 for error, ≥8 for "the value changed". | `check-prop-vocab.js:106`; table in §Area 3 | **M** |
-| P1-22 | **Two CSS variables render a different brand blue than the role they cite.** `--primary` and `--accent-foreground` are `#002c77` (blue1100) while `interactive.primary` resolves to `#000f47` (blue1000). This is now *visible* — the gate reports it every run — but it is an unmade brand decision, not a fixed bug. | `check-token-variables.js` ROLE_EXCEPTIONS | **S** (decision) |
-| P1-23 | **Dark mode is 2 of 630 stories.** The axe suite also runs `reducedMotion: 'reduce'` throughout, so the animated path is never sampled either. | `stat-card.stories.tsx:295`, `metric-card.stories.tsx:165` | **M** |
-
-Carried forward from earlier runs and still open: P1-1 (multi-brand), P1-4
-(virtualization), P1-5 (uncontrolled-only), P1-7 (undeclared SCSS palette),
-P1-8 (hex-checker blind spot), P1-9 (bus factor of 1).
-
----
-
-### Historical: the run-1 P0 set (all closed)
-
-Kept for provenance. Status against HEAD is in the run-3 table above.
-
-| # | Gap | Evidence | Effort |
-|---|---|---|:---:|
-| P0-1 | **No formatting utilities.** No currency/number/percent/compact/date formatter, no locale handling. `StatCard.value` is typed `string`, so consumers hand-concatenate — stories already do: `` `$${premium.toLocaleString()}` ``. | `src/lib/` contains only `utils.ts` (13 lines, `cn()` alone); `data-table.stories.tsx:248` | **M** |
-| P0-2 | **No data-error state.** 0 of 73 components accept a data-fetch `error` prop (the 3 that exist are form validation). A failed API call is indistinguishable from an empty result. | no `error-state.tsx`; `data-table.tsx` has no error branch | **S** |
-| P0-3 | **Toasts render behind every overlay.** | `toast.tsx:27` `z-[100]` vs `dialog.tsx:29,58`, `sheet.tsx:30`, `popover.tsx:30` all `z-[1500]` | **S** |
-| P0-4 | **The shadcn CSS-var layer has drifted from the tokens.** 26 of 34 variables decode to a different hex than they state. Material cases: `--foreground` decodes `#00174c`, states `#000f47`; `--primary` decodes `#00337a`, states `#002c77`. A shadcn component and an MUI component show different navies side by side. | `src/styles/token-variables.css` — independently verified by decoding each HSL triplet | **S** |
-| P0-5 | **The product page makes accessibility claims the codebase does not substantiate.** `Portfolio.tsx:600` states *"Focus order, focus trapping in modals, and skip-links implemented throughout"* and `:615` *"Tested with axe-core and VoiceOver"*. There are **zero focus-trap implementations**, **zero skip links** — the only match for "skip-link" in all of `src/` is that sentence — and no artefact of any screen-reader testing. | verified by exhaustive grep across `src/` | **S** |
-| P0-6 | **451 lines of accessibility tests exist and never run.** `vitest.config.ts:42` excludes `src/**/*.accessibility.test.tsx`, silently disabling `Header.accessibility.test.tsx` (259 lines) and `SideNavigation.accessibility.test.tsx` (192 lines). | both files present, neither in the 169 that execute | **S** |
-
-> **Severity note, stated honestly.** P0-4 is a *consistency and trust* defect, not an
-> accessibility one — `#00174c` and `#000f47` are both ~18:1 on white, and no
-> contrast threshold breaks. It is P0 because it is the seam between the governed
-> token system and what users actually see, and because it is the one link in the
-> chain with no build step: `token-variables.css` is transcribed by hand into a
-> different colour space, guarded by a test covering exactly **one** variable
-> (`src/__tests__/ring-css-var.sync.test.ts`) — written after this precise failure
-> had already shipped once.
-
-### Historical: the run-1 P1 set
-
-Kept for provenance. P1-2, P1-3, P1-6, P1-10 and P1-11 have since moved —
-see the run-3 list above for their current state.
-
-| # | Gap | Evidence | Effort |
-|---|---|---|:---:|
-| P1-1 | **No multi-brand mechanism.** A second brand requires a fork today. Blocked by `getRoleColor()` returning resolved hex with no brand parameter, across 133 caller files. | `src/theme/roles.ts:172`; `ResolveRoleOptions` carries only `mode` | **L** |
-| P1-2 | **No z-index scale.** `1500` hardcoded 16× across 3 syntaxes; `data-table` uses `zIndex:1/2/3` for sticky headers while `table.tsx:187` uses `z-10` for the same job. | zero z-index tokens in `tailwind.config.js` or `src/theme/` | **S** |
-| P1-3 | **`TooltipContent` is exported raw and unstyled** — no background, no radius, no z-index. Composing the standard shadcn shape yields an invisible tooltip. | `tooltip.tsx:136` | **S** |
-| P1-4 | **No virtualization, and the hand-rolled `Table` renders everything by default.** Pagination is opt-in there; 1,000 rows → 1,000 `<tr>`. No windowing library installed. | measured: 166 ms / 1000 rows; `table.tsx:118` | **M** |
-| P1-5 | **Six components are uncontrolled-only** — `tabs`, `accordion`, `list`, `table`, `side-navigation`, `notifications-drawer`. `table.tsx` fires `onSort` *after* sorting locally, so server-side sort is impossible through it. | `tabs.tsx:57`, `table.tsx:91-95` | **M** |
-| P1-6 | **38 of 73 components lack `forwardRef`; 7 reject `className`; only 5 support `asChild`.** `breadcrumbs.tsx:65` hardcodes `<a href>`, so every breadcrumb full-page-navigates despite `react-router-dom` being a dependency. | counts across `src/components/ui/` | **M** |
-| P1-7 | **A second, undeclared palette.** `src/styles/_tokens.scss` defines 143 colours, **122 of which (85%) exist nowhere in `src/tokens.ts`** — turquoise, teal, pink, orange, crimson families with no MDS counterpart. Consumed by 19 SCSS files, invisible to every governance script. | `src/styles/_tokens.scss` | **M** |
-| P1-8 | **The hex checker has a blind spot.** `button.tsx` carries `roles-allow-hex-file`, so its **81 hex literals report as 0**. The scan is also limited to `src/components`, leaving ~617 literals in `src/pages`/`src/projects` unscanned. Reported total 125; actual repo-wide ~823. | `check-role-usage.js:17,79`; `button.tsx:3` | **S** |
-| P1-9 | **Bus factor of 1.** `CODEOWNERS` names one owner on all 8 paths — its own comment calls this "a bus factor, not a review process". No deprecation window, no support commitment. | `.github/CODEOWNERS` | **S** |
-| P1-10 | **No composed filter bar; no date-range presets.** The toolbar is welded inside `DataTable` with no slot, so it cannot host a date filter. No "Last 7 days / MTD / YTD". | `data-table.tsx:370-473`; `date-picker.tsx:90-129` | **M** |
-| P1-11 | **No app shell or layout primitive.** The shell is hand-assembled by each consumer — no `AppShell`/`DashboardLayout`, no responsive grid component. | no such export in `src/components/` | **M** |
-| P1-12 | **Coverage is misconfigured.** `vitest.config.ts` has no coverage block — no include/exclude, no thresholds — so the headline number instruments Storybook's own built bundles. | reported **4.6%**; scoped to `src/components/ui/**/*.tsx` it is **45.25%** | **S** |
-
-### P2 — quality and scale
-
-| # | Gap | Effort |
-|---|---|:---:|
-| P2-1 | Two incompatible table APIs both exported (`ColumnDef` vs `TableColumn`), plus a third MUI DataGrid lineage. | **L** |
-| P2-2 | Grouped headers render structurally wrong — the `<th>` never emits `colSpan={header.colSpan}` (`data-table.tsx:495-506`). Latent until nested columns are used. | **S** |
-| P2-3 | Prop vocabulary unguarded beyond `size`/`tone`: 3 names for primary text, 5 for secondary, **8 for change handlers**, 3 for icons; `error` vs `invalid` both declared in `select.tsx` and `radio-group.tsx`. | **M** |
-| P2-4 | No density tokens. The only density control is uncontrolled internal state in one component. 15/73 expose a size-ish prop under 4 names and 4 scales. | **M** |
-| P2-5 | Chart palette is CSS-only (unreachable from TS), categorical-only, and **silently recycles hue 1 at series 6** against its own documented intent. No sequential or diverging scale. | **M** |
-| P2-6 | Typography sits entirely outside the token pipeline — no DTCG export, no drift check. Tailwind never extends `spacing`/`fontSize`, so the MDS spacing scale never reaches the Tailwind track. | **M** |
-| P2-7 | 0 of 73 components carry a maturity label; no per-component subpath exports (MUI ships 156). | **M** |
-| P2-8 | `src/styles/_semantic-tokens.scss` and `_theme-dark.scss` are imported by nothing but read as authoritative. | **S** |
+`shadows.ts` ships untyped (`vite.lib.config.ts:101-121`, **S**) · `src/index.ts:181-184`
+withholds `Table` citing "0.7.0 has never shipped" — it shipped 2026-10-01 (**S**) ·
+`dist/theme.css` not in the published tarball, so non-React consumers cannot reach the
+role vars (**S**) · health score reports **0 hardcoded hex** while 15 literals ship,
+because a whole-file exemption scores as zero (`ds-health-score.js:147`, **S**) ·
+`CLAUDE.md:148` documents a `getRoleColor` signature that does not compile (**S**) ·
+3 competing `MetricCard` implementations, the DS one unused (**S**) · `data-table.tsx:38-44`
+says virtualization is "deliberately NOT included" — it is, at `:299-307` (**S**) ·
+`prefers-reduced-motion` absent from `ui/` and the shipped stylesheet while 11 modules
+animate (**M**) · 4 public modules accept no `className` (**S**) · **0** collision tuning
+repo-wide (**S**) · z-index and radius gates scan `ui/` only — the app breaks the scale at
+`zIndex: 999999` (**S**) · 112 test files type-checked by nothing (**S**) · `tsc -p tsconfig.json`
+checks **0 files** (`"files": []`), a trap for anyone typing the obvious command (**S**) ·
+`stories:audit` run by no workflow: 27/93 have descriptions, 33/93 argTypes (**M**) ·
+`README.package.md:239,246` names 2 unexported internals (there are 3) and recommends
+pinning `~0.4.0` at version 0.7.0 (**S**) · pre-commit covers 2 of 8 gates, no pre-push (**S**).
 
 ---
 
 ## (d) 30 / 60 / 90-day plan
 
-### What to do next — run 3 recommendation
+Sequenced by dependency, not effort.
 
-With the P0 list empty, the theme of the next block of work changes. Run 3's
-lesson was not that a particular thing was broken — it was that **the repo
-could not tell the difference between "green" and "correct"** for anything it
-did not directly check. Four of the five items below are about closing that
-gap, not about features.
+### 30 days — restore the governance that is claimed, and stop the bleeding
 
-| # | Do this | Why now | Effort |
-|---|---|---|:---:|
-| 1 | **Give the axe gate a self-test** (P1-16) | The single highest-leverage item on the list. This gate is the evidence behind the accessibility claim on a public page, it guards 630 stories, and it has *already* silently run zero checks once. Everything else in area 5 is asserted on top of it. | **S** |
-| 2 | **Run coverage in CI, and type-check the tests** (P1-17, P1-18) | Same shape as the published-types defect: configuration that exists and is never executed. Both are one workflow line and one tsconfig change. | **S** |
-| 3 | **Export a composable `Tooltip` root** (P1-14) | The only *functional* break left: a publicly exported component that throws when used the documented way. | **S** |
-| 4 | **Focus-ring pass across the 45 components that have none** (P1-15) | The largest genuine accessibility gap, and the one the green gate cannot see. Also what makes the corrected Portfolio claim true rather than merely accurate. | **M** |
-| 5 | **Decide `--primary`: blue1000 or blue1100** (P1-22) | Not a bug — an unmade decision that is currently rendering two different brand blues depending on whether a component reads the CSS var or the role. Needs an owner, not a commit. | **S** |
+1. **Fix `check-role-usage.js:144`** — terminate the slice at the union's real end, not the
+   first `;`. One line. Then triage whatever it finds for real, and add
+   `roles:check:strict` to `governance:ci`. **Until this lands, every claim the repo makes
+   about role governance is unbacked.**
+2. **Correct the three documents an adopter reads first** — `DEVELOPERS.md:57,144,158`,
+   `GOVERNANCE.md:58`, `CLAUDE.md:148`, `README.package.md:239,246`.
+3. **Add a `registry.json` completeness test** mirroring `taxonomy.test.ts:38-55`. The
+   drift to 71-of-93 happened silently over 82 commits; one test prevents the next one.
+4. **Make `test:coverage` runnable** (raise the instrumented timeout), then wire it to CI
+   with thresholds moved up to near current actuals.
+5. **Add one deliberate-violation probe story** so the axe gate has a self-test.
+6. **Add a dev-mode warning** when `pageSize` is large and `maxHeight` is absent.
 
-After those, the two structural decisions that still need an owner rather than
-a commit: **multi-brand theming** (P1-1 — `getRoleColor()` returns resolved hex
-with no brand parameter, 133 caller files) and **bus factor 1** (P1-9).
+### 60 days — close the P0s and the adoption gap
 
-Deliberately *not* recommended next: virtualization (P1-4). `DataTable`
-paginates by default, so it only bites the hand-rolled `Table`, and the two
-table APIs should be reconciled (P2-1) before either is optimised.
+7. **Wire `formatValue` into the grid's default cell renderer behind `meta.type`**, reading
+   `FormatProvider`. This closes P0-12 *and* gives `FormatProvider` its adoption — the two
+   reasons area 8 has not moved in two runs.
+8. **Apply `.mds-dashboard` to the 11 portalled surfaces** and add a
+   `check-typography-context.js` gate.
+9. **Clear the 14 `ui/` dark-mode failures**, then gate `test:dark` on the `ui/` subset via
+   an allowlist so the backlog cannot grow while the legacy MUI tail is worked off.
+10. **Bring chart colours into the token pipeline** and under contrast validation.
+11. **Add a byte-size gate** so area 9's numbers stop being unprotected.
 
-> **A note on how run 3's P0s were found.** None came from the CI gates; all
-> three came from independent agents told to verify the previous run's claims
-> rather than extend them. The gates were not wrong — they were answering
-> narrower questions than anyone reading "8 green checks" would assume. That
-> is worth remembering when this document is next used to argue the system is
-> ready.
+### 90 days — make it genuinely adoptable by another team
 
----
-
-Sequenced by dependency, not effort. Each stage unblocks the next.
-
-### 30 days — close the P0s and stop the bleeding
-
-0. **Correct or substantiate the accessibility claims on `Portfolio.tsx`**
-   (P0-5). Either implement skip links and focus traps, or amend the copy today.
-   Advertising conformance you cannot evidence is the one item here that carries
-   legal rather than engineering risk. **Un-exclude the 451 lines of a11y tests**
-   at `vitest.config.ts:42` in the same change (P0-6), and find out why they were
-   excluded — if they fail, that is itself the finding.
-1. **Generate `token-variables.css` from `roles.ts`** in `build-tokens.js` (P0-4).
-   The emitter and the data both already exist; this is the highest
-   value-to-effort item in the document and it also removes a whole class of
-   future drift.
-2. **Ship a formatting module** — `formatCurrency`, `formatNumber`,
-   `formatPercent`, `formatCompact`, `formatDate`, with an `Intl` locale context
-   and an explicit null convention (P0-1). Change `StatCard.value` to accept
-   `number | string`.
-3. **Add an `ErrorState` component** and an `error` prop to `DataTable`,
-   `Table` and the KPI cards (P0-2).
-4. **Add a z-index scale** to the Tailwind theme and move all 16 hardcoded
-   `1500`s onto it; put the toast viewport above overlays (P0-3, P1-2).
-5. **Add a second `CODEOWNERS` owner** and a deprecation window to
-   `docs/CONTRIBUTING.md` §Releases (P1-9) — hours of work, highest
-   organisational risk in the document.
-6. **Configure coverage** (`include`/`exclude`/thresholds) so the number means
-   something and can gate (P1-12).
-
-### 60 days — make it safe for a second team
-
-7. **Decide the theming architecture.** Either commit to `var(--role-*)` and
-   migrate components off `getRoleColor()`, or accept single-brand and say so
-   explicitly in the docs. **This is a decision, not a task** — and it should be
-   made before more teams build on the current model, because the migration cost
-   grows with every consumer (P1-1).
-8. **Composition pass:** `forwardRef` everywhere, `className` on all 73,
-   `asChild` on `Badge`/`Card`/`Chip`/`Breadcrumbs`, and controlled props for the
-   six uncontrolled-only components (P1-5, P1-6).
-9. **Fix `TooltipContent`** and audit the other raw re-exports (P1-3).
-10. **Retire or absorb `_tokens.scss`** — 122 orphan colours is a second design
-    system hiding in the repo (P1-7). Delete the two dead SCSS token files.
-11. **Extract the DataTable toolbar** into a composable filter bar and add
-    date-range presets (P1-10).
-12. **Widen the hex checker** to the whole `src/` tree and convert `button.tsx`'s
-    file-level opt-out into tracked, line-level annotations (P1-8).
-
-### 90 days — make it a platform
-
-13. **Virtualization** for both tables, or a documented row-count ceiling (P1-4).
-14. **App shell + layout primitives** (P1-11) — an `AppShell`/`DashboardLayout`
-    and a responsive grid component, so each consumer stops hand-assembling one.
-15. **Component maturity ladder** (experimental/beta/stable) with objective
-    criteria, surfaced in Storybook and a generated status page (P2-7).
-16. **Consolidate the table story** — one table API, not three (P2-1).
-17. **Visual regression** actually running, and **interaction tests** using
-    `@testing-library/user-event` (not yet a dependency).
-18. **Density tokens** and a provider, so a dashboard can be set compact globally
-    (P2-4).
+12. **Move the repo and package to a Marsh-owned org**, with a team CODEOWNERS handle and
+    branch protection that requires the gates. This is the single largest blocker and it is
+    organisational, not technical.
+13. **Begin the `getRoleColor()` → `var(--role-*)` conversion**, `button.tsx` as the
+    template. The role tier already publishes all 55 roles statically in both modes, so
+    this converts brand from a fork into a cascade override. ~71 modules; do the
+    highest-traffic first and measure the inline-style count down from 272.
+14. **Add `forwardRef` to the named load-bearing modules** (`data-table`, `data-grid`,
+    `tabs`, `pagination`, `combobox`, `date-picker`), and document the React 18 vs 19 ref
+    difference for the 14 that rely on React 19 behaviour.
+15. **Stand up visual regression** — both mechanisms are already installed and dormant.
 
 ---
 
 ## (e) Checks that could not be run
 
-These are findings in their own right — each is a gap in the tooling, not in the
-audit.
+Per method step 3. A check not run is itself a finding.
 
-| Check | Why it could not run |
+| Check | Why |
 |---|---|
-| **Visual regression** | A local baseline tool exists (`scripts/visual-baseline.js`) and has caught one real defect, but there is **no npm script and no CI step**, so nothing diffs on a PR. Run 2 described this as "now genuinely runs", which overstated it: it runs when a human runs it. |
-| **Cross-browser** | The story suite runs **chromium only** (`vitest.config.ts` browser instances). No Firefox or WebKit coverage, so no Safari-specific layout or focus behaviour is verified. |
-| **Animated-path accessibility** | The suite forces reduced motion globally for a documented and correct reason (axe mis-reads mid-flight opacity as contrast failures). The consequence is that **the non-reduced-motion path is never axe-tested**. |
-| **Screen-reader behaviour** | No NVDA/JAWS/VoiceOver pass is possible here. Automated axe covers roughly a third of WCAG; focus order, meaningful sequence and error identification remain unverified. The unsubstantiated VoiceOver/"screen reader validated" claims in `Portfolio.tsx` were corrected at run 3. |
-| **Dark-mode rendered contrast** | ~~Only **2 of 630** axe-checked stories opt into dark mode (`stat-card.stories.tsx:295`, `metric-card.stories.tsx:165`) — and both exist *because* dark contrast bugs were found there. Token-level dark contrast is enforced; rendered dark contrast is not.~~ — **Partly resolved 2026-10-03:** `npm run test:dark` (`vitest.dark.config.ts`) now re-runs the whole story suite with `initialGlobals: { colorMode: 'dark' }`, so every story is axe-checked in dark. It is **not yet in `governance:ci`** because the first run surfaced a real backlog — see below. |
-| **Focus visibility (WCAG 2.4.7)** | Axe does not check focus indication at all, so the gate gives zero signal. `getFocusRingSx` (`src/theme/focusRing.ts`) is used by **0 of 79** `ui/` components; **45** have no focus styling and fall back to the UA outline. |
-| **ARIA semantic truthfulness** | Axe validates ARIA syntax, not whether it is true. `MegaMenu.tsx:117` declares `aria-modal="true"` with no focus trap and no accessible name — syntactically valid, semantically false. No tool here can catch that class of defect. |
-| **Accessibility conformance record** | No VPAT or ACR exists, so there is nothing to hand to procurement. |
-| **Real-browser render performance** | The 1k-row figures below are **jsdom**, not a real browser. Treat the DOM node counts as the reliable signal and the milliseconds as indicative only. No Lighthouse or React Profiler run. |
-| **Multi-brand** | Untestable — no second brand exists to test with. The blockers in P1-1 are derived from source, not from an attempted migration. |
-| **SSR / Next.js App Router** | Partly closed, and this row was **wrong at run 2**. "Derived from source, not observed" was doing real damage here: `ThemeModeProvider` read `localStorage` in a `useState` initializer and threw `ReferenceError` on any server render — the crash was in the source the claim was derived *from*. Run 3 added `ThemeModeContext.ssr.test.tsx` under `@vitest-environment node`, which is the only environment in the repo where `typeof window === 'undefined'`, so provider-level SSR is now observed rather than assumed. Still **no Next.js app stood up** end-to-end, and no other component has an SSR test. |
-| **Consumer upgrade path** | No real downstream consumer exists, so nothing validates that a version bump is non-breaking in practice. |
+| **Branch protection / required status checks** | `gh` is not installed in this environment. `CODEOWNERS:3` implies it may not be configured (*"once branch protection requires owner review"*). **Whether any green gate is actually required to merge is unverified** — with a single author committing directly, the gates may be advisory in practice. This is material to area 10's score. |
+| **Whether 0.7.0 is on the registry** | Private registry, no credentials. |
+| **Real consumer install / bundle impact** | `npm install` and `shadcn add` both need GitHub auth against a private repo. Tree-shaking is verified at the *enabling* level (`preserveModules`, `sideEffects`, a 2-module import closure for `button.mjs`) — not from a built consumer app. |
+| **Whether multi-brand is achievable in practice** | There is no second brand in the repo to migrate. Every figure in P1-2 is derived from source; no migration was attempted. |
+| **Exact dark-mode violation total** | Vitest truncates at 50 of 71 failure blocks. 418 `color-contrast` findings is a **floor**, not a total. The failing-test (71) and failing-file (22) counts are exact, reproduced twice. |
+| **Combined coverage** | Not obtainable at HEAD — `test:coverage` fails and writes no report. 64.89% is the **unit project only**. |
+| **Visual regression** | **Not currently measurable.** `scripts/visual-baseline.js` has no npm script; `@chromatic-com/storybook` is installed but unregistered, unconfigured and absent from CI. No baseline exists to diff against. |
+| **Cross-browser** | chromium only. Safari sticky-header and pinned-column behaviour — the two things most likely to differ — are unverified. |
+| **Screen-reader behaviour** | No automated check; no dated VoiceOver/NVDA artefact in the repo. |
+| **Focus-appearance contrast (WCAG 2.4.7)** | axe does not evaluate it. Modules were measured for whether they *declare* a governed ring colour, not whether each resolved ring passes 3:1. The one case computed by hand (`header.tsx:204`, dark) fails at **1.72:1**. |
+| **Sustained scroll performance** | Mount and a single sort commit were measured. Sustained FPS and long-task distribution need a CDP tracing harness. |
 
 ---
 
 ## (f) Evidence appendix
 
-Every number above is reproducible. Commands as run:
+Every command used, so the reviewer can re-run them.
 
 ```bash
-# Packaging
-npm pack --dry-run                       # tarball contents, LICENSE inclusion
-npm run build:package                    # 74 modules, median 3.6 kB, styles.css 11.4 kB gz
-npm audit --omit=dev                     # 0 production vulnerabilities
+# Gates — all green at HEAD
+npm run governance:ci          # exit 0, 8 commands
+npm run build:package          # → check-package-types.js: 113 re-exports resolve
+node scripts/check-package-css.js   # 117705 bytes, 55 role vars, all resolve
+npm run tokens:validate-dtcg   # 445 tokens, 244 aliases, 201 literals
+npx shadcn@latest registry validate # valid, 76 items
 
-# Tokens
-npm run tokens:validate-dtcg             # 413 tokens, 215 aliases — DTCG conformant
-npm run tokens:contrast:all              # 20 pairs × light+dark; 18 enforced, 1 WARN
-npm run roles:check                      # 0 role violations; 125 hex reported (see P1-8)
-npm run tokens:check-vars                # 34/34 self-consistent; 2 role divergences, both recorded
-npm run zindex:check                     # all 8 site groups on the scale (new at run 3)
+# The dead gate
+node scripts/check-role-usage.js --strict ; echo $?        # 1
+grep -rln "roles:check" .github/workflows/ .husky/ | wc -l # 0
 
-# The published artifact — the gap that produced run 3's P0s
-npm run build:package                    # now ends with check-package-types.js
-npm run pkg:types:check                  # 93 re-exports resolve; consumer compiles clean
+# Tests
+npm test                       # 223 files, 1835 tests
+npx vitest run --project unit --coverage  # 64.89% lines; full run fails
+npm run test:dark              # exit 1 — 22 files / 71 tests failed
+npm run stories:audit          # 93 modules; 72 storied, 27 described, 33 argTypes, 9 play
 
-# Testing
-npm test                                 # 1,295 tests / 185 files, incl. axe on 630 story entries
-npx vitest run --project unit --coverage \
-  --coverage.include='src/components/ui/**/*.tsx' \
-  --coverage.exclude='**/*.stories.tsx'  # 45.25% stmts / 79.52% branches / 46.83% funcs
+# Types
+npx tsc -b --force             # exit 0, 42.0s — a real check
+npx tsc -p tsconfig.json --listFiles --noEmit | wc -l   # 0 files — the trap
 
-# Type safety
-npx tsc -b --force                       # clean
-grep -rhoE ':\s*any\b' src/components/ui/*.tsx | wc -l   # 0
+# Counts re-derived at HEAD
+ls src/components/ui/*.tsx | grep -v '\.test\.\|\.stories\.' | wc -l   # 93
+find src api -name "*.test.*" -o -name "*.spec.*" | wc -l              # 112
+node -e "const r=require('./registry.json');console.log(r.items.filter(i=>i.type==='registry:ui').length)"  # 71
+
+# The P0, demonstrated
+grep -rn "meta\.type" src/components/ui/*.tsx | grep -v test  # sole use: alignment
 ```
 
-**1k-row render performance** (jsdom; DOM counts are the reliable signal):
+**1k-row render, measured in real Chromium 1400×1000 via `React.Profiler`:**
 
-| Path | Time | `<tr>` in DOM |
-|---|---:|---:|
-| `DataTable` default (paginates) | 50 ms | 10 |
-| `DataTable` `pageSize={1000}` | 251 ms | 1000 |
-| `Table` — pagination **not** enabled (the default) | 166 ms | 1000 |
-| `Table` — pagination enabled | 17 ms | 25 |
-
-Neither table uses `React.memo` or `useCallback`; `data-table.tsx` has 3 `useMemo`,
-`table.tsx` has 2.
-
-**Component-set counts** (denominator 73, excluding `.stories`/`.test`):
-
-| Metric | Count |
-|---|---|
-| Use `cva` | 23 |
-| Hand-rolled variants (3 idioms) | 18 |
-| Use `cn()` | 65 |
-| Accept `className` | 66 |
-| Use `forwardRef` | 35 |
-| Support `asChild` | 5 |
-| Call `getRoleColor()` | 58 (518 call sites) |
-| Use `var(--role-*)` | 2 |
-| Use inline `style={{}}` | 54 (246 literals) |
-| Have a `loading` prop | 4 |
-| Have a data-`error` prop | 0 |
-| Carry a maturity label | 0 |
+| Configuration | Mount | DOM nodes | Sort re-render |
+|---|---:|---:|---:|
+| `DataTable` default (10/page) | 14.3 ms | 112 | 37.7 ms |
+| `pageSize={1000}`, no virtualization | 144.9 ms | **5,062** | **221.7 ms** |
+| `pageSize={1000} maxHeight={600} enableVirtualization` | **6.1 ms** | **174** | **30.7 ms** |
 
 ---
 
 ## Findings that did not survive verification
 
-A sub-agent reported that `table.tsx` row selection breaks across pages because
-indices are page-relative. **Checked and dropped:** selection *is* cleared on page
-change (`table.tsx:304,309`), so the indices stay consistent. The real limitation
-is narrower — selection cannot be *accumulated* across pages — which is a feature
-gap, not a defect.
+Recorded so the reviewer can see what was discarded, per the method's instruction to drop
+anything unprovable.
 
-**A stale code comment became a finding.** P1-11 originally claimed a live
-cascade collision — that `_grid.scss` defined unprefixed `.grid-cols-1..12`
-which beat Tailwind's. The evidence was a warning comment in
-`DashboardDemo.tsx`. Re-checking the source found **zero** unprefixed
-`.grid-cols-N` rules in the SCSS and **zero** in the built app CSS: the legacy
-utilities were namespaced to `.mds-legacy-grid-cols-*` at some point, and the
-comment outlived the problem. The comment has since been corrected. P1-11 stands
-on the missing app shell alone.
-
-Recorded deliberately. Every P0 in this document was re-verified against source
-or command output before publication, and these are what that process caught. A
-warning comment is evidence that something was once true, not that it still is.
+- **"111 hardcoded hex literals in 11 shipped modules"** (`MAINSTREAM_REUSE_ASSESSMENT.md:296-298`).
+  Re-derived at HEAD with comments stripped: **15 literals in 2 modules** — `button.tsx`
+  (3 hex + 8 `rgba`) and `side-navigation.tsx` (4 `rgba`). Stale by ~10×. **Do not quote the
+  old figure.**
+- **"No virtualization in either table"** (run 3, area 9). False at HEAD — `data-grid-table.tsx:466`,
+  measured at 174 vs 5,062 DOM nodes.
+- **"No test file is type-checked"** (run 3, area 6). True only of `.test.tsx`. The **147 `play`
+  interaction tests are all type-checked**, because they live in `.stories.tsx`, which
+  `tsconfig.app.json` includes. The uncovered surface is the 112 unit-test files.
+- **"29 modules render a focus ring in `currentcolor`."** Did not survive checking: 26 of 30
+  ring-bearing modules do set the governed colour, most via inline style rather than a class.
+  The real figure is **4 modules / 5 sites**.
+- **A cva-adoption finding (24/99)** was dropped: the 75 non-cva modules are overwhelmingly
+  raw Radix aliases or pure composition. Only 3 hand-roll a class map where cva would fit.
+- **A legacy-`Table` pagination regression** was dropped — it was the auditing agent's own
+  error (`pagination` takes a config object, not a boolean).
 
 ---
 
 ## See also
 
-- [`DS_HEALTH_REPORT.md`](./DS_HEALTH_REPORT.md) — the recurring internal health
-  report and its DEFERRED register. Findings here that need tracking over time
-  belong there too.
-- [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md) — the
-  earlier cross-project readiness view; overlaps §1 and §10.
-- [`GOVERNANCE.md`](./GOVERNANCE.md) — the four governance systems referenced in §10.
+- [`DS_HEALTH_REPORT.md`](./DS_HEALTH_REPORT.md) — the internal running health log; distinct from this adoption audit
+- [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md) — the Atlas/React reuse question (note the stale hex figure above)
+- [`GOVERNANCE.md`](./GOVERNANCE.md) — the four governance systems (note the false claim at `:58`)
+- [`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) — per-component migration state
