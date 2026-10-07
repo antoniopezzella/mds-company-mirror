@@ -2,6 +2,8 @@
 
 **Status:** proposal, not built · **Written:** 2026-10-06 · **Measured at:** `6ae5d37`
 **Scope:** replace the two hand-written typography stylesheets with one source and a generator, and expose the scale as explicit utility classes instead of an ambient scope class.
+**Focus: dashboard product experiences.** The generator emits both surfaces because that costs one line, but **the migration converts `src/components/ui/` and the dashboard screens only.** The marketing site keeps what it has until someone chooses to move it.
+**Out of scope: AEM / CMS content.** Styling HTML we do not control is a real problem with a real answer (`@tailwindcss/typography`, or a generated `content-*` utility — a custom `@utility` can style descendants, verified by compiling). It is deliberately not part of this work.
 **Related:** Storybook `Foundations/Typography` (`src/docs/20-Typography.mdx`) documents the scale as it is today. [`PRODUCTION_READINESS.md`](../PRODUCTION_READINESS.md) P0-T records the defects this closes.
 
 ---
@@ -185,50 +187,6 @@ hatch, for free.
 The second is the one worth insisting on. It is three lines, and it is the only thing
 that would have caught an expression that equalled the default for months.
 
-### Layer 3b — content you do not control
-
-The 21 utilities above assume you own the markup. **AEM does not give you that.** Rich
-text arrives as rendered HTML, so there is no element to put `text-marketing-h1` on.
-
-This is exactly what [`@tailwindcss/typography`](https://github.com/tailwindlabs/tailwindcss-typography)
-exists for — *"beautiful typographic defaults for HTML you don't control, like HTML
-rendered from Markdown, or pulled from a CMS."* It is **not installed** here today, and
-`prose` appears nowhere in `src/`.
-
-Two routes, and the second is the one to take:
-
-**Install the plugin** (v4: `@plugin "@tailwindcss/typography";`) and theme it through its
-`--tw-prose-*` variables. Gets link, list, code, blockquote and table defaults for free —
-genuinely a lot of surface — but its scale is its own, so our tokens and its defaults
-would have to be kept in agreement by hand. That is the drift this proposal exists to end.
-
-**Or emit a content utility from the same source**, which is what Layer 1 already makes
-cheap. Verified by compiling — a custom `@utility` can style descendants it does not
-control, reading the same tokens as the authored classes:
-
-```css
-@utility content-marketing {
-  & h1 { font-family: var(--font-marketing);
-         font-weight: var(--weight-marketing-heading);
-         font-size: var(--text-h1);
-         line-height: var(--text-h1--line-height); }
-  & h2 { … }
-  & p  { font-size: var(--text-body1); line-height: var(--text-body1--line-height); }
-}
-```
-
-```html
-<article class="content-marketing" dangerouslySetInnerHTML={{ __html: aemHtml }} />
-```
-
-**Recommendation: emit `content-dashboard` and `content-marketing` from the generator** —
-two more outputs from the same `SCALE`, so CMS content and authored components cannot
-disagree by construction. Reach for the plugin only if the long tail it covers (lists,
-blockquotes, code, tables) turns out to be needed, and if so theme it from these tokens
-rather than letting it bring its own scale.
-
-That makes **23 classes**: 21 authored + 2 content.
-
 ---
 
 ## 5. Extending it
@@ -237,7 +195,7 @@ That makes **23 classes**: 21 authored + 2 content.
 |---|---|---|
 | change the dashboard face | one line in `SURFACES` | 7 classes follow |
 | add a variant (`h7`, `legal`) | one entry in `SCALE` | 1 or 2 classes generated |
-| add a surface (AEM, email) | one entry in `SURFACES` | 7 authored + 1 content class generated |
+| add a surface | one entry in `SURFACES` | 7 classes generated |
 | collapse to a single brand | delete a surface | 7 classes disappear; the differ-test confirms |
 | override one property | use the stock `text-h1` / `font-dashboard` / `leading-*` | no new class needed |
 
@@ -251,7 +209,7 @@ That makes **23 classes**: 21 authored + 2 content.
 | Emit tokens + 21 utilities into `component-utilities.css` | **S** | file already ships to both targets |
 | Convert headings inside `src/components/ui/` | **M** | they take the **dashboard** class — `ui/` is dashboard-built |
 | Convert the 8 `.mds-dashboard` call sites and any ambient-dependent heading | **M** | `App.tsx`, `PageShell`, `ColleagueShell`, `DashboardDemo`, `InsuranceDashboard`, `ClinicalTrialsPage`, `RESGAssetListPage`, `notifications-drawer` |
-| Delete both scope blocks and `typography-variables.css` | **S** | the opposite-defaults bug goes with them |
+| Delete `typography-variables.css` and the `.mds-dashboard` scope block | **S** | the opposite-defaults bug goes with them. **Keep `.mds-marketing`'s values** as the `marketing` entry in `SURFACES` — the marketing site is not being migrated, so its headings must keep resolving |
 | Add the four tests | **S** | |
 
 **`src/theme.ts` needs no work.** The MUI typography config reads `var(--typo-*)`, and
@@ -262,21 +220,20 @@ visibly unstyled — rather than silently inheriting the wrong face. Loud beats 
 
 ---
 
-## 7. The open decision
+## 7. The open decision — deferred, not blocking
 
-**Does `marketing` survive the single-brand consolidation?**
+**Does `marketing` survive the single-brand consolidation?** It no longer gates this
+work. Because the migration is dashboard-only, `marketing` can stay in `SURFACES` as a
+one-line entry that keeps the existing site rendering, and the brand decision can be made
+later on its own timetable:
 
-- **Both surfaces stay** — 21 classes, as above.
-- **They converge** — `SURFACES` has one entry, **14 classes**, and the two scope blocks
-  are deleted outright.
+- **Marketing stays distinct** — nothing to do; the entry is already there.
+- **The surfaces converge** — delete one entry. Seven classes disappear and the
+  differ-test confirms it; no component changes, because dashboard components already
+  name their surface explicitly.
 
-The architecture is identical either way; it is one entry in one object. Keep the
-`contextual` flag even in the single-surface case, so AEM or email can be added later
-without a rewrite.
-
-> This is a brand decision, not an engineering one. The corporate hero currently renders
-> Marsh Serif headings, so the two surfaces appear to be live today — but that should be
-> confirmed rather than inferred from one page.
+Keep the `contextual` flag even if only one surface remains. It is what makes adding a
+surface later a data change rather than a rewrite.
 
 ---
 
