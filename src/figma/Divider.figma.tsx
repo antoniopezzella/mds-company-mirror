@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { Divider } from '../components/Divider/Divider';
+import { Divider } from '../components/ui/separator';
 
 /** Code Connect — Divider (V3 Content & Display) */
 const NODE_URL = '${LIB}?node-id=7592-24113';
