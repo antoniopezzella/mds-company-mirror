@@ -1,0 +1,116 @@
+name: Figma Code Connect
+
+# Two jobs, deliberately split by whether they need a credential.
+#
+# `validate` runs on every PR and push and needs NO token — `figma connect
+# parse` is entirely local. It is the gate that catches a Code Connect file
+# that no longer parses, which is the failure mode this repo has actually hit
+# (see d1ffac7, "repair 8 broken Figma bindings").
+#
+# `publish` is workflow_dispatch only, following publish-package.yml: pushing
+# snippets into Dev Mode changes what every designer and developer sees when
+# they click a component, so it stays a deliberate human-triggered action.
+# What this workflow changes is WHERE THE CREDENTIAL LIVES — a Figma PAT is a
+# personal credential carrying one human's full access to every file they can
+# see, and this repo already leaked one from a local .env that was gitignored
+# only after it had been committed. As a repository secret it has one rotation
+# point, an audit trail, and never sits on a laptop.
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    # No branch filter, matching ci.yml: this repo does substantial work
+    # directly on feature branches, which would otherwise get no signal.
+  workflow_dispatch:
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────
+  # Token-free. Always runs.
+  # ─────────────────────────────────────────────────────────────────────
+  validate:
+    name: Parse Code Connect files
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+
+      # A Code Connect file importing a component that no longer exists is a
+      # type error, and tsconfig.app.json does include src/figma — so this
+      # catches a repointed mapping whose target was renamed or deleted.
+      - name: Types
+        run: npx tsc -p tsconfig.app.json --noEmit
+
+      # --exit-on-unreadable-files is what makes this a gate rather than a
+      # report; the CLI's own help recommends it for CI. Verified by mutation:
+      # appending a malformed figma.connect() call takes this from exit 0 to
+      # exit 1. Without the flag a broken file is merely skipped and logged,
+      # and the job stays green while that component silently loses its
+      # mapping in Dev Mode.
+      - name: Parse
+        run: npx figma connect parse --exit-on-unreadable-files --skip-update-check
+
+  # ─────────────────────────────────────────────────────────────────────
+  # Needs FIGMA_ACCESS_TOKEN. Manual trigger only.
+  # ─────────────────────────────────────────────────────────────────────
+  publish:
+    name: Publish to Figma Dev Mode
+    if: github.event_name == 'workflow_dispatch'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: figma-publish
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+
+      # Fail with an actionable message rather than letting the CLI print
+      # "Couldn't find a Figma access token" from inside a publish step.
+      - name: Check the secret is configured
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$FIGMA_ACCESS_TOKEN" ]; then
+            echo "::error::FIGMA_ACCESS_TOKEN is not set."
+            echo "Add it under Settings -> Secrets and variables -> Actions."
+            echo "Create the token at figma.com -> Settings -> Security -> Personal access tokens."
+            echo "Do NOT copy it into any local .env — this workflow is the only thing that needs it."
+            exit 1
+          fi
+
+      # The same gates publish-package.yml runs, for the same reason recorded
+      # there: workflow_dispatch can be fired from any ref at any time, so
+      # `main` being green says nothing about what is about to be published.
+      - name: Governance
+        run: npm run governance:ci
+
+      # --dry-run exercises the real API and validates every doc without
+      # writing anything, so a bad mapping fails here rather than halfway
+      # through a real publish.
+      - name: Dry run
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: npx figma connect publish --dry-run --exit-on-unreadable-files --skip-update-check
+
+      - name: Publish
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: npx figma connect publish --exit-on-unreadable-files --skip-update-check
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Figma Code Connect" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Published from \`${{ github.sha }}\` on \`${{ github.ref_name }}\`." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Verify in Figma Dev Mode, or list what is live with \`npx figma connect list\`." >> $GITHUB_STEP_SUMMARY
