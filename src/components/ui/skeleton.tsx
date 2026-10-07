@@ -41,6 +41,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ variant = 'text', animation 
   const defaultHeight = variant === 'text' ? '1em' : variant === 'circular' ? 40 : 20;
   return (
     <div
+      data-slot="skeleton"
       className={cn(skeletonVariants({ variant, animation: animation === false ? 'none' : animation }), className)}
       style={{
         backgroundColor: getRoleColor('surface.subtle'),
