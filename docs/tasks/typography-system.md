@@ -1,250 +1,273 @@
 # Typography system — proposal
 
-**Status:** proposal, not built · **Written:** 2026-10-06 · **Measured at:** `6ae5d37`
-**Scope:** replace the two hand-written typography stylesheets with one source and a generator, and expose the scale as explicit utility classes instead of an ambient scope class.
-**Focus: dashboard product experiences.** The generator emits both surfaces because that costs one line, but **the migration converts `src/components/ui/` and the dashboard screens only.** The marketing site keeps what it has until someone chooses to move it.
-**Out of scope: AEM / CMS content.** Styling HTML we do not control is a real problem with a real answer (`@tailwindcss/typography`, or a generated `content-*` utility — a custom `@utility` can style descendants, verified by compiling). It is deliberately not part of this work.
-**Related:** Storybook `Foundations/Typography` (`src/docs/20-Typography.mdx`) documents the scale as it is today. [`PRODUCTION_READINESS.md`](../PRODUCTION_READINESS.md) P0-T records the defects this closes.
+**Status:** proposal, not built · **Rewritten:** 2026-10-06 · **Measured at:** `6ae5d37`
+**Supersedes** the first draft of this file, which proposed a `src/typography.ts` source, a
+~200-line generator and 21 generated classes. That was roughly 100× the solution this
+needs. §9 records what did not survive review, and why.
+
+**Shape:** tokens in Tailwind's `@theme`; the face/weight/size *pairings* as `@utility`
+classes. No generator, no second stylesheet, no custom scale.
 
 ---
 
 ## 1. The diagnosis
 
-Typography is the only token tier in this repo with no generator.
+Typography is the only token tier in this repo with no single source.
 
-| tier | source | generator | artifact | tests |
-|---|---|---|---|---|
-| colour | `src/tokens.ts` | `build-tokens.js` | `roles.generated.css` | snapshot + contrast |
-| spacing | `src/spacing.ts` | `build-tokens.js` | DTCG | yes |
-| shadow | `src/shadows.ts` | `build-tokens.js` | DTCG | yes |
-| **typography** | — | **none** | **two hand-written files** | **none** |
+| tier | source | drifted? |
+|---|---|---|
+| colour | `tokens.ts` → `build-tokens.js` → `roles.generated.css` | no |
+| spacing | `spacing.ts` → `build-tokens.js` → DTCG | no |
+| shadow | `shadows.ts` → `build-tokens.js` → DTCG | no |
+| **typography** | **two hand-written stylesheets, no generator** | **yes — four ways** |
 
-Every typography defect found in audit runs 4 and 5 follows from that one row. They are
-not separate bugs; they are the same bug four times.
-
-**The same variable means two different things.** `src/styles/_typography.scss` (77
-`--typo-*` declarations) is imported by `global.scss` and `.storybook/preview.tsx`.
-`src/styles/typography-variables.css` (15 declarations) is imported by
-`styles.package.css`. Nothing imports both. So:
-
-```
-app      --typo-h1-font-family  →  Marsh Serif   (marketing)
-package  --typo-h1-font-family  →  Noto Sans     (dashboard)
-```
-
-`typography-variables.css:45-47` is candid about shipping the dashboard values and tells
-the reader a consumer "overrides these four" — while shipping no mechanism to override
-them.
-
-**The context mechanism never reached the package.** `mds-dashboard` and `mds-marketing`
-appear **0 times** in `dist-pkg/styles.css`. A consumer adding `className="mds-dashboard"`
-matches no selector.
-
-**One of the two expressions is a no-op.** `.mds-marketing` restates `:root` verbatim and
-has **0 call sites**. There is one expression plus a default, and the default *is* the
-marketing expression — so every unscoped surface is silently opted into it.
-
-**The scope does not survive a portal.** 10 `ui/` modules render a Radix portal to
-`document.body`, outside any scoped subtree; **1** re-applies the class
-(`notifications-drawer.tsx:104`, with its reasoning written out). `CLAUDE.md:270`
-prescribes the fix for the other nine and no gate enforces it. A dialog opened from a
-dashboard renders its heading in Marsh Serif.
+1. **The same variable means two different things.** `_typography.scss` (77 declarations,
+   imported by `global.scss` and Storybook) says `--typo-h1-font-family` is Marsh Serif.
+   `typography-variables.css` (15 declarations, imported by `styles.package.css`) says
+   Noto Sans. Nothing imports both, so nothing ever noticed.
+2. **The context mechanism never reached the package.** `mds-dashboard` appears **0 times**
+   in `dist-pkg/styles.css`.
+3. **One of the two expressions is a no-op.** `.mds-marketing` restates `:root` verbatim
+   and has **0 call sites**.
+4. **The scale is in `px`.** `--typo-h1-font-size: clamp(28px, …, 36px)` — frozen against
+   the user's browser font-size setting. **WCAG 1.4.4 Resize Text.** The accessible helper
+   already exists in that file (`fluid-rem()`, commented *"scales with user font size"*)
+   and is called **once out of fifteen**.
 
 ---
 
-## 2. What we learned, as principles
+## 2. What the components actually do
 
-Each of these is a failure observed in this repo, inverted.
+This has to come first, because it contradicts what the docs describe.
 
-1. **Generate, don't hand-maintain.** Two files defining the same variable drifted to
-   opposite values. The three tiers with a generator did not drift.
-2. **Explicit at the element beats ambient on an ancestor.** An ancestor scope is lost
-   by construction at a portal boundary, and silently — the heading still renders, in the
-   wrong face.
-3. **The core must be neutral.** If `:root` is one of the expressions, "no context" means
-   "that expression", and the mistake is invisible. Carbon Core is neutral; each
-   expression layers onto it.
-4. **A thing that ships must be tested in the artifact.** `check-package-css.js` catches
-   missing role variables precisely because it reads `dist-pkg`, not `src`. Typography had
-   no equivalent, so the gap shipped.
-5. **Test the painted result, not the declaration.** The pattern behind six defects this
-   week: a gate asserting something adjacent to the thing that matters.
-6. **If two options should differ, assert that they differ.** `.mds-marketing` was equal
-   to `:root` in all 15 declarations and nothing noticed for months.
+| | count |
+|---|---|
+| Tailwind stock size utilities (`text-sm` 115, `text-xs` 52, …) | **189** |
+| MDS `--typo-*` references | **39** |
+| hardcoded `fontSize` / `fontFamily` in `ui/` | **4** |
+| components rendering a literal `<h1>`–`<h6>` | **5** |
+
+**83% of typography in the design system's own components already uses Tailwind's stock
+scale** — fixed, rem, accessible. The custom fluid scale is the minority, and it is the
+one with the `px` defect.
+
+The two scales nearly coincide, which is why nobody noticed:
+
+```
+text-sm = 14px fixed        --typo-body2  = clamp(14px → 15px)
+text-xs = 12px fixed        --typo-caption = clamp(12px → 13px)
+```
+
+Identical at 360px wide, 1px apart at 1536px — inside the same table row.
+
+### Where headings are written
+
+```
+rendered BY a ui/ component :    5
+written AD-HOC in a page    :  117   across 27 files
+```
+
+**96% of headings are hand-written**, mostly in marketing pages (`MarshCorporate` 14,
+`Portfolio` 12, `GoToMarket` 7). This single number decides the API — see §4, Layer 2.
 
 ---
 
-## 3. What mature systems do
+## 3. What the research says
 
-**Carbon ships two layers, deliberately.** Composed type tokens are the recommended API —
-*"unless there are specific exceptions, always use Carbon helpers to style your fonts"* —
-applied through a `type-style` mixin. Alongside them sit granular utilities
-(`.cds--type-{font-weight}`, `.cds--type-italic`) as the escape hatch. Fluid scaling is an
-opt-in parameter on the same tokens, not a parallel scale.
+**Carbon ships two type sets.** *Productive* for *"users focused on getting a specific job
+done — inputs, forms, and controls."* *Expressive* for *"users trying to learn and
+explore… scanning and reading."* And decisively on fluid:
 
-**Tailwind v4 provides both layers natively.** Verified by compiling, not assumed:
+> Fluid headings exist **only in the expressive set**. Productive contexts use fixed
+> headings paired with corresponding body styles.
 
-- a `--text-*` entry in `@theme` emits a real CSS variable **and** generates the stock
-  `text-*` utility, with `--line-height`, `--letter-spacing` and `--font-weight`
-  companions;
-- it does **not** carry `font-family` — that is a separate axis, which is precisely the
-  property that differs between our surfaces;
-- an `@utility` class can read `@theme` variables and gets the full variant system
-  (`md:text-dashboard-h1` and `hover:` both generated).
+So **fixed type is the modern recommendation for dashboards.** The 189 stock-scale uses
+are right; the fluid `--typo-*` references inside `ui/` are the anomaly.
 
-So Carbon's architecture maps onto Tailwind's own constructs with nothing bespoke, and
-`src/styles/component-utilities.css` — already imported by **both** `index.css` and
-`styles.package.css` — is the file it belongs in.
+Carbon also expects **blending** — expressive moments inside products (a hero on a product
+page), productive moments inside websites (a form on a marketing page). So the axis is
+**intent, not URL**, which is what makes `HeroBanner` on a product page coherent rather
+than an exception.
+
+**Carbon's primary API is one token per style** — `.cds--type-heading-03` carries size,
+weight, family and leading together, *"always use Carbon helpers to style your fonts"* —
+with granular utilities as the escape hatch.
+
+**Tailwind v4 provides both layers.** Verified by compiling, not assumed:
+
+- `@theme` emits a real CSS variable **and** generates the stock utility, with
+  `--line-height`, `--letter-spacing` and `--font-weight` companions;
+- **`@theme` accepts `clamp()`** — so "use Tailwind's scale" and "keep fluid" are not in
+  tension;
+- it does **not** carry `font-family` — a separate axis, and the property that differs
+  between the two sets;
+- `@utility` reads `@theme` variables and gets the full variant system (`md:`, `hover:`).
 
 ---
 
 ## 4. The proposal
 
-### Layer 1 — one source: `src/typography.ts`
+### Layer 1 — tokens in `@theme`
 
-Beside `tokens.ts`, `spacing.ts` and `shadows.ts`.
-
-```ts
-export const SURFACES = {
-  dashboard: { family: "'Noto Sans', sans-serif", headingWeight: 700 },
-  marketing: { family: "'Marsh Serif', serif",    headingWeight: 400 },
-};
-
-export const SCALE = {
-  // `contextual` marks the variants whose FAMILY and WEIGHT change by surface.
-  // Everything else — size, line-height, tracking — is shared, which is why
-  // the fluid clamp() is declared once and never duplicated per surface.
-  display: { size: fluid(40, 72), lineHeight: 1.1,  tracking: '-0.01em',  contextual: true },
-  h1:      { size: fluid(28, 36), lineHeight: 1.25, tracking: '-0.01em',  contextual: true },
-  h2:      { size: fluid(24, 28), lineHeight: 1.3,  tracking: '-0.005em', contextual: true },
-  h3:      { size: fluid(20, 24), lineHeight: 1.35, tracking: '0em',      contextual: true },
-  h4:      { size: fluid(18, 20), lineHeight: 1.4,  tracking: '0em',      contextual: true },
-  h5:      { size: fluid(16, 18), lineHeight: 1.4,  tracking: '0em',      contextual: true },
-  h6:      { size: fluid(14, 16), lineHeight: 1.45, tracking: '0em',      contextual: true },
-
-  subtitle1: { size: fluid(15, 16), lineHeight: 1.5,  weight: 500, tracking: '0.005em' },
-  subtitle2: { size: fluid(13, 14), lineHeight: 1.5,  weight: 500, tracking: '0.005em' },
-  body1:     { size: fluid(15, 16), lineHeight: 1.6,  weight: 400 },
-  body2:     { size: fluid(14, 15), lineHeight: 1.55, weight: 400 },
-  button:    { size: '16px',        lineHeight: '24px', weight: 500, transform: 'none' },
-  caption:   { size: fluid(12, 13), lineHeight: 1.4,  weight: 400, tracking: '0.01em' },
-  overline:  { size: fluid(11, 12), lineHeight: 1.4,  weight: 400, tracking: '0.08em',
-               transform: 'uppercase' },
-};
-```
-
-This is the current scale exactly — 14 variants, re-derived from `_typography.scss`, not
-re-invented. Seven are contextual; seven are not.
-
-### Layer 2 — generated `@theme` tokens
-
-Emitted into `component-utilities.css`, which already ships to both the app and the
-package:
+In `src/styles/component-utilities.css`, already imported by **both** `index.css` and
+`styles.package.css`, so one declaration ships to the app and the package.
 
 ```css
 @theme {
-  --text-h1: clamp(…);
-  --text-h1--line-height: 1.25;
-  --text-h1--letter-spacing: -0.01em;
-  --font-dashboard: 'Noto Sans', sans-serif;
-  --font-marketing: 'Marsh Serif', serif;
-  --weight-dashboard-heading: 700;
-  --weight-marketing-heading: 400;
+  /* EXPRESSIVE — fluid, rem. Marketing, hero, long-form.
+     NAMED ADDITIONS, not redefinitions of stock steps: `text-4xl` keeps meaning
+     what every Tailwind developer expects, and these read as a Marsh scale.
+     Redefining a stock step also silently keeps its stock line-height, computed
+     from the OLD size — found while probing this. */
+  --text-hero:    clamp(2.5rem,  1.8878rem + 2.7211vw, 4.5rem);
+  --text-hero--line-height: 1.1;
+  --text-display: clamp(1.75rem, 1.5969rem + 0.6803vw, 2.25rem);
+  --text-display--line-height: 1.25;
+  /* h2–h6 as needed; most land on stock steps within ±0–2px — see §5 */
+
+  /* FACES */
+  --font-expressive: 'Marsh Serif', serif;
+  --font-productive: 'Noto Sans', sans-serif;
 }
 ```
 
-### Layer 3 — generated `@utility` classes: 21
+**PRODUCTIVE needs no declaration.** Tailwind's stock steps are already rem, already
+fixed, already used at 189 sites.
 
-| group | classes | count |
-|---|---|---|
-| contextual · dashboard | `text-dashboard-display`, `text-dashboard-h1` … `-h6` | **7** |
-| contextual · marketing | `text-marketing-display`, `text-marketing-h1` … `-h6` | **7** |
-| universal | `text-subtitle1` `text-subtitle2` `text-body1` `text-body2` `text-button` `text-caption` `text-overline` | **7** |
+### Layer 2 — the pairings as `@utility`
 
-**The absence of a surface prefix is information.** `text-body1` is the same on every
-surface by design; only headings carry one. A reader can tell which is which from the
-class name alone.
+Because **117 of 122 headings are hand-written**, composable axes would mean 117 chances
+to write `font-expressive font-bold` — Marsh Serif at 700, a combination nobody designed.
+So the pairing gets one class:
 
-```tsx
-<h1 className="text-dashboard-h1">Portfolio overview</h1>   // product
-<h1 className="text-marketing-h1">Four brand legacies</h1>  // website
-<p  className="text-body1">…</p>                            // both
+```css
+@utility text-expressive-h1 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: -0.01em;
+}
 ```
 
-Because `@theme` also generates the stock utilities, `text-h1`, `font-dashboard`,
-`leading-*` and `tracking-*` remain available for the exception case — Carbon's escape
-hatch, for free.
+About **nine blocks**: the expressive headings, plus two or three productive pairings
+(`text-productive-h1` = `text-2xl` + Noto Sans 700, which is what dashboard pages already
+write by hand as `text-2xl font-bold`).
 
-### Layer 4 — the tests that make the four defects impossible
+This is Carbon's two layers in Tailwind's constructs: **one class for the common case,
+granular utilities (`font-*`, `leading-*`, `tracking-*`, stock `text-*`) still there for
+the exception.**
 
-| test | the defect it closes |
-|---|---|
-| generated CSS matches `typography.ts` (snapshot, like `roles.snapshot.test.ts`) | two files drifting apart |
-| **every surface differs from every other surface** | `.mds-marketing` being a silent no-op |
-| the 21 classes exist in `dist-pkg/styles.css` | the scope class never reaching the package |
-| a story asserting the **computed** `font-family` of a rendered heading | testing the declaration instead of the paint |
+### Layer 3 — `px` → `rem`
 
-The second is the one worth insisting on. It is three lines, and it is the only thing
-that would have caught an expression that equalled the default for months.
+Independent of everything above and worth landing on its own: the expressive scale moves
+from `fluid()` to `fluid-rem()`. The helper exists, with its rationale already written.
+**One function swap closes WCAG 1.4.4 across every heading in the system.**
+
+> Needs a visual pass, not a silent swap. `fluid-rem` scales with the user's setting *and*
+> the viewport, so at a 20px browser default an `h1` goes from 28–36px to roughly 35–45px.
+> That is the correct behaviour — it is what respecting the setting means — but it changes
+> rendering.
 
 ---
 
-## 5. Extending it
+## 5. The classes
 
-| you want to… | you do | result |
+**Expressive — fluid, Marsh Serif 400.** Surfaces people *read*.
+
+| class | size | nearest stock |
 |---|---|---|
-| change the dashboard face | one line in `SURFACES` | 7 classes follow |
-| add a variant (`h7`, `legal`) | one entry in `SCALE` | 1 or 2 classes generated |
-| add a surface | one entry in `SURFACES` | 7 classes generated |
-| collapse to a single brand | delete a surface | 7 classes disappear; the differ-test confirms |
-| override one property | use the stock `text-h1` / `font-dashboard` / `leading-*` | no new class needed |
+| `text-expressive-hero` | 2.5 → 4.5rem (40→72px) | `text-4xl`…`text-7xl` ±4px |
+| `text-expressive-h1` | 1.75 → 2.25rem (28→36px) | `text-3xl`…`text-4xl` ±2px |
+| `text-expressive-h2` | 1.5 → 1.75rem (24→28px) | `text-2xl`…`text-3xl` ±2px |
+| `text-expressive-h3` | 1.25 → 1.5rem (20→24px) | `text-xl`…`text-2xl` **±0** |
+| `text-expressive-h4` | 1.125 → 1.25rem (18→20px) | `text-lg`…`text-xl` **±0** |
+| `text-expressive-h5` | 1 → 1.125rem (16→18px) | `text-base`…`text-lg` **±0** |
+| `text-expressive-h6` | 0.875 → 1rem (14→16px) | `text-sm`…`text-base` **±0** |
+
+**Productive — fixed rem, Noto Sans.** Surfaces people *operate*. Stock Tailwind; dashboard
+pages already use exactly these on headings today (`text-2xl` ×3, `text-3xl`, `text-4xl`,
+`text-xl`, `text-lg` ×2).
+
+Live specimen — both sets at real size, with sliders for browser font-size and viewport:
+<https://claude.ai/code/artifact/49289a69-88ee-4b68-ae3d-2fc13f2072ae>
 
 ---
 
-## 6. Migration
+## 6. Which set, when
+
+The axis is intent, not location.
+
+| surface | set |
+|---|---|
+| table cell, column header, form label, chip, nav item | productive |
+| dashboard page title | productive |
+| marketing page title, section heading | expressive |
+| `HeroBanner` — **even on a product page** | expressive |
+| AI chat response, long-form copy | expressive |
+
+---
+
+## 7. Migration
 
 | step | size | note |
 |---|---|---|
-| `typography.ts` + generator in `build-tokens.js` | **S** | mirrors the colour tier; ~200 lines |
-| Emit tokens + 21 utilities into `component-utilities.css` | **S** | file already ships to both targets |
-| Convert headings inside `src/components/ui/` | **M** | they take the **dashboard** class — `ui/` is dashboard-built |
-| Convert the 8 `.mds-dashboard` call sites and any ambient-dependent heading | **M** | `App.tsx`, `PageShell`, `ColleagueShell`, `DashboardDemo`, `InsuranceDashboard`, `ClinicalTrialsPage`, `RESGAssetListPage`, `notifications-drawer` |
-| Delete `typography-variables.css` and the `.mds-dashboard` scope block | **S** | the opposite-defaults bug goes with them. **Keep `.mds-marketing`'s values** as the `marketing` entry in `SURFACES` — the marketing site is not being migrated, so its headings must keep resolving |
-| Add the four tests | **S** | |
+| `fluid()` → `fluid-rem()` on 14 variants | **S** | the accessibility fix — land it first, on its own |
+| `@theme` tokens + ~9 `@utility` pairings | **S** | ~40 lines, in a file that already ships to both targets |
+| Point `--typo-*` at the new tokens instead of a parallel scale | **S** | **closes the opposite-defaults bug.** `src/theme.ts`'s 56 refs keep working untouched |
+| Convert the 5 heading-rendering `ui/` components | **S** | `card`, `page-shell`, `status-card`, `mega-menu`, `side-navigation` |
+| Convert the 39 stray `--typo-*` refs in `ui/` | **M** | each picks a set; most become a stock `text-*` |
+| Convert the 117 ad-hoc headings | **M** | opportunistic, as pages are touched |
+| Retire `_typography.scss` + `typography-variables.css` | **S** | once `--typo-*` consumers reach zero |
 
-**`src/theme.ts` needs no work.** The MUI typography config reads `var(--typo-*)`, and
-those variables are still emitted — by a generator instead of by hand.
-
-**Failure mode improves.** A heading with no class renders at the browser default —
-visibly unstyled — rather than silently inheriting the wrong face. Loud beats silent.
+**The 189 stock-scale call sites change nothing.** They were never wrong.
 
 ---
 
-## 7. The open decision — deferred, not blocking
+## 8. Documentation in scope
 
-**Does `marketing` survive the single-brand consolidation?** It no longer gates this
-work. Because the migration is dashboard-only, `marketing` can stay in `SURFACES` as a
-one-line entry that keeps the existing site rendering, and the brand decision can be made
-later on its own timetable:
+This contradicts what several live docs say. None should be edited before the work lands;
+all are in scope for it.
 
-- **Marketing stays distinct** — nothing to do; the entry is already there.
-- **The surfaces converge** — delete one entry. Seven classes disappear and the
-  differ-test confirms it; no component changes, because dashboard components already
-  name their surface explicitly.
-
-Keep the `contextual` flag even if only one surface remains. It is what makes adding a
-surface later a data change rather than a rewrite.
+| doc | what becomes wrong |
+|---|---|
+| **`CLAUDE.md`** §Two typography contexts (~59 lines) | Describes `.mds-dashboard` as the selection mechanism, *"`:root` defaults to the MARKETING scale"*, and *"8 call sites declare a context"*. All retired. The largest rewrite |
+| **`src/docs/20-Typography.mdx`** (Storybook Foundations) | *"becomes Noto Sans Bold inside `.mds-dashboard`"*; and §"Using typography from SCSS (source of truth)" — the source is no longer SCSS |
+| **`docs/foundations/DESIGN.md`** | brand type spec — confirm the scale matches |
+| **`README.package.md`** | consumer-facing; must document `text-expressive-*` and the font-face requirement |
+| **`docs/get-started/DEVELOPERS.md`**, **`DESIGNERS.md`** | heading guidance |
+| **`.claude/skills/tailwind/SKILL.md`** | add the `@theme`-accepts-`clamp()` finding and the stock-step line-height trap |
+| **`.claude/skills/composition/SKILL.md`** | silent on typography today; should carry the productive/expressive rule |
+| **`docs/PRODUCTION_READINESS.md`** P0-T | closes |
+| **`docs/ROADMAP.md`** Goal 1 | the typography half closes; the colour half stays separate |
 
 ---
 
-## 8. What this does not solve
+## 9. What this replaced, and why
 
-**Colour.** Brand colour needs scoped variables, not explicit classes: 55 roles × N
-surfaces is not enumerable the way 7 variants × 2 surfaces is. An earlier draft of
-[`ROADMAP.md`](../ROADMAP.md) sequenced the colour conversion behind this work on the
-premise that typography would validate the mechanism. **It does not** — they are
-different problems with different right answers, and that sequencing claim should be
-removed.
+The first draft proposed `src/typography.ts`, a ~200-line generator, 21 generated classes
+and four new tests. Recorded because the reasoning is reusable:
 
-The 515 `getRoleColor()` call sites remain their own item, and with the single-brand move
-their primary justification (serving a second brand) is weaker than when it was written.
+- **"Why not just use Tailwind's scale?"** — its stock steps land **±0px on nine of
+  thirteen** MDS variants, worst case ±4px. The custom scale bought 1–4px of precision and
+  cost a generator, a second source file and its own test suite.
+- **"Can `@theme` hold a `clamp()`?"** — yes, verified. That removed the last argument for
+  a custom scale: fluid and Tailwind-native are not in tension.
+- **The one-class layer came back** after measuring 117 ad-hoc headings. Composable axes
+  are safe when components render the headings. Here they do not.
+
+**Did not survive:** the generator, the custom source file, the `.mds-*` scope classes, and
+a plan touching 228 call sites. **Survived:** two sets named by intent, fluid only in the
+expressive one, rem throughout, one class per pairing, ~40 lines of CSS in a file that
+already ships.
+
+### Out of scope
+
+**AEM / CMS content.** Styling HTML we do not control is a real problem with a real
+answer — `@tailwindcss/typography`, or a generated `content-*` utility (a custom
+`@utility` can style descendants, verified by compiling). There is currently **one**
+markdown surface, `AIAssistantChat`, which hand-rolls 13 hardcoded values. Worth fixing;
+not part of this.
+
+**Colour.** Different problem, different mechanism: 7 variants × 2 sets is enumerable;
+55 roles × N brands is not. See [`ROADMAP.md`](../ROADMAP.md).
