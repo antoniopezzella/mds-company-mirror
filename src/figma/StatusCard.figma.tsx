@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import StatusCard from '../components/StatusCard/StatusCard';
+import StatusCard from '../components/ui/status-card';
 
 // TODO: Update node ID when Figma component is finalized
 const NODE_URL = '${LIB}?node-id=10852-2';

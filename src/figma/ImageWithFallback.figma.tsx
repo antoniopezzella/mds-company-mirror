@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import { ImageWithFallback } from '../components/ImageWithFallback/ImageWithFallback';
+import { ImageWithFallback } from '../components/ui/image-with-fallback';
 
 /** Code Connect — Image Placeholder (V3 Content & Display) */
 const NODE_URL = '${LIB}?node-id=7592-31934';

@@ -1,5 +1,5 @@
 import figma from '@figma/code-connect';
-import Modal from '../components/Modal/Modal';
+import Modal from '../components/ui/dialog';
 
 /** Code Connect — Modal (V3 Content & Display) */
 const NODE_URL = '${LIB}?node-id=7592-32260';
