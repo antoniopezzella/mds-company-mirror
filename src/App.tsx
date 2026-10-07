@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DashboardHeader } from './components/Header/Header';
 import SideNavigation from './components/SideNavigation/SideNavigation';
 import type { SideNavItem } from './components/SideNavigation/SideNavigation';
-import Modal from './components/Modal/Modal';
+import Modal from './components/ui/dialog';
 import Tabs from './components/ui/tabs';
 import type { TabItem } from './components/ui/tabs';
 import type { GridColDef } from './components/DataGrid';
@@ -622,7 +622,6 @@ function App() {
             size="Small"
             hasHeader
             hasFooter
-            hasScrollbar
             footer={
               <>
                 <Button variant="outlined" onClick={() => setModalOpen(false)} sx={{ fontFamily: 'Noto Sans, sans-serif' }}>Cancel</Button>

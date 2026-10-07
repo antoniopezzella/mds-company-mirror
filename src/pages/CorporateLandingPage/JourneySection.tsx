@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { getRoleColor } from '../../theme/roles';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { ImageWithFallback } from '../../components/ImageWithFallback/ImageWithFallback';
+import { ImageWithFallback } from '../../components/ui/image-with-fallback';
 import '../../styles/_grid.scss';
 
 /**

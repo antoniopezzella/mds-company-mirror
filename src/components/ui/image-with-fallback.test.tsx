@@ -1,6 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { ImageWithFallback } from './ImageWithFallback';
+
+import { ImageWithFallback } from './image-with-fallback';
+
+/**
+ * Ported from src/components/ImageWithFallback/ImageWithFallback.test.tsx when
+ * the MUI component was deleted. The shadcn counterpart is API-compatible and
+ * the load/error state machine is identical, so the assertions are unchanged
+ * except for the skeleton selector: the MUI version was found via
+ * `[class*="MuiSkeleton"]`, this one via its `data-slot`.
+ */
+const skeletonIn = (container: HTMLElement) => container.querySelector('[data-slot="skeleton"]');
 
 describe('ImageWithFallback', () => {
   it('renders an img element with the provided src and alt', () => {
@@ -13,17 +23,14 @@ describe('ImageWithFallback', () => {
 
   it('shows a skeleton while the image is loading', () => {
     const { container } = render(<ImageWithFallback src="/image.jpg" alt="Loading" />);
-    // MUI Skeleton renders a wave animation element; its presence indicates loading state
-    const skeleton = container.querySelector('[class*="MuiSkeleton"]');
-    expect(skeleton).toBeTruthy();
+    expect(skeletonIn(container)).toBeTruthy();
   });
 
   it('does not show a skeleton when showSkeleton is false', () => {
     const { container } = render(
       <ImageWithFallback src="/image.jpg" alt="No skeleton" showSkeleton={false} />
     );
-    const skeleton = container.querySelector('[class*="MuiSkeleton"]');
-    expect(skeleton).toBeNull();
+    expect(skeletonIn(container)).toBeNull();
   });
 
   it('hides the image element initially (before load event)', () => {
@@ -38,8 +45,7 @@ describe('ImageWithFallback', () => {
     const img = container.querySelector('img[alt="Loaded"]') as HTMLImageElement;
     fireEvent.load(img);
     expect(img.style.display).toBe('block');
-    const skeleton = container.querySelector('[class*="MuiSkeleton"]');
-    expect(skeleton).toBeNull();
+    expect(skeletonIn(container)).toBeNull();
   });
 
   it('shows the broken-image fallback when the image errors and no fallbackSrc is provided', () => {
@@ -74,10 +80,15 @@ describe('ImageWithFallback', () => {
   });
 
   it('forwards additional img attributes to the underlying img element', () => {
-    render(
-      <ImageWithFallback src="/image.jpg" alt="Extra attrs" data-testid="custom-img" />
-    );
+    render(<ImageWithFallback src="/image.jpg" alt="Extra attrs" data-testid="custom-img" />);
     const img = screen.getByTestId('custom-img');
     expect(img.tagName).toBe('IMG');
+  });
+
+  it('constrains the box to the given aspect ratio', () => {
+    const { container } = render(
+      <ImageWithFallback src="/image.jpg" alt="Ratio" aspectRatio="16:9" />
+    );
+    expect(container.firstElementChild).toHaveClass('aspect-video');
   });
 });

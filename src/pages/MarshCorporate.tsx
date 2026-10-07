@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { ImageWithFallback } from '../components/ImageWithFallback/ImageWithFallback';
+import { ImageWithFallback } from '../components/ui/image-with-fallback';
 import { useReducedMotion } from './marsh-new-charpter-begins/animations/hooks/useReducedMotion';
 import { useScrollTrigger } from './marsh-new-charpter-begins/animations/hooks/useScrollTrigger';
 import { durations, eases } from './marsh-new-charpter-begins/animations/motion/tokens';
