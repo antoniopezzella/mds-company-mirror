@@ -194,6 +194,98 @@ Live specimen — both sets at real size, with sliders for browser font-size and
 
 ---
 
+## 5b. Dashboard roles — four, not fifteen
+
+### The rule
+
+**Tailwind's scale is the vocabulary.** `text-xs` … `text-4xl`, `font-medium`,
+`tracking-wide` — developers already know it, designers can mirror the same names as Figma
+text styles, and both sides then say "text-sm" and mean the same thing. This part should
+stay boring.
+
+A style earns a named role **only when it bundles three or more decisions** a developer
+would otherwise have to remember every time. Below that bar Tailwind's class is better:
+shorter, precise, and it tells you the size. A `text-data-cell` that resolves to `text-sm`
+*removes* information.
+
+### The four that qualify
+
+| role | resolves to | decisions | why it earns a name |
+|---|---|---|---|
+| `text-metric-value` | `text-3xl font-bold tracking-tight tabular-nums` | 4 | repeated per KPI; nobody remembers `tracking-tight` **and** `tabular-nums` every time |
+| `text-data-header` | `text-xs font-semibold tracking-wide uppercase` | 4 | **five inconsistent takes exist today** — see below |
+| `text-metric-delta` | `text-sm font-medium tabular-nums` | 3 | |
+| `text-data-numeric` | `text-sm tabular-nums` | 2 | the deliberate exception: `tabular-nums` is the most-forgotten decision in a data product, and it appears in **4 of 93** components |
+
+### The evidence for `text-data-header`
+
+Every "small uppercase label" in the library:
+
+| component | size | weight | tracking |
+|---|---|---|---|
+| `card` | — | `font-semibold` | `tracking-wide` |
+| `list` | `text-xs` | `font-semibold` | `tracking-wide` |
+| `notifications-drawer` | — | `font-semibold` | **`tracking-wider`** |
+| `stepper` | — | `font-semibold` | **none** |
+| `toast` | `text-sm` | — | `tracking-wide` |
+
+Three trackings, two sizes, one visual idea. Nothing is wrong enough to fail a gate — it
+is five people solving the same problem independently. That is exactly what a named role
+prevents, and the only reliable evidence that one is needed.
+
+### What does NOT get a role
+
+These were in the first draft of this section and are cut. Each bundles one or two
+decisions, so Tailwind says it better:
+
+```
+text-data-cell     → text-sm                  (46 components already write this)
+text-body          → text-sm
+text-meta          → text-xs                  (20 components)
+text-field-label   → text-sm font-medium      (14 components)
+text-field-help    → text-xs
+text-title-page    → text-2xl font-bold
+text-title-section → text-lg font-semibold
+text-title-card    → text-base font-semibold
+text-title-item    → text-sm font-semibold
+```
+
+**Nine roles cut.** They are real clusters — measured, not guessed — but naming them adds
+a vocabulary to learn without preventing a mistake.
+
+### On the MUI variants
+
+`subtitle1` and `subtitle2` differ in **exactly one property**:
+
+```
+subtitle1   0.9375 → 1rem      weight 500   tracking 0.005em   lh 1.5
+subtitle2   0.8125 → 0.875rem  weight 500   tracking 0.005em   lh 1.5
+```
+
+Same family, weight, tracking and leading. And `subtitle1` is the same size as `body1`,
+differing only in weight and leading.
+
+They are Material Design's names, inherited wholesale, and every one needs a sentence of
+prose in Storybook to explain when to reach for it (*"section descriptors, list or panel
+headers, supporting context"*). **A name that needs a sentence is not doing its job.**
+
+They become migration targets, not API:
+
+```
+body1 · body2 · caption · subtitle1 · subtitle2 · overline  →  Tailwind classes
+button                                                      →  Button's own cva
+```
+
+`src/theme.ts` keeps its MUI variant block throughout. The variants still resolve; they
+simply stop being what anyone reaches for in new code.
+
+### Sequencing
+
+Lands **after** §4 and §7. Adding four utilities is small. Retiring the MUI vocabulary is
+incremental — migrate as components are touched, delete when usage reaches zero.
+
+---
+
 ## 6. Which set, when
 
 The axis is intent, not location.
@@ -218,6 +310,8 @@ The axis is intent, not location.
 | Convert the 5 heading-rendering `ui/` components | **S** | `card`, `page-shell`, `status-card`, `mega-menu`, `side-navigation` |
 | Convert the 39 stray `--typo-*` refs in `ui/` | **M** | each picks a set; most become a stock `text-*` |
 | Convert the 117 ad-hoc headings | **M** | opportunistic, as pages are touched |
+| Add the four dashboard roles (§5b) | **S** | four `@utility` blocks; `text-data-header` consolidates five existing takes |
+| Retire the MUI variant vocabulary | **M** | incremental — migrate as components are touched, delete at zero usage |
 | Retire `_typography.scss` + `typography-variables.css` | **S** | once `--typo-*` consumers reach zero |
 
 **The 189 stock-scale call sites change nothing.** They were never wrong.
@@ -256,8 +350,14 @@ and four new tests. Recorded because the reasoning is reusable:
 - **The one-class layer came back** after measuring 117 ad-hoc headings. Composable axes
   are safe when components render the headings. Here they do not.
 
-**Did not survive:** the generator, the custom source file, the `.mds-*` scope classes, and
-a plan touching 228 call sites. **Survived:** two sets named by intent, fluid only in the
+- **"`text-3xl` is easier to understand from a development standpoint."**
+  Correct, and it halved §5b. Fifteen semantic roles became four. The test that
+  settled it: a style earns a name only if it bundles **three or more decisions**.
+  `text-metric-value` does; `text-data-cell` resolving to `text-sm` does not — it
+  removes the one piece of information the class name was carrying.
+
+**Did not survive:** the generator, the custom source file, the `.mds-*` scope classes, a
+plan touching 228 call sites, and nine of the fifteen proposed roles. **Survived:** two sets named by intent, fluid only in the
 expressive one, rem throughout, one class per pairing, ~40 lines of CSS in a file that
 already ships.
 
