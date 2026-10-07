@@ -31,6 +31,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`guides/STORYBOOK_BEST_PRACTICES.md`](./guides/STORYBOOK_BEST_PRACTICES.md) | Writing stories/docs the way this repo does it |
 | [`guides/STORY_UI_CONSIDERATIONS.md`](./guides/STORY_UI_CONSIDERATIONS.md) | Story UI + MDS governance interplay |
 | [`guides/TESTING_GUIDE.md`](./guides/TESTING_GUIDE.md) | Writing tests (see also the README's own Testing section for the Vitest+Playwright setup) |
+| [`guides/TROUBLESHOOTING.md`](./guides/TROUBLESHOOTING.md) | Symptom → cause for common MDS issues (tokens, contrast, fonts, dark mode) |
 | [`guides/DEV_SERVER_MANAGEMENT.md`](./guides/DEV_SERVER_MANAGEMENT.md) | Local dev server troubleshooting |
 | [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see [`OPERATIONS.md`](./OPERATIONS.md) for the operational picture) |
 | [`guides/PERFORMANCE_MONITORING.md`](./guides/PERFORMANCE_MONITORING.md) | RUM / Web Vitals |
