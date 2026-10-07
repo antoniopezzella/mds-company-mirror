@@ -66,6 +66,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`tasks/data-grid-backlog.md`](./tasks/data-grid-backlog.md) | DataGrid — what is deliberately not built yet, and why |
 | [`tasks/filters-assessment.md`](./tasks/filters-assessment.md) | Filters assessed against reui — why the gap is a shared schema, not a component |
 | [`tasks/data-table-audit.md`](./tasks/data-table-audit.md) | DataTable/DataGrid audited against the Experience Specification — capability matrix and prioritised gaps |
+| [`tasks/typography-system.md`](./tasks/typography-system.md) | **Proposal, not built.** Replace the two hand-written typography stylesheets with one source + generator, and the ambient `.mds-dashboard` scope with explicit utility classes. Diagnoses why typography is the only token tier that drifted — it is the only one with no generator |
 | [`tasks/implement-google-lighthouse.md`](./tasks/implement-google-lighthouse.md) | Lighthouse CI implementation task |
 
 ## Archive

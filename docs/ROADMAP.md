@@ -50,10 +50,19 @@ Three structural holes, all of which the colour conversion would inherit:
    and lose the scope by construction; **1** re-applies it. `CLAUDE.md:270`
    prescribes the fix and no gate enforces it.
 
-**This reorders the plan.** Fix the three holes in typography first — **15
-variables, 8 call sites, effort S** — and the mechanism is validated. Start with
-colour instead and you rediscover all three across **110 role variables and 515
-call sites**, at **L**.
+**CORRECTED AGAIN 2026-10-06.** An earlier revision of this paragraph said to
+fix typography first *because it would validate the mechanism for colour*. That
+is wrong: the two need different mechanisms. Typography is 7 variants × 2
+surfaces — enumerable, so explicit utility classes win. Colour is 55 roles × N
+surfaces — not enumerable, so it genuinely needs scoped variables. Typography
+proves nothing about colour.
+
+Both are still worth doing; they are simply independent. See
+[`tasks/typography-system.md`](./tasks/typography-system.md) for the typography
+proposal. And note that with Marsh consolidating to a single brand, the colour
+conversion's primary justification — serving a second brand — is weaker than
+when this document was written; what remains is dark-mode maintainability (64
+hand-written twins that can drift) and alpha at call sites.
 
 > The authoring API is a separate question and remains open. An ambient context
 > is invisible at the call site, which is a real objection to using it as the
