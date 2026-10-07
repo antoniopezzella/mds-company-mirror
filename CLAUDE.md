@@ -817,33 +817,33 @@ function Header() {
 
 ### Image Component with Fallback
 
+**Use the shipped component — don't hand-roll one.** This section showed a
+hand-written `onError` snippet until 2026-10-07, with the prop named
+`fallback` and pointing at `src/components/ImageWithFallback/`. That path is
+deleted (the MUI component went with the shadcn migration) and the prop has
+always been **`fallbackSrc`** — so the snippet produced code that did not
+compile against the real component.
+
 ```typescript
-// src/components/ImageWithFallback/ImageWithFallback.tsx
-import React, { useState } from 'react';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 
-interface ImageWithFallbackProps {
-  src: string;
-  fallback: string;
-  alt: string;
-}
-
-const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ 
-  src, 
-  fallback, 
-  alt 
-}) => {
-  const [imgSrc, setImgSrc] = useState(src);
-  
-  return (
-    <img
-      src={imgSrc}
-      alt={alt}
-      onError={() => setImgSrc(fallback)}
-      loading="lazy"
-    />
-  );
-};
+// Extends React.ImgHTMLAttributes, so src/alt/loading/etc. pass straight through.
+<ImageWithFallback
+  src="/images/journey-aviation.jpg"
+  alt="Aviation journey"
+  fallbackSrc="/images/placeholder.jpg"  // tried once if `src` errors
+  aspectRatio="16:9"                     // Figma `Format`; omit to fill the container
+  showSkeleton                           // default true — Skeleton while loading
+/>
 ```
+
+It owns a three-state machine (loading → loaded | error) and, when both `src`
+and `fallbackSrc` fail, replaces the `<img>` with an "Image unavailable"
+placeholder. `src/components/ui/image-with-fallback.test.tsx` covers that
+chain — read it before changing the behaviour.
+
+One gotcha: `className` lands on the **wrapper div**, not the `<img>`. Pass
+per-image styling via `style`, which is spread onto the img itself.
 
 ### Storybook Static Assets
 

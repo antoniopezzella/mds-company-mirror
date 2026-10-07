@@ -112,24 +112,34 @@ import DSAlert from '../../components/Alert/Alert';
 ---
 
 ### 5. Modal Component
-**Location**: `src/components/Modal/Modal.tsx`
+**Location**: `src/components/ui/dialog.tsx`
+
+> Moved 2026-10-07. `src/components/Modal/Modal.tsx` was deleted in the
+> shadcn migration; `ui/dialog` exports an API-compatible `Modal` alongside
+> the composable Radix `Dialog` parts. The MUI-only `hasScrollbar` prop is
+> gone — it mapped to Dialog's `scroll="paper"|"body"`, and `ui/dialog`
+> already scrolls its body via `max-h-[85vh] overflow-y-auto`.
 
 **Best Use Case**: Contact forms, video overlays, detailed content
 
 **Implementation**:
 ```tsx
-import DSModal from '../../components/Modal/Modal';
+import Modal from '../../components/ui/dialog';
 
 const [open, setOpen] = useState(false);
 
-<DSModal
+<Modal
   open={open}
   onClose={() => setOpen(false)}
   title="Contact Our Experts"
 >
   <p>Modal content goes here</p>
-</DSModal>
+</Modal>
 ```
+
+`size` accepts `'sm' | 'md' | 'lg' | 'fullscreen'`, and still accepts the
+capitalised Figma values (`'Small'`, `'Medium'`, `'Large'`, `'FullScreen'`)
+for Code Connect parity.
 
 ---
 
@@ -391,18 +401,18 @@ import DSAlert from '../../components/Alert/Alert';
 
 ### 3. Modal with Form Pattern
 ```tsx
-import DSModal from '../../components/Modal/Modal';
+import Modal from '../../components/ui/dialog';
 import DSTextField from '../../components/TextField/TextField';
 import DSButton from '../../components/Button/Button';
 
-<DSModal open={open} onClose={handleClose} title="Contact Us">
+<Modal open={open} onClose={handleClose} title="Contact Us">
   <DSTextField label="Name" />
   <DSTextField label="Email" type="email" />
   <DSTextField label="Message" multiline rows={4} />
   <DSButton variant="primary" onClick={handleSubmit}>
     Send
   </DSButton>
-</DSModal>
+</Modal>
 ```
 
 ---
