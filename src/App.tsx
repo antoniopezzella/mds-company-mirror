@@ -619,7 +619,7 @@ function App() {
             open={modalOpen}
             onClose={() => setModalOpen(false)}
             title="New Action"
-            size="Small"
+            size="sm"
             hasHeader
             hasFooter
             footer={
