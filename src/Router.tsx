@@ -7,17 +7,8 @@ import { usePageTracking } from './hooks/usePageTracking';
 // recharts, so importing it eagerly put both in the entry chunk and made
 // every other route wait on them before first paint.
 const App = lazy(() => import('./App'));
-const TestPage = lazy(() => import('./pages/TestPage'));
-const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage'));
-const SimpleApp = lazy(() => import('./pages/SimpleApp'));
 const MarshNewCharpterBeginsPage = lazy(() => import('./pages/marsh-new-charpter-begins/Page'));
-const ComponentShowcase = lazy(() => import('./pages/ComponentShowcase'));
 const GridShowcase = lazy(() => import('./pages/GridShowcase'));
-const GridTestPage = lazy(() => import('./pages/GridTestPage'));
-const AnimatedGridDemo = lazy(() => import('./pages/AnimatedGridDemo'));
-const SimpleEnhancedGridDemo = lazy(() => import('./pages/SimpleEnhancedGridDemo'));
-const DebugPage = lazy(() => import('./pages/DebugPage'));
-const ParallaxDemo = lazy(() => import('./pages/ParallaxDemo'));
 const MarshCorporate = lazy(() => import('./pages/MarshCorporate'));
 const MarshCorporateNew = lazy(() => import('./pages/MarshCorporateNew'));
 const CorporateLandingPage = lazy(() => import('./pages/CorporateLandingPage/index').then(m => ({ default: m.CorporateLandingPage })));
@@ -34,10 +25,8 @@ const RESGAssetListPage = lazy(() => import('./pages/RESGAssetListPage'));
 const RESGClientSummary = lazy(() => import('./projects/resg').then(m => ({ default: m.ClientSummaryDefault })));
 const Portfolio = lazy(() => import('./pages/Portfolio/Portfolio'));
 const ClinicalTrials = lazy(() => import('./projects/ClinicalTrials').then(m => ({ default: m.ClinicalTrialsPage })));
-const TreeTestingToolPage = lazy(() => import('./pages/TreeTestingTool/TreeTestingToolPage'));
 const HeroBannerTest = lazy(() => import('./pages/HeroBannerTest'));
 const HeroBannerGridTest = lazy(() => import('./pages/HeroBannerGridTest'));
-const CardTestPage = lazy(() => import('./pages/CardTestPage'));
 const ColorSandbox = lazy(() => import('./pages/ColorSandbox'));
 const Marsh1DER = lazy(() => import('./projects/Marsh1DER').then(m => ({ default: m.Marsh1DERPage })));
 const CorporateHome = lazy(() => import('./projects/Marsh1DER/corporate/home').then(m => ({ default: m.CorporateHomePage })));
@@ -73,16 +62,7 @@ const Router: React.FC = () => (
         <Routes>
           <Route path="/" element={<App />} />
         <Route path="/app" element={<App />} />
-        <Route path="/simple-app" element={<SimpleApp />} />
-        <Route path="/test" element={<TestPage />} />
-        <Route path="/diagnostic" element={<DiagnosticPage />} />
-        <Route path="/components" element={<ComponentShowcase />} />
         <Route path="/grid" element={<GridShowcase />} />
-        <Route path="/grid-test" element={<GridTestPage />} />
-        <Route path="/grid-demo" element={<AnimatedGridDemo />} />
-        <Route path="/enhanced-grid" element={<SimpleEnhancedGridDemo />} />
-        <Route path="/debug" element={<DebugPage />} />
-        <Route path="/parallax-demo" element={<ParallaxDemo />} />
         <Route path="/marsh-new-charpter-begins" element={<MarshNewCharpterBeginsPage />} />
         <Route path="/marsh-corporate" element={<MarshCorporate />} />
         <Route path="/marsh-corporate-new" element={<MarshCorporateNew />} />
@@ -100,10 +80,8 @@ const Router: React.FC = () => (
         <Route path="/resg/client-summary" element={<RESGClientSummary />} />
         <Route path="/ClinicalTrials" element={<ClinicalTrials />} />
         <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/tree-testing" element={<TreeTestingToolPage />} />
         <Route path="/hero-banner-test" element={<HeroBannerTest />} />
         <Route path="/hero-banner-grid-test" element={<HeroBannerGridTest />} />
-        <Route path="/card-test" element={<CardTestPage />} />
         <Route path="/color-sandbox" element={<ColorSandbox />} />
         <Route path="/marsh-1der" element={<Marsh1DER />} />
         <Route path="/marsh-1der/corporate" element={<CorporateHome />} />
