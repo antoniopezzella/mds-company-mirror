@@ -54,6 +54,12 @@ export default {
         // Security work that isn't a dependency bump: secret handling, CSP,
         // sanitization, headers.
         'security',
+        // `docs/tasks/` — a scoped, in-progress piece of work (a backlog, an
+        // assessment, a proposal), as distinct from `docs` for reference
+        // documentation. Added 2026-10-08 after five commits had already used
+        // it and warned, the same way `package`/`deps`/`repo` were added once
+        // they turned out to be real areas of this repo.
+        'tasks',
       ],
     ],
   },
