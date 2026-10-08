@@ -26,13 +26,55 @@ the exception, not the norm. `serif` also says what you get, where the earlier
 <h1 className="text-serif-h1">A new chapter</h1>       {/* marketing */}
 ```
 
-Both sets run `h1`–`h6`, and the serif set adds `text-serif-hero` for a
-full-bleed marketing headline. The serif sizes are fluid (`clamp()`, 360–1536px);
-the sans sizes are fixed Tailwind steps, because a dashboard should not reflow
-its heading sizes as a window resizes.
-
 These ship in the published package, so a consumer can write them in their own
 code — verified in `dist-pkg/styles.css` rather than assumed.
+
+## `h1`–`h6`, level by level
+
+**The two scales do not align level-for-level, and they are not meant to.**
+
+| level | product — `text-h*` | marketing — `text-serif-h*` |
+|---|---|---|
+| `hero` | — | **40 → 72px**, Marsh Serif 400 |
+| `h1` | **30px**, Noto Sans **700** | **28 → 36px**, Marsh Serif **400** |
+| `h2` | **24px**, Noto Sans **700** | **24 → 28px**, Marsh Serif **400** |
+| `h3` | **20px**, Noto Sans **700** | **20 → 24px**, Marsh Serif **400** |
+| `h4` | **18px**, Noto Sans **600** | **18 → 20px**, Marsh Serif **400** |
+| `h5` | **16px**, Noto Sans **600** | **16 → 18px**, Marsh Serif **400** |
+| `h6` | **14px**, Noto Sans **600** | **14 → 16px**, Marsh Serif **400** |
+
+Three differences, each deliberate:
+
+**Weight.** Product headings are **700** at `h1`–`h3` and **600** at `h4`–`h6`;
+marketing is **400** throughout. A serif at a heavy weight is a combination
+nobody designed — `font-serif-expressive font-bold` is explicitly in the
+Don't list below. Product headings carry hierarchy by weight because they sit
+in dense, scannable UI; marketing carries it by size and whitespace.
+
+**Fluid vs fixed.** Marketing sizes are `clamp()` between a 360px and a 1536px
+viewport, so a hero headline scales with the page. Product sizes are **fixed**
+steps: a dashboard heading that reflows as you resize a window makes a data
+table feel unstable, and the viewport is usually a desktop anyway.
+
+Both are `rem`-based, so both respect the browser font-size setting
+(WCAG 1.4.4). At a 20px browser default every size above grows proportionally —
+that is the point, not a bug.
+
+**Where the product scale comes from.** `text-h1`…`text-h6` are the stock
+Tailwind steps — `text-3xl`, `text-2xl`, `text-xl`, `text-lg`, `text-base`,
+`text-sm` — with the face and weight attached. That is intentional: dashboard
+pages already wrote exactly those by hand (`text-2xl font-bold` in three
+places), so the classes change nothing visually and only stop the face and
+weight being re-chosen each time. `text-h1` at 30px is `text-3xl`, which is why
+it does not match the marketing `h1`'s 28–36px range.
+
+`text-serif-hero` has no product counterpart on purpose. A full-bleed 72px
+headline is a marketing device; a dashboard that needs one is probably a
+marketing page.
+
+**Pick by expression, not by element.** `PageHeading` renders an `<h1>` at
+`text-2xl`, not `text-h1` — because that is what dashboard page titles already
+render at. The element is semantics; the class is appearance.
 
 ## Four dashboard roles, and only four
 
@@ -63,8 +105,6 @@ designers can mirror the same names as Figma text styles.
   `text-2xl` is fine and common on dashboards.
 - Line length: target 60–70ch for reading views.
 - Line height: body 1.55–1.6; headings 1.1–1.45.
-- Sizes are `rem`-based, so they respect the browser font-size setting
-  (WCAG 1.4.4 Resize Text). A `px` scale ignores it.
 - Tables: use `text-data-numeric` or add `tabular-nums`, so digits align.
 
 ## Legacy — being retired
