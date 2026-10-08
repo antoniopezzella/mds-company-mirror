@@ -321,7 +321,13 @@ function measure(rev) {
   // different face in the app than in the package. dist-pkg/ is not committed,
   // so the committed package entry is the only thing measurable at a rev.
   const pkgCss = read(rev, 'src/styles.package.css') ?? '';
-  const expressionInPackage = /mds-dashboard|mds-marketing|data-typography-context/.test(pkgCss) ? 1 : 0;
+  // Strip CSS comments first. A bare regex over the file matched the scope
+  // NAMED IN A COMMENT, which scopes nothing — found 2026-10-08 by
+  // check-metric-selftests.js, whose unchanged-probe put `mds-dashboard` in a
+  // comment and watched this metric jump 0 -> 100. Exactly the class of bug
+  // the harness exists for, in the metric that is worth the most weight.
+  const pkgCssCode = pkgCss.replace(/\/\*[\s\S]*?\*\//g, ' ');
+  const expressionInPackage = /mds-dashboard|mds-marketing|data-typography-context/.test(pkgCssCode) ? 1 : 0;
 
   // AGENTIC — Code Connect coverage. Figma's own eval names coverage, not
   // component count, as what drives the measured token and time savings.
