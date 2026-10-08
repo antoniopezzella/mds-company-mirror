@@ -1,19 +1,38 @@
-# Readiness backlog — the nine metric-bound tasks
+# Readiness backlog — the metric-bound tasks
 
-**Status:** Open · **Raised:** 2026-10-08 · **Measured at:** `62347d3`
-**Rubric:** `npm run ds:score` v3 · **Machine-readable:** [`readiness-backlog.json`](./readiness-backlog.json)
+**Status:** Open · **Raised:** 2026-10-08 · **Measured at:** `04b0bfa`
+**Rubric:** `npm run ds:score` v4 · **Machine-readable:** [`readiness-backlog.json`](./readiness-backlog.json)
+
+> **First loop run, 2026-10-08 — what it cost and what it bought.**
+> `ds-backlog-pilot` dispatched DEV-1 to `ds-metric-closer`, which moved
+> `prop_docs` 44 → 80 and satisfied its instructions exactly. 14 of the 45
+> modules it produced were **hollow** — a docblock inside an empty interface
+> body, documenting nothing react-docgen can surface. The defect was the
+> metric, not the agent: v3's `prop_docs` tested for `/**` anywhere in a Props
+> declaration. Fixed in v4, which requires the docblock to precede an actual
+> prop; 31 modules applied (`4e1d87a`, 42 → 65), 14 deferred to **DEV-4**.
+>
+> Two by-products worth more than the metric move: the run surfaced a live
+> rendering bug — `AttachmentAction` shipped a **completely empty button**,
+> fixed in `04b0bfa` — and it exposed that the pilot's ranking rule was
+> self-contradictory, so DEV-1 was the 5th-best pick, not the first.
+>
+> The loop works. What it mostly proves is that **a metric an agent can
+> satisfy without moving the thing it names will be satisfied that way**,
+> within hours. Hence **GOV-2**.
 
 ---
 
-## Why these nine and not others
+## Why these eleven and not others
 
-Every task here **moves a specific `ds:score` v3 metric**, so "done" is a
+Every task here **moves a specific `ds:score` v4 metric**, so "done" is a
 number that changed rather than a judgement someone made. That is the whole
 point: this repo's recurring failure is work that reports green while the
 thing it claims to fix is still broken.
 
-Rubric v3 scores four goals. Two of them were invisible to v2 and score
-badly now that they are measured:
+Rubric v4 scores four goals. Two were invisible to v2 and score badly now
+that they are measured. `prop_docs` is shown at its honest v4 value — v3
+reported it 3 points higher by counting docblocks attached to no prop:
 
 | Goal | Score | Weight |
 |---|---|---|
@@ -43,8 +62,9 @@ and dispatches it.
 **Verification is the contract.** A task is done when the metric moved,
 measured independently — never because an agent said so. If the metric did
 not move, the task is not done; check whether the *metric* is measuring the
-right thing before assuming the work failed. (That is not hypothetical: the
-`props` gate probe was wrong, not the gate.)
+right thing before assuming the work failed. (Neither is hypothetical: the `props`
+gate probe was wrong rather than the gate, and `prop_docs` itself was wrong
+rather than the work it measured.)
 
 > **`agents/design-system-agent` is a different thing and does not drive
 > this.** It does exactly one job — turn one Figma node into an MDS component
@@ -204,7 +224,7 @@ and reports the real ratio.
 ## Development readiness — 62/100
 
 ### DEV-1 · Document props on the most-used components
-`prop_docs` · **52/118 → 90/118** · M · P1
+`prop_docs` · **77/118 → 90/118** · M · P1
 
 A developer who cannot read the API reads the source. That works inside this
 building and nowhere else.
@@ -253,6 +273,51 @@ no longer exists and still pass.
 **Acceptance** — `npx tsc -b` covers all test files and exits 0, confirmed via
 `--listFiles` rather than assumed. (A `tsc` run that silently excludes them
 exits 0 too — that is the trap.)
+
+### DEV-4 · Rework the 14 hollow prop docblocks
+`prop_docs` · **65 → 76** · S · P2
+
+Left out of `4e1d87a` because the docblock sat in an empty interface body:
+
+```ts
+export interface SpinnerProps extends React.ComponentProps<"svg"> {
+  /** Any standard SVG prop passes straight through... */
+}
+```
+
+**Requirements**
+- The prose is useful; it is in the wrong place. Move it **above** the
+  declaration, where react-docgen reads it as the *component* description
+  rather than a prop description.
+- `progress`, `select` and `slider` were already hollow before any agent
+  touched them — pre-existing, not introduced.
+- A named exported Props type is worth keeping even when every prop is
+  inherited. The defect is where the comment sits, not that the interface
+  exists.
+
+**Acceptance** — `prop_docs` ≥ 76, and no `src/components/ui` module has a
+Props interface whose only body content is a comment.
+
+### GOV-2 · Self-test the ds:score metrics, not just the gates
+no metric yet · M · P1
+
+Gates have `check-gate-selftests.js`. The **14 ds:score metrics have nothing
+equivalent** — and `prop_docs` proved, within hours of shipping, that a metric
+can be satisfied without moving the thing it names.
+
+**Requirements**
+- **Add the metric first** if this is to be tracked; like GLOBAL-3 and DEV-3
+  it has none today.
+- A probe must assert **both directions**: a change that should move the
+  metric does, and a change that should *not* move it does not. `prop_docs` v4
+  was verified exactly this way — a hollow docblock left the numerator at 49,
+  a real one took it to 50.
+- **Binary metrics first.** A typo in `expression_reach` or
+  `contracts_emitted` reads as a permanent 0, indistinguishable from the real
+  state.
+
+**Acceptance** — a harness mutates each metric's input in both directions and
+fails if a metric does not discriminate.
 
 ---
 

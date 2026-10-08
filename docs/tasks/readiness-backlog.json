@@ -1,10 +1,10 @@
 {
   "note": "Metric-bound readiness backlog. Each task names a ds:score v3 metric, so completion is a number that moved rather than a self-report. Companion prose: readiness-backlog.md",
-  "method": "current values measured at 62347d3 by `npm run ds:score --json` on 2026-10-08. `current` is the metric's 0-100 SCORE, not its raw count; `raw` carries the underlying figures. Re-measure rather than trusting these.",
+  "method": "current values measured at 04b0bfa by `npm run ds:score --json` on 2026-10-08, rubric v4. `current` is the metric's 0-100 SCORE, not its raw count; `raw` carries the underlying figures. v3 and v4 are NOT comparable: v3's prop_docs counted docblocks attached to no prop. Re-measure rather than trusting these.",
   "caveat": "Four propose-only Claude Code subagents work this backlog: ds-backlog-pilot (triage + dispatch), ds-metric-closer (DEV-1/DEV-2/GLOBAL-2), ds-gate-author (AGENT-3 + new metrics), ds-code-connect-mapper (AGENT-1). Each applies, measures, reverts, and leaves a patch in .agent-proposals/ for a human to git apply. None commits. GLOBAL-1, GLOBAL-3 and DEV-3 are fenced off from all of them by explicit human decision. agents/design-system-agent is unrelated: it turns one Figma node into a component and has never been run end-to-end.",
   "verify": "npm run ds:score --json | then read .parts[] for the named metric id",
-  "rubricVersion": 3,
-  "measuredAt": "2253bf6",
+  "rubricVersion": 4,
+  "measuredAt": "04b0bfa",
   "goals": {
     "dev": {
       "label": "Development readiness",
@@ -138,10 +138,10 @@
       "title": "Document props on the most-used components",
       "goal": "dev",
       "metric": "prop_docs",
-      "current": 44,
+      "current": 65,
       "target": 76,
       "raw": {
-        "withPropDocs": 52,
+        "withPropDocs": 77,
         "uiModules": 118
       },
       "size": "M",
@@ -151,9 +151,11 @@
       "requirements": [
         "A JSDoc block inside the exported *Props declaration is what makes Storybook Controls show a description",
         "Prioritise by usage, not file order - avatar is 19 of 19 props undocumented",
-        "Document the three API traps: Button iconOnly silently discards children; Input has no adornment prop; Tooltip takes title, not content"
+        "Document the three API traps: Button iconOnly silently discards children; Input has no adornment prop; Tooltip takes title, not content",
+        "A docblock must sit IMMEDIATELY BEFORE a prop line. An empty interface body containing only a comment does not count and never did -- react-docgen builds Controls descriptions per prop. v3's metric accepted it, which is how 14 hollow modules were produced; v4 does not."
       ],
-      "acceptance": "ds:score prop_docs >= 76"
+      "acceptance": "ds:score prop_docs >= 76",
+      "history": "31 of 45 modules from the first ds-metric-closer patch applied in 4e1d87a (42 -> 65). The other 14 were hollow."
     },
     {
       "id": "DEV-2",
@@ -249,6 +251,72 @@
         "Add a dev-goal metric so it cannot silently regress"
       ],
       "acceptance": "npx tsc -b covers all test files and exits 0, CONFIRMED with --listFiles rather than assumed - a run that silently excludes them also exits 0"
+    },
+    {
+      "id": "DEV-4",
+      "title": "Rework the 14 hollow prop docblocks",
+      "goal": "dev",
+      "metric": "prop_docs",
+      "current": 65,
+      "target": 76,
+      "raw": {
+        "hollowModules": [
+          "calendar",
+          "command",
+          "empty",
+          "field",
+          "label",
+          "popover",
+          "questionnaire",
+          "scroll-area",
+          "sheet",
+          "spinner",
+          "table-primitives",
+          "toaster",
+          "toggle-group",
+          "toggle"
+        ],
+        "alsoHollowBeforeAnyPatch": [
+          "progress",
+          "select",
+          "slider"
+        ]
+      },
+      "size": "S",
+      "priority": "P2",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "These 14 were left out of 4e1d87a because their docblock sat in an empty interface body, documenting nothing react-docgen can surface.",
+        "The prose is genuinely useful and should return ABOVE the declaration, where react-docgen reads it as the COMPONENT description rather than a prop description.",
+        "progress, select and slider were already hollow before any agent touched them -- pre-existing, not introduced.",
+        "A named exported Props type is still worth keeping even when every prop is inherited; the defect is where the comment sits, not that the interface exists."
+      ],
+      "acceptance": "ds:score prop_docs >= 76, and no src/components/ui module has a Props interface whose only body content is a comment"
+    },
+    {
+      "id": "GOV-2",
+      "title": "Self-test the ds:score metrics, not just the gates",
+      "goal": "gov",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "gatesWithSelfTests": "6/15 via check-gate-selftests.js",
+        "metricsWithSelfTests": 0,
+        "metricsTotal": 14
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "ADD THE METRIC FIRST if this is to be tracked -- it currently has none, like GLOBAL-3 and DEV-3.",
+        "Gates have check-gate-selftests.js; the 14 ds:score metrics have nothing equivalent, and prop_docs proved within hours of shipping that a metric can be satisfied without moving the thing it names.",
+        "A metric probe must assert BOTH directions: a change that should move it does, and a change that should NOT move it does not. prop_docs v4 was verified exactly this way -- a hollow docblock left the numerator at 49, a real one took it to 50.",
+        "Binary metrics are the priority: a typo in expression_reach or contracts_emitted reads as a permanent 0, indistinguishable from the real state."
+      ],
+      "acceptance": "a harness exists that mutates each metric's input in both directions and fails if a metric does not discriminate"
     }
   ]
 }
