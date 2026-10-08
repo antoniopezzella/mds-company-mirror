@@ -266,7 +266,7 @@ const METRICS = [
     flat: () =>
       prepend(
         'src/styles.package.css',
-        '/* a comment naming text-expressive-h1 and text-productive-h1 and component-utilities.css */\n'
+        '/* a comment naming text-serif-h1 and text-h1 and component-utilities.css */\n'
       ),
     flatWhy: 'expressions named only in a comment, with no import, reach no consumer',
   },

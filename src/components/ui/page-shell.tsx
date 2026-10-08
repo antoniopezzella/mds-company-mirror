@@ -177,7 +177,7 @@ export const PageHeading = React.forwardRef<HTMLDivElement, PageHeadingProps>(
           size here would re-render every page built on PageShell.
         */}
         <h1
-          className="font-productive text-2xl font-bold"
+          className="font-sans-productive text-2xl font-bold"
           style={{ color: getRoleColor('text.primary') }}
         >
           {title}
