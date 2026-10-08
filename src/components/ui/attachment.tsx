@@ -163,13 +163,18 @@ function AttachmentActions({
 
 export interface AttachmentActionProps extends React.ComponentProps<typeof Button> {
   /**
-   * `iconOnly` defaults to `true` here (this is a single-icon action —
-   * remove/retry/download). `Button` with `iconOnly` renders
-   * `icon ?? startIcon ?? endIcon` and discards `children` entirely, so
-   * an icon passed as a child — the pattern this file's own stories
-   * use — renders nothing; prefer `icon={<XIcon />}` over
-   * `<AttachmentAction><XIcon /></AttachmentAction>`.
+   * The icon. Either form works: `icon={<XIcon />}` or
+   * `<AttachmentAction><XIcon /></AttachmentAction>` — children are promoted
+   * to `icon` when none is given, because `Button` with `iconOnly` renders
+   * only `icon ?? startIcon ?? endIcon` and discards children.
    */
+  icon?: React.ComponentProps<typeof Button>["icon"]
+  /**
+   * Icon-only by default — these are single-glyph actions (remove, retry,
+   * download). Set `false` to render a labelled button, in which case
+   * `children` is used as the label as normal.
+   */
+  iconOnly?: boolean
 }
 
 function AttachmentAction({
@@ -177,17 +182,41 @@ function AttachmentAction({
   variant = "ghost",
   size = "sm",
   iconOnly = true,
+  icon,
+  startIcon,
+  endIcon,
+  children,
   ...props
 }: AttachmentActionProps) {
+  // Promote children to `icon`.
+  //
+  // `Button` renders `{iconOnly ? (icon ?? startIcon ?? endIcon) : children}`,
+  // so with `iconOnly` defaulting to true here, the natural usage
+  // `<AttachmentAction><XIcon /></AttachmentAction>` rendered a COMPLETELY
+  // EMPTY button — proven by render: `button.innerHTML === ""`. This file's
+  // own stories (attachment.stories.tsx) use that form, so the shipped
+  // example was invisible. The axe gate could not catch it either: the story
+  // passes `aria-label`, so the button has an accessible name and no visible
+  // content, which `button-name` is satisfied by.
+  //
+  // Children win nothing here — if an explicit icon is passed it is used, so
+  // this only rescues the case that was previously broken.
+  const resolvedIcon = icon ?? startIcon ?? endIcon ?? (iconOnly ? children : undefined)
+
   return (
     <Button
       data-slot="attachment-action"
       variant={variant}
       size={size}
       iconOnly={iconOnly}
+      icon={resolvedIcon}
+      startIcon={startIcon}
+      endIcon={endIcon}
       className={className}
       {...props}
-    />
+    >
+      {iconOnly ? undefined : children}
+    </Button>
   )
 }
 
