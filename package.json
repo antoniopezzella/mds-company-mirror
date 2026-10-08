@@ -2,7 +2,7 @@
   "name": "@antoniopezzella/marsh-design-system",
   "version": "0.8.0",
   "type": "module",
-  "description": "Marsh Design System — React component library (shadcn/Radix + Tailwind) with governed design tokens. Published under a personal GitHub account as an explicit stopgap pending move to a Marsh/MMC GitHub org — see docs/SHADCN_MIGRATION_STATUS.md.",
+  "description": "Marsh Design System \u2014 React component library (shadcn/Radix + Tailwind) with governed design tokens. Published under a personal GitHub account as an explicit stopgap pending move to a Marsh/MMC GitHub org \u2014 see docs/SHADCN_MIGRATION_STATUS.md.",
   "repository": {
     "type": "git",
     "url": "https://github.com/antoniopezzella/marsh-design-system.git"
@@ -85,6 +85,10 @@
     "roles:check:strict": "node scripts/check-role-usage.js --strict",
     "roles:check:json": "node scripts/check-role-usage.js --json",
     "zindex:check": "node scripts/check-z-index.js",
+    "visual:build": "storybook build -o dist/storybook",
+    "visual:capture": "node scripts/visual-baseline.js capture visual-baseline/light",
+    "visual:capture:dark": "node scripts/visual-baseline.js capture visual-baseline/dark --dark",
+    "visual:compare": "node scripts/visual-baseline.js compare",
     "gates:selftest": "node scripts/check-gate-selftests.js",
     "metrics:selftest": "node scripts/check-metric-selftests.js",
     "radius:check": "node scripts/check-radius.js",
