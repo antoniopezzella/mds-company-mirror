@@ -164,8 +164,20 @@ export const PageHeading = React.forwardRef<HTMLDivElement, PageHeadingProps>(
       {...props}
     >
       <Stack gap={1} className="min-w-0">
+        {/*
+          Explicit face instead of reading `--typo-h1-font-family` from the
+          ambient `.mds-dashboard` scope. The variable resolved to Marsh Serif
+          whenever that class was missing — including inside a Radix portal,
+          which does not inherit it — so the fallback chain was load-bearing.
+          `font-productive` + the stock step says the same thing and cannot
+          silently resolve to the other expression.
+
+          text-2xl rather than `text-productive-h1` (text-3xl) on purpose: this
+          is what dashboard page titles already render at, and changing the
+          size here would re-render every page built on PageShell.
+        */}
         <h1
-          className="font-[family-name:var(--typo-h1-font-family,_Noto_Sans,_sans-serif)] text-2xl font-bold"
+          className="font-productive text-2xl font-bold"
           style={{ color: getRoleColor('text.primary') }}
         >
           {title}
