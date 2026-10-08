@@ -347,7 +347,29 @@ if (previousTokensJson) {
 // (https://www.designtokens.org/tr/drafts/format/#file-extension) — `dist/tokens.json`
 // already exists as the legacy flat-key export, hence `tokens.tokens.json`
 // (not a typo) rather than a name that collides with it.
-writeFileSync(path.join(root, 'dist', 'tokens.tokens.json'), JSON.stringify(dtcgMerged, null, 2));
+//
+// Stamp the version onto the DTCG export too. The legacy `dist/tokens.json`
+// carries `meta.version`, but this file carried none — so a tool consuming the
+// standards export could not tell which release it read. Added 2026-10-08.
+//
+// `$`-prefixed keys are reserved by the DTCG spec for group/file metadata
+// (https://www.designtokens.org/tr/drafts/format/#description) and are NOT
+// treated as tokens, so `$description` / `$extensions` keep the file valid.
+// The `meta` object matches the legacy artifact's for symmetry; `meta.generated`
+// is omitted deliberately so this export doesn't churn on every build the way
+// the legacy one is specifically guarded against above.
+const dtcgWithMeta = {
+  $description: `Marsh Design System tokens — W3C DTCG format — v${meta.version}`,
+  $extensions: {
+    'com.marsh.mds': {
+      version: meta.version,
+      source: meta.source,
+      deprecated: meta.deprecated,
+    },
+  },
+  ...dtcgMerged,
+};
+writeFileSync(path.join(root, 'dist', 'tokens.tokens.json'), JSON.stringify(dtcgWithMeta, null, 2));
 
 // ─── The role tier, on its own, for stylesheets to import ──────────────────
 // `dist/theme.css` carries all three tiers and is the PORTABLE export. This

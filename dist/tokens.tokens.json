@@ -1,4 +1,38 @@
 {
+  "$description": "Marsh Design System tokens — W3C DTCG format — v0.8.0",
+  "$extensions": {
+    "com.marsh.mds": {
+      "version": "0.8.0",
+      "source": [
+        "src/tokens.ts",
+        "src/spacing.ts",
+        "src/shadows.ts"
+      ],
+      "deprecated": {
+        "statusWarning": {
+          "replaceWith": [
+            "statusWarningBg",
+            "statusWarningText"
+          ],
+          "rationale": "Use background + text pair for accessible warning states."
+        },
+        "statusSuccess": {
+          "replaceWith": [
+            "statusSuccessBg",
+            "statusSuccessText"
+          ],
+          "rationale": "Adopt background/text pattern for consistency."
+        },
+        "statusDanger": {
+          "replaceWith": [
+            "statusDangerBg",
+            "statusDangerText"
+          ],
+          "rationale": "Adopt background/text pattern for consistency."
+        }
+      }
+    }
+  },
   "color": {
     "blue50": {
       "$type": "color",
