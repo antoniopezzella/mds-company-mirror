@@ -86,6 +86,17 @@ const GATES = [
     content: `import { tokens } from '../../tokens';\nexport const GateProbe = () => <div style={{ color: tokens.blue1000 }} />;\n`,
   },
   {
+    name: 'roles-hex',
+    script: 'roles:check:strict',
+    probe: 'src/components/ui/__gate_probe_roles_hex.tsx',
+    // A separate rule inside the same gate, so it gets its own probe: hex is
+    // a hard failure in src/components/ui/ SOURCE and advisory everywhere
+    // else. The path matters more than the content here — the same literal in
+    // a `.stories.tsx` or under src/components/[A-Z]* must NOT fail, and a
+    // probe in the wrong place would quietly certify nothing.
+    content: `export const GateProbe = () => <div style={{ color: '#ff0000' }} />;\n`,
+  },
+  {
     name: 'composition',
     script: 'composition:check:strict',
     probe: 'src/components/ui/__gate_probe_composition.tsx',

@@ -36,6 +36,30 @@ const componentFiles = fs.existsSync(componentsDir) ? listFiles(componentsDir) :
 const violations = [];
 const hardcoded = [];
 
+/**
+ * Where a hex literal is a hard failure rather than a note.
+ *
+ * Hex was informational everywhere until 2026-10-08, because much of it is
+ * documented debt in the legacy MUI half with no role to move to yet. But
+ * "never hardcode a colour" being advisory in the CURRENT component set meant
+ * the rule everyone is told to follow had no teeth exactly where the role
+ * layer is complete. Peers enforce this: SLDS Linter's
+ * `no-hardcoded-values-slds2`, Salt's `correct-theme-token-usage`.
+ *
+ * Scope is `src/components/ui/` component source only, and it cost nothing to
+ * turn on: that set had **0** hex literals when this was added, so the gate
+ * locks in a clean state rather than demanding a cleanup. It ratchets —
+ * new debt cannot enter the current set, and the 77 legacy + 36
+ * story/test literals stay advisory.
+ *
+ * Stories and tests are excluded on purpose. They legitimately name colours:
+ * swatch demos, and assertions that a component resolved to an expected
+ * value. Forcing roles there would make the tests tautological — asserting
+ * getRoleColor() equals getRoleColor().
+ */
+const isEnforcedHexPath = (rel) =>
+  /^src\/components\/ui\//.test(rel) && !/\.(stories|test)\.tsx?$/.test(rel);
+
 // Good-enough for this lint heuristic — strips comments so prose that
 // merely *mentions* a token/role name (e.g. "see semantic-tokens.ts") isn't
 // flagged as a real reference. A word-boundary-only check isn't enough:
@@ -112,7 +136,7 @@ for (const file of componentFiles) {
     const allowed = /roles-allow-hex/.test(line) || /roles-allow-hex/.test(raw[i - 1] ?? '');
     if (allowed) return;
     const hits = code.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g);
-    if (hits) for (const h of hits) hardcoded.push({ file: rel, line: i + 1, match: h });
+    if (hits) for (const h of hits) hardcoded.push({ file: rel, line: i + 1, match: h, enforced: isEnforcedHexPath(rel) });
   });
 }
 
@@ -231,12 +255,32 @@ if (asJson) {
   }
 
   if (hardcoded.length) {
-    const byFile = hardcoded.reduce((a, h) => ((a[h.file] = (a[h.file] || 0) + 1), a), {});
-    console.log(`\nHardcoded colour literals: ${hardcoded.length} in ${Object.keys(byFile).length} file(s) (informational — not a gate)`);
-    for (const [f, n] of Object.entries(byFile).sort((a, b) => b[1] - a[1])) {
-      console.log(`  • ${f}: ${n}`);
+    const enforcedHits = hardcoded.filter((h) => h.enforced);
+    const advisoryHits = hardcoded.filter((h) => !h.enforced);
+
+    if (enforcedHits.length) {
+      console.log(
+        `\nHardcoded colour literals in src/components/ui/ source: ${enforcedHits.length} — ${strict ? 'FAIL' : 'WARN'}`
+      );
+      for (const h of enforcedHits) {
+        console.log(`  • ${h.file}:${h.line}  ${h.match}`);
+      }
+      console.log('  The role layer is complete for this set, so there is a role for this.');
+      console.log('  Use getRoleColor(\'role.name\') or var(--role-*). If the literal is genuinely');
+      console.log('  right (a brand asset, a third-party constant), annotate the line with');
+      console.log('  `roles-allow-hex` and say why.');
     }
-    console.log('  Prefer a role via getRoleColor()/var(--role-*); annotate deliberate ones with `roles-allow-hex`.');
+
+    if (advisoryHits.length) {
+      const byFile = advisoryHits.reduce((a, h) => ((a[h.file] = (a[h.file] || 0) + 1), a), {});
+      console.log(
+        `\nHardcoded colour literals elsewhere: ${advisoryHits.length} in ${Object.keys(byFile).length} file(s) (informational — legacy components, stories and tests)`
+      );
+      for (const [f, n] of Object.entries(byFile).sort((a, b) => b[1] - a[1])) {
+        console.log(`  • ${f}: ${n}`);
+      }
+      console.log('  Prefer a role via getRoleColor()/var(--role-*); annotate deliberate ones with `roles-allow-hex`.');
+    }
   }
 }
 
@@ -250,7 +294,11 @@ if (danglingVars.length) {
 // Dangling vars gate in --strict alongside direct-token violations: unlike a
 // hardcoded hex (which at least renders the colour someone intended), one of
 // these renders nothing and is invisible until someone looks closely.
-if (strict && (violations.length > 0 || danglingVars.length > 0)) {
+//
+// Hex in `src/components/ui/` source joins them — see isEnforcedHexPath.
+// Hex anywhere else stays informational.
+const enforcedHex = hardcoded.filter((h) => h.enforced);
+if (strict && (violations.length > 0 || danglingVars.length > 0 || enforcedHex.length > 0)) {
   process.exit(1);
 }
 process.exit(0);

@@ -34,9 +34,32 @@ otherwise. So: **every gate needs a self-test that proves it can fail.**
   real story and a browser run.
 
 **Adding a gate means adding its probe** to the `GATES` table in
-`check-gate-selftests.js`. Covered so far: roles, composition, radius, zindex,
-props. Not yet: contrast, deprecations, docs-sprawl, figma-drift,
-figma-semantic-drift, package-css, package-types, registry, token-variables.
+`check-gate-selftests.js`. Covered so far: roles, roles-hex, composition,
+radius, zindex, props. Not yet: contrast, deprecations, docs-sprawl,
+figma-drift, figma-semantic-drift, package-css, package-types, registry,
+token-variables.
+
+## Hex literals: enforced in `ui/`, advisory elsewhere
+
+Changed 2026-10-08. Hex was informational everywhere, which left "never
+hardcode a colour" toothless exactly where the role layer is complete.
+
+| Where | Hex literal |
+|---|---|
+| `src/components/ui/**` source | **fails** `roles:check:strict` |
+| `src/components/ui/**` `.stories.tsx` / `.test.tsx` | advisory |
+| `src/components/[A-Z]*/` (legacy MUI) and elsewhere | advisory |
+
+It cost nothing to switch on: that set had **0** hex literals at the time, so
+the gate locks in a clean state rather than demanding a cleanup. It ratchets —
+new debt cannot enter the current set, while the 77 legacy and 36 story/test
+literals stay as notes. Stories and tests are excluded deliberately: they name
+colours for swatch demos and for asserting a component resolved to an expected
+value, and forcing roles there would make those assertions tautological.
+
+Escape hatches unchanged: `roles-allow-hex` on the line (or the line above),
+`roles-allow-hex-file` anywhere in the file. Use them for a literal that is
+genuinely right — a brand asset, a third-party constant — and say why.
 
 When a probe fails, suspect the probe before the gate. The `props` probe first
 used `size="default"`, which `prop-compat.ts` does not track as legacy — the
