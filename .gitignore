@@ -85,3 +85,13 @@ marsh-design-system-deploy/
 # and leave a patch here. Gitignored because a proposal is not a decision —
 # a human applies it with `git apply`.
 .agent-proposals/
+
+# Untracked 2026-10-08: dead files kept locally but not shipped to the repo.
+# - *.backup image: superseded by the real .jpg beside it
+# - main-backup.tsx: stale copy of main.tsx, not imported
+# - the 45MB 30fps video: 0 code references (the 24fps one IS used)
+*.backup
+src/main-backup.tsx
+public/video/10394868-uhd_3840_2160_30fps.mp4
+# Superseded workflows kept locally for reference, not shipped.
+.github/workflows/*.disabled
