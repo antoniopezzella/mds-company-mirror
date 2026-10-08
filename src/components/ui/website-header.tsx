@@ -5,7 +5,6 @@ import { ChevronDown, Globe, Menu, Search } from 'lucide-react';
 
 import MARSH_LOGO from '../../assets/images/marsh.svg';
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { Sheet, SheetContent } from './sheet';
 
@@ -135,7 +134,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
     if (contactHref) window.location.href = contactHref;
   };
 
-  const onHero: React.CSSProperties = { color: getRoleColor('text.onHero') };
+  const onHero: React.CSSProperties = { color: 'var(--role-text-onHero)' };
 
   return (
     <>
@@ -272,7 +271,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
                 href={item.href ?? '#'}
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-between rounded-md px-2 py-3 text-sm font-medium"
-                style={{ color: getRoleColor('text.primary') }}
+                style={{ color: 'var(--role-text-primary)' }}
               >
                 {item.label}
                 {item.hasMenu && <ChevronDown className="h-4 w-4" aria-hidden />}

@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { normalizeSize } from './prop-compat';
-import { getRoleColor } from '@/theme/roles';
 import { Badge, type BadgeTone } from './badge';
 
 /**
@@ -77,7 +76,7 @@ export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
                 ? 'h-5 min-w-[20px] px-1 text-[0.65rem]'
                 : 'h-6 min-w-[24px] px-1 text-xs'
           )}
-          style={{ borderColor: getRoleColor('surface.default') }}
+          style={{ borderColor: 'var(--role-surface-default)' }}
         >
           {isDot ? null : content}
         </Badge>

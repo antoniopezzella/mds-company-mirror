@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Input } from './input';
 import { Textarea } from './textarea';
 
@@ -79,7 +78,7 @@ export function DataGridCellEditor({
     onBlur: () => onCommit(draft),
     className: cn('w-full', invalid && 'ring-2'),
     style: invalid
-      ? ({ '--tw-ring-color': getRoleColor('status.danger.fg') } as React.CSSProperties)
+      ? ({ '--tw-ring-color': 'var(--role-status-danger-fg)' } as React.CSSProperties)
       : undefined,
   };
 

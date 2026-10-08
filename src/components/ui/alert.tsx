@@ -83,7 +83,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
           // accent, which only needs 3:1. See getSeverityRoles.
           color: getRoleColor(text),
           backgroundColor: outlined ? 'transparent' : getRoleColor(bg),
-          border: outlined ? `1px solid ${getRoleColor('border.default')}` : 'none',
+          border: outlined ? `1px solid ${'var(--role-border-default)'}` : 'none',
           ...style,
         }}
         {...rest}

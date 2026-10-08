@@ -105,8 +105,8 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const style: React.CSSProperties = disabled
       ? {
-          backgroundColor: getRoleColor('surface.disabled'),
-          color: getRoleColor('text.disabled'),
+          backgroundColor: 'var(--role-surface-disabled)',
+          color: 'var(--role-text-disabled)',
           borderColor: 'transparent',
         }
       : {
@@ -122,7 +122,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           // against the page surface; the tightest is success at 5.12:1.
           color: getRoleColor(fg),
           border: variant === 'outlined' ? `1px solid ${getRoleColor(border)}` : 'none',
-          boxShadow: selectable && selected ? `inset 0 0 0 2px ${getRoleColor('focus.ring')}` : undefined,
+          boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-focus-ring)'}` : undefined,
         };
 
     const chipClassName = cn(
@@ -133,12 +133,12 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const chipStyle = {
       ...style,
-      '--tw-ring-color': getRoleColor('focus.ring'),
+      '--tw-ring-color': 'var(--role-focus-ring)',
       // Tailwind's ring-offset-2 defaults its gap color to white — wrong
       // against a dark surface. Tying it to surface.default keeps the ring's
       // inner gap correct in both modes, matching Checkbox's
       // --checkbox-focus-inner-ring pattern.
-      '--tw-ring-offset-color': getRoleColor('surface.default'),
+      '--tw-ring-offset-color': 'var(--role-surface-default)',
       // Caller override last, so it wins over (not replaces) the tone-based
       // style above — style was destructured out of ...rest specifically so a
       // plain spread couldn't clobber this object.

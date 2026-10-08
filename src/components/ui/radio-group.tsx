@@ -109,17 +109,17 @@ function getControlStyle({
   style?: React.CSSProperties;
 }): React.CSSProperties {
   const focusVars = {
-    '--radio-focus-ring': getRoleColor('focus.ring'),
-    '--radio-focus-inner-ring': getRoleColor('surface.default'),
+    '--radio-focus-ring': 'var(--role-focus-ring)',
+    '--radio-focus-inner-ring': 'var(--role-surface-default)',
   } as React.CSSProperties;
 
   if (disabled) {
     return {
       ...style,
       ...focusVars,
-      backgroundColor: getRoleColor('surface.disabled'),
-      borderColor: getRoleColor('text.disabled'),
-      color: getRoleColor('text.disabled'),
+      backgroundColor: 'var(--role-surface-disabled)',
+      borderColor: 'var(--role-text-disabled)',
+      color: 'var(--role-text-disabled)',
     };
   }
 
@@ -133,7 +133,7 @@ function getControlStyle({
     return {
       ...style,
       ...focusVars,
-      backgroundColor: getRoleColor('surface.default'),
+      backgroundColor: 'var(--role-surface-default)',
       borderColor: getRoleColor(role),
       color: getRoleColor(role),
     };
@@ -142,10 +142,10 @@ function getControlStyle({
   const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
   const backgroundColor =
     interaction === 'active'
-      ? `color-mix(in srgb, ${getRoleColor('surface.default')} 80%, ${getRoleColor('interactive.primary')} 20%)`
+      ? `color-mix(in srgb, ${'var(--role-surface-default)'} 80%, ${'var(--role-interactive-primary)'} 20%)`
       : interaction === 'hover'
-        ? `color-mix(in srgb, ${getRoleColor('surface.default')} 90%, ${getRoleColor('interactive.primary')} 10%)`
-        : getRoleColor('surface.default');
+        ? `color-mix(in srgb, ${'var(--role-surface-default)'} 90%, ${'var(--role-interactive-primary)'} 10%)`
+        : 'var(--role-surface-default)';
 
   return {
     ...style,
@@ -360,7 +360,7 @@ export const DSRadioGroup = React.forwardRef<HTMLDivElement, DSRadioGroupProps>(
     return (
       <div ref={ref} className={cn(radioGroupVariants({ fullWidth }), className)}>
         {label && (
-          <span className={radioGroupLabelVariants()} style={{ color: getRoleColor('text.primary') }}>
+          <span className={radioGroupLabelVariants()} style={{ color: 'var(--role-text-primary)' }}>
             {label}
           </span>
         )}
@@ -388,7 +388,7 @@ export const DSRadioGroup = React.forwardRef<HTMLDivElement, DSRadioGroupProps>(
           <span
             id={helperId}
             className={radioGroupHelperVariants()}
-            style={{ color: error ? getRoleColor('status.danger.fg') : getRoleColor('text.primary') }}
+            style={{ color: error ? 'var(--role-status-danger-fg)' : 'var(--role-text-primary)' }}
           >
             {helperText}
           </span>

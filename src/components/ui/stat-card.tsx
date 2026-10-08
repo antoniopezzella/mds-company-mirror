@@ -4,7 +4,6 @@ import * as React from 'react';
 import { TrendingUp, TrendingDown, ArrowRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import {
   formatDelta,
   formatValue,
@@ -208,10 +207,10 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
     // follow the theme without a separate `dark:` variant.
     const badgeStyle: React.CSSProperties =
       sentiment === 'up'
-        ? { color: getRoleColor('status.success.fg'), backgroundColor: getRoleColor('status.success.bg') }
+        ? { color: 'var(--role-status-success-fg)', backgroundColor: 'var(--role-status-success-bg)' }
         : sentiment === 'down'
-          ? { color: getRoleColor('status.danger.fg'), backgroundColor: getRoleColor('status.danger.bg') }
-          : { color: getRoleColor('text.secondary'), backgroundColor: getRoleColor('surface.subtle') };
+          ? { color: 'var(--role-status-danger-fg)', backgroundColor: 'var(--role-status-danger-bg)' }
+          : { color: 'var(--role-text-secondary)', backgroundColor: 'var(--role-surface-subtle)' };
 
     const shell = cn(
       'flex flex-col gap-4',

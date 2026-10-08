@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { normalizeSize } from './prop-compat';
-import { getRoleColor } from '@/theme/roles';
 import { Input, type InputTone } from './input';
 import { Label } from './label';
 import { Textarea } from './textarea';
@@ -41,19 +40,19 @@ export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaEleme
     const effectiveTone: InputTone = isError ? 'error' : tone;
 
     const helperColor = isError
-      ? getRoleColor('status.danger.fg')
+      ? 'var(--role-status-danger-fg)'
       : tone === 'success'
-        ? getRoleColor('status.success.fg')
+        ? 'var(--role-status-success-fg)'
         : tone === 'warning'
-          ? getRoleColor('status.warning.fg')
-          : getRoleColor('text.secondary');
+          ? 'var(--role-status-warning-fg)'
+          : 'var(--role-text-secondary)';
 
     return (
       <div className={cn('inline-flex flex-col gap-1.5', fullWidth && 'w-full', className)}>
         {label && (
           <Label htmlFor={fieldId}>
             {label}
-            {rest.required && <span style={{ color: getRoleColor('status.danger.fg') }}> *</span>}
+            {rest.required && <span style={{ color: 'var(--role-status-danger-fg)' }}> *</span>}
           </Label>
         )}
         {type === 'textarea' ? (

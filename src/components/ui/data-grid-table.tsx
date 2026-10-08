@@ -6,7 +6,6 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowLeftToLine, ArrowRightToLine, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, EyeOff, PinOff, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { DataState } from './data-state';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './dropdown-menu';
 import { Input } from './input';
@@ -241,14 +240,14 @@ export function DataGridTable<TData extends RowData>({
   // border.default remains correct for the edge of a control; these are rules
   // separating content the user is already inside. In dark it is translucent
   // white, so it composites over the row beneath rather than sitting on it.
-  const borderColor = getRoleColor('border.subtle');
-  const textColor = getRoleColor('text.primary');
-  const activeColor = getRoleColor('interactive.primary');
-  const rowBg = getRoleColor('surface.raised');
+  const borderColor = 'var(--role-border-subtle)';
+  const textColor = 'var(--role-text-primary)';
+  const activeColor = 'var(--role-interactive-primary)';
+  const rowBg = 'var(--role-surface-raised)';
   // Sky Blue in light (#ceecff), unchanged #252525 in dark. Its own role, not
   // surface.subtle, because stripeBg and headerBg below still want the neutral
   // lift and must NOT follow hover into brand blue.
-  const hoverBg = getRoleColor('surface.row.hover');
+  const hoverBg = 'var(--role-surface-row-hover)';
   // surface.selected, not surface.accent: accent (#f7f8f8) is one unit from
   // surface.subtle (#f8f8f8) in light, so a selected row and a hovered row
   // were indistinguishable. surface.selected is the role whose own
@@ -258,24 +257,24 @@ export function DataGridTable<TData extends RowData>({
   // under AA, and green1000 is the darkest green there is. The lighter tint
   // restores that; the left accent bar below is what keeps selected
   // distinguishable from hovered, since no tint satisfies both.
-  const selectedBg = getRoleColor('surface.selected.subtle');
-  const selectedEdge = getRoleColor('interactive.primary');
+  const selectedBg = 'var(--role-surface-selected-subtle)';
+  const selectedEdge = 'var(--role-interactive-primary)';
   // The header band. It used to equal the row background exactly, so the
   // column row floated with nothing anchoring it. surface.subtle is one step
   // off the panel in both modes (#f8f8f8 on white, #252525 on #1a1a1a).
   //
   // This is also why surface.raised is NOT neutral900: surface.subtle already
   // is #252525 in dark, and a band the same colour as its panel is not a band.
-  const headerBg = getRoleColor('surface.subtle');
-  const stripeBg = getRoleColor('surface.subtle');
-  const selectionBg = getRoleColor('surface.selected.subtle');
+  const headerBg = 'var(--role-surface-subtle)';
+  const stripeBg = 'var(--role-surface-subtle)';
+  const selectionBg = 'var(--role-surface-selected-subtle)';
 
   // Before anything is focused, TanStack reports tabIndex -1 for every cell —
   // correct for "there is no roving position yet", but it leaves the grid
   // unreachable by Tab. APG requires the grid to be in the tab order from the
   // start, so the first cell takes the stop until focus moves.
   const hasFocusedCell = enableCellSelection && !!table.getFocusedCell();
-  const selectionEdge = getRoleColor('interactive.primary');
+  const selectionEdge = 'var(--role-interactive-primary)';
 
   /**
    * The range outline, drawn with box-shadow insets on the edge cells.
@@ -795,7 +794,7 @@ export function DataGridTable<TData extends RowData>({
                             {
                               backgroundColor: selectionEdge,
                               zIndex: Z_INDEX.stickyRaised,
-                              '--tw-ring-color': getRoleColor('focus.ring'),
+                              '--tw-ring-color': 'var(--role-focus-ring)',
                             } as React.CSSProperties
                           }
                         />
@@ -896,7 +895,7 @@ export function DataGridTable<TData extends RowData>({
                           }
                         }}
                         className="-mx-1 flex h-7 w-full items-center rounded-lg px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
-                        style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                        style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                         title="Double-click or press Enter to edit"
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -956,7 +955,7 @@ export function DataGridTable<TData extends RowData>({
             where an aria-label on a <table> is not, and it is visible, which
             helps everyone rather than only screen-reader users. */}
         {caption && (
-          <TableCaption className="p-2 text-left text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <TableCaption className="p-2 text-left text-sm" style={{ color: 'var(--role-text-secondary)' }}>
             {caption}
           </TableCaption>
         )}
@@ -1015,7 +1014,7 @@ export function DataGridTable<TData extends RowData>({
                         <button
                           type="button"
                           className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
-                          style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                          style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                           // Shift-click keeps its meaning as "add to the
                           // multi-sort" rather than opening the menu — Radix
                           // opens on pointerdown, so it has to be intercepted
@@ -1160,7 +1159,7 @@ export function DataGridTable<TData extends RowData>({
                       className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-hidden focus-visible:ring-2"
                       style={{
                         backgroundColor: header.column.getIsResizing() ? activeColor : 'transparent',
-                        '--tw-ring-color': getRoleColor('focus.ring'),
+                        '--tw-ring-color': 'var(--role-focus-ring)',
                       } as React.CSSProperties}
                     />
                     /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */

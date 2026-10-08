@@ -86,8 +86,8 @@ function getControlStyle({
 }): React.CSSProperties {
   const checkedVisual = isCheckedLike(checked);
   const focusVars = {
-    '--checkbox-focus-ring': getRoleColor('focus.ring'),
-    '--checkbox-focus-inner-ring': getRoleColor('surface.default'),
+    '--checkbox-focus-ring': 'var(--role-focus-ring)',
+    '--checkbox-focus-inner-ring': 'var(--role-surface-default)',
   } as React.CSSProperties;
 
   if (disabled) {
@@ -100,17 +100,17 @@ function getControlStyle({
       return {
         ...style,
         ...focusVars,
-        backgroundColor: getRoleColor('text.disabled'),
-        borderColor: getRoleColor('text.disabled'),
-        color: getRoleColor('surface.default'),
+        backgroundColor: 'var(--role-text-disabled)',
+        borderColor: 'var(--role-text-disabled)',
+        color: 'var(--role-surface-default)',
       };
     }
     return {
       ...style,
       ...focusVars,
-      backgroundColor: getRoleColor('surface.disabled'),
-      borderColor: getRoleColor('border.default'),
-      color: getRoleColor('text.disabled'),
+      backgroundColor: 'var(--role-surface-disabled)',
+      borderColor: 'var(--role-border-default)',
+      color: 'var(--role-text-disabled)',
     };
   }
 
@@ -130,7 +130,7 @@ function getControlStyle({
       ...focusVars,
       backgroundColor: getRoleColor(role),
       borderColor: getRoleColor(role),
-      color: getRoleColor('text.onInteractive'),
+      color: 'var(--role-text-onInteractive)',
     };
   }
 
@@ -146,19 +146,19 @@ function getControlStyle({
     return {
       ...style,
       ...focusVars,
-      backgroundColor: getRoleColor('surface.default'),
+      backgroundColor: 'var(--role-surface-default)',
       borderColor: getRoleColor(borderRole),
       color: getRoleColor(invalid ? 'interactive.danger' : 'interactive.primary'),
     };
   }
 
-  const uncheckedInteractiveColor = invalid ? getRoleColor('status.danger.border') : getRoleColor('interactive.secondary');
+  const uncheckedInteractiveColor = invalid ? 'var(--role-status-danger-border)' : 'var(--role-interactive-secondary)';
   const washPercent = interaction === 'active' ? 20 : 10; // Figma: ~#..1a (10%) hover, ~#..33 (20%) active
 
   return {
     ...style,
     ...focusVars,
-    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${getRoleColor('surface.default')} ${100 - washPercent}%)`,
+    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${'var(--role-surface-default)'} ${100 - washPercent}%)`,
     borderColor: uncheckedInteractiveColor,
     color: uncheckedInteractiveColor,
   };

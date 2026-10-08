@@ -5,7 +5,6 @@ import * as LabelPrimitive from '@radix-ui/react-label';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 const labelVariants = cva(
   'font-sans-productive text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
@@ -18,7 +17,7 @@ const Label = React.forwardRef<
   <LabelPrimitive.Root
     ref={ref}
     className={cn(labelVariants(), className)}
-    style={{ color: getRoleColor('text.secondary'), ...style }}
+    style={{ color: 'var(--role-text-secondary)', ...style }}
     {...props}
   />
 ));

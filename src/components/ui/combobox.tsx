@@ -94,10 +94,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
           )}
           style={
             {
-              borderColor: getRoleColor('border.default'),
-              backgroundColor: getRoleColor('surface.default'),
-              color: selected ? getRoleColor('text.primary') : getRoleColor('text.secondary'),
-              '--tw-ring-color': getRoleColor('focus.ring'),
+              borderColor: 'var(--role-border-default)',
+              backgroundColor: 'var(--role-surface-default)',
+              color: selected ? 'var(--role-text-primary)' : 'var(--role-text-secondary)',
+              '--tw-ring-color': 'var(--role-focus-ring)',
             } as React.CSSProperties
           }
         >
@@ -121,7 +121,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
                     setOpen(false);
                   }}
                 >
-                  <Check className={cn('h-4 w-4', option.value === value ? 'opacity-100' : 'opacity-0')} style={{ color: getRoleColor('interactive.primary') }} />
+                  <Check className={cn('h-4 w-4', option.value === value ? 'opacity-100' : 'opacity-0')} style={{ color: 'var(--role-interactive-primary)' }} />
                   {option.label}
                 </CommandItem>
               ))}

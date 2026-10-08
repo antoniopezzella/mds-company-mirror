@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './dropdown-menu';
-import { getRoleColor } from '@/theme/roles';
 import type { DataGridColumnDef } from './data-grid-features';
 
 /**
@@ -194,7 +193,7 @@ function RowActionsCell<TData>({
             // Destructive gets the danger colour whether or not it is
             // icon-only — the confirmation is the safeguard, the colour is
             // the warning that one is coming.
-            style={primaryAction.destructive ? { color: getRoleColor('status.danger.fg') } : undefined}
+            style={primaryAction.destructive ? { color: 'var(--role-status-danger-fg)' } : undefined}
             {...(primaryAction.iconOnly
               ? { iconOnly: true, icon: primaryAction.icon }
               : {})}
@@ -239,7 +238,7 @@ function RowActionsCell<TData>({
                       disabled={disabled}
                       title={disabled ? action.disabledReason : undefined}
                       onSelect={() => activate(action)}
-                      style={action.destructive ? { color: getRoleColor('status.danger.fg') } : undefined}
+                      style={action.destructive ? { color: 'var(--role-status-danger-fg)' } : undefined}
                     >
                       {action.icon}
                       {action.label}

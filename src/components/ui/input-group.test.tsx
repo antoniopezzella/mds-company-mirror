@@ -8,7 +8,6 @@ import {
   InputGroupInput,
   InputGroupTextarea,
 } from './input-group';
-import { getRoleColor } from '@/theme/roles';
 
 describe('InputGroup', () => {
   it('renders as a group with the neutral border role', () => {
@@ -20,7 +19,8 @@ describe('InputGroup', () => {
     const group = screen.getByTestId('group');
     expect(group).toHaveAttribute('role', 'group');
     expect(group).toHaveAttribute('data-slot', 'input-group');
-    expect(group).toHaveStyle({ borderColor: getRoleColor('border.default') });
+    // `.style.*`, not toHaveStyle: jsdom cannot match a `var()` inline value.
+    expect((group as HTMLElement).style.borderColor).toBe('var(--role-border-default)');
   });
 
   it('renders its control and addon children', () => {

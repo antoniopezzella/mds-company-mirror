@@ -165,8 +165,8 @@ export const Avatar: React.FC<AvatarProps> = ({
           height: sizePx,
           borderRadius: RADIUS[variant],
           fontSize: FONT_SIZE[resolvedSize],
-          border: `2px solid ${getRoleColor('surface.default')}`,
-          boxShadow: `0 0 0 1px ${getRoleColor('border.default')}`,
+          border: `2px solid ${'var(--role-surface-default)'}`,
+          boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
         }}
       >
         {src && <AvatarPrimitive.Image src={src} alt={alt} className="h-full w-full object-cover" />}
@@ -186,8 +186,8 @@ export const Avatar: React.FC<AvatarProps> = ({
             width: statusPx,
             height: statusPx,
             backgroundColor: getRoleColor(getStatusColor(status)),
-            border: `2px solid ${getRoleColor('surface.default')}`,
-            boxShadow: `0 0 0 1px ${getRoleColor('border.default')}`,
+            border: `2px solid ${'var(--role-surface-default)'}`,
+            boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
           }}
         />
       )}

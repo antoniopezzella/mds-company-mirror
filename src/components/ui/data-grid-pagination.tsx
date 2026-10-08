@@ -4,7 +4,6 @@ import * as React from 'react';
 import type { RowData } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Pagination } from './pagination';
 import { useDataGrid } from './data-grid';
 
@@ -50,8 +49,8 @@ export function DataGridPagination<TData extends RowData>({
   const filteredCount = table.getFilteredRowModel().rows.length;
   const totalItems = manual ? recordCount : filteredCount;
 
-  const borderColor = getRoleColor('border.default');
-  const mutedColor = getRoleColor('text.secondary');
+  const borderColor = 'var(--role-border-default)';
+  const mutedColor = 'var(--role-text-secondary)';
 
   const handlePageChange = (page: number) => {
     table.setPageIndex(page - 1);

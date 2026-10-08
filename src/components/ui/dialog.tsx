@@ -5,7 +5,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
 // Radix Dialog is deliberately unopinionated about layout — you compose the
@@ -77,7 +76,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
           size === 'fullscreen' ? 'max-h-screen overflow-y-auto' : 'max-h-[85vh] overflow-y-auto',
           className
         )}
-        style={{ backgroundColor: getRoleColor('surface.default') }}
+        style={{ backgroundColor: 'var(--role-surface-default)' }}
         {...props}
       >
         {children}
@@ -93,7 +92,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
             // grew, nothing moved. `DialogHeader`'s `pr-12` is the matching
             // clearance (the box now reaches 44px in).
             className="absolute right-2 top-2 flex size-9 items-center justify-center rounded-md opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
-            style={{ color: getRoleColor('text.secondary') }}
+            style={{ color: 'var(--role-text-secondary)' }}
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -125,7 +124,7 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
       'flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:flex-wrap sm:justify-end',
       className
     )}
-    style={{ borderColor: getRoleColor('border.default') }}
+    style={{ borderColor: 'var(--role-border-default)' }}
     {...props}
   />
 );
@@ -138,7 +137,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn('font-sans-productive text-lg font-semibold leading-none', className)}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     {...props}
   />
 ));
@@ -151,7 +150,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn('font-sans-productive text-sm', className)}
-    style={{ color: getRoleColor('text.secondary') }}
+    style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
 ));

@@ -47,9 +47,9 @@ const ToggleGroupItem = React.forwardRef<
       onMouseLeave={() => setHover(false)}
       className={cn(toggleVariants({ variant: context.variant ?? variant, size: context.size ?? size }), className)}
       style={{
-        backgroundColor: pressed ? getRoleColor('surface.accent') : hover ? getRoleColor('surface.subtle') : 'transparent',
-        color: getRoleColor('text.primary'),
-        borderColor: (context.variant ?? variant) === 'outline' ? getRoleColor('border.default') : undefined,
+        backgroundColor: pressed ? 'var(--role-surface-accent)' : hover ? 'var(--role-surface-subtle)' : 'transparent',
+        color: 'var(--role-text-primary)',
+        borderColor: (context.variant ?? variant) === 'outline' ? 'var(--role-border-default)' : undefined,
         ...style,
       }}
       {...props}

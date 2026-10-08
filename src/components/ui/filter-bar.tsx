@@ -6,7 +6,6 @@ import type { DateRange } from 'react-day-picker';
 import { Search, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { ControlSizeContext, useControlSize, type ControlSize } from './control-size';
 import { Button } from './button';
 import { FilterChip, FilterChipSet } from './filter-chip';
@@ -119,7 +118,7 @@ export function FilterBarField({ label, children, className }: FilterBarFieldPro
         <label
           htmlFor={id}
           className="text-xs font-medium"
-          style={{ color: getRoleColor('text.secondary') }}
+          style={{ color: 'var(--role-text-secondary)' }}
         >
           {label}
         </label>
@@ -152,7 +151,7 @@ export function FilterBarSearch({
         <Search
           aria-hidden="true"
           className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2"
-          style={{ color: getRoleColor('text.secondary') }}
+          style={{ color: 'var(--role-text-secondary)' }}
         />
         <Input
           type="search"
@@ -340,7 +339,7 @@ export function FilterBarChips({
       className={cn('w-full', className)}
       {...props}
     >
-      <span className="text-xs font-medium" style={{ color: getRoleColor('text.secondary') }}>
+      <span className="text-xs font-medium" style={{ color: 'var(--role-text-secondary)' }}>
         Filtering by
       </span>
       {/* One tab stop for the whole applied-filters row, not one per filter.
@@ -359,7 +358,7 @@ export function FilterBarChips({
           // "EMEA" on its own is not.
           label={
             <>
-              <span style={{ color: getRoleColor('text.secondary') }}>{f.label}: </span>
+              <span style={{ color: 'var(--role-text-secondary)' }}>{f.label}: </span>
               {f.value}
             </>
           }

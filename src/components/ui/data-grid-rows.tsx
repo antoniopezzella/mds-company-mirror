@@ -5,7 +5,6 @@ import type { Row, RowData } from '@tanstack/react-table';
 import { ChevronRight, Pin, PinOff } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import type { DataGridColumnDef, DataGridFeatures } from './data-grid-features';
 
 /**
@@ -70,7 +69,7 @@ export function createExpandColumn<TData extends RowData>({
           style={
             {
               marginLeft: row.depth * indent,
-              '--tw-ring-color': getRoleColor('focus.ring'),
+              '--tw-ring-color': 'var(--role-focus-ring)',
             } as React.CSSProperties
           }
         >
@@ -120,7 +119,7 @@ export function createRowPinColumn<TData extends RowData>({
           aria-pressed={!!pinned}
           aria-label={(pinned ? unpinLabel : pinLabel).replace('{row}', n)}
           className="flex size-6 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
         >
           {pinned ? <PinOff className="size-4" aria-hidden="true" /> : <Pin className="size-4" aria-hidden="true" />}
         </button>
@@ -146,7 +145,7 @@ export function DataGridDetailPanel({ children, className }: DataGridDetailPanel
   return (
     <div
       className={cn('px-6 py-4 text-sm', className)}
-      style={{ backgroundColor: getRoleColor('surface.subtle'), color: getRoleColor('text.primary') }}
+      style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-primary)' }}
     >
       {children}
     </div>

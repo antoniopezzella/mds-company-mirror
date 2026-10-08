@@ -66,17 +66,17 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
   const [filter, setFilter] = React.useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
 
-  const textPrimary = getRoleColor('text.primary');
-  const textSecondary = getRoleColor('text.secondary');
-  const borderDefault = getRoleColor('border.default');
-  const surfaceSubtle = getRoleColor('surface.subtle');
-  const surfaceDefault = getRoleColor('surface.default');
-  const primaryBlue = getRoleColor('interactive.primary');
+  const textPrimary = 'var(--role-text-primary)';
+  const textSecondary = 'var(--role-text-secondary)';
+  const borderDefault = 'var(--role-border-default)';
+  const surfaceSubtle = 'var(--role-surface-subtle)';
+  const surfaceDefault = 'var(--role-surface-default)';
+  const primaryBlue = 'var(--role-interactive-primary)';
   // `text.onInteractive`, NOT `text.onAccent`. interactive.primary LIGHTENS in
   // dark mode (#000f47 -> #95caff), so white-on-accent drops to 1.73:1 there —
   // a clear AA failure. text.onInteractive exists for exactly these surfaces
   // and resolves to #000f47 in dark, giving 10.50:1.
-  const textOnInteractive = getRoleColor('text.onInteractive');
+  const textOnInteractive = 'var(--role-text-onInteractive)';
 
   const unreadCount = notifications.filter((n) => n.unread).length;
   const actionCount = notifications.filter((n) => n.actionRequired).length;
@@ -179,12 +179,12 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                         className="relative rounded-lg border p-3.5"
                         style={{
                           borderColor: borderDefault,
-                          backgroundColor: n.unread ? getRoleColor('surface.accent') : surfaceDefault,
+                          backgroundColor: n.unread ? 'var(--role-surface-accent)' : surfaceDefault,
                         }}
                       >
                         <div className="mb-1.5 flex items-start justify-between gap-2">
                           <div className="flex min-w-0 flex-1 items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: getRoleColor('status.danger.fg') }} />
+                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--role-status-danger-fg)' }} />
                             <span className="text-sm font-bold leading-tight" style={{ color: textPrimary }}>
                               {n.title}
                             </span>

@@ -5,7 +5,6 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 export interface TabItem {
   id: string;
@@ -70,7 +69,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, var
     <TabsPrimitive.Root value={value} onValueChange={handleChange} className={cn('w-full', className)}>
       <TabsPrimitive.List
         className={cn(tabsListVariants({ variant }))}
-        style={{ borderColor: getRoleColor('border.default'), '--tabs-focus-ring': getRoleColor('focus.ring') } as React.CSSProperties}
+        style={{ borderColor: 'var(--role-border-default)', '--tabs-focus-ring': 'var(--role-focus-ring)' } as React.CSSProperties}
       >
         {tabs.map((tab) => {
           const isActive = tab.id === value;
@@ -82,11 +81,11 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, var
               className={cn(tabTriggerVariants())}
               style={{
                 color: tab.disabled
-                  ? getRoleColor('text.disabled')
+                  ? 'var(--role-text-disabled)'
                   : isActive
-                    ? getRoleColor('interactive.primary')
-                    : getRoleColor('text.secondary'),
-                borderBottomColor: isActive ? getRoleColor('interactive.primary') : 'transparent',
+                    ? 'var(--role-interactive-primary)'
+                    : 'var(--role-text-secondary)',
+                borderBottomColor: isActive ? 'var(--role-interactive-primary)' : 'transparent',
               }}
             >
               {tab.title}

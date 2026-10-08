@@ -53,9 +53,10 @@ describe('Textarea', () => {
 
   it('defaults to the neutral border role', () => {
     render(<Textarea placeholder="Default" />);
-    expect(screen.getByPlaceholderText('Default')).toHaveStyle({
-      borderColor: getRoleColor('border.default'),
-    });
+    // `.style.*`, not toHaveStyle: jsdom cannot match a `var()` inline value.
+    expect((screen.getByPlaceholderText('Default') as HTMLElement).style.borderColor).toBe(
+      'var(--role-border-default)'
+    );
   });
 
   it('merges a caller className without dropping base classes', () => {

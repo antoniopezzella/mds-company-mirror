@@ -31,7 +31,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
       inset && 'pl-8',
       className
     )}
-    style={{ color: getRoleColor('text.primary'), '--dropdown-hover-bg': getRoleColor('surface.subtle') } as React.CSSProperties}
+    style={{ color: 'var(--role-text-primary)', '--dropdown-hover-bg': 'var(--role-surface-subtle)' } as React.CSSProperties}
     {...props}
   >
     {children}
@@ -50,7 +50,7 @@ const DropdownMenuSubContent = React.forwardRef<
       'z-[1500] min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
       className
     )}
-    style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}
+    style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));
@@ -68,7 +68,7 @@ const DropdownMenuContent = React.forwardRef<
         'z-[1500] min-w-[10rem] overflow-hidden rounded-lg border p-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className
       )}
-      style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}
+      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
@@ -124,13 +124,13 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     checked={checked}
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" style={{ color: getRoleColor('interactive.primary') }} />
+        <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -148,12 +148,12 @@ const DropdownMenuRadioItem = React.forwardRef<
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     {...props}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" style={{ color: getRoleColor('interactive.primary') }} />
+        <Circle className="h-2 w-2 fill-current" style={{ color: 'var(--role-interactive-primary)' }} />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -168,7 +168,7 @@ const DropdownMenuLabel = React.forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'pl-8', className)}
-    style={{ color: getRoleColor('text.secondary') }}
+    style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
 ));
@@ -181,7 +181,7 @@ const DropdownMenuSeparator = React.forwardRef<
   <DropdownMenuPrimitive.Separator
     ref={ref}
     className={cn('-mx-1 my-1 h-px', className)}
-    style={{ backgroundColor: getRoleColor('border.default') }}
+    style={{ backgroundColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));

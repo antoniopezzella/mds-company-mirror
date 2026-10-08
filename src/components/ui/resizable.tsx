@@ -56,8 +56,8 @@ const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandlePro
     )}
     style={
       {
-        backgroundColor: getRoleColor('border.default'),
-        '--resizable-focus-ring': getRoleColor('focus.ring'),
+        backgroundColor: 'var(--role-border-default)',
+        '--resizable-focus-ring': 'var(--role-focus-ring)',
       } as React.CSSProperties
     }
     {...props}
@@ -66,11 +66,11 @@ const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandlePro
       <div
         className="z-10 flex h-4 w-3 items-center justify-center rounded-md border"
         style={{
-          backgroundColor: getRoleColor('surface.default'),
-          borderColor: getRoleColor('border.default'),
+          backgroundColor: 'var(--role-surface-default)',
+          borderColor: 'var(--role-border-default)',
         }}
       >
-        <GripVertical className="h-2.5 w-2.5" style={{ color: getRoleColor('text.secondary') }} />
+        <GripVertical className="h-2.5 w-2.5" style={{ color: 'var(--role-text-secondary)' }} />
       </div>
     )}
   </Separator>

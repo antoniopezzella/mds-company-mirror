@@ -107,9 +107,9 @@ export const Accordion: React.FC<AccordionProps> = ({
   className,
 }) => {
   const rootStyle = {
-    '--accordion-focus-ring': getRoleColor('focus.ring'),
-    '--accordion-shadow-color': getRoleColor('surface.subtle'),
-    borderColor: getRoleColor('border.default'),
+    '--accordion-focus-ring': 'var(--role-focus-ring)',
+    '--accordion-shadow-color': 'var(--role-surface-subtle)',
+    borderColor: 'var(--role-border-default)',
   } as React.CSSProperties;
 
   const commonRootProps = {
@@ -124,7 +124,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         value={item.id}
         disabled={item.disabled}
         className={cn(accordionItemVariants({ variant }))}
-        style={{ backgroundColor: getRoleColor('surface.default') }}
+        style={{ backgroundColor: 'var(--role-surface-default)' }}
       >
         <AccordionPrimitive.Header className="flex">
           <AccordionPrimitive.Trigger
@@ -141,7 +141,7 @@ export const Accordion: React.FC<AccordionProps> = ({
               {item.subtitle && (
                 <span
                   className="mt-1 block font-sans-productive text-sm"
-                  style={{ color: getRoleColor('text.secondary') }}
+                  style={{ color: 'var(--role-text-secondary)' }}
                 >
                   {item.subtitle}
                 </span>
@@ -149,14 +149,14 @@ export const Accordion: React.FC<AccordionProps> = ({
             </span>
             <ChevronDown
               className="h-5 w-5 shrink-0 transition-transform duration-200"
-              style={{ color: getRoleColor('text.secondary') }}
+              style={{ color: 'var(--role-text-secondary)' }}
             />
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
         <AccordionPrimitive.Content className={cn(accordionContentVariants({ variant }))}>
           <div
             className="border-t pt-4 font-sans-productive text-base"
-            style={{ borderColor: getRoleColor('border.default'), color: getRoleColor('text.primary') }}
+            style={{ borderColor: 'var(--role-border-default)', color: 'var(--role-text-primary)' }}
           >
             {item.content}
           </div>

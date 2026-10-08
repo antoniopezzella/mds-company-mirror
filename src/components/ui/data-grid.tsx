@@ -4,7 +4,6 @@ import * as React from 'react';
 import type { RowData } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { shadows } from '@/shadows';
 import { resolveDataStatus, type DataStatus } from './data-state';
 import type { DataGridTableInstance } from './data-grid-features';
@@ -205,11 +204,11 @@ export function DataGridContainer({ children, border = true, className }: DataGr
         // mid-grey #878787 drew a cage around the data. In dark it is
         // translucent white, so it composites over the panel rather than
         // sitting on it as a hard grey line.
-        borderColor: border ? getRoleColor('border.subtle') : undefined,
+        borderColor: border ? 'var(--role-border-subtle)' : undefined,
         // surface.raised: identical to the page in light (the border does the
         // work), genuinely lighter in dark, so the grid reads as a panel on
         // the page instead of a hole cut into it.
-        backgroundColor: getRoleColor('surface.raised'),
+        backgroundColor: 'var(--role-surface-raised)',
         // Level 1 only, and only a hint. shadows.ts is fixed black alpha with
         // no dark variant — a black shadow on a near-black page is invisible
         // rather than wrong, so dark leans on the border and the surface lift

@@ -5,7 +5,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { AlertTriangle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 
 /**
@@ -102,11 +101,11 @@ function ErrorStateMedia({
       style={
         variant === 'icon'
           ? {
-              backgroundColor: getRoleColor('status.danger.bg'),
-              color: getRoleColor('status.danger.fg'),
+              backgroundColor: 'var(--role-status-danger-bg)',
+              color: 'var(--role-status-danger-fg)',
               ...style,
             }
-          : { color: getRoleColor('status.danger.fg'), ...style }
+          : { color: 'var(--role-status-danger-fg)', ...style }
       }
       {...props}
     />
@@ -118,7 +117,7 @@ function ErrorStateTitle({ className, style, ...props }: React.ComponentProps<'d
     <div
       data-slot="error-state-title"
       className={cn('text-lg font-medium tracking-tight', className)}
-      style={{ color: getRoleColor('text.primary'), ...style }}
+      style={{ color: 'var(--role-text-primary)', ...style }}
       {...props}
     />
   );
@@ -129,7 +128,7 @@ function ErrorStateDescription({ className, style, ...props }: React.ComponentPr
     <div
       data-slot="error-state-description"
       className={cn('text-sm/relaxed', className)}
-      style={{ color: getRoleColor('text.secondary'), ...style }}
+      style={{ color: 'var(--role-text-secondary)', ...style }}
       {...props}
     />
   );
@@ -198,7 +197,7 @@ function DataError({
             </Button>
           )}
           {detail && (
-            <span className="font-mono text-xs" style={{ color: getRoleColor('text.secondary') }}>
+            <span className="font-mono text-xs" style={{ color: 'var(--role-text-secondary)' }}>
               {detail}
             </span>
           )}

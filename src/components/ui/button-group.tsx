@@ -4,7 +4,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 import { ControlSizeContext, useControlSize, type ControlSize } from './control-size';
-import { getRoleColor } from '@/theme/roles';
 import { Separator } from './separator';
 
 /**
@@ -106,9 +105,9 @@ function ButtonGroupText({ className, asChild = false, style, ...props }: Button
         className
       )}
       style={{
-        backgroundColor: getRoleColor('surface.subtle'),
-        borderColor: getRoleColor('border.default'),
-        color: getRoleColor('text.primary'),
+        backgroundColor: 'var(--role-surface-subtle)',
+        borderColor: 'var(--role-border-default)',
+        color: 'var(--role-text-primary)',
         ...style,
       }}
       {...props}

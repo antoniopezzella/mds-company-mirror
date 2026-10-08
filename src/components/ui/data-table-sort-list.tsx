@@ -5,7 +5,6 @@ import type { RowData } from '@tanstack/react-table';
 import type { DataGridTableInstance } from './data-grid-features';
 import { ArrowDownUp, Plus, Trash2 } from 'lucide-react';
 
-import { getRoleColor } from '@/theme/roles';
 import { Badge } from './badge';
 import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -33,8 +32,8 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
     return typeof header === 'string' ? header : id;
   };
 
-  const mutedColor = getRoleColor('text.secondary');
-  const borderColor = getRoleColor('border.default');
+  const mutedColor = 'var(--role-text-secondary)';
+  const borderColor = 'var(--role-border-default)';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -68,7 +67,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
                     table.setSorting(next);
                   }}
                   className="flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                 >
                   {[s.id, ...unsorted.map((c) => c.id)].map((id) => (
                     <option key={id} value={id}>
@@ -81,7 +80,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
                   value={s.desc ? 'desc' : 'asc'}
                   onChange={(e) => table.setSorting(sorting.map((x) => (x.id === s.id ? { ...x, desc: e.target.value === 'desc' } : x)))}
                   className="w-24 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                 >
                   <option value="asc">Asc</option>
                   <option value="desc">Desc</option>

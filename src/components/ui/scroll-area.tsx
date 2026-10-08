@@ -48,7 +48,7 @@ const ScrollBar = React.forwardRef<
   >
     <ScrollAreaPrimitive.ScrollAreaThumb
       className="relative flex-1 rounded-full"
-      style={{ backgroundColor: getRoleColor('border.strong') }}
+      style={{ backgroundColor: 'var(--role-border-strong)' }}
     />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ));
