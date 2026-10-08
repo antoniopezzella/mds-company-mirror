@@ -23,9 +23,24 @@ measured something **adjacent** to what it claimed to measure, and stayed green.
 
 A green gate is indistinguishable from a disabled gate unless something asserts
 otherwise. So: **every gate needs a self-test that proves it can fail.**
-`scripts/check-a11y-gate.js` is the reference implementation — it writes a
-deliberate violation, runs the real suite, and fails if the suite *passes*.
-Mirror that pattern; see `.claude/rules/gate-self-tests.md`.
+
+- `npm run gates:selftest` (`scripts/check-gate-selftests.js`) does this for
+  the static gates: it writes a probe containing one violation, runs the real
+  npm script, and requires the gate to exit non-zero **and name the probe**.
+  Exiting non-zero alone is not enough — a crash, a syntax error in the probe,
+  or an unrelated pre-existing violation all look like a healthy gate
+  otherwise. Folded into `governance:ci` (~3s).
+- `scripts/check-a11y-gate.js` does the same for the axe gate, which needs a
+  real story and a browser run.
+
+**Adding a gate means adding its probe** to the `GATES` table in
+`check-gate-selftests.js`. Covered so far: roles, composition, radius, zindex,
+props. Not yet: contrast, deprecations, docs-sprawl, figma-drift,
+figma-semantic-drift, package-css, package-types, registry, token-variables.
+
+When a probe fails, suspect the probe before the gate. The `props` probe first
+used `size="default"`, which `prop-compat.ts` does not track as legacy — the
+gate was right to pass, and the harness was right to refuse to certify it.
 
 ## 9. Governance & Validation
 
