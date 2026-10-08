@@ -166,10 +166,10 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
     if (tone === 'default') {
       backgroundColor = 'transparent';
-      color = getRoleColor('text.primary');
-      borderColor = getRoleColor('border.default');
+      color = 'var(--role-text-primary)';
+      borderColor = 'var(--role-border-default)';
     } else if (tone === 'disabled') {
-      backgroundColor = getRoleColor('surface.disabled');
+      backgroundColor = 'var(--role-surface-disabled)';
       // text.secondary, not text.disabled. WCAG 1.4.3 exempts text that is part
       // of an *inactive user interface component* — but a Badge is a status
       // label, not a control the user is locked out of. "Disabled" here is a
@@ -180,7 +180,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       // Deliberately scoped to the Badge rather than changing text.disabled
       // globally, where the exemption does legitimately apply (disabled inputs,
       // disabled buttons).
-      color = getRoleColor('text.secondary');
+      color = 'var(--role-text-secondary)';
       borderColor = undefined;
     } else {
       const roles = TONE_ROLES[tone];

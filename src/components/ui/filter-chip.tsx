@@ -5,7 +5,6 @@ import { cva } from 'class-variance-authority';
 import { Check, ChevronDown, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -140,33 +139,33 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
     // whatever mode first rendered.
     const style: React.CSSProperties = disabled
       ? {
-          backgroundColor: selected ? getRoleColor('surface.disabled') : 'transparent',
-          color: getRoleColor('text.disabled'),
-          border: `1px solid ${getRoleColor('border.subtle')}`,
+          backgroundColor: selected ? 'var(--role-surface-disabled)' : 'transparent',
+          color: 'var(--role-text-disabled)',
+          border: `1px solid ${'var(--role-border-subtle)'}`,
         }
       : selected
         ? {
             // Filled tonal when applied — the chip should read as "on" at a
             // glance across a row of filters.
-            backgroundColor: getRoleColor('surface.selected'),
-            color: getRoleColor('text.primary'),
-            border: `1px solid ${getRoleColor('interactive.primary')}`,
+            backgroundColor: 'var(--role-surface-selected)',
+            color: 'var(--role-text-primary)',
+            border: `1px solid ${'var(--role-interactive-primary)'}`,
           }
         : {
             backgroundColor: 'transparent',
-            color: getRoleColor('text.primary'),
+            color: 'var(--role-text-primary)',
             // border.default, not border.subtle: this is the outline of a
             // control the user operates, which WCAG 1.4.11 holds to 3:1.
             // border.subtle is for rules inside a surface.
-            border: `1px solid ${getRoleColor('border.default')}`,
+            border: `1px solid ${'var(--role-border-default)'}`,
           };
 
     const chipStyle = {
       ...style,
-      '--tw-ring-color': getRoleColor('focus.ring'),
+      '--tw-ring-color': 'var(--role-focus-ring)',
       // Tailwind's ring-offset-2 defaults its gap to white, which is wrong on a
       // dark surface. Same fix as Chip and Checkbox.
-      '--tw-ring-offset-color': getRoleColor('surface.default'),
+      '--tw-ring-offset-color': 'var(--role-surface-default)',
       ...styleProp,
     } as React.CSSProperties;
 
@@ -228,7 +227,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           {...shared}
           onClick={toggle}
           className="inline-flex items-center gap-1.5 border-0 bg-transparent p-0 text-inherit focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ ['--tw-ring-color' as string]: getRoleColor('focus.ring') }}
+          style={{ ['--tw-ring-color' as string]: 'var(--role-focus-ring)' }}
           {...rest}
         >
           {body}
@@ -239,7 +238,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           aria-label={removeLabel ?? `Remove ${typeof label === 'string' ? label : 'filter'}`}
           onClick={onRemove}
           className="ml-1 inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0.5 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ ['--tw-ring-color' as string]: getRoleColor('focus.ring') }}
+          style={{ ['--tw-ring-color' as string]: 'var(--role-focus-ring)' }}
         >
           <X className={ICON[size]} aria-hidden="true" />
         </button>

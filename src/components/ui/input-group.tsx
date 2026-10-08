@@ -44,7 +44,7 @@ export interface InputGroupProps extends React.ComponentProps<'div'> {
 }
 
 function InputGroup({ className, size, ...props }: InputGroupProps) {
-  const borderColor = getRoleColor('border.default');
+  const borderColor = 'var(--role-border-default)';
   const resolved = useControlSize(size);
   return (
     <ControlSizeContext.Provider value={resolved}>
@@ -60,7 +60,7 @@ function InputGroup({ className, size, ...props }: InputGroupProps) {
           CONTROL_HEIGHT[resolved],
           className
         )}
-        style={{ borderColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+        style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
         {...props}
       />
     </ControlSizeContext.Provider>
@@ -99,7 +99,7 @@ function InputGroupAddon({
       data-slot="input-group-addon"
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
-      style={{ color: getRoleColor('text.secondary') }}
+      style={{ color: 'var(--role-text-secondary)' }}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('button')) return;
         (e.currentTarget.parentElement?.querySelector('input, textarea') as HTMLElement | null)?.focus();
@@ -147,7 +147,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
       className={cn('flex items-center gap-2 text-sm [&_svg]:pointer-events-none', className)}
-      style={{ color: getRoleColor('text.secondary') }}
+      style={{ color: 'var(--role-text-secondary)' }}
       {...props}
     />
   )
@@ -161,7 +161,7 @@ function InputGroupInput({ className, style, ...props }: React.ComponentProps<'i
         'flex-1 border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
-      style={{ color: getRoleColor('text.primary'), ...style }}
+      style={{ color: 'var(--role-text-primary)', ...style }}
       {...props}
     />
   )
@@ -175,7 +175,7 @@ function InputGroupTextarea({ className, style, ...props }: React.ComponentProps
         'flex-1 resize-none border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
-      style={{ color: getRoleColor('text.primary'), ...style }}
+      style={{ color: 'var(--role-text-primary)', ...style }}
       {...props}
     />
   )

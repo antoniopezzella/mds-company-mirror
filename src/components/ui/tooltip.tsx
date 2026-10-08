@@ -176,8 +176,8 @@ export const TooltipContent = React.forwardRef<
         className
       )}
       style={{
-        backgroundColor: getRoleColor('surface.disabled'),
-        color: getRoleColor('text.primary'),
+        backgroundColor: 'var(--role-surface-disabled)',
+        color: 'var(--role-text-primary)',
         borderRadius: '6px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
         ...style,

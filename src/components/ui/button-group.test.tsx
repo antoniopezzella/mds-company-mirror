@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from './button-group';
 import { Button } from './button';
-import { getRoleColor } from '@/theme/roles';
 
 describe('ButtonGroup', () => {
   it('exposes itself as a group so assistive tech knows the buttons belong together', () => {
@@ -93,11 +92,11 @@ describe('ButtonGroupText', () => {
     // Asserted against getRoleColor rather than a literal so this keeps
     // passing if the role is retargeted, and fails if the component starts
     // hardcoding colour instead of consuming the role layer.
-    expect(text).toHaveStyle({
-      backgroundColor: getRoleColor('surface.subtle'),
-      borderColor: getRoleColor('border.default'),
-      color: getRoleColor('text.primary'),
-    });
+    // `.style.*`, not toHaveStyle: jsdom cannot match a `var()` inline value.
+    const ts = (text as HTMLElement).style;
+    expect(ts.backgroundColor).toBe('var(--role-surface-subtle)');
+    expect(ts.borderColor).toBe('var(--role-border-default)');
+    expect(ts.color).toBe('var(--role-text-primary)');
     // It is a label, not a control — it must not be announced as one.
     expect(screen.queryByRole('button', { name: 'https://' })).not.toBeInTheDocument();
   });

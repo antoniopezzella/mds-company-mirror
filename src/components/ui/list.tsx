@@ -6,7 +6,6 @@ import { Check } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { DataState, resolveDataStatus, type DataStateProps } from './data-state';
-import { getRoleColor } from '@/theme/roles';
 
 /**
  * Design System List — shadcn/ui counterpart for the MDS List. Built
@@ -88,11 +87,11 @@ export const List: React.FC<ListProps> = ({
 
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.default'), ...style }}>
+    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: 'var(--role-surface-default)', ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"
-          style={{ backgroundColor: getRoleColor('surface.subtle'), color: getRoleColor('text.primary') }}
+          style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-primary)' }}
         >
           {subheader}
         </div>
@@ -117,7 +116,7 @@ export const List: React.FC<ListProps> = ({
           return (
             <React.Fragment key={item.id}>
               <li
-                style={{ backgroundColor: isSelected ? getRoleColor('surface.subtle') : isHovered ? getRoleColor('surface.subtle') : 'transparent' }}
+                style={{ backgroundColor: isSelected ? 'var(--role-surface-subtle)' : isHovered ? 'var(--role-surface-subtle)' : 'transparent' }}
               >
                 <button
                   type="button"
@@ -133,7 +132,7 @@ export const List: React.FC<ListProps> = ({
                     dense ? 'px-3 py-1.5' : 'px-4 py-2.5',
                     selectable ? 'pl-2' : undefined
                   )}
-                  style={{ color: item.disabled ? getRoleColor('text.disabled') : getRoleColor('text.primary') }}
+                  style={{ color: item.disabled ? 'var(--role-text-disabled)' : 'var(--role-text-primary)' }}
                 >
                   {selectable && (
                     // Purely presentational. This used to render the real
@@ -148,9 +147,9 @@ export const List: React.FC<ListProps> = ({
                       aria-hidden="true"
                       className="flex h-4 w-4 shrink-0 items-center justify-center rounded-md border"
                       style={{
-                        borderColor: isSelected ? getRoleColor('interactive.primary') : getRoleColor('border.default'),
-                        backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',
-                        color: getRoleColor('text.onInteractive'),
+                        borderColor: isSelected ? 'var(--role-interactive-primary)' : 'var(--role-border-default)',
+                        backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',
+                        color: 'var(--role-text-onInteractive)',
                       }}
                     >
                       {isSelected && <Check className="h-3 w-3" />}
@@ -160,7 +159,7 @@ export const List: React.FC<ListProps> = ({
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm">{item.primary}</span>
                     {item.secondary && (
-                      <span className="block truncate text-xs" style={{ color: item.disabled ? getRoleColor('text.disabled') : getRoleColor('text.secondary') }}>
+                      <span className="block truncate text-xs" style={{ color: item.disabled ? 'var(--role-text-disabled)' : 'var(--role-text-secondary)' }}>
                         {item.secondary}
                       </span>
                     )}
@@ -169,7 +168,7 @@ export const List: React.FC<ListProps> = ({
                 </button>
               </li>
               {dividers && index < items.length - 1 && (
-                <li aria-hidden="true" className="h-px" style={{ backgroundColor: getRoleColor('border.default') }} />
+                <li aria-hidden="true" className="h-px" style={{ backgroundColor: 'var(--role-border-default)' }} />
               )}
             </React.Fragment>
           );

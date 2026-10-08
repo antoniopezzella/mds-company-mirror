@@ -124,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isPrimary = variant === 'primary';
   const bg = getRoleColor(isPrimary ? 'surface.navigation' : 'surface.secondary');
   const fg = getRoleColor(isPrimary ? 'text.onHero' : 'text.primary');
-  const hoverBg = getRoleColor('surface.navigation.hover');
+  const hoverBg = 'var(--role-surface-navigation-hover)';
   const [profileHover, setProfileHover] = React.useState(false);
 
   return (
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
         // A delineating edge fixes that without lightening the brand navy or
         // disturbing the nav hover/active scale, which already occupy the
         // lighter blues.
-        borderBottomColor: getRoleColor('surface.navigation.active'),
+        borderBottomColor: 'var(--role-surface-navigation-active)',
       }}
     >
       {/* Left: sidebar toggle + brand */}
@@ -187,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({
               // near-white; interactive.danger LIGHTENS to #ff6b6b in dark, so
               // white-on-it measured 2.78:1 and the count was unreadable.
               // onInteractive flips to Midnight in dark: 5.34 / 6.53.
-              style={{ backgroundColor: getRoleColor('interactive.danger'), color: getRoleColor('text.onInteractive') }}
+              style={{ backgroundColor: 'var(--role-interactive-danger)', color: 'var(--role-text-onInteractive)' }}
             >
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
@@ -216,16 +216,16 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-3 px-3 py-3">
               <Avatar initials={user.initials} size="md" tone="primary" />
               <div>
-                <p className="text-sm font-semibold" style={{ color: getRoleColor('text.primary') }}>
+                <p className="text-sm font-semibold" style={{ color: 'var(--role-text-primary)' }}>
                   {user.name}
                 </p>
                 {user.role && (
-                  <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+                  <p className="text-xs" style={{ color: 'var(--role-text-secondary)' }}>
                     {user.role}
                   </p>
                 )}
                 {user.organization && (
-                  <p className="mt-0.5 text-[11px]" style={{ color: getRoleColor('text.secondary') }}>
+                  <p className="mt-0.5 text-[11px]" style={{ color: 'var(--role-text-secondary)' }}>
                     {user.organization}
                   </p>
                 )}

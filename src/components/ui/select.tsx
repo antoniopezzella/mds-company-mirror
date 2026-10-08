@@ -5,6 +5,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { type RoleName } from '@/theme/roles';
 import { normalizeSize } from './prop-compat';
 import {
   CONTROL_HEIGHT,
@@ -15,7 +16,6 @@ import {
   useControlSize,
   type ControlSize,
 } from './control-size';
-import { getRoleColor, type RoleName } from '@/theme/roles';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
 // Radix Select renders a real custom-styled listbox (not a native <select>),
@@ -55,10 +55,10 @@ const SelectTrigger = React.forwardRef<
     )}
     style={
       {
-        borderColor: invalid ? getRoleColor('status.danger.border') : getRoleColor('border.default'),
-        color: getRoleColor('text.primary'),
-        backgroundColor: getRoleColor('surface.default'),
-        '--tw-ring-color': invalid ? getRoleColor('status.danger.border') : getRoleColor('focus.ring'),
+        borderColor: invalid ? 'var(--role-status-danger-border)' : 'var(--role-border-default)',
+        color: 'var(--role-text-primary)',
+        backgroundColor: 'var(--role-surface-default)',
+        '--tw-ring-color': invalid ? 'var(--role-status-danger-border)' : 'var(--role-focus-ring)',
       } as React.CSSProperties
     }
     {...props}
@@ -112,7 +112,7 @@ const SelectContent = React.forwardRef<
         position === 'popper' && 'data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1',
         className
       )}
-      style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}
+      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
       position={position}
       {...props}
     >
@@ -139,7 +139,7 @@ const SelectLabel = React.forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn('px-2 py-1.5 text-xs font-semibold', className)}
-    style={{ color: getRoleColor('text.secondary') }}
+    style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
 ));
@@ -155,14 +155,14 @@ const SelectItem = React.forwardRef<
       'relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 pl-2 pr-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
     // inside it, written for exactly that case, became dead code.
     {...props}
     onFocus={(e) => {
-      (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor('surface.subtle');
+      (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-surface-subtle)';
       props.onFocus?.(e);
     }}
     onBlur={(e) => {
@@ -172,7 +172,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute right-2 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" style={{ color: getRoleColor('interactive.primary') }} />
+        <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </SelectPrimitive.ItemIndicator>
     </span>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -187,7 +187,7 @@ const SelectSeparator = React.forwardRef<
   <SelectPrimitive.Separator
     ref={ref}
     className={cn('-mx-1 my-1 h-px', className)}
-    style={{ backgroundColor: getRoleColor('border.default') }}
+    style={{ backgroundColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));
@@ -349,7 +349,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
         <label
           htmlFor={generatedId}
           className="font-sans-productive text-sm font-medium"
-          style={{ color: getRoleColor('text.secondary') }}
+          style={{ color: 'var(--role-text-secondary)' }}
         >
           {label}
         </label>

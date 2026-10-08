@@ -55,9 +55,9 @@ const FIELD_TRIGGER = `justify-start gap-2 ${CONTROL_RADIUS} font-normal`;
 const FIELD_TRIGGER_STYLE: React.CSSProperties = {
   borderStyle: 'solid',
   borderWidth: 1,
-  borderColor: getRoleColor('border.default'),
-  backgroundColor: getRoleColor('surface.default'),
-  color: getRoleColor('text.primary'),
+  borderColor: 'var(--role-border-default)',
+  backgroundColor: 'var(--role-surface-default)',
+  color: 'var(--role-text-primary)',
 };
 
 export interface DatePickerProps {
@@ -102,7 +102,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     <PopoverTrigger asChild>
       <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE} dir={dir}>
         <CalendarIcon className={CONTROL_ICON[controlSize]} />
-        {date ? format(date, 'MMM d, yyyy') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
+        {date ? format(date, 'MMM d, yyyy') : <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
       </Button>
     </PopoverTrigger>
     <PopoverContent className="w-auto p-0" align="start">
@@ -160,7 +160,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <PopoverTrigger asChild>
         <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
-          {label ?? <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
+          {label ?? <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -220,7 +220,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
             type="button"
             aria-label="Open calendar"
             className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
-            style={{ color: getRoleColor('text.secondary') }}
+            style={{ color: 'var(--role-text-secondary)' }}
           >
             {/* Fixed 32px affordance inside the field — does not scale. */}
             <CalendarIcon className="h-4 w-4" />
@@ -284,7 +284,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       <PopoverTrigger asChild>
         <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
-          {date ? format(date, 'MMM d, yyyy · h:mm a') : <span style={{ color: getRoleColor('text.secondary') }}>{placeholder}</span>}
+          {date ? format(date, 'MMM d, yyyy · h:mm a') : <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -297,9 +297,9 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         />
         <div
           className="flex items-center gap-2 border-t p-3"
-          style={{ borderColor: getRoleColor('border.default') }}
+          style={{ borderColor: 'var(--role-border-default)' }}
         >
-          <Clock className="h-4 w-4" style={{ color: getRoleColor('text.secondary') }} />
+          <Clock className="h-4 w-4" style={{ color: 'var(--role-text-secondary)' }} />
           <Input
             type="time"
             inputSize="small"
@@ -353,7 +353,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
               type="button"
               aria-label="Open calendar"
               className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
-              style={{ color: getRoleColor('text.secondary') }}
+              style={{ color: 'var(--role-text-secondary)' }}
             >
               <CalendarIcon className="h-4 w-4" />
             </button>
@@ -374,16 +374,16 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
         </Popover>
       </div>
       {text.trim() && (
-        <div className="flex items-center gap-1.5 text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--role-text-secondary)' }}>
           {parsed ? (
             <>
-              <Check className="h-3.5 w-3.5" style={{ color: getRoleColor('status.success.fg') }} />
+              <Check className="h-3.5 w-3.5" style={{ color: 'var(--role-status-success-fg)' }} />
               <span>Understood as {format(parsed, 'EEEE, MMM d, yyyy')}</span>
               {date?.getTime() !== parsed.getTime() && (
                 <button
                   type="button"
                   className="ml-1 underline underline-offset-2"
-                  style={{ color: getRoleColor('interactive.primary') }}
+                  style={{ color: 'var(--role-interactive-primary)' }}
                   onClick={() => onDateChange?.(parsed)}
                 >
                   Use this date
@@ -392,7 +392,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
             </>
           ) : (
             <>
-              <X className="h-3.5 w-3.5" style={{ color: getRoleColor('status.danger.fg') }} />
+              <X className="h-3.5 w-3.5" style={{ color: 'var(--role-status-danger-fg)' }} />
               <span>Couldn&apos;t understand that date</span>
             </>
           )}

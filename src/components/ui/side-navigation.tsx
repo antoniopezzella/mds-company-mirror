@@ -190,15 +190,15 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
 
       if (variant === 'light') {
         return {
-          navBg: getRoleColor('surface.default'),
-          navText: getRoleColor('text.primary'),
-          itemHoverBg: getRoleColor('surface.subtle'),
+          navBg: 'var(--role-surface-default)',
+          navText: 'var(--role-text-primary)',
+          itemHoverBg: 'var(--role-surface-subtle)',
           activeBg: 'rgba(11, 75, 255, 0.08)',
           activeHoverBg: 'rgba(11, 75, 255, 0.12)',
-          activeBorder: getRoleColor('interactive.secondary'),
-          border: getRoleColor('border.default'),
-          ctaBg: getRoleColor('surface.subtle'),
-          ctaText: getRoleColor('text.primary'),
+          activeBorder: 'var(--role-interactive-secondary)',
+          border: 'var(--role-border-default)',
+          ctaBg: 'var(--role-surface-subtle)',
+          ctaText: 'var(--role-text-primary)',
           ctaInverse: false,
         };
       }
@@ -210,17 +210,17 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         navBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
         navText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
         itemHoverBg: getRoleColor(isSecondary ? 'surface.secondary.hover' : 'surface.navigation.hover'),
-        activeBg: getRoleColor('surface.navigation.active'),
-        activeHoverBg: getRoleColor('surface.navigation.active'),
-        activeBorder: getRoleColor('interactive.secondary'),
+        activeBg: 'var(--role-surface-navigation-active)',
+        activeHoverBg: 'var(--role-surface-navigation-active)',
+        activeBorder: 'var(--role-interactive-secondary)',
         // The active pill's background is the same dark navy
         // (surface.navigation.active, #333f6b) for BOTH colour schemes, so the
         // active item's text has to follow that background rather than the
         // rail's. On the secondary (sky-blue) rail navText is the dark
         // text.primary, which put #000f47 on #333f6b — 1.78:1, effectively
         // invisible, on every active item. text.onHero measures 8.27:1 there.
-        activeText: getRoleColor('text.onHero'),
-        border: getRoleColor('border.default'),
+        activeText: 'var(--role-text-onHero)',
+        border: 'var(--role-border-default)',
         ctaBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
         ctaText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
         // Sky-blue (secondary) rail is a light surface — same navy button
@@ -361,7 +361,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                     <span
                       aria-hidden="true"
                       className="mr-1 h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: getRoleColor('status.warning.fg') }}
+                      style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
                     />
                   )}
                   {!collapsed && isGroup && (
@@ -422,7 +422,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                               <span
                                 aria-hidden="true"
                                 className="ml-2 h-1.5 w-1.5 shrink-0 rounded-full"
-                                style={{ backgroundColor: getRoleColor('status.warning.fg') }}
+                                style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
                               />
                             )}
                           </button>

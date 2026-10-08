@@ -5,7 +5,6 @@ import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 /**
  * Design System MegaMenu — shadcn/ui counterpart for the MDS MegaMenu.
@@ -54,11 +53,11 @@ const triggerClass =
  * multi-column panels. Pass `items` as `{ label, sections, description? }`.
  */
 export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
-  const textColor = getRoleColor('text.primary');
-  const mutedColor = getRoleColor('text.secondary');
-  const linkColor = getRoleColor('interactive.primary');
-  const borderColor = getRoleColor('border.default');
-  const focusRing = getRoleColor('focus.ring');
+  const textColor = 'var(--role-text-primary)';
+  const mutedColor = 'var(--role-text-secondary)';
+  const linkColor = 'var(--role-interactive-primary)';
+  const borderColor = 'var(--role-border-default)';
+  const focusRing = 'var(--role-focus-ring)';
 
   return (
     <NavigationMenuPrimitive.Root className={cn('relative z-40', className)}>
@@ -77,7 +76,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
             >
               <div
                 className="w-[min(90vw,900px)] rounded-lg border p-6 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
-                style={{ backgroundColor: getRoleColor('surface.default'), borderColor }}
+                style={{ backgroundColor: 'var(--role-surface-default)', borderColor }}
               >
                 {item.description && (
                   <p className="mb-4 text-sm" style={{ color: mutedColor }}>
@@ -114,7 +113,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
                                 {link.badge && (
                                   <span
                                     className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-                                    style={{ backgroundColor: getRoleColor('surface.accent'), color: getRoleColor('text.primary') }}
+                                    style={{ backgroundColor: 'var(--role-surface-accent)', color: 'var(--role-text-primary)' }}
                                   >
                                     {link.badge}
                                   </span>
@@ -132,7 +131,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
           </NavigationMenuPrimitive.Item>
         ))}
         <NavigationMenuPrimitive.Indicator className="top-full z-10 flex h-2 items-end justify-center overflow-hidden transition-[width,transform_250ms_ease] data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in">
-          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-lg" style={{ backgroundColor: getRoleColor('surface.default'), border: `1px solid ${borderColor}` }} />
+          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-lg" style={{ backgroundColor: 'var(--role-surface-default)', border: `1px solid ${borderColor}` }} />
         </NavigationMenuPrimitive.Indicator>
       </NavigationMenuPrimitive.List>
       <div className="absolute left-0 top-full flex justify-center">

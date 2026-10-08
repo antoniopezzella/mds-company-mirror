@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 
-import { getRoleColor } from '@/theme/roles';
 
 export interface BreadcrumbItem {
   label: string;
@@ -35,9 +34,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   className,
   ariaLabel = 'Breadcrumbs',
 }) => {
-  const linkColor = getRoleColor('interactive.primary');
-  const textColor = getRoleColor('text.primary');
-  const mutedColor = getRoleColor('text.secondary');
+  const linkColor = 'var(--role-interactive-primary)';
+  const textColor = 'var(--role-text-primary)';
+  const mutedColor = 'var(--role-text-secondary)';
 
   const displayItems: (BreadcrumbItem | 'ellipsis')[] =
     items.length > maxItems && maxItems >= 2

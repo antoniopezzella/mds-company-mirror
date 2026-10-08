@@ -25,9 +25,9 @@ const sliderThumbVariants = cva(
 );
 
 function getThumbColor(interaction: InteractionState): string {
-  if (interaction === 'active') return getRoleColor('interactive.primary.active');
-  if (interaction === 'hover') return getRoleColor('interactive.primary.hover');
-  return getRoleColor('interactive.primary');
+  if (interaction === 'active') return 'var(--role-interactive-primary-active)';
+  if (interaction === 'hover') return 'var(--role-interactive-primary-hover)';
+  return 'var(--role-interactive-primary)';
 }
 
 export type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
@@ -64,7 +64,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
       return `${rootLabel} (handle ${index + 1})`;
     };
 
-    const thumbColor = disabled ? getRoleColor('text.disabled') : getThumbColor(interaction);
+    const thumbColor = disabled ? 'var(--role-text-disabled)' : getThumbColor(interaction);
 
     return (
       <SliderPrimitive.Root
@@ -95,11 +95,11 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
       >
         <SliderPrimitive.Track
           className={sliderTrackVariants()}
-          style={{ backgroundColor: getRoleColor('border.default') }}
+          style={{ backgroundColor: 'var(--role-border-default)' }}
         >
           <SliderPrimitive.Range
             className={sliderRangeVariants()}
-            style={{ backgroundColor: disabled ? getRoleColor('text.disabled') : getRoleColor('interactive.primary') }}
+            style={{ backgroundColor: disabled ? 'var(--role-text-disabled)' : 'var(--role-interactive-primary)' }}
           />
         </SliderPrimitive.Track>
         {Array.from({ length: thumbCount }).map((_, index) => (
@@ -109,9 +109,9 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
             className={sliderThumbVariants()}
             style={
               {
-                backgroundColor: getRoleColor('surface.default'),
+                backgroundColor: 'var(--role-surface-default)',
                 borderColor: thumbColor,
-                '--slider-focus-ring': getRoleColor('focus.ring'),
+                '--slider-focus-ring': 'var(--role-focus-ring)',
               } as React.CSSProperties
             }
           />

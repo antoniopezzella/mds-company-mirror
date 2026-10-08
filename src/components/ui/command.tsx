@@ -23,8 +23,8 @@ const Command = React.forwardRef<
     className={cn('flex h-full w-full flex-col overflow-hidden rounded-md', className)}
     style={
       {
-        backgroundColor: getRoleColor('surface.default'),
-        color: getRoleColor('text.primary'),
+        backgroundColor: 'var(--role-surface-default)',
+        color: 'var(--role-text-primary)',
           // Referenced by CommandItem's data-selected background utility. The
           // class is described in prose, not written out: Tailwind's content
           // scanner is a plain text scan with no awareness of comments, so a
@@ -36,7 +36,7 @@ const Command = React.forwardRef<
         // the "Tailwind JIT can't see a dynamic getRoleColor() value" issue
         // for cmdk's own internal `data-selected` (keyboard nav) styling,
         // which we can't otherwise hook into from JS.
-        '--cmdk-selected-bg': getRoleColor('surface.subtle'),
+        '--cmdk-selected-bg': 'var(--role-surface-subtle)',
         ...style,
       } as React.CSSProperties
     }
@@ -59,7 +59,7 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
-  <div className="flex items-center gap-2 border-b px-3" style={{ borderColor: getRoleColor('border.default') }}>
+  <div className="flex items-center gap-2 border-b px-3" style={{ borderColor: 'var(--role-border-default)' }}>
     <Search className="h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
@@ -85,7 +85,7 @@ const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
 >((props, ref) => (
-  <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" style={{ color: getRoleColor('text.secondary') }} {...props} />
+  <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" style={{ color: 'var(--role-text-secondary)' }} {...props} />
 ));
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
@@ -96,7 +96,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn('overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-semibold', className)}
-    style={{ color: getRoleColor('text.primary'), ...style } as React.CSSProperties}
+    style={{ color: 'var(--role-text-primary)', ...style } as React.CSSProperties}
     {...props}
   />
 ));
@@ -115,7 +115,7 @@ const CommandSeparator = React.forwardRef<
     ref={ref}
     aria-hidden="true"
     className={cn('-mx-1 my-1 h-px', className)}
-    style={{ backgroundColor: getRoleColor('border.default') }}
+    style={{ backgroundColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));
@@ -131,7 +131,7 @@ const CommandItem = React.forwardRef<
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-[var(--cmdk-selected-bg)]',
       className
     )}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     {...props}
   />
 ));

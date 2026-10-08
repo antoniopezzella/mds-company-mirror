@@ -2,7 +2,6 @@ import * as React from 'react';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 export type SkeletonVariant = 'text' | 'rectangular' | 'rounded' | 'circular';
 
@@ -47,7 +46,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({ variant = 'text', animation 
       data-slot="skeleton"
       className={cn(skeletonVariants({ variant, animation: animation === false ? 'none' : animation }), className)}
       style={{
-        backgroundColor: getRoleColor('surface.subtle'),
+        backgroundColor: 'var(--role-surface-subtle)',
         width: width ?? (variant === 'circular' ? 40 : '100%'),
         height: height ?? defaultHeight,
         ...style,

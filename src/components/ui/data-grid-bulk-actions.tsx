@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { Modal } from './dialog';
 import { Spinner } from './spinner';
@@ -233,10 +232,10 @@ export function DataGridBulkActions({
             </Button>
           }
         >
-          <ul className="max-h-48 overflow-auto text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <ul className="max-h-48 overflow-auto text-sm" style={{ color: 'var(--role-text-secondary)' }}>
             {state.result.failed?.map((f) => (
               <li key={f.id} className="flex gap-2 py-0.5">
-                <span className="font-medium" style={{ color: getRoleColor('text.primary') }}>
+                <span className="font-medium" style={{ color: 'var(--role-text-primary)' }}>
                   {f.id}
                 </span>
                 <span>{f.reason}</span>

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Checkbox } from './checkbox';
 import { Skeleton } from './skeleton';
 import { DataState, resolveDataStatus } from './data-state';
@@ -188,16 +187,16 @@ function TableComponent<T extends object>({
     return column.render ? column.render(value, row, index) : (value as React.ReactNode);
   };
 
-  const borderColor = getRoleColor('border.default');
-  const headerBg = getRoleColor('surface.subtle');
-  const rowBg = getRoleColor('surface.default');
-  const stripeBg = getRoleColor('surface.subtle');
+  const borderColor = 'var(--role-border-default)';
+  const headerBg = 'var(--role-surface-subtle)';
+  const rowBg = 'var(--role-surface-default)';
+  const stripeBg = 'var(--role-surface-subtle)';
   // Sky Blue in light, unchanged in dark. headerBg and stripeBg above keep the
   // neutral lift deliberately — only the hovered row goes brand.
-  const hoverBg = getRoleColor('surface.row.hover');
-  const selectedBg = getRoleColor('surface.accent');
-  const textColor = getRoleColor('text.primary');
-  const mutedColor = getRoleColor('text.secondary');
+  const hoverBg = 'var(--role-surface-row-hover)';
+  const selectedBg = 'var(--role-surface-accent)';
+  const textColor = 'var(--role-text-primary)';
+  const mutedColor = 'var(--role-text-secondary)';
 
   const cellPadding = SIZE_PADDING[size];
   const bordered = variant === 'bordered';

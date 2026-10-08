@@ -4,7 +4,6 @@ import * as React from 'react';
 import { ImageOff } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Skeleton } from './skeleton';
 
 export type ImageAspectRatio = '1:1' | '5:4' | '4:3' | '3:2' | '16:9' | '16:10' | '2:1' | 'round' | 'free';
@@ -78,7 +77,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
       {error && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center gap-1"
-          style={{ backgroundColor: getRoleColor('surface.subtle'), color: getRoleColor('text.secondary') }}
+          style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-secondary)' }}
         >
           <ImageOff className="h-8 w-8 opacity-40" />
           <span className="text-xs opacity-60">Image unavailable</span>

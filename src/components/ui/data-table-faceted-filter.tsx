@@ -6,7 +6,6 @@ import type { DataGridColumn } from './data-grid-features';
 import { Check, PlusCircle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Badge } from './badge';
 import { Button } from './button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
@@ -63,7 +62,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
 
   const reset = () => column?.setFilterValue(undefined);
 
-  const mutedColor = getRoleColor('text.secondary');
+  const mutedColor = 'var(--role-text-secondary)';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -122,9 +121,9 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
                     <span
                       className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
                       style={{
-                        borderColor: getRoleColor('interactive.primary'),
-                        backgroundColor: isSelected ? getRoleColor('interactive.primary') : 'transparent',
-                        color: getRoleColor('text.onInteractive'),
+                        borderColor: 'var(--role-interactive-primary)',
+                        backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',
+                        color: 'var(--role-text-onInteractive)',
                       }}
                     >
                       <Check className={cn('h-3 w-3', !isSelected && 'invisible')} />

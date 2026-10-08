@@ -52,10 +52,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
         style={
           {
-            borderColor: toneRole ? getRoleColor(toneRole) : getRoleColor('border.default'),
-            color: getRoleColor('text.primary'),
-            backgroundColor: getRoleColor('surface.default'),
-            '--tw-ring-color': toneRole ? getRoleColor(toneRole) : getRoleColor('focus.ring'),
+            borderColor: toneRole ? getRoleColor(toneRole) : 'var(--role-border-default)',
+            color: 'var(--role-text-primary)',
+            backgroundColor: 'var(--role-surface-default)',
+            '--tw-ring-color': toneRole ? getRoleColor(toneRole) : 'var(--role-focus-ring)',
             ...style,
           } as React.CSSProperties
         }

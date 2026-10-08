@@ -6,7 +6,6 @@ import { OTPInput, OTPInputContext } from 'input-otp';
 import { Dot } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 /**
  * Design System InputOTP — shadcn/ui counterpart wrapping the `input-otp`
@@ -63,10 +62,10 @@ const InputOTPSlot = React.forwardRef<
       )}
       style={
         {
-          borderColor: isActive ? getRoleColor('focus.ring') : getRoleColor('border.default'),
-          color: getRoleColor('text.primary'),
-          backgroundColor: getRoleColor('surface.default'),
-          '--tw-ring-color': getRoleColor('focus.ring'),
+          borderColor: isActive ? 'var(--role-focus-ring)' : 'var(--role-border-default)',
+          color: 'var(--role-text-primary)',
+          backgroundColor: 'var(--role-surface-default)',
+          '--tw-ring-color': 'var(--role-focus-ring)',
           ...style,
         } as React.CSSProperties
       }
@@ -77,7 +76,7 @@ const InputOTPSlot = React.forwardRef<
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div
             className="h-4 w-px animate-caret-blink"
-            style={{ backgroundColor: getRoleColor('text.primary') }}
+            style={{ backgroundColor: 'var(--role-text-primary)' }}
           />
         </div>
       )}
@@ -89,7 +88,7 @@ InputOTPSlot.displayName = 'InputOTPSlot';
 const InputOTPSeparator = React.forwardRef<React.ElementRef<'div'>, React.ComponentPropsWithoutRef<'div'>>(
   ({ ...props }, ref) => (
     <div ref={ref} role="separator" {...props}>
-      <Dot style={{ color: getRoleColor('text.secondary') }} />
+      <Dot style={{ color: 'var(--role-text-secondary)' }} />
     </div>
   )
 );

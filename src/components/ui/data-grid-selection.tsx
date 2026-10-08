@@ -4,7 +4,6 @@ import * as React from 'react';
 import type { RowData } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { DataGridBulkActions, type BulkAction } from './data-grid-bulk-actions';
 import type { DataGridTableInstance } from './data-grid-features';
@@ -166,9 +165,9 @@ export function DataGridSelectionBanner({
       aria-live="polite"
       className={cn('flex flex-wrap items-center gap-3 rounded-lg px-3 py-2 text-sm', className)}
       style={{
-        backgroundColor: getRoleColor('surface.subtle'),
-        color: getRoleColor('text.primary'),
-        border: `1px solid ${getRoleColor('border.subtle')}`,
+        backgroundColor: 'var(--role-surface-subtle)',
+        color: 'var(--role-text-primary)',
+        border: `1px solid ${'var(--role-border-subtle)'}`,
       }}
     >
       {allFilteredRowsSelected ? (

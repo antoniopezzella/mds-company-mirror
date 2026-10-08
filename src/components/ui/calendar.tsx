@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DayPicker, UI, type ChevronProps, type DayButtonProps, type DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 // No MDS/Figma spec exists for this yet; built matching real shadcn/ui
 // conventions directly, adapted for react-day-picker v10's actual prop API
@@ -34,7 +33,7 @@ function CalendarChevron({ className, orientation, disabled, ...props }: Chevron
   return (
     <Icon
       className={cn('h-4 w-4', disabled && 'opacity-50', className)}
-      style={{ color: getRoleColor('text.secondary') }}
+      style={{ color: 'var(--role-text-secondary)' }}
       {...props}
     />
   );
@@ -67,21 +66,21 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       style={
         {
           color: isSolidSelected
-            ? getRoleColor('text.onInteractive')
+            ? 'var(--role-text-onInteractive)'
             : isRangeMiddle
-              ? getRoleColor('text.primary')
+              ? 'var(--role-text-primary)'
               : modifiers.disabled
-                ? getRoleColor('text.disabled')
-                : getRoleColor('text.primary'),
+                ? 'var(--role-text-disabled)'
+                : 'var(--role-text-primary)',
           backgroundColor: isSolidSelected
-            ? getRoleColor('interactive.primary')
+            ? 'var(--role-interactive-primary)'
             : isRangeMiddle
-              ? getRoleColor('surface.accent')
+              ? 'var(--role-surface-accent)'
               : 'transparent',
           opacity: modifiers.disabled ? 0.5 : modifiers.outside ? 0.6 : 1,
           boxShadow:
-            modifiers.today && !modifiers.selected ? `inset 0 0 0 1px ${getRoleColor('border.default')}` : 'none',
-          '--tw-ring-color': getRoleColor('focus.ring'),
+            modifiers.today && !modifiers.selected ? `inset 0 0 0 1px ${'var(--role-border-default)'}` : 'none',
+          '--tw-ring-color': 'var(--role-focus-ring)',
         } as React.CSSProperties
       }
       // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
@@ -91,7 +90,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       {...props}
       onMouseEnter={(e) => {
         if (!modifiers.selected && !modifiers.disabled) {
-          (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor('surface.subtle');
+          (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-surface-subtle)';
         }
         props.onMouseEnter?.(e);
       }}
@@ -134,10 +133,10 @@ function Calendar({ className, classNames, showOutsideDays = true, components, .
         ...classNames,
       }}
       styles={{
-        [UI.CaptionLabel]: { color: getRoleColor('text.primary') },
-        [UI.Weekday]: { color: getRoleColor('text.secondary') },
-        [UI.PreviousMonthButton]: { color: getRoleColor('text.secondary') },
-        [UI.NextMonthButton]: { color: getRoleColor('text.secondary') },
+        [UI.CaptionLabel]: { color: 'var(--role-text-primary)' },
+        [UI.Weekday]: { color: 'var(--role-text-secondary)' },
+        [UI.PreviousMonthButton]: { color: 'var(--role-text-secondary)' },
+        [UI.NextMonthButton]: { color: 'var(--role-text-secondary)' },
       }}
       components={{
         Chevron: CalendarChevron,

@@ -58,9 +58,11 @@ describe('Input', () => {
 
   it('defaults to the neutral border role', () => {
     render(<Input placeholder="Default" />);
-    expect(screen.getByPlaceholderText('Default')).toHaveStyle({
-      borderColor: getRoleColor('border.default'),
-    });
+    // `.style.*`, not toHaveStyle: jsdom's toHaveStyle cannot match a `var()`
+    // inline value (it normalises it away). The raw style property returns it.
+    expect((screen.getByPlaceholderText('Default') as HTMLElement).style.borderColor).toBe(
+      'var(--role-border-default)'
+    );
   });
 
   it('applies the size preset heights', () => {

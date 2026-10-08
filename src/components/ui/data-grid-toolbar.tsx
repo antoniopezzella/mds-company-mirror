@@ -5,7 +5,6 @@ import type { RowData } from '@tanstack/react-table';
 import { ChevronDown, Download, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 import { Button } from './button';
 import { Input } from './input';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
@@ -96,7 +95,7 @@ export function DataGridToolbar<TData extends RowData>({
 
   const columnFilters = table.state.columnFilters;
   const searchValue = searchKey ? ((table.getColumn(searchKey)?.getFilterValue() as string) ?? '') : '';
-  const textColor = getRoleColor('text.secondary');
+  const textColor = 'var(--role-text-secondary)';
 
   const exportableColumns = React.useMemo(
     () => table.getAllLeafColumns().filter((c) => c.getCanHide()),
@@ -149,7 +148,7 @@ export function DataGridToolbar<TData extends RowData>({
                   searchInputRef.current?.focus();
                 }}
                 className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-                style={{ color: textColor, '--tw-ring-color': getRoleColor('focus.ring') } as React.CSSProperties}
+                style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
               >
                 <X className="h-3.5 w-3.5" />
               </button>

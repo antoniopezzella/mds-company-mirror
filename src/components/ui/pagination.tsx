@@ -4,7 +4,6 @@ import * as React from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 /**
  * simple   — prev/next with an `X / Y` readout.
@@ -85,12 +84,12 @@ export const Pagination: React.FC<PaginationProps> = ({
     onPageChange(page);
   };
 
-  const focusRing = getRoleColor('focus.ring');
-  const hoverBg = getRoleColor('surface.subtle');
-  const activeBg = getRoleColor('interactive.primary');
-  const activeFg = getRoleColor('text.onInteractive');
-  const textColor = getRoleColor('text.primary');
-  const mutedColor = getRoleColor('text.secondary');
+  const focusRing = 'var(--role-focus-ring)';
+  const hoverBg = 'var(--role-surface-subtle)';
+  const activeBg = 'var(--role-interactive-primary)';
+  const activeFg = 'var(--role-text-onInteractive)';
+  const textColor = 'var(--role-text-primary)';
+  const mutedColor = 'var(--role-text-secondary)';
 
   const pluralizedItemLabel = itemLabel && (totalItems === 1 ? itemLabel : `${itemLabel}s`);
 
@@ -125,7 +124,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 if (currentPage > Math.ceil(totalItems / newSize)) onPageChange(1);
               }}
               className="rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-              style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.default'), color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
+              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-surface-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             >
               {pageSizeOptions.map((option) => (
                 <option key={option} value={option}>
@@ -244,7 +243,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               }}
               aria-label="Jump to page"
               className="w-14 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-              style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.default'), color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
+              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-surface-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             />
             <span style={{ color: mutedColor }}>of {totalPages}</span>
           </div>

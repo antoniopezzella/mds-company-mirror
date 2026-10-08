@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 const Separator = React.forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
@@ -15,7 +14,7 @@ const Separator = React.forwardRef<
     decorative={decorative}
     orientation={orientation}
     className={cn('shrink-0', orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px', className)}
-    style={{ backgroundColor: getRoleColor('border.default'), ...style }}
+    style={{ backgroundColor: 'var(--role-border-default)', ...style }}
     {...props}
   />
 ));
@@ -48,7 +47,7 @@ export const Divider: React.FC<DividerProps> = ({
   dashed = false,
   className,
 }) => {
-  const borderColor = getRoleColor('border.default');
+  const borderColor = 'var(--role-border-default)';
   const lineStyle: React.CSSProperties = {
     flex: 1,
     borderStyle: dashed ? 'dashed' : 'solid',
@@ -66,7 +65,7 @@ export const Divider: React.FC<DividerProps> = ({
         )}
       >
         {(labelPosition === 'start' || labelPosition === 'center') && <div style={lineStyle} />}
-        <span className="whitespace-nowrap text-sm" style={{ color: getRoleColor('text.secondary') }}>
+        <span className="whitespace-nowrap text-sm" style={{ color: 'var(--role-text-secondary)' }}>
           {label}
         </span>
         {(labelPosition === 'end' || labelPosition === 'center') && <div style={lineStyle} />}

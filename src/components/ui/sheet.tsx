@@ -61,7 +61,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Co
       <DialogPrimitive.Content
         ref={ref}
         className={cn(sheetVariants({ side }), className)}
-        style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}
+        style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
         {...props}
       >
         {children}
@@ -81,17 +81,17 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Co
           className="absolute right-5 top-4 inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
           style={
             {
-              color: getRoleColor('text.secondary'),
-              '--sheet-close-hover': getRoleColor('surface.subtle'),
+              color: 'var(--role-text-secondary)',
+              '--sheet-close-hover': 'var(--role-surface-subtle)',
             } as React.CSSProperties
           }
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = getRoleColor('surface.subtle');
-            e.currentTarget.style.color = getRoleColor('text.primary');
+            e.currentTarget.style.backgroundColor = 'var(--role-surface-subtle)';
+            e.currentTarget.style.color = 'var(--role-text-primary)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = getRoleColor('text.secondary');
+            e.currentTarget.style.color = 'var(--role-text-secondary)';
           }}
           aria-label="Close"
         >
@@ -111,7 +111,7 @@ SheetHeader.displayName = 'SheetHeader';
 const SheetFooter = ({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn('mt-auto flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end', className)}
-    style={{ borderColor: getRoleColor('border.default'), ...style }}
+    style={{ borderColor: 'var(--role-border-default)', ...style }}
     {...props}
   />
 );
@@ -124,7 +124,7 @@ const SheetTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn('font-sans-productive text-lg font-semibold', className)}
-    style={{ color: getRoleColor('text.primary') }}
+    style={{ color: 'var(--role-text-primary)' }}
     {...props}
   />
 ));
@@ -137,7 +137,7 @@ const SheetDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn('text-sm', className)}
-    style={{ color: getRoleColor('text.secondary') }}
+    style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
 ));
