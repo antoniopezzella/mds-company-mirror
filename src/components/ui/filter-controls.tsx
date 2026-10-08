@@ -43,8 +43,11 @@ import { describeFilterValue, type FilterField, type FilterUnit } from './filter
 /** A popover, not a DropdownMenu. Menu items capture typing, so a menu containing
  *  a text field swallows the digits the user is trying to enter. */
 export interface FilterNumberRangeProps {
+  /** The schema entry this control renders for — supplies the label and unit (number/currency/percent). */
   field: Extract<FilterField, { type: 'numberRange' }>;
+  /** Controlled value. `undefined` (either bound) renders as "no filter applied", not zero. */
   value?: { min?: number; max?: number };
+  /** Fires on Apply with the committed range, not on every keystroke — see the draft-state note below. */
   onValueChange: (value: { min?: number; max?: number } | undefined) => void;
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;

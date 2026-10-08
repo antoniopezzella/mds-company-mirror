@@ -18,15 +18,21 @@ const markerVariants = cva(
   }
 )
 
+export interface MarkerProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof markerVariants> {
+  /** `separator` draws a rule on both sides (e.g. "— Today —"); `border` adds a bottom border instead; `default` is plain text. */
+  variant?: "default" | "separator" | "border"
+  /** Render as a Radix `Slot` onto the single child element instead of a `div` — e.g. to make the marker itself an `<a>`. */
+  asChild?: boolean
+}
+
 function Marker({
   className,
   variant = "default",
   asChild = false,
   ...props
-}: React.ComponentProps<"div"> &
-  VariantProps<typeof markerVariants> & {
-    asChild?: boolean
-  }) {
+}: MarkerProps) {
   const Comp = asChild ? Slot : "div"
 
   return (

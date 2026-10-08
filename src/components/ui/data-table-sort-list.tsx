@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * Mirrors tablecn's sort-list; state lives in TanStack, not here.
  */
 export interface DataTableSortListProps<TData extends RowData> {
+  /** The TanStack table instance to read/write multi-sort state from — reads `table.state.sorting` directly, so no separate value prop is needed. */
   table: DataGridTableInstance<TData>;
 }
 

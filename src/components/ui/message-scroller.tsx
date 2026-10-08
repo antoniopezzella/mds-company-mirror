@@ -79,6 +79,17 @@ function MessageScrollerItem({
   )
 }
 
+export interface MessageScrollerButtonProps
+  extends React.ComponentProps<typeof MessageScrollerPrimitive.Button>,
+    Pick<React.ComponentProps<typeof Button>, "variant" | "size"> {
+  /**
+   * Which end of the scroller this jumps to — `end` (default, "new
+   * messages") or `start`. Drives the default icon rotation and position
+   * as well as the auto-generated `aria-label`.
+   */
+  direction?: "start" | "end"
+}
+
 function MessageScrollerButton({
   direction = "end",
   className,
@@ -87,8 +98,7 @@ function MessageScrollerButton({
   variant = "secondary",
   size = "sm",
   ...props
-}: React.ComponentProps<typeof MessageScrollerPrimitive.Button> &
-  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+}: MessageScrollerButtonProps) {
   return (
     <MessageScrollerPrimitive.Button
       data-slot="message-scroller-button"

@@ -31,6 +31,7 @@ export interface RiskNotification {
 export interface NotificationsDrawerProps {
   open: boolean;
   onClose: () => void;
+  /** Defaults to a built-in sample set of risk alerts — pass real data in any non-demo usage. */
   notifications?: RiskNotification[];
 }
 

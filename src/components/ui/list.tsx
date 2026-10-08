@@ -30,10 +30,13 @@ export interface ListItemConfig {
 export interface ListProps extends DataStateProps {
   items: ListItemConfig[];
   subheader?: string;
+  /** Items become clickable/checkable rows with selected-state styling. Required for `onSelectionChange` to do anything. */
   selectable?: boolean;
+  /** Allow more than one row selected at once. Ignored when `selectable` is false. */
   multiSelect?: boolean;
   dense?: boolean;
   dividers?: boolean;
+  /** Fires with the full set of selected `id`s on every selection change, not just the item that was toggled. */
   onSelectionChange?: (selectedIds: string[]) => void;
   className?: string;
   style?: React.CSSProperties;

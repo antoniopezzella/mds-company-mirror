@@ -53,15 +53,18 @@ function DrawerBackdrop({
   )
 }
 
+export interface DrawerContentProps
+  extends React.ComponentProps<typeof DrawerPrimitive.Popup> {
+  /** Renders a visual swipe grip — only meaningful for `swipeDirection="up"|"down"`. */
+  showSwipeHandle?: boolean
+}
+
 function DrawerContent({
   className,
   children,
   showSwipeHandle = true,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Popup> & {
-  /** Renders a visual swipe grip — only meaningful for `swipeDirection="up"|"down"`. */
-  showSwipeHandle?: boolean
-}) {
+}: DrawerContentProps) {
   return (
     <DrawerPortal>
       <DrawerBackdrop />

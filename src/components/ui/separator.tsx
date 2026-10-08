@@ -30,8 +30,11 @@ export { Separator };
 
 export interface DividerProps {
   orientation?: 'horizontal' | 'vertical';
+  /** `inset` indents from the leading edge, `middle` indents both edges — same semantics as the MUI Divider twin. */
   variant?: 'fullWidth' | 'inset' | 'middle';
+  /** Breaks the line to show inline text, e.g. "OR" — works on both orientations. */
   label?: React.ReactNode;
+  /** Where `label` sits along the line. Has no effect without `label`. */
   labelPosition?: 'start' | 'center' | 'end';
   dashed?: boolean;
   className?: string;

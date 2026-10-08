@@ -44,6 +44,7 @@ const ResizablePanel = (props: PanelProps) => <Panel {...props} />;
 ResizablePanel.displayName = 'ResizablePanel';
 
 export interface ResizableHandleProps extends SeparatorProps {
+  /** Shows a small visible grip indicator on the handle. Omit for an invisible drag region matching the surrounding border. */
   withHandle?: boolean;
 }
 

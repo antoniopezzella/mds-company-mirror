@@ -41,6 +41,7 @@ export interface MegaMenuItem {
 }
 
 export interface MegaMenuProps {
+  /** Top-level nav entries. Each renders a hover/focus-activated panel built from `sections` (and an optional `description`). */
   items: MegaMenuItem[];
   className?: string;
 }

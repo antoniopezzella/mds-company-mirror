@@ -52,10 +52,14 @@ const SEVERITY_ICON: Record<
 const roleFor = (severity: AlertSeverity) => (severity === 'error' || severity === 'warning' ? 'alert' : 'status');
 
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+  /** Drives icon, colour and the ARIA `role` — error/warning render as `alert` (assertive), the rest as `status` (polite). */
   severity: AlertSeverity;
+  /** Rendered as the bold `AlertTitle` line above `children`. Omit for a single-line alert with no heading. */
   title?: React.ReactNode;
   outlined?: boolean;
+  /** Renders a close button; omit to make the alert persistent (no dismiss affordance). */
   onClose?: () => void;
+  /** Suppress the severity icon, e.g. when the surrounding layout already signals status. */
   hideIcon?: boolean;
 }
 

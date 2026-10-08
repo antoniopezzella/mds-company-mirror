@@ -22,7 +22,11 @@ export type TooltipPlacement =
 export type TooltipTone = 'default' | 'dark' | 'info' | 'warning' | 'danger' | 'success';
 
 export interface TooltipProps {
-  /** Tooltip content/text */
+  /**
+   * The tooltip's body content. Named `title` (matching the MUI Tooltip
+   * this wraps conceptually), NOT `content` — there is no `content`
+   * prop, and passing one is silently ignored rather than erroring.
+   */
   title: React.ReactNode;
   /** The single element the tooltip is anchored to */
   children: React.ReactElement;

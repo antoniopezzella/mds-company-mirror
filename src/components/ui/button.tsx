@@ -176,10 +176,15 @@ export interface ButtonProps
   /** Stretch the button to fill its container */
   fullWidth?: boolean;
   
-  /** Icon-only button: renders a square button */
+  /**
+   * Icon-only button: renders a square button showing ONLY
+   * `icon ?? startIcon ?? endIcon` — `children` is discarded entirely,
+   * even text. If you've passed text as `children` and it isn't
+   * rendering, this is why; pass the icon via `icon`/`startIcon` instead.
+   */
   iconOnly?: boolean;
-  
-  /** Icon node for icon-only usage */
+
+  /** Icon node for icon-only usage. Required for anything to render when `iconOnly` is set and neither `startIcon` nor `endIcon` is passed. */
   icon?: React.ReactNode;
   
   /** Whether the button is in a loading state */

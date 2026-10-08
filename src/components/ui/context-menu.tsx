@@ -74,9 +74,17 @@ const ContextMenuContent = React.forwardRef<
 ));
 ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName;
 
+export interface ContextMenuItemProps
+  extends React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> {
+  /** Indents the item to align with items that have a leading icon/checkbox, without adding one itself. */
+  inset?: boolean;
+  /** `danger` tints the text (and its focus highlight) red — use for destructive actions like "Delete". */
+  tone?: 'default' | 'danger';
+}
+
 const ContextMenuItem = React.forwardRef<
   React.ElementRef<typeof ContextMenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & { inset?: boolean; tone?: 'default' | 'danger' }
+  ContextMenuItemProps
 >(({ className, inset, tone = 'default', ...props }, ref) => (
   <ContextMenuPrimitive.Item
     ref={ref}

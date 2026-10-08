@@ -40,9 +40,14 @@ const InputOTPGroup = React.forwardRef<React.ElementRef<'div'>, React.ComponentP
 );
 InputOTPGroup.displayName = 'InputOTPGroup';
 
+export interface InputOTPSlotProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Zero-based position in the code — reads its character and active/caret state from the parent `OTPInputContext`, not from props directly. */
+  index: number;
+}
+
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'> & { index: number }
+  InputOTPSlotProps
 >(({ index, className, style, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext);
   const slot = inputOTPContext?.slots[index];

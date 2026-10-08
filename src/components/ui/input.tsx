@@ -29,6 +29,14 @@ function getToneBorderRole(tone: InputTone): RoleName | null {
   }
 }
 
+/**
+ * There is no `startAdornment`/`endAdornment`/`InputAdornment` prop —
+ * unlike the MUI TextField this wraps conceptually, this component has
+ * no slot for a leading icon or trailing button. For that, compose
+ * `InputGroup`/`InputGroupAddon` (see `input-group.tsx`) around a plain
+ * `Input`, rather than reaching for an adornment prop that doesn't exist
+ * here.
+ */
 export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   tone?: InputTone;
   /**
