@@ -1,6 +1,27 @@
-# Typography system — proposal
+# Typography system
 
-**Status:** proposal, not built · **Rewritten:** 2026-10-06 · **Measured at:** `6ae5d37`
+**Status:** core LANDED 2026-10-08 · migration partly done · **Measured at:** `719e7d1`
+
+| step (§7) | state |
+|---|---|
+| `fluid()` → `fluid-rem()` on 14 variants (WCAG 1.4.4) | ✅ `d343370` |
+| `@theme` tokens + `@utility` pairings, in a file both targets import | ✅ `67166a7` |
+| Renamed to `text-h1` / `text-serif-h1`; fixed a double-emitted class and a vocabulary that did not ship | ✅ `621e07f` |
+| Four dashboard roles | ✅ |
+| Reaches the published package | ✅ verified in `dist-pkg/styles.css` |
+| Take `src/components/ui/` off `--typo-*` | ✅ `719e7d1` — 36 reads, 23 files |
+| Storybook **Foundations → Typography** rewritten | ✅ |
+| Convert the ~117 ad-hoc headings in app **pages** | ◻ opportunistic |
+| Delete `.mds-dashboard` (blocked on the row above) | ◻ |
+| Retire `_typography.scss` + `typography-variables.css` at zero consumers | ◻ — `src/theme.ts` still has 56 `--typo-*` refs, and MUI is being removed |
+| Retire the MUI variant vocabulary | ◻ incremental |
+
+Guarded by `typo_scope_free` (global, w3): counts `--typo-*` reads in `ui/`
+code, sits at 100 with 0, and is probed in both directions so a comment
+mentioning the variable does not count as a use.
+
+**Rewritten:** 2026-10-06 (the proposal below is kept as the record of what was
+decided and why — §9 lists what did not survive review)
 **Supersedes** the first draft of this file, which proposed a `src/typography.ts` source, a
 ~200-line generator and 21 generated classes. That was roughly 100× the solution this
 needs. §9 records what did not survive review, and why.
