@@ -22,25 +22,37 @@ badly now that they are measured:
 | **Scalable global system** | **1/100** | 14% |
 | **AI-agent readiness** | **17/100** | 12% |
 
-## How an agent should use this
+## The agents that work this backlog
 
-1. Read `readiness-backlog.json`. Each task carries `metric`, `current`,
-   `target`, `verify` and `blocked_by`.
-2. Pick the highest `priority` task whose `blocked_by` is empty.
-3. Do the work against `requirements`.
-4. **Verify by re-running `npm run ds:score --json`** and confirming the named
-   metric moved toward `target`. Do not self-report completion.
-5. If the metric did not move, the task is not done — and check whether the
-   metric itself is measuring the right thing before assuming the work failed.
+Four Claude Code subagents in `.claude/agents/`. All are **propose-only**:
+each applies a change, measures whether the metric actually moved, reverts,
+and leaves a patch in `.agent-proposals/` (gitignored) for a human to apply
+with `git apply`. None of them commits.
 
-> **The existing orchestrator cannot drive most of these.**
-> `agents/design-system-agent` does exactly one job — turn one Figma component
-> node into an MDS component (`--component <Name> --figma-url <url>`), via
-> token-mapper → component-builder → a11y-auditor → code-connect-publisher.
-> Of the nine tasks below, only **AGENT-1** is close to that shape. Driving the
-> rest needs either a second orchestrator whose unit of work is "a backlog
-> task" rather than "a Figma node", or doing them interactively. It has also
-> never been run end-to-end. Do not assume it can pick these up.
+| Agent | Drives | Writes |
+|---|---|---|
+| `ds-backlog-pilot` | triage + dispatch | measured values in `readiness-backlog.json`, nothing else |
+| `ds-metric-closer` | DEV-1, DEV-2, GLOBAL-2 | `src/components/ui/**` → patch |
+| `ds-gate-author` | AGENT-3, new metrics | `scripts/check-gate-selftests.js`, `ds-health-score.js` → patch |
+| `ds-code-connect-mapper` | AGENT-1 | `src/figma/*.figma.tsx` → patch |
+
+Start with `ds-backlog-pilot`: it reconciles the recorded numbers against a
+live `ds:score` run, reports regressions first, picks the next unblocked task
+and dispatches it.
+
+**Verification is the contract.** A task is done when the metric moved,
+measured independently — never because an agent said so. If the metric did
+not move, the task is not done; check whether the *metric* is measuring the
+right thing before assuming the work failed. (That is not hypothetical: the
+`props` gate probe was wrong, not the gate.)
+
+> **`agents/design-system-agent` is a different thing and does not drive
+> this.** It does exactly one job — turn one Figma node into an MDS component
+> (`--component <Name> --figma-url <url>`) via token-mapper →
+> component-builder → a11y-auditor → code-connect-publisher — and it has never
+> been run end-to-end. Only **AGENT-1** is near its shape, and
+> `ds-code-connect-mapper` covers that case without needing an API key or a
+> Figma token.
 
 ---
 

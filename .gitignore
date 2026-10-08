@@ -79,3 +79,9 @@ lighthouse-*.html
 
 # Storybook deploy output, committed once by accident (201 files, 11MB)
 marsh-design-system-deploy/
+
+# Agent proposals. The task agents in .claude/agents/ are propose-only: they
+# apply a change, measure whether the ds:score metric actually moved, revert,
+# and leave a patch here. Gitignored because a proposal is not a decision —
+# a human applies it with `git apply`.
+.agent-proposals/
