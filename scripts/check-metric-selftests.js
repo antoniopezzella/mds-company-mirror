@@ -243,13 +243,32 @@ const METRICS = [
   },
   {
     id: 'expression_reach',
-    dir: 'up',
-    // Prepend at the very start of the file. Anchoring on '@import' put the
-    // rule INSIDE the header comment — its first occurrence is prose at
-    // line 35 — so the probe was stripped and reported the metric as blind.
-    up: () => prepend('src/styles.package.css', '.mds-dashboard { --probe: 1; }\n'),
-    flat: () => prepend('src/styles.package.css', '/* a comment mentioning mds-dashboard */\n'),
-    flatWhy: 'the scope named only in a comment does not actually scope anything',
+    dir: 'down',
+    // The metric now follows a CHAIN: styles.package.css must import
+    // component-utilities.css, and that file must define both expressions. So
+    // the down-probe breaks one link, and the flat-probe breaks neither while
+    // looking like it does.
+    //
+    // Direction is 'down' because the chain is currently intact: it can only
+    // be broken, not improved.
+    // Breaks the IMPORT link, which is a single unambiguous edit. A first
+    // version renamed `@utility text-productive-h1`, which did nothing: the
+    // metric matches the `text-productive-` PREFIX, and h2-h4 still matched.
+    // A probe has to break the thing the metric actually tests.
+    up: () =>
+      patch(
+        'src/styles.package.css',
+        "@import './styles/component-utilities.css';",
+        "/* probe: import removed */"
+      ),
+    // Mentions both expressions, but only inside a comment, and imports
+    // nothing. Previously this exact shape scored 100.
+    flat: () =>
+      prepend(
+        'src/styles.package.css',
+        '/* a comment naming text-expressive-h1 and text-productive-h1 and component-utilities.css */\n'
+      ),
+    flatWhy: 'expressions named only in a comment, with no import, reach no consumer',
   },
   {
     id: 'token_doc_accuracy',

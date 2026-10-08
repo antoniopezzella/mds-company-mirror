@@ -107,3 +107,176 @@
     height: 8px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY — the two expressions, as explicit classes
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Replaces the ambient `.mds-dashboard` scope. That class worked by sitting on
+   a subtree root and redefining `--typo-*` for everything inside, which had
+   three defects, all silent:
+
+     1. `:root` is the MARKETING expression, so a product screen that forgot
+        the class rendered Marsh Serif headings. Wrong-looking, not unstyled —
+        no error, no failing test.
+     2. It does not survive a portal. Radix renders to `document.body`, so
+        notifications-drawer.tsx re-applies the class by hand, and every new
+        portalled surface inherits that tax.
+     3. It never shipped. `styles.package.css` had 0 references to it, so a
+        package consumer could not opt into the dashboard expression at all.
+
+   The only difference between the expressions is `display` and `h1`–`h6`:
+   face and weight. Body, UI and buttons are Noto Sans in both. Seven levels,
+   two properties — small enough that explicit classes beat an inherited scope.
+
+   Sizes are IDENTICAL to what `_typography.scss` emits today, copied from its
+   compiled output rather than recomputed, so nothing re-renders. The clamps
+   are rem-based (WCAG 1.4.4) via the `fluid-rem()` change in d343370.
+
+   Named additions, NOT redefinitions of stock steps: `text-4xl` keeps meaning
+   what every Tailwind developer expects. Redefining a stock step also silently
+   keeps its stock line-height, computed from the OLD size.
+*/
+
+@theme {
+  /* Faces */
+  --font-expressive: 'Marsh Serif', serif;
+  --font-productive: 'Noto Sans', sans-serif;
+
+  /* EXPRESSIVE sizes — fluid, for surfaces people READ. */
+  --text-expressive-hero: clamp(2.5rem, 1.887755102rem + 2.7210884354vw, 4.5rem);
+  --text-expressive-hero--line-height: 1.1;
+  --text-expressive-h1: clamp(1.75rem, 1.5969387755rem + 0.6802721088vw, 2.25rem);
+  --text-expressive-h1--line-height: 1.25;
+  --text-expressive-h2: clamp(1.5rem, 1.4234693878rem + 0.3401360544vw, 1.75rem);
+  --text-expressive-h2--line-height: 1.3;
+  --text-expressive-h3: clamp(1.25rem, 1.1734693878rem + 0.3401360544vw, 1.5rem);
+  --text-expressive-h3--line-height: 1.35;
+  --text-expressive-h4: clamp(1.125rem, 1.0867346939rem + 0.1700680272vw, 1.25rem);
+  --text-expressive-h4--line-height: 1.4;
+  --text-expressive-h5: clamp(1rem, 0.9617346939rem + 0.1700680272vw, 1.125rem);
+  --text-expressive-h5--line-height: 1.4;
+  --text-expressive-h6: clamp(0.875rem, 0.8367346939rem + 0.1700680272vw, 1rem);
+  --text-expressive-h6--line-height: 1.45;
+}
+
+/* ── EXPRESSIVE — Marsh Serif 400. Marketing, hero, long-form. ─────────────
+   One class per pairing rather than composable axes, because 117 of 122
+   headings are hand-written: composable would mean 117 chances to write
+   `font-expressive font-bold`, which is Marsh Serif at 700 — a combination
+   nobody designed. The granular utilities (`font-*`, `leading-*`,
+   `tracking-*`, stock `text-*`) remain available for the exception. */
+
+@utility text-expressive-hero {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-hero);
+  line-height: var(--text-expressive-hero--line-height);
+  letter-spacing: -0.01em;
+}
+@utility text-expressive-h1 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h1);
+  line-height: var(--text-expressive-h1--line-height);
+  letter-spacing: -0.01em;
+}
+@utility text-expressive-h2 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h2);
+  line-height: var(--text-expressive-h2--line-height);
+  letter-spacing: -0.005em;
+}
+@utility text-expressive-h3 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h3);
+  line-height: var(--text-expressive-h3--line-height);
+}
+@utility text-expressive-h4 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h4);
+  line-height: var(--text-expressive-h4--line-height);
+}
+@utility text-expressive-h5 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h5);
+  line-height: var(--text-expressive-h5--line-height);
+}
+@utility text-expressive-h6 {
+  font-family: var(--font-expressive);
+  font-weight: 400;
+  font-size: var(--text-expressive-h6);
+  line-height: var(--text-expressive-h6--line-height);
+}
+
+/* ── PRODUCTIVE — Noto Sans 700, fixed rem. Surfaces people OPERATE. ───────
+   Sizes are stock Tailwind steps, which dashboard pages already write by hand
+   (`text-2xl font-bold` ×3, `text-3xl`, `text-xl`, `text-lg` ×2). These exist
+   so the face and weight travel with the size instead of being re-chosen. */
+
+@utility text-productive-h1 {
+  font-family: var(--font-productive);
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+  letter-spacing: -0.01em;
+}
+@utility text-productive-h2 {
+  font-family: var(--font-productive);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+}
+@utility text-productive-h3 {
+  font-family: var(--font-productive);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+}
+@utility text-productive-h4 {
+  font-family: var(--font-productive);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+}
+
+/* ── DASHBOARD ROLES — four, not fifteen. ──────────────────────────────────
+   A style earns a name only when it bundles THREE OR MORE decisions a
+   developer would otherwise re-derive. Below that bar Tailwind's own class is
+   better: shorter, precise, and it tells you the size. A `text-data-cell`
+   resolving to `text-sm` REMOVES information, which is why it is not here. */
+
+@utility text-metric-value {
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+@utility text-metric-delta {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* Consolidates five independent takes on "small uppercase label" — card,
+   list, notifications-drawer, stepper and toast ship three different
+   trackings and two sizes for one visual idea. */
+@utility text-data-header {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+/* Two decisions, kept deliberately: `tabular-nums` is the most-forgotten
+   decision in a data product, and appears in only 4 of 93 components. */
+@utility text-data-numeric {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-variant-numeric: tabular-nums;
+}
