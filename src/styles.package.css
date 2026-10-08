@@ -89,6 +89,20 @@
    correct in Storybook, absent in the artifact. */
 @import './styles/component-utilities.css';
 
+/* Force the typography vocabulary into the SHIPPED stylesheet.
+ *
+ * `@utility` classes are emitted only when they appear in scanned content, and
+ * tailwind.package.config.js deliberately scans only the export surface
+ * (src/components/ui/** etc). That is right for component internals and WRONG
+ * for a vocabulary: text-h1 / text-serif-h1 exist for CONSUMERS to write in
+ * THEIR code, which this build can never see. Without this they compile to
+ * nothing and a consumer's `className="text-h1"` silently does nothing.
+ */
+@source inline("text-serif-{hero,h1,h2,h3,h4,h5,h6}");
+@source inline("text-{h1,h2,h3,h4,h5,h6}");
+@source inline("text-{metric-value,metric-delta,data-header,data-numeric}");
+@source inline("font-{serif-expressive,sans-productive}");
+
 /* ===== Corner radius =====================================================
    There is deliberately NO radius configuration here. The repo uses
    Tailwind's STOCK scale, unmodified:

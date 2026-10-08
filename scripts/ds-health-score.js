@@ -336,15 +336,19 @@ function measure(rev) {
   //
   // It looked for `.mds-dashboard` until 2026-10-08. That was the right test
   // for the ambient-scope mechanism and the wrong one afterwards: the scope was
-  // replaced by explicit `text-expressive-*` / `text-productive-*` utilities,
-  // because `:root` defaulting to marketing made a forgotten class render serif
-  // headings silently, and because the scope did not survive a Radix portal.
+  // replaced by explicit `text-serif-*` / `text-h*` utilities, because `:root`
+  // defaulting to marketing made a forgotten class render serif headings
+  // silently, and because the scope did not survive a Radix portal.
+  //
+  // `text-h1` is the sans/product expression and `text-serif-h1` the marketing
+  // one: the UNMARKED name is the common case, and `serif` is self-describing
+  // where `expressive`/`productive` had to be learned.
   const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ');
   const pkgCssCode = strip(pkgCss);
   const utilSrc = strip(read(rev, 'src/styles/component-utilities.css') ?? '');
   const pkgImportsUtilities = /@import\s+['"][^'"]*component-utilities\.css['"]/.test(pkgCssCode);
   const definesBothExpressions =
-    /@utility\s+text-expressive-/.test(utilSrc) && /@utility\s+text-productive-/.test(utilSrc);
+    /@utility\s+text-serif-h1\b/.test(utilSrc) && /@utility\s+text-h1\b/.test(utilSrc);
   const expressionInPackage = pkgImportsUtilities && definesBothExpressions ? 1 : 0;
 
   // AGENTIC — Code Connect coverage. Figma's own eval names coverage, not
