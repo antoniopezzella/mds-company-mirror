@@ -85,7 +85,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
             // ship. So `.mds-root` is powerless over native controls no matter
             // its specificity, and this trigger rendered its label in Arial
             // beside Noto Sans fields. Input/Textarea/Select already declare it.
-            'box-border flex w-full items-center justify-between gap-2 border font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'box-border flex w-full items-center justify-between gap-2 border font-sans-productive transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
             CONTROL_RADIUS,
             CONTROL_HEIGHT[resolvedSize],
             CONTROL_PX[resolvedSize],

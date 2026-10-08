@@ -315,6 +315,29 @@ function measure(rev) {
     if (/prefers-reduced-motion|motion-reduce/.test(src)) reducedMotion += 1;
   }
 
+  // GLOBAL — is the SHIPPED surface off the ambient typography scope?
+  //
+  // Counts ui/ modules that still read a `--typo-*` variable in CODE. Those
+  // reads were the ambient mechanism: the variable resolved to Marsh Serif
+  // whenever `.mds-dashboard` was missing, including inside a Radix portal,
+  // so every one was a silent dependency on an inherited scope. All 36 are
+  // now `font-sans-productive`, which travels with the element.
+  //
+  // At 100 it is a RATCHET, like colour_discipline: it adds no pressure now
+  // and stops the dependency coming back. Comments are stripped so the
+  // migration notes that MENTION `--typo-*` do not count as uses.
+  let typoScopeRefs = 0;
+  for (const f of impl) {
+    const src = read(rev, f);
+    if (!src) continue;
+    const code = src
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .split('\n')
+      .map((l) => l.replace(/\/\/.*$/, ''))
+      .join('\n');
+    typoScopeRefs += (code.match(/--typo-/g) ?? []).length;
+  }
+
   // GLOBAL — does an expression scope reach the PUBLISHED stylesheet? The
   // mechanism exists in src/styles/_typography.scss and the package entry
   // imports a flat unscoped file, so `--typo-h1-font-family` resolves to a
@@ -419,6 +442,7 @@ function measure(rev) {
     expressionInPackage,
     codeConnect,
     contractsEmitted,
+    typoScopeRefs,
     gatesSelfTested: gatesSelfTested + axeSelfTested,
     gatesTotal: allGates.length + 1,
   };
@@ -479,7 +503,11 @@ const RUBRIC = [
     id: 'a11y_enforcement',
     label: 'Accessibility gate',
     goal: 'dev',
-    weight: 10,
+    // 10 -> 7 to fund typo_scope_free. Justified rather than arbitrary: this
+    // metric reads ONE enum out of preview.tsx and is blind to the 71
+    // dark-mode failures and to prefers-reduced-motion, so weighting it as
+    // heavily as test coverage overstated what it can see.
+    weight: 7,
     // Advisory scores well below half: a gate that reports and never fails is
     // most of the work for none of the protection.
     score: (m) => ({ error: 100, todo: 35, configured: 20, none: 0 })[m.a11yGate] ?? 0,
@@ -561,6 +589,16 @@ const RUBRIC = [
     // partial expression mechanism is not a partial score, it is a bug.
     score: (m) => (m.expressionInPackage ? 100 : 0),
     format: (m) => (m.expressionInPackage ? 'yes' : 'no — package is unscoped'),
+  },
+  {
+    id: 'typo_scope_free',
+    label: 'Shipped components off the typography scope',
+    goal: 'global',
+    weight: 3,
+    // Density, not a ratio of files, so one file with six reads counts six.
+    // 0 refs is 100; one read per module is 0.
+    score: (m) => (m.uiModules === 0 ? 0 : clamp(100 - pct(m.typoScopeRefs, m.uiModules))),
+    format: (m) => `${m.typoScopeRefs} --typo-* read(s) across ${m.uiModules}`,
   },
   {
     id: 'rtl_readiness',

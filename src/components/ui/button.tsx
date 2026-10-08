@@ -344,7 +344,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           // this line, and because `cn()` is twMerge the later class won: the
           // size variant's `text-sm` was silently discarded and every button
           // rendered 16px regardless of size.
-          'font-[family-name:var(--typo-button-font-family,_Noto_Sans,_sans-serif)]',
+          'font-sans-productive',
           'font-bold tracking-normal',
           // Corner radius comes from CONTROL_RADIUS so a button and a field
           // beside it always agree. The comment here used to claim
