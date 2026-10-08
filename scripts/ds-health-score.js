@@ -71,8 +71,21 @@ const HISTORY = path.join(root, 'docs/ds-health-history.json');
  *
  * v2 and v3 numbers are NOT comparable. `--compare` filters by rubric version
  * for exactly this reason; re-record history to see a v3 trend.
+ *
+ * v4 — `prop_docs` now requires a JSDoc block immediately preceding an actual
+ * prop, not merely present somewhere in the declaration.
+ *
+ * Bumped the same day v3 shipped, because v3's definition was wrong rather
+ * than merely imprecise. It counted a docblock sitting in an empty interface
+ * body, which react-docgen cannot turn into a Controls description — so the
+ * metric could move a long way while the thing it names got no closer. An
+ * agent working the backlog found this within hours by satisfying the metric
+ * exactly as written: 44 -> 80, of which 14 modules were hollow.
+ *
+ * v3 and v4 are not comparable either. v3's recorded run is left in history
+ * rather than migrated, which is the point of keeping raw metrics per run.
  */
-export const RUBRIC_VERSION = 3;
+export const RUBRIC_VERSION = 4;
 
 // ---------------------------------------------------------------------------
 // Reading the repo — at HEAD, or at any revision, without touching the tree
@@ -256,12 +269,29 @@ function measure(rev) {
 
   // DEV — can a consumer read the API, and hold a ref to it?
   //
-  // `withPropDocs` looks for a JSDoc block anywhere inside an exported *Props
-  // declaration, which is what makes Storybook Controls show a description.
-  // Deliberately coarse: it asks "was this interface documented at all", not
-  // "is every prop documented", because the former is the step that is
-  // actually missing and a per-prop ratio would move for reasons unrelated to
-  // effort (adding an undocumented prop to a documented interface).
+  // `withPropDocs` requires a JSDoc block **immediately preceding an actual
+  // prop declaration**, not merely present somewhere inside the Props block.
+  //
+  // v3 tested only for `/**` anywhere in the declaration, and that was wrong
+  // in the way this repo keeps being wrong: it measured something adjacent.
+  // An agent given the v3 metric and told "a JSDoc block inside the exported
+  // *Props declaration is what makes Storybook Controls show a description"
+  // did exactly that, and produced 14 modules shaped like this:
+  //
+  //     export interface SpinnerProps extends React.ComponentProps<"svg"> {
+  //       /** Any standard SVG prop passes through... */
+  //     }
+  //
+  // The comment is attached to NOTHING. react-docgen builds Controls
+  // descriptions per prop, so an empty interface body cannot produce one — the
+  // metric moved 44 -> 80 while the thing it names got no closer. The claim in
+  // the v3 comment was the root cause: a docblock inside the declaration is
+  // not sufficient, it has to document a prop.
+  //
+  // Still deliberately coarse in the other direction: ONE documented prop
+  // counts the module. "Is every prop documented" would move for reasons
+  // unrelated to effort — adding an undocumented prop to a documented
+  // interface would score as a regression.
   let withPropDocs = 0;
   let withRef = 0;
   let logicalProps = 0;
@@ -271,7 +301,11 @@ function measure(rev) {
     const src = read(rev, f);
     if (!src) continue;
     const propBlocks = [...src.matchAll(/export (?:interface|type) \w*Props\b[\s\S]*?\n(?:\}|\);)/g)].map((m) => m[0]);
-    if (propBlocks.some((b) => /\/\*\*/.test(b))) withPropDocs += 1;
+    // A closing `*/`, then a prop name, then `:` / `?:` / `(`. That last part
+    // is what distinguishes a documented prop from a docblock sitting in an
+    // empty body.
+    const DOCUMENTED_PROP = /\/\*\*[\s\S]*?\*\/\s*\n\s*(?:readonly\s+)?['"]?[a-zA-Z_$][\w$]*['"]?\??\s*[:?(]/;
+    if (propBlocks.some((b) => DOCUMENTED_PROP.test(b))) withPropDocs += 1;
     if (/forwardRef/.test(src)) withRef += 1;
     // GLOBAL — RTL readiness. Logical properties flip with `dir`; physical
     // ones do not, so a right-to-left locale breaks the layout rather than

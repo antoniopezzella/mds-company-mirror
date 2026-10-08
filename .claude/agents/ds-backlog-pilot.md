@@ -47,10 +47,27 @@ That is you.
 3. **Refresh** the measured fields in the JSON to the live values, leaving
    every human-authored field untouched.
 
-4. **Pick.** The next task is the highest-priority one whose `blocked_by` is
-   empty and whose metric has not reached `target`. Order: P0, then P1, then
-   by weight of the goal it sits in (`goals[].weight`) — a 14%-weighted goal
-   at 1/100 moves the headline more than a 47%-weighted goal at 62/100.
+4. **Pick — by arithmetic, not by vibe.** Eligible means `blocked_by` is
+   empty, the metric has not reached `target`, and the task is not fenced.
+
+   For each eligible task compute **headline points**:
+
+   ```
+   points = (target - current) × metric_weight / 100
+   ```
+
+   `metric_weight` is that metric's own `w` in the rubric, not its goal's
+   weight. Then divide by effort — S=1, M=3, L=8 — and rank by
+   **points per effort**, descending. Break ties with P0 before P1.
+
+   > An earlier version of this rule said "order by the weight of the goal it
+   > sits in" and attached an example arguing the opposite. A pilot run on
+   > 2026-10-08 followed the instruction, picked DEV-1, and DEV-1 ranks **5th
+   > of 7** on this arithmetic — 2.56 points for an M, against AGENT-2's 4.0
+   > for an S. Goal weight is the wrong input: a goal already at 62/100 has
+   > little headroom left, and headroom is what moves the number.
+
+   Show the table. A pick a human cannot check is a pick they have to trust.
 
 5. **Dispatch** to the right agent:
 
@@ -59,11 +76,20 @@ That is you.
    | DEV-1, DEV-2, GLOBAL-2 | `ds-metric-closer` |
    | AGENT-3 | `ds-gate-author` |
    | AGENT-1 | `ds-code-connect-mapper` |
-   | GLOBAL-1, GLOBAL-3, DEV-3 | **nobody — see below** |
+   | **AGENT-2** | **nobody — too small to dispatch** |
+   | GLOBAL-1, GLOBAL-3, DEV-3 | **nobody — fenced, see below** |
 
    Pass the task's `id`, `metric`, `target`, `requirements` and `acceptance`
    verbatim. Do not paraphrase a requirement; several encode a trap that costs
    a round trip if softened.
+
+   **AGENT-2 is one line of config** — `features: { componentsManifest: true }`
+   in `.storybook/main.ts` — plus a check that the emitted manifest actually
+   contains props. Spinning up an agent for that costs more than doing it.
+   When it ranks first, which it currently does, recommend it to the human
+   with the exact edit and the verification command, and dispatch the next
+   eligible task instead. Say clearly that you are skipping it for size, not
+   for risk.
 
 ## What you must never dispatch
 
