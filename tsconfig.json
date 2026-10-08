@@ -9,7 +9,18 @@
     "resolveJsonModule": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    // Duplicated from tsconfig.app.json for the same "tools that read only the
+    // root tsconfig" reason above — here it is react-docgen, which powers
+    // Storybook's component manifest. It resolves imports by static analysis
+    // against the ROOT tsconfig's paths, not Vite's aliases, so without this
+    // every `@/lib/utils` and `@/theme/roles` import failed to resolve and the
+    // manifest emitted 5 of 77 ui/ components with props instead of 70.
+    // react-docgen's own error text asks for exactly this.
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "references": [
     { "path": "./tsconfig.app.json" },

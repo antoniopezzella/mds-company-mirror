@@ -41,6 +41,20 @@ const config: StorybookConfig = {
     options: {}
   },
   docs: {},
+  features: {
+    // Emits `manifests/components.json` — props, variants and types derived
+    // from the stories and prop types by static analysis. This is the
+    // "contract" layer agents read instead of inferring an API from source,
+    // and it is where every published measurement of agent coding gains sits.
+    //
+    // Off the shelf rather than built: the flag landed in Storybook 10.1 as
+    // `experimentalComponentsManifest` and was renamed in 10.3. This repo is
+    // on 10.6.
+    //
+    // The schema is explicitly NOT stable and NOT a public API. Consume it;
+    // never fork it or hand-edit the output.
+    componentsManifest: true,
+  },
   staticDirs: ['../public'],
   viteFinal: async (config) => {
     // Mirror the '@' -> src alias from vite.config.ts (Storybook builds its own
