@@ -23,11 +23,43 @@ This repo enforces three separate, interlocking governance systems. Each one exi
 
 | Command | Checks |
 |---|---|
-| `npm run roles:check:strict` | Any component importing `tokens.*` or `semanticColors.*` directly, or using deprecated tokens |
+| `npm run roles:check:strict` | Any component importing `tokens.*` or `semanticColors.*` directly, a dangling `--role-*` variable, or a hex literal in `src/components/ui/` source |
 | `npm run tokens:check` | Token build succeeds, no unauthorized primitive diff, DTCG export valid, WCAG contrast on every enforced pair |
-| `npm run governance:ci` | `roles:check` + contrast, bundled into one strict report — this is what `governance.yml` runs in CI |
+| `npm run governance:ci` | Every gate below, bundled — this is what `governance.yml` runs in CI |
 
 Full architecture, naming rule, and dark-mode mechanics: [Roles](?path=/docs/foundations-roles--docs), [Colors](?path=/docs/foundations-colors--docs), and **`docs/foundations/TOKENS.md`**.
+
+---
+
+## 1b. The gates that check the gates
+
+**What it protects:** that a green result means something.
+
+Every gate in this repo that has ever been wrong was wrong the same way — it
+measured something *adjacent* to what it claimed, and reported green while the
+real defect shipped. The axe gate once ran **zero** checks across every story.
+The role gate parsed **6 of 55** role names. The registry gate checked index
+entries rather than dependency edges. A published release shipped an
+`index.d.ts` that did not compile, with all eight gates green.
+
+A green gate is indistinguishable from a disabled one unless something asserts
+otherwise. So two harnesses do the asserting, and both run in `governance:ci`.
+
+| Command | Checks |
+|---|---|
+| `npm run gates:selftest` | Writes a probe containing one real violation per gate, runs the gate, and requires it to exit non-zero **and name the probe**. Exiting non-zero alone is not evidence — a crash, a malformed probe, or an unrelated pre-existing violation all look like a healthy gate |
+| `npm run metrics:selftest` | The same idea for the 14 `ds:score` metrics, in **both** directions: a change that should move a metric must move it, and one that should *not* must leave it exactly alone |
+| `npm run ds:score` | The health score itself — 14 frozen formulas grouped by goal (development readiness, governance, scalable global system, AI-agent readiness), readable at any git revision so history is backfillable |
+
+The second direction is the one that earns its keep. A metric is a *number*,
+and a number can move for the wrong reason: `prop_docs` was once satisfied by
+14 docblocks sitting in **empty interface bodies**, which react-docgen cannot
+turn into a prop description. The metric moved 44 → 80 while the thing it names
+did not budge. Only a probe asserting "this change must *not* count" catches
+that.
+
+Adding a gate means adding its probe; adding a metric means adding both of its
+probes. That is deliberate friction.
 
 ---
 

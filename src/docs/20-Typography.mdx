@@ -4,91 +4,111 @@ import { DoDont } from './_components/DoDont';
 
 <Meta title="Foundations/Typography" />
 
-
-
-
 # Typography
 
-System typography leverages `Noto Sans` for body text and UI copy. Marketing website headings (`h1`–`h6`) and display utilities use `Marsh Serif`; dashboard containers use `Noto Sans` Bold for headings.
+**Two expressions. The only difference is `display` and `h1`–`h6`: face and
+weight.** Body, UI copy and buttons are Noto Sans in both.
 
-## Scale (Preview)
+| | headings | body / UI |
+|---|---|---|
+| **Product** (dashboards, tools) | **Noto Sans 700** | Noto Sans 400 |
+| **Marketing** (hero, long-form) | **Marsh Serif 400** | Noto Sans 400 |
+
+## Pick a class
+
+`text-h1` is Noto Sans. `text-serif-h1` is Marsh Serif. The **unmarked name is
+the common case**, because most of what this system builds is product UI — mark
+the exception, not the norm. `serif` also says what you get, where the earlier
+`expressive` / `productive` naming had to be learned.
+
+```tsx
+<h1 className="text-h1">Portfolio overview</h1>        {/* product */}
+<h1 className="text-serif-h1">A new chapter</h1>       {/* marketing */}
+```
+
+Both sets run `h1`–`h6`, and the serif set adds `text-serif-hero` for a
+full-bleed marketing headline. The serif sizes are fluid (`clamp()`, 360–1536px);
+the sans sizes are fixed Tailwind steps, because a dashboard should not reflow
+its heading sizes as a window resizes.
+
+These ship in the published package, so a consumer can write them in their own
+code — verified in `dist-pkg/styles.css` rather than assumed.
+
+## Four dashboard roles, and only four
+
+A style earns a name **only when it bundles three or more decisions** you would
+otherwise re-derive every time. Below that bar Tailwind's own class is better:
+shorter, precise, and it tells you the size. `text-sm` beats a `text-data-cell`
+that resolves to `text-sm` and *removes* information.
+
+| class | resolves to | why it earns a name |
+|---|---|---|
+| `text-metric-value` | `text-3xl` + bold + tight tracking + tabular | nobody remembers tracking **and** tabular every time |
+| `text-data-header` | `text-xs` + semibold + wide tracking + uppercase | consolidates **five** independent takes that existed in `card`, `list`, `notifications-drawer`, `stepper` and `toast` |
+| `text-metric-delta` | `text-sm` + medium + tabular | |
+| `text-data-numeric` | `text-sm` + tabular | the deliberate two-decision exception: `tabular-nums` is the most-forgotten decision in a data product |
+
+Everything else uses the stock scale — `text-sm`, `font-medium`,
+`tracking-wide`. That part should stay boring: developers already know it, and
+designers can mirror the same names as Figma text styles.
+
+## Scale (preview)
 
 <TypographyTable />
 
 ## Guidance
-- Use semantic heading levels (`<h1>`…`<h6>`) according to document hierarchy.
-- Keep display usage purposeful: marketing hero and section titles use `Marsh Serif`; dashboards use `Noto Sans` Bold for dense, scannable headings and key metrics.
-- Avoid inline font overrides—add a variant to the theme if reused.
-- Ensure accessible contrast and sufficient size for readability.
 
-### When to use which variant
-- h1–h3: Page and major section headings. Keep above the fold concise; avoid stacking multiple large headings.
-- h4–h6: Subsections and card titles within a page.
-- .typography-display: Marketing display text by default; becomes Noto Sans Bold inside `.mds-dashboard` or `[data-typography-context="dashboard"]`.
-- subtitle1/2: Section descriptors, list or panel headers, supporting context.
-- body1: Default reading text in dashboards and docs.
-- body2: Dense UI copy: labels, secondary text, table meta (keep legible).
-- caption: Tertiary metadata; avoid for persistent or critical UI text.
-- overline: Short labels/chips; prefer sentence case elsewhere.
-
-### Readability & rhythm
+- Use semantic heading levels (`<h1>`…`<h6>`) for document hierarchy, and pick
+  the class by **expression**, not by element. An `<h1>` rendering at
+  `text-2xl` is fine and common on dashboards.
 - Line length: target 60–70ch for reading views.
-- Line height: body around 1.55–1.6; headings between 1.1–1.3.
-- Numeric data: consider `font-variant-numeric: tabular-nums` in tables.
+- Line height: body 1.55–1.6; headings 1.1–1.45.
+- Sizes are `rem`-based, so they respect the browser font-size setting
+  (WCAG 1.4.4 Resize Text). A `px` scale ignores it.
+- Tables: use `text-data-numeric` or add `tabular-nums`, so digits align.
 
-### Responsive behavior
-- Sizes are clamp-based; headings shrink gracefully on small screens.
-- If mobile feels heavy, reduce H1/H2 clamp mins by ~2px.
+## Legacy — being retired
 
-## Using typography from SCSS (source of truth)
+Three mechanisms predate the classes above. They still work; **do not write new
+code against them.**
 
-We expose CSS variables and mixins in `src/styles/_typography.scss`. These power both CSS Modules and the MUI theme (which now reads the same variables), so React and SCSS always stay in sync.
+**`.mds-dashboard` / `[data-typography-context='dashboard']`** — an ambient
+scope on a subtree root that redefined `--typo-*` for everything inside. Three
+problems, all silent: `:root` was the *marketing* expression, so a product
+screen that forgot the class rendered serif headings with no error; it did not
+survive a Radix portal, so `notifications-drawer` had to repeat it by hand; and
+it never reached the published package at all. **Removed from every
+`src/components/ui/` component on 2026-10-08** (36 reads across 23 files) and
+guarded by the `typo_scope_free` metric. It remains on `PageShell` only because
+~117 ad-hoc headings in app *pages* still depend on it.
 
-- In a CSS Module
+**`.typography-h2` / `.typography-body1` and the `apply-variant` SCSS mixin** —
+in `src/styles/_typography.scss`, used by marketing CSS Modules. Zero usage in
+`src/components/ui/`.
 
-```scss
-@use '../../styles/_typography.scss' as typo;
+**MUI `<Typography variant="h4">` and `sx={{ typography: 'body2' }}`** — MUI is
+being removed; `src/theme.ts` still reads `--typo-*` for its 56 references.
 
-.cardTitle { @include typo.apply-variant(h4); }
-.meta { @include typo.apply-variant(subtitle2); }
-```
+Full migration plan and remaining steps:
+`docs/tasks/typography-system.md`.
 
-- With utility classes
-
-```html
-<h2 className="typography-h2">Section title</h2>
-<p className="typography-body1">Body copy…</p>
-```
-
-- In MUI components (unchanged usage; now backed by CSS vars)
-
-```tsx
-<Typography variant="h4">Title</Typography>
-<Box sx={{ typography: 'body2' }}>Dense label</Box>
-```
-
-Tip: Prefer variants/mixins over raw font-size declarations to keep hierarchy and responsiveness consistent.
-
-## Do & Don’t
+## Do & Don't
 
 <DoDont
 	do={[
-		{ body: <>Use theme variants (e.g., <code>variant="h4"</code> or <code>{"sx={{ typography: 'body2' }}"}</code>) instead of hardcoding sizes.</> },
+		{ body: <>Pick the class by expression: <code>text-h1</code> for product, <code>text-serif-h1</code> for marketing.</> },
 		{ body: <>Structure content with semantic headings (one <code>h1</code> per page), then <code>h2</code>–<code>h6</code> in order.</> },
-		{ body: <>Keep body text around <strong>16px</strong> with line-height ~<strong>1.55–1.6</strong> for readability.</> },
-		{ body: <>Use <code>body2</code>/<code>subtitle2</code> for dense UI; consider <code>font-variant-numeric: tabular-nums</code> in tables.</> },
+		{ body: <>Use the stock scale (<code>text-sm</code>, <code>font-medium</code>) for anything that is not one of the four named roles.</> },
+		{ body: <>Use <code>text-data-numeric</code> or <code>tabular-nums</code> wherever digits line up in a column.</> },
 		{ body: <>Target line length around <strong>60–70ch</strong> in reading views.</> },
-		{ body: <>Rely on clamp-based sizes and verify small-screen typography visually.</> },
+		{ body: <>Keep body text at <strong>16px</strong> with line-height ~<strong>1.55–1.6</strong>.</> },
 	]}
 	dont={[
-		{ body: <>Hardcode <code>font-size</code> values like <code>0.875rem</code> in components.</> },
-		{ body: <>Use display fonts for long paragraphs or dense tables.</> },
-		{ body: <>Stack multiple large headings above the fold.</> },
-		{ body: <>Rely on color-only emphasis or tighten tracking on small text.</> },
-		{ body: <>Drop persistent UI text below <strong>14px</strong> or use captions for critical information.</> },
-		{ body: <>Break hierarchy with random weights/sizes that bypass the theme.</> },
+		{ body: <>Hardcode a <code>font-size</code> like <code>0.875rem</code>, or a <code>font-family</code>, in a component.</> },
+		{ body: <>Write new code against <code>.mds-dashboard</code>, <code>--typo-*</code>, <code>.typography-*</code> or MUI <code>variant</code>.</> },
+		{ body: <>Combine the serif face with a bold weight — <code>font-serif-expressive font-bold</code> is a pairing nobody designed.</> },
+		{ body: <>Use fluid serif sizes on a dashboard, where headings would reflow as the window resizes.</> },
+		{ body: <>Use display faces for long paragraphs or dense tables.</> },
+		{ body: <>Drop persistent UI text below <strong>14px</strong>, or use captions for critical information.</> },
 	]}
 />
-
----
-_Enhance later with responsive sizing & custom variants demonstration._
