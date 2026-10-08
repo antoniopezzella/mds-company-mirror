@@ -175,10 +175,20 @@ function measure(rev) {
   const semantics = count(read(rev, 'src/semantic-tokens.ts'), /^\s+[a-zA-Z][a-zA-Z0-9]*:\s*ref\(/gm);
   const roles = count(read(rev, 'src/theme/roles.ts'), /^\s+\|\s*'[a-z]/gm);
 
-  // ...and what CLAUDE.md CLAIMS they are. The gap is the doc-drift metric:
-  // a design system whose own documentation misstates its size is one nobody
-  // can trust the rest of.
-  const claude = read(rev, 'CLAUDE.md') ?? '';
+  // ...and what the agent instructions CLAIM they are. The gap is the
+  // doc-drift metric: a design system whose own documentation misstates its
+  // size is one nobody can trust the rest of.
+  //
+  // Read BOTH files. The token-tier section lived in CLAUDE.md until
+  // 2026-10-07, when that file was split into a ~166-line core plus
+  // path-scoped `.claude/rules/`; the counts moved to rules/tokens.md and this
+  // metric silently went to 0/100 reporting "305 off" — a false zero caused by
+  // the split, not by any drift. Concatenating is deliberate rather than
+  // choosing one: it keeps scoring old revisions correct (`rev` can be any
+  // commit, and before the split the counts really were in CLAUDE.md), and it
+  // keeps working if they move again.
+  const claude =
+    (read(rev, 'CLAUDE.md') ?? '') + '\n' + (read(rev, '.claude/rules/tokens.md') ?? '');
   const claimed = {
     primitives: Number(/([0-9]+) color tokens/.exec(claude)?.[1] ?? 0),
     semantics: Number(/([0-9]+) semantic tokens/.exec(claude)?.[1] ?? 0),
