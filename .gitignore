@@ -95,3 +95,7 @@ src/main-backup.tsx
 public/video/10394868-uhd_3840_2160_30fps.mp4
 # Superseded workflows kept locally for reference, not shipped.
 .github/workflows/*.disabled
+
+# Visual-regression baselines — machine-specific PNG sets from
+# scripts/visual-baseline.js (npm run visual:capture). Never committed.
+visual-baseline/
