@@ -36,16 +36,20 @@ const attachmentVariants = cva(
   }
 )
 
+export interface AttachmentProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof attachmentVariants> {
+  /** Drives the border/dash treatment (`idle` dashed, `error` tinted) and the shimmer on `AttachmentTitle` while `uploading`/`processing`. */
+  state?: "idle" | "uploading" | "processing" | "error" | "done"
+}
+
 function Attachment({
   className,
   state = "done",
   size = "default",
   orientation = "horizontal",
   ...props
-}: React.ComponentProps<"div"> &
-  VariantProps<typeof attachmentVariants> & {
-    state?: "idle" | "uploading" | "processing" | "error" | "done"
-  }) {
+}: AttachmentProps) {
   return (
     <div
       data-slot="attachment"
@@ -157,13 +161,24 @@ function AttachmentActions({
   )
 }
 
+export interface AttachmentActionProps extends React.ComponentProps<typeof Button> {
+  /**
+   * `iconOnly` defaults to `true` here (this is a single-icon action —
+   * remove/retry/download). `Button` with `iconOnly` renders
+   * `icon ?? startIcon ?? endIcon` and discards `children` entirely, so
+   * an icon passed as a child — the pattern this file's own stories
+   * use — renders nothing; prefer `icon={<XIcon />}` over
+   * `<AttachmentAction><XIcon /></AttachmentAction>`.
+   */
+}
+
 function AttachmentAction({
   className,
   variant = "ghost",
   size = "sm",
   iconOnly = true,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: AttachmentActionProps) {
   return (
     <Button
       data-slot="attachment-action"

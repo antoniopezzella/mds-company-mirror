@@ -13,9 +13,12 @@ export interface BreadcrumbItem {
 
 export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
+  /** Rendered between each item. Defaults to `/`. */
   separator?: React.ReactNode;
+  /** Collapses the middle items into an ellipsis once `items.length` exceeds this, keeping the first and last entries visible. */
   maxItems?: number;
   className?: string;
+  /** Overrides the `<nav>`'s `aria-label` — localize it when the surrounding page isn't in English. */
   ariaLabel?: string;
 }
 

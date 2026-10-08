@@ -20,9 +20,12 @@ type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
 export interface CarouselProps {
+  /** Passed straight through to Embla Carousel (loop, align, dragFree, etc.) — see Embla's own options docs. */
   opts?: CarouselOptions;
+  /** Embla plugins, e.g. autoplay or wheel-gestures. */
   plugins?: CarouselPlugin;
   orientation?: 'horizontal' | 'vertical';
+  /** Escape hatch to drive the carousel imperatively — called once the Embla API instance is ready, so you can wire up custom controls outside `CarouselPrevious`/`CarouselNext`. */
   setApi?: (api: CarouselApi) => void;
 }
 

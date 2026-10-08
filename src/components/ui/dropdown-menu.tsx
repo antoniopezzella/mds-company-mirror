@@ -75,9 +75,17 @@ const DropdownMenuContent = React.forwardRef<
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
+export interface DropdownMenuItemProps
+  extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> {
+  /** Indents the item to align with items that have a leading icon/checkbox, without adding one itself. */
+  inset?: boolean;
+  /** `danger` tints the text (and its focus highlight) red — use for destructive actions like "Delete". */
+  tone?: 'default' | 'danger';
+}
+
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & { inset?: boolean; tone?: 'default' | 'danger' }
+  DropdownMenuItemProps
 >(({ className, inset, tone = 'default', ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}

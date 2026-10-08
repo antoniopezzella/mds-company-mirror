@@ -63,6 +63,7 @@ function getToneRoles(tone: ToastTone): { bg: RoleName; fg: RoleName } {
 export interface ToastProps
   extends React.ComponentPropsWithoutRef<typeof ToastPrimitive.Root>,
     VariantProps<typeof toastVariants> {
+  /** Background/foreground pairing — `default`, `success`, `warning`, `danger`, etc. */
   tone?: ToastTone;
 }
 

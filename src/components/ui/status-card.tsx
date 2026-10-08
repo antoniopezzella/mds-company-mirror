@@ -28,9 +28,11 @@ function getRoles(status: StatusCardStatus): { bg: RoleName; fg: RoleName; borde
 }
 
 export interface StatusCardProps {
+  /** Drives the border/background colour and the default icon. */
   status: StatusCardStatus;
   title: string;
   message: string;
+  /** Overrides the status's default icon. */
   icon?: React.ReactNode;
   className?: string;
 }

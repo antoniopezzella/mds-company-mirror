@@ -40,6 +40,7 @@ import type { FilterField } from './filter-schema';
  */
 
 export interface FilterFieldControlProps {
+  /** Picks the rendered control type (text/select/boolean/numberRange/...) — see `filters-schema.ts`. Renders nothing for a `hidden` field. */
   field: FilterField;
   value: unknown;
   onValueChange: (value: unknown) => void;

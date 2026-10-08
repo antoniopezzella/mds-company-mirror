@@ -22,14 +22,21 @@ export type AvatarTone = 'default' | 'primary' | 'secondary' | 'success' | 'warn
 export type AvatarStatus = 'online' | 'offline' | 'away' | 'busy';
 
 export interface AvatarProps {
+  /** Image URL. Falls back to `initials` automatically on a failed load via Radix's `Fallback` — no manual error handling needed. */
   src?: string;
+  /** Shown in the fallback circle while `src` is empty or fails to load. */
   initials?: string;
   size?: AvatarSize | LegacyAvatarSize;
   variant?: AvatarVariant;
+  /** Background/foreground pairing for the initials fallback. Has no effect when `src` resolves. */
   tone?: AvatarTone;
+  /** Image alt text. Defaults to a generic "User Avatar" — pass a real name/role when the identity matters to the page. */
   alt?: string;
+  /** Makes the avatar an interactive control: adds `role="button"`, keyboard activation (Enter/Space) and a pointer cursor. */
   onClick?: () => void;
+  /** Renders a small coloured dot in the bottom-right corner indicating presence. Omit for no indicator. */
   status?: AvatarStatus;
+  /** Arbitrary content pinned to the top-right corner, e.g. a notification count — rendered above the avatar, not inside it. */
   badge?: React.ReactNode;
   className?: string;
 }

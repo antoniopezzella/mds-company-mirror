@@ -133,6 +133,7 @@ export function createRowPinColumn<TData extends RowData>({
 }
 
 export interface DataGridDetailPanelProps {
+  /** The expanded row's detail content — usually a `renderDetail` result passed straight through. */
   children: React.ReactNode;
   className?: string;
 }

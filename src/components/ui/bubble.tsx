@@ -74,15 +74,19 @@ const bubbleVariants = cva(
   }
 )
 
+export interface BubbleProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof bubbleVariants> {
+  /** `end` right-aligns the bubble (the local user's own messages); `start` is the default, left-aligned side. */
+  align?: "start" | "end"
+}
+
 function Bubble({
   variant = "default",
   align = "start",
   className,
   ...props
-}: React.ComponentProps<"div"> &
-  VariantProps<typeof bubbleVariants> & {
-    align?: "start" | "end"
-  }) {
+}: BubbleProps) {
   return (
     <div
       data-slot="bubble"

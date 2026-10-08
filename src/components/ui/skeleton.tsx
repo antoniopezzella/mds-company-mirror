@@ -27,9 +27,12 @@ const skeletonVariants = cva('block', {
 });
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** `circular` defaults to a 40px dot; `text`/`rectangular` default to full width. */
   variant?: SkeletonVariant;
   width?: number | string;
+  /** Defaults to `1em` for `text`, 40 for `circular`, 20 for `rectangular`. */
   height?: number | string;
+  /** Pass `false` to render a static block with no shimmer/pulse — useful inside `prefers-reduced-motion` contexts. */
   animation?: 'pulse' | 'wave' | false;
 }
 

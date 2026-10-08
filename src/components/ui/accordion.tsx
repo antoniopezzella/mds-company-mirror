@@ -18,10 +18,14 @@ export interface AccordionItem {
 }
 
 export interface AccordionProps {
+  /** The panels to render, in order. Each entry owns its own expand/collapse state via `id`. */
   items: AccordionItem[];
+  /** `id`s that start expanded. Ignored after the first render — this is not a controlled-state prop. */
   defaultExpanded?: string[];
+  /** Allow more than one panel open at once. When false, opening one panel closes the others. */
   allowMultiple?: boolean;
   variant?: 'default' | 'compact' | 'elevated';
+  /** Fires with the full list of currently-expanded `id`s whenever a panel opens or closes. */
   onChange?: (expandedIds: string[]) => void;
   className?: string;
 }

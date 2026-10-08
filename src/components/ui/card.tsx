@@ -120,11 +120,14 @@ export { Card, CardHeader, CardAction, CardTitle, CardDescription, CardContent, 
 export interface ContentCardProps {
   title?: string;
   description?: string;
+  /** Small label above the title, e.g. a topic or section name. */
   category?: string;
   date?: string;
+  /** Rendered above the title/description in `vertical` orientation, to the side in `horizontal`. */
   image?: string;
   orientation?: 'vertical' | 'horizontal';
   border?: boolean;
+  /** Label for the trailing call-to-action link/button. Renders nothing if omitted, even when `onCtaClick` is set. */
   ctaLabel?: string;
   onCtaClick?: () => void;
   className?: string;

@@ -12,11 +12,16 @@ function MessageGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+export interface MessageProps extends React.ComponentProps<"div"> {
+  /** `end` reverses the row (avatar on the right) for the local user's own messages; `start` is the default. */
+  align?: "start" | "end"
+}
+
 function Message({
   className,
   align = "start",
   ...props
-}: React.ComponentProps<"div"> & { align?: "start" | "end" }) {
+}: MessageProps) {
   return (
     <div
       data-slot="message"

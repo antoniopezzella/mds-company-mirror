@@ -24,7 +24,9 @@ import { dateRangeFilterFn } from './data-grid-filter-fns';
  * hundreds, none of which anyone wants to tick individually.
  */
 export interface DataTableDateFilterProps<TData extends RowData, TValue> {
+  /** The TanStack column this filter controls. Renders disabled-looking with no interaction when omitted. */
   column?: DataGridColumn<TData, TValue>;
+  /** Label shown on the trigger button, e.g. "Date" or "Created". */
   title: string;
 }
 
