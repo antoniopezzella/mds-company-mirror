@@ -67,13 +67,13 @@ export const StatusCard: React.FC<StatusCardProps> = ({ status, title, message, 
           {icon ?? <Icon className="h-6 w-6" />}
         </span>
         <h3
-          className="m-0 font-[family-name:var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-base font-semibold leading-normal"
+          className="m-0 font-sans-productive text-base font-semibold leading-normal"
           style={{ color: getRoleColor(fg) }}
         >
           {title}
         </h3>
       </div>
-      <p className="m-0 font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm leading-5" style={{ color: getRoleColor(fg) }}>
+      <p className="m-0 font-sans-productive text-sm leading-5" style={{ color: getRoleColor(fg) }}>
         {message}
       </p>
     </div>

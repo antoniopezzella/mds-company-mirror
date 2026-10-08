@@ -97,21 +97,21 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
   return (
     <Sheet open={open} onOpenChange={(next) => !next && onClose()}>
       {/*
-          `mds-dashboard` is repeated here on purpose. Radix portals SheetContent
-          to document.body, so it sits OUTSIDE the page's own `.mds-dashboard`
-          root and the typography context cannot cascade in — without this the
-          drawer silently falls back to the marketing display face.
+          The `mds-dashboard` repeat that used to be here is GONE, and this is
+          the clearest demonstration of why explicit classes beat the ambient
+          scope. Radix portals SheetContent to document.body, outside the
+          page's own scope root, so the typography context could not cascade in
+          — the drawer silently fell back to the marketing display face unless
+          the class was repeated by hand on every portalled surface.
+
+          `font-sans-productive` travels with the element, so there is nothing
+          to remember and nothing to forget.
         */}
-        <SheetContent side="right" className="mds-dashboard flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
+        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
         <SheetHeader className="flex-row items-center justify-between px-6 pb-4 pt-6">
-          <SheetTitle
-              style={{
-                fontFamily: 'var(--typo-h5-font-family, var(--font-family-dashboard))',
-                fontWeight: 'var(--typo-h5-font-weight, 700)' as React.CSSProperties['fontWeight'],
-              }}
-            >
-              Notifications
-            </SheetTitle>
+          {/* font-bold overrides SheetTitle's own font-semibold — this title
+              was weight 700 before the migration and stays there. */}
+          <SheetTitle className="font-bold">Notifications</SheetTitle>
         </SheetHeader>
 
         <div style={{ borderTop: `1px solid ${borderDefault}` }} />

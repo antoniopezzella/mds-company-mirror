@@ -43,7 +43,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         ref={ref}
         disabled={disabled}
         className={cn(
-          'box-border flex min-h-[80px] w-full border bg-transparent font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] shadow-xs transition-colors placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          'box-border flex min-h-[80px] w-full border bg-transparent font-sans-productive shadow-xs transition-colors placeholder:opacity-70 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
           CONTROL_RADIUS,
           CONTROL_PX[resolvedSize],
           CONTROL_PY[resolvedSize],

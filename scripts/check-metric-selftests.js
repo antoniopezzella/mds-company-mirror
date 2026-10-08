@@ -76,6 +76,7 @@ const RAW_FIELD = {
   colour_discipline: 'hexLiterals',
   rtl_readiness: 'logicalProps',
   code_connect_coverage: 'codeConnect',
+  typo_scope_free: 'typoScopeRefs',
   doc_sprawl: 'rootDocs',
   contracts_emitted: 'contractsEmitted',
   expression_reach: 'expressionInPackage',
@@ -212,6 +213,15 @@ const METRICS = [
     // Two things that must NOT move it: hex in a comment, and an exempted file.
     flat: () => create(`${UI}/__mprobe_hex.tsx`, '// a note mentioning #ff0000 for contrast, not a colour\n/* roles-allow-hex-file */\nexport const MProbe = () => <div style={{ color: "#00ff00" }} />;\n'),
     flatWhy: 'hex in a comment, and hex in a roles-allow-hex-file file, are both deliberate',
+  },
+  {
+    id: 'typo_scope_free',
+    dir: 'up',
+    // Raw field counts BAD things (refs), so it rises as the score falls.
+    up: () => create(`${UI}/__mprobe_typo.tsx`, 'export const MProbe = () => <div className="font-[family-name:var(--typo-h1-font-family,_Noto_Sans,_sans-serif)]" />;\n'),
+    // A comment mentioning the variable is a migration note, not a use.
+    flat: () => create(`${UI}/__mprobe_typo.tsx`, '// migration note: this used to read --typo-h1-font-family\nexport const MProbe = () => <div />;\n'),
+    flatWhy: 'a comment mentioning --typo-* is a migration note, not a dependency',
   },
   {
     id: 'rtl_readiness',

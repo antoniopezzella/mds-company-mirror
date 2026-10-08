@@ -12,7 +12,7 @@ export type ChipVariant = 'filled' | 'outlined';
 export type ChipSize = 'sm' | 'md' | 'lg';
 
 const chipVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] font-medium transition-transform focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex items-center gap-1.5 rounded-full font-sans-productive font-medium transition-transform focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       size: {

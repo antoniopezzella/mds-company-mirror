@@ -137,7 +137,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('font-[family-name:var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-semibold leading-none', className)}
+    className={cn('font-sans-productive text-lg font-semibold leading-none', className)}
     style={{ color: getRoleColor('text.primary') }}
     {...props}
   />
@@ -150,7 +150,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)}
+    className={cn('font-sans-productive text-sm', className)}
     style={{ color: getRoleColor('text.secondary') }}
     {...props}
   />

@@ -76,7 +76,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     // eslint-disable-next-line jsx-a11y/heading-has-content
     <h3
       ref={ref}
-      className={cn('font-[family-name:var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-bold leading-tight', className)}
+      className={cn('font-sans-productive text-lg font-bold leading-tight', className)}
       style={{ color: getRoleColor('text.primary') }}
       {...props}
     />
@@ -88,7 +88,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn('font-[family-name:var(--typo-body2-font-family,_Noto_Sans,_sans-serif)] text-sm', className)}
+      className={cn('font-sans-productive text-sm', className)}
       style={{ color: getRoleColor('text.secondary') }}
       {...props}
     />

@@ -37,7 +37,7 @@ const tabsListVariants = cva('flex items-center gap-6 border-b', {
 });
 
 const tabTriggerVariants = cva(
-  'relative -mb-px inline-flex items-center justify-center whitespace-nowrap border-b-2 border-transparent px-1 py-3 font-[family-name:var(--typo-body1-font-family,_Noto_Sans,_sans-serif)] text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--tabs-focus-ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed'
+  'relative -mb-px inline-flex items-center justify-center whitespace-nowrap border-b-2 border-transparent px-1 py-3 font-sans-productive text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--tabs-focus-ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed'
 );
 
 const tabContentVariants = cva('pt-6 focus-visible:outline-hidden');

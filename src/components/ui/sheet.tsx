@@ -123,7 +123,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('font-[family-name:var(--typo-h6-font-family,_Noto_Sans,_sans-serif)] text-lg font-semibold', className)}
+    className={cn('font-sans-productive text-lg font-semibold', className)}
     style={{ color: getRoleColor('text.primary') }}
     {...props}
   />
