@@ -2,6 +2,85 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.8.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.7.0...v0.8.0) (2026-10-08)
+
+### Features
+
+* **components:** add the marsh-dashboard block, and make the registry installable ([4343b98](https://github.com/antoniopezzella/marsh-design-system/commit/4343b9832ebd5284982fda5c185235f7df6c790e))
+* **components:** build the Client Pivot View tab ([57f262d](https://github.com/antoniopezzella/marsh-design-system/commit/57f262d3d261a2ae4840fff5fb11fa763d0335e4))
+* **components:** sortable headers on the Client Pivot assignments table ([5bb5f2c](https://github.com/antoniopezzella/marsh-design-system/commit/5bb5f2cff6abbba813d397e6656c79f065ed908e))
+* **governance:** enforce no-raw-hex in components/ui, keep it advisory elsewhere ([5da7844](https://github.com/antoniopezzella/marsh-design-system/commit/5da78447c01e6e242ae34edae584569e18dcb21d))
+* **governance:** refuse commits to main with a pre-commit hook ([3981716](https://github.com/antoniopezzella/marsh-design-system/commit/39817169946fd525b5a536f11ac03b8c05a871b2))
+* **governance:** rubric v3 — score the three goals, not just tidiness ([62347d3](https://github.com/antoniopezzella/marsh-design-system/commit/62347d33906acc6ed7f55fc42646303aed2319dd))
+* **governance:** self-test the a11y gate, and check the registry against disk ([cecadfd](https://github.com/antoniopezzella/marsh-design-system/commit/cecadfd179ad71c23ff6928c73b11849bbc348b1))
+* **governance:** self-test the ds:score metrics, and fix expression_reach (GOV-2) ([74656af](https://github.com/antoniopezzella/marsh-design-system/commit/74656af7b7eebcf17bc2a5b568f1fe43bc193ded))
+* **governance:** self-test the static gates, proving they can fail ([565e6a9](https://github.com/antoniopezzella/marsh-design-system/commit/565e6a93f9a0d40859caeecd2337fa84e94ce3d0))
+* **repo:** four propose-only agents to work the readiness backlog ([2253bf6](https://github.com/antoniopezzella/marsh-design-system/commit/2253bf6f80630f299dcfd4a9ac813a53eaed8583))
+* **roles:** add text.placeholder, promoting an unreachable semantic ([8dd66fe](https://github.com/antoniopezzella/marsh-design-system/commit/8dd66fe53adb0f09d0b5d5169b1c05c36ff20d8c))
+* **storybook:** emit the component manifest, and make docgen resolve @/ (AGENT-2) ([bbd22d6](https://github.com/antoniopezzella/marsh-design-system/commit/bbd22d6370f22fb3f38f6ed50cc8e4288e487223))
+* **theme:** add CONTROL_RADIUS and move controls from 6px to 4px ([1aa1012](https://github.com/antoniopezzella/marsh-design-system/commit/1aa101225695b8bd56aa6aa35615c2dbb7e90470))
+* **theme:** ship both typography expressions as explicit utilities (GLOBAL-1) ([67166a7](https://github.com/antoniopezzella/marsh-design-system/commit/67166a74e4375ef235b0bb5d76a2f6f4dd7f5577))
+
+### Bug Fixes
+
+* **components:** correct the four defects Run 5 found in the day's own work ([9f4b64d](https://github.com/antoniopezzella/marsh-design-system/commit/9f4b64d87b5e2c060bc9c5377f1da17ff360fd6d))
+* **components:** empty button from AttachmentAction's iconOnly default ([04b0bfa](https://github.com/antoniopezzella/marsh-design-system/commit/04b0bfa832ce0e628844313936f332ed91398891))
+* **components:** hero banner dark background used a button-fill role ([6556508](https://github.com/antoniopezzella/marsh-design-system/commit/65565089ef0c9b53a0c3a03576e10292cfd31ae3))
+* **components:** move App.tsx Modal off the legacy size spelling ([0180439](https://github.com/antoniopezzella/marsh-design-system/commit/01804395f2e20e3d388125d4762008a859c0d828))
+* **components:** size the Vimeo iframe to the source's ratio, not a hardcoded one ([3840fc2](https://github.com/antoniopezzella/marsh-design-system/commit/3840fc2508da7425b0d4c8a971133442d00a45b2))
+* **governance:** ds:score read token counts from the rules file too ([82ebab6](https://github.com/antoniopezzella/marsh-design-system/commit/82ebab61a9c5eb70f3b1eb1925ab68e4db38a2e7))
+* **governance:** make the role-usage gate see all 55 roles, and run it ([85f038d](https://github.com/antoniopezzella/marsh-design-system/commit/85f038d093771e330d3a0b66d7786b6d4490025b))
+* **governance:** prop_docs counted docblocks attached to nothing ([77e3ec1](https://github.com/antoniopezzella/marsh-design-system/commit/77e3ec1925d34dc2760c545e0c37951b30a3ae55))
+* **package:** check the registry dependency graph, not just the index ([6ae5d37](https://github.com/antoniopezzella/marsh-design-system/commit/6ae5d37eb39438a8ad671df187c58f3839a4788e))
+* **package:** ship custom utilities to the package and make them variant-capable ([02b636d](https://github.com/antoniopezzella/marsh-design-system/commit/02b636d1c0ae4cddb0d99e0dcb043221d99fef9d))
+* **storybook:** repair two broken image paths ([2159f2a](https://github.com/antoniopezzella/marsh-design-system/commit/2159f2a1324a7b2f17a6d911e1a8e076873aa4cc))
+* **theme:** make the type scale rem, closing WCAG 1.4.4 ([d343370](https://github.com/antoniopezzella/marsh-design-system/commit/d343370035a0328b7ab1465dcca6194709200e81))
+* **tokens:** neutralise surfaceAccent in dark, guard brand surfaces ([fed4382](https://github.com/antoniopezzella/marsh-design-system/commit/fed43823a2e80fd8bea4ca50de6efd6d7816a079))
+* **tokens:** restore brand navy to surfaceHero in dark mode ([0c53b86](https://github.com/antoniopezzella/marsh-design-system/commit/0c53b868817f9375cefdd7de6a753993c424ca6d))[ceecff/#95caff](https://github.com/antoniopezzella/marsh-design-system/issues/95caff)
+
+### Refactoring
+
+* **components:** delete four MUI components, port their tests to ui/ ([df2bd6e](https://github.com/antoniopezzella/marsh-design-system/commit/df2bd6e45637f1ffc6a23342c8f0b92ed597a293))
+* **components:** name hero text colours for what they are ([2d0de9e](https://github.com/antoniopezzella/marsh-design-system/commit/2d0de9e22b249060cd36ed2925cdf2287bbc1c51))
+* **components:** repoint four Code Connect mappings to ui/ components ([15fd156](https://github.com/antoniopezzella/marsh-design-system/commit/15fd1569456284d4752556462278fcc3f9675ba6))
+* **components:** take the shipped surface off the typography scope ([719e7d1](https://github.com/antoniopezzella/marsh-design-system/commit/719e7d10695e21c18a670aac9efdd72ced79f6a4))
+* **theme:** rename to text-h1 / text-serif-h1, and fix a class collision ([621e07f](https://github.com/antoniopezzella/marsh-design-system/commit/621e07f727b2cd457b1bd979bf8eefbf6fc66cf5))
+
+### Documentation
+
+* **components:** document props on 31 modules (DEV-1, partial) ([4e1d87a](https://github.com/antoniopezzella/marsh-design-system/commit/4e1d87a2eb2dc47dda0fb2c8cc244ca50c7dcfe3))
+* correct the Run-4 status note, which contradicted Run 5 ([c1dab9d](https://github.com/antoniopezzella/marsh-design-system/commit/c1dab9dcbc0be40982f435d03b0aed67a0f3f655))
+* correct two docs that described the four deleted MUI components ([c288772](https://github.com/antoniopezzella/marsh-design-system/commit/c288772fe5e62817edc15a66b4dd3b597ab45fac))
+* **guides:** correct the Vimeo cover's aspect-ratio claim ([b65466f](https://github.com/antoniopezzella/marsh-design-system/commit/b65466f7b9af7d9ef0353eb5629f5df31354e460))
+* **guides:** record the responsive Vimeo cover requirement ([c8f40a0](https://github.com/antoniopezzella/marsh-design-system/commit/c8f40a0244663243ea0798ed9a28d0ca6790632d))
+* map every open item to four goals, against the expressions target ([d06b80b](https://github.com/antoniopezzella/marsh-design-system/commit/d06b80b9da69945965589ad7eba11552feccd45d))
+* **repo:** add the Atlas token comparison, as data plus a pointer ([53c9e1e](https://github.com/antoniopezzella/marsh-design-system/commit/53c9e1e6b31b9b811423e52bad393bce44d92d0d))
+* **repo:** split CLAUDE.md into a 166-line core plus path-scoped rules ([3c5ef72](https://github.com/antoniopezzella/marsh-design-system/commit/3c5ef7225801b944c6dc1560db874e98e9c0c575))
+* run 5 audit — verify the day's six commits instead of trusting them ([5a645a6](https://github.com/antoniopezzella/marsh-design-system/commit/5a645a6a56a683e27e68a08d423c5f32f35f0a6c))
+* **storybook:** give the h1-h6 difference actual numbers ([8848105](https://github.com/antoniopezzella/marsh-design-system/commit/884810593e0c725f64b24d2111e33c0185d51f37))
+* **storybook:** make CardWebsite stories render the approved carousel card ([1f0f6bd](https://github.com/antoniopezzella/marsh-design-system/commit/1f0f6bd4bba8f77d66ab81ff3f31739439a4700e))
+* **storybook:** rewrite Foundations Typography, and document the self-tests ([53b6efd](https://github.com/antoniopezzella/marsh-design-system/commit/53b6efd4d4096a1bf31586e935d9f9b30ef64443))
+* **tasks:** cut the dashboard role set from fifteen to four ([45aded5](https://github.com/antoniopezzella/marsh-design-system/commit/45aded5a9ccb93b11bd9a24d96ec5cd7bfcc3ed7))
+* **tasks:** nine metric-bound readiness tasks, with requirements ([7b8a739](https://github.com/antoniopezzella/marsh-design-system/commit/7b8a73933371586bd5ab9c33774f03af761a3895))
+* **tasks:** propose a generated typography system ([a2b618a](https://github.com/antoniopezzella/marsh-design-system/commit/a2b618ac05e9c08568a864d8e57e722e9e657531))
+* **tasks:** record the first loop run, and add DEV-4 and GOV-2 ([3890b34](https://github.com/antoniopezzella/marsh-design-system/commit/3890b3452c868f0d5dcf5e2fff006a4fec8d90b7))
+* **tasks:** rewrite the typography proposal — tokens in [@theme](https://github.com/theme), pairings as [@utility](https://github.com/utility) ([5c69e5c](https://github.com/antoniopezzella/marsh-design-system/commit/5c69e5c65abad6543254bb6696c5237f95c0733c))
+* **tasks:** scope the typography proposal to dashboard product ([6b65dd0](https://github.com/antoniopezzella/marsh-design-system/commit/6b65dd0cb98275712154b44786a7aabe969a4fca))
+
+### Continuous Integration
+
+* **repo:** publish Code Connect from CI, and gate it on a real parse check ([82a4340](https://github.com/antoniopezzella/marsh-design-system/commit/82a4340140249577c594b6dee0340de7d1ba37c5))
+
+### Tests
+
+* **governance:** add a dark-mode story pass and measure the backlog ([d5255f5](https://github.com/antoniopezzella/marsh-design-system/commit/d5255f591f42f15788605b6e2b658602368f9b51))
+
+### Chores
+
+* **repo:** add 'tasks' to the commitlint scope enum ([54c04f3](https://github.com/antoniopezzella/marsh-design-system/commit/54c04f3c4d883e5b71b3c59144c0e38b59bee721))
+* **repo:** delete 11 dead demo and debug pages ([c3cd29c](https://github.com/antoniopezzella/marsh-design-system/commit/c3cd29c6a0effeec98eaadc6084a576440a8332a))
+* **storybook:** hide the legacy MUI groups and sort Components first ([9d3ee6b](https://github.com/antoniopezzella/marsh-design-system/commit/9d3ee6be74df709a6beb0b6984deca1af0d93049))
+
 ## [0.7.0](https://github.com/antoniopezzella/marsh-design-system/compare/v0.6.0...v0.7.0) (2026-10-01)
 
 ### Features
