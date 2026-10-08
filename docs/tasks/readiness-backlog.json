@@ -1,15 +1,31 @@
 {
   "note": "Metric-bound readiness backlog. Each task names a ds:score v3 metric, so completion is a number that moved rather than a self-report. Companion prose: readiness-backlog.md",
   "method": "current values measured at 62347d3 by `npm run ds:score --json` on 2026-10-08. `current` is the metric's 0-100 SCORE, not its raw count; `raw` carries the underlying figures. Re-measure rather than trusting these.",
-  "caveat": "agents/design-system-agent does ONE job - turn a Figma node into a component. Only AGENT-1 is near that shape, and it has never been run end-to-end. Driving the rest needs an orchestrator whose unit of work is a backlog task, or doing them interactively.",
+  "caveat": "Four propose-only Claude Code subagents work this backlog: ds-backlog-pilot (triage + dispatch), ds-metric-closer (DEV-1/DEV-2/GLOBAL-2), ds-gate-author (AGENT-3 + new metrics), ds-code-connect-mapper (AGENT-1). Each applies, measures, reverts, and leaves a patch in .agent-proposals/ for a human to git apply. None commits. GLOBAL-1, GLOBAL-3 and DEV-3 are fenced off from all of them by explicit human decision. agents/design-system-agent is unrelated: it turns one Figma node into a component and has never been run end-to-end.",
   "verify": "npm run ds:score --json | then read .parts[] for the named metric id",
   "rubricVersion": 3,
   "measuredAt": "62347d3",
   "goals": {
-    "dev": { "label": "Development readiness", "score": 62, "weight": 47 },
-    "gov": { "label": "Governance & verification", "score": 84, "weight": 27 },
-    "global": { "label": "Scalable global system", "score": 1, "weight": 14 },
-    "agentic": { "label": "AI-agent readiness", "score": 17, "weight": 12 }
+    "dev": {
+      "label": "Development readiness",
+      "score": 62,
+      "weight": 47
+    },
+    "gov": {
+      "label": "Governance & verification",
+      "score": 84,
+      "weight": 27
+    },
+    "global": {
+      "label": "Scalable global system",
+      "score": 1,
+      "weight": 14
+    },
+    "agentic": {
+      "label": "AI-agent readiness",
+      "score": 17,
+      "weight": 12
+    }
   },
   "tasks": [
     {
@@ -19,11 +35,16 @@
       "metric": "expression_reach",
       "current": 0,
       "target": 100,
-      "raw": { "expressionInPackage": 0, "detail": "src/styles.package.css has 0 scope references" },
+      "raw": {
+        "expressionInPackage": 0,
+        "detail": "src/styles.package.css has 0 scope references"
+      },
       "size": "M",
       "priority": "P0",
       "blocked_by": [],
-      "blocks": ["colour-tier-conversion"],
+      "blocks": [
+        "colour-tier-conversion"
+      ],
       "requirements": [
         "Fix the three typography holes first - 15 variables, 8 call sites - before betting 110 role variables on the same mechanism",
         "Radix portals render to document.body and do not inherit the scope; re-apply it as notifications-drawer.tsx does",
@@ -38,7 +59,11 @@
       "metric": "contracts_emitted",
       "current": 0,
       "target": 100,
-      "raw": { "contractsEmitted": 0, "storybookVersion": "10.6", "flagAvailableSince": "10.1" },
+      "raw": {
+        "contractsEmitted": 0,
+        "storybookVersion": "10.6",
+        "flagAvailableSince": "10.1"
+      },
       "size": "S",
       "priority": "P1",
       "blocked_by": [],
@@ -57,7 +82,21 @@
       "metric": "gate_selftests",
       "current": 40,
       "target": 100,
-      "raw": { "gatesSelfTested": 6, "gatesTotal": 15, "remaining": ["contrast", "deprecations", "docs-sprawl", "figma-drift", "figma-semantic-drift", "package-css", "package-types", "registry", "token-variables"] },
+      "raw": {
+        "gatesSelfTested": 6,
+        "gatesTotal": 15,
+        "remaining": [
+          "contrast",
+          "deprecations",
+          "docs-sprawl",
+          "figma-drift",
+          "figma-semantic-drift",
+          "package-css",
+          "package-types",
+          "registry",
+          "token-variables"
+        ]
+      },
       "size": "M",
       "priority": "P1",
       "blocked_by": [],
@@ -77,7 +116,10 @@
       "metric": "code_connect_coverage",
       "current": 25,
       "target": 51,
-      "raw": { "codeConnect": 30, "uiModules": 118 },
+      "raw": {
+        "codeConnect": 30,
+        "uiModules": 118
+      },
       "size": "M",
       "priority": "P1",
       "blocked_by": [],
@@ -98,7 +140,10 @@
       "metric": "prop_docs",
       "current": 44,
       "target": 76,
-      "raw": { "withPropDocs": 52, "uiModules": 118 },
+      "raw": {
+        "withPropDocs": 52,
+        "uiModules": 118
+      },
       "size": "M",
       "priority": "P1",
       "blocked_by": [],
@@ -117,7 +162,11 @@
       "metric": "ref_paths",
       "current": 35,
       "target": 76,
-      "raw": { "withRef": 41, "uiModules": 118, "peerRange": "^18 || ^19" },
+      "raw": {
+        "withRef": 41,
+        "uiModules": 118,
+        "peerRange": "^18 || ^19"
+      },
       "size": "M",
       "priority": "P1",
       "blocked_by": [],
@@ -136,7 +185,10 @@
       "metric": "rtl_readiness",
       "current": 5,
       "target": 80,
-      "raw": { "logicalProps": 4, "physicalProps": 69 },
+      "raw": {
+        "logicalProps": 4,
+        "physicalProps": 69
+      },
       "size": "M",
       "priority": "P1",
       "blocked_by": [],
@@ -155,7 +207,16 @@
       "metric": null,
       "current": null,
       "target": null,
-      "raw": { "i18nLibrary": "none", "hardcodedExamples": ["Rows per page:", "Select an option", "Search...", "User Avatar", "Toggle row {row}"] },
+      "raw": {
+        "i18nLibrary": "none",
+        "hardcodedExamples": [
+          "Rows per page:",
+          "Select an option",
+          "Search...",
+          "User Avatar",
+          "Toggle row {row}"
+        ]
+      },
       "size": "S for the metric, L for the conversion",
       "priority": "P1",
       "blocked_by": [],
@@ -175,7 +236,9 @@
       "metric": null,
       "current": null,
       "target": null,
-      "raw": { "uncheckedTestFiles": 109 },
+      "raw": {
+        "uncheckedTestFiles": 109
+      },
       "size": "S",
       "priority": "P1",
       "blocked_by": [],
