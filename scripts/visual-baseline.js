@@ -57,7 +57,7 @@ function serve(dir) {
   });
 }
 
-async function capture(outDir) {
+async function capture(outDir, { dark = false } = {}) {
   if (!fs.existsSync(STORYBOOK_DIR)) {
     console.error(`visual-baseline: ${STORYBOOK_DIR} not found. Run: npx storybook build -o dist/storybook`);
     process.exit(1);
@@ -82,7 +82,21 @@ async function capture(outDir) {
 
   let done = 0;
   for (const s of stories) {
-    const url = `http://localhost:${PORT}/iframe.html?id=${encodeURIComponent(s.id)}&viewMode=story`;
+    // Dark pass via Storybook's OWN `colorMode` global, not a post-load class
+    // toggle. preview.tsx declares that global and its decorator sets `.dark`
+    // on <html>, swaps in darkTheme, AND re-renders — so getRoleColor(), which
+    // resolves once at render by reading the `.dark` class (roles.ts:239), sees
+    // dark at MOUNT. An earlier version injected `.dark` with page.evaluate
+    // AFTER load; that re-themed nothing, because components had already
+    // computed their inline colours in light and React did not re-render. The
+    // tell was `button` (reactive `dark:` classes) reading byte-identical while
+    // `dialog` (a late-mounting portal) changed — the toggle caught only
+    // whatever happened to re-resolve after it. `&globals=colorMode:dark` sets
+    // it before the story mounts, which is the only correct way.
+    const url =
+      `http://localhost:${PORT}/iframe.html?id=${encodeURIComponent(s.id)}` +
+      (dark ? '&globals=colorMode:dark' : '') +
+      '&viewMode=story';
     try {
       await page.goto(url, { waitUntil: 'networkidle', timeout: 20000 });
 
@@ -232,8 +246,10 @@ function compare(dirA, dirB) {
 }
 
 const [cmd, ...rest] = process.argv.slice(2);
-if (cmd === 'capture') await capture(path.resolve(rest[0] || 'visual-baseline'));
-else if (cmd === 'compare') compare(path.resolve(rest[0]), path.resolve(rest[1]));
+const dark = rest.includes('--dark');
+const positional = rest.filter((a) => !a.startsWith('--'));
+if (cmd === 'capture') await capture(path.resolve(positional[0] || 'visual-baseline'), { dark });
+else if (cmd === 'compare') compare(path.resolve(positional[0]), path.resolve(positional[1]));
 else {
   console.error('usage: visual-baseline.js capture <outDir> | compare <baselineDir> <currentDir>');
   process.exit(1);
