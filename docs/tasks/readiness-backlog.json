@@ -4,7 +4,7 @@
   "caveat": "Four propose-only Claude Code subagents work this backlog: ds-backlog-pilot (triage + dispatch), ds-metric-closer (DEV-1/DEV-2/GLOBAL-2), ds-gate-author (AGENT-3 + new metrics), ds-code-connect-mapper (AGENT-1). Each applies, measures, reverts, and leaves a patch in .agent-proposals/ for a human to git apply. None commits. GLOBAL-1, GLOBAL-3 and DEV-3 are fenced off from all of them by explicit human decision. agents/design-system-agent is unrelated: it turns one Figma node into a component and has never been run end-to-end.",
   "verify": "npm run ds:score --json | then read .parts[] for the named metric id",
   "rubricVersion": 3,
-  "measuredAt": "62347d3",
+  "measuredAt": "2253bf6",
   "goals": {
     "dev": {
       "label": "Development readiness",
