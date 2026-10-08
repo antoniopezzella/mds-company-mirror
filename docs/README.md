@@ -64,6 +64,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 
 | Doc | For |
 |---|---|
+| [`tasks/readiness-backlog.md`](./tasks/readiness-backlog.md) + [`readiness-backlog.json`](./tasks/readiness-backlog.json) | **The nine metric-bound tasks.** Each one names a `ds:score` v3 metric, so "done" is a number that moved rather than a self-report. Grouped by the four goals the rubric now scores — dev readiness 62, governance 84, **global 1**, **agentic 17**. The JSON is the machine-readable half: `metric`, `current`, `target`, `verify`, `blocked_by`, for an agent to pick from and verify against. Read the caveat first — the existing orchestrator fits only one of the nine |
 | [`tasks/data-grid-backlog.md`](./tasks/data-grid-backlog.md) | DataGrid — what is deliberately not built yet, and why |
 | [`tasks/filters-assessment.md`](./tasks/filters-assessment.md) | Filters assessed against reui — why the gap is a shared schema, not a component |
 | [`tasks/data-table-audit.md`](./tasks/data-table-audit.md) | DataTable/DataGrid audited against the Experience Specification — capability matrix and prioritised gaps |
