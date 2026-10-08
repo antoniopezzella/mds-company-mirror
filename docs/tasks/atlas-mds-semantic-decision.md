@@ -1,6 +1,6 @@
 # Decision — how MDS's semantic/role tier relates to Atlas
 
-**Status:** open decision · **Raised:** 2026-10-08 · **Owner:** Design Lead +
+**Status:** Q1 (translucency) DECIDED 2026-10-08 — **MDS stays solid-hex**, no Atlas alpha model. This unblocks Structure item 3. Q2–Q4 (interaction grid, icon tier, naming) remain open and do not block. · **Raised:** 2026-10-08 · **Owner:** Design Lead +
 DS maintainer · **Blocks:** Structure item 3 (the `getRoleColor` → `var(--role-*)`
 conversion — 581 call sites), because that work bets the colour tier on a
 target that this decision may change.
@@ -110,9 +110,10 @@ helps*, diverge on *resolution model and governance*.
 
 ## What must be decided, concretely
 
-1. **Translucency:** does MDS adopt alpha-composited semantics (Atlas's model)
-   or stay solid-hex? *This is the gate on Structure item 3* — the answer
-   changes what `var(--role-*)` resolves to.
+1. ~~**Translucency:** alpha-composited or solid-hex?~~ **DECIDED 2026-10-08:
+   stay solid-hex.** Matches option C and 54 of 55 current roles. `var(--role-*)`
+   resolves to a solid hex, so the item-3 conversion can proceed without rework
+   risk.
 2. **Interaction grid:** fill MDS's 3-of-9 to Atlas's 9-of-9, or keep the
    smaller set?
 3. **Icon tier:** add one, or keep `currentColor` + dual-purpose roles?
