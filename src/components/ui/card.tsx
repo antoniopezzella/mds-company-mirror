@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
 
 /**
  * Design System Card — shadcn/ui counterpart for the MDS Card.
@@ -29,8 +28,8 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
       // disagree with — a card beside a grid had visibly different corners.
       className={cn('flex flex-col rounded-xl', border && 'border', className)}
       style={{
-        backgroundColor: getRoleColor('surface.default'),
-        borderColor: border ? getRoleColor('border.default') : undefined,
+        backgroundColor: 'var(--role-surface-default)',
+        borderColor: border ? 'var(--role-border-default)' : undefined,
         ...style,
       }}
       {...props}
@@ -77,7 +76,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn('font-sans-productive text-lg font-bold leading-tight', className)}
-      style={{ color: getRoleColor('text.primary') }}
+      style={{ color: 'var(--role-text-primary)' }}
       {...props}
     />
   )
@@ -89,7 +88,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
     <p
       ref={ref}
       className={cn('font-sans-productive text-sm', className)}
-      style={{ color: getRoleColor('text.secondary') }}
+      style={{ color: 'var(--role-text-secondary)' }}
       {...props}
     />
   )
@@ -106,7 +105,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
     <div
       ref={ref}
       className={cn('flex items-center gap-2 border-t px-6 py-4', className)}
-      style={{ borderColor: getRoleColor('border.default'), ...style }}
+      style={{ borderColor: 'var(--role-border-default)', ...style }}
       {...props}
     />
   )
@@ -157,7 +156,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       )}
       <div className="flex flex-1 flex-col">
         {(category || date) && (
-          <div className="flex items-center gap-2 px-6 pt-6 text-xs" style={{ color: getRoleColor('text.secondary') }}>
+          <div className="flex items-center gap-2 px-6 pt-6 text-xs" style={{ color: 'var(--role-text-secondary)' }}>
             {category && <span className="font-semibold uppercase tracking-wide">{category}</span>}
             {category && date && <span>&middot;</span>}
             {date && <span>{date}</span>}
@@ -179,7 +178,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
               type="button"
               onClick={onCtaClick}
               className="text-sm font-semibold hover:underline"
-              style={{ color: getRoleColor('interactive.primary') }}
+              style={{ color: 'var(--role-interactive-primary)' }}
             >
               {ctaLabel}
             </button>
