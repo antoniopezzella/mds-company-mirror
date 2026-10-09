@@ -215,6 +215,8 @@ export const semanticColors = {
     interactiveDangerHover: ref('red950'), // #9d201f — red scale (from crimson700, 2026-10-09)
     interactiveDangerActive: ref('red1000'), // #8b1a1a — red scale (from crimson800, 2026-10-09)
     textOnDanger: ref('white'), // White text on red
+    textOnSuccess: ref('white'), // White on solid success green (4.72:1); flips to Midnight in dark
+    textOnWarning: ref('blue1000'), // Midnight on solid warning gold (5.63:1) — white fails at 3.22, so mode-invariant
 };
 // ── Dark mode overrides ─────────────────────────────────────────────────────
 // Dark overrides mapped to new Figma "Primitive Colors" collection
@@ -245,6 +247,7 @@ export const semanticDarkOverrides = {
     // already switched to for exactly this hazard (see its destructive block).
     // 15.49:1 on status.danger.fg, 6.53:1 on dark interactive.danger.
     textOnDanger: tokens.blue1000, // #000f47 — was white, see above
+    textOnSuccess: tokens.blue1000, // #000f47 — solid success border lightens in dark (11.64:1)
     textOnLight: tokens.blue1000, // unchanged (rare context)
     textOnDark: tokens.neutral50, // #f8f8f8
     textDisabled: tokens.neutral500, // #878787

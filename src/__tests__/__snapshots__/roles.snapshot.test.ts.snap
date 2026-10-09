@@ -315,6 +315,18 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "textOnPrimary",
   },
   {
+    "dark": "#000f47",
+    "light": "#ffffff",
+    "role": "text.onSuccess",
+    "semantic": "textOnSuccess",
+  },
+  {
+    "dark": "#000f47",
+    "light": "#000f47",
+    "role": "text.onWarning",
+    "semantic": "textOnWarning",
+  },
+  {
     "dark": "#c4c4c4",
     "light": "#767676",
     "role": "text.placeholder",

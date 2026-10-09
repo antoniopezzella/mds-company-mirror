@@ -61,6 +61,8 @@ export type RoleName =
   // and no gate catches it, because both are valid role names.
   | 'text.onPrimary'
   | 'text.onDanger'
+  | 'text.onSuccess'
+  | 'text.onWarning'
   | 'text.onLight'
   | 'text.disabled'
   | 'text.placeholder'
@@ -130,6 +132,8 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
       'Label on interactive.primary — Sky in light, Midnight in dark, flipping with the fill beneath it (14.72:1 / 10.50:1). NOT text.primary, which is body text',
   },
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
+  'text.onSuccess': { semantic: 'textOnSuccess', description: 'Readable text over solid success surfaces (white light / Midnight dark)' },
+  'text.onWarning': { semantic: 'textOnWarning', description: 'Readable text over solid warning surfaces (Midnight; mode-invariant, white fails on gold)' },
   'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
   'text.placeholder': {

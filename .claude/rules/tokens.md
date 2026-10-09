@@ -36,7 +36,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ SEMANTICS (src/semantic-tokens.ts)                          │
 │ Intent-based aliases: brandPrimary, textSecondary,          │
 │ surfaceDefault, interactivePrimaryHover, statusSuccessBg    │
-│ 72 tokens with light + dark mode overrides                  │
+│ 74 tokens with light + dark mode overrides                  │
 └──────────────────────┬──────────────────────────────────────┘
                        │ referenced by
                        ▼
@@ -44,7 +44,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 │ ROLES (src/theme/roles.ts)                                  │
 │ Component consumption API: text.primary, surface.accent,    │
 │ interactive.primary.hover, status.success.bg                │
-│ 55 roles — the ONLY API components should use               │
+│ 57 roles — the ONLY API components should use               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -110,7 +110,7 @@ export const semanticDarkOverrides = {
 
 **Naming:** `[category][Intent][State]` (camelCase)  
 **Categories:** `brand`, `text`, `surface`, `border`, `interactive`, `status`  
-**Count:** 72 semantic tokens  
+**Count:** 74 semantic tokens  
 **Dark Mode:** Defined in `semanticDarkOverrides` object
 
 #### **Roles (`src/theme/roles.ts`)**
@@ -167,7 +167,7 @@ export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): 
 
 **Naming:** `[category].[element][.variant][.state]` (kebab-case with dots)  
 **Examples:** `text.primary`, `surface.navigation.hover`, `interactive.danger.active`  
-**Count:** 55 roles (growing as components need them)  
+**Count:** 57 roles (growing as components need them)  
 **Usage:** Components use `getRoleColor('role.name')` ONLY
 
 ### Critical Rules for Token Usage
