@@ -28,7 +28,7 @@
   --role-surface-default: #ffffff;
   --role-surface-subtle: #f8f8f8;
   --role-surface-disabled: #e3e3e3;
-  --role-surface-accent: #f7f8f8;
+  --role-surface-accent: #f8f8f8;
   --role-surface-raised: #ffffff;
   --role-surface-secondary: #ceecff;
   --role-surface-secondary-hover: #ebf7ff;
@@ -67,8 +67,8 @@
   --role-interactive-danger: #c53532;
   --role-interactive-danger-hover: #9a1c1f;
   --role-interactive-danger-active: #691315;
-  --role-interactive-disabled-bg: #ebe7e2;
-  --role-interactive-disabled-fg: #878580;
+  --role-interactive-disabled-bg: #e3e3e3;
+  --role-interactive-disabled-fg: #878787;
 }
 
 /* `.dark` is the selector the live system toggles — index.html's pre-paint
