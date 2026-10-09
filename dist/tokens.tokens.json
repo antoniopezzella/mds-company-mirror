@@ -2557,6 +2557,14 @@
       "textOnDanger": {
         "$type": "color",
         "$value": "{color.white}"
+      },
+      "textOnSuccess": {
+        "$type": "color",
+        "$value": "{color.white}"
+      },
+      "textOnWarning": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
       }
     }
   },
@@ -2599,6 +2607,10 @@
         "$value": "{color.blue1000}"
       },
       "textOnDanger": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "textOnSuccess": {
         "$type": "color",
         "$value": "{color.blue1000}"
       },
@@ -2874,6 +2886,14 @@
           "$type": "color",
           "$value": "{semantic.color.textOnDanger}"
         },
+        "onSuccess": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnSuccess}"
+        },
+        "onWarning": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnWarning}"
+        },
         "onLight": {
           "$type": "color",
           "$value": "{semantic.color.textOnLight}"
@@ -3125,6 +3145,14 @@
         "onDanger": {
           "$type": "color",
           "$value": "{semanticDark.color.textOnDanger}"
+        },
+        "onSuccess": {
+          "$type": "color",
+          "$value": "{semanticDark.color.textOnSuccess}"
+        },
+        "onWarning": {
+          "$type": "color",
+          "$value": "{semantic.color.textOnWarning}"
         },
         "onLight": {
           "$type": "color",

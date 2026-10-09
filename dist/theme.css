@@ -227,6 +227,8 @@
   --color-interactive-danger-hover: #9d201f;
   --color-interactive-danger-active: #8b1a1a;
   --color-text-on-danger: #ffffff;
+  --color-text-on-success: #ffffff;
+  --color-text-on-warning: #000f47;
   --role-text-primary: #000f47;
   --role-text-secondary: #595959;
   --role-text-inverse: #ffffff;
@@ -235,6 +237,8 @@
   --role-text-onHero: #ceecff;
   --role-text-onPrimary: #ceecff;
   --role-text-onDanger: #ffffff;
+  --role-text-onSuccess: #ffffff;
+  --role-text-onWarning: #000f47;
   --role-text-onLight: #000f47;
   --role-text-disabled: #767676;
   --role-text-placeholder: #767676;
@@ -357,6 +361,8 @@
   --color-interactive-danger-hover: #ff9d9d;
   --color-interactive-danger-active: #ffe8e8;
   --color-text-on-danger: #000f47;
+  --color-text-on-success: #000f47;
+  --color-text-on-warning: #000f47;
   --role-text-primary: #ffffff;
   --role-text-secondary: #dadada;
   --role-text-inverse: #ffffff;
@@ -365,6 +371,8 @@
   --role-text-onHero: #ceecff;
   --role-text-onPrimary: #000f47;
   --role-text-onDanger: #000f47;
+  --role-text-onSuccess: #000f47;
+  --role-text-onWarning: #000f47;
   --role-text-onLight: #000f47;
   --role-text-disabled: #878787;
   --role-text-placeholder: #c4c4c4;
@@ -487,6 +495,8 @@
   --color-interactive-danger-hover: #ff9d9d;
   --color-interactive-danger-active: #ffe8e8;
   --color-text-on-danger: #000f47;
+  --color-text-on-success: #000f47;
+  --color-text-on-warning: #000f47;
   --role-text-primary: #ffffff;
   --role-text-secondary: #dadada;
   --role-text-inverse: #ffffff;
@@ -495,6 +505,8 @@
   --role-text-onHero: #ceecff;
   --role-text-onPrimary: #000f47;
   --role-text-onDanger: #000f47;
+  --role-text-onSuccess: #000f47;
+  --role-text-onWarning: #000f47;
   --role-text-onLight: #000f47;
   --role-text-disabled: #878787;
   --role-text-placeholder: #c4c4c4;

@@ -89,7 +89,7 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
   },
   success: {
     solidBg: 'status.success.border',
-    solidFg: 'text.onInteractive', // same dark-mode-lightens shape as interactive.primary (border dark = #8dcc92)
+    solidFg: 'text.onSuccess', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
     softBg: 'status.success.bg',
     softBorder: 'status.success.border',
     softFg: 'text.primary',
@@ -97,15 +97,13 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
   },
   warning: {
     solidBg: 'status.warning.border',
-    // text.onLight, not text.primary: text.primary flips to white in dark
-    // mode (for the general dark page background), but warning's border/bg
-    // stay light/mid-toned gold in BOTH modes — white text there fails
-    // (2.12:1 solid, 3.41:1 soft). text.onLight is mode-invariant Midnight,
-    // matching what this tone actually needs in both modes (8.55/5.31:1).
-    solidFg: 'text.onLight',
+    // Warning's gold stays light/mid-toned in BOTH modes, so white text fails
+    // (2.12:1 solid, 3.41:1 soft). text.onWarning is mode-invariant Midnight —
+    // the dedicated on-* token for warning content (was proxied via onLight).
+    solidFg: 'text.onWarning',
     softBg: 'status.warning.bg',
     softBorder: 'status.warning.border',
-    softFg: 'text.onLight',
+    softFg: 'text.onWarning',
     // The one tone that cannot be tonal. status.warning.fg is gold1000
     // (#cb7623) and measures **3.41:1** on white — under AA for the 12px text
     // this variant uses. The gold ramp BOTTOMS OUT there: gold1000 is the
@@ -120,7 +118,7 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
   },
   danger: {
     solidBg: 'status.danger.border',
-    solidFg: 'text.onInteractive', // same shape as interactive.danger (border dark = interactiveDanger's #ff6b6b)
+    solidFg: 'text.onDanger', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
     softBg: 'status.danger.bg',
     softBorder: 'status.danger.border',
     softFg: 'text.primary',
