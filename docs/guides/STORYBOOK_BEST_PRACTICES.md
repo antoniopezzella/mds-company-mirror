@@ -235,13 +235,13 @@ export const WithImage: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="flex items-center gap-4">
+      <div className="flex flex-col items-center">
         <Avatar initials="S" size="small" />
-        <span style={{ fontSize: '12px' }}>Small</span>
-      </Box>
+        <span className="text-xs">Small</span>
+      </div>
       {/* ... other sizes ... */}
-    </Box>
+    </div>
   ),
   parameters: {
     docs: {
@@ -262,13 +262,13 @@ export const AllSizes: Story = {
 
 export const WithStatusIndicators: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: '32px' }}>
-      <Box>
+    <div className="flex gap-8">
+      <div>
         <Avatar status="online" size="large" />
         <span>Online</span>
-      </Box>
+      </div>
       {/* ... other statuses ... */}
-    </Box>
+    </div>
   ),
   parameters: {
     docs: {
@@ -289,7 +289,7 @@ export const WithStatusIndicators: Story = {
 
 export const ClaimAssignees: Story = {
   render: () => (
-    <Box>
+    <div>
       <div>Assigned to:</div>
       <AvatarGroupComponent
         max={3}
@@ -299,7 +299,7 @@ export const ClaimAssignees: Story = {
           { initials: 'CD', name: 'Charlie Davis' },
         ]}
       />
-    </Box>
+    </div>
   ),
   parameters: {
     docs: {
@@ -322,13 +322,13 @@ export const Interactive: Story = {
   render: function InteractiveAvatarDemo() {
     const [clicked, setClicked] = React.useState(false);
     return (
-      <Box>
+      <div>
         <Avatar
           onClick={() => setClicked(!clicked)}
           status="online"
         />
         <div>{clicked ? '✓ Clicked' : 'Click to interact'}</div>
-      </Box>
+      </div>
     );
   },
   parameters: {
@@ -351,9 +351,8 @@ Here's how a properly organized Badge component story file should look:
 
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Badge } from './Badge';
-import { Box } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Badge } from '@/components/ui';
+import { Bell } from 'lucide-react';
 
 const meta: Meta<typeof Badge> = {
   title: 'Components/Badge/Badge',
@@ -439,11 +438,11 @@ export const Dot: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: '20px' }}>
+    <div className="flex gap-5">
       <Badge content="3" variant="standard" />
       <Badge content="!" variant="dot" />
       <Badge content="New" variant="text" />
-    </Box>
+    </div>
   ),
   parameters: {
     docs: { description: { story: 'All badge variant types' } },
@@ -452,13 +451,13 @@ export const AllVariants: Story = {
 
 export const AllTones: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+    <div className="flex flex-wrap gap-5">
       <Badge content="1" tone="default" />
       <Badge content="2" tone="primary" />
       <Badge content="3" tone="success" />
       <Badge content="4" tone="warning" />
       <Badge content="5" tone="danger" />
-    </Box>
+    </div>
   ),
   parameters: {
     docs: { description: { story: 'Badge color tone variations' } },
@@ -471,13 +470,13 @@ export const AllTones: Story = {
 
 export const UnreadDocuments: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px' }}>
-      <Box sx={{ position: 'relative' }}>
-        <NotificationsIcon />
+    <div className="flex items-center gap-3 p-3">
+      <div className="relative">
+        <Bell />
         <Badge content="3" tone="danger" />
-      </Box>
+      </div>
       <div>3 unread documents in your policy</div>
-    </Box>
+    </div>
   ),
   parameters: {
     docs: { description: { story: 'Badge for unread document count' } },
@@ -486,16 +485,16 @@ export const UnreadDocuments: Story = {
 
 export const ClaimStatus: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
         <span>Claim #CLM-2024-001:</span>
         <Badge content="Pending" tone="warning" variant="text" />
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      </div>
+      <div className="flex items-center gap-2">
         <span>Claim #CLM-2024-002:</span>
         <Badge content="Approved" tone="success" variant="text" />
-      </Box>
-    </Box>
+      </div>
+    </div>
   ),
   parameters: {
     docs: { description: { story: 'Status badges for claims' } },
@@ -526,7 +525,7 @@ export const ClaimStatus: Story = {
 - ❌ Don't skip description parameters
 - ❌ Don't use generic names like `Example1`, `Example2`
 - ❌ Don't create 50+ stories for one component (group them)
-- ❌ Don't use inline styles excessively (use Box/MUI)
+- ❌ Don't use inline styles excessively (use Tailwind classes / layout primitives)
 - ❌ Don't forget to add labels to visual variants
 - ❌ Don't ignore accessibility requirements
 - ❌ Don't create stories without insurance context
@@ -570,7 +569,6 @@ export const ClaimStatus: Story = {
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { YourComponent } from './YourComponent';
-import { Box } from '@mui/material';
 
 const meta: Meta<typeof YourComponent> = {
   title: 'Components/YourComponent/YourComponent',
@@ -635,9 +633,9 @@ export const Default: Story = {
 
 export const AnotherStory: Story = {
   render: () => (
-    <Box>
+    <div>
       {/* Content */}
-    </Box>
+    </div>
   ),
   parameters: {
     docs: {

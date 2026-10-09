@@ -43,9 +43,9 @@ color: getRoleColor('text.primary')
 padding: '24px'
 
 // ✅ After
-sx={{ p: 3 }} // Uses spacing[3] = 16px
+className="p-4" // Uses spacing[4] = 16px
 // or
-sx={{ gap: (theme) => theme.spacing(5) }} // 24px
+className="gap-6" // 24px
 ```
 
 ### Issue: Font not loading

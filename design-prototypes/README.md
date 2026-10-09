@@ -161,7 +161,7 @@ When creating mockups, use these **exact RGB values** (from `src/semantic-tokens
 
 | Style | Font | Weight | Size | Line Height |
 |-------|------|--------|------|-------------|
-| **Headings** | MMC Display | 700 | 36px | 1.25 |
+| **Headings** | Marsh Serif | 400 | 36px | 1.25 |
 | **Subheadings** | Noto Sans | 600 | 16px | 1.5 |
 | **Body** | Noto Sans | 400 | 14px | 20px (1.43) |
 | **Buttons** | Noto Sans | 500 | 16px | 24px |

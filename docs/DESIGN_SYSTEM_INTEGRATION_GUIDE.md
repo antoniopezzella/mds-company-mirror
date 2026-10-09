@@ -3,10 +3,12 @@
 ## Overview
 This guide shows you how to connect MDS (Marsh Design System) components to your corporate landing page and other pages.
 
+> **Current integration path:** the live component set lives in `src/components/ui/` and is imported from `@/components/ui` (e.g. `import { Button, Card, DSTextField, Alert } from '@/components/ui'`). The `../../components/<Name>/<Name>` default imports and the `@mui/material` "before" snippets shown below are the **legacy MUI-era path, being removed** — they illustrate the migration source, not the component you should reach for in new code.
+
 ## Already Connected Components ✅
 
-### 1. DSButton
-**Location**: `src/components/Button/Button.tsx`
+### 1. Button
+**Location**: `src/components/ui/button.tsx`
 
 **Current Usage**:
 - Header: "Contact Us" CTA
@@ -16,18 +18,18 @@ This guide shows you how to connect MDS (Marsh Design System) components to your
 
 **Import**:
 ```tsx
-import DSButton from '../../components/Button/Button';
+import { Button } from '@/components/ui';
 ```
 
 **Usage**:
 ```tsx
-<DSButton variant="primary" size="md">
+<Button variant="primary" size="md">
   Contact Us
-</DSButton>
+</Button>
 
-<DSButton variant="secondary" size="md">
+<Button variant="secondary" size="md">
   Learn More
-</DSButton>
+</Button>
 ```
 
 **Available Variants**: `primary`, `secondary`, `tertiary`, `ghost`
@@ -38,7 +40,7 @@ import DSButton from '../../components/Button/Button';
 ## Components Ready to Connect 🎯
 
 ### 2. Card Component
-**Location**: `src/components/Card/Card.tsx`
+**Location**: `src/components/ui/card.tsx` (legacy `DSCard` shown below — being removed; the current `ui` export is `Card`/`ContentCard`, with a different prop shape)
 
 **Best Use Case**: Replace MUI Cards in Journey Section
 
@@ -71,13 +73,13 @@ import DSCard from '../../components/Card/Card';
 ---
 
 ### 3. TextField Component
-**Location**: `src/components/TextField/TextField.tsx`
+**Location**: `src/components/ui/text-field.tsx`
 
 **Best Use Case**: Contact forms, search inputs, newsletter signup
 
 **Implementation**:
 ```tsx
-import DSTextField from '../../components/TextField/TextField';
+import { DSTextField } from '@/components/ui';
 
 <DSTextField
   label="Email Address"
@@ -91,7 +93,7 @@ import DSTextField from '../../components/TextField/TextField';
 ---
 
 ### 4. Alert Component
-**Location**: `src/components/Alert/Alert.tsx`
+**Location**: `src/components/ui/alert.tsx` (legacy `DSAlert` shown below — being removed; the current `ui` export is `Alert`/`AlertTitle`/`AlertDescription`, with a different prop shape)
 
 **Best Use Case**: Success messages, warnings, info banners
 

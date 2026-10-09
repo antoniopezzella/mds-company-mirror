@@ -57,7 +57,7 @@ Check `/design-system` and existing components first — see `CLAUDE.md`'s "deci
    - `MyComponent.test.tsx`
 2. **Follow conventions**:
    - **Colors**: always `getRoleColor(...)` — never a hex code directly.
-   - **Spacing**: `theme.spacing()` (MUI stack) or Tailwind spacing classes (current stack) — no hardcoded pixels.
+   - **Spacing**: Tailwind spacing classes on the scale (`p-4`, `gap-2`) or `Stack`/`Inline` `gap` — no hardcoded pixels. (`theme.spacing()` is legacy MUI only, being removed.)
    - **Exports**: via a barrel `index.ts`.
 3. **Storybook**: stories covering all meaningful states (Primary, Secondary, Disabled, Error, etc.) — see `docs/guides/STORYBOOK_BEST_PRACTICES.md` for naming/organization conventions.
 4. **Testing**: a render test at minimum; interaction tests if the component is interactive.

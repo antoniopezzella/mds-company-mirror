@@ -214,7 +214,7 @@ You can create a real-time performance dashboard:
 ```typescript
 import React, { useState } from 'react';
 import { useWebVitals, getPerformanceSnapshot } from '@/utils/performance';
-import { Box, Typography, Chip } from '@mui/material';
+import { Badge } from '@/components/ui';
 
 export function PerformanceDashboard() {
   const [metrics, setMetrics] = useState<Record<string, any>>({});
@@ -232,20 +232,18 @@ export function PerformanceDashboard() {
   });
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6">Core Web Vitals</Typography>
+    <div className="p-2">
+      <h6>Core Web Vitals</h6>
       {Object.entries(metrics).map(([name, data]) => (
-        <Box key={name} sx={{ display: 'flex', gap: 1, my: 1 }}>
-          <Typography>{name}:</Typography>
-          <Typography>{Math.round(data.value)}</Typography>
-          <Chip 
-            label={data.rating} 
-            color={data.rating === 'good' ? 'success' : 'warning'} 
-            size="small"
-          />
-        </Box>
+        <div key={name} className="flex items-center gap-1 my-1">
+          <span>{name}:</span>
+          <span>{Math.round(data.value)}</span>
+          <Badge tone={data.rating === 'good' ? 'success' : 'warning'}>
+            {data.rating}
+          </Badge>
+        </div>
       ))}
-    </Box>
+    </div>
   );
 }
 ```
