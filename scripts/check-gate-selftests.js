@@ -97,6 +97,16 @@ const GATES = [
     content: `export const GateProbe = () => <div style={{ color: '#ff0000' }} />;\n`,
   },
   {
+    name: 'roles-palette',
+    script: 'roles:check:strict',
+    probe: 'src/components/ui/__gate_probe_roles_palette.tsx',
+    // Third rule in the role gate: a Tailwind DEFAULT-palette class
+    // (bg-red-500) is a hard failure in src/components/ui/ SOURCE — it renders
+    // Tailwind's colour, not Marsh's, and bypasses the role system. Advisory in
+    // stories/tests and legacy, so again the PATH is the real assertion.
+    content: `export const GateProbe = () => <div className="bg-red-500" />;\n`,
+  },
+  {
     name: 'composition',
     script: 'composition:check:strict',
     probe: 'src/components/ui/__gate_probe_composition.tsx',
