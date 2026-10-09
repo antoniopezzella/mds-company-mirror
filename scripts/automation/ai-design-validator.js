@@ -41,7 +41,10 @@ const MDS_SPACING_SCALE = [4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 80, 96, 112
  */
 const MDS_TYPOGRAPHY = {
   fonts: {
-    heading: 'MMC Display',
+    // Marketing headings are Marsh Serif; dashboard headings are Noto Sans 700.
+    // MMC Display was removed from the system (2026-10-09) — it was never the
+    // heading face, despite older docs claiming so.
+    heading: 'Marsh Serif',
     body: 'Noto Sans',
     ui: 'Noto Sans'
   },
@@ -217,7 +220,7 @@ function validateTypography(componentData) {
       {
         severity: 'info',
         type: 'typography-guideline',
-        message: 'Headings should use MMC Display (bold), Body text should use Noto Sans',
+        message: 'Headings use Marsh Serif (marketing) or Noto Sans 700 (dashboard); body text uses Noto Sans',
         suggestion: 'Reference CSS variables: var(--typo-h1-font-family), var(--typo-body1-font-size)'
       }
     ],

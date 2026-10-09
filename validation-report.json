@@ -2,7 +2,7 @@
   "metadata": {
     "componentName": "Alert (System Alert Component)",
     "nodeId": "7584:25919",
-    "timestamp": "2026-04-26T23:23:22.772Z",
+    "timestamp": "2026-10-09T14:12:28.966Z",
     "validator": "MDS AI Design Validator v1.0"
   },
   "summary": {
@@ -173,13 +173,13 @@
         {
           "severity": "info",
           "type": "typography-guideline",
-          "message": "Headings should use MMC Display (bold), Body text should use Noto Sans",
+          "message": "Headings use Marsh Serif (marketing) or Noto Sans 700 (dashboard); body text uses Noto Sans",
           "suggestion": "Reference CSS variables: var(--typo-h1-font-family), var(--typo-body1-font-size)"
         }
       ],
       "stats": {
         "fonts": {
-          "heading": "MMC Display",
+          "heading": "Marsh Serif",
           "body": "Noto Sans",
           "ui": "Noto Sans"
         },

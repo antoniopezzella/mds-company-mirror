@@ -454,7 +454,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
                 <h3
                   className={cn(styles.cardTitle, 'overflow-hidden')}
                   style={{
-                    fontFamily: isFeatured ? 'var(--typo-display-font-family, "MMC Display", serif)' : 'var(--typo-body1-font-family)',
+                    fontFamily: isFeatured ? 'var(--typo-display-font-family, "Marsh Serif", serif)' : 'var(--typo-body1-font-family)',
                     fontSize: isFeatured ? 28 : 22,
                     fontWeight: isFeatured ? 400 : 500,
                     lineHeight: isFeatured ? '36px' : '28px',

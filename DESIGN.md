@@ -213,7 +213,7 @@ Figma variables map 1:1 to code tokens (see CLAUDE.md Section 1):
 
 **Typography Styles** (12 variants)
 - Styles: `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `body1`, `body2`, `subtitle1`, `subtitle2`, `caption`, `button`
-- Fonts: MMC Display (700 bold) for h1-h4, Noto Sans (400-600) for h5-h6 + body
+- Fonts: Marsh Serif (400) for marketing display/headings · Noto Sans (700) for dashboard headings · Noto Sans (400-600) for body + UI
 
 ### Variable Binding Pattern
 
@@ -473,7 +473,7 @@ grid.appendChild(row);
 
 ```javascript
 // Load font before creating text
-await figma.loadFontAsync({ family: 'MMC Display', style: 'Bold' });
+await figma.loadFontAsync({ family: 'Marsh Serif', style: 'Regular' });
 await figma.loadFontAsync({ family: 'Noto Sans', style: 'Regular' });
 await figma.loadFontAsync({ family: 'Noto Sans', style: 'Medium' });
 await figma.loadFontAsync({ family: 'Noto Sans', style: 'SemiBold' });
@@ -483,12 +483,19 @@ await figma.loadFontAsync({ family: 'Noto Sans', style: 'SemiBold' });
 
 | Variant | Font | Weight | Size | Line Height | Usage |
 |---------|------|--------|------|-------------|-------|
-| h1 | MMC Display | 700 | 36px | 1.25 | Page titles |
-| h2 | MMC Display | 700 | 28px | 1.3 | Section headings |
-| h3 | MMC Display | 700 | 24px | 1.35 | Subsection headings |
-| h4 | MMC Display | 700 | 20px | 1.4 | Card titles |
+| h1 | Marsh Serif | 400 | 36px | 1.25 | Page titles |
+| h2 | Marsh Serif | 400 | 28px | 1.3 | Section headings |
+| h3 | Marsh Serif | 400 | 24px | 1.35 | Subsection headings |
+| h4 | Marsh Serif | 400 | 20px | 1.4 | Card titles |
 | h5 | Noto Sans | 600 | 18px | 1.5 | Small headings |
 | h6 | Noto Sans | 600 | 16px | 1.5 | Labels |
+
+> Heading font is **context-dependent** (the two typography contexts): the
+> marketing/website context uses **Marsh Serif 400** (shown above, the `:root`
+> default); the dashboard/product context redefines the same `--typo-*`
+> variables to **Noto Sans 700**. `PageShell` sets the dashboard context, so
+> product screens get Noto Sans headings automatically. Body/UI is Noto Sans in
+> both. See `docs/foundations/DESIGN.md` and `.claude/rules/tokens.md`.
 | body1 | Noto Sans | 400 | 16px | 1.6 | Primary body text |
 | body2 | Noto Sans | 400 | 14px | 1.6 | Secondary text |
 | subtitle1 | Noto Sans | 500 | 16px | 1.5 | Emphasized text |
@@ -504,8 +511,8 @@ const createText = async (variant, content) => {
   
   // Map variant to font settings
   const fontMap = {
-    h1: { family: 'MMC Display', style: 'Bold', size: 36 },
-    h2: { family: 'MMC Display', style: 'Bold', size: 28 },
+    h1: { family: 'Marsh Serif', style: 'Regular', size: 36 },
+    h2: { family: 'Marsh Serif', style: 'Regular', size: 28 },
     body1: { family: 'Noto Sans', style: 'Regular', size: 16 },
     button: { family: 'Noto Sans', style: 'Medium', size: 16 },
   };

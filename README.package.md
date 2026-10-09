@@ -120,8 +120,8 @@ Retarget the whole library from one place by redefining the variable:
 .mds-root { --typo-body1-font-family: 'Your Font', sans-serif; }
 ```
 
-MMC Display and Marsh Serif are **not** redistributable here — obtain them
-through Marsh McLennan brand channels.
+Marsh Serif is **not** redistributable here — obtain it through Marsh McLennan
+brand channels.
 
 <details>
 <summary>Why a stylesheet is needed at all, if the components use Tailwind</summary>
