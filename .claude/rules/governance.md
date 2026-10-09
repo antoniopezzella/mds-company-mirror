@@ -34,8 +34,8 @@ otherwise. So: **every gate needs a self-test that proves it can fail.**
   real story and a browser run.
 
 **Adding a gate means adding its probe** to the `GATES` table in
-`check-gate-selftests.js`. Covered so far: roles, roles-hex, composition,
-radius, zindex, props. Not yet: contrast, deprecations, docs-sprawl,
+`check-gate-selftests.js`. Covered so far: roles, roles-hex, roles-palette,
+composition, radius, zindex, props. Not yet: contrast, deprecations, docs-sprawl,
 figma-drift, figma-semantic-drift, package-css, package-types, registry,
 token-variables.
 
@@ -60,6 +60,20 @@ value, and forcing roles there would make those assertions tautological.
 Escape hatches unchanged: `roles-allow-hex` on the line (or the line above),
 `roles-allow-hex-file` anywhere in the file. Use them for a literal that is
 genuinely right — a brand asset, a third-party constant — and say why.
+
+## Tailwind default-palette classes: same rule as hex (added 2026-10-09)
+
+`bg-red-500`, `text-gray-100`, `from-indigo-950` — Tailwind's *default* palette
+is still reachable because `colors` is merged via `theme.extend`. Those classes
+render Tailwind's colours, not Marsh's, bypass the role system, and — being
+valid classes — no other gate caught them; several also fail to theme-swap in
+dark mode. `check-role-usage.js` now flags them with the **same** policy as hex:
+**fails** in `src/components/ui/**` source (`roles:check:strict`), advisory in
+legacy / stories / tests. It went in at **0** source violations, so it ratchets
+rather than demanding a cleanup (the 9 advisory hits are all in `.stories.tsx`).
+MDS's own semantic classes (`bg-primary`, `bg-surface-accent`) never match —
+they carry no numeric step. Escapes: `roles-allow-palette` (line or line-above),
+`roles-allow-palette-file`. Self-tested as the `roles-palette` probe.
 
 When a probe fails, suspect the probe before the gate. The `props` probe first
 used `size="default"`, which `prop-compat.ts` does not track as legacy — the

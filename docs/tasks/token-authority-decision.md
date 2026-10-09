@@ -143,11 +143,15 @@ The four edges are not parallel; they depend on each other.
 - component colour: 562 CSS-var usages; ~5 runtime files still on `getRoleColor`
 - `--role-*` generated: 110 (55 roles × light/dark) — `src/styles/roles.generated.css`
 - shadcn vars hand-authored: 48, HSL, `src/styles/token-variables.css`, role-annotated
-- Tailwind default palette: reachable (via `theme.extend`); 13 off-system usages in `ui/`
+- Tailwind default palette: reachable (via `theme.extend`); **now GATED** —
+  `roles:check:strict` fails on default-palette classes in `ui/` source
+  (2026-10-09, `roles-palette` probe). Source was already clean (0); the ~9
+  usages were all in `.stories.tsx` (advisory, like hex). Ratchets.
 - Tailwind colour config: still the v3 JS config via `@config "../tailwind.config.js"`;
   CSS-first `@theme` for colour is deliberately deferred
 - Figma: DTCG export only; Code Connect 47/71 mappable (66%)
-- gates absent for: default-palette classes, shadcn-var↔role sync
+- gates: shadcn-var↔role sync (`varsync`) and default-palette classes
+  (`roles-palette`) both now in place — the two colour-edge holes are closed.
 
 ---
 
@@ -175,6 +179,9 @@ The four edges are not parallel; they depend on each other.
   governance:ci, self-proving via `--selftest`). This is the cheap half of
   move #2 — a gate, not a generator. Dark-side shadcn values are out of its
   scope (independently authored).
+- **Tailwind default-palette leak gated** (`roles-palette` rule in
+  check-role-usage.js, in governance:ci, self-tested). Source was clean, so it
+  ratchets. Closes the component-edge enforcement step.
 - `text.inverse` deprecated.
 - Dark mode verified **sound** — one clean `semanticDarkOverrides` axis on the
   neutral ladder; the review's dark alarms were Figma-file-specific. Only open

@@ -35,6 +35,19 @@ const componentFiles = fs.existsSync(componentsDir) ? listFiles(componentsDir) :
 
 const violations = [];
 const hardcoded = [];
+const palette = [];
+
+// Tailwind DEFAULT-palette colour utilities (`bg-red-500`, `text-gray-100`,
+// `from-indigo-950`). They render Tailwind's colours, not Marsh's, bypass the
+// role system entirely, and — being valid classes — no other gate catches
+// them. `colors` is merged via `theme.extend`, so the whole default palette
+// stays reachable. Enforced in src/components/ui/ source (same set and escape
+// hatches as hex); advisory elsewhere; stories/tests exempt (swatch demos).
+// MDS's own semantic classes (`bg-primary`, `bg-surface-accent`) never match —
+// they carry no numeric step. Annotate a deliberate one with
+// `roles-allow-palette` (line or line-above) or `roles-allow-palette-file`.
+const PALETTE_CLASS =
+  /\b(?:bg|text|border|ring|from|via|to|fill|stroke|divide|outline|decoration|caret|accent|shadow)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950)\b/g;
 
 /**
  * Where a hex literal is a hard failure rather than a note.
@@ -101,6 +114,7 @@ for (const file of componentFiles) {
   // Whole-file opt-out, for files whose content *is* colour values
   // (palette swatches, token fixtures).
   if (/roles-allow-hex-file/.test(rawText)) continue;
+  const paletteFileAllowed = /roles-allow-palette-file/.test(rawText);
   const raw = rawText.split('\n');
   // Block-comment state has to be tracked ACROSS lines, and trailing `//`
   // stripped, or the sweep counts documentation as drift. It previously only
@@ -137,6 +151,14 @@ for (const file of componentFiles) {
     if (allowed) return;
     const hits = code.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g);
     if (hits) for (const h of hits) hardcoded.push({ file: rel, line: i + 1, match: h, enforced: isEnforcedHexPath(rel) });
+
+    if (!paletteFileAllowed) {
+      const palAllowed = /roles-allow-palette/.test(line) || /roles-allow-palette/.test(raw[i - 1] ?? '');
+      if (!palAllowed) {
+        const pm = code.match(PALETTE_CLASS);
+        if (pm) for (const p of pm) palette.push({ file: rel, line: i + 1, match: p, enforced: isEnforcedHexPath(rel) });
+      }
+    }
   });
 }
 
@@ -241,7 +263,7 @@ const danglingVars = [];
 }
 
 if (asJson) {
-  const payload = { strict, violations, hardcoded, danglingVars };
+  const payload = { strict, violations, hardcoded, palette, danglingVars };
   process.stdout.write(JSON.stringify(payload, null, 2) + '\n');
 } else {
   if (violations.length === 0) {
@@ -282,6 +304,30 @@ if (asJson) {
       console.log('  Prefer a role via getRoleColor()/var(--role-*); annotate deliberate ones with `roles-allow-hex`.');
     }
   }
+
+  if (palette.length) {
+    const enforcedPal = palette.filter((p) => p.enforced);
+    const advisoryPal = palette.filter((p) => !p.enforced);
+
+    if (enforcedPal.length) {
+      console.log(
+        `\nTailwind default-palette classes in src/components/ui/ source: ${enforcedPal.length} — ${strict ? 'FAIL' : 'WARN'}`
+      );
+      for (const p of enforcedPal) console.log(`  • ${p.file}:${p.line}  ${p.match}`);
+      console.log('  These render Tailwind\'s colours, not Marsh\'s, and bypass the role system');
+      console.log('  (and do NOT theme-swap in dark mode). Use a semantic class (bg-primary,');
+      console.log('  bg-surface-accent) or a role via var(--role-*). Annotate a deliberate one');
+      console.log('  with `roles-allow-palette` and say why.');
+    }
+
+    if (advisoryPal.length) {
+      const byFile = advisoryPal.reduce((a, p) => ((a[p.file] = (a[p.file] || 0) + 1), a), {});
+      console.log(
+        `\nTailwind default-palette classes elsewhere: ${advisoryPal.length} in ${Object.keys(byFile).length} file(s) (informational — legacy, stories and tests)`
+      );
+      for (const [f, n] of Object.entries(byFile).sort((a, b) => b[1] - a[1])) console.log(`  • ${f}: ${n}`);
+    }
+  }
 }
 
 if (danglingVars.length) {
@@ -298,7 +344,11 @@ if (danglingVars.length) {
 // Hex in `src/components/ui/` source joins them — see isEnforcedHexPath.
 // Hex anywhere else stays informational.
 const enforcedHex = hardcoded.filter((h) => h.enforced);
-if (strict && (violations.length > 0 || danglingVars.length > 0 || enforcedHex.length > 0)) {
+// Default-palette classes in ui/ source join the hard set: like hex, the role
+// layer is complete for this set and they were 0 when the gate went in, so it
+// ratchets rather than demanding a cleanup.
+const enforcedPalette = palette.filter((p) => p.enforced);
+if (strict && (violations.length > 0 || danglingVars.length > 0 || enforcedHex.length > 0 || enforcedPalette.length > 0)) {
   process.exit(1);
 }
 process.exit(0);
