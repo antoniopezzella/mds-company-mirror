@@ -382,6 +382,15 @@ function measure(rev) {
   const sbMain = read(rev, '.storybook/main.ts') ?? '';
   const contractsEmitted = /componentsManifest\s*:\s*true/.test(sbMain) ? 1 : 0;
 
+  // AGENTIC — the "which component, when" contract layer. The manifest above is
+  // the mechanical API (props/variants); this is the decision layer
+  // (purpose / whenToUse / whenNotToUse). Count `purpose:` inside the CONTRACTS
+  // block only, against the taxonomy total. Partial by design, so it ratchets.
+  const taxSrc = read(rev, 'src/components/ui/taxonomy.ts') ?? '';
+  const contractsBlock = /export const CONTRACTS[^{]*\{([\s\S]*?)\n\};/.exec(taxSrc)?.[1] ?? '';
+  const contractsWritten = (contractsBlock.match(/^\s{4}purpose:/gm) ?? []).length;
+  const taxonomyTotal = (taxSrc.match(/^\s{2}'?[a-z][a-z0-9-]*'?:\s*'(?:atom|molecule|organism|template)'/gm) ?? []).length;
+
   // AGENTIC/GOVERNANCE — gates that prove they can fail.
   //
   // A gate is self-tested when either it carries its own self-test (the axe
@@ -442,6 +451,8 @@ function measure(rev) {
     expressionInPackage,
     codeConnect,
     contractsEmitted,
+    contractsWritten,
+    taxonomyTotal,
     typoScopeRefs,
     gatesSelfTested: gatesSelfTested + axeSelfTested,
     gatesTotal: allGates.length + 1,
@@ -617,7 +628,7 @@ const RUBRIC = [
     id: 'code_connect_coverage',
     label: 'Components mapped to Figma (Code Connect)',
     goal: 'agentic',
-    weight: 8,
+    weight: 5,
     // Figma's own eval attributes its measured token and time savings to
     // COVERAGE rather than to having Code Connect at all, which is why this
     // is a ratio and not a yes/no.
@@ -634,6 +645,18 @@ const RUBRIC = [
     // Available off the shelf from Storybook 10.1; this repo is on 10.6.
     score: (m) => (m.contractsEmitted ? 100 : 0),
     format: (m) => (m.contractsEmitted ? 'emitted' : 'not emitted'),
+  },
+  {
+    id: 'contract_coverage',
+    label: 'Components with a decision contract (when / when-not)',
+    goal: 'agentic',
+    weight: 3,
+    // The manifest above gives an agent the mechanical API (props, variants);
+    // this is the decision layer — purpose / whenToUse / whenNotToUse in
+    // taxonomy.ts. Partial by design (written only where boundaries are
+    // known), so it is a ratio that ratchets as contracts are added.
+    score: (m) => pct(m.contractsWritten, m.taxonomyTotal),
+    format: (m) => `${m.contractsWritten}/${m.taxonomyTotal}`,
   },
 ];
 

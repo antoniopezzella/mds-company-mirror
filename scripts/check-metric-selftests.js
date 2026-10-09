@@ -79,6 +79,7 @@ const RAW_FIELD = {
   typo_scope_free: 'typoScopeRefs',
   doc_sprawl: 'rootDocs',
   contracts_emitted: 'contractsEmitted',
+  contract_coverage: 'contractsWritten',
   expression_reach: 'expressionInPackage',
   token_doc_accuracy: 'tokenDocDrift',
   gate_selftests: 'gatesSelfTested',
@@ -250,6 +251,28 @@ const METRICS = [
     up: () => patch('.storybook/main.ts', 'componentsManifest: true', 'componentsManifest: false'),
     flat: () => patch('.storybook/main.ts', 'staticDirs:', 'staticDirs /* probe comment */:'),
     flatWhy: 'an unrelated edit to the same file must not move a config-flag metric',
+  },
+  {
+    id: 'contract_coverage',
+    dir: 'up',
+    // The metric counts `purpose:` fields INSIDE the CONTRACTS block. The up
+    // probe adds a real contract entry (one more 4-space `purpose:`); the flat
+    // probe adds a comment that merely mentions the word, which must not count
+    // — the failure mode here is a substring match, exactly how a sibling block
+    // once shipped four wrong numbers off a currency substring.
+    up: () =>
+      patch(
+        'src/components/ui/taxonomy.ts',
+        'export const CONTRACTS: Record<string, ComponentContract> = {',
+        'export const CONTRACTS: Record<string, ComponentContract> = {\n  __mprobe: {\n    purpose: "probe contract, reverted immediately",\n    whenToUse: ["probe"],\n  },'
+      ),
+    flat: () =>
+      patch(
+        'src/components/ui/taxonomy.ts',
+        'export const CONTRACTS: Record<string, ComponentContract> = {',
+        'export const CONTRACTS: Record<string, ComponentContract> = {\n    // purpose: this is a comment, not a contract field'
+      ),
+    flatWhy: 'a comment mentioning "purpose:" must not count as a written contract',
   },
   {
     id: 'expression_reach',
