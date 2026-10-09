@@ -195,7 +195,7 @@
   --color-surface-default: #ffffff;
   --color-surface-subtle: #f8f8f8;
   --color-surface-muted: #e3e3e3;
-  --color-surface-accent: #f7f8f8;
+  --color-surface-accent: #f8f8f8;
   --color-surface-secondary-hover: #ebf7ff;
   --color-surface-row-hover: #ceecff;
   --color-surface-selected: #ceecff;
@@ -204,7 +204,7 @@
   --color-surface-navigation-mode: #002c77;
   --color-surface-navigation-hover: #1a2759;
   --color-surface-navigation-active: #333f6b;
-  --color-surface-accent-strong: #cfd0cd;
+  --color-surface-accent-strong: #c4c4c4;
   --color-surface-hero: #000f47;
   --color-surface-disabled: #e3e3e3;
   --color-surface-raised: #ffffff;
@@ -218,8 +218,8 @@
   --color-interactive-primary-hover: #082d9e;
   --color-interactive-primary-active: #0b4bff;
   --color-interactive-primary-disabled: #dadada;
-  --color-interactive-disabled-bg: #ebe7e2;
-  --color-interactive-disabled-fg: #878580;
+  --color-interactive-disabled-bg: #e3e3e3;
+  --color-interactive-disabled-fg: #878787;
   --color-interactive-accent-hover: #eaa501;
   --color-interactive-accent-active: #d58b02;
   --color-interactive-secondary: #0b4bff;
@@ -263,7 +263,7 @@
   --role-surface-default: #ffffff;
   --role-surface-subtle: #f8f8f8;
   --role-surface-disabled: #e3e3e3;
-  --role-surface-accent: #f7f8f8;
+  --role-surface-accent: #f8f8f8;
   --role-surface-raised: #ffffff;
   --role-surface-secondary: #ceecff;
   --role-surface-secondary-hover: #ebf7ff;
@@ -302,8 +302,8 @@
   --role-interactive-danger: #c53532;
   --role-interactive-danger-hover: #9a1c1f;
   --role-interactive-danger-active: #691315;
-  --role-interactive-disabled-bg: #ebe7e2;
-  --role-interactive-disabled-fg: #878580;
+  --role-interactive-disabled-bg: #e3e3e3;
+  --role-interactive-disabled-fg: #878787;
 }
 
 [data-theme="dark"] {

@@ -64,13 +64,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#3b3b3b",
-    "light": "#ebe7e2",
+    "light": "#e3e3e3",
     "role": "interactive.disabled.bg",
     "semantic": "interactiveDisabledBg",
   },
   {
     "dark": "#878787",
-    "light": "#878580",
+    "light": "#878787",
     "role": "interactive.disabled.fg",
     "semantic": "interactiveDisabledFg",
   },
@@ -184,7 +184,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#252525",
-    "light": "#f7f8f8",
+    "light": "#f8f8f8",
     "role": "surface.accent",
     "semantic": "surfaceAccent",
   },

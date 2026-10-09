@@ -2605,7 +2605,7 @@
       },
       "surfaceAccent": {
         "$type": "color",
-        "$value": "{color.gray250}"
+        "$value": "{color.neutral50}"
       },
       "surfaceSecondaryHover": {
         "$type": "color",
@@ -2641,7 +2641,7 @@
       },
       "surfaceAccentStrong": {
         "$type": "color",
-        "$value": "{color.gray400}"
+        "$value": "{color.neutral300}"
       },
       "surfaceHero": {
         "$type": "color",
@@ -2697,11 +2697,11 @@
       },
       "interactiveDisabledBg": {
         "$type": "color",
-        "$value": "{color.gray300}"
+        "$value": "{color.neutral200}"
       },
       "interactiveDisabledFg": {
         "$type": "color",
-        "$value": "{color.gray700}"
+        "$value": "{color.neutral500}"
       },
       "interactiveAccentHover": {
         "$type": "color",

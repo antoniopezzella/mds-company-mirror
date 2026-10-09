@@ -46,7 +46,7 @@ const lightPalette = {
   },
   background: {
     default: tokens.white,
-    paper: tokens.gray250,          // #f7f8f8 — App background (was blueGray75)
+    paper: tokens.neutral50,        // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
   },
   text: {
     primary: tokens.blue1000,       // #000f47 — Brand-tinted text

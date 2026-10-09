@@ -53,7 +53,7 @@ export const semanticColors = {
     surfaceDefault: ref('white'), // Default page background
     surfaceSubtle: ref('neutral50'), // #f8f8f8 — Slight elevation
     surfaceMuted: ref('neutral200'), // #e3e3e3 — Muted backgrounds
-    surfaceAccent: ref('gray250'), // #f7f8f8 — Warm accent (was blueGray75)
+    surfaceAccent: ref('neutral50'), // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
     surfaceSecondaryHover: ref('blue100'), // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
     /**
      * Hovered TABLE ROW. Sky Blue in light, unchanged neutral in dark.
@@ -104,7 +104,7 @@ export const semanticColors = {
     // Approximations of white overlays blended on `#000f47` to produce stable hex values
     surfaceNavigationHover: ref('blue975'), // #1a2759 — ~white@10% over #000f47
     surfaceNavigationActive: ref('blue990'), // #333f6b — ~white@20% over #000f47
-    surfaceAccentStrong: ref('gray400'), // #cfd0cd — Strong accent (was blueGray200)
+    surfaceAccentStrong: ref('neutral300'), // #c4c4c4 — Brand neutral (de-warmed from gray400 2026-10-09)
     surfaceHero: ref('blue1000'), // #000f47 — Midnight Navy — dark hero sections
     surfaceDisabled: ref('neutral200'), // #e3e3e3 — Disabled state
     /**
@@ -160,8 +160,8 @@ export const semanticColors = {
     // 3.69:1 across the whole system for the sake of one component.
     //
     // Dark matches what Button already shipped as literals.
-    interactiveDisabledBg: ref('gray300'), // #ebe7e2 — Neutral/Gray/300
-    interactiveDisabledFg: ref('gray700'), // #878580 — Neutral/Gray/700
+    interactiveDisabledBg: ref('neutral200'), // #e3e3e3 — Brand neutral (de-warmed from gray300 2026-10-09)
+    interactiveDisabledFg: ref('neutral500'), // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
     // ── Interactive — Accent (Gold / primaryAlt Button hover-active) ──────────
     // Base color is brandAccent (gold750) — these are only the hover/active
     // states. Matches src/components/ui/button.tsx's primaryAlt variant,

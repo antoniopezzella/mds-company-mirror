@@ -45,7 +45,7 @@
   --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
   
   /* Secondary (Outline style) */
-  --secondary: 180 6.7% 97.1%;                   /* #f7f8f8 Gray 250 - MDS: surface.accent */
+  --secondary: 0 0% 97.3%;                       /* #f8f8f8 Neutral 50 - MDS: surface.accent */
   --secondary-foreground: 227.3 100% 13.9%;       /* #000f47 - MDS: text.primary */
   
   /* Muted (Subtle backgrounds) */
