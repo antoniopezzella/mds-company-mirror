@@ -189,9 +189,16 @@ The four edges are not parallel; they depend on each other.
 
 ### Foundations backlog — VERIFIED real (2026-10-09), trigger-gated on binding
 From the DTCG foundation review, confirmed against the live export:
-- **105 of 156 primitives unreachable** (no semantic refs them); **56 of 57
-  alpha/shade primitives dead**. Candidate for deletion — but some ramps may be
-  kept for design parity; needs a pass, not a blind purge.
+- ~~**105 of 156 primitives unreachable** — candidate for deletion.~~
+  **Investigated 2026-10-09: NOT dead weight, do not delete.** The 91
+  no-semantic-ref primitives are the *intentional palette*: ~35 are individual
+  steps of full colour ramps (kept for parity — you keep the whole ramp even if
+  only some steps map to semantics), and ~56 are the alpha/shade ramps
+  (`shadesWhite/Black/Midnight/Active`) which are a deliberate overlay/scrim
+  palette **documented in ColorSandbox** and partly live (`borderSubtle` dark =
+  `shadesWhite10`). Deleting them would break `borderSubtle` and gut the colour
+  docs. The review's "unreachable ⇒ dead" read is a false lead for the code side;
+  only `gray`/`crimson` were genuinely retirable families (done).
 - **7 "primitives that aren't"** — `statusCritical/Warning/Success/Info`,
   `focusBlue/BlueDark/Cyan` — semantic values in the primitive tier; promote.
 - **Naming**: all role names contain dots (**DTCG-invalid**); **two grammars**
