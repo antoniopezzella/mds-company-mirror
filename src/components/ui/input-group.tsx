@@ -10,7 +10,7 @@ import {
   useControlSize,
   type ControlSize,
 } from "./control-size"
-import { getRoleColor } from "@/theme/roles"
+import { roleVar } from '@/theme/roles';
 import { Button } from "@/components/ui/button"
 
 /**
@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button"
  *    precedence than the `border-0 bg-transparent` classes this
  *    component needs to make the control blend into the group's own
  *    border instead of drawing its own. Native elements avoid the
- *    conflict outright; color still comes from getRoleColor(), just
+ *    conflict outright; color still comes from roleVar(), just
  *    applied here directly.
  * 2. InputGroupButton maps onto this repo's actual Button size API
  *    (`sm`/`md`/`lg` + `iconOnly`) instead of upstream's `xs`/`icon-xs`/

@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
 
 /**
  * NotificationsDrawer — shadcn/Radix counterpart to
  * `src/components/NotificationsDrawer/NotificationsDrawer.tsx` (MUI). Same
  * risk-notification content and grouping/filtering behavior, rebuilt on
- * `Sheet` instead of MUI `Drawer`. Colors go through `getRoleColor()`
+ * `Sheet` instead of MUI `Drawer`. Colors go through `roleVar()`
  * (auto dark-aware, see roles.ts) rather than the MUI original's static
  * per-severity hex map, which is a deliberate improvement — the MUI version
  * doesn't itself adapt severity pill colors for dark mode.
@@ -192,7 +192,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
                           <div className="flex shrink-0 items-center gap-2">
                             <span
                               className="whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-                              style={{ backgroundColor: getRoleColor(cfg.bg), color: getRoleColor(cfg.fg) }}
+                              style={{ backgroundColor: roleVar(cfg.bg), color: roleVar(cfg.fg) }}
                             >
                               {cfg.label}
                             </span>

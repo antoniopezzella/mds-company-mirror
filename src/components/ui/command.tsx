@@ -5,13 +5,13 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Dialog, DialogContent } from './dialog';
 
 /**
  * Command — no MDS/Figma spec exists for this yet; built matching real
  * shadcn/ui conventions directly (the `cmdk` library), styled with
- * `getRoleColor()`. A searchable command palette / filterable list.
+ * `roleVar()`. A searchable command palette / filterable list.
  */
 
 const Command = React.forwardRef<
@@ -33,7 +33,7 @@ const Command = React.forwardRef<
           // every build. It is still a
         // static Tailwind class naming a CSS var it can generate at build
         // time, with the actual color supplied here at runtime. Sidesteps
-        // the "Tailwind JIT can't see a dynamic getRoleColor() value" issue
+        // the "Tailwind JIT can't see a dynamic roleVar() value" issue
         // for cmdk's own internal `data-selected` (keyboard nav) styling,
         // which we can't otherwise hook into from JS.
         '--cmdk-selected-bg': 'var(--role-surface-subtle)',

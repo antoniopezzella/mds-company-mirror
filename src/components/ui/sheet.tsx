@@ -6,12 +6,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * Sheet — no MDS/Figma spec exists for this yet; built matching real
  * shadcn/ui conventions (a side-anchored Dialog variant), styled with
- * `getRoleColor()`. Reuses `@radix-ui/react-dialog` — already a dependency
+ * `roleVar()`. Reuses `@radix-ui/react-dialog` — already a dependency
  * for the `Modal`/`Dialog` components — rather than adding a new library.
  */
 

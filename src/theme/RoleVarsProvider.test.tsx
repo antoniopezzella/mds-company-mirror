@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { RoleVarsProvider } from './RoleVarsProvider';
-import { listRoles } from './roles';
+import { listRoles, roleVarName } from './roles';
 
 describe('RoleVarsProvider', () => {
   it('renders its children', () => {
@@ -46,7 +46,7 @@ describe('RoleVarsProvider', () => {
     const style = (container.firstElementChild as HTMLElement).getAttribute('style') ?? '';
     const roles = listRoles();
     for (const { role } of roles) {
-      const varName = `--role-${role.replaceAll('.', '-')}`;
+      const varName = roleVarName(role);
       expect(style).toContain(varName);
     }
   });

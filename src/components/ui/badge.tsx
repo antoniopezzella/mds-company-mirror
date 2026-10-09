@@ -4,7 +4,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 /**
  * Design System Badge — shadcn/ui counterpart for the MDS "Text Badge"
@@ -185,19 +185,19 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     } else {
       const roles = TONE_ROLES[tone];
       if (resolved === 'soft') {
-        backgroundColor = getRoleColor(roles.softBg);
-        color = getRoleColor(roles.softFg);
-        borderColor = getRoleColor(roles.softBorder);
+        backgroundColor = roleVar(roles.softBg);
+        color = roleVar(roles.softFg);
+        borderColor = roleVar(roles.softBorder);
       } else if (resolved === 'outline') {
         // Transparent, not a tint: the badge sits on whatever surface it is
         // placed on — a table row, a card, a striped row — and any fixed tint
         // would fight those. The border carries the tone.
         backgroundColor = 'transparent';
-        color = getRoleColor(roles.outlineFg);
-        borderColor = getRoleColor(roles.softBorder);
+        color = roleVar(roles.outlineFg);
+        borderColor = roleVar(roles.softBorder);
       } else {
-        backgroundColor = roles.solidBg ? getRoleColor(roles.solidBg) : 'transparent';
-        color = getRoleColor(roles.solidFg);
+        backgroundColor = roles.solidBg ? roleVar(roles.solidBg) : 'transparent';
+        color = roleVar(roles.solidFg);
         borderColor = undefined;
       }
     }

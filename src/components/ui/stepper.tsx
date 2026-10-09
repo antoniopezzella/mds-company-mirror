@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Check, Loader2, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 import { Badge } from './badge';
 
 /**
@@ -336,7 +336,7 @@ export const Stepper: React.FC<StepperProps> = ({
           // lineHeight is set here rather than via `leading-none`: Tailwind v4's
           // `text-sm` carries its own line-height, so the two collapse into one
           // twMerge group and the utility class silently loses.
-          style={{ color: getRoleColor(getLabelRole(status)), lineHeight: 1 }}
+          style={{ color: roleVar(getLabelRole(status)), lineHeight: 1 }}
         >
           {step.label}
         </span>

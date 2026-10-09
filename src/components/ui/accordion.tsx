@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 export interface AccordionItem {
   id: string;
@@ -134,7 +134,7 @@ export const Accordion: React.FC<AccordionProps> = ({
             <span className="flex-1">
               <span
                 className="block font-sans-productive text-base font-semibold"
-                style={{ color: getRoleColor(item.disabled ? 'text.disabled' : 'text.primary') }}
+                style={{ color: roleVar(item.disabled ? 'text.disabled' : 'text.primary') }}
               >
                 {item.title}
               </span>

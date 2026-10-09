@@ -6,7 +6,7 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 type InteractionState = 'default' | 'hover' | 'active';
 
@@ -35,7 +35,7 @@ export type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.
 /**
  * Design System Slider — shadcn/ui/Radix counterpart. No MDS twin exists yet;
  * built to match shadcn/ui's reference `Slider` API (Radix `Slider` wrapper),
- * re-skinned with `getRoleColor()` role tokens. Thumb hover/active coloring is
+ * re-skinned with `roleVar()` role tokens. Thumb hover/active coloring is
  * tracked via local React state, following the same pattern as `switch.tsx`
  * since the color is resolved at runtime and can't be baked into a Tailwind
  * `hover:` class.

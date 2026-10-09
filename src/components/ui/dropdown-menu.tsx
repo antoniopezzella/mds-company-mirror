@@ -5,7 +5,7 @@ import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 // Radix DropdownMenu gives real menu semantics (roving tabindex, typeahead,
 // arrow-key navigation, submenu support) that MUI's `Popover` + manual
@@ -94,14 +94,14 @@ const DropdownMenuItem = React.forwardRef<
       inset && 'pl-8',
       className
     )}
-    style={{ color: getRoleColor(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
     // inside it, written for exactly that case, became dead code.
     {...props}
     onFocus={(e) => {
-      (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor(
+      (e.currentTarget as HTMLElement).style.backgroundColor = roleVar(
         tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
       );
       props.onFocus?.(e);

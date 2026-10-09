@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ChevronDown, ChevronRight, LayoutDashboard, FileText, Shield, ClipboardList, BarChart3, Folder, Settings, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { getRoleColor } from '@/theme/roles';
+import { getRoleColor, roleVar } from '@/theme/roles';
 import { Tooltip } from './tooltip';
 import { useThemeMode } from '@/theme/ThemeModeContext';
 
@@ -159,7 +159,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
 
     const { mode } = useThemeMode();
 
-    // Resolves entirely through getRoleColor() — no hardcoded hex, no
+    // Resolves entirely through roleVar() — no hardcoded hex, no
     // Tailwind arbitrary-value classes. The previous version built classes
     // like `border-[${currentColors.border}]` via string interpolation,
     // which Tailwind's JIT scanner can never generate CSS for (it needs the
@@ -207,9 +207,9 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       // `colorScheme` picks the hue — navy (primary) or sky blue (secondary).
       const isSecondary = colorScheme === 'secondary';
       return {
-        navBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
-        navText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
-        itemHoverBg: getRoleColor(isSecondary ? 'surface.secondary.hover' : 'surface.navigation.hover'),
+        navBg: roleVar(isSecondary ? 'surface.secondary' : 'surface.navigation'),
+        navText: roleVar(isSecondary ? 'text.primary' : 'text.onHero'),
+        itemHoverBg: roleVar(isSecondary ? 'surface.secondary.hover' : 'surface.navigation.hover'),
         activeBg: 'var(--role-surface-navigation-active)',
         activeHoverBg: 'var(--role-surface-navigation-active)',
         activeBorder: 'var(--role-interactive-secondary)',
@@ -221,8 +221,8 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         // invisible, on every active item. text.onHero measures 8.27:1 there.
         activeText: 'var(--role-text-onHero)',
         border: 'var(--role-border-default)',
-        ctaBg: getRoleColor(isSecondary ? 'surface.secondary' : 'surface.navigation'),
-        ctaText: getRoleColor(isSecondary ? 'text.primary' : 'text.onHero'),
+        ctaBg: roleVar(isSecondary ? 'surface.secondary' : 'surface.navigation'),
+        ctaText: roleVar(isSecondary ? 'text.primary' : 'text.onHero'),
         // Sky-blue (secondary) rail is a light surface — same navy button
         // as the light-mode case reads fine there. Only the navy (primary)
         // rail is dark enough to need the inverse (light-on-dark) treatment.

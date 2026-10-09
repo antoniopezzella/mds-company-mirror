@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * A tiny trend line for inside a KPI tile, table cell or list row.
@@ -85,7 +85,7 @@ export const Sparkline = React.forwardRef<SVGSVGElement, SparklineProps>(
         <polyline
           points={points}
           fill="none"
-          stroke={color ?? getRoleColor(SENTIMENT_ROLE[sentiment])}
+          stroke={color ?? roleVar(SENTIMENT_ROLE[sentiment])}
           strokeWidth={1.5}
           strokeLinecap="round"
           strokeLinejoin="round"

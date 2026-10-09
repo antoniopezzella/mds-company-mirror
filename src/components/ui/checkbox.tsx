@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 import { AlertCircle, Check, Info, Minus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 type CheckedState = CheckboxPrimitive.CheckedState;
 type InteractionState = 'default' | 'hover' | 'active';
@@ -128,8 +128,8 @@ function getControlStyle({
     return {
       ...style,
       ...focusVars,
-      backgroundColor: getRoleColor(role),
-      borderColor: getRoleColor(role),
+      backgroundColor: roleVar(role),
+      borderColor: roleVar(role),
       color: 'var(--role-text-onInteractive)',
     };
   }
@@ -147,8 +147,8 @@ function getControlStyle({
       ...style,
       ...focusVars,
       backgroundColor: 'var(--role-surface-default)',
-      borderColor: getRoleColor(borderRole),
-      color: getRoleColor(invalid ? 'interactive.danger' : 'interactive.primary'),
+      borderColor: roleVar(borderRole),
+      color: roleVar(invalid ? 'interactive.danger' : 'interactive.primary'),
     };
   }
 
@@ -306,8 +306,8 @@ const DSCheckbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Ro
       onCheckedChange?.(nextChecked);
     };
 
-    const labelColor = getRoleColor(disabled ? 'text.disabled' : 'text.primary');
-    const helperColor = getRoleColor(
+    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
+    const helperColor = roleVar(
       disabled ? 'text.disabled' : invalid ? 'status.danger.fg' : 'text.primary'
     );
     const controlStyle = getControlStyle({
