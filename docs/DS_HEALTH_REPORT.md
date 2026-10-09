@@ -1,8 +1,52 @@
 # MDS Design System Health Report
 
-**Last updated:** 2026-09-22
+**Last updated:** 2026-10-09
 **Owner:** mds-health-auditor (recurring, read-only — audit + propose only)
-**Branch audited:** `main` — note the change: `main` is now the trunk (see below), so this and future runs audit `main`, not `feature/shadcn-ui-migration`.
+**Branch audited:** `main` trunk; the 2026-10-09 run below landed on the active
+`feature/mui-removal-and-ds-hardening` branch (not yet merged).
+
+## Changelog — 2026-10-09 (token-foundation hardening)
+
+An explicit "resolve it" pass, not read-only: items below are landed and
+verified, each measurement from a command run in this pass. **`ds:score` 73/100**
+(dev 63 · governance 85 · global 78 · agentic 75).
+
+**Token foundation — two legacy ramps retired, drift closed, enforcement completed:**
+
+- **`gray` family removed (178 → 158 primitives).** The warm/green-tinted ramp
+  was retired onto the pure R=G=B `neutral` scale; the four live semantics
+  (`surfaceAccent`, `surfaceAccentStrong`, `interactiveDisabled` bg/fg) repointed
+  to the nearest neutral, lightness preserved. This independently matches the
+  Figma DTCG review's "build dark on the neutral scale, not the warm ramp."
+- **`crimson` family removed (158 → 156).** The legacy 2-stop destructive ramp
+  had nowhere to point for a full state ladder (critical hover == default);
+  danger hover/active migrated onto the 14-stop `red` scale (red950/red1000).
+- **`on-*` family completed (55 → 57 roles).** Added `text.onSuccess`/
+  `text.onWarning`; `badge`'s solid variants stopped borrowing
+  `text.onInteractive`/`onLight` proxies. Zero visual change, verified AA.
+- **shadcn↔role drift fixed + gated.** `--primary`/`--accent-foreground` were
+  `#002c77` while their role `interactive.primary` resolved to `#000f47` — two
+  primary blues in one UI. Realigned to `#000f47`; new **`varsync:check`** gate
+  (self-proving) asserts every annotated Tailwind var matches its role.
+- **Tailwind default-palette leak gated.** `bg-red-500`/`text-gray-100` etc. in
+  `ui/` source now fail `roles:check:strict` (`roles-palette` rule + self-test);
+  source was clean, so it ratchets. With `varsync`, both colour-edge holes closed.
+- **`text.inverse` deprecated** → `text.onAccent` (redundant alias, 0 consumers).
+
+**Governance:** gate self-test harness now proves **7** gates can fail (added
+`roles-palette`); `token_doc_accuracy` 0 off (counts corrected to 156/74/57);
+1134 unit tests green; `governance:ci` green.
+
+**Investigated, deliberately NOT changed:** the DTCG review's "~105 unreachable
+primitives ⇒ delete" is a false lead for the code side — those are the
+intentional palette (full colour ramps kept for parity + a documented
+alpha/overlay ramp, `shadesWhite10` live in `borderSubtle`). Dark mode is sound
+(one clean `semanticDarkOverrides` axis on the neutral ladder). Both recorded in
+[`tasks/token-authority-decision.md`](./tasks/token-authority-decision.md).
+
+**Still open (trigger-gated or non-token):** naming convergence + Figma↔code
+binding + resolver (await a trigger); the live `sk-proj-…` key in
+`agents/design-system-agent/.env` (user action); Code Connect tail (47/71).
 
 ## Changelog since previous run (2026-09-05)
 
