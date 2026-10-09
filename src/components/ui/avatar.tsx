@@ -5,7 +5,7 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 import { normalizeSize } from './prop-compat';
 
 /**
@@ -173,7 +173,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         <AvatarPrimitive.Fallback
           delayMs={src ? 400 : undefined}
           className="flex h-full w-full items-center justify-center"
-          style={{ backgroundColor: getRoleColor(bg), color: getRoleColor(fg) }}
+          style={{ backgroundColor: roleVar(bg), color: roleVar(fg) }}
         >
           {initials}
         </AvatarPrimitive.Fallback>
@@ -185,7 +185,7 @@ export const Avatar: React.FC<AvatarProps> = ({
           style={{
             width: statusPx,
             height: statusPx,
-            backgroundColor: getRoleColor(getStatusColor(status)),
+            backgroundColor: roleVar(getStatusColor(status)),
             border: `2px solid ${'var(--role-surface-default)'}`,
             boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
           }}

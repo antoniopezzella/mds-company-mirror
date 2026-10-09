@@ -5,14 +5,14 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { CONTROL_HEIGHT, CONTROL_ICON, CONTROL_PX, CONTROL_RADIUS, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 /**
  * Combobox — no MDS/Figma spec exists for this yet; built matching real
  * shadcn/ui conventions directly (Popover + Command combined), styled with
- * `getRoleColor()`.
+ * `roleVar()`.
  */
 
 export interface ComboboxOption {

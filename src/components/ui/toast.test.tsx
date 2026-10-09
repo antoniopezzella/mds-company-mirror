@@ -10,7 +10,7 @@ import {
   ToastClose,
   ToastAction,
 } from './toast';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * Radix Toast requires a Provider + Viewport around any Toast, so every case
@@ -74,10 +74,9 @@ describe('Toast', () => {
         <ToastTitle>Tone</ToastTitle>
       </Toast>
     );
-    expect(screen.getByTestId('toast')).toHaveStyle({
-      backgroundColor: getRoleColor(bg),
-      color: getRoleColor(fg),
-    });
+    const ts = (screen.getByTestId('toast') as HTMLElement).style;
+    expect(ts.backgroundColor).toBe(roleVar(bg));
+    expect(ts.color).toBe(roleVar(fg));
   });
 
   it('fires onOpenChange when the close control is used', () => {

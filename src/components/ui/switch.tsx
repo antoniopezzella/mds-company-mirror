@@ -5,7 +5,7 @@ import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 type InteractionState = 'default' | 'hover' | 'active';
 
@@ -74,7 +74,7 @@ function getRootStyle({
   if (checked) {
     const baseRole = tone === 'danger' ? 'interactive.danger' : 'interactive.primary';
     const role = getInteractiveRole(baseRole, interaction);
-    const color = getRoleColor(role);
+    const color = roleVar(role);
     return { ...focusVars, backgroundColor: color, borderColor: color };
   }
 
@@ -150,7 +150,7 @@ const DSSwitch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>,
       if (!disabled) setInteraction(next);
     };
 
-    const labelColor = getRoleColor(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
     const rootStyle = getRootStyle({ checked: currentChecked, disabled, tone, interaction });
 
     const switchElement = (

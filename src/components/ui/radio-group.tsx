@@ -6,7 +6,7 @@ import { cva } from 'class-variance-authority';
 import { Circle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 type InteractionState = 'default' | 'hover' | 'active';
 
@@ -134,8 +134,8 @@ function getControlStyle({
       ...style,
       ...focusVars,
       backgroundColor: 'var(--role-surface-default)',
-      borderColor: getRoleColor(role),
-      color: getRoleColor(role),
+      borderColor: roleVar(role),
+      color: roleVar(role),
     };
   }
 
@@ -151,8 +151,8 @@ function getControlStyle({
     ...style,
     ...focusVars,
     backgroundColor,
-    borderColor: getRoleColor(borderRole),
-    color: getRoleColor(invalid ? 'interactive.danger' : 'interactive.primary'),
+    borderColor: roleVar(borderRole),
+    color: roleVar(invalid ? 'interactive.danger' : 'interactive.primary'),
   };
 }
 
@@ -239,7 +239,7 @@ const DSRadio = React.forwardRef<React.ElementRef<typeof RadioGroupPrimitive.Ite
       if (!disabled) setInteraction(next);
     };
 
-    const labelColor = getRoleColor(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
     const controlStyle = getControlStyle({ checked, disabled, invalid: isDanger, interaction, style });
 
     return (

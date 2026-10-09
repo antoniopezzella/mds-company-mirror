@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 export type ChipTone = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info';
 export type ChipVariant = 'filled' | 'outlined';
@@ -110,7 +110,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           borderColor: 'transparent',
         }
       : {
-          backgroundColor: isFilled ? getRoleColor(bg) : 'transparent',
+          backgroundColor: isFilled ? roleVar(bg) : 'transparent',
           // Text always takes `fg`; `border` is for the border only.
           //
           // Outlined chips used to render their label in the BORDER colour,
@@ -120,8 +120,8 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           // white — 3.59:1, below AA, and it failed axe the moment an outlined
           // chip was used at `size="sm"` (12px). Every tone's `fg` clears 4.5:1
           // against the page surface; the tightest is success at 5.12:1.
-          color: getRoleColor(fg),
-          border: variant === 'outlined' ? `1px solid ${getRoleColor(border)}` : 'none',
+          color: roleVar(fg),
+          border: variant === 'outlined' ? `1px solid ${roleVar(border)}` : 'none',
           boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-focus-ring)'}` : undefined,
         };
 

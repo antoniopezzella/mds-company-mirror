@@ -5,7 +5,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { normalizeSize } from './prop-compat';
 import { CONTROL_HEIGHT, CONTROL_PX, CONTROL_RADIUS, CONTROL_TEXT, useControlSize, type ControlSize } from './control-size';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 /**
  * Form-field validation state — NOT action severity.
@@ -75,10 +75,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         style={
           {
-            borderColor: toneRole ? getRoleColor(toneRole) : 'var(--role-border-default)',
+            borderColor: toneRole ? roleVar(toneRole) : 'var(--role-border-default)',
             color: 'var(--role-text-primary)',
             backgroundColor: 'var(--role-surface-default)',
-            '--tw-ring-color': toneRole ? getRoleColor(toneRole) : 'var(--role-focus-ring)',
+            '--tw-ring-color': toneRole ? roleVar(toneRole) : 'var(--role-focus-ring)',
             ...style,
           } as React.CSSProperties
         }

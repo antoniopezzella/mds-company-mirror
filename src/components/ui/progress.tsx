@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 export type ProgressTone = 'default' | 'success' | 'danger';
 
@@ -35,7 +35,7 @@ export interface CircularProgressProps extends Omit<React.SVGAttributes<SVGSVGEl
 
 export const CircularProgress = React.forwardRef<SVGSVGElement, CircularProgressProps>(
   ({ size = 40, thickness = 3.6, tone = 'default', value = 0, variant = 'indeterminate', className, ...props }, ref) => {
-    const color = getRoleColor(getToneColor(tone));
+    const color = roleVar(getToneColor(tone));
     const radius = (size - thickness * 2) / 2;
     const circumference = 2 * Math.PI * radius;
     const clamped = Math.min(Math.max(value, 0), 100);
@@ -103,7 +103,7 @@ export const LinearProgress: React.FC<LinearProgressProps> = ({
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
 }) => {
-  const color = getRoleColor(getToneColor(tone));
+  const color = roleVar(getToneColor(tone));
   const clamped = Math.min(Math.max(value, 0), 100);
 
   return (

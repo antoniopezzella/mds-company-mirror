@@ -5,12 +5,12 @@ import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
 import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { toggleVariants } from './toggle';
 
 /**
  * ToggleGroup — no MDS/Figma spec exists for this yet; built matching real
- * shadcn/ui conventions (Radix ToggleGroup), styled with `getRoleColor()`.
+ * shadcn/ui conventions (Radix ToggleGroup), styled with `roleVar()`.
  */
 
 const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({ size: 'default', variant: 'default' });

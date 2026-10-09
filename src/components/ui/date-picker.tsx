@@ -8,7 +8,7 @@ import type { DateRange, DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { CONTROL_ICON, CONTROL_RADIUS, useControlSize, type ControlSize } from './control-size';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Input } from './input';
@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover';
  * Design System Date Picker — no MDS/Figma spec exists for this yet; built
  * matching shadcn/ui's own official documented patterns directly
  * (https://ui.shadcn.com/docs/components/base/date-picker), styled with
- * getRoleColor() per this repo's convention. `Calendar` (see calendar.tsx)
+ * roleVar() per this repo's convention. `Calendar` (see calendar.tsx)
  * already routes every visual state through role tokens, so every variant
  * below inherits correct token theming for free — none of them touch color
  * directly except for small bits of picker-chrome (helper text, status

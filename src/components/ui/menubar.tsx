@@ -5,7 +5,7 @@ import * as MenubarPrimitive from '@radix-ui/react-menubar';
 import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 // No MDS/Figma spec exists for this yet; built matching real shadcn/ui
 // conventions directly. Radix Menubar's API closely mirrors DropdownMenu
@@ -116,14 +116,14 @@ const MenubarItem = React.forwardRef<
       inset && 'pl-8',
       className
     )}
-    style={{ color: getRoleColor(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
     // inside it, written for exactly that case, became dead code.
     {...props}
     onFocus={(e) => {
-      (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor(
+      (e.currentTarget as HTMLElement).style.backgroundColor = roleVar(
         tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
       );
       props.onFocus?.(e);

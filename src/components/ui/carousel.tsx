@@ -6,12 +6,12 @@ import type { EmblaOptionsType, EmblaPluginType } from 'embla-carousel';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * Carousel — no MDS/Figma spec exists for this yet; built matching real
  * shadcn/ui conventions directly (`embla-carousel-react`), styled with
- * `getRoleColor()`.
+ * `roleVar()`.
  */
 
 type CarouselApi = UseEmblaCarouselType[1];

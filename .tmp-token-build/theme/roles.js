@@ -169,6 +169,38 @@ export function getRoleColor(role, options = {}) {
     return base;
 }
 /**
+ * The CSS custom property a role publishes, e.g. `var(--role-text-primary)`.
+ *
+ * This is the OVERRIDABLE counterpart to `getRoleColor()`. Where getRoleColor
+ * bakes a resolved hex into an inline style — which no stylesheet can outrank,
+ * so a consumer cannot retheme it — `roleVar()` returns a reference to the
+ * custom property `RoleVarsProvider`/`roles.generated.css` publish, so a
+ * consumer's `.dark` or brand scope wins from the cascade. Prefer this for any
+ * colour that should be themeable; reach for `getRoleColor()` only when you
+ * genuinely need the resolved hex at call time (a canvas fill, a computed
+ * contrast check, or a mode explicitly forced via its options).
+ *
+ * The name mapping (dots → dashes, camelCase segments preserved: `text.primary`
+ * → `--role-text-primary`, `text.onInteractive` → `--role-text-onInteractive`)
+ * lives HERE and only here. It was previously duplicated in
+ * RoleVarsProvider.tsx's `roleNameToVar` and again in its test; both now import
+ * this, so the transform has a single source of truth and cannot drift.
+ */
+export function roleVarName(role) {
+    if (!ROLE_MAP[role])
+        throw new Error(`Unknown role: ${role}`);
+    // `.replace(/\./g, '-')`, not `.replaceAll`: roles.ts is also compiled under
+    // tsconfig.tokens.json (build-tokens.js imports from it), whose lib target
+    // predates String.replaceAll (ES2021). The global-regex replace is identical
+    // and ancient-compatible. RoleVarsProvider's old copy of this used replaceAll
+    // and compiled fine only because it's app-only code.
+    return `--role-${role.replace(/\./g, '-')}`;
+}
+/** `var(--role-…)` wrapping {@link roleVarName}. The value to assign in a style. */
+export function roleVar(role) {
+    return `var(${roleVarName(role)})`;
+}
+/**
  * Enumerate roles with metadata (semantic key + description) to feed documentation
  * tables, snapshots, and governance scripts.
  */

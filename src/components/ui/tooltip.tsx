@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 import { Z_INDEX } from './z-index';
 
 export type TooltipPlacement =
@@ -104,8 +104,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   const { side, align } = placementToSideAlign(placement);
   const { bg, fg } = getToneColors(tone);
-  const bgColor = getRoleColor(bg);
-  const fgColor = getRoleColor(fg);
+  const bgColor = roleVar(bg);
+  const fgColor = roleVar(fg);
 
   return (
     <TooltipPrimitive.Provider delayDuration={enterDelay}>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-react';
 
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 export type StatusCardStatus = 'success' | 'warning' | 'error' | 'info';
 
@@ -54,8 +54,8 @@ export const StatusCard: React.FC<StatusCardProps> = ({ status, title, message, 
         width: 360,
         minHeight: 110,
         borderRadius: 8,
-        border: `1px solid ${getRoleColor(border)}`,
-        backgroundColor: getRoleColor(bg),
+        border: `1px solid ${roleVar(border)}`,
+        backgroundColor: roleVar(bg),
         padding: 20,
         display: 'flex',
         flexDirection: 'column',
@@ -63,17 +63,17 @@ export const StatusCard: React.FC<StatusCardProps> = ({ status, title, message, 
       }}
     >
       <div className="flex items-center gap-3">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center" style={{ color: getRoleColor(fg) }}>
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center" style={{ color: roleVar(fg) }}>
           {icon ?? <Icon className="h-6 w-6" />}
         </span>
         <h3
           className="m-0 font-sans-productive text-base font-semibold leading-normal"
-          style={{ color: getRoleColor(fg) }}
+          style={{ color: roleVar(fg) }}
         >
           {title}
         </h3>
       </div>
-      <p className="m-0 font-sans-productive text-sm leading-5" style={{ color: getRoleColor(fg) }}>
+      <p className="m-0 font-sans-productive text-sm leading-5" style={{ color: roleVar(fg) }}>
         {message}
       </p>
     </div>

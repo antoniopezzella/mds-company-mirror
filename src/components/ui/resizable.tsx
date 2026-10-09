@@ -11,13 +11,13 @@ import { GripVertical } from 'lucide-react';
 import { Group, Panel, Separator, type GroupProps, type PanelProps, type SeparatorProps } from 'react-resizable-panels';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * Design System Resizable — shadcn/ui counterpart wrapping
  * `react-resizable-panels`. No MDS twin exists yet; built to match
  * shadcn/ui's reference `ResizablePanelGroup` / `ResizablePanel` /
- * `ResizableHandle` API, re-skinned with `getRoleColor()` role tokens
+ * `ResizableHandle` API, re-skinned with `roleVar()` role tokens
  * instead of hardcoded hex.
  */
 // NOTE: `Group` already applies `flex-direction` internally via inline style

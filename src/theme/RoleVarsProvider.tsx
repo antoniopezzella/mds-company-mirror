@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getRoleColor, listRoles, type RoleName } from './roles';
+import { getRoleColor, listRoles, roleVarName } from './roles';
 
 /**
  * RoleVarsProvider
@@ -21,13 +21,10 @@ export type RoleVarsProviderProps = {
   children: React.ReactNode;
 };
 
-function roleNameToVar(role: RoleName) {
-  return `--role-${role.replaceAll('.', '-')}`;
-}
 
 export const RoleVarsProvider: React.FC<RoleVarsProviderProps> = ({ mode = 'light', children }) => {
   const styleVars = useMemo(() => {
-    const entries = listRoles().map(({ role }) => [roleNameToVar(role), getRoleColor(role, { mode })]);
+    const entries = listRoles().map(({ role }) => [roleVarName(role), getRoleColor(role, { mode })]);
     return Object.fromEntries(entries) as React.CSSProperties;
   }, [mode]);
 

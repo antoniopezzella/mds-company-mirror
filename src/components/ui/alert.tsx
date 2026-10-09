@@ -4,7 +4,7 @@ import * as React from 'react';
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 export type AlertSeverity = 'error' | 'warning' | 'info' | 'success';
 
@@ -81,14 +81,14 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         style={{
           // Body copy uses `text` (4.5:1); the icon below keeps `fg` as the
           // accent, which only needs 3:1. See getSeverityRoles.
-          color: getRoleColor(text),
-          backgroundColor: outlined ? 'transparent' : getRoleColor(bg),
+          color: roleVar(text),
+          backgroundColor: outlined ? 'transparent' : roleVar(bg),
           border: outlined ? `1px solid ${'var(--role-border-default)'}` : 'none',
           ...style,
         }}
         {...rest}
       >
-        {!hideIcon && <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color: getRoleColor(fg) }} />}
+        {!hideIcon && <Icon className="mt-0.5 h-5 w-5 shrink-0" style={{ color: roleVar(fg) }} />}
         <div className="min-w-0 flex-1">
           {title && <AlertTitle>{title}</AlertTitle>}
           {children && <AlertDescription>{children}</AlertDescription>}

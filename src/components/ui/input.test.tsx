@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as React from 'react';
 import { Input } from './input';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 describe('Input', () => {
   it('renders an input and forwards arbitrary props', () => {
@@ -51,9 +51,7 @@ describe('Input', () => {
     ['warning', 'status.warning.fg'],
   ] as const)('tone="%s" borders with the %s role', (tone, role) => {
     render(<Input placeholder="Tone" tone={tone} />);
-    expect(screen.getByPlaceholderText('Tone')).toHaveStyle({
-      borderColor: getRoleColor(role),
-    });
+    expect((screen.getByPlaceholderText('Tone') as HTMLElement).style.borderColor).toBe(roleVar(role));
   });
 
   it('defaults to the neutral border role', () => {

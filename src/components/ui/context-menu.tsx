@@ -5,13 +5,13 @@ import * as ContextMenuPrimitive from '@radix-ui/react-context-menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 // ContextMenu — no MDS/Figma spec exists for this yet, so it's built
 // matching real shadcn/ui conventions directly (Radix ContextMenu), mirroring
 // dropdown-menu.tsx's structure since both are Radix menu-family primitives
 // (Root/Trigger/Content/Item/Label/Separator/CheckboxItem/RadioItem/Sub*),
-// styled with this repo's `getRoleColor()` role tokens.
+// styled with this repo's `roleVar()` role tokens.
 
 const ContextMenu = ContextMenuPrimitive.Root;
 const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
@@ -93,14 +93,14 @@ const ContextMenuItem = React.forwardRef<
       inset && 'pl-8',
       className
     )}
-    style={{ color: getRoleColor(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
     // inside it, written for exactly that case, became dead code.
     {...props}
     onFocus={(e) => {
-      (e.currentTarget as HTMLElement).style.backgroundColor = getRoleColor(
+      (e.currentTarget as HTMLElement).style.backgroundColor = roleVar(
         tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
       );
       props.onFocus?.(e);

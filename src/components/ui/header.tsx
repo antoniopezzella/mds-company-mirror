@@ -20,7 +20,7 @@ import {
 
 import MARSH_LOGO from '../../assets/images/marsh.svg';
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Avatar } from './avatar';
 import { Tooltip } from './tooltip';
 import {
@@ -122,8 +122,8 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const isPrimary = variant === 'primary';
-  const bg = getRoleColor(isPrimary ? 'surface.navigation' : 'surface.secondary');
-  const fg = getRoleColor(isPrimary ? 'text.onHero' : 'text.primary');
+  const bg = roleVar(isPrimary ? 'surface.navigation' : 'surface.secondary');
+  const fg = roleVar(isPrimary ? 'text.onHero' : 'text.primary');
   const hoverBg = 'var(--role-surface-navigation-hover)';
   const [profileHover, setProfileHover] = React.useState(false);
 

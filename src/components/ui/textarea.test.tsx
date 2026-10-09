@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as React from 'react';
 import { Textarea } from './textarea';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 describe('Textarea', () => {
   it('renders a textarea and forwards arbitrary props', () => {
@@ -46,9 +46,7 @@ describe('Textarea', () => {
     ['warning', 'status.warning.fg'],
   ] as const)('tone="%s" borders with the %s role', (tone, role) => {
     render(<Textarea placeholder="Tone" tone={tone} />);
-    expect(screen.getByPlaceholderText('Tone')).toHaveStyle({
-      borderColor: getRoleColor(role),
-    });
+    expect((screen.getByPlaceholderText('Tone') as HTMLElement).style.borderColor).toBe(roleVar(role));
   });
 
   it('defaults to the neutral border role', () => {

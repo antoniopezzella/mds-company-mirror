@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor, type RoleName } from '@/theme/roles';
+import { type RoleName, roleVar } from '@/theme/roles';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
 // Radix Toast is a queue/viewport system, not a single controlled instance —
@@ -74,7 +74,7 @@ const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitive.Root>, Toa
       <ToastPrimitive.Root
         ref={ref}
         className={cn(toastVariants(), className)}
-        style={{ backgroundColor: getRoleColor(bg), color: getRoleColor(fg) }}
+        style={{ backgroundColor: roleVar(bg), color: roleVar(fg) }}
         {...props}
       />
     );

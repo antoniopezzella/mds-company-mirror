@@ -4,12 +4,12 @@ import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * Popover — no MDS/Figma spec exists for this yet, so it's built matching
  * real shadcn/ui conventions directly (Radix Popover), styled with this
- * repo's `getRoleColor()` role tokens instead of shadcn's default
+ * repo's `roleVar()` role tokens instead of shadcn's default
  * CSS-variable palette.
  */
 

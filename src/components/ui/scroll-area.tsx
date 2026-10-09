@@ -4,12 +4,12 @@ import * as React from 'react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 
 /**
  * ScrollArea — no MDS/Figma spec exists for this yet; built matching real
  * shadcn/ui conventions directly (Radix ScrollArea), styled with
- * `getRoleColor()` for the scrollbar thumb.
+ * `roleVar()` for the scrollbar thumb.
  */
 
 const ScrollArea = React.forwardRef<
