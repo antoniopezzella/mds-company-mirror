@@ -216,11 +216,19 @@ run it (or its strict/CI variant) any time you touch component styling.
 
 ## Design System Tokens
 
-Core color tokens in `src/tokens.ts`; spacing scale in `src/spacing.ts` integrates with the custom `theme.spacing(index)` function (returns explicit value for defined indices, otherwise `index * 4px`). Prefer `theme.spacing(n)` over raw pixel values for consistency and scalability.
+Core color tokens in `src/tokens.ts`; spacing scale in `src/spacing.ts`. On the
+current Tailwind v4 stack, apply spacing with scale classes (`p-4`, `gap-2`) or,
+for layout, the `Stack`/`Inline` components whose `gap` prop is typed to the
+scale. Never hardcode pixels; `composition:check:strict` fails on arbitrary
+values like `p-[16px]`.
 
 Example:
 ```tsx
-<Box sx={{ p: theme.spacing(3), gap: theme.spacing(2) }} />
+import { Stack, Inline } from '@/components/ui';
+
+<div className="p-4">
+  <Inline gap={2}>…</Inline>
+</div>
 ```
 
 ## Testing
