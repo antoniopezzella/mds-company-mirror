@@ -1,7 +1,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { CONTESTED, CONTRACTS, TAXONOMY, TIERS, byTier, contractOf, contractCoverage, tierOf, type Tier } from './taxonomy';
+import {
+  CODE_ONLY,
+  CONTESTED,
+  CONTRACTS,
+  TAXONOMY,
+  TIERS,
+  byTier,
+  contractOf,
+  contractCoverage,
+  figmaMappable,
+  tierOf,
+  type Tier,
+} from './taxonomy';
 
 /**
  * The taxonomy is only useful if it is complete and current. A manifest that
@@ -144,5 +156,32 @@ describe('taxonomy', () => {
     expect(total).toBe(Object.keys(TAXONOMY).length);
     expect(withContract).toBe(Object.keys(CONTRACTS).filter((k) => k in TAXONOMY).length);
     expect(withContract).toBeGreaterThan(0);
+  });
+
+  // ── Code Connect mappability ───────────────────────────────────────────────
+  // CODE_ONLY is the honest denominator correction: components with no Figma
+  // node cannot be Code-Connected, so counting them as coverage gaps makes the
+  // metric unreachable. These guard that the exclusion list stays truthful.
+
+  it('only excludes components that exist in the taxonomy', () => {
+    const orphan = Object.keys(CODE_ONLY).filter((c) => !(c in TAXONOMY));
+    expect(orphan, `CODE_ONLY references non-existent components: ${orphan.join(', ')}`).toEqual([]);
+  });
+
+  it('gives every code-only exclusion a non-empty reason', () => {
+    const unreasoned = Object.entries(CODE_ONLY)
+      .filter(([, why]) => !why?.trim())
+      .map(([n]) => n);
+    // The reason is the thing that stops the list quietly growing to flatter
+    // the metric — an exclusion with no stated reason is exactly that.
+    expect(unreasoned, `code-only exclusions missing a reason: ${unreasoned.join(', ')}`).toEqual([]);
+  });
+
+  it('figmaMappable is taxonomy minus code-only, sorted, and non-empty', () => {
+    const mappable = figmaMappable();
+    expect(mappable).toEqual([...mappable].sort());
+    expect(mappable.length).toBe(Object.keys(TAXONOMY).length - Object.keys(CODE_ONLY).length);
+    expect(mappable.length).toBeGreaterThan(0);
+    for (const c of mappable) expect(c in CODE_ONLY).toBe(false);
   });
 });

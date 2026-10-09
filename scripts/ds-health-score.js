@@ -374,10 +374,6 @@ function measure(rev) {
     /@utility\s+text-serif-h1\b/.test(utilSrc) && /@utility\s+text-h1\b/.test(utilSrc);
   const expressionInPackage = pkgImportsUtilities && definesBothExpressions ? 1 : 0;
 
-  // AGENTIC — Code Connect coverage. Figma's own eval names coverage, not
-  // component count, as what drives the measured token and time savings.
-  const codeConnect = list(rev, 'src/figma').filter((f) => /\.figma\.tsx$/.test(f)).length;
-
   // AGENTIC — are machine-readable component contracts emitted at all?
   const sbMain = read(rev, '.storybook/main.ts') ?? '';
   const contractsEmitted = /componentsManifest\s*:\s*true/.test(sbMain) ? 1 : 0;
@@ -389,7 +385,36 @@ function measure(rev) {
   const taxSrc = read(rev, 'src/components/ui/taxonomy.ts') ?? '';
   const contractsBlock = /export const CONTRACTS[^{]*\{([\s\S]*?)\n\};/.exec(taxSrc)?.[1] ?? '';
   const contractsWritten = (contractsBlock.match(/^\s{4}purpose:/gm) ?? []).length;
-  const taxonomyTotal = (taxSrc.match(/^\s{2}'?[a-z][a-z0-9-]*'?:\s*'(?:atom|molecule|organism|template)'/gm) ?? []).length;
+  const taxonomyKeys = new Set(
+    [...taxSrc.matchAll(/^\s{2}'?([a-z][a-z0-9-]*)'?:\s*'(?:atom|molecule|organism|template)'/gm)].map((m) => m[1])
+  );
+  const taxonomyTotal = taxonomyKeys.size;
+
+  // AGENTIC — Code Connect coverage, measured against the MAPPABLE set, not a
+  // raw file walk. Figma's eval names COVERAGE as what drives its token/time
+  // savings — but coverage is only honest if the denominator is components that
+  // can actually be mapped. A mapping attaches a snippet to a Figma NODE, so a
+  // code-only component (CODE_ONLY in taxonomy.ts: internal sub-parts, headless
+  // primitives, providers) has nothing to attach to and is excluded. The
+  // numerator is DISTINCT mappable components a .figma.tsx points at — not the
+  // file count, which double-counts and which legacy stubs importing deleted
+  // code would inflate.
+  const codeOnlyBlock = /export const CODE_ONLY[^{]*\{([\s\S]*?)\n\};/.exec(taxSrc)?.[1] ?? '';
+  const codeOnlyKeys = new Set(
+    [...codeOnlyBlock.matchAll(/^\s{2}'?([a-z][a-z0-9-]*)'?:/gm)].map((m) => m[1])
+  );
+  const mappable = new Set([...taxonomyKeys].filter((k) => !codeOnlyKeys.has(k)));
+  const mapped = new Set();
+  for (const f of list(rev, 'src/figma').filter((f) => /\.figma\.tsx$/.test(f))) {
+    const src = read(rev, f) ?? '';
+    // ALL ui imports, not the first — one file can map several components
+    // (Header.figma.tsx connects both `header` and `website-header`).
+    for (const m of src.matchAll(/from\s+['"][^'"]*components\/ui\/([a-z][a-z0-9-]*)['"]/g)) {
+      if (mappable.has(m[1])) mapped.add(m[1]);
+    }
+  }
+  const codeConnect = mapped.size;
+  const codeConnectMappable = mappable.size;
 
   // AGENTIC/GOVERNANCE — gates that prove they can fail.
   //
@@ -450,6 +475,7 @@ function measure(rev) {
     reducedMotion,
     expressionInPackage,
     codeConnect,
+    codeConnectMappable,
     contractsEmitted,
     contractsWritten,
     taxonomyTotal,
@@ -631,9 +657,11 @@ const RUBRIC = [
     weight: 5,
     // Figma's own eval attributes its measured token and time savings to
     // COVERAGE rather than to having Code Connect at all, which is why this
-    // is a ratio and not a yes/no.
-    score: (m) => pct(m.codeConnect, m.uiModules),
-    format: (m) => `${m.codeConnect}/${m.uiModules}`,
+    // is a ratio and not a yes/no. Denominator is the MAPPABLE set (taxonomy
+    // minus code-only), so 100% is reachable and the number is not diluted by
+    // components Figma has no node for.
+    score: (m) => pct(m.codeConnect, m.codeConnectMappable),
+    format: (m) => `${m.codeConnect}/${m.codeConnectMappable} mappable`,
   },
   {
     id: 'contracts_emitted',

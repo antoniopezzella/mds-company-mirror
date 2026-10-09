@@ -450,7 +450,7 @@ export const CONTRACTS: Record<string, ComponentContract> = {
   card: {
     purpose: 'A generic surface with composable Header/Title/Content/Footer parts (plus `ContentCard` for the title/image/CTA Figma spec).',
     whenToUse: [
-      'Grouping arbitrary content into a bordered, rounded surface you lay out yourself.',
+      'Grouping arbitrary content into a bordered surface you lay out yourself.',
       'Use `ContentCard` for the canonical title + category + image + CTA content card.',
     ],
     whenNotToUse: [
@@ -938,4 +938,63 @@ export function contractCoverage(): { withContract: number; total: number } {
   const total = Object.keys(TAXONOMY).length;
   const withContract = Object.keys(CONTRACTS).filter((k) => k in TAXONOMY).length;
   return { withContract, total };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Code Connect mappability — the honest denominator for coverage
+// ─────────────────────────────────────────────────────────────────────────
+//
+// Figma Code Connect attaches a code snippet to a Figma NODE. A component with
+// no Figma node cannot be mapped — so counting it as a coverage "gap" makes the
+// metric unreachable by construction. Before this list, the metric's
+// denominator was a raw walk of src/components/ui that counted 118 things: 19
+// non-component .ts files (hooks, schemas, control-size.ts, taxonomy.ts
+// itself), 6 nested internal .tsx parts, and the code-only components below.
+// None of those have a Figma counterpart; chasing 118/118 meant fabricating
+// node IDs (the StatusCard `// TODO: Update node ID` placeholder is that
+// anti-pattern leaking in).
+//
+// CODE_ONLY names the taxonomy components that are deliberately un-mappable,
+// each with the reason. Everything else in TAXONOMY is the mappable set. When
+// in doubt a component stays mappable (keeps coverage honest-low), so this list
+// holds only the unambiguous cases: internal sub-parts of a larger mapped
+// component, headless layout/behaviour primitives, providers, and render-state
+// glue. A code-only component can still carry a CONTRACT (stack, page-shell do)
+// — being un-mappable in Figma says nothing about being useful in code.
+export const CODE_ONLY: Record<string, string> = {
+  // Headless layout / behaviour primitives — no visual design to attach to.
+  'aspect-ratio': 'Radix layout primitive; constrains ratio, renders nothing of its own.',
+  'scroll-area': 'Radix viewport primitive; the scrollbars are the only visual, not a Figma component.',
+  resizable: 'Radix panel-group primitive; the drag handles have no standalone Figma node.',
+  stack: 'Layout primitive (Stack/Inline) — spacing as a type, no Figma component.',
+  'page-shell': 'Template scaffold (header/sidebar/content slots), not a drawable component.',
+  // Providers / mounts — infrastructure, not a surface a designer selects.
+  toaster: 'The mount point that renders queued `toast`es; `toast` is the mappable surface.',
+  'badge-anchor': 'Positioning wrapper that pins a `badge` to a corner; `badge` carries the design.',
+  'data-state': 'Render-state slot (loading/empty/error switch) — composition glue, not a surface.',
+  'error-state': 'Render-state slot paired with `data-state`; `empty` is the mappable empty-state surface.',
+  'table-primitives': 'Internal <thead>/<tbody>/<td> element set used by `table`/`data-table`.',
+  // data-grid internals — render inside `data-grid`, never selected alone in Figma.
+  'data-grid-bulk-actions': 'Internal part of `data-grid`.',
+  'data-grid-cell-edit': 'Internal part of `data-grid`.',
+  'data-grid-pagination': 'Internal part of `data-grid`.',
+  'data-grid-row-actions': 'Internal part of `data-grid`.',
+  'data-grid-rows': 'Internal part of `data-grid`.',
+  'data-grid-selection': 'Internal part of `data-grid`.',
+  'data-grid-table': 'Internal part of `data-grid`.',
+  'data-grid-toolbar': 'Internal part of `data-grid`.',
+  // data-table internals — the public surface is `data-table`.
+  'data-table-date-filter': 'Internal filter part of `data-table`.',
+  'data-table-faceted-filter': 'Internal filter part of `data-table`.',
+  'data-table-sort-list': 'Internal sort part of `data-table`.',
+  // filter internals — the public surfaces are `filter-bar` and `filter-chip`.
+  'filter-controls': 'Internal composition of `filters`/`filter-bar`.',
+  'filter-field-control': 'Internal per-field control of `filters`/`filter-bar`.',
+};
+
+/** Components eligible for a Figma Code Connect mapping: taxonomy minus CODE_ONLY. */
+export function figmaMappable(): string[] {
+  return Object.keys(TAXONOMY)
+    .filter((c) => !(c in CODE_ONLY))
+    .sort();
 }
