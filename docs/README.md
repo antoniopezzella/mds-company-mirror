@@ -29,8 +29,6 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | Doc | For |
 |---|---|
 | [`guides/STORYBOOK_BEST_PRACTICES.md`](./guides/STORYBOOK_BEST_PRACTICES.md) | Writing stories/docs the way this repo does it |
-| [`guides/STORY_UI_CONSIDERATIONS.md`](./guides/STORY_UI_CONSIDERATIONS.md) | Story UI + MDS governance interplay |
-| [`guides/TESTING_GUIDE.md`](./guides/TESTING_GUIDE.md) | Writing tests (see also the README's own Testing section for the Vitest+Playwright setup) |
 | [`guides/TROUBLESHOOTING.md`](./guides/TROUBLESHOOTING.md) | Symptom → cause for common MDS issues (tokens, contrast, fonts, dark mode) |
 | [`guides/DEV_SERVER_MANAGEMENT.md`](./guides/DEV_SERVER_MANAGEMENT.md) | Local dev server troubleshooting |
 | [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see [`OPERATIONS.md`](./OPERATIONS.md) for the operational picture) |
@@ -38,7 +36,7 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`guides/LIGHTHOUSE_GUIDE.md`](./guides/LIGHTHOUSE_GUIDE.md) | Lighthouse audits |
 | [`guides/WORKFLOW_GUIDE.md`](./guides/WORKFLOW_GUIDE.md) | General contributor workflow |
 | [`guides/RESPONSIVE_VIMEO_COVER.md`](./guides/RESPONSIVE_VIMEO_COVER.md) | Making a fixed-ratio Vimeo iframe fill an arbitrary container — `object-fit: cover` doesn't apply to iframes. **Read before touching HeroBanner's media sizing**: the container-query units fix a real bug and the constraints list says what not to change |
-| [`guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md`](./guides/MARSH_ONE_MDS_SYSTEM_GUIDE.md), [`guides/MARSH_ONE_QUICKSTART.md`](./guides/MARSH_ONE_QUICKSTART.md) | The Marsh One project specifically |
+| [`guides/MARSH_ONE_QUICKSTART.md`](./guides/MARSH_ONE_QUICKSTART.md) | The Marsh One project specifically (the older `MARSH_ONE_MDS_SYSTEM_GUIDE.md` was archived 2026-10-09 — it taught the removed MUI stack and MMC Display) |
 | [`guides/INSURANCE_DASHBOARD_QUICKSTART.md`](./guides/INSURANCE_DASHBOARD_QUICKSTART.md) | The Insurance Dashboard project specifically |
 
 ## Reference (cross-cutting, doesn't fit a category above)
