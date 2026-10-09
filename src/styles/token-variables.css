@@ -41,7 +41,7 @@
   --popover-foreground: 227.3 100% 13.9%;         /* #000f47 - MDS: text.primary */
   
   /* Primary (Midnight Blue - MODE Primary) */
-  --primary: 217.8 100% 23.3%;                    /* #002c77 - MDS: interactive.primary */
+  --primary: 227.3 100% 13.9%;                    /* #000f47 Midnight - MDS: interactive.primary (realigned from #002c77 drift 2026-10-09) */
   --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
   
   /* Secondary (Outline style) */
@@ -54,7 +54,7 @@
   
   /* Accent (Gold - Brand Secondary) */
   --accent: 44.9 100% 50%;                      /* #ffbf00 Gold 750 - MDS: brand.accent */
-  --accent-foreground: 217.8 100% 23.3%;          /* #002c77 - MDS: interactive.primary */
+  --accent-foreground: 227.3 100% 13.9%;          /* #000f47 Midnight - MDS: interactive.primary (realigned from #002c77 drift 2026-10-09) */
   
   /* Destructive (Error/Danger state) */
   /* Was `0 84% 60%` (#ee4343), a Tailwind default — despite the comment

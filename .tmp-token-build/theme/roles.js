@@ -52,7 +52,14 @@ import { semanticColors, semanticDarkOverrides } from '../semantic-tokens.js';
 const ROLE_MAP = {
     'text.primary': { semantic: 'textPrimary', description: 'Primary body & UI text' },
     'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
-    'text.inverse': { semantic: 'textOnAccent', description: 'Text on accent or inverse surfaces' },
+    /**
+     * @deprecated since 0.8.0; remove after 0.9.0 / 2027-01-09. Use `text.onAccent`.
+     * Redundant alias of textOnAccent with a vague "inverse" meaning and zero
+     * consumers. Content on an inverted/brand surface is the on-* pairing
+     * (surface.primary + text.onPrimary), never an "inverse" token — see
+     * docs/tasks/token-authority-decision.md.
+     */
+    'text.inverse': { semantic: 'textOnAccent', description: 'DEPRECATED — use text.onAccent' },
     'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
     'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
     'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface — mode-INVARIANT Sky, because hero surfaces stay dark in both modes. For a label on interactive.primary, which does flip, use text.onPrimary' },
