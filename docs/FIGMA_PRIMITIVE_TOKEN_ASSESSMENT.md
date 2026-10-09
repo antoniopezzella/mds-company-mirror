@@ -5,6 +5,14 @@
 
 **Scope note:** report only, same as the semantic pass — no token values changed. One pure bookkeeping fix (re-linking already-existing tokens the original snapshot never matched by name) is called out separately below since it changes no rendered color.
 
+> **Superseded in part — 2026-10-09.** The entire warm/green `gray*` family this
+> doc analyses was **removed from the code** (retired onto the pure `neutral`
+> R=G=B ramp; the four live semantics repointed). So the code-side gray claims
+> below (e.g. "`gray1000` is `#303c37`") describe a family that no longer exists
+> in `tokens.ts`. The **Figma-side analysis still stands** — Figma retains the
+> warm ramp, which the DTCG review proposes renaming to a cream/sand scale. See
+> [`docs/tasks/token-authority-decision.md`](./tasks/token-authority-decision.md).
+
 ## Executive summary
 
 | Category | Count (of 135) | Meaning |

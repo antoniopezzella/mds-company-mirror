@@ -25,7 +25,7 @@ and Button is visually unchanged by this work.
 |---|---|
 | Primary hover/active | `interactivePrimaryHover` → `blue900` (#082d9e), `interactivePrimaryActive` → `blue750` (#0b4bff). Figma names blue750 "Primary Palette/Blue/750 **(Active)**" — the roles had stopped one step short of the step Figma labels Active. |
 | Disabled | New `interactive.disabled.bg/.fg` → #ebe7e2 / #878580. `text.disabled` and `surface.disabled` deliberately **unchanged**: repointing them would have dropped disabled text on white from 4.54:1 to 3.69:1 system-wide for one component's benefit. |
-| Destructive | Moved off `red*` onto Figma's **Traffic/Crimson** ramp: #c53532 / #9a1c1f / #691315. White-on-danger contrast *improved* 4.90:1 → 5.34:1. |
+| Destructive | ~~Moved off `red*` onto Figma's **Traffic/Crimson** ramp: #c53532 / #9a1c1f / #691315.~~ **Superseded 2026-10-09:** the 2-stop crimson ramp was deprecated and the danger hover/active states migrated back onto the 14-stop `red` scale (`interactiveDangerHover`→red950 #9d201f, `interactiveDangerActive`→red1000 #8b1a1a); `statusCritical` #c53532 stays as the rest fill. White-on-danger contrast *improved* 4.90:1 → 5.34:1. |
 
 **Four primitives were the actual root cause.** `#ebe7e2`, `#878580`,
 `#9a1c1f` and `#691315` all existed in `src/figma-variable-map.json` with
