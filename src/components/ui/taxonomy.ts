@@ -361,6 +361,571 @@ export const CONTRACTS: Record<string, ComponentContract> = {
       'AttachmentAction accepts the icon as `icon` OR as children — children are promoted to icon. (Earlier it discarded children and rendered an empty button; fixed.)',
     ],
   },
+
+  // ── Single-choice / value pickers ────────────────────────────────────────
+  select: {
+    purpose: 'Pick one value from a short, fixed list via a Radix listbox (DSSelect wraps the parts for MUI parity).',
+    whenToUse: [
+      'Choosing a single persisted VALUE from a known, finite set — status, country, coverage type.',
+      'The option count is small enough that scrolling, not searching, is the right way to find one.',
+    ],
+    whenNotToUse: [
+      { instead: 'combobox', because: 'The list is long enough that the user needs to type-to-filter.' },
+      { instead: 'radio-group', because: 'There are only a few options and showing them all at once aids the choice.' },
+      { instead: 'dropdown-menu', because: 'The items are ACTIONS to run, not a value to store.' },
+    ],
+    gotchas: [
+      'The trigger is `role="combobox"`, which gets NO accessible name from its content — a label-less DSSelect/Combobox needs a visible `label` or `aria-label` or axe fails and the build breaks.',
+      'Radix rejects an empty-string item value (reserved for "no selection"); DSSelect maps `value: ""` to a sentinel and back, so an "Unassigned" placeholder option still works.',
+      'SelectContent portals to document.body, outside any page typography scope — re-apply scope on the content if it matters.',
+    ],
+  },
+  combobox: {
+    purpose: 'Pick one value from a long list with type-to-filter search (Popover + Command).',
+    whenToUse: [
+      'Single-value selection where the option set is large enough that searching beats scrolling.',
+    ],
+    whenNotToUse: [
+      { instead: 'select', because: 'The list is short and a plain listbox is simpler and lighter.' },
+      { instead: 'command', because: 'You want a full command palette of actions, not a form value picker.' },
+    ],
+    gotchas: [
+      'The trigger is `role="combobox"`, which has no name-from-content — pass `aria-label` (it defaults to `placeholder`) or the control fails axe.',
+      'Selecting the already-selected option clears it (`onChange` fires with `""`) — it toggles, it does not re-confirm.',
+    ],
+  },
+  'radio-group': {
+    purpose: 'Pick exactly one option from a small set, with every option visible at once.',
+    whenToUse: [
+      'A few mutually-exclusive choices (roughly 2–6) where seeing them all helps the decision.',
+    ],
+    whenNotToUse: [
+      { instead: 'select', because: 'There are many options or the row would get too tall — collapse them behind a trigger.' },
+      { instead: 'checkbox', because: 'More than one option can be selected at the same time.' },
+      { instead: 'toggle-group', because: 'You want a compact segmented/icon control rather than labelled radio rows.' },
+    ],
+    gotchas: [
+      'A `DSRadio` only tracks checked visuals inside a `DSRadioGroup` (it reads the selected value from context) — a lone `DSRadio` will not light up.',
+    ],
+  },
+  'dropdown-menu': {
+    purpose: 'A menu of ACTIONS opened by clicking a trigger (Radix, real menu semantics).',
+    whenToUse: [
+      'A button that opens a list of commands — row actions, a profile menu, bulk operations.',
+      'You need submenus, checkbox/radio items, or typeahead within the menu.',
+    ],
+    whenNotToUse: [
+      { instead: 'select', because: 'The user is choosing a value to persist, not firing an action.' },
+      { instead: 'context-menu', because: 'The menu should open on right-click of a surface, not a button press.' },
+      { instead: 'menubar', because: 'You want a persistent, always-visible bar of top-level menus (an app menu bar).' },
+    ],
+    gotchas: [
+      'Content portals to document.body, so it sits outside the `mds-dashboard` typography scope — re-apply it on the content if needed.',
+    ],
+  },
+  'context-menu': {
+    purpose: 'A menu of actions opened by right-click (or long-press) on a target surface.',
+    whenToUse: [
+      'Contextual actions tied to right-clicking a specific element — a grid cell, a canvas item.',
+    ],
+    whenNotToUse: [
+      { instead: 'dropdown-menu', because: 'The menu should open from a visible trigger button — a right-click menu is undiscoverable and hard to reach on touch/keyboard, so it must only ever be a shortcut to actions available elsewhere.' },
+    ],
+    gotchas: [
+      'Content portals to document.body, outside the dashboard typography scope.',
+    ],
+  },
+  menubar: {
+    purpose: 'A persistent horizontal bar of top-level menus — the desktop-application menu bar pattern.',
+    whenToUse: [
+      'An always-visible row of menus (File / Edit / View …) where several menus coordinate focus as one widget.',
+    ],
+    whenNotToUse: [
+      { instead: 'dropdown-menu', because: 'There is only one menu, opened from a single trigger button.' },
+      { instead: 'side-navigation', because: 'You are navigating between app sections, not invoking menu commands.' },
+    ],
+  },
+
+  // ── Card family ──────────────────────────────────────────────────────────
+  card: {
+    purpose: 'A generic surface with composable Header/Title/Content/Footer parts (plus `ContentCard` for the title/image/CTA Figma spec).',
+    whenToUse: [
+      'Grouping arbitrary content into a bordered, rounded surface you lay out yourself.',
+      'Use `ContentCard` for the canonical title + category + image + CTA content card.',
+    ],
+    whenNotToUse: [
+      { instead: 'stat-card', because: 'You are showing a KPI metric with a delta/trend/sparkline.' },
+      { instead: 'metric-card', because: 'You just need one very large headline number.' },
+      { instead: 'status-card', because: 'The card is a success/warning/error/info status message.' },
+    ],
+    gotchas: [
+      'CardTitle renders a fixed `<h3>` — mind heading order when a card sits directly under the page `<h1>`.',
+    ],
+  },
+  'stat-card': {
+    purpose: 'The dashboard KPI tile: a labelled value with an optional delta badge, trend caption, comparison and sparkline.',
+    whenToUse: [
+      'One metric that changes over time — premium, open claims — where the change and its sentiment matter.',
+      'Pass a number plus `format`; set `deltaPolarity` so "down is good" metrics colour correctly.',
+    ],
+    whenNotToUse: [
+      { instead: 'metric-card', because: 'You want only a large number with a label, no trend or delta.' },
+      { instead: 'card', because: 'The content is arbitrary rather than a single metric.' },
+      { instead: 'status-card', because: 'You are conveying a status, not a number.' },
+    ],
+    gotchas: [
+      '`as` defaults to `"p"` — the label is deliberately NOT a heading, so a grid of StatCards no longer breaks heading order (it used to hardcode `<h3>`). Set `as="h3"` only when the tile genuinely is a section heading.',
+      'Colour follows sentiment = direction × `deltaPolarity`; the deprecated `trend`/`change` props can contradict the number beside them. Prefer `delta`.',
+      'Loading and error states render in place (skeleton / inline error) rather than swapping in a `<DataState>`, so a 4-tile grid does not reflow when data lands.',
+    ],
+  },
+  'metric-card': {
+    purpose: 'A single very large, centred headline number with a label beneath — a hero stat.',
+    whenToUse: [
+      'A standalone showcase figure where visual weight, not trend context, is the point.',
+    ],
+    whenNotToUse: [
+      { instead: 'stat-card', because: 'You need a delta, trend, comparison, sparkline, or number formatting.' },
+      { instead: 'card', because: 'The content is richer than one number and a label.' },
+    ],
+    gotchas: [
+      '`value` is a string and is rendered as-is — there is no formatting here; format the number before passing it.',
+    ],
+  },
+  'status-card': {
+    purpose: 'A standalone status surface (success/warning/error/info) with an icon, title and message.',
+    whenToUse: [
+      'A self-contained status block — a card-shaped success/error summary set apart from page flow.',
+    ],
+    whenNotToUse: [
+      { instead: 'alert', because: 'You want an inline status banner that flows with page content.' },
+      { instead: 'toast', because: 'The message is transient and should float then auto-dismiss.' },
+    ],
+    gotchas: [
+      'Width is fixed at 360px via inline `style`, so a `className` setting width silently loses — override with `style` if you must.',
+      'It is a `role="alert"` and emits an `<h3>` title, so it both announces on mount and participates in heading order.',
+    ],
+  },
+
+  // ── Binary controls ───────────────────────────────────────────────────────
+  checkbox: {
+    purpose: 'A single boolean, or one option among several independently-selectable ones.',
+    whenToUse: [
+      'An on/off value in a form that is submitted later — accept terms, pick several tags.',
+      'A list where any number of options may be checked at once (supports an indeterminate state).',
+    ],
+    whenNotToUse: [
+      { instead: 'switch', because: 'The change applies immediately, like a settings toggle, rather than on submit.' },
+      { instead: 'radio-group', because: 'The options are mutually exclusive — only one may be chosen.' },
+      { instead: 'toggle', because: 'You want a toolbar button that holds a pressed state, not a form field.' },
+    ],
+  },
+  switch: {
+    purpose: 'An immediately-applied on/off setting.',
+    whenToUse: [
+      'Flipping a setting that takes effect at once — enable notifications, dark mode.',
+    ],
+    whenNotToUse: [
+      { instead: 'checkbox', because: 'The value is part of a form submitted later, or several may be selected together.' },
+      { instead: 'toggle', because: 'You want a pressed-state toolbar/formatting button, not a labelled setting.' },
+    ],
+  },
+  toggle: {
+    purpose: 'A single two-state button that holds a pressed/unpressed state (e.g. bold).',
+    whenToUse: [
+      'A toolbar/formatting control that stays visibly "on" while active.',
+    ],
+    whenNotToUse: [
+      { instead: 'switch', because: 'It is an on/off setting with a label, not a toolbar button.' },
+      { instead: 'checkbox', because: 'It is a form boolean that gets submitted.' },
+      { instead: 'toggle-group', because: 'There are several related toggles that behave as one control.' },
+    ],
+    gotchas: [
+      'Sizes are the shadcn stock scale (h-8/h-9/h-10), not the shared CONTROL_HEIGHT control scale — it will not line up pixel-for-pixel with Input/Button/Select.',
+    ],
+  },
+  'toggle-group': {
+    purpose: 'A set of toggle buttons behaving as one control — a segmented single-select, or a multi-select button row.',
+    whenToUse: [
+      'A compact segmented control: alignment, view density, a short icon-based choice.',
+    ],
+    whenNotToUse: [
+      { instead: 'tabs', because: 'You are switching between panels/views, not setting a value.' },
+      { instead: 'radio-group', because: 'You want labelled radio rows for an accessible form choice.' },
+      { instead: 'toggle', because: 'There is only one independent button.' },
+    ],
+  },
+
+  // ── Overlays ───────────────────────────────────────────────────────────────
+  popover: {
+    purpose: 'Click-triggered, non-modal floating content anchored to a trigger (Radix, portalled).',
+    whenToUse: [
+      'Interactive or essential content on demand — a small form, filter controls, a colour picker — that the user opens by click/tap.',
+    ],
+    whenNotToUse: [
+      { instead: 'tooltip', because: 'You only need a short, non-essential hover/focus hint.' },
+      { instead: 'hover-card', because: 'The content is a rich preview shown on hover, not operated by click.' },
+      { instead: 'dialog', because: 'The interaction must block the rest of the page until dismissed.' },
+    ],
+    gotchas: [
+      'Content portals to document.body and does NOT inherit the `mds-dashboard` typography scope — re-apply it if the content needs the dashboard type scale.',
+    ],
+  },
+  'hover-card': {
+    purpose: 'A rich preview that opens on hover/focus of its trigger (Radix, portalled).',
+    whenToUse: [
+      'Non-essential supplementary context on hover — a user card, a link preview — that a reader can safely miss.',
+    ],
+    whenNotToUse: [
+      { instead: 'popover', because: 'The content is interactive or essential — hover is not reachable reliably by touch or keyboard.' },
+      { instead: 'tooltip', because: 'A short text label is all you need.' },
+    ],
+    gotchas: [
+      'Content portals to document.body, outside the dashboard typography scope.',
+      'Because it opens on hover, anything inside must be optional — touch and keyboard users may never trigger it.',
+    ],
+  },
+
+  // ── Labels / markers ────────────────────────────────────────────────────────
+  badge: {
+    purpose: 'A static, non-interactive tone-coloured status label (outline/soft/solid).',
+    whenToUse: [
+      'Labelling state inline — a row status, a count, a category pill — with no click behaviour.',
+    ],
+    whenNotToUse: [
+      { instead: 'chip', because: 'The element is clickable or removable.' },
+      { instead: 'filter-chip', because: 'It toggles a filter and carries selection state.' },
+      { instead: 'label', because: 'You are captioning a form control (use `htmlFor`).' },
+    ],
+    gotchas: [
+      '`variant` is ignored for the `default` and `disabled` tones, which each have one fixed treatment.',
+      'The legacy `soft` boolean is deprecated — `soft` → `variant="soft"`, `soft={false}` → `variant="solid"`.',
+    ],
+  },
+  chip: {
+    purpose: 'A compact filled/outlined element that may be clickable (`onClick`) or removable (`onDelete`).',
+    whenToUse: [
+      'An interactive or deletable token — an entered tag, an input value you can remove.',
+    ],
+    whenNotToUse: [
+      { instead: 'badge', because: 'The token is a static label with no action — a chip with no handler just renders a non-interactive span, so reach for Badge.' },
+      { instead: 'filter-chip', because: 'The chip represents a filter that toggles on/off and carries selection.' },
+    ],
+    gotchas: [
+      'The `selectable`/`selected` props are deprecated — their inset-ring selection reads as focus and relies on colour alone. Use `filter-chip`, which carries selection via a checkmark and `aria-pressed`.',
+      'With no `onClick`/`onDelete` and not disabled, Chip renders a `<span>` (not a focusable button) on purpose.',
+    ],
+  },
+  'filter-chip': {
+    purpose: 'A toggleable filter control carrying selection (leading checkmark + `aria-pressed`), optionally removable or menu-backed.',
+    whenToUse: [
+      'Applying/clearing a filter in a toolbar — "Active", "Region: EMEA" — where the on state must survive without colour.',
+    ],
+    whenNotToUse: [
+      { instead: 'chip', because: 'The token is an input/assist/suggestion chip with no selection state.' },
+      { instead: 'badge', because: 'It is a static, non-interactive label.' },
+    ],
+    gotchas: [
+      'Wrap a row of them in `FilterChipSet` (a `role="toolbar"` with roving tabindex) so the whole group is one tab stop, not fifteen.',
+      '`hasMenu` renders the chevron AFFORDANCE only — it opens nothing. Use `FilterChipMenu` (or wrap in a `DropdownMenuTrigger asChild`) to actually back it with a menu.',
+    ],
+  },
+  label: {
+    purpose: 'An accessible caption for a form control (Radix Label, wired via `htmlFor`).',
+    whenToUse: [
+      'Naming an Input/Select/Checkbox so clicking the text focuses the control and screen readers announce it.',
+    ],
+    whenNotToUse: [
+      { instead: 'badge', because: 'You want a status label, not a form caption.' },
+      { instead: 'text-field', because: 'You want the whole labelled field (label + input + helper) in one component.' },
+    ],
+  },
+
+  // ── Form wrappers ───────────────────────────────────────────────────────────
+  'text-field': {
+    purpose: 'A complete labelled field: Label + Input (or Textarea) + helper/error text in one component.',
+    whenToUse: [
+      'The common case — a single text input that needs a visible label, helper text and validation tone.',
+      'Set `type="textarea"` to switch the control to a multi-line Textarea without changing the API.',
+    ],
+    whenNotToUse: [
+      { instead: 'input', because: 'You want just the bare control with no label/helper scaffolding.' },
+      { instead: 'field', because: 'You are laying out a custom or compound form row by hand.' },
+      { instead: 'input-group', because: 'The control needs an inline addon (icon/button/prefix).' },
+    ],
+    gotchas: [
+      'Validation state uses `tone="error"` (fields), not `tone="danger"` (which is for actions like Button).',
+    ],
+  },
+  field: {
+    purpose: 'Low-level form-layout primitives (FieldSet/FieldGroup/Field/FieldLabel/FieldDescription/FieldError…) for composing custom form rows.',
+    whenToUse: [
+      'Hand-building a form section — grouping controls, legends, descriptions, error lists, horizontal/responsive field orientation.',
+    ],
+    whenNotToUse: [
+      { instead: 'text-field', because: 'You just need one standard labelled text input — that composition is already done.' },
+    ],
+  },
+  textarea: {
+    purpose: 'The bare multi-line text input control, with the same tone-driven validation colouring as Input.',
+    whenToUse: [
+      'Free-form multi-line entry where you supply the label/helper yourself (or compose it).',
+    ],
+    whenNotToUse: [
+      { instead: 'input', because: 'The entry is a single line.' },
+      { instead: 'text-field', because: 'You want the labelled wrapper — pass `type="textarea"`.' },
+      { instead: 'input-group', because: 'You need addon buttons/icons inside the control border.' },
+    ],
+    gotchas: [
+      'It takes no fixed height from the control scale — height comes from `rows` and content (min-height 80px). Size only drives padding and text.',
+    ],
+  },
+  'input-group': {
+    purpose: 'An input or textarea plus addon buttons/icons/text sharing one bordered, focus-ringed container.',
+    whenToUse: [
+      'A control with an adornment — a search icon, a trailing send button, a unit suffix, a chat composer.',
+    ],
+    whenNotToUse: [
+      { instead: 'input', because: 'There is no adornment — a plain control is enough.' },
+      { instead: 'text-field', because: 'You need a label and helper text, not inline addons.' },
+      { instead: 'button-group', because: 'You are grouping buttons only, with no text entry.' },
+    ],
+    gotchas: [
+      'Use `InputGroupInput`/`InputGroupTextarea` inside it, NOT this repo\'s Input/Textarea — the latter set border/background via inline style that beats the borderless classes the group needs.',
+      '`InputGroupButton` defaults `iconOnly` from the presence of children; a text label works, but an icon-only button still needs `aria-label`.',
+      'The group owns the height and cascades `size` via context — children must not set their own.',
+    ],
+  },
+
+  // ── Progress / feedback ──────────────────────────────────────────────────────
+  progress: {
+    purpose: 'A determinate or indeterminate progress indicator — `{ Linear, Circular }`.',
+    whenToUse: [
+      'Showing how far along a known task is (determinate), or that a bounded operation is running (indeterminate bar/ring).',
+    ],
+    whenNotToUse: [
+      { instead: 'spinner', because: 'You only need a small inline "working" glyph with no track.' },
+      { instead: 'skeleton', because: 'You are reserving space for content whose layout you can mimic.' },
+    ],
+    gotchas: [
+      'The root is `role="progressbar"`, which requires an accessible name — it defaults to "Loading"; pass `aria-label` for something specific.',
+      'Default export is an object `{ Circular, Linear }`, not a single component.',
+    ],
+  },
+  spinner: {
+    purpose: 'A small indeterminate loading glyph (a spinning Loader icon).',
+    whenToUse: [
+      'A lightweight "working…" indicator inline — inside a button, beside a message, in a cell.',
+    ],
+    whenNotToUse: [
+      { instead: 'progress', because: 'You can show a determinate percentage or want a full bar/ring.' },
+      { instead: 'skeleton', because: 'You are loading a block of content and can mimic its shape.' },
+    ],
+    gotchas: [
+      'It renders `role="status"` with `aria-label="Loading"` already — do not wrap it in another live region.',
+    ],
+  },
+  skeleton: {
+    purpose: 'A placeholder shape that mimics content while it loads.',
+    whenToUse: [
+      'Reserving the layout of forthcoming content — text lines, a card, an avatar — to avoid a reflow when data lands.',
+    ],
+    whenNotToUse: [
+      { instead: 'spinner', because: 'A small inline indicator is enough and the layout is unknown.' },
+      { instead: 'empty', because: 'There is genuinely no data to show (not a loading state).' },
+    ],
+    gotchas: [
+      'Pass `animation={false}` for a static block inside `prefers-reduced-motion` contexts.',
+    ],
+  },
+
+  // ── Navigation / sequence ─────────────────────────────────────────────────────
+  breadcrumbs: {
+    purpose: 'A trail showing the current page\'s position in a hierarchy.',
+    whenToUse: [
+      'Communicating where the user is within nested sections, with links back up the tree.',
+    ],
+    whenNotToUse: [
+      { instead: 'tabs', because: 'You are switching between sibling views, not showing hierarchy.' },
+      { instead: 'stepper', because: 'The items are sequential steps in a process, not ancestors.' },
+      { instead: 'pagination', because: 'You are moving through pages of a list.' },
+    ],
+    gotchas: [
+      'There is no Link component — each item navigates via its own `href`/`onClick`.',
+      'Collapses middle items to an ellipsis once `items.length` exceeds `maxItems`, keeping first and last.',
+    ],
+  },
+  pagination: {
+    purpose: 'Controls for moving through paged data (prev/next, numbered pages, page-size).',
+    whenToUse: [
+      'Navigating a long list or table that is split into pages.',
+      'Pick `variant`: simple (prev/next + readout), compact (what DataTable uses), or advanced (numbers + jump-to-page).',
+    ],
+    whenNotToUse: [
+      { instead: 'stepper', because: 'The movement is through sequential steps of a flow, not data pages.' },
+      { instead: 'breadcrumbs', because: 'You are showing hierarchy, not paging.' },
+    ],
+  },
+  stepper: {
+    purpose: 'A sequential multi-step process indicator with per-step status (completed/active/pending/error).',
+    whenToUse: [
+      'A wizard or checkout-style flow, or a read-only progress indicator across ordered steps.',
+    ],
+    whenNotToUse: [
+      { instead: 'tabs', because: 'The views are peers switched in any order, not an ordered sequence.' },
+      { instead: 'pagination', because: 'You are moving through data pages, not process steps.' },
+      { instead: 'breadcrumbs', because: 'You are showing location in a hierarchy.' },
+    ],
+    gotchas: [
+      'It is interactive (WAI-ARIA tablist, arrow-key nav) only when `onStepClick` is passed; otherwise it stays presentational, since a pure progress indicator has nothing to navigate to.',
+    ],
+  },
+  tabs: {
+    purpose: 'Switching between sibling views that occupy the same region, one at a time.',
+    whenToUse: [
+      'Peer panels in one context — Overview / Activity / Settings — where only one shows at once.',
+    ],
+    whenNotToUse: [
+      { instead: 'accordion', because: 'Several sections may need to be open simultaneously.' },
+      { instead: 'stepper', because: 'The panels are ordered steps the user progresses through.' },
+      { instead: 'toggle-group', because: 'You are setting a value, not swapping content panels.' },
+    ],
+  },
+  accordion: {
+    purpose: 'A set of independently expandable panels (optionally single-open).',
+    whenToUse: [
+      'Stacked sections the user expands/collapses — an FAQ, grouped settings — possibly several at once (`allowMultiple`).',
+    ],
+    whenNotToUse: [
+      { instead: 'collapsible', because: 'There is only ONE region to show/hide.' },
+      { instead: 'tabs', because: 'Exactly one of a set of peer views should show at a time.' },
+    ],
+    gotchas: [
+      '`defaultExpanded` is read once on mount — it is uncontrolled, not a controlled-state prop.',
+    ],
+  },
+  collapsible: {
+    purpose: 'A single show/hide region (a thin, unstyled Radix re-export).',
+    whenToUse: [
+      'Toggling one block of content open and closed — a "show more", an expandable row detail.',
+    ],
+    whenNotToUse: [
+      { instead: 'accordion', because: 'You have a SET of panels to manage together.' },
+    ],
+    gotchas: [
+      'Ships with no styling — compose the trigger/content with role-token classNames at the call site, same as upstream shadcn.',
+    ],
+  },
+
+  // ── Tabular ────────────────────────────────────────────────────────────────
+  table: {
+    purpose: 'A config-driven table (columns + data arrays) covering sort, selection, loading, and pagination.',
+    whenToUse: [
+      'A straightforward table described declaratively, needing basic sort/select/pagination but not faceted filtering or custom cell infrastructure.',
+    ],
+    whenNotToUse: [
+      { instead: 'data-table', because: 'You need TanStack-powered filtering, faceted filters, column typing or custom cells.' },
+      { instead: 'data-grid', because: 'You want to own the table instance and compose toolbar/grid/pagination parts yourself.' },
+    ],
+    gotchas: [
+      '`emptyMessage` is deprecated — use `emptyState` (a ReactNode), the name every data surface in the set shares.',
+    ],
+  },
+  'data-grid': {
+    purpose: 'The composable grid: the consumer owns the TanStack table instance and assembles Toolbar/Container/Table/Pagination parts.',
+    whenToUse: [
+      'You need to read or drive grid state from outside (which rows are selected, server-side pagination), or compose non-standard pieces around the grid.',
+    ],
+    whenNotToUse: [
+      { instead: 'data-table', because: 'The one-component preset over this layer covers your case with far less wiring.' },
+      { instead: 'table', because: 'A simple declarative table with no owned TanStack instance is enough.' },
+    ],
+    gotchas: [
+      'In server mode the `table` holds only the current page, so `recordCount` must be supplied separately — the footer cannot derive the total.',
+    ],
+  },
+
+  // ── Date ───────────────────────────────────────────────────────────────────
+  'date-picker': {
+    purpose: 'A field that opens a Calendar in a Popover to pick a date or range (with natural-language input parsing).',
+    whenToUse: [
+      'Choosing a date/range in a form or filter row, where the calendar should stay out of the way until opened.',
+    ],
+    whenNotToUse: [
+      { instead: 'calendar', because: 'You want the month grid always visible inline, not behind a trigger.' },
+      { instead: 'input', because: 'A plain free-text field (no date semantics) is what you need.' },
+    ],
+    gotchas: [
+      'The trigger is styled as a FIELD (1px `border.default`, CONTROL_RADIUS) so it lines up with Input/Select beside it — set `size` from the shared control scale, not a hardcoded height.',
+      'The Popover content portals to document.body, outside the dashboard typography scope.',
+    ],
+  },
+  calendar: {
+    purpose: 'An inline, always-visible month grid for date or range selection (react-day-picker v10).',
+    whenToUse: [
+      'Embedding a calendar directly in the page — a booking view, a date panel — with no popover.',
+    ],
+    whenNotToUse: [
+      { instead: 'date-picker', because: 'You want a compact field that reveals the calendar on demand.' },
+    ],
+    gotchas: [
+      'Built for react-day-picker v10, whose prop API (the `UI` enum, single `Chevron` component) differs from v8-era shadcn recipes — a copy-pasted v8 snippet will not compile.',
+    ],
+  },
+
+  // ── Misc with a clear purpose ──────────────────────────────────────────────────
+  avatar: {
+    purpose: 'A user/entity image with an automatic initials fallback, optional status dot and corner badge.',
+    whenToUse: [
+      'Representing a person or entity — a profile photo that degrades to initials when the image is absent or fails.',
+    ],
+    whenNotToUse: [
+      { instead: 'image-with-fallback', because: 'You are showing a general content image, not a person/entity avatar.' },
+      { instead: 'badge', because: 'You only need the standalone status/count marker, not an avatar.' },
+    ],
+    gotchas: [
+      '`alt` defaults to a generic "User Avatar" — pass a real name/role when the identity matters to the page.',
+      'Passing `onClick` makes it `role="button"` with keyboard activation — only do so when it is genuinely actionable.',
+    ],
+  },
+  empty: {
+    purpose: 'Composable empty-state primitives (Empty/EmptyHeader/EmptyMedia/…) for a "no content" placeholder.',
+    whenToUse: [
+      'Communicating that a list, search, or inbox has nothing to show, usually with an icon, message and a CTA.',
+    ],
+    whenNotToUse: [
+      { instead: 'skeleton', because: 'Content is still loading rather than genuinely absent.' },
+      { instead: 'error-state', because: 'A fetch failed — that is an error, not an empty result.' },
+      { instead: 'data-state', because: 'You want the four-state wrapper to pick loading/error/empty/ready for you.' },
+    ],
+  },
+  command: {
+    purpose: 'A searchable command palette / filterable list (cmdk), optionally in a dialog.',
+    whenToUse: [
+      'A ⌘K-style palette of actions, or a filterable list of items with keyboard navigation.',
+    ],
+    whenNotToUse: [
+      { instead: 'combobox', because: 'You are selecting a single VALUE for a form (Combobox is built on this).' },
+      { instead: 'dropdown-menu', because: 'A short, fixed menu of actions from a trigger is enough.' },
+      { instead: 'select', because: 'A plain value picker over a short list is simpler.' },
+    ],
+    gotchas: [
+      'Use `CommandDialog` to present it as an overlay — it wraps Command in a Dialog and portals to document.body.',
+    ],
+  },
+  carousel: {
+    purpose: 'A swipeable/scrollable slide container (Embla), horizontal or vertical.',
+    whenToUse: [
+      'Stepping through a sequence of slides/cards with prev/next controls or drag/swipe.',
+    ],
+    whenNotToUse: [
+      { instead: 'tabs', because: 'The content is a small set of discrete, labelled views.' },
+      { instead: 'scroll-area', because: 'You just need a scrollable region, not slide/snap navigation.' },
+    ],
+    gotchas: [
+      'Children must render inside `<Carousel>` — the parts throw if used outside its context. `setApi` exposes the Embla instance for custom controls.',
+    ],
+  },
 };
 
 /** The contract for a component module, or undefined if none is written yet. */
