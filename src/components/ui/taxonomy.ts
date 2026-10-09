@@ -196,3 +196,181 @@ export const CONTESTED: Record<string, string> = {
   table: "Organism, not molecule: `table.tsx` holds five pieces of internal state (sort, selection, pagination, ...).",
   'radio-group': 'Molecule: the group plus its items is the unit; neither half is useful alone.',
 };
+
+// ─────────────────────────────────────────────────────────────────────────
+// Component contracts — the "which component, when" layer
+// ─────────────────────────────────────────────────────────────────────────
+//
+// The Storybook component manifest (features.componentsManifest) emits the
+// MECHANICAL contract: props, variants, types. That tells an agent HOW to call
+// a component, not WHETHER to. Research on agentic design systems is consistent
+// that this second half is what tokens-plus-manifest cannot provide — "which
+// component to reach for, and when NOT to use one" — and that it has to be
+// machine-readable, not buried in prose.
+//
+// So each component gets a CONTRACT: one-line purpose, when to use it, when NOT
+// to (each pointing at the right alternative), and the gotchas that surprise a
+// first-time caller. An agent — or a developer — reads `contractOf('sheet')`
+// and learns it is the STATIC side panel, that a swipeable one is `drawer`, and
+// that it portals to document.body.
+//
+// This is populated incrementally and HONESTLY: a contract exists only for a
+// component whose real usage boundaries are known, never fabricated to hit a
+// number. `contract_coverage` in ds:score tracks the ratio so the gap is
+// visible, and taxonomy.test.ts validates every contract names a real
+// component for its `instead` pointers.
+
+export interface ComponentContract {
+  /** One line: what this component is for. */
+  purpose: string;
+  /** Situations where this is the right choice. */
+  whenToUse: string[];
+  /** Situations where it is the WRONG choice — each names the right component. */
+  whenNotToUse?: { instead: string; because: string }[];
+  /** Behaviour that surprises a first-time caller. The traps, stated plainly. */
+  gotchas?: string[];
+}
+
+/**
+ * Contracts, keyed like TAXONOMY (module basename). PARTIAL on purpose — only
+ * components whose boundaries are genuinely understood. Add one when you know
+ * the real answer, not to raise coverage.
+ */
+export const CONTRACTS: Record<string, ComponentContract> = {
+  button: {
+    purpose: 'The primary interactive action trigger.',
+    whenToUse: [
+      'Any click/tap action: submit, open, confirm, navigate-as-action.',
+      'Pick appearance with `variant` (primary/secondary/outline/ghost) and intent with `tone` (default/danger/success) — never MUI-style `color`.',
+    ],
+    gotchas: [
+      'For navigation to a URL use a native <a>, not a Button — there is no Link component, and a button is not a link semantically or for assistive tech.',
+      '`iconOnly` renders ONLY `icon ?? startIcon ?? endIcon` and DISCARDS children. Passing an icon as a child of an iconOnly button renders an empty button. Pass it via `icon`.',
+      'A text button needs no accessible-name workaround, but an `iconOnly` button needs `aria-label`.',
+    ],
+  },
+  sheet: {
+    purpose: 'A static side panel that slides in from an edge (Radix Dialog variant).',
+    whenToUse: [
+      'A side-anchored overlay — filters, detail, secondary nav — that opens and closes without a drag gesture.',
+    ],
+    whenNotToUse: [
+      { instead: 'drawer', because: 'When you need swipe/drag-to-dismiss (mobile bottom-sheet behaviour). Sheet has no drag model.' },
+      { instead: 'dialog', because: 'For a centred modal that is not edge-anchored.' },
+    ],
+    gotchas: [
+      'Portals to document.body, so it sits outside a page scope. Apply typography/theme scope on the content if it needs one (notifications-drawer does).',
+    ],
+  },
+  drawer: {
+    purpose: 'A swipeable drawer with drag-to-dismiss (Base UI, not Radix).',
+    whenToUse: [
+      'Mobile surfaces where swipe-to-dismiss is the expected gesture — a bottom sheet you can drag closed.',
+    ],
+    whenNotToUse: [
+      { instead: 'sheet', because: 'For a static side panel with no drag — Sheet is lighter and on Radix like the rest of the overlays.' },
+    ],
+    gotchas: [
+      'The one component on @base-ui/react rather than Radix — intentionally, for the swipe model Radix lacks. Keep that in mind for bundle and API consistency.',
+    ],
+  },
+  dialog: {
+    purpose: 'A centred modal overlay. Exports both the composable Radix parts and an API-compatible `Modal` shim.',
+    whenToUse: [
+      'A focused, centred interruption: confirm, form, detail that must be dismissed before continuing.',
+    ],
+    whenNotToUse: [
+      { instead: 'sheet', because: 'For an edge-anchored panel rather than a centred modal.' },
+      { instead: 'popover', because: 'For lightweight, non-modal content anchored to a trigger.' },
+    ],
+    gotchas: [
+      '`size` accepts sm/md/lg/fullscreen AND the legacy PascalCase (Small/Medium/…) for Code Connect parity — prefer the lowercase.',
+      'For an all-destructive footer, set onOpenAutoFocus to avoid Enter firing a destructive default on open.',
+    ],
+  },
+  'data-table': {
+    purpose: 'The TanStack-based data table for sortable, filterable, paginated tabular data.',
+    whenToUse: [
+      'Rows of structured data needing sort, filter, pagination, selection, or custom cells.',
+      'Set `meta.type` (currency/date/percent/number) for right-alignment.',
+    ],
+    whenNotToUse: [
+      { instead: 'table', because: 'For simple static tabular layout with no sorting/filtering/pagination — table-primitives are lighter.' },
+    ],
+    gotchas: [
+      '`meta.type` currently only drives ALIGNMENT, not formatting — the value is rendered as-is. Format in the cell or via FormatProvider.',
+      'Takes `loadError`; data-grid-table does not — a failed fetch there renders like empty data.',
+    ],
+  },
+  tooltip: {
+    purpose: 'A hover/focus label anchored to a trigger (Radix, portalled).',
+    whenToUse: ['A short, non-essential label or hint on hover/focus of an interactive element.'],
+    whenNotToUse: [
+      { instead: 'popover', because: 'For interactive or essential content — tooltips are not reachable by touch or keyboard reliably.' },
+      { instead: 'hover-card', because: 'For richer preview content on hover.' },
+    ],
+    gotchas: [
+      'Takes `title`, NOT `content` — a common mis-call from other libraries.',
+    ],
+  },
+  alert: {
+    purpose: 'An inline, persistent status message within page flow.',
+    whenToUse: ['Contextual status that should stay on screen — validation summary, info banner, warning in a form.'],
+    whenNotToUse: [
+      { instead: 'toast', because: 'For a transient, auto-dismissing notification that floats above content.' },
+      { instead: 'status-card', because: 'For a standalone status surface with title + message as a card.' },
+    ],
+  },
+  toast: {
+    purpose: 'A transient notification that floats above all overlays and auto-dismisses.',
+    whenToUse: ['Brief feedback after an action — "Saved", "Copied" — that should not block.'],
+    whenNotToUse: [
+      { instead: 'alert', because: 'For persistent, inline status that stays until resolved.' },
+    ],
+    gotchas: [
+      'Sits at z-index 1600, deliberately ABOVE overlays (1500), so a toast fired while a dialog is open is still visible.',
+      'Render one `Toaster` near the app root; call `toast()`/`showSnackbar()` from anywhere.',
+    ],
+  },
+  input: {
+    purpose: 'A single-line text field.',
+    whenToUse: ['Single-line text entry. Use `tone` (error/success/warning) for validation state.'],
+    whenNotToUse: [
+      { instead: 'textarea', because: 'For multi-line input.' },
+      { instead: 'input-group', because: 'For an input with an adornment (icon, button, prefix) — Input has no adornment prop.' },
+    ],
+  },
+  stack: {
+    purpose: 'Vertical layout with gap on the spacing scale (also exports Inline for horizontal).',
+    whenToUse: ['Stacking children vertically (`Stack`) or in a wrapping row (`Inline`). `gap` only accepts scale steps — `gap={7}` is a compile error.'],
+    whenNotToUse: [
+      { instead: 'page-shell', because: 'For the whole page frame — PageShell owns the min-w-0 chain and sidebar scaffold.' },
+    ],
+  },
+  'page-shell': {
+    purpose: 'The dashboard page template — header, sidebar, main, and the min-w-0 chain that stops wide tables scrolling the page.',
+    whenToUse: ['Starting any dashboard page. Also provides the skip link and the dashboard typography context.'],
+    gotchas: [
+      'Emits an <h1> via PageHeading; a stats grid of StatCards (<h3>) placed directly under it skips <h2> and fails axe heading-order. Wrap stats in a <section> with an sr-only <h2>.',
+    ],
+  },
+  attachment: {
+    purpose: 'A file attachment chip with media, actions, and upload/processing states.',
+    whenToUse: ['Showing an attached or uploading file with remove/retry actions.'],
+    gotchas: [
+      'AttachmentAction accepts the icon as `icon` OR as children — children are promoted to icon. (Earlier it discarded children and rendered an empty button; fixed.)',
+    ],
+  },
+};
+
+/** The contract for a component module, or undefined if none is written yet. */
+export function contractOf(component: string): ComponentContract | undefined {
+  return CONTRACTS[component];
+}
+
+/** Ratio of taxonomy'd modules that carry a contract — feeds ds:score. */
+export function contractCoverage(): { withContract: number; total: number } {
+  const total = Object.keys(TAXONOMY).length;
+  const withContract = Object.keys(CONTRACTS).filter((k) => k in TAXONOMY).length;
+  return { withContract, total };
+}

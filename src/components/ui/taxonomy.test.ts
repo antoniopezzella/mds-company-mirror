@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { CONTESTED, TAXONOMY, TIERS, byTier, tierOf, type Tier } from './taxonomy';
+import { CONTESTED, CONTRACTS, TAXONOMY, TIERS, byTier, contractOf, contractCoverage, tierOf, type Tier } from './taxonomy';
 
 /**
  * The taxonomy is only useful if it is complete and current. A manifest that
@@ -103,5 +103,46 @@ describe('taxonomy', () => {
     // both Stack and Inline — the manifest is keyed by module, not by export.
     expect(tierOf('stack')).toBe('atom');
     expect(tierOf('page-shell')).toBe('template');
+  });
+
+  // ── Contracts ────────────────────────────────────────────────────────────
+  // Contracts are PARTIAL by design (written only where boundaries are known),
+  // so these validate integrity, not coverage. Coverage is tracked by ds:score.
+
+  it('writes contracts only for components that exist in the taxonomy', () => {
+    const orphan = Object.keys(CONTRACTS).filter((c) => !(c in TAXONOMY));
+    expect(orphan, `contracts for non-existent components: ${orphan.join(', ')}`).toEqual([]);
+  });
+
+  it("every whenNotToUse `instead` names a real component", () => {
+    const broken: string[] = [];
+    for (const [name, c] of Object.entries(CONTRACTS)) {
+      for (const alt of c.whenNotToUse ?? []) {
+        if (!(alt.instead in TAXONOMY)) broken.push(`${name} → ${alt.instead}`);
+      }
+    }
+    // A dangling pointer sends a reader (or an agent) to a component that does
+    // not exist — worse than no pointer. This caught `button → link` on the
+    // first run; there is no Link component.
+    expect(broken, `dangling instead pointers: ${broken.join(', ')}`).toEqual([]);
+  });
+
+  it('every contract states a purpose and at least one whenToUse', () => {
+    const thin = Object.entries(CONTRACTS)
+      .filter(([, c]) => !c.purpose?.trim() || !(c.whenToUse?.length))
+      .map(([n]) => n);
+    expect(thin, `contracts missing purpose/whenToUse: ${thin.join(', ')}`).toEqual([]);
+  });
+
+  it('contractOf resolves a written contract and returns undefined otherwise', () => {
+    expect(contractOf('button')?.purpose).toMatch(/action/i);
+    expect(contractOf('definitely-not-a-component')).toBeUndefined();
+  });
+
+  it('contractCoverage counts only taxonomy-resident contracts', () => {
+    const { withContract, total } = contractCoverage();
+    expect(total).toBe(Object.keys(TAXONOMY).length);
+    expect(withContract).toBe(Object.keys(CONTRACTS).filter((k) => k in TAXONOMY).length);
+    expect(withContract).toBeGreaterThan(0);
   });
 });
