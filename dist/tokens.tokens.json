@@ -1138,30 +1138,6 @@
         "hex": "#000000"
       }
     },
-    "crimson700": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6039,
-          0.1098,
-          0.1216
-        ],
-        "hex": "#9a1c1f"
-      }
-    },
-    "crimson800": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.4118,
-          0.0745,
-          0.0824
-        ],
-        "hex": "#691315"
-      }
-    },
     "statusCritical": {
       "$type": "color",
       "$value": {
@@ -2572,11 +2548,11 @@
       },
       "interactiveDangerHover": {
         "$type": "color",
-        "$value": "{color.crimson700}"
+        "$value": "{color.red950}"
       },
       "interactiveDangerActive": {
         "$type": "color",
-        "$value": "{color.crimson800}"
+        "$value": "{color.red1000}"
       },
       "textOnDanger": {
         "$type": "color",

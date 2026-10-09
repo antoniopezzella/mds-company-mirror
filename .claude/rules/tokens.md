@@ -27,7 +27,7 @@ The token architecture uses a strict layering system to decouple visual primitiv
 ┌─────────────────────────────────────────────────────────────┐
 │ PRIMITIVES (src/tokens.ts)                                  │
 │ Raw palette values: #000f47, #ceecff, 4px, 8px, etc.       │
-│ 158 tokens across Blue, Gold, Green, Red, Purple,           │
+│ 156 tokens across Blue, Gold, Green, Red, Purple,           │
 │ Neutral palettes + Static + Utilities + Shades              │
 └──────────────────────┬──────────────────────────────────────┘
                        │ references
@@ -67,7 +67,7 @@ export const tokens = {
 
 **Naming:** `[palette][scale]` where scale = 50, 100, 200, ..., 1000, 1100  
 **Source:** Synced from Figma "Primitive Colors" collection  
-**Count:** 158 color tokens + spacing + shadow primitives
+**Count:** 156 color tokens + spacing + shadow primitives
 
 > Counts here are checked mechanically by `npm run ds:score` (the
 > `token_doc_accuracy` metric). They drifted to 9/5/6 out before that gate

@@ -91,8 +91,6 @@
   --primitive-neutral1000: #000000;
   --primitive-white: #ffffff;
   --primitive-black: #000000;
-  --primitive-crimson700: #9a1c1f;
-  --primitive-crimson800: #691315;
   --primitive-status-critical: #c53532;
   --primitive-status-warning: #cb7e03;
   --primitive-status-success: #14853d;
@@ -226,8 +224,8 @@
   --color-status-info-border: #82baff;
   --color-status-info-text: #000f47;
   --color-interactive-danger: #c53532;
-  --color-interactive-danger-hover: #9a1c1f;
-  --color-interactive-danger-active: #691315;
+  --color-interactive-danger-hover: #9d201f;
+  --color-interactive-danger-active: #8b1a1a;
   --color-text-on-danger: #ffffff;
   --role-text-primary: #000f47;
   --role-text-secondary: #595959;
@@ -280,8 +278,8 @@
   --role-interactive-secondary-hover: #082d9e;
   --role-interactive-secondary-active: #06206e;
   --role-interactive-danger: #c53532;
-  --role-interactive-danger-hover: #9a1c1f;
-  --role-interactive-danger-active: #691315;
+  --role-interactive-danger-hover: #9d201f;
+  --role-interactive-danger-active: #8b1a1a;
   --role-interactive-disabled-bg: #e3e3e3;
   --role-interactive-disabled-fg: #878787;
 }
