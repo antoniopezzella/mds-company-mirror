@@ -235,13 +235,18 @@ const METRICS = [
     id: 'code_connect_coverage',
     dir: 'up',
     // The numerator is DISTINCT MAPPABLE components a .figma.tsx points at. The
-    // up probe maps `combobox` (mappable, currently unmapped) → +1. The flat
+    // up probe maps `hover-card` (mappable, currently unmapped) → +1. The flat
     // probe maps `stack` (CODE_ONLY: a layout primitive with no Figma node) —
     // a real .figma.tsx, so the old extension-only probe would have been
     // fooled, but it must NOT count, because coverage is measured against the
     // mappable set. That is the whole point of the denominator fix.
+    //
+    // NOTE: the up probe's component must be in the mappable set AND not yet
+    // mapped. It was `combobox` until 2026-10-09, when combobox got a real
+    // mapping and the probe stopped moving the count — repoint it to any
+    // still-unmapped mappable component if `hover-card` ever gets mapped.
     up: () =>
-      create('src/figma/__MProbe.figma.tsx', "import { Combobox } from '../components/ui/combobox';\nexport { Combobox };\n"),
+      create('src/figma/__MProbe.figma.tsx', "import { HoverCard } from '../components/ui/hover-card';\nexport { HoverCard };\n"),
     flat: () =>
       create('src/figma/__MProbe.figma.tsx', "import { Stack } from '../components/ui/stack';\nexport { Stack };\n"),
     flatWhy: 'a mapping to a code-only component (stack) must not raise coverage over the mappable set',
