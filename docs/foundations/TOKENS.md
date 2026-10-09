@@ -72,23 +72,23 @@ signal to request a new role via the [token request process](../TOKEN_REQUEST_PR
 Roles resolve to CSS custom properties, so both stacks read the same
 underlying value — only the API for reading it differs.
 
-### Legacy MUI stack — the `getRoleColor` helper
+### The `getRoleColor` helper
 
 ```tsx
-import { getRoleColor } from 'src/theme/roles';
+import { getRoleColor } from '@/theme/roles';
 
 // Good ✅
-<Box sx={{ color: getRoleColor('text.primary') }} />
+<div style={{ color: getRoleColor('text.primary') }} />
 
 // Bad ❌
-<Box sx={{ color: 'primary.main' }} /> // Ambiguous
-<Box sx={{ color: '#13284B' }} /> // Hardcoded
+<div style={{ color: 'blue' }} /> // Ambiguous, not a role
+<div style={{ color: '#13284B' }} /> // Hardcoded
 ```
 
 ### Component library / Tailwind stack
 
-Same helper, same import — used via `style` (or Tailwind's arbitrary-value
-syntax) instead of `sx`:
+Same helper, same import — also usable via Tailwind's arbitrary-value
+syntax:
 
 ```tsx
 import { getRoleColor } from '@/theme/roles';

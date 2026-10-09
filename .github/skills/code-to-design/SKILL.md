@@ -296,7 +296,7 @@ frame.primaryAxisAlignItems = 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
 ### Font Loading (Required)
 
 ```javascript
-await figma.loadFontAsync({ family: 'MMC Display', style: 'Bold' });
+await figma.loadFontAsync({ family: 'Marsh Serif', style: 'Regular' });
 await figma.loadFontAsync({ family: 'Noto Sans', style: 'Regular' });
 await figma.loadFontAsync({ family: 'Noto Sans', style: 'Medium' });
 ```

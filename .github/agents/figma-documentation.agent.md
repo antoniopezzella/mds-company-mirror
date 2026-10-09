@@ -289,7 +289,7 @@ Document spacing with:
 ### Typography Documentation
 Document typography with:
 - **Variant**: `h1`, `h2`, `body1`, etc.
-- **Font**: MMC Display / Noto Sans
+- **Font**: Marsh Serif (display) / Noto Sans (body)
 - **Size**: Use fluid responsive (clamp)
 - **Weight**: 400, 500, 600, 700
 - **Line Height**: 1.2, 1.5, etc.

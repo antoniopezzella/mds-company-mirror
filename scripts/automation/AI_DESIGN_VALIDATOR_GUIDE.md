@@ -22,7 +22,7 @@ The AI Design Validator analyzes Figma components and reports MDS compliance iss
    - Provides guidelines for theme.spacing() usage
 
 3. **✍️ Typography** (15% weight)
-   - Validates font families (MMC Display for headings, Noto Sans for body)
+   - Validates font families (Marsh Serif for marketing headings, Noto Sans 700 for dashboard headings and body)
    - Checks font sizes, weights against approved variants
    - Ensures CSS variable usage
 
@@ -255,7 +255,7 @@ node scripts/automation/ai-design-validator.js extracted-colors.json
 ### Typography Rules
 
 **Approved Fonts**:
-- Headings (h1-h4): `MMC Display` (700 bold)
+- Headings (h1-h4): `Marsh Serif` (marketing) / `Noto Sans` 700 (dashboard)
 - Small headings (h5-h6), UI: `Noto Sans` (400-600)
 
 **Approved Sizes**: [36, 32, 28, 24, 20, 18] (headings), [16, 15, 14] (body), [16, 14, 12] (UI)

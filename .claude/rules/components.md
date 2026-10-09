@@ -468,8 +468,6 @@ function Component() {
 ```
 public/
 ├── fonts/
-│   ├── MMCDisplay_W_Bd.woff2       # MMC Display Bold
-│   ├── MMCDisplay_W_Rg.woff2       # MMC Display Regular
 │   └── NotoSans/                   # Noto Sans family
 │       ├── NotoSans-Regular.woff2
 │       ├── NotoSans-Medium.woff2
@@ -487,14 +485,6 @@ public/
 ### Font Loading (`src/global.scss`)
 
 ```scss
-@font-face {
-  font-family: 'MMC Display';
-  src: url('/fonts/MMCDisplay_W_Bd.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 @font-face {
   font-family: 'Noto Sans';
   src: url('/fonts/NotoSans/NotoSans-Regular.woff2') format('woff2');
