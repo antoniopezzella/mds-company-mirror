@@ -13,7 +13,7 @@ The MDS color system is structured in three tiers. Each layer adds intention and
 
 <div style={{display:'flex',gap:12,margin:'24px 0 32px',fontFamily:'system-ui,sans-serif'}}>
   {[
-    {tier:'01',label:'Primitives',sub:'tokens.ts',desc:'Raw palette values — 141 tokens across 7 palettes. Never referenced directly in components.',bg:'#f5fbff',border:'#95caff',accent:'#042791'},
+    {tier:'01',label:'Primitives',sub:'tokens.ts',desc:'Raw palette values — 156 tokens across the brand colour families plus status, focus and alpha ramps. Never referenced directly in components.',bg:'#f5fbff',border:'#95caff',accent:'#042791'},
     {tier:'02',label:'Semantics',sub:'semantic-tokens.ts',desc:'Intent-based aliases that reference primitives and express purpose: brandPrimary, textSecondary, statusSuccessBg.',bg:'#f8fcf7',border:'#8dcc92',accent:'#2f7d32'},
     {tier:'03',label:'Roles',sub:'theme/roles.ts',desc:'The only API components consume via getRoleColor(). Grouped by intent: text.primary, interactive.primary.hover.',bg:'#fff8ed',border:'#ffb700',accent:'#8b5000'},
   ].map((t,i) => (
@@ -68,7 +68,7 @@ Semantic tokens express *purpose*, not raw palette values. They define how color
 
 ## Roles (Component API)
 
-Roles are the stable interface that components consume via `getRoleColor('role.name')`. They resolve through semantic tokens to primitives. Components must never reference primitives or semantics directly.
+Roles are the stable interface components consume — as `var(--role-*)` CSS variables (via `roleVar('role.name')`); `getRoleColor()` is the legacy JS resolver, now residual. They resolve through semantic tokens to primitives. Components must never reference primitives or semantics directly.
 
 <div style={{
   background: '#fff8ed',
