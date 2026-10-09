@@ -116,16 +116,12 @@ export const tokens = {
   white: '#ffffff',
   black: '#000000',
 
-  // ── TRAFFIC / CRIMSON ─────────────────────────────────────────────────────
-  // Figma's destructive ramp, which is NOT the `red*` ramp above — that one
-  // maps to a different Figma family. Only the 600 step had been imported
-  // (as `statusCritical` below); 700 and 800 existed in Figma with
-  // `mdsToken: null` in figma-variable-map.json, so Button, which needs the
-  // full ramp for hover and active, had nowhere to point and shipped them as
-  // literals. The `red800`/`red900` the danger roles used instead are marked
-  // "interpolated" — invented values that never matched the design.
-  crimson700: '#9a1c1f',   // ★ Figma anchor — Traffic/Crimson 700
-  crimson800: '#691315',   // ★ Figma anchor — Traffic/Crimson 800
+  // ── TRAFFIC / CRIMSON removed 2026-10-09 ──────────────────────────────────
+  // The legacy 2-stop destructive ramp (700/800) was retired onto the 14-stop
+  // `red` scale: interactiveDangerHover → red950, interactiveDangerActive →
+  // red1000. A 2-stop family had nowhere to point for a full state ladder,
+  // which is the same gap the Figma DTCG review flags for critical. (The 600
+  // step lives on separately as `statusCritical`.) See token-authority-decision.
 
   // ── UTILITIES ─────────────────────────────────────────────────────────────
   statusCritical: '#c53532',   // Figma Utilities/Critical (= Traffic/Crimson 600 - default)

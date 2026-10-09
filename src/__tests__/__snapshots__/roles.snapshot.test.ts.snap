@@ -52,13 +52,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#ffe8e8",
-    "light": "#691315",
+    "light": "#8b1a1a",
     "role": "interactive.danger.active",
     "semantic": "interactiveDangerActive",
   },
   {
     "dark": "#ff9d9d",
-    "light": "#9a1c1f",
+    "light": "#9d201f",
     "role": "interactive.danger.hover",
     "semantic": "interactiveDangerHover",
   },

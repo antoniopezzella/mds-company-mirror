@@ -212,8 +212,8 @@ export const semanticColors = {
     // Crimson 600 wins the same argument by a wider margin and is the value
     // Figma labels "default".
     interactiveDanger: ref('statusCritical'), // #c53532 — Traffic/Crimson 600 - default
-    interactiveDangerHover: ref('crimson700'), // #9a1c1f — Traffic/Crimson 700
-    interactiveDangerActive: ref('crimson800'), // #691315 — Traffic/Crimson 800
+    interactiveDangerHover: ref('red950'), // #9d201f — red scale (from crimson700, 2026-10-09)
+    interactiveDangerActive: ref('red1000'), // #8b1a1a — red scale (from crimson800, 2026-10-09)
     textOnDanger: ref('white'), // White text on red
 };
 // ── Dark mode overrides ─────────────────────────────────────────────────────
