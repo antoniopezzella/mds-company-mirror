@@ -19,7 +19,7 @@ export const ElevationCompare: React.FC = () => {
               mode="light"
               label="Light"
               shadow={s.value}
-              bg={tokens.gray250}
+              bg={tokens.neutral50}
               textColor={tokens.blue1000}
             />
             <Surface

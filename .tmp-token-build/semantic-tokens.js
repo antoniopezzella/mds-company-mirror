@@ -297,7 +297,7 @@ export const semanticDarkOverrides = {
     // Dark needs no lightening: status text inverts to the near-white end of
     // each ramp, so it clears easily on the navy. Same value as surfaceSelected.
     surfaceSelectedSubtle: tokens.blue975, // #1a2759
-    surfaceAccentStrong: tokens.gray700, // #878580 (was blueGray700)
+    surfaceAccentStrong: tokens.neutral500, // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
     // The hero surface is the BRAND surface, and the brand colour does not
     // change between modes — so this holds blue1000 in dark exactly as in light.
     //
