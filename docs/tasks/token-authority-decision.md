@@ -148,3 +148,56 @@ The four edges are not parallel; they depend on each other.
   CSS-first `@theme` for colour is deliberately deferred
 - Figma: DTCG export only; Code Connect 47/71 mappable (66%)
 - gates absent for: default-palette classes, shadcn-var↔role sync
+
+---
+
+## Update — 2026-10-09 (what shipped, decisions, and the banked backlog)
+
+### Decided
+- **Canonical primary = `#000f47` (Midnight).** The shadcn `--primary`/
+  `--accent-foreground` were drifting to `#002c77` (blue1100, "MODE Primary");
+  realigned to `#000f47`. If a future brand move adopts `#002c77`, it changes
+  the *role* (`interactive.primary`) and both follow — not one layer silently.
+- **"inverse" is never a token name.** Content on an inverted/brand surface is
+  the `on-*` pairing (`surface.primary` + `text.onPrimary`), or a whole-band
+  `surface:inverse` *context* — never a per-token `*.inverse` name. `text.inverse`
+  (redundant, 0 consumers) is deprecated → `text.onAccent`.
+- **Figma↔code binding: deferred.** Pursuing it presupposes the naming
+  convergence + resolver below and is a quarter-scale initiative; it only pays
+  off at a concrete trigger (multi-brand/white-label, a second team, or drift
+  shipping wrong values). Until then we keep exporting DTCG code→Figma and keep
+  Figma hand-matched. Revisit when a trigger lands.
+
+### Shipped (move out of "open" — do not re-litigate)
+- gray→neutral (178→158), crimson→red (→156) — legacy warm/short ramps retired.
+- `on-*` family completed (`text.onSuccess`/`onWarning`); badge de-proxied. 57 roles.
+- **shadcn drift fixed + `varsync:check` gate** (check-token-vars-sync.js, in
+  governance:ci, self-proving via `--selftest`). This is the cheap half of
+  move #2 — a gate, not a generator. Dark-side shadcn values are out of its
+  scope (independently authored).
+- `text.inverse` deprecated.
+- Dark mode verified **sound** — one clean `semanticDarkOverrides` axis on the
+  neutral ladder; the review's dark alarms were Figma-file-specific. Only open
+  dark item is status-fill consistency (brand decision, no live failure).
+
+### Foundations backlog — VERIFIED real (2026-10-09), trigger-gated on binding
+From the DTCG foundation review, confirmed against the live export:
+- **105 of 156 primitives unreachable** (no semantic refs them); **56 of 57
+  alpha/shade primitives dead**. Candidate for deletion — but some ramps may be
+  kept for design parity; needs a pass, not a blind purge.
+- **7 "primitives that aren't"** — `statusCritical/Warning/Success/Info`,
+  `focusBlue/BlueDark/Cyan` — semantic values in the primitive tier; promote.
+- **Naming**: all role names contain dots (**DTCG-invalid**); **two grammars**
+  (property-first `surface.*`/`text.*` vs role-first `interactive.*`/`status.*`).
+  This is the binding prerequisite. **Do the rename LAST** — doing it first means
+  touching every diverged value and broken link twice, in an unreviewable diff.
+- Dark authoring sits at the role tier (generated), not the semantic tier.
+
+### Resolver spec (tokens-studio/resolver-spec) — the mechanism, not now
+The standard way to express multi-axis resolution (`theme` × `surface` × brand)
+as sets + modifiers, filling DTCG's no-mode gap — and exactly what the Figma
+review's `mds.resolver.json` assumes. **Adopt only when a genuine second
+orthogonal axis lands** (surface-inverse, white-label, or Figma binding via
+Tokens Studio). For a single theme axis, `semanticDarkOverrides` is simpler;
+a resolver then is over-engineering. It's a living, unversioned draft — early
+adoption is churn risk.
