@@ -187,7 +187,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
     >
       {/* Header */}
       <Box sx={{ px: '24px', pt: '20px', pb: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-        <Typography sx={{ fontSize: 20, fontWeight: 700, color: textPrimary, fontFamily: 'MMC Display, sans-serif' }}>
+        <Typography sx={{ fontSize: 20, fontWeight: 700, color: textPrimary, fontFamily: 'var(--typo-display-font-family)' }}>
           Notifications
         </Typography>
         <IconButton onClick={onClose} size="small" aria-label="Close notifications" sx={{ color: textSecondary }}>

@@ -98,25 +98,6 @@
   }
 }
 
-/* Global MDS display font */
-@font-face {
-  font-family: 'MMC Display';
-  src: url('/fonts/MMCDisplay_W_Rg.woff2') format('woff2'),
-       url('/fonts/MMCDisplay_W_Rg.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MMC Display';
-  src: url('/fonts/MMCDisplay_W_Bd.woff2') format('woff2'),
-       url('/fonts/MMCDisplay_W_Bd.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Marsh One project font (scoped to marsh-one components) */
 @font-face {
   font-family: 'Marsh Serif';

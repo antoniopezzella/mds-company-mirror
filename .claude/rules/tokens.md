@@ -285,11 +285,13 @@ pattern for any new portalled surface (Sheet, Dialog, Popover) in a dashboard.
 **8 call sites** currently declare a context, including `App.tsx:97` and
 `PageShell`.
 
-> `MMC Display` is **not** the heading face. This section said so until
-> 2026-10-03 and was wrong; the font still appears in four files
-> (`src/index.css` `@font-face`, `CardWebsite.tsx`, `NotificationsDrawer.tsx`,
-> `go-to-market.css`) but nothing in `_typography.scss` references it. The
-> display face is **Marsh Serif**, which is also what Atlas uses — see
+> `MMC Display` was **removed from the system on 2026-10-09** — font files,
+> the `src/index.css` `@font-face` rules, the three remaining usages
+> (`CardWebsite.tsx`, `NotificationsDrawer.tsx`, `go-to-market.css`), and the
+> `ai-design-validator.js` heading rule all deleted/repointed. It was *never*
+> the heading face despite docs claiming so until 2026-10-03. The display face
+> is **Marsh Serif** (marketing) / **Noto Sans 700** (dashboard) — the same
+> Marsh Serif Atlas uses, see
 > [`docs/ATLAS_TOKEN_COMPARISON.md`](../../docs/ATLAS_TOKEN_COMPARISON.md) §6.
 
 **Usage in MUI (`src/theme.ts`):**
