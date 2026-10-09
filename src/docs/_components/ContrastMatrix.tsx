@@ -43,7 +43,7 @@ const contrastRatio = (hex1: string, hex2: string): number => {
 const defaultPairs: Pair[] = [
   { fg: tokens.blue750, bg: tokens.white, label: 'Blue750 (Active/links) on White' },
   { fg: tokens.white, bg: tokens.blue750, label: 'White on Blue750' },
-  { fg: tokens.blue1000, bg: tokens.gray250, label: 'Blue1000 (brand) on Gray250' },
+  { fg: tokens.blue1000, bg: tokens.neutral50, label: 'Blue1000 (brand) on Neutral50' },
   { fg: tokens.white, bg: tokens.blue1000, label: 'White on Blue1000 (Midnight)' },
   { fg: tokens.neutral1000, bg: tokens.white, label: 'Neutral1000 on White' },
   { fg: tokens.neutral700, bg: tokens.white, label: 'Neutral700 on White' },

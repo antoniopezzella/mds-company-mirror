@@ -363,7 +363,6 @@ const ANCHOR_STOPS = new Set([
   'green250', 'green500', 'green750', 'green1000',
   'red250', 'red500', 'red750', 'red1000',
   'purple250', 'purple500', 'purple750', 'purple1000',
-  'gray250', 'gray500', 'gray750', 'gray1000',
   'neutral250', 'neutral500', 'neutral750', 'neutral1000',
 ]);
 

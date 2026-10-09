@@ -84,27 +84,10 @@ export const tokens = {
     purple900: '#7720b0', // Figma value
     purple950: '#6a18a3', // interpolated
     purple1000: '#5e0f95', // ★ Figma anchor
-    // ── GRAY (20 stops — warm/green-tinted neutral) ───────────────────────────
-    gray50: '#fdfefe', // interpolated
-    gray100: '#fbfbfb', // interpolated
-    gray150: '#faf7f4', // ★ Figma anchor — added 2026-09-15 (finer granularity, Figma has this step; MDS didn't)
-    gray200: '#f9f9f9', // interpolated
-    gray250: '#f7f8f8', // ★ Figma anchor
-    gray300: '#ebe7e2', // ★ Figma anchor — corrected from interpolated #eaebea (Neutral/Gray/300). Button shipped this value as a literal because the ramp had drifted off it.
-    gray350: '#dedbd6', // ★ Figma anchor — added 2026-09-15
-    gray400: '#cfd0cd', // interpolated
-    gray450: '#c5c2bd', // ★ Figma anchor — added 2026-09-15
-    gray500: '#b4b6b1', // ★ Figma anchor
-    gray550: '#adaaa5', // ★ Figma anchor — added 2026-09-15
-    gray600: '#9c9e9a', // interpolated
-    gray650: '#94918c', // ★ Figma anchor — added 2026-09-15
-    gray700: '#878580', // ★ Figma anchor — corrected from interpolated #8a8c88 (Neutral/Gray/700). Same story as gray300 above.
-    gray750: '#787b78', // ★ Figma anchor
-    gray800: '#6a6e6b', // interpolated
-    gray850: '#62615c', // ★ Figma anchor — added 2026-09-15
-    gray900: '#4d5551', // interpolated
-    gray950: '#3e4944', // interpolated
-    gray1000: '#303c37', // ★ Figma anchor
+    // ── GRAY removed 2026-10-09 — the warm/green-tinted family was retired in
+    //    favour of the pure `neutral` brand family. Its four live semantics
+    //    (surfaceAccent, surfaceAccentStrong, interactiveDisabled bg/fg) were
+    //    repointed to the nearest neutral. See docs/tasks/token-authority-decision.md.
     // ── NEUTRAL (14 stops — pure R=G=B scale) ─────────────────────────────────
     neutral50: '#f8f8f8', // interpolated
     neutral100: '#eeeeee', // interpolated

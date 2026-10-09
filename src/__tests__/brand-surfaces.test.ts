@@ -91,7 +91,7 @@ describe('brand surfaces', () => {
       if (!byValue.has(value)) byValue.set(value, name);
     }
     const family = (primitiveName: string) => /^[a-zA-Z]+?(?=[0-9]|$)/.exec(primitiveName)?.[0] ?? primitiveName;
-    const NEUTRAL_FAMILIES = new Set(['gray', 'neutral', 'white', 'black', 'shades']);
+    const NEUTRAL_FAMILIES = new Set(['neutral', 'white', 'black', 'shades']);
 
     const undeclared: string[] = [];
 
