@@ -79,6 +79,25 @@ export default tseslint.config([
     files: ['src/components/ui/**/*.{ts,tsx}'],
     rules: {
       'react-refresh/only-export-components': 'off',
+
+      // Import convention for the current component set: cross-directory
+      // imports go through the `@/` alias, never a relative parent path.
+      // Two conventions were in play (Colleague Profile used `@/…`, RESG used
+      // `../…`) and nothing enforced either; `@/` is the dominant one here and
+      // the one the components in this directory already use for `@/lib/utils`,
+      // `@/theme/roles`, etc. A `../` always means leaving the current
+      // directory, so banning it leaves same-directory `./` imports untouched
+      // while forcing every cross-directory hop onto the alias.
+      //
+      // Uses the typescript-eslint variant so `import type { … } from '../x'`
+      // is caught too (the core rule misses type-only imports on some versions).
+      '@typescript-eslint/no-restricted-imports': ['error', {
+        patterns: [{
+          regex: '^\\.\\./',
+          message:
+            "Use the '@/' alias for cross-directory imports in src/components/ui (e.g. '@/components/ui/button', '@/assets/…'), not a relative parent path. Same-directory './' imports are fine.",
+        }],
+      }],
     },
   },
   {

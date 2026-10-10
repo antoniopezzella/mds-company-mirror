@@ -928,6 +928,80 @@ export const CONTRACTS: Record<string, ComponentContract> = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────────────────
+// Maturity — how settled a component's API is
+// ─────────────────────────────────────────────────────────────────────────
+//
+// A consumer could not previously tell a settled primitive (Button, Input)
+// from one whose API is still moving (the Sept-2026 composable data-grid
+// layer). `maturity` makes that legible.
+//
+//   - stable:       API settled; breaking changes only on a major. The DEFAULT.
+//   - beta:         new surface, still settling. Safe to use; may change.
+//   - experimental: bespoke or actively-iterated; expect breaking changes.
+//
+// Like CONTRACTS, this is a PARTIAL OVERRIDE map, not a field on every entry:
+// `stable` is the default and is NOT listed, so the map holds only the
+// components that are not yet stable. Everything listed here is from the newest
+// cohort (git first-add 2026-09+) or is a bespoke/in-flux surface — the call is
+// evidence-based, not a vibe. `maturityOf()` resolves 'stable' for anything
+// unlisted, so EVERY taxonomy entry has a maturity (taxonomy.test.ts enforces).
+
+export type Maturity = 'stable' | 'beta' | 'experimental';
+
+export const MATURITY_OVERRIDES: Record<string, Exclude<Maturity, 'stable'>> = {
+  // Bespoke, actively-iterated surfaces — AI chat and the questionnaire flow.
+  // Not general-purpose primitives; their shape still moves with product needs.
+  bubble: 'experimental',
+  message: 'experimental',
+  'message-scroller': 'experimental',
+  questionnaire: 'experimental',
+
+  // The composable data-grid layer and its internal parts (added 2026-09-25):
+  // the consumer-owns-the-instance API is newer than `table`/`data-table` and
+  // still settling. Internals are beta because they are only ever composed
+  // inside `data-grid`, never used directly.
+  'data-grid': 'beta',
+  'data-grid-bulk-actions': 'beta',
+  'data-grid-cell-edit': 'beta',
+  'data-grid-pagination': 'beta',
+  'data-grid-row-actions': 'beta',
+  'data-grid-rows': 'beta',
+  'data-grid-selection': 'beta',
+  'data-grid-table': 'beta',
+  'data-grid-toolbar': 'beta',
+
+  // The data-table faceted/date/sort filter internals (added 2026-09).
+  'data-table-date-filter': 'beta',
+  'data-table-faceted-filter': 'beta',
+  'data-table-sort-list': 'beta',
+
+  // The filters module — the first directory-shaped component, added 2026-09.
+  filters: 'beta',
+  'filter-bar': 'beta',
+  'filter-chip': 'beta',
+  'filter-controls': 'beta',
+  'filter-field-control': 'beta',
+
+  // New data-viz atom (added 2026-09-24).
+  sparkline: 'beta',
+};
+
+/**
+ * Maturity for a component file basename. Returns 'stable' for anything not in
+ * MATURITY_OVERRIDES, so every classified component resolves to a maturity.
+ */
+export function maturityOf(component: string): Maturity {
+  return MATURITY_OVERRIDES[component] ?? 'stable';
+}
+
+/** Component basenames at a given maturity, sorted. */
+export function byMaturity(maturity: Maturity): string[] {
+  return Object.keys(TAXONOMY)
+    .filter((c) => maturityOf(c) === maturity)
+    .sort();
+}
+
 /** The contract for a component module, or undefined if none is written yet. */
 export function contractOf(component: string): ComponentContract | undefined {
   return CONTRACTS[component];

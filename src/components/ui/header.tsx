@@ -18,7 +18,7 @@ import {
   User,
 } from 'lucide-react';
 
-import MARSH_LOGO from '../../assets/images/marsh.svg';
+import MARSH_LOGO from '@/assets/images/marsh.svg';
 import { cn } from '@/lib/utils';
 import { roleVar } from '@/theme/roles';
 import { Avatar } from './avatar';

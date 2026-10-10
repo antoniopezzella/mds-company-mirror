@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ChevronDown, Globe, Menu, Search } from 'lucide-react';
 
-import MARSH_LOGO from '../../assets/images/marsh.svg';
+import MARSH_LOGO from '@/assets/images/marsh.svg';
 import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { Sheet, SheetContent } from './sheet';

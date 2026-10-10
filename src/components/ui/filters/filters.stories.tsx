@@ -10,11 +10,11 @@ import { useFilterQuery } from './use-filter-query';
 import { getRoleColor } from '@/theme/roles';
 import type { FilterField } from './filters-schema';
 import type { FilterQuery } from './filters-types';
-import { DataTable } from '../data-table';
-import { Badge } from '../badge';
-import { Stack } from '../stack';
+import { DataTable } from '@/components/ui/data-table';
+import { Badge } from '@/components/ui/badge';
+import { Stack } from '@/components/ui/stack';
 import { formatCurrency } from '@/lib/format';
-import type { DataGridColumnDef } from '../data-grid-features';
+import type { DataGridColumnDef } from '@/components/ui/data-grid-features';
 
 const meta: Meta<typeof Filters> = {
   title: 'Components/Filters',

@@ -146,6 +146,28 @@ export const TooltipProvider = TooltipPrimitive.Provider;
 export const TooltipTrigger = TooltipPrimitive.Trigger;
 
 /**
+ * The composable Radix Root, completing the shadcn/ui shape
+ * (`TooltipProvider` → `TooltipRoot` → `TooltipTrigger` → `TooltipContent`)
+ * for anyone composing the primitives with their own provider/root:
+ *
+ * ```tsx
+ * <TooltipProvider>
+ *   <TooltipRoot>
+ *     <TooltipTrigger asChild><button>Hover</button></TooltipTrigger>
+ *     <TooltipContent>Label</TooltipContent>
+ *   </TooltipRoot>
+ * </TooltipProvider>
+ * ```
+ *
+ * It is deliberately NOT named `Tooltip`: that name belongs to the convenience
+ * wrapper above, which bundles Provider+Root+Trigger+Content into one
+ * component with the MUI-parity `title`/`placement`/`tone` API. Renaming the
+ * wrapper to expose the Root would break every existing `<Tooltip title=…>`
+ * call site, so the Root is added alongside under a clear name instead.
+ */
+export const TooltipRoot = TooltipPrimitive.Root;
+
+/**
  * Styled tooltip content for the composable shape
  * (`TooltipProvider`/`Root`/`Trigger`/`Content`), which is what anyone
  * arriving from shadcn/ui will reach for.

@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
-import { Button } from '../button';
+import { Button } from '@/components/ui/button';
 import { FiltersGroup, type FiltersGroupMessages } from './filters-group';
 import type { FiltersRuleProps } from './filters-rule';
 import type { FiltersValueEditorProps } from './filters-value-editor';

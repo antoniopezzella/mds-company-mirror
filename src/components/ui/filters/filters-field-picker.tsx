@@ -5,7 +5,7 @@ import { ChevronRight, Search } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
-import { Input } from '../input';
+import { Input } from '@/components/ui/input';
 import {
   fieldsAtPath,
   fieldPathLabel,
