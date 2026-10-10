@@ -25,19 +25,38 @@ A green gate is indistinguishable from a disabled gate unless something asserts
 otherwise. So: **every gate needs a self-test that proves it can fail.**
 
 - `npm run gates:selftest` (`scripts/check-gate-selftests.js`) does this for
-  the static gates: it writes a probe containing one violation, runs the real
-  npm script, and requires the gate to exit non-zero **and name the probe**.
-  Exiting non-zero alone is not enough — a crash, a syntax error in the probe,
-  or an unrelated pre-existing violation all look like a healthy gate
-  otherwise. Folded into `governance:ci` (~3s).
+  gates that SCAN A DIRECTORY: it writes a probe containing one violation,
+  runs the real npm script, and requires the gate to exit non-zero **and name
+  the probe**. Exiting non-zero alone is not enough — a crash, a syntax error
+  in the probe, or an unrelated pre-existing violation all look like a
+  healthy gate otherwise. Folded into `governance:ci` (~3s). Covered this way:
+  roles, roles-hex, roles-palette, composition, radius, zindex, props,
+  docs-sprawl, deprecations, registry.
+- A gate that compares FIXED files (not a directory a probe can be dropped
+  into) instead carries its own `--selftest` flag, mirroring
+  `check-token-vars-sync.js`: mutate an in-memory copy, confirm the violation
+  is caught, confirm the live file passes clean, exit. Each has its own
+  `<area>:selftest` npm script, folded into `governance:ci`. Covered this
+  way: contrast, token-variables, figma-drift, figma-semantic-drift. Two more
+  check the PUBLISHED ARTIFACT rather than source (`package-css`,
+  `package-types`), so their `--selftest` goes further: it mutates SOURCE,
+  runs the real build (`build:css` / `vite build`), evaluates the resulting
+  artifact, then restores source and rebuilds again either way — a probe that
+  skipped the build would test nothing, since the historical bugs both gates
+  exist for are build-time regressions invisible in source.
 - `scripts/check-a11y-gate.js` does the same for the axe gate, which needs a
   real story and a browser run.
+- `check-token-vars-sync.js` carries a real `--selftest` too, but spells the
+  marker "selftest" (no hyphen) rather than "self-test", so the
+  `gate_selftests` metric's `self-test|GATE NOT WORKING` regex does not see
+  it — a known, separate gap, left as-is rather than patched as a side
+  effect of this work.
 
-**Adding a gate means adding its probe** to the `GATES` table in
-`check-gate-selftests.js`. Covered so far: roles, roles-hex, roles-palette,
-composition, radius, zindex, props. Not yet: contrast, deprecations, docs-sprawl,
-figma-drift, figma-semantic-drift, package-css, package-types, registry,
-token-variables.
+**Adding a gate means adding its probe** — either a `GATES` table entry in
+`check-gate-selftests.js`, or a `--selftest` flag on the gate itself. All 16
+non-harness gate scripts are covered as of 2026-10-10; only the harness files
+themselves (`check-gate-selftests.js`, `check-a11y-gate.js`) are excluded by
+definition.
 
 ## Hex literals: enforced in `ui/`, advisory elsewhere
 

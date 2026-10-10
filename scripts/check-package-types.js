@@ -41,6 +41,74 @@ const pkgDir = path.join(root, 'dist-pkg');
 const entry = path.join(pkgDir, 'index.d.ts');
 const pkgJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 
+/**
+ * The exact defect this gate exists for: a module index.d.ts re-exports from
+ * that has no .d.ts actually emitted. Factored out so --selftest below can
+ * run it against a deliberately broken dist-pkg without duplicating the
+ * detection logic (and risking the two silently disagreeing later).
+ */
+function findMissingSpecifiers(entrySrc, dir) {
+  const specifiers = [...entrySrc.matchAll(/from\s+['"](\.[^'"]+)['"]/g)].map((m) => m[1]);
+  const missing = [];
+  for (const spec of new Set(specifiers)) {
+    const base = path.join(dir, spec);
+    const candidates = [`${base}.d.ts`, path.join(base, 'index.d.ts'), base];
+    if (!candidates.some((c) => fs.existsSync(c))) missing.push(spec);
+  }
+  return { specifiers, missing };
+}
+
+// --selftest: prove the gate can actually go red — against a REAL build.
+// The bug this gate exists for (index.d.ts referencing 5 modules with no
+// .d.ts emitted) only exists in the ARTIFACT, so a hand-written fixture
+// would test nothing real. This builds a fresh dist-pkg, picks one
+// re-exported module that genuinely has a .d.ts, hides it, and confirms
+// `findMissingSpecifiers` flags it — then restores it either way. It does
+// NOT re-run the full consumer-compile step (that needs no probe: step 1,
+// which this mutates, already exits before tsc ever runs).
+if (process.argv.includes('--selftest')) {
+  console.log('check-package-types --selftest: building a fresh dist-pkg (npx vite build --config vite.lib.config.ts)...');
+  try {
+    execFileSync('npx', ['vite', 'build', '--config', 'vite.lib.config.ts'], { cwd: root, stdio: 'pipe' });
+  } catch (err) {
+    console.error(`✗ self-test: could not build a baseline dist-pkg — ${(err.stdout ?? '') + (err.stderr ?? '')}`);
+    process.exit(1);
+  }
+  if (!fs.existsSync(entry)) {
+    console.error('✗ self-test: build succeeded but dist-pkg/index.d.ts is still missing — cannot certify this gate.');
+    process.exit(1);
+  }
+
+  const entrySrc = fs.readFileSync(entry, 'utf8');
+  const { specifiers, missing: baseline } = findMissingSpecifiers(entrySrc, pkgDir);
+  if (baseline.length) {
+    console.error(`✗ self-test: the fresh build already has ${baseline.length} missing .d.ts module(s) — fix those first.`);
+    process.exit(1);
+  }
+  const target = [...new Set(specifiers)].find((spec) => fs.existsSync(path.join(pkgDir, `${spec}.d.ts`)));
+  if (!target) {
+    console.error('✗ self-test: no re-exported module with a plain <name>.d.ts found to hide — cannot certify this gate.');
+    process.exit(1);
+  }
+
+  const targetFile = path.join(pkgDir, `${target}.d.ts`);
+  const backupFile = `${targetFile}.selftest-backup`;
+  fs.renameSync(targetFile, backupFile);
+  let exitCode = 0;
+  try {
+    const { missing: caught } = findMissingSpecifiers(entrySrc, pkgDir);
+    if (!caught.includes(target)) {
+      console.error(`✗ self-test: hid ${target}.d.ts and the gate did NOT flag it as missing — the gate is broken.`);
+      exitCode = 1;
+    } else {
+      console.log(`✓ package-types self-test: fresh build passes clean; hiding ${target}.d.ts is caught as a missing re-export.`);
+    }
+  } finally {
+    fs.renameSync(backupFile, targetFile);
+  }
+  process.exit(exitCode);
+}
+
 if (!fs.existsSync(entry)) {
   console.error('✗ dist-pkg/index.d.ts not found — run `npm run build:package` first.');
   process.exit(1);
@@ -50,14 +118,7 @@ if (!fs.existsSync(entry)) {
 //    the cheap, precise version of the check and gives a better error than
 //    tsc's, so it runs first.
 const src = fs.readFileSync(entry, 'utf8');
-const specifiers = [...src.matchAll(/from\s+['"](\.[^'"]+)['"]/g)].map((m) => m[1]);
-const missing = [];
-
-for (const spec of new Set(specifiers)) {
-  const base = path.join(pkgDir, spec);
-  const candidates = [`${base}.d.ts`, path.join(base, 'index.d.ts'), base];
-  if (!candidates.some((c) => fs.existsSync(c))) missing.push(spec);
-}
+const { specifiers, missing } = findMissingSpecifiers(src, pkgDir);
 
 if (missing.length) {
   console.error(`✗ dist-pkg/index.d.ts references ${missing.length} module(s) with no .d.ts emitted:\n`);

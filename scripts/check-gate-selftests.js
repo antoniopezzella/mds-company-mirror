@@ -71,9 +71,14 @@ const only = onlyIdx !== -1 ? argv[onlyIdx + 1] : null;
  *   probe    path (repo-relative) INSIDE that gate's scan root.
  *   content  the violating file. One violation per probe, so a failure is
  *            attributable to one rule rather than to "something in here".
- *   expect   a string the gate's output must contain, beyond exiting
- *            non-zero. The probe's basename is the baseline; `rule` adds the
- *            specific rule name where the gate prints one.
+ *   expect   OPTIONAL. The string the gate's output must contain, beyond
+ *            exiting non-zero. Defaults to the probe's basename (WITH
+ *            extension) — right for gates that print a file path/line. Set
+ *            this explicitly when the gate reports by a different name than
+ *            its own filename — e.g. check-registry.js prints component
+ *            NAMES with the extension stripped (`• my-component`, not
+ *            `my-component.tsx`), so the default basename would never
+ *            appear even when the gate is working correctly.
  */
 const GATES = [
   {
@@ -143,6 +148,37 @@ const GATES = [
     // this value, check it against prop-compat.ts first.
     content: `import { Button } from './button';\nexport const GateProbe = () => <Button size="small">x</Button>;\n`,
   },
+  {
+    name: 'docs-sprawl',
+    script: 'docs:check-sprawl',
+    // The gate's scan root is the repo root itself (non-recursive), so the
+    // probe lives there too — nowhere else is read.
+    probe: '__gate_probe_docs_sprawl.md',
+    // Any .md at root outside the closed allowlist in CLAUDE.md §"Documentation
+    // Governance" — the literal failure mode ~70 one-off reports once caused.
+    content: `# Gate probe\n\nShould never exist at repo root.\n`,
+  },
+  {
+    name: 'deprecations',
+    script: 'deprecations:check',
+    probe: 'src/components/ui/__gate_probe_deprecations.tsx',
+    // A bare @deprecated with no removal-window header attached — exactly the
+    // defect this gate exists to prevent (prop-compat.ts's deprecation once
+    // pointed at a CONTRIBUTING.md section that did not exist).
+    content: `/** @deprecated no removal window attached. */\nexport const GateProbe = 1;\n`,
+  },
+  {
+    name: 'registry',
+    script: 'registry:check',
+    probe: 'src/components/ui/__gate_probe_registry.tsx',
+    // A new component on disk with no registry.json entry — the omission that
+    // let 23 real components (the DataGrid family, PageShell, Stack, …) go
+    // unlisted for 82 commits while `npx shadcn add` had nothing to give.
+    content: `export const GateProbe = () => null;\n`,
+    // check-registry.js prints bare component NAMES, extension stripped
+    // (`• my-component`) — see the `expect` doc above.
+    expect: '__gate_probe_registry',
+  },
 ];
 
 if (only && !GATES.some((g) => g.name === only)) {
@@ -208,7 +244,7 @@ try {
 
     fs.unlinkSync(probePath);
 
-    const named = out.includes(probeName);
+    const named = out.includes(gate.expect ?? probeName);
     const caught = exitCode !== 0 && named;
 
     results.push({ ...gate, exitCode, named, caught, out });
@@ -234,7 +270,7 @@ for (const r of results) {
   let why = '';
   if (!r.caught) {
     if (r.exitCode === 0) why = 'exited 0 — THE VIOLATION WAS NOT CAUGHT';
-    else if (!r.named) why = `exited ${r.exitCode} but never named ${path.basename(r.probe)} — cannot attribute`;
+    else if (!r.named) why = `exited ${r.exitCode} but never named ${r.expect ?? path.basename(r.probe)} — cannot attribute`;
   }
   console.log(`  ${mark} ${r.name.padEnd(pad)}  ${r.script.padEnd(26)} ${why}`);
 }
@@ -256,7 +292,7 @@ for (const r of broken) {
     console.error(`    Check the scan root: if ${path.dirname(r.probe)} is no longer walked,`);
     console.error(`    the gate silently stopped seeing most of the repo.`);
   } else {
-    console.error(`    Exited ${r.exitCode} but did not mention ${path.basename(r.probe)}.`);
+    console.error(`    Exited ${r.exitCode} but did not mention ${r.expect ?? path.basename(r.probe)}.`);
     console.error(`    That is NOT evidence the gate works — it may have crashed, or failed`);
     console.error(`    on a pre-existing violation elsewhere. Re-run with --verbose.`);
   }

@@ -45,28 +45,69 @@ function rgbaToHex8(rgba) {
   return '#' + h2(r) + h2(g) + h2(b) + h2(Math.round(parseFloat(a) * 255));
 }
 
-let inSync = 0;
-let drifted = 0;
-let missing = 0;
-const driftRows = [];
-const missingRows = [];
+/**
+ * Pure diff: snapshot entries + a token map in, sync/drift/missing out, plus
+ * a per-token status map so a caller (the main flow, or --selftest below)
+ * can ask "what happened to THIS token" without re-deriving it.
+ */
+function diffPrimitives(snapshotPrimitives, tokenMap) {
+  let inSync = 0;
+  let drifted = 0;
+  let missing = 0;
+  const driftRows = [];
+  const missingRows = [];
+  const statusByToken = new Map();
 
-for (const entry of snapshot.primitives) {
-  if (!entry.mdsToken) continue; // unmapped Figma variable, nothing to check
-  const currentVal = tokens[entry.mdsToken];
-  if (!currentVal) {
-    missing++;
-    missingRows.push(entry.mdsToken);
-    continue;
+  for (const entry of snapshotPrimitives) {
+    if (!entry.mdsToken) continue; // unmapped Figma variable, nothing to check
+    const currentVal = tokenMap[entry.mdsToken];
+    if (!currentVal) {
+      missing++;
+      missingRows.push(entry.mdsToken);
+      statusByToken.set(entry.mdsToken, 'missing');
+      continue;
+    }
+    const currentNorm = currentVal.startsWith('rgba') ? rgbaToHex8(currentVal) : currentVal.toUpperCase();
+    if (currentNorm === entry.figmaValue.toUpperCase()) {
+      inSync++;
+      statusByToken.set(entry.mdsToken, 'inSync');
+    } else {
+      drifted++;
+      driftRows.push({ token: entry.mdsToken, current: currentVal, figma: entry.figmaValue, figmaVar: entry.figmaVariable });
+      statusByToken.set(entry.mdsToken, 'drifted');
+    }
   }
-  const currentNorm = currentVal.startsWith('rgba') ? rgbaToHex8(currentVal) : currentVal.toUpperCase();
-  if (currentNorm === entry.figmaValue.toUpperCase()) {
-    inSync++;
-  } else {
-    drifted++;
-    driftRows.push({ token: entry.mdsToken, current: currentVal, figma: entry.figmaValue, figmaVar: entry.figmaVariable });
-  }
+  return { inSync, drifted, missing, driftRows, missingRows, statusByToken };
 }
+
+// --selftest: prove the gate can actually go red. This gate compares two
+// FIXED files, not a directory to drop a probe into, so the proof mutates an
+// in-memory copy of the parsed `tokens` map instead of writing anything —
+// same category as check-token-vars-sync.js's --selftest. It does not
+// require the whole file to be drift-free (18 primitives already are, for
+// real, pending the next Figma sync) — it only needs ONE currently-in-sync
+// token to prove the detector notices when that token stops being in sync.
+if (process.argv.includes('--selftest')) {
+  const baseline = diffPrimitives(snapshot.primitives, tokens);
+  const cleanEntry = snapshot.primitives.find(
+    (e) => e.mdsToken && baseline.statusByToken.get(e.mdsToken) === 'inSync'
+  );
+  if (!cleanEntry) {
+    console.error('✗ self-test: no in-sync primitive found to mutate — cannot certify this gate.');
+    process.exit(1);
+  }
+  const mutatedTokens = { ...tokens, [cleanEntry.mdsToken]: '#123456' };
+  const mutated = diffPrimitives(snapshot.primitives, mutatedTokens);
+  const caught = mutated.statusByToken.get(cleanEntry.mdsToken) === 'drifted';
+  if (!caught) {
+    console.error(`✗ self-test: forced ${cleanEntry.mdsToken} to #123456 and the gate did NOT flag it as drifted — the gate is broken.`);
+    process.exit(1);
+  }
+  console.log(`✓ figma-drift self-test: ${cleanEntry.mdsToken} is in sync in the live snapshot; forcing it to #123456 is caught as drift.`);
+  process.exit(0);
+}
+
+const { inSync, drifted, missing, driftRows, missingRows } = diffPrimitives(snapshot.primitives, tokens);
 
 console.log(`Figma snapshot dated: ${snapshot.snapshotDate} (source: ${snapshot.snapshotSource})`);
 console.log(`In sync: ${inSync} | Drifted: ${drifted} | Token missing from tokens.ts: ${missing}\n`);

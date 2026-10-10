@@ -20,16 +20,45 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 
-const file = path.join(process.cwd(), 'dist-pkg', 'styles.css');
+const root = process.cwd();
+const file = path.join(root, 'dist-pkg', 'styles.css');
+const ENTRY = path.join(root, 'src', 'styles.package.css');
+const BUILD_CMD = 'npx tailwindcss -c tailwind.package.config.js -i src/styles.package.css -o dist-pkg/styles.css --minify';
 
-if (!fs.existsSync(file)) {
-  console.error('check-package-css: dist-pkg/styles.css not found — did build:css run?');
-  process.exit(1);
+/**
+ * Everything below was a straight-line script operating on module-level
+ * `css`/`bytes`. Wrapped in `evaluate()` so --selftest can run it against a
+ * deliberately broken BUILD OUTPUT without that output being dist-pkg's real
+ * file — the mutation and the read both have to go through a real build (see
+ * --selftest below), but the verdict logic itself is one pure function.
+ */
+function evaluate(css) {
+  const bytes = Buffer.byteLength(css);
+  const forbidden = FORBIDDEN.filter((r) => css.includes(r.sel));
+  const missing = REQUIRED.filter((r) => !css.includes(r.sel));
+  const MIN_BYTES = 90_000;
+  const tooSmall = bytes < MIN_BYTES && !missing.length && !forbidden.length;
+
+  const defined = new Set([...css.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((m) => m[1]));
+  const referenced = new Map();
+  for (const m of css.matchAll(/var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,|\))/g)) {
+    referenced.set(m[1], (referenced.get(m[1]) ?? 0) + 1);
+  }
+  const dangling = [...referenced.keys()].filter((name) => {
+    if (defined.has(name)) return false;
+    const withFallback = new RegExp(`var\\(\\s*${name}\\s*,`);
+    return !withFallback.test(css);
+  });
+  const ROLE_PREFIX = '--role-';
+  const danglingRoles = dangling.filter((n) => n.startsWith(ROLE_PREFIX));
+  const danglingOther = dangling.filter((n) => !n.startsWith(ROLE_PREFIX));
+  const roleCount = [...defined].filter((n) => n.startsWith(ROLE_PREFIX)).length;
+
+  const ok = !missing.length && !forbidden.length && !tooSmall && !danglingRoles.length;
+  return { ok, bytes, missing, forbidden, tooSmall, MIN_BYTES, danglingRoles, danglingOther, roleCount, referenced };
 }
-
-const css = fs.readFileSync(file, 'utf8');
-const bytes = Buffer.byteLength(css);
 
 /**
  * Each entry is a rule that must exist, plus what its absence means. The
@@ -77,28 +106,79 @@ const FORBIDDEN = [
   },
 ];
 
-const forbidden = FORBIDDEN.filter((r) => css.includes(r.sel));
+// --selftest: prove the gate can actually go red — against a REAL build, not
+// a hand-written artifact. The historical bug (missing `tailwindcss/theme`)
+// was a SOURCE defect that only manifests after Tailwind compiles it, so a
+// probe that skips the build would test nothing. This comments out the exact
+// import that regressed, runs the real `build:css` compiler, evaluates the
+// resulting (broken) CSS, then restores the source and rebuilds again so a
+// valid dist-pkg/styles.css is left behind either way.
+if (process.argv.includes('--selftest')) {
+  const backup = fs.readFileSync(ENTRY, 'utf8');
+  const THEME_IMPORT = '@import "tailwindcss/theme" layer(theme);';
+  if (!backup.includes(THEME_IMPORT)) {
+    console.error(`✗ self-test: ${THEME_IMPORT} not found in src/styles.package.css — cannot certify this gate.`);
+    process.exit(1);
+  }
+  const broken = backup.replace(THEME_IMPORT, '/* GATE SELFTEST: theme import removed */');
 
-const missing = REQUIRED.filter((r) => !css.includes(r.sel));
+  let exitCode = 0;
+  try {
+    fs.writeFileSync(ENTRY, broken);
+    execSync(BUILD_CMD.replace(' && node scripts/check-package-css.js', ''), { cwd: root, stdio: 'pipe' });
+    const brokenCss = fs.readFileSync(file, 'utf8');
+    const brokenResult = evaluate(brokenCss);
+    const caughtIt = brokenResult.missing.some((m) => m.sel === '.p-4{');
+    if (!caughtIt) {
+      console.error('✗ self-test: removed the theme import, rebuilt, and the gate did NOT flag missing .p-4{ — the gate is broken.');
+      exitCode = 1;
+    }
+  } catch (err) {
+    console.error(`✗ self-test: build/evaluate step threw — ${err.message}`);
+    exitCode = 1;
+  } finally {
+    // Restore source and rebuild a valid artifact regardless of outcome.
+    fs.writeFileSync(ENTRY, backup);
+    try {
+      execSync(BUILD_CMD.replace(' && node scripts/check-package-css.js', ''), { cwd: root, stdio: 'pipe' });
+    } catch (err) {
+      console.error(`✗ self-test: could not rebuild a clean artifact after restoring source — ${err.message}`);
+      exitCode = 1;
+    }
+  }
 
-// The theme layer roughly doubles the file. A sharp drop is the signature of
-// the exact regression this script exists to catch, so treat it as a warning
-// even when the presence checks somehow pass.
-const MIN_BYTES = 90_000;
+  if (exitCode === 0) {
+    const cleanResult = evaluate(fs.readFileSync(file, 'utf8'));
+    if (!cleanResult.ok) {
+      console.error('✗ self-test: restored source still fails evaluate() after rebuild — investigate before trusting this gate.');
+      exitCode = 1;
+    } else {
+      console.log('✓ package-css self-test: removing the theme import is caught as missing .p-4{; the restored build passes clean.');
+    }
+  }
+  process.exit(exitCode);
+}
 
-if (missing.length || forbidden.length) {
-  console.error(`\n✗ check-package-css: dist-pkg/styles.css is incorrect (${bytes} bytes)\n`);
-  for (const m of missing) console.error(`  missing   ${m.sel.padEnd(22)} → ${m.why}`);
-  for (const f of forbidden) console.error(`  forbidden ${f.sel.padEnd(22)} → ${f.why}`);
+if (!fs.existsSync(file)) {
+  console.error('check-package-css: dist-pkg/styles.css not found — did build:css run?');
+  process.exit(1);
+}
+
+const result = evaluate(fs.readFileSync(file, 'utf8'));
+
+if (result.missing.length || result.forbidden.length) {
+  console.error(`\n✗ check-package-css: dist-pkg/styles.css is incorrect (${result.bytes} bytes)\n`);
+  for (const m of result.missing) console.error(`  missing   ${m.sel.padEnd(22)} → ${m.why}`);
+  for (const f of result.forbidden) console.error(`  forbidden ${f.sel.padEnd(22)} → ${f.why}`);
   console.error('\n  The build did NOT fail — Tailwind drops rules it cannot resolve,');
   console.error('  and rebinds variants it cannot bind, without erroring.');
   console.error('  See .claude/skills/tailwind/SKILL.md → "The package build".\n');
   process.exit(1);
 }
 
-if (bytes < MIN_BYTES) {
+if (result.tooSmall) {
   console.error(
-    `\n✗ check-package-css: stylesheet is ${bytes} bytes, expected >= ${MIN_BYTES}.` +
+    `\n✗ check-package-css: stylesheet is ${result.bytes} bytes, expected >= ${result.MIN_BYTES}.` +
       '\n  A sharp drop usually means a layer or @import was silently dropped.\n'
   );
   process.exit(1);
@@ -115,42 +195,10 @@ if (bytes < MIN_BYTES) {
 //
 // A consumer following README.package.md got a primary button with no
 // background, and all nine gates stayed green.
-const defined = new Set([...css.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((m) => m[1]));
-const referenced = new Map();
-for (const m of css.matchAll(/var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,|\))/g)) {
-  referenced.set(m[1], (referenced.get(m[1]) ?? 0) + 1);
-}
-
-// A `var(--x, fallback)` is legitimately undefined-tolerant, so only consider
-// references that would resolve to nothing.
-const dangling = [...referenced.keys()].filter((name) => {
-  if (defined.has(name)) return false;
-  const withFallback = new RegExp(`var\\(\\s*${name}\\s*,`);
-  return !withFallback.test(css);
-});
-
-// Two tiers, because not every undefined reference is a defect.
-//
-// HARD FAIL — `--role-*`. These are the design system's own contract and the
-// package cannot assume RoleVarsProvider is mounted, so they must be defined
-// by a stylesheet we ship. This is the class that actually broke.
-//
-// REPORT ONLY — everything else. Three legitimate kinds live here:
-//   · component-local vars (`--switch-focus-ring`, `--sn-active-bg`), set by
-//     the same component's inline style in the same render it is read;
-//   · `--radix-*` and `--tw-*`, set on the element at runtime by Radix and
-//     Tailwind respectively;
-//   · scanner artifacts — Tailwind's content scan is plain text, so a
-//     documentation example like `p-[var(--x)]` in src/docs/30-Spacing.mdx
-//     becomes a real rule in the output. Harmless bloat, worth seeing.
-const ROLE_PREFIX = '--role-';
-const danglingRoles = dangling.filter((n) => n.startsWith(ROLE_PREFIX));
-const danglingOther = dangling.filter((n) => !n.startsWith(ROLE_PREFIX));
-
-if (danglingRoles.length) {
-  console.error(`\n✗ check-package-css: ${danglingRoles.length} role variable(s) referenced but never defined\n`);
-  for (const name of danglingRoles.sort()) {
-    console.error(`  ${name.padEnd(40)} ${referenced.get(name)} reference(s), 0 definitions`);
+if (result.danglingRoles.length) {
+  console.error(`\n✗ check-package-css: ${result.danglingRoles.length} role variable(s) referenced but never defined\n`);
+  for (const name of result.danglingRoles.sort()) {
+    console.error(`  ${name.padEnd(40)} ${result.referenced.get(name)} reference(s), 0 definitions`);
   }
   console.error('\n  These resolve to nothing in a consumer app — the property silently does');
   console.error('  not apply, so you get a transparent background rather than an error,');
@@ -163,14 +211,13 @@ if (danglingRoles.length) {
   process.exit(1);
 }
 
-const roleCount = [...defined].filter((n) => n.startsWith(ROLE_PREFIX)).length;
 console.log(
-  `✓ package stylesheet OK — ${bytes} bytes, all load-bearing rules present, ` +
-    `${roleCount} role var(s) defined, every --role-* reference resolves.`
+  `✓ package stylesheet OK — ${result.bytes} bytes, all load-bearing rules present, ` +
+    `${result.roleCount} role var(s) defined, every --role-* reference resolves.`
 );
-if (danglingOther.length) {
+if (result.danglingOther.length) {
   console.log(
-    `  ℹ ${danglingOther.length} non-role var(s) are set at runtime or by the content scanner ` +
+    `  ℹ ${result.danglingOther.length} non-role var(s) are set at runtime or by the content scanner ` +
       '(informational, not a failure).'
   );
 }

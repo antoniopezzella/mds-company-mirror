@@ -104,25 +104,78 @@ if (!fs.existsSync(FILE)) {
   process.exit(1);
 }
 
+/** One line's verdict, or null if the line carries no HSL/hex triplet. */
+function detectLineDrift(line) {
+  const m = LINE.exec(line);
+  if (!m) return null;
+  const [, prefix, name, hs, ss, ls, mid, statedHex] = m;
+  const decoded = hslToHex(Number(hs), Number(ss), Number(ls));
+  if (decoded.toLowerCase() === statedHex.toLowerCase()) return null;
+  return { prefix, name, hs, ss, ls, mid, statedHex, decoded };
+}
+
+/** Every drifting line in an arbitrary block of text — used by both the real
+ * scan below and --selftest, so the two can never disagree about what counts
+ * as drift. */
+function scanAllDrift(text) {
+  return text
+    .split('\n')
+    .map((line, i) => ({ line: i + 1, d: detectLineDrift(line) }))
+    .filter((x) => x.d)
+    .map((x) => ({ line: x.line, name: x.d.name, stated: x.d.statedHex, decoded: x.d.decoded }));
+}
+
+// --selftest: prove check 1 (HSL decodes to its stated hex) can actually go
+// red. No file-drop probe fits this gate — it reads exactly ONE fixed file,
+// not a directory — so the proof mutates an in-memory copy of that file's
+// text and never touches disk, same category as check-token-vars-sync.js's
+// --selftest.
+if (process.argv.includes('--selftest')) {
+  const liveText = fs.readFileSync(FILE, 'utf8');
+  const liveDrift = scanAllDrift(liveText);
+  if (liveDrift.length) {
+    console.error(`✗ self-test: the live file already has ${liveDrift.length} undecoded drift(s) — fix those first (see --fix).`);
+    process.exit(1);
+  }
+
+  const lines = liveText.split('\n');
+  const idx = lines.findIndex((l) => LINE.test(l));
+  if (idx === -1) {
+    console.error('✗ self-test: no HSL-triplet line found to mutate — cannot certify this gate.');
+    process.exit(1);
+  }
+  const m = LINE.exec(lines[idx]);
+  const [, , name, hs, ss, ls] = m;
+  // Corrupt the lightness so the triplet decodes to something other than the
+  // hex stated in its own comment — the exact defect this check exists for
+  // (26 of 34 variables were found in exactly this state).
+  const brokenLs = (parseFloat(ls) + 11) % 100;
+  const brokenLine = lines[idx].replace(`${hs} ${ss}% ${ls}%`, `${hs} ${ss}% ${brokenLs}%`);
+  const brokenText = [...lines.slice(0, idx), brokenLine, ...lines.slice(idx + 1)].join('\n');
+
+  const caught = scanAllDrift(brokenText);
+  if (!caught.some((d) => d.name === name)) {
+    console.error(`✗ self-test: corrupted --${name}'s lightness and the gate did NOT catch it — the gate is broken.`);
+    process.exit(1);
+  }
+  console.log(`✓ token-variables self-test: clean file passes check 1; corrupting --${name}'s HSL triplet is caught.`);
+  process.exit(0);
+}
+
 const lines = fs.readFileSync(FILE, 'utf8').split('\n');
 const drift = [];
 let fixed = 0;
 
 const out = lines.map((line, i) => {
-  const m = LINE.exec(line);
-  if (!m) return line;
+  const d = detectLineDrift(line);
+  if (!d) return line;
 
-  const [, prefix, name, hs, ss, ls, mid, statedHex] = m;
-  const decoded = hslToHex(Number(hs), Number(ss), Number(ls));
-
-  if (decoded.toLowerCase() === statedHex.toLowerCase()) return line;
-
-  drift.push({ line: i + 1, name, stated: statedHex, decoded });
+  drift.push({ line: i + 1, name: d.name, stated: d.statedHex, decoded: d.decoded });
 
   if (fix) {
-    const [h, s, l] = hexToHsl(statedHex);
+    const [h, s, l] = hexToHsl(d.statedHex);
     fixed++;
-    return line.replace(`${hs} ${ss}% ${ls}%`, `${h} ${s}% ${l}%`);
+    return line.replace(`${d.hs} ${d.ss}% ${d.ls}%`, `${h} ${s}% ${l}%`);
   }
   return line;
 });
