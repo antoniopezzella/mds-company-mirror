@@ -35,6 +35,13 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-a11y',
     '@storybook/addon-vitest',
+    // Visual-regression baselines live on Chromatic (decided 2026-10-10 over
+    // committing PNGs to git — no repo bloat, hosted diffs, PR integration).
+    // This addon surfaces Chromatic's per-story config; the actual snapshot
+    // upload is the `chromatic` CLI (see package.json `chromatic` script and
+    // .github/workflows/chromatic.yml). Inert until CHROMATIC_PROJECT_TOKEN is
+    // set — see docs/guides/VISUAL_REGRESSION.md.
+    '@chromatic-com/storybook',
   ],
   framework: {
     name: '@storybook/react-vite',
