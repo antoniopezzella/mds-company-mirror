@@ -13,7 +13,7 @@
  * button's `danger` (severity of an action) are different axes, and every
  * benchmarked system keeps them separate. See prop-compat.ts.
  *
- * This script does two different jobs, deliberately:
+ * This script does three different jobs, deliberately:
  *
  *   1. USAGE — report call sites still on a legacy spelling, so the deprecation
  *      window can actually close. Advisory by default.
@@ -25,6 +25,21 @@
  *      record fails even without --strict, because it means the compatibility
  *      layer is lying about where a consumer should go.
  *
+ *   3. DECLARATIONS — read each component's own Props shape, not just call
+ *      sites that exercise it. Jobs 1 and 2 are both blind to a component that
+ *      declares a THIRD size spelling nobody ever calls with — exactly how
+ *      `attachment.tsx` (`size?: 'default' | 'sm' | 'xs'`) and `toggle.tsx`
+ *      (`size?: 'default' | 'sm' | 'lg'`, `default` resolving to an off-scale
+ *      `h-9` rather than CONTROL_HEIGHT's `md`) shipped an eighth size
+ *      vocabulary while this gate printed green: no call site anywhere in the
+ *      tree uses `size="default"` on either, so usage-scanning never sees it,
+ *      and neither value is a tracked legacy alias, so integrity-checking
+ *      never sees it either. See the DECLARATIONS section below for how the
+ *      union is read back out of a `cva()` call when the Props interface names
+ *      no literal at all. Fails regardless of --strict — unlike a known legacy
+ *      spelling, an off-vocabulary declared value has no migration path for a
+ *      consumer to follow.
+ *
  * THE HAZARD THIS EXISTS TO AVOID: roughly 46 `size="small"` call sites in this
  * repo target MUI components, which have their own entirely legitimate
  * `small|medium|large` vocabulary. Worse, `DSTextField` names two different
@@ -35,9 +50,10 @@
  * is exactly what happened once during the migration and was caught only by tsc.
  *
  * Flags:
- *   --strict : exit non-zero if any legacy usage remains (for CI gating)
+ *   --strict : exit non-zero if any legacy USAGE remains (for CI gating)
  *   --json   : machine-readable summary on stdout
- * Exit code: 0 (advisory) unless --strict, or unless the record is inconsistent.
+ * Exit code: 0 (advisory) unless --strict, unless the deprecation record is
+ * inconsistent, or unless a component declares an off-vocabulary size value.
  */
 import fs from 'fs';
 import path from 'path';
@@ -240,14 +256,172 @@ for (const file of listFiles(srcDir)) {
 }
 
 // ---------------------------------------------------------------------------
+// 4. Declarations — does a component's OWN Props shape stay on the unified
+//    size vocabulary, independent of whether any call site exercises it?
+//
+// Sections 1-3 above only ever see a size value someone WROTE at a call
+// site. A value that is DECLARED on a component's Props but never once used
+// in this tree is invisible to all three — and that is exactly how
+// attachment.tsx and toggle.tsx shipped an eighth size vocabulary (see the
+// header comment) while this gate stayed green.
+//
+// `size` is declared two different ways in this codebase, so both are read:
+//
+//   1. a literal string union directly on the exported `*Props` interface
+//      (`size?: 'sm' | 'md' | 'lg'`) — the common case, read straight off the
+//      interface text;
+//   2. `VariantProps<typeof xVariants>`, where the Props interface names no
+//      literal at all and the real union lives in the referenced `cva()`
+//      call's `variants.size` object keys. Parsing only the interface text
+//      misses this shape entirely — which is exactly the shape attachment.tsx
+//      and toggle.tsx both use — so the `cva()` call is resolved too.
+//
+// A value is accepted when it is canonical (CANONICAL_SIZES) or a tracked
+// legacy alias (a key of SIZE_ALIASES — it has an automatic migration path
+// via `normalizeSize`). Anything else is neither: nothing in prop-compat.ts
+// maps it anywhere, so a consumer reading the type cannot tell it apart from
+// a real option.
+// ---------------------------------------------------------------------------
+
+/** Advance past a quoted string (single/double/backtick), honouring escapes. */
+function skipQuoted(src, i) {
+  const quote = src[i];
+  i += 1;
+  while (i < src.length) {
+    if (src[i] === '\\') {
+      i += 2;
+      continue;
+    }
+    if (src[i] === quote) return i + 1;
+    i += 1;
+  }
+  return i;
+}
+
+/** Index of the `{` at `openIdx`'s matching `}`, skipping brace-like characters inside strings. */
+function findMatchingBrace(src, openIdx) {
+  let depth = 0;
+  for (let i = openIdx; i < src.length; i += 1) {
+    const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      i = skipQuoted(src, i) - 1;
+      continue;
+    }
+    if (c === '{') depth += 1;
+    else if (c === '}') {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/** Same as findMatchingBrace, for `(` / `)`. */
+function findMatchingParen(src, openIdx) {
+  let depth = 0;
+  for (let i = openIdx; i < src.length; i += 1) {
+    const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      i = skipQuoted(src, i) - 1;
+      continue;
+    }
+    if (c === '(') depth += 1;
+    else if (c === ')') {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/** Every exported `*Props` interface/type block, verbatim. */
+function propsBlocks(src) {
+  return [...src.matchAll(/export (?:interface|type) \w*Props\b[\s\S]*?\n(?:\}|\);)/g)].map((m) => m[0]);
+}
+
+/** The literal `size` union declared directly on a Props block, if any (null otherwise). */
+function directSizeLiteral(block) {
+  const m = /\bsize\??\s*:\s*((?:'[^']*'|"[^"]*")(?:\s*\|\s*(?:'[^']*'|"[^"]*"))*)/.exec(block);
+  if (!m) return null;
+  return [...m[1].matchAll(/'([^']*)'|"([^"]*)"/g)].map((g) => g[1] ?? g[2]);
+}
+
+/**
+ * The `size` variant keys of a NAMED `cva()` call elsewhere in the same file —
+ * what `VariantProps<typeof name>` actually resolves to for `size`. Returns
+ * null when that cva call has no `size` variant at all (most do not).
+ */
+function cvaSizeKeysByName(src, name) {
+  const declRe = new RegExp(`\\b${name}\\s*=\\s*cva\\s*\\(`);
+  const m = declRe.exec(src);
+  if (!m) return null;
+  const openParen = m.index + m[0].length - 1;
+  const closeParen = findMatchingParen(src, openParen);
+  if (closeParen === -1) return null;
+  const callBody = src.slice(openParen, closeParen + 1);
+  const variantsKeyMatch = /\bvariants\s*:\s*\{/.exec(callBody);
+  if (!variantsKeyMatch) return null;
+  const variantsBraceIdx = variantsKeyMatch.index + variantsKeyMatch[0].length - 1;
+  const variantsCloseIdx = findMatchingBrace(callBody, variantsBraceIdx);
+  if (variantsCloseIdx === -1) return null;
+  const variantsBlock = callBody.slice(variantsBraceIdx, variantsCloseIdx + 1);
+  const sizeKeyMatch = /\bsize\s*:\s*\{/.exec(variantsBlock);
+  if (!sizeKeyMatch) return null;
+  const sizeBraceIdx = sizeKeyMatch.index + sizeKeyMatch[0].length - 1;
+  const sizeCloseIdx = findMatchingBrace(variantsBlock, sizeBraceIdx);
+  if (sizeCloseIdx === -1) return null;
+  const sizeBlock = variantsBlock.slice(sizeBraceIdx, sizeCloseIdx + 1);
+  return [...sizeBlock.matchAll(/^[ \t]*([A-Za-z_$][\w$]*)\s*:/gm)].map((g) => g[1]);
+}
+
+const LEGACY_SIZE_SET = new Set(LEGACY_SIZES);
+const declarations = [];
+for (const file of fs
+  .readdirSync(uiDir)
+  .filter((f) => /\.tsx$/.test(f) && !/\.(stories|test)\.tsx$/.test(f))) {
+  const full = path.join(uiDir, file);
+  const raw = fs.readFileSync(full, 'utf8');
+  const src = stripComments(raw);
+  for (const block of propsBlocks(src)) {
+    let values = directSizeLiteral(block);
+    let via = 'literal';
+    if (!values) {
+      const viaVariant = /VariantProps<\s*typeof\s+(\w+)\s*>/.exec(block);
+      if (viaVariant) {
+        values = cvaSizeKeysByName(src, viaVariant[1]);
+        via = `cva:${viaVariant[1]}`;
+      }
+    }
+    if (!values || !values.length) continue;
+    const nameMatch = /export (?:interface|type) (\w*Props)\b/.exec(block);
+    const offVocab = values.filter((v) => !CANONICAL_SIZES.has(v) && !LEGACY_SIZE_SET.has(v));
+    for (const value of offVocab) {
+      declarations.push({
+        file: path.relative(root, full),
+        component: nameMatch ? nameMatch[1] : file,
+        via,
+        value,
+      });
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 const summary = {
   aliases: { size: SIZE_ALIASES, tone: TONE_ALIASES },
   registryEntries: Object.keys(registry).length,
   integrityErrors: integrity,
+  declarationViolations: declarations,
   legacyUsage: usage,
-  status: integrity.length ? 'BROKEN_RECORD' : usage.length ? 'LEGACY_USAGE' : 'OK',
+  status: integrity.length
+    ? 'BROKEN_RECORD'
+    : declarations.length
+      ? 'OFF_VOCAB_DECLARED'
+      : usage.length
+        ? 'LEGACY_USAGE'
+        : 'OK',
 };
 
 if (asJson) {
@@ -258,6 +432,12 @@ if (asJson) {
     console.log('\n✗ Deprecation record is inconsistent:');
     for (const e of integrity) console.log(`  - ${e}`);
   }
+  if (declarations.length) {
+    console.log(`\n✗ ${declarations.length} component Props declare an off-vocabulary size value (neither canonical nor a tracked legacy alias — no migration path exists):`);
+    for (const d of declarations) {
+      console.log(`  ${d.file}  ${d.component}.size === "${d.value}"  (via ${d.via})`);
+    }
+  }
   if (usage.length) {
     console.log(`\n⚠ ${usage.length} call site(s) still on a legacy spelling:`);
     for (const u of usage) {
@@ -265,12 +445,17 @@ if (asJson) {
     }
     if (!strict) console.log('\n  (advisory — run with --strict to fail)');
   }
-  if (!integrity.length && !usage.length) {
-    console.log('✓ No legacy size/tone spellings in files importing from components/ui.');
+  if (!integrity.length && !declarations.length && !usage.length) {
+    console.log('✓ No legacy size/tone spellings in files importing from components/ui, and no component declares an off-vocabulary size value.');
   }
 }
 
 // A broken record fails regardless of --strict: it means the compatibility layer
 // is pointing consumers at a replacement that doesn't exist.
 if (integrity.length) process.exit(1);
+// A component declaring an off-vocabulary size value fails regardless of
+// --strict too, for the same reason: unlike a known legacy spelling (usage,
+// below, which has an automatic path via normalizeSize and a deprecation
+// window to close), nothing maps this value anywhere.
+if (declarations.length) process.exit(1);
 if (strict && usage.length) process.exit(1);

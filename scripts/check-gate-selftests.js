@@ -149,6 +149,21 @@ const GATES = [
     content: `import { Button } from './button';\nexport const GateProbe = () => <Button size="small">x</Button>;\n`,
   },
   {
+    name: 'props-declaration',
+    script: 'props:check:strict',
+    probe: 'src/components/ui/__gate_probe_props_decl.tsx',
+    // The declaration half of the SAME gate/script as `props` above, added
+    // because the usage probe only proves the gate reads CALL SITES. It
+    // would stay green forever against a component whose Props interface
+    // itself declares an off-vocabulary size value that nobody ever calls
+    // with — which is exactly how attachment.tsx (`'default' | 'sm' | 'xs'`)
+    // and toggle.tsx (`'default' | 'sm' | 'lg'`) shipped an eighth size
+    // vocabulary while this gate printed green. `'huge'` is neither
+    // canonical (sm|md|lg|xl|fullscreen) nor a tracked legacy alias in
+    // prop-compat.ts — check it there first if you change this value.
+    content: `export interface GateProbeDeclProps {\n  size?: 'huge';\n}\nexport const GateProbeDecl = () => null;\n`,
+  },
+  {
     name: 'docs-sprawl',
     script: 'docs:check-sprawl',
     // The gate's scan root is the repo root itself (non-recursive), so the
