@@ -69,21 +69,25 @@ export interface ButtonGroupProps
  * supposed to read as a single unit — `items-stretch` could not fix it,
  * because both children set explicit heights that override stretch.
  */
-function ButtonGroup({ className, orientation, size, ...props }: ButtonGroupProps) {
-  const resolved = useControlSize(size);
-  return (
-    <ControlSizeContext.Provider value={resolved}>
-      <div
-        role="group"
-        data-slot="button-group"
-        data-orientation={orientation ?? 'horizontal'}
-        data-size={resolved}
-        className={cn(buttonGroupVariants({ orientation }), className)}
-        {...props}
-      />
-    </ControlSizeContext.Provider>
-  );
-}
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
+  ({ className, orientation, size, ...props }, ref) => {
+    const resolved = useControlSize(size);
+    return (
+      <ControlSizeContext.Provider value={resolved}>
+        <div
+          ref={ref}
+          role="group"
+          data-slot="button-group"
+          data-orientation={orientation ?? 'horizontal'}
+          data-size={resolved}
+          className={cn(buttonGroupVariants({ orientation }), className)}
+          {...props}
+        />
+      </ControlSizeContext.Provider>
+    );
+  }
+);
+ButtonGroup.displayName = 'ButtonGroup';
 
 export interface ButtonGroupTextProps extends React.ComponentProps<'div'> {
   /** Render as the child element instead of a `div` (e.g. a `<label>`). */

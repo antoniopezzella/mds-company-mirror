@@ -41,7 +41,8 @@ export interface ListProps extends DataStateProps {
   style?: React.CSSProperties;
 }
 
-export const List: React.FC<ListProps> = ({
+/** Forwards to the outer `<div>`, so a consumer can scroll the list into view or measure it. */
+export const List = React.forwardRef<HTMLDivElement, ListProps>(({
   items,
   loading,
   loadError,
@@ -59,7 +60,7 @@ export const List: React.FC<ListProps> = ({
   onSelectionChange,
   className,
   style,
-}) => {
+}, ref) => {
   const [selected, setSelected] = React.useState<Set<string>>(
     new Set(items.filter((item) => item.selected).map((item) => item.id))
   );
@@ -87,7 +88,7 @@ export const List: React.FC<ListProps> = ({
 
 
   return (
-    <div className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: 'var(--role-surface-default)', ...style }}>
+    <div ref={ref} className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: 'var(--role-surface-default)', ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"
@@ -177,6 +178,7 @@ export const List: React.FC<ListProps> = ({
       </DataState>
     </div>
   );
-};
+});
+List.displayName = 'List';
 
 export default List;

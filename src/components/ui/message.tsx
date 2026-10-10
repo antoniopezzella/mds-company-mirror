@@ -17,23 +17,24 @@ export interface MessageProps extends React.ComponentProps<"div"> {
   align?: "start" | "end"
 }
 
-function Message({
-  className,
-  align = "start",
-  ...props
-}: MessageProps) {
-  return (
-    <div
-      data-slot="message"
-      data-align={align}
-      className={cn(
-        "group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+/** Forwards to the message row's own `<div>` — the element a chat UI scrolls to for "jump to this message". */
+const Message = React.forwardRef<HTMLDivElement, MessageProps>(
+  ({ className, align = "start", ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        data-slot="message"
+        data-align={align}
+        className={cn(
+          "group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse",
+          className
+        )}
+        {...props}
+      />
+    )
+  }
+);
+Message.displayName = "Message";
 
 function MessageAvatar({ className, ...props }: React.ComponentProps<"div">) {
   return (

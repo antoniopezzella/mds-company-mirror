@@ -245,7 +245,12 @@ function badgeLabelFor(status?: StepStatus) {
   }
 }
 
-export const Stepper: React.FC<StepperProps> = ({
+/**
+ * Forwards to the outer wrapper `<div>` — individual step triggers already
+ * manage their own focus internally (see `triggerRefs` below); this ref is
+ * for measuring/scrolling the whole stepper, e.g. into view on step change.
+ */
+export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
   steps,
   activeStep,
   orientation = 'vertical',
@@ -260,7 +265,7 @@ export const Stepper: React.FC<StepperProps> = ({
   showStepEyebrow = false,
   completedTone = 'primary',
   className,
-}) => {
+}, ref) => {
   const isHorizontal = orientation === 'horizontal';
   const isBar = indicator === 'bar';
   // Bar indicators only make sense with the label stacked underneath —
@@ -479,7 +484,7 @@ export const Stepper: React.FC<StepperProps> = ({
   };
 
   return (
-    <div className={cn('flex w-full flex-col', className)} style={{ gap: variant === 'compact' ? 16 : 24 }}>
+    <div ref={ref} className={cn('flex w-full flex-col', className)} style={{ gap: variant === 'compact' ? 16 : 24 }}>
       <div
         role={isInteractive ? 'tablist' : undefined}
         aria-orientation={isInteractive ? orientation : undefined}
@@ -505,6 +510,7 @@ export const Stepper: React.FC<StepperProps> = ({
       )}
     </div>
   );
-};
+});
+Stepper.displayName = 'Stepper';
 
 export default Stepper;

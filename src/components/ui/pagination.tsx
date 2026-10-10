@@ -59,7 +59,8 @@ const navButtonClass =
  * Same `currentPage`/`totalItems`/`pageSize`/`pageSizeOptions`/`variant`/
  * `onPageChange`/`onPageSizeChange` API as the MUI twin.
  */
-export const Pagination: React.FC<PaginationProps> = ({
+/** Forwards to the outer `<div>`, so a consumer can scroll the control into view. */
+export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(({
   currentPage,
   totalItems,
   pageSize,
@@ -73,7 +74,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   disabled = false,
   itemLabel = 'item',
   rowsLabel = 'Items per page:',
-}) => {
+}, ref) => {
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
@@ -94,7 +95,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const pluralizedItemLabel = itemLabel && (totalItems === 1 ? itemLabel : `${itemLabel}s`);
 
   return (
-    <div className={cn('flex flex-wrap items-center gap-x-6 gap-y-2', className)} style={{ color: textColor }}>
+    <div ref={ref} className={cn('flex flex-wrap items-center gap-x-6 gap-y-2', className)} style={{ color: textColor }}>
       {(showItemsRange || showTotalItems) && (
         <div className="text-sm" style={{ color: mutedColor }}>
           {showItemsRange && totalItems > 0 && <span>{startItem}–{endItem}</span>}
@@ -251,6 +252,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       </div>
     </div>
   );
-};
+});
+Pagination.displayName = 'Pagination';
 
 export default Pagination;

@@ -8,7 +8,7 @@
 // reference implementation's component names.
 import * as React from 'react';
 import { GripVertical } from 'lucide-react';
-import { Group, Panel, Separator, type GroupProps, type PanelProps, type SeparatorProps } from 'react-resizable-panels';
+import { Group, Panel, Separator, type GroupProps, type PanelImperativeHandle, type PanelProps, type SeparatorProps } from 'react-resizable-panels';
 
 import { cn } from '@/lib/utils';
 import { roleVar } from '@/theme/roles';
@@ -23,8 +23,16 @@ import { roleVar } from '@/theme/roles';
 // NOTE: `Group` already applies `flex-direction` internally via inline style
 // based on `orientation`, so no `data-[orientation=vertical]:flex-col`
 // selector is needed here (there is no such data attribute on its root).
-const ResizablePanelGroup = ({ className, ...props }: GroupProps) => (
-  <Group className={cn('flex h-full w-full', className)} {...props} />
+// `Group`/`Panel`/`Separator` are plain functions, not `forwardRef`-wrapped —
+// react-resizable-panels v4 takes a DOM ref via its own `elementRef` prop
+// instead (confirmed in the package's .d.ts; a bare `ref` is rejected by its
+// types). This wrapper still exposes the standard `ref` prop via
+// `React.forwardRef` and threads it into `elementRef` underneath, so the
+// *consumer-facing* API is the one every other component here uses.
+const ResizablePanelGroup = React.forwardRef<HTMLDivElement, GroupProps>(
+  ({ className, ...props }, ref) => (
+    <Group elementRef={ref as React.Ref<HTMLDivElement | null>} className={cn('flex h-full w-full', className)} {...props} />
+  )
 );
 ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 
@@ -40,7 +48,15 @@ ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 // worse than leaving it alone, since it implies keyboard access that doesn't
 // exist. The stories scope that one axe rule off with this same explanation;
 // the fix belongs upstream, or in replacing the library.
-const ResizablePanel = (props: PanelProps) => <Panel {...props} />;
+/**
+ * Forwards to `react-resizable-panels`' own imperative handle
+ * (`collapse`/`expand`/`getSize`/`resize`) via its `panelRef` prop, not a DOM
+ * node — there is no single element to focus on a Panel, but the imperative
+ * API is exactly what a consumer reaches for a ref to do.
+ */
+const ResizablePanel = React.forwardRef<PanelImperativeHandle, PanelProps>(
+  (props, ref) => <Panel panelRef={ref} {...props} />
+);
 ResizablePanel.displayName = 'ResizablePanel';
 
 export interface ResizableHandleProps extends SeparatorProps {
@@ -48,8 +64,10 @@ export interface ResizableHandleProps extends SeparatorProps {
   withHandle?: boolean;
 }
 
-const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandleProps) => (
+const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
+  ({ withHandle, className, ...props }, ref) => (
   <Separator
+    elementRef={ref as React.Ref<HTMLDivElement>}
     className={cn(
       'relative flex w-px items-center justify-center aria-[orientation=vertical]:h-px aria-[orientation=vertical]:w-full after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2 aria-[orientation=vertical]:after:inset-x-0 aria-[orientation=vertical]:after:left-0 aria-[orientation=vertical]:after:h-1 aria-[orientation=vertical]:after:w-full aria-[orientation=vertical]:after:translate-x-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--resizable-focus-ring)] focus-visible:ring-offset-1',
       className
@@ -74,6 +92,7 @@ const ResizableHandle = ({ withHandle, className, ...props }: ResizableHandlePro
       </div>
     )}
   </Separator>
+  )
 );
 ResizableHandle.displayName = 'ResizableHandle';
 

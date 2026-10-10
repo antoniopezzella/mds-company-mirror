@@ -123,8 +123,10 @@ const avatarRootVariants = cva('flex shrink-0 items-center justify-center overfl
  * Design System Avatar — shadcn/ui/Radix counterpart for the MDS Avatar.
  * Same `src`/`initials`/`size`/`variant`/`tone`/`status`/`badge` API as the
  * MUI twin. Uses Radix Avatar for automatic image-load-failure fallback.
+ * Forwards to the outer wrapper `<div>` — the clickable surface when
+ * `onClick` is set, and the element a Popover/Tooltip would anchor to.
  */
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(({
   src,
   initials,
   size = 'md',
@@ -135,7 +137,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   status,
   badge,
   className,
-}) => {
+}, ref) => {
   const resolvedSize = normalizeSize(size, 'Avatar') as AvatarSize;
   const sizePx = SIZE_PX[resolvedSize];
   const statusPx = STATUS_SIZE[resolvedSize];
@@ -143,6 +145,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn(avatarWrapperVariants({ clickable: Boolean(onClick) }), className)}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
@@ -195,6 +198,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {badge && <span className="absolute right-0 top-0 z-10">{badge}</span>}
     </div>
   );
-};
+});
+Avatar.displayName = 'Avatar';
 
 export default Avatar;

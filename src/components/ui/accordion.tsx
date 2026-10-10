@@ -96,16 +96,17 @@ const accordionContentVariants = cva(
 /**
  * Design System Accordion — shadcn/ui/Radix counterpart for the MDS Accordion.
  * Same `items`/`defaultExpanded`/`allowMultiple`/`variant`/`onChange` API as
- * the MUI twin.
+ * the MUI twin. Forwards to the Radix root `<div>`, so a consumer can scroll
+ * the whole panel into view or measure it.
  */
-export const Accordion: React.FC<AccordionProps> = ({
+export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
   items,
   defaultExpanded = [],
   allowMultiple = false,
   variant = 'default',
   onChange,
   className,
-}) => {
+}, ref) => {
   const rootStyle = {
     '--accordion-focus-ring': 'var(--role-focus-ring)',
     '--accordion-shadow-color': 'var(--role-surface-subtle)',
@@ -168,6 +169,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   if (allowMultiple) {
     return (
       <AccordionPrimitive.Root
+        ref={ref}
         type="multiple"
         defaultValue={defaultExpanded}
         onValueChange={(value) => onChange?.(value)}
@@ -180,6 +182,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 
   return (
     <AccordionPrimitive.Root
+      ref={ref}
       type="single"
       collapsible
       defaultValue={defaultExpanded[0]}
@@ -189,6 +192,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       {items.map(renderItem)}
     </AccordionPrimitive.Root>
   );
-};
+});
+Accordion.displayName = 'Accordion';
 
 export default Accordion;

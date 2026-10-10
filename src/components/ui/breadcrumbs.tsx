@@ -27,13 +27,14 @@ export interface BreadcrumbsProps {
  * including the same first/last + ellipsis collapse behavior when the
  * item count exceeds `maxItems`.
  */
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
+/** Forwards to the `<nav>` landmark, so a consumer can scroll it into view or measure it. */
+export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(({
   items,
   separator = '/',
   maxItems = 8,
   className,
   ariaLabel = 'Breadcrumbs',
-}) => {
+}, ref) => {
   const linkColor = 'var(--role-interactive-primary)';
   const textColor = 'var(--role-text-primary)';
   const mutedColor = 'var(--role-text-secondary)';
@@ -44,7 +45,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       : items;
 
   return (
-    <nav aria-label={ariaLabel} className={className}>
+    <nav ref={ref} aria-label={ariaLabel} className={className}>
       <ol className="flex flex-wrap items-center gap-1.5 text-sm">
         {displayItems.map((item, index) => {
           const isLast = index === displayItems.length - 1;
@@ -85,6 +86,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       </ol>
     </nav>
   );
-};
+});
+Breadcrumbs.displayName = 'Breadcrumbs';
 
 export default Breadcrumbs;
