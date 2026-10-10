@@ -1,0 +1,66 @@
+name: Chromatic (visual regression)
+
+# Visual-regression baselines for the Storybook component set. Decided
+# 2026-10-10 over committing PNGs to git: hosted diffs, no repo bloat, review
+# in the Chromatic UI on each PR.
+#
+# INERT UNTIL SET UP — needs the CHROMATIC_PROJECT_TOKEN repo secret, which
+# only a repo admin can add (create a project at chromatic.com, link this
+# repo, copy the token into Settings → Secrets → Actions). Until then this
+# job skips itself rather than failing every PR. See
+# docs/guides/VISUAL_REGRESSION.md for the one-time setup.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Chromatic diffs each build against the baseline of its git
+          # ancestor, so it needs full history — a shallow clone makes every
+          # build look like a new baseline with no parent to compare to.
+          fetch-depth: 0
+
+      - name: Skip when no project token is configured
+        id: guard
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: |
+          if [ -z "$CHROMATIC_PROJECT_TOKEN" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CHROMATIC_PROJECT_TOKEN not set — skipping. See docs/guides/VISUAL_REGRESSION.md."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        if: steps.guard.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.run == 'true'
+        run: npm ci
+
+      - name: Build tokens
+        if: steps.guard.outputs.run == 'true'
+        run: npm run tokens:build
+
+      - name: Publish to Chromatic
+        if: steps.guard.outputs.run == 'true'
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build-storybook
+          # Visual changes are surfaced for review in the Chromatic UI rather
+          # than hard-failing the PR check. Drop this once the team wants an
+          # accepted baseline to be a required gate.
+          exitZeroOnChanges: true
