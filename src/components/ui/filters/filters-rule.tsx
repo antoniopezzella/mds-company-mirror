@@ -5,16 +5,16 @@ import { ChevronDown, MoreVertical, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
-import { Button } from '../button';
-import { ButtonGroup } from '../button-group';
-import { Popover, PopoverContent, PopoverTrigger } from '../popover';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersValueEditor, type FiltersValueEditorProps } from './filters-value-editor';
 import { findOperator, operatorsFor } from './filters-operators';

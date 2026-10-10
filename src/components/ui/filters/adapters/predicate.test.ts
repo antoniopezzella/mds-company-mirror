@@ -6,9 +6,9 @@ import {
   createFilterGroup,
   createFilterQuery,
   createFilterRule,
-} from '../filters-query';
-import { operatorsFor } from '../filters-operators';
-import type { FilterField } from '../filters-schema';
+} from '@/components/ui/filters/filters-query';
+import { operatorsFor } from '@/components/ui/filters/filters-operators';
+import type { FilterField } from '@/components/ui/filters/filters-schema';
 
 beforeEach(__resetFilterIds);
 

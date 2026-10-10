@@ -8,8 +8,8 @@ import { createFilterGroup, createFilterQuery, createFilterRule } from './filter
 import { applyFilterQuery } from './adapters/predicate';
 import type { FilterField } from './filters-schema';
 import type { FilterQuery } from './filters-types';
-import { Card, CardContent, CardHeader, CardTitle } from '../card';
-import { Stack } from '../stack';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Stack } from '@/components/ui/stack';
 
 const meta: Meta<typeof FiltersBuilder> = {
   title: 'Components/Filters Builder',

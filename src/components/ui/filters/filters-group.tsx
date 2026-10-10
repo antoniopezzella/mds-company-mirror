@@ -5,8 +5,8 @@ import { ChevronDown, FolderPlus, MoreVertical, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { getRoleColor } from '@/theme/roles';
-import { Button } from '../button';
-import { Popover, PopoverContent, PopoverTrigger } from '../popover';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersRule, type FiltersRuleProps } from './filters-rule';
 import type { FiltersValueEditorProps } from './filters-value-editor';

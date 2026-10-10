@@ -1,6 +1,6 @@
-import { isFilterGroup, type FilterGroup, type FilterQuery, type FilterRule } from '../filters-types';
-import { isFilterRuleComplete } from '../filters-query';
-import { fieldTypeAt, type FilterField } from '../filters-schema';
+import { isFilterGroup, type FilterGroup, type FilterQuery, type FilterRule } from '@/components/ui/filters/filters-types';
+import { isFilterRuleComplete } from '@/components/ui/filters/filters-query';
+import { fieldTypeAt, type FilterField } from '@/components/ui/filters/filters-schema';
 
 /**
  * Compiles a query into a local predicate — §31.

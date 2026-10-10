@@ -5,13 +5,17 @@ import {
   CODE_ONLY,
   CONTESTED,
   CONTRACTS,
+  MATURITY_OVERRIDES,
   TAXONOMY,
   TIERS,
+  byMaturity,
   byTier,
   contractOf,
   contractCoverage,
   figmaMappable,
+  maturityOf,
   tierOf,
+  type Maturity,
   type Tier,
 } from './taxonomy';
 
@@ -156,6 +160,49 @@ describe('taxonomy', () => {
     expect(total).toBe(Object.keys(TAXONOMY).length);
     expect(withContract).toBe(Object.keys(CONTRACTS).filter((k) => k in TAXONOMY).length);
     expect(withContract).toBeGreaterThan(0);
+  });
+
+  // ── Maturity ───────────────────────────────────────────────────────────────
+  // Every classified component must resolve to a maturity so a consumer can
+  // always tell a settled primitive from one whose API is still moving.
+
+  it('gives every taxonomy entry a valid maturity', () => {
+    const valid = new Set<Maturity>(['stable', 'beta', 'experimental']);
+    const bad = Object.keys(TAXONOMY).filter((c) => !valid.has(maturityOf(c)));
+    expect(bad, `components with no/invalid maturity: ${bad.join(', ')}`).toEqual([]);
+  });
+
+  it('only records maturity overrides for components that exist', () => {
+    const orphan = Object.keys(MATURITY_OVERRIDES).filter((c) => !(c in TAXONOMY));
+    expect(orphan, `MATURITY_OVERRIDES references unknown component(s): ${orphan.join(', ')}`).toEqual([]);
+  });
+
+  it('never lists a `stable` override (stable is the unlisted default)', () => {
+    // A `stable` entry here would be noise — the whole point of the override
+    // map is that it holds only the not-yet-stable components.
+    const redundant = Object.entries(MATURITY_OVERRIDES)
+      .filter(([, m]) => (m as Maturity) === 'stable')
+      .map(([n]) => n);
+    expect(redundant, `redundant stable overrides: ${redundant.join(', ')}`).toEqual([]);
+  });
+
+  it('maturityOf defaults unlisted components to stable', () => {
+    expect(maturityOf('button')).toBe('stable');
+    expect(maturityOf('data-grid')).toBe('beta');
+    expect(maturityOf('questionnaire')).toBe('experimental');
+    expect(maturityOf('definitely-not-a-component')).toBe('stable');
+  });
+
+  it('byMaturity partitions the taxonomy into sorted, non-overlapping sets', () => {
+    const maturities: Maturity[] = ['stable', 'beta', 'experimental'];
+    const all = maturities.flatMap(byMaturity);
+    expect(all.length).toBe(Object.keys(TAXONOMY).length);
+    expect(new Set(all).size).toBe(all.length); // no component in two buckets
+    for (const m of maturities) {
+      const list = byMaturity(m);
+      expect(list).toEqual([...list].sort());
+    }
+    expect(byMaturity('stable').length).toBeGreaterThan(0);
   });
 
   // ── Code Connect mappability ───────────────────────────────────────────────
