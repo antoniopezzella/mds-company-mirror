@@ -19,15 +19,18 @@ const toggleVariants = cva(
         default: 'border border-transparent',
         outline: 'border',
       },
+      // On the shared control-height scale (control-size.ts): sm 32 / md 40 /
+      // lg 48. Ported from shadcn on its own h-8/h-9/h-10 scale; normalised
+      // 2026-10-10 so a Toggle lines up with Button/Input in a toolbar.
       size: {
-        default: 'h-9 px-3',
         sm: 'h-8 px-2',
-        lg: 'h-10 px-4',
+        md: 'h-10 px-3',
+        lg: 'h-12 px-4',
       },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
+      size: 'md',
     },
   }
 );

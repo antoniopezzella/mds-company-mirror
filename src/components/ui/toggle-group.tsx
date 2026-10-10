@@ -12,7 +12,7 @@ import { toggleVariants } from './toggle';
  * shadcn/ui conventions (Radix ToggleGroup), styled with `roleVar()`.
  */
 
-const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({ size: 'default', variant: 'default' });
+const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({ size: 'md', variant: 'default' });
 /** Mirrors the pattern used by shadcn RadioGroup in this repo: the item needs
  *  to know the group's current value to compute its own pressed-state color. */
 const ToggleGroupValueContext = React.createContext<string | string[] | undefined>(undefined);

@@ -29,7 +29,7 @@ const meta: Meta<typeof Attachment> = {
       control: 'select',
       options: ['idle', 'uploading', 'processing', 'error', 'done'],
     },
-    size: { control: 'select', options: ['default', 'sm', 'xs'] },
+    size: { control: 'select', options: ['md', 'sm'] },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
   },
 };

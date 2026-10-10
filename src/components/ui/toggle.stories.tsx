@@ -16,7 +16,7 @@ const meta: Meta<typeof Toggle> = {
   },
   argTypes: {
     variant: { control: 'select', options: ['default', 'outline'] },
-    size: { control: 'select', options: ['default', 'sm', 'lg'] },
+    size: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
 };
 
@@ -49,7 +49,7 @@ export const Sizes: StoryObj = {
   render: () => (
     <div className="flex items-center gap-2">
       <Toggle size="sm" aria-label="Bold (small)"><Bold className="h-3.5 w-3.5" /></Toggle>
-      <Toggle size="default" aria-label="Bold (default)"><Bold className="h-4 w-4" /></Toggle>
+      <Toggle size="md" aria-label="Bold (medium)"><Bold className="h-4 w-4" /></Toggle>
       <Toggle size="lg" aria-label="Bold (large)"><Bold className="h-5 w-5" /></Toggle>
     </div>
   ),
