@@ -6,7 +6,6 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 type InteractionState = 'default' | 'hover' | 'active';
 

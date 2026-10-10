@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 /**
  * ScrollArea — no MDS/Figma spec exists for this yet; built matching real

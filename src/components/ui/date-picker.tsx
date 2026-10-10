@@ -8,7 +8,6 @@ import type { DateRange, DayPickerProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { CONTROL_ICON, CONTROL_RADIUS, useControlSize, type ControlSize } from './control-size';
-import { roleVar } from '@/theme/roles';
 import { Button } from './button';
 import { Calendar } from './calendar';
 import { Input } from './input';

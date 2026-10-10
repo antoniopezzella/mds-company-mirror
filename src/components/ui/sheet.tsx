@@ -6,7 +6,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 /**
  * Sheet — no MDS/Figma spec exists for this yet; built matching real

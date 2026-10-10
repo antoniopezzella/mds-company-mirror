@@ -11,7 +11,6 @@ import { GripVertical } from 'lucide-react';
 import { Group, Panel, Separator, type GroupProps, type PanelImperativeHandle, type PanelProps, type SeparatorProps } from 'react-resizable-panels';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 /**
  * Design System Resizable — shadcn/ui counterpart wrapping

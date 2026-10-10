@@ -10,7 +10,6 @@ import {
   useControlSize,
   type ControlSize,
 } from "./control-size"
-import { roleVar } from '@/theme/roles';
 import { Button } from "@/components/ui/button"
 
 /**
