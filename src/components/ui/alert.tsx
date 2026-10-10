@@ -13,17 +13,16 @@ export type AlertSeverity = 'error' | 'warning' | 'info' | 'success';
  * are the same for every severity except warning, and that exception is the
  * whole reason this returns two values.
  *
- * `status.warning.fg` is gold1000 (#cb7623). On `status.warning.bg` (gold50,
- * #fffcf8) it measures 3.34:1 — fine for a non-text accent, which needs only
- * 3:1, but well under the 4.5:1 that body text requires. Every warning Alert,
- * Badge, Chip and Snackbar was rendering unreadable text, and no gold in the
- * palette fixes it: gold1000 is the darkest and fails even on pure white
- * (3.41:1).
+ * `status.warning.fg` is the burnt orange #c25600 (V3 re-sync 2026-10-10, was
+ * gold #cb7623). On `status.warning.bg` (gold50, #fffcf8) it measures 4.44:1 —
+ * comfortably over the 3:1 a non-text accent needs, but still a hair under the
+ * 4.5:1 body text requires, so warning text still can't ride the accent.
  *
- * `text.onLight` exists for exactly this — its own role description cites
- * "warning gold" — and measures 17.71:1 here. check-contrast.js already
- * validates that pair. Success and danger need no equivalent: their own `fg`
- * passes on their own background (4.94:1 and 8.77:1).
+ * `text.onLight` exists for exactly this and measures 17.71:1 here;
+ * check-contrast.js validates that pair. Success and danger need no equivalent:
+ * their own `fg` passes on their own background (4.94:1 and 8.77:1). (A warning
+ * Alert is always the pale-surface form — the dark-orange SOLID fill, where
+ * white text works, is Badge's `solid` variant via text.onWarning.)
  */
 function getSeverityRoles(severity: AlertSeverity): { fg: RoleName; bg: RoleName; text: RoleName } {
   switch (severity) {

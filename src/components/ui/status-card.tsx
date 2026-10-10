@@ -18,7 +18,7 @@ function getRoles(status: StatusCardStatus): { bg: RoleName; fg: RoleName; borde
       return { bg: 'status.success.bg', fg: 'status.success.fg', border: 'status.success.border' };
     case 'warning':
       // fg is applied to the title and body copy, so it must clear 4.5:1;
-      // status.warning.fg (gold1000) manages only 3.34:1 on this background.
+      // status.warning.fg (#c25600) manages 4.44:1 on this background — over 3:1 as an accent, under 4.5 as text.
       return { bg: 'status.warning.bg', fg: 'text.onLight', border: 'status.warning.border' };
     case 'error':
       return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.border' };

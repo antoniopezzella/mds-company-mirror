@@ -202,13 +202,13 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#ffd98a",
-    "light": "#cb7e03",
+    "light": "#c25600",
     "role": "status.warning.border",
     "semantic": "statusWarningBorder",
   },
   {
     "dark": "#fff2da",
-    "light": "#cb7623",
+    "light": "#c25600",
     "role": "status.warning.fg",
     "semantic": "statusWarningText",
   },
@@ -352,7 +352,7 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
   },
   {
     "dark": "#000f47",
-    "light": "#000f47",
+    "light": "#ffffff",
     "role": "text.onWarning",
     "semantic": "textOnWarning",
   },

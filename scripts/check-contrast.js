@@ -112,10 +112,11 @@ const PAIRS = [
   // fill — see badge.tsx's own TODO about no dedicated solid-fill role yet).
   { name: 'textOnInteractive on statusSuccessBorder', fg: 'textOnInteractive', bg: 'statusSuccessBorder', required: 4.5, warn: 4.5 },
   { name: 'textOnInteractive on statusDangerBorder', fg: 'textOnInteractive', bg: 'statusDangerBorder', required: 4.5, warn: 4.5 },
-  // textOnLight (mode-invariant Midnight), not textOnInteractive: warning's
-  // border/bg stay light/mid-toned gold in both modes, so a mode-flipping
-  // token doesn't fit the way it does for success/danger.
-  { name: 'textOnLight on statusWarningBorder', fg: 'textOnLight', bg: 'statusWarningBorder', required: 4.5, warn: 4.5 },
+  // Warning's solid fill, same shape as success/danger above now that V3's
+  // warning is a dark burnt orange (#c25600): textOnWarning flips white
+  // (light, 4.54:1 on #c25600) → Midnight (dark, 13.41:1 on gold500). It was the
+  // textOnLight exception only while warning was pale gold where white failed.
+  { name: 'textOnWarning on statusWarningBorder', fg: 'textOnWarning', bg: 'statusWarningBorder', required: 4.5, warn: 4.5 },
   { name: 'textOnLight on statusWarningBg', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
   // Informational only unless explicitly included (white on white scenario)
   { name: 'textOnAccent on surfaceDefault', fg: 'textOnAccent', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
@@ -160,10 +161,12 @@ const PAIRS = [
   // Raised 3.0 -> 4.5: Badge's `outline` variant renders these as small text
   // directly on the page, so AA for text applies, not the 3:1 non-text floor.
   { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
-  // Stays at 3.0 — and this is exactly why Badge's warning outline uses
-  // text.primary instead: at 3.41 this colour cannot be body text, and the
-  // gold ramp has no darker step to promote.
-  { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
+  // Raised 3.0 -> 4.5 (2026-10-10): statusWarningText is now the #c25600 accent
+  // at 4.54:1 on white, so Badge's warning OUTLINE renders it as 12px text —
+  // AA for text applies. The old gold1000 managed only 3.41 and forced that
+  // variant to text.primary; the burnt orange clears the bar, barely, so the
+  // gate guards it against a regressive nudge.
+  { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
   { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
 
   // Status text on its OWN background — the pairing components actually render
@@ -179,7 +182,8 @@ const PAIRS = [
   { name: 'statusSuccessText on statusSuccessBg', fg: 'statusSuccessText', bg: 'statusSuccessBg', required: 4.5, warn: 4.5 },
   { name: 'statusDangerText on statusDangerBg', fg: 'statusDangerText', bg: 'statusDangerBg', required: 4.5, warn: 4.5 },
   { name: 'textOnLight on statusWarningBg (warning text)', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
-  // Gold stays legal as a non-text accent (icon, border): 3:1, not 4.5:1.
+  // The #c25600 accent on the pale warning fill — icon and outline: 4.44:1,
+  // comfortably over the 3:1 non-text floor (the old gold managed 3.34 here).
   { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 },
 
   // ── Chart series vs the chart surface ──────────────────────────────────────

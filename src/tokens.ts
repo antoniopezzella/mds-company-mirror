@@ -125,7 +125,7 @@ export const tokens = {
 
   // ── UTILITIES ─────────────────────────────────────────────────────────────
   statusCritical: '#c53532',   // Figma Utilities/Critical (= Traffic/Crimson 600 - default)
-  statusWarning:  '#cb7e03',   // Figma Utilities/Warning
+  statusWarning:  '#c25600',   // Figma V3/Surface|Border|Text/Warning — re-synced 2026-10-10 from gold #cb7e03. V3 moved Warning to a burnt orange; darker than the old gold, so white text now works on a solid warning fill (4.54:1) and it clears the 3:1 accent floor with room to spare (4.44 on the pale bg). See docs/tasks/token-authority-decision.md.
   statusSuccess:  '#14853d',   // Figma Utilities/Success
   statusInfo:     '#6fb4ff',   // → blue500
   focusCyan:      '#009de0',   // Figma MODE/Border/Focus (future-state)
