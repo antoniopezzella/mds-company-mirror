@@ -74,6 +74,13 @@ jobs:
       - name: Build publishable package
         run: npm run build:package
 
+      # Bundle-size budget on what actually ships (dist-pkg). Runs right after
+      # the package is built so the artifacts it measures are the ones just
+      # produced. Limits live in .size-limit.cjs, set ~12% above the measured
+      # size — this catches the package growing unnoticed between releases.
+      - name: Bundle-size budget
+        run: npm run size
+
       # `registry validate` only checks that the FILE is well-formed. It will
       # happily pass a registry missing a quarter of the library — which is
       # exactly what happened: 71 listed against 94 on disk. This second step

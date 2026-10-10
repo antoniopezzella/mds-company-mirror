@@ -34,15 +34,26 @@ export default defineConfig({
         // Data, not logic — a manifest and a deprecation record.
         'src/components/ui/taxonomy.ts',
       ],
-      // Set just below the measured floor (unit project alone: 48.98% lines,
-      // 52.45% functions, 81.95% branches) so the gate catches regression
-      // rather than sitting so far below actual that it never fires. Raise
-      // these as coverage rises.
+      // DETERMINISM: coverage is collected from the `unit` project ONLY
+      // (`test:coverage` runs `vitest run --project unit --coverage`). Running
+      // `--coverage` across ALL projects also instruments the `storybook`
+      // project, which executes in a real Playwright browser and flakes on a
+      // cold Vite pre-bundle cache — it exits 1 and writes no report, and V8
+      // clears `coverage/` on the way down, so the gate's number swung between
+      // ~92% (both projects, warm cache) and "no report at all" (cold cache).
+      // The unit project is jsdom-only and reproduces to the digit: measured
+      // 65.69% lines / 65.69% statements / 71.72% functions / 85.63% branches,
+      // identical across repeated runs (2026-10-10). The browser path still
+      // has its own coverage script: `test:coverage:storybook`.
+      //
+      // Thresholds are set a few points below those measured unit-only numbers
+      // so the gate catches a regression without failing today. Raise them as
+      // coverage rises; a threshold nobody can pass gets disabled.
       thresholds: {
-        lines: 45,
-        functions: 50,
-        statements: 45,
-        branches: 78,
+        lines: 62,
+        functions: 68,
+        statements: 62,
+        branches: 82,
       },
     },
     projects: [
