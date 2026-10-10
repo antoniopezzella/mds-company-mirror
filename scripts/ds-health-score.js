@@ -84,8 +84,26 @@ const HISTORY = path.join(root, 'docs/ds-health-history.json');
  *
  * v3 and v4 are not comparable either. v3's recorded run is left in history
  * rather than migrated, which is the point of keeping raw metrics per run.
+ *
+ * v5 — `a11y_enforcement` stopped being a single string read out of
+ * preview.tsx. It scored 100/100 from the presence of `test: 'error'` alone,
+ * which is true and was never the whole claim: this repo has ~71 recorded
+ * dark-mode contrast failures (`npm run test:dark`) and NOTHING honouring
+ * `prefers-reduced-motion`, and the v4 metric could not fall by one point for
+ * either fact. "A health score that cannot fall when health does is a number,
+ * not a measurement" — so v5 composes the metric from three file-readable
+ * facts (axe enforcement level, whether the dark-mode test mechanism is
+ * wired/enforced, and reduced-motion coverage as a ratio), none of which
+ * needs a build or a browser run. Finding and fixing `reducedMotion`'s own
+ * bug in the same change — it matched the PHRASE "prefers-reduced-motion" in
+ * a JSDoc comment and a taxonomy.ts prose string, counting two mentions as
+ * two implementations — is why this is v5 and not a same-version patch: the
+ * metric's definition was wrong, not merely under-weighted, exactly per the
+ * v3->v4 precedent above.
+ *
+ * v4 and v5 are not comparable. v4's recorded runs are left in history.
  */
-export const RUBRIC_VERSION = 4;
+export const RUBRIC_VERSION = 5;
 
 // ---------------------------------------------------------------------------
 // Reading the repo — at HEAD, or at any revision, without touching the tree
@@ -130,6 +148,9 @@ function list(rev, dir) {
 }
 
 const count = (text, re) => (text ? (text.match(re) ?? []).length : 0);
+
+/** Blanks out /* block comments *\/, preserving length-irrelevant whitespace. Shared by every metric that must not count a comment as code. */
+const stripBlockComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ');
 
 // ---------------------------------------------------------------------------
 // The metrics
@@ -233,7 +254,11 @@ function measure(rev) {
   // Loose .md files at the repo root — the sprawl the docs gate exists for.
   const rootDocs = list(rev, '.').filter((f) => /^[^/]+\.md$/.test(f)).length;
 
-  // Accessibility: enforced, advisory, or absent.
+  // Accessibility — axe enforcement level: enforced, advisory, or absent.
+  // This ONE enum used to be the whole `a11y_enforcement` metric, and it was
+  // blind to the ~71 dark-mode contrast failures and to whether anything
+  // honours `prefers-reduced-motion` — see the two blocks below, which feed
+  // the other two-thirds of that metric now.
   const preview = read(rev, '.storybook/preview.tsx') ?? '';
   const a11yBlock = /a11y:\s*\{[^}]*\}/s.exec(preview)?.[0] ?? '';
   const a11y = /test:\s*'error'/.test(a11yBlock)
@@ -243,6 +268,48 @@ function measure(rev) {
       : a11yBlock
         ? 'configured'
         : 'none';
+
+  // Accessibility — the dark-mode story pass: wired, enforced, or absent.
+  //
+  // `ds:score` refuses a build or a test run by design, so this CANNOT read
+  // "does test:dark pass" — vitest.dark.config.ts's own header says the
+  // ~71-failure backlog behind it is still open, and only a browser run
+  // could tell. What IS file-readable is whether the mechanism exists at
+  // all ('wired': the config file exists and `test:dark` resolves to it) and
+  // whether it is actually gating anything ('enforced': promoted into
+  // `governance:ci` or the default `test` script, per that same header's own
+  // "promote it once it is green"). 'wired' earns real but partial credit —
+  // a runnable mechanism nobody runs automatically is worth more than
+  // nothing and a great deal less than a gate.
+  let scripts = {};
+  try {
+    scripts = JSON.parse(read(rev, 'package.json') ?? '{}').scripts ?? {};
+  } catch {
+    scripts = {};
+  }
+  const darkConfigExists = read(rev, 'vitest.dark.config.ts') !== null;
+  const darkScript = scripts['test:dark'] ?? '';
+  const darkWired = darkConfigExists && /vitest\.dark\.config/.test(darkScript);
+  const darkPromoted = ['governance:ci', 'test'].some((s) => /\btest:dark\b/.test(scripts[s] ?? ''));
+  const darkModeStatus = !darkWired ? 'none' : darkPromoted ? 'enforced' : 'wired';
+
+  // Accessibility — reduced-motion coverage, as a RATIO like every other
+  // density metric here, so it does not move simply because the library
+  // grew.
+  //
+  // Requires an actual mechanism — Tailwind's `motion-reduce:` variant, or a
+  // `@media (prefers-reduced-motion` query, or a `matchMedia(...
+  // prefers-reduced-motion` read — not merely the PHRASE "prefers-reduced-
+  // motion" appearing in the file. Before this, the match was a bare
+  // substring test against raw source (comments included), and the ONLY two
+  // hits in the whole component set were skeleton.tsx's JSDoc ("useful
+  // inside `prefers-reduced-motion` contexts") and a sentence in
+  // taxonomy.ts's `gotchas` array — prose, not code, counted as if it were
+  // an implementation. That is the exact bug this file's own header warns
+  // against, found here rather than by an agent satisfying the metric as
+  // written: wiring a broken field into the score the same day it is given
+  // a weight would have shipped the repo's signature failure a tenth time.
+  const REDUCED_MOTION_RE = /motion-reduce:|@media[^{]*prefers-reduced-motion|matchMedia\(\s*['"][^'"]*prefers-reduced-motion/;
 
   // Do the file-walking gates actually reach subdirectories? Two of them did
   // not until 2026-09-26, so a whole directory-shaped component was invisible
@@ -312,7 +379,9 @@ function measure(rev) {
     // mirroring it.
     logicalProps += (src.match(/\b(?:ms|me|ps|pe)-[0-9]/g) ?? []).length;
     physicalProps += (src.match(/\b(?:ml|mr|pl|pr)-[0-9]/g) ?? []).length;
-    if (/prefers-reduced-motion|motion-reduce/.test(src)) reducedMotion += 1;
+    // Comments stripped first — same reason typoScopeRefs strips them below:
+    // a mention is not a mechanism.
+    if (REDUCED_MOTION_RE.test(stripBlockComments(src))) reducedMotion += 1;
   }
 
   // GLOBAL — is the SHIPPED surface off the ambient typography scope?
@@ -366,9 +435,8 @@ function measure(rev) {
   // `text-h1` is the sans/product expression and `text-serif-h1` the marketing
   // one: the UNMARKED name is the common case, and `serif` is self-describing
   // where `expressive`/`productive` had to be learned.
-  const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ');
-  const pkgCssCode = strip(pkgCss);
-  const utilSrc = strip(read(rev, 'src/styles/component-utilities.css') ?? '');
+  const pkgCssCode = stripBlockComments(pkgCss);
+  const utilSrc = stripBlockComments(read(rev, 'src/styles/component-utilities.css') ?? '');
   const pkgImportsUtilities = /@import\s+['"][^'"]*component-utilities\.css['"]/.test(pkgCssCode);
   const definesBothExpressions =
     /@utility\s+text-serif-h1\b/.test(utilSrc) && /@utility\s+text-h1\b/.test(utilSrc);
@@ -463,6 +531,7 @@ function measure(rev) {
     tokenDocDrift: drift,
     rootDocs,
     a11yGate: a11y,
+    darkModeStatus,
     gatesRecursive: recursive,
     gatesPresent,
     deprecations,
@@ -545,10 +614,39 @@ const RUBRIC = [
     // dark-mode failures and to prefers-reduced-motion, so weighting it as
     // heavily as test coverage overstated what it can see.
     weight: 7,
-    // Advisory scores well below half: a gate that reports and never fails is
-    // most of the work for none of the protection.
-    score: (m) => ({ error: 100, todo: 35, configured: 20, none: 0 })[m.a11yGate] ?? 0,
-    format: (m) => m.a11yGate,
+    //
+    // v5 — a HEALTH SCORE THAT CANNOT FALL WHEN HEALTH DOES IS A NUMBER, NOT
+    // A MEASUREMENT. v4 scored 100 purely because preview.tsx contains the
+    // string `test: 'error'`, which is true right now and says nothing about
+    // the ~71 dark-mode contrast failures or the complete absence of
+    // `prefers-reduced-motion` support underneath it. Composed from three
+    // file-readable facts instead of one, so each can move independently and
+    // the ceiling itself moves when the repo's own stated gaps are real:
+    //
+    //   50%  axe enforcement level (unchanged: error/todo/configured/none).
+    //   30%  dark-mode test MECHANISM — 'enforced' (promoted into
+    //        governance:ci or `npm test`) scores full; 'wired' (the config
+    //        and script exist but gate nothing yet, which is the actual
+    //        state today) scores 40; 'none' scores 0. Deliberately NOT "does
+    //        test:dark pass" — this file refuses a browser run by design,
+    //        and the ~71-failure backlog behind it needs one to assess.
+    //   20%  reduced-motion coverage, as a ratio of ui/ modules carrying a
+    //        REAL mechanism (`motion-reduce:`, a `prefers-reduced-motion`
+    //        media query, or a matching `matchMedia` read) — not a module
+    //        that merely mentions the phrase. See `reducedMotion`'s own
+    //        comment for the two prose-only false positives this replaces.
+    //
+    // Advisory-only axe still scores well below half on its own, and the
+    // composite cannot reach 100 while the other two gaps stay open — which
+    // is the whole point: a number that used to read 100 unconditionally now
+    // reads whatever the sum of real, file-readable evidence supports.
+    score: (m) => {
+      const axe = { error: 100, todo: 35, configured: 20, none: 0 }[m.a11yGate] ?? 0;
+      const dark = { enforced: 100, wired: 40, none: 0 }[m.darkModeStatus] ?? 0;
+      const motion = pct(m.reducedMotion, m.uiModules);
+      return axe * 0.5 + dark * 0.3 + motion * 0.2;
+    },
+    format: (m) => `axe:${m.a11yGate} dark:${m.darkModeStatus} motion:${m.reducedMotion}/${m.uiModules}`,
   },
   {
     id: 'gate_reach',
