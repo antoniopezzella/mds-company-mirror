@@ -1,7 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { theme } from '../theme';
 
-type TypoKey = keyof typeof theme.typography;
+// Only the typographic VARIANT keys — each maps to a TypographyStyle object.
+// `keyof typeof theme.typography` would also include the scalar/function members
+// (fontFamily, fontWeightBold, htmlFontSize, pxToRem, …), so indexing with it
+// produced a union on which fontSize/lineHeight/etc. do not exist.
+type TypoKey =
+  | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  | 'subtitle1' | 'subtitle2'
+  | 'body1' | 'body2'
+  | 'caption' | 'overline'
+  | 'button';
 
 const KEYS: TypoKey[] = [
   'h1','h2','h3','h4','h5','h6',

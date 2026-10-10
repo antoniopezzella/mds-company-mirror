@@ -1,4 +1,12 @@
-import '@testing-library/jest-dom';
+// The `/vitest` entry (not the bare '@testing-library/jest-dom') registers the
+// same DOM matchers AND augments Vitest's `expect` directly. The bare entry's
+// type definitions do `/// <reference types="jest" />`, which pulls @types/jest's
+// global `expect` — typed with a single argument and returning `JestMatchers` —
+// into any TypeScript program that includes this file (tsconfig.test.json). That
+// shadows Vitest's own `expect`, breaking both the `expect(value, message)`
+// overload and Vitest-only matchers like `toHaveBeenCalledOnce`. Runtime is
+// unchanged: both entries call the identical `expect.extend(...)`.
+import '@testing-library/jest-dom/vitest';
 
 // Radix UI primitives (Select, Checkbox, etc.) call these DOM APIs during
 // interaction — jsdom doesn't implement them, so tests throw without a stub.

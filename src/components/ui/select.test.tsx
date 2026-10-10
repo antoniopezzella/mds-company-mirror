@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { DSSelect } from './select';
 
 // Radix Select renders its listbox in a portal and only opens via full

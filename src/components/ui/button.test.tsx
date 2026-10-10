@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { Button } from './button';
 
 describe('Button', () => {
@@ -29,7 +29,7 @@ describe('Button', () => {
         Inverse ghost
       </Button>
     );
-    const { container: inverseTertiary } = render(<Button variant="inverseTertiary">Inverse tertiary</Button>);
+    const { container: inverseTertiary } = render(<Button variant="tertiary" inverse>Inverse tertiary</Button>);
     expect(inverseGhost.querySelector('button')?.className).toBe(
       inverseTertiary.querySelector('button')?.className
     );

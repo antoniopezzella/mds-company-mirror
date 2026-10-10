@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import DSRadio, { DSRadioGroup } from './Radio';
 
 describe('DSRadio', () => {

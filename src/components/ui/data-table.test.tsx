@@ -1,6 +1,6 @@
 import type { DataGridColumnDef } from './data-grid-features';
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 import { DataTable, createSelectColumn } from './data-table';
 

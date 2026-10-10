@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi } from 'vitest';
 
 import { DataGridBulkActions, type BulkAction } from './data-grid-bulk-actions';

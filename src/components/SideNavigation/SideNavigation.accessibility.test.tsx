@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import SideNavigation from './SideNavigation';
 import type { SideNavItem } from './SideNavigation';
