@@ -239,8 +239,26 @@ if (fs.existsSync(THEME)) {
   // Dark inherits every role it does not override.
   const roleHexDark = new Map([...roleHexLight, ...mapOf(themeDark)]);
 
-  // `/* #hex <anything> MDS: some.role.name */`
-  const ROLE_LINE = /--([a-z0-9-]+):[^;]+;\s*\/\*\s*[^*]*?(#[0-9a-fA-F]{6})[^*]*?MDS:\s*([A-Za-z][A-Za-z.]*)/;
+  // The role projection itself (`--role-text-primary`, `--role-chart-1`). The
+  // `--color-*` map above resolves a role by its SEMANTIC's kebab name, which
+  // only works when role-dashed === semantic-kebab. That coincidence breaks for
+  // roles whose name carries a digit (`chart.1`..`chart.5`, whose semantic is
+  // `chartSeries1`) or preserves camelCase (`text.onInteractive`) — but every
+  // role has a `--role-*` var, so this is the authoritative fallback. Keys are
+  // case-PRESERVED (dots→dashes only), matching roleVarName in roles.ts.
+  const roleMapOf = (css) => {
+    const m = new Map();
+    for (const hit of css.matchAll(/--role-([A-Za-z0-9-]+):\s*(#[0-9a-fA-F]{3,8})/g)) {
+      m.set(hit[1], hit[2].toLowerCase());
+    }
+    return m;
+  };
+  const roleVarLight = roleMapOf(themeLight);
+  const roleVarDark = new Map([...roleVarLight, ...roleMapOf(themeDark)]);
+
+  // `/* #hex <anything> MDS: some.role.name */` — role names may carry digits
+  // (`chart.1`), so the capture class includes 0-9.
+  const ROLE_LINE = /--([a-z0-9-]+):[^;]+;\s*\/\*\s*[^*]*?(#[0-9a-fA-F]{6})[^*]*?MDS:\s*([A-Za-z][A-Za-z0-9.]*)/;
 
   let inDark = false;
   lines.forEach((line, i) => {
@@ -251,7 +269,12 @@ if (fs.existsSync(THEME)) {
 
     // 'text.primary' -> 'text-primary'
     const key = role.replace(/\./g, '-').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-    const actual = (inDark ? roleHexDark : roleHexLight).get(key);
+    let actual = (inDark ? roleHexDark : roleHexLight).get(key);
+    // Fall back to the role projection for roles the semantic-kebab lookup
+    // can't reach (digit-bearing / camelCase names — see roleMapOf above).
+    if (!actual) {
+      actual = (inDark ? roleVarDark : roleVarLight).get(role.replace(/\./g, '-'));
+    }
 
     if (!actual) {
       unknownRoles.push({ line: i + 1, name, role, mode: inDark ? 'dark' : 'light' });

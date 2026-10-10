@@ -233,6 +233,28 @@ export const semanticColors = {
   textOnDanger:            ref('white'),        // White text on red
   textOnSuccess:           ref('white'),        // White on solid success green (4.72:1); flips to Midnight in dark
   textOnWarning:           ref('blue1000'),     // Midnight on solid warning gold (5.63:1) — white fails at 3.22, so mode-invariant
+
+  // ── Chart — categorical data-visualisation series ─────────────────────────
+  // Five-hue categorical palette for charts, consumed by recharts/chart.tsx
+  // through the role tier (`--chart-1..5` → `chart.1..5`). The order
+  // green→blue→gold→purple→red is LOAD-BEARING: it is the only arrangement of
+  // these five brand hues with no adjacent-pair CVD collision at light-mode
+  // lightness (see chart.tsx and the `dataviz` skill). Identity is never
+  // colour-alone — chart.tsx always ships a legend + direct labels — which is
+  // why two of the ten (light gold, dark purple) sit below the 3:1 non-text
+  // floor on the surface by design (tracked INFO pairs in check-contrast.js).
+  //
+  // These were hand-authored HSL in token-variables.css, OUTSIDE the token
+  // system; promoted here so they are DTCG-exported, contrast-tracked and
+  // varsync-gated. Reconciling to the live primitives moved two values that
+  // had gone stale when the 2026-09-15 Figma re-sync shifted their anchors:
+  // chartSeries4 purple750 #8f37c6 → #8f20de (light), chartSeries2 blue600
+  // #478aff → #5e9aff (dark override below).
+  chartSeries1: ref('green800'),  // #54a731 — Green 800
+  chartSeries2: ref('blue700'),   // #1f60ff — Blue 700
+  chartSeries3: ref('gold900'),   // #e09015 — Gold 900
+  chartSeries4: ref('purple750'), // #8f20de — Purple 750 (was stale #8f37c6)
+  chartSeries5: ref('red800'),    // #d33330 — Red 800
 } as const;
 
 export type SemanticColorName = keyof typeof semanticColors;
@@ -419,4 +441,11 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   interactiveDanger:       tokens.red500,        // #ff6b6b
   interactiveDangerHover:  tokens.red400,        // #ff9d9d
   interactiveDangerActive: tokens.red250,        // #ffe8e8
+
+  // Chart series — three of five lighten against the dark surface (#101010),
+  // independently re-validated, NOT an automatic flip. chartSeries1 (green)
+  // and chartSeries5 (red) are unchanged from light, so they carry no override.
+  chartSeries2: tokens.blue600,    // #5e9aff — Blue 600 (was stale #478aff)
+  chartSeries3: tokens.gold1000,   // #cb7623 — Gold 1000
+  chartSeries4: tokens.purple800,  // #842daf — Purple 800
 };

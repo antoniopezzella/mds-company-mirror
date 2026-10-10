@@ -146,7 +146,12 @@ const ROLE_MAP = {
     'interactive.disabled.fg': {
         semantic: 'interactiveDisabledFg',
         description: 'Disabled label/icon on interactive.disabled.bg. Separate from text.disabled for the same reason. The pair measures below 4.5:1 by design — WCAG 1.4.3 exempts inactive controls',
-    }
+    },
+    'chart.1': { semantic: 'chartSeries1', description: 'Categorical chart series 1 — green. Order is CVD-safe and load-bearing; pair with legend + direct labels (chart.tsx)' },
+    'chart.2': { semantic: 'chartSeries2', description: 'Categorical chart series 2 — blue' },
+    'chart.3': { semantic: 'chartSeries3', description: 'Categorical chart series 3 — gold. Below 3:1 on the light surface by design — legible via legend + direct labels, never colour-alone' },
+    'chart.4': { semantic: 'chartSeries4', description: 'Categorical chart series 4 — purple. Below 3:1 on the dark surface by design — legible via legend + direct labels, never colour-alone' },
+    'chart.5': { semantic: 'chartSeries5', description: 'Categorical chart series 5 — red' }
 };
 /**
  * Resolve a role to its hex color for a given mode.

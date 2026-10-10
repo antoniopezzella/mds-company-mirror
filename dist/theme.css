@@ -229,6 +229,11 @@
   --color-text-on-danger: #ffffff;
   --color-text-on-success: #ffffff;
   --color-text-on-warning: #000f47;
+  --color-chart-series1: #54a731;
+  --color-chart-series2: #1f60ff;
+  --color-chart-series3: #e09015;
+  --color-chart-series4: #8f20de;
+  --color-chart-series5: #d33330;
   --role-text-primary: #000f47;
   --role-text-secondary: #595959;
   --role-text-inverse: #ffffff;
@@ -286,6 +291,11 @@
   --role-interactive-danger-active: #8b1a1a;
   --role-interactive-disabled-bg: #e3e3e3;
   --role-interactive-disabled-fg: #878787;
+  --role-chart-1: #54a731;
+  --role-chart-2: #1f60ff;
+  --role-chart-3: #e09015;
+  --role-chart-4: #8f20de;
+  --role-chart-5: #d33330;
 }
 
 [data-theme="dark"] {
@@ -363,6 +373,11 @@
   --color-text-on-danger: #000f47;
   --color-text-on-success: #000f47;
   --color-text-on-warning: #000f47;
+  --color-chart-series1: #54a731;
+  --color-chart-series2: #5e9aff;
+  --color-chart-series3: #cb7623;
+  --color-chart-series4: #842daf;
+  --color-chart-series5: #d33330;
   --role-text-primary: #ffffff;
   --role-text-secondary: #dadada;
   --role-text-inverse: #ffffff;
@@ -420,6 +435,11 @@
   --role-interactive-danger-active: #ffe8e8;
   --role-interactive-disabled-bg: #3b3b3b;
   --role-interactive-disabled-fg: #878787;
+  --role-chart-1: #54a731;
+  --role-chart-2: #5e9aff;
+  --role-chart-3: #cb7623;
+  --role-chart-4: #842daf;
+  --role-chart-5: #d33330;
 }
 
 .dark {
@@ -497,6 +517,11 @@
   --color-text-on-danger: #000f47;
   --color-text-on-success: #000f47;
   --color-text-on-warning: #000f47;
+  --color-chart-series1: #54a731;
+  --color-chart-series2: #5e9aff;
+  --color-chart-series3: #cb7623;
+  --color-chart-series4: #842daf;
+  --color-chart-series5: #d33330;
   --role-text-primary: #ffffff;
   --role-text-secondary: #dadada;
   --role-text-inverse: #ffffff;
@@ -554,4 +579,9 @@
   --role-interactive-danger-active: #ffe8e8;
   --role-interactive-disabled-bg: #3b3b3b;
   --role-interactive-disabled-fg: #878787;
+  --role-chart-1: #54a731;
+  --role-chart-2: #5e9aff;
+  --role-chart-3: #cb7623;
+  --role-chart-4: #842daf;
+  --role-chart-5: #d33330;
 }

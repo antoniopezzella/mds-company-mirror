@@ -99,12 +99,17 @@
      red) is load-bearing: it's the only arrangement of these five brand
      hues with no adjacent-pair CVD collision at light-mode lightness —
      reordering will reintroduce a red/green or red/gold confusion pair.
-     Always pair with a legend + direct labels (WARN-band contrast). */
-  --chart-1: 102.2 54.6% 42.4%;                     /* #54a731 Green 800 */
-  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 */
-  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 */
-  --chart-4: 276.9 56.5% 49.6%;                     /* #8f37c6 Purple 750 */
-  --chart-5: 1.1 64.9% 50.8%;                       /* #d33330 Red 800 */
+     Always pair with a legend + direct labels (WARN-band contrast).
+
+     Now role-backed (chart.1..5 → chartSeries1..5 → primitives) and annotated
+     MDS so varsync tracks them against roles.generated.css. --chart-4 moved
+     #8f37c6 → #8f20de: its hand-authored HSL had gone stale when the
+     2026-09-15 Figma re-sync shifted purple750 (#8f37c6 → #8f20de). */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
+  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 - MDS: chart.2 */
+  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 - MDS: chart.3 */
+  --chart-4: 275.1 74.8% 49.8%;                   /* #8f20de Purple 750 - MDS: chart.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
 }
 
 /* Dark Mode */
@@ -148,10 +153,13 @@
 
   /* Chart Colors — same validated series-to-hue mapping as light mode,
      independently re-validated against the dark surface (#101010), not
-     an automatic flip: dark mode needs a lighter L band overall. */
-  --chart-1: 102.2 54.6% 42.4%;                     /* #54a731 Green 800 */
-  --chart-2: 218.2 100% 63.9%;                    /* #478aff Blue 600 */
-  --chart-3: 29.6 70.6% 46.7%;                      /* #cb7623 Gold 1000 */
-  --chart-4: 280.2 59.1% 43.1%;                     /* #842daf Purple 800 */
-  --chart-5: 1.1 64.9% 50.8%;                       /* #d33330 Red 800 */
+     an automatic flip: dark mode needs a lighter L band overall. Role-backed
+     via the chartSeries* dark overrides. --chart-2 moved #478aff → #5e9aff:
+     its hand-authored HSL had gone stale when the 2026-09-15 Figma re-sync
+     shifted blue600 (#478aff → #5e9aff). */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
+  --chart-2: 217.6 100% 68.4%;                    /* #5e9aff Blue 600 - MDS: chart.2 */
+  --chart-3: 29.6 70.6% 46.7%;                    /* #cb7623 Gold 1000 - MDS: chart.3 */
+  --chart-4: 280.2 59.1% 43.1%;                   /* #842daf Purple 800 - MDS: chart.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
 }

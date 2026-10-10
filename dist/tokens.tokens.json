@@ -2565,6 +2565,26 @@
       "textOnWarning": {
         "$type": "color",
         "$value": "{color.blue1000}"
+      },
+      "chartSeries1": {
+        "$type": "color",
+        "$value": "{color.green800}"
+      },
+      "chartSeries2": {
+        "$type": "color",
+        "$value": "{color.blue700}"
+      },
+      "chartSeries3": {
+        "$type": "color",
+        "$value": "{color.gold900}"
+      },
+      "chartSeries4": {
+        "$type": "color",
+        "$value": "{color.purple750}"
+      },
+      "chartSeries5": {
+        "$type": "color",
+        "$value": "{color.red800}"
       }
     }
   },
@@ -2848,6 +2868,26 @@
       "interactiveDangerActive": {
         "$type": "color",
         "$value": "{color.red250}"
+      },
+      "chartSeries2": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3686,
+            0.6039,
+            1
+          ],
+          "hex": "#5e9aff"
+        }
+      },
+      "chartSeries3": {
+        "$type": "color",
+        "$value": "{color.gold1000}"
+      },
+      "chartSeries4": {
+        "$type": "color",
+        "$value": "{color.purple800}"
       }
     }
   },
@@ -3108,6 +3148,28 @@
             "$value": "{semantic.color.statusInfoBorder}"
           }
         }
+      },
+      "chart": {
+        "1": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries1}"
+        },
+        "2": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries2}"
+        },
+        "3": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries3}"
+        },
+        "4": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries4}"
+        },
+        "5": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries5}"
+        }
       }
     }
   },
@@ -3367,6 +3429,28 @@
             "$type": "color",
             "$value": "{semanticDark.color.statusInfoBorder}"
           }
+        }
+      },
+      "chart": {
+        "1": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries1}"
+        },
+        "2": {
+          "$type": "color",
+          "$value": "{semanticDark.color.chartSeries2}"
+        },
+        "3": {
+          "$type": "color",
+          "$value": "{semanticDark.color.chartSeries3}"
+        },
+        "4": {
+          "$type": "color",
+          "$value": "{semanticDark.color.chartSeries4}"
+        },
+        "5": {
+          "$type": "color",
+          "$value": "{semantic.color.chartSeries5}"
         }
       }
     }

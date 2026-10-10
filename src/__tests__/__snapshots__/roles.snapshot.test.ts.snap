@@ -27,6 +27,36 @@ exports[`roles snapshot > role color resolutions > role-color-resolutions 1`] = 
     "semantic": "brandAccent",
   },
   {
+    "dark": "#54a731",
+    "light": "#54a731",
+    "role": "chart.1",
+    "semantic": "chartSeries1",
+  },
+  {
+    "dark": "#5e9aff",
+    "light": "#1f60ff",
+    "role": "chart.2",
+    "semantic": "chartSeries2",
+  },
+  {
+    "dark": "#cb7623",
+    "light": "#e09015",
+    "role": "chart.3",
+    "semantic": "chartSeries3",
+  },
+  {
+    "dark": "#842daf",
+    "light": "#8f20de",
+    "role": "chart.4",
+    "semantic": "chartSeries4",
+  },
+  {
+    "dark": "#d33330",
+    "light": "#d33330",
+    "role": "chart.5",
+    "semantic": "chartSeries5",
+  },
+  {
     "dark": "#5e9aff",
     "light": "#3d7aff",
     "role": "focus.ring",
