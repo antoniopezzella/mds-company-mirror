@@ -1,9 +1,45 @@
 # MDS Design System Health Report
 
-**Last updated:** 2026-10-09
+**Last updated:** 2026-10-10
 **Owner:** mds-health-auditor (recurring, read-only — audit + propose only)
-**Branch audited:** `main` trunk; the 2026-10-09 run below landed on the active
+**Branch audited:** `main` trunk; the 2026-10-09/10 runs below landed on the active
 `feature/mui-removal-and-ds-hardening` branch (not yet merged).
+
+## Changelog — 2026-10-10 (backlog pass — governance + dev readiness)
+
+Resolve pass against the readiness backlog, each task verified independently
+(not just metric-moved). **`ds:score` 73 → 79.** Goals: governance **98** (was
+85), development **69** (was 63), global 78, agentic 75.
+
+- **AGENT-3 — gate self-tests 7/17 → 16/17.** The 9 unproven gates now each
+  prove they can go red: file-drop probes for the scanning gates (docs-sprawl,
+  deprecations, registry) and built-in `--selftest` for the fixed-file ones
+  (contrast, token-variables, figma-drift, figma-semantic-drift) plus two that
+  run a real build (package-css, package-types). Re-verified by hand that the
+  contrast self-test goes red when its fail-counter is disabled. (16/17 not
+  17/17 is a documented heuristic artifact — `varsync`'s marker is "selftest"
+  not "self-test", and it serves as the metric-selftest's uncovered-gate fixture.)
+- **DEV-2 — ref forwarding 41/118 → 66/118.** 25 load-bearing components now
+  forward a ref to the correct element. Caught a real published-`.d.ts` defect
+  (`QuestionnaireInput` + forwardRef inlined a `node_modules` path; `tsc` alone
+  missed it, `pkg:types:check` caught it). Declined to pad on generics /
+  bare-aliases / display-only components.
+- **DEV-1 + DEV-4 — prop docs 77/118 → 97/118.** Real per-prop JSDoc + named
+  `*Props` types on 20 components; the metric self-test confirms they're real,
+  not hollow. No prop API changed.
+
+**Not gamed — metric blind spots found and reported** (for a future
+`ds-gate-author` regex fix, not worked around): `prop_docs` can't match
+hyphenated `aria-*` props or `*Options`-suffixed type names, so some genuine
+docs are invisible to it.
+
+**Still open:** GLOBAL-2 (RTL, 5/100 — needs a product decision on whether Marsh
+ships RTL); the generic DataGrid/DataTable ref family (largest remaining
+unref'd block, needs a documented generic-forwardRef pattern); DEV-3
+(type-check tests) and GLOBAL-3 (i18n strings), both metric-less. **Security:
+the leaked `sk-proj-…` key is gitignored/untracked now, but the value remains
+in pre-`695d58c` history — revocation (provider dashboard, user action) is the
+only real fix; history-rewriting is not advised.**
 
 ## Changelog — 2026-10-09 (token-foundation hardening)
 
