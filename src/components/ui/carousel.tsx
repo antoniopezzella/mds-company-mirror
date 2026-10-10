@@ -6,7 +6,6 @@ import type { EmblaOptionsType, EmblaPluginType } from 'embla-carousel';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 /**
  * Carousel — no MDS/Figma spec exists for this yet; built matching real

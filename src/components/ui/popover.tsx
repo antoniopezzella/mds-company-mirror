@@ -4,7 +4,6 @@ import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 import { cn } from '@/lib/utils';
-import { roleVar } from '@/theme/roles';
 
 /**
  * Popover — no MDS/Figma spec exists for this yet, so it's built matching
