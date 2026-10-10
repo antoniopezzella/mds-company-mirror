@@ -16,12 +16,13 @@ function MessageScrollerProvider(
   return <MessageScrollerPrimitive.Provider {...props} />
 }
 
-function MessageScroller({
-  className,
-  ...props
-}: React.ComponentProps<typeof MessageScrollerPrimitive.Root>) {
+const MessageScroller = React.forwardRef<
+  React.ElementRef<typeof MessageScrollerPrimitive.Root>,
+  React.ComponentProps<typeof MessageScrollerPrimitive.Root>
+>(({ className, ...props }, ref) => {
   return (
     <MessageScrollerPrimitive.Root
+      ref={ref}
       data-slot="message-scroller"
       className={cn(
         "group/message-scroller relative flex size-full min-h-0 flex-col overflow-hidden",
@@ -30,14 +31,20 @@ function MessageScroller({
       {...props}
     />
   )
-}
+})
+MessageScroller.displayName = 'MessageScroller'
 
-function MessageScrollerViewport({
-  className,
-  ...props
-}: React.ComponentProps<typeof MessageScrollerPrimitive.Viewport>) {
+/**
+ * Forwards to the actual scroll container — the element a consumer needs
+ * to call `scrollTo`/`scrollIntoView` on, or measure scroll position.
+ */
+const MessageScrollerViewport = React.forwardRef<
+  React.ElementRef<typeof MessageScrollerPrimitive.Viewport>,
+  React.ComponentProps<typeof MessageScrollerPrimitive.Viewport>
+>(({ className, ...props }, ref) => {
   return (
     <MessageScrollerPrimitive.Viewport
+      ref={ref}
       data-slot="message-scroller-viewport"
       className={cn(
         "size-full min-h-0 min-w-0 scroll-fade-b scrollbar-thin scrollbar-gutter-stable overflow-y-auto overscroll-contain contain-content data-autoscrolling:scrollbar-none",
@@ -46,7 +53,8 @@ function MessageScrollerViewport({
       {...props}
     />
   )
-}
+})
+MessageScrollerViewport.displayName = 'MessageScrollerViewport'
 
 function MessageScrollerContent({
   className,

@@ -62,7 +62,9 @@ function highlightNumbers(text: string) {
   return parts.map((part, i) => (/^\$|^\d/.test(part) ? <strong key={i}>{part}</strong> : part));
 }
 
-export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOTIFICATIONS }: NotificationsDrawerProps) {
+/** Forwards to the Sheet's content panel, so a consumer can focus or measure it once open. */
+export const NotificationsDrawer = React.forwardRef<HTMLDivElement, NotificationsDrawerProps>(
+  ({ open, onClose, notifications = DEFAULT_NOTIFICATIONS }, ref) => {
   const [filter, setFilter] = React.useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
 
@@ -107,7 +109,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
           `font-sans-productive` travels with the element, so there is nothing
           to remember and nothing to forget.
         */}
-        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
+        <SheetContent ref={ref} side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
         <SheetHeader className="flex-row items-center justify-between px-6 pb-4 pt-6">
           {/* font-bold overrides SheetTitle's own font-semibold — this title
               was weight 700 before the migration and stays there. */}
@@ -237,6 +239,7 @@ export function NotificationsDrawer({ open, onClose, notifications = DEFAULT_NOT
       </SheetContent>
     </Sheet>
   );
-}
+});
+NotificationsDrawer.displayName = 'NotificationsDrawer';
 
 export default NotificationsDrawer;

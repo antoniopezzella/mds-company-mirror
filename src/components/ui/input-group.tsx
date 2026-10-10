@@ -43,29 +43,33 @@ export interface InputGroupProps extends React.ComponentProps<'div'> {
   size?: ControlSize;
 }
 
-function InputGroup({ className, size, ...props }: InputGroupProps) {
-  const borderColor = 'var(--role-border-default)';
-  const resolved = useControlSize(size);
-  return (
-    <ControlSizeContext.Provider value={resolved}>
-      <div
-        data-slot="input-group"
-        role="group"
-        data-size={resolved}
-        className={cn(
-          'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
-          'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
-          // The group owns the height; the inner control is borderless and
-          // fills it, so the two cannot disagree.
-          CONTROL_HEIGHT[resolved],
-          className
-        )}
-        style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
-        {...props}
-      />
-    </ControlSizeContext.Provider>
-  )
-}
+const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
+  ({ className, size, ...props }, ref) => {
+    const borderColor = 'var(--role-border-default)';
+    const resolved = useControlSize(size);
+    return (
+      <ControlSizeContext.Provider value={resolved}>
+        <div
+          ref={ref}
+          data-slot="input-group"
+          role="group"
+          data-size={resolved}
+          className={cn(
+            'group/input-group relative flex w-full min-w-0 items-center rounded-md border shadow-xs transition-colors outline-hidden has-[>textarea]:h-auto',
+            'has-[[data-slot=input-group-control]:focus-visible]:ring-2',
+            // The group owns the height; the inner control is borderless and
+            // fills it, so the two cannot disagree.
+            CONTROL_HEIGHT[resolved],
+            className
+          )}
+          style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+          {...props}
+        />
+      </ControlSizeContext.Provider>
+    )
+  }
+);
+InputGroup.displayName = 'InputGroup';
 
 const inputGroupAddonVariants = cva(
   'flex h-auto cursor-text items-center justify-center gap-2 py-1.5 select-none [&>svg:not([class*="size-"])]:size-4',
@@ -109,39 +113,43 @@ function InputGroupAddon({
   )
 }
 
-function InputGroupButton({
-  className,
-  type = 'button',
-  variant = 'tertiary',
-  size = 'sm',
-  iconOnly,
-  children,
-  ...props
-}: React.ComponentProps<typeof Button>) {
-  // `iconOnly` used to default to `true` unconditionally. Button renders
-  // `{iconOnly ? iconOnlyNode : children}`, so under that default a text label
-  // — `<InputGroupButton>Save</InputGroupButton>` — was silently discarded,
-  // producing an empty button with no accessible name and no warning. Every
-  // existing call site passes `icon` + `aria-label` and is unaffected, but the
-  // default is a trap for the next person.
-  //
-  // Defaulting from the presence of children keeps the icon-button ergonomics
-  // (the common case in an input group) while making a text label work as
-  // written. An explicit `iconOnly` prop still wins either way.
-  const resolvedIconOnly = iconOnly ?? children == null;
-  return (
-    <Button
-      type={type}
-      variant={variant}
-      size={size}
-      iconOnly={resolvedIconOnly}
-      className={className}
-      {...props}
-    >
-      {children}
-    </Button>
-  )
-}
+const InputGroupButton = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
+  ({
+    className,
+    type = 'button',
+    variant = 'tertiary',
+    size = 'sm',
+    iconOnly,
+    children,
+    ...props
+  }, ref) => {
+    // `iconOnly` used to default to `true` unconditionally. Button renders
+    // `{iconOnly ? iconOnlyNode : children}`, so under that default a text label
+    // — `<InputGroupButton>Save</InputGroupButton>` — was silently discarded,
+    // producing an empty button with no accessible name and no warning. Every
+    // existing call site passes `icon` + `aria-label` and is unaffected, but the
+    // default is a trap for the next person.
+    //
+    // Defaulting from the presence of children keeps the icon-button ergonomics
+    // (the common case in an input group) while making a text label work as
+    // written. An explicit `iconOnly` prop still wins either way.
+    const resolvedIconOnly = iconOnly ?? children == null;
+    return (
+      <Button
+        ref={ref}
+        type={type}
+        variant={variant}
+        size={size}
+        iconOnly={resolvedIconOnly}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Button>
+    )
+  }
+);
+InputGroupButton.displayName = 'InputGroupButton';
 
 function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
   return (
@@ -153,9 +161,11 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
   )
 }
 
-function InputGroupInput({ className, style, ...props }: React.ComponentProps<'input'>) {
-  return (
+/** Plain native `<input>` (not this repo's own `Input`, see the file header) — forwards straight to it, same as every other field. */
+const InputGroupInput = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
+  ({ className, style, ...props }, ref) => (
     <input
+      ref={ref}
       data-slot="input-group-control"
       className={cn(
         'flex-1 border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
@@ -165,11 +175,13 @@ function InputGroupInput({ className, style, ...props }: React.ComponentProps<'i
       {...props}
     />
   )
-}
+);
+InputGroupInput.displayName = 'InputGroupInput';
 
-function InputGroupTextarea({ className, style, ...props }: React.ComponentProps<'textarea'>) {
-  return (
+const InputGroupTextarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(
+  ({ className, style, ...props }, ref) => (
     <textarea
+      ref={ref}
       data-slot="input-group-control"
       className={cn(
         'flex-1 resize-none border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
@@ -179,7 +191,8 @@ function InputGroupTextarea({ className, style, ...props }: React.ComponentProps
       {...props}
     />
   )
-}
+);
+InputGroupTextarea.displayName = 'InputGroupTextarea';
 
 export {
   InputGroup,

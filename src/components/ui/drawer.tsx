@@ -59,12 +59,19 @@ export interface DrawerContentProps
   showSwipeHandle?: boolean
 }
 
-function DrawerContent({
+/**
+ * Forwards to the Base UI `Popup` — the drawer's actual content surface, so
+ * a consumer can focus or measure it once open.
+ */
+const DrawerContent = React.forwardRef<
+  React.ElementRef<typeof DrawerPrimitive.Popup>,
+  DrawerContentProps
+>(({
   className,
   children,
   showSwipeHandle = true,
   ...props
-}: DrawerContentProps) {
+}, ref) => {
   return (
     <DrawerPortal>
       <DrawerBackdrop />
@@ -76,6 +83,7 @@ function DrawerContent({
           styling below. */}
       <DrawerPrimitive.Viewport data-slot="drawer-viewport" className="contents">
         <DrawerPrimitive.Popup
+          ref={ref}
           data-slot="drawer-content"
           className={cn(
             "group/drawer-content fixed z-[1500] flex h-auto flex-col border-border bg-background text-foreground transition-transform",
@@ -100,7 +108,8 @@ function DrawerContent({
       </DrawerPrimitive.Viewport>
     </DrawerPortal>
   )
-}
+})
+DrawerContent.displayName = 'DrawerContent'
 
 function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (

@@ -51,8 +51,9 @@ const triggerClass =
 /**
  * Design System MegaMenu — top-level nav with hover/focus-activated
  * multi-column panels. Pass `items` as `{ label, sections, description? }`.
+ * Forwards to the Radix root `<nav>`, so a consumer can measure it.
  */
-export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
+export const MegaMenu = React.forwardRef<HTMLElement, MegaMenuProps>(({ items, className }, ref) => {
   const textColor = 'var(--role-text-primary)';
   const mutedColor = 'var(--role-text-secondary)';
   const linkColor = 'var(--role-interactive-primary)';
@@ -60,7 +61,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
   const focusRing = 'var(--role-focus-ring)';
 
   return (
-    <NavigationMenuPrimitive.Root className={cn('relative z-40', className)}>
+    <NavigationMenuPrimitive.Root ref={ref} className={cn('relative z-40', className)}>
       <NavigationMenuPrimitive.List className="flex items-center gap-1">
         {items.map((item) => (
           <NavigationMenuPrimitive.Item key={item.label}>
@@ -139,6 +140,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ items, className }) => {
       </div>
     </NavigationMenuPrimitive.Root>
   );
-};
+});
+MegaMenu.displayName = 'MegaMenu';
 
 export default MegaMenu;

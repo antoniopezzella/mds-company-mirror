@@ -161,6 +161,19 @@ function QuestionnaireChoice({
   )
 }
 
+// NOT wrapped in forwardRef, deliberately — unlike every other component in
+// this file. `QuestionnairePrimitive.Input`'s own prop type routes through
+// `@shadcn/react`'s internal (unexported) `UseRenderComponentProps` helper
+// type, and `forwardRef`'s `PropsWithoutRef<P>` conditional forces
+// `vite.lib.config.ts`'s dts bundler to fully re-expand that type — which it
+// cannot do cleanly, and inlines a literal `node_modules/@shadcn/react/...`
+// path into the published `.d.ts` instead. That fails `pkg:types:check`
+// (a consumer's `node_modules` layout isn't ours to assume) even though the
+// source itself compiles clean — confirmed by reproducing it with
+// `npm run build:package`. The primitive already accepts `ref` as a plain
+// prop (it's written against React 19's ref-as-prop convention internally),
+// so this wrapper still passes `ref` straight through below; it just isn't
+// `forwardRef`-wrapped itself.
 function QuestionnaireInput({
   className,
   ...props

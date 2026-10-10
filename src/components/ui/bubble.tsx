@@ -81,22 +81,22 @@ export interface BubbleProps
   align?: "start" | "end"
 }
 
-function Bubble({
-  variant = "default",
-  align = "start",
-  className,
-  ...props
-}: BubbleProps) {
-  return (
-    <div
-      data-slot="bubble"
-      data-variant={variant}
-      data-align={align}
-      className={cn(bubbleVariants({ variant }), className)}
-      {...props}
-    />
-  )
-}
+/** Forwards to the bubble's own `<div>`, so a consumer can scroll a specific message into view (e.g. "jump to this reply"). */
+const Bubble = React.forwardRef<HTMLDivElement, BubbleProps>(
+  ({ variant = "default", align = "start", className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        data-slot="bubble"
+        data-variant={variant}
+        data-align={align}
+        className={cn(bubbleVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
+);
+Bubble.displayName = "Bubble";
 
 function BubbleContent({
   asChild = false,

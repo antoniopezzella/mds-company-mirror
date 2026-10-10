@@ -48,7 +48,11 @@ export interface ComboboxProps {
   'aria-labelledby'?: string;
 }
 
-export const Combobox: React.FC<ComboboxProps> = ({
+/**
+ * Forwards to the trigger `<button>` — the element a consumer needs to
+ * focus, or to anchor a Popover/Tooltip against.
+ */
+export const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(({
   options,
   size,
   value,
@@ -60,7 +64,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   className,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
-}) => {
+}, ref) => {
   const [open, setOpen] = React.useState(false);
   const selected = options.find((o) => o.value === value);
   const listId = React.useId();
@@ -70,6 +74,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          ref={ref}
           type="button"
           role="combobox"
           aria-expanded={open}
@@ -131,6 +136,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
+});
+Combobox.displayName = 'Combobox';
 
 export default Combobox;

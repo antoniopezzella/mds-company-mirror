@@ -99,13 +99,14 @@ const fieldVariants = cva(
   }
 )
 
-function Field({
-  className,
-  orientation = "vertical",
-  ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
+/** Forwards to the field's own wrapper `<div>` — the element to `scrollIntoView` for "jump to the first invalid field" on submit. */
+const Field = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>
+>(({ className, orientation = "vertical", ...props }, ref) => {
   return (
     <div
+      ref={ref}
       role="group"
       data-slot="field"
       data-orientation={orientation}
@@ -113,7 +114,8 @@ function Field({
       {...props}
     />
   )
-}
+});
+Field.displayName = "Field";
 
 function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
   return (

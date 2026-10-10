@@ -84,7 +84,11 @@ export interface DatePickerProps {
   dir?: 'ltr' | 'rtl';
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({
+/**
+ * Forwards to the trigger `<button>` (the `Button` below) — the element a
+ * consumer needs to focus, or to anchor a Popover against.
+ */
+export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(({
   size,
   date,
   onDateChange,
@@ -95,12 +99,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   endMonth,
   locale,
   dir,
-}) => {
+}, ref) => {
   const controlSize = useControlSize(size);
   return (
   <Popover>
     <PopoverTrigger asChild>
-      <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE} dir={dir}>
+      <Button ref={ref} variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE} dir={dir}>
         <CalendarIcon className={CONTROL_ICON[controlSize]} />
         {date ? format(date, 'MMM d, yyyy') : <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
       </Button>
@@ -121,7 +125,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     </PopoverContent>
   </Popover>
   );
-};
+});
+DatePicker.displayName = 'DatePicker';
 
 // ---------------------------------------------------------------------------
 // 2. Range Picker
@@ -141,13 +146,13 @@ export interface DateRangePickerProps {
   className?: string;
 }
 
-export const DateRangePicker: React.FC<DateRangePickerProps> = ({
+export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps>(({
   size,
   range,
   onRangeChange,
   placeholder = 'Pick a date range',
   className,
-}) => {
+}, ref) => {
   const controlSize = useControlSize(size);
   const label = (() => {
     if (!range?.from) return null;
@@ -158,7 +163,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
+        <Button ref={ref} variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {label ?? <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
         </Button>
@@ -175,7 +180,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
+});
+DateRangePicker.displayName = 'DateRangePicker';
 
 // ---------------------------------------------------------------------------
 // 3. Input Field Variant — typed date synced with the popover calendar.
@@ -261,13 +267,13 @@ export interface DateTimePickerProps {
   className?: string;
 }
 
-export const DateTimePicker: React.FC<DateTimePickerProps> = ({
+export const DateTimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(({
   size,
   date,
   onDateChange,
   placeholder = 'Pick a date & time',
   className,
-}) => {
+}, ref) => {
   const controlSize = useControlSize(size);
   const timeValue = date ? format(date, 'HH:mm') : '';
 
@@ -282,7 +288,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
+        <Button ref={ref} variant="tertiary" size={controlSize} className={cn(FIELD_TRIGGER, className)} style={FIELD_TRIGGER_STYLE}>
           <CalendarIcon className={CONTROL_ICON[controlSize]} />
           {date ? format(date, 'MMM d, yyyy · h:mm a') : <span style={{ color: 'var(--role-text-secondary)' }}>{placeholder}</span>}
         </Button>
@@ -311,7 +317,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
+});
+DateTimePicker.displayName = 'DateTimePicker';
 
 // ---------------------------------------------------------------------------
 // 5. Natural Language Picker — free text ("next Friday", "in 3 weeks")

@@ -30,8 +30,14 @@ export interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImag
  * ImageWithFallback. Same `src`/`fallbackSrc`/`showSkeleton` API as the MUI
  * twin, plus `aspectRatio` — genuinely part of the Figma "Image Placeholder"
  * spec (`Format`) even though the current MUI component doesn't expose it.
+ *
+ * Forwards to the `<img>` itself — NOT the wrapper `<div>` — so a consumer
+ * can read its natural dimensions or hand it to an IntersectionObserver.
+ * The ref is only attached once `error` is false; the element it forwards
+ * to is unmounted entirely while the fallback "Image unavailable" state
+ * is showing.
  */
-export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
+export const ImageWithFallback = React.forwardRef<HTMLImageElement, ImageWithFallbackProps>(({
   src,
   alt,
   fallbackSrc,
@@ -40,7 +46,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   className,
   style,
   ...rest
-}) => {
+}, ref) => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [currentSrc, setCurrentSrc] = React.useState(src);
@@ -86,6 +92,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 
       {!error && (
         <img
+          ref={ref}
           src={currentSrc}
           alt={alt}
           onLoad={handleLoad}
@@ -97,6 +104,7 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
       )}
     </div>
   );
-};
+});
+ImageWithFallback.displayName = 'ImageWithFallback';
 
 export default ImageWithFallback;

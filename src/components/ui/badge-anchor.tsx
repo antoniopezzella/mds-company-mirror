@@ -45,7 +45,11 @@ const POSITION_CLASSES: Record<string, string> = {
   'bottom-left': '-bottom-1 -left-1',
 };
 
-export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
+/**
+ * Forwards to the outer `<span>` — the element a Popover/Tooltip would
+ * anchor to, given the name.
+ */
+export const BadgeAnchor = React.forwardRef<HTMLSpanElement, BadgeAnchorProps>(({
   content,
   variant = 'dot',
   size = 'md',
@@ -54,13 +58,13 @@ export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
   invisible = false,
   children,
   className,
-}) => {
+}, ref) => {
   const resolvedSize = normalizeSize(size, 'BadgeAnchor');
   const positionKey = `${anchorOrigin.vertical}-${anchorOrigin.horizontal}`;
   const isDot = variant === 'dot';
 
   return (
-    <span className={cn('relative inline-flex', className)}>
+    <span ref={ref} className={cn('relative inline-flex', className)}>
       {children}
       {!invisible && (
         <Badge
@@ -83,6 +87,7 @@ export const BadgeAnchor: React.FC<BadgeAnchorProps> = ({
       )}
     </span>
   );
-};
+});
+BadgeAnchor.displayName = 'BadgeAnchor';
 
 export default BadgeAnchor;

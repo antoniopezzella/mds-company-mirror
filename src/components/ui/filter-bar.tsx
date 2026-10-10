@@ -137,14 +137,15 @@ export interface FilterBarSearchProps {
   'aria-label'?: string;
 }
 
-export function FilterBarSearch({
+/** Forwards to the inner `<input>` — so a consumer can focus it, e.g. on a "/" keyboard shortcut. */
+export const FilterBarSearch = React.forwardRef<HTMLInputElement, FilterBarSearchProps>(({
   value,
   onChange,
   placeholder = 'Search…',
   label,
   className,
   'aria-label': ariaLabel = 'Search',
-}: FilterBarSearchProps) {
+}, ref) => {
   return (
     <FilterBarField label={label} className={className}>
       <div className="relative">
@@ -154,6 +155,7 @@ export function FilterBarSearch({
           style={{ color: 'var(--role-text-secondary)' }}
         />
         <Input
+          ref={ref}
           type="search"
           aria-label={ariaLabel}
           placeholder={placeholder}
@@ -164,7 +166,8 @@ export function FilterBarSearch({
       </div>
     </FilterBarField>
   );
-}
+});
+FilterBarSearch.displayName = 'FilterBarSearch';
 
 export interface FilterBarSelectProps {
   label?: React.ReactNode;

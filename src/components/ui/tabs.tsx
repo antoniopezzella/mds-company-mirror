@@ -51,13 +51,16 @@ function findInitialId(tabs: TabItem[], defaultActiveId?: string): string | unde
 /**
  * Design System Tabs — shadcn/ui/Radix counterpart for the MDS Tabs.
  * Same `tabs`/`defaultActiveId`/`onSelect`/`variant` API as the MUI twin.
+ * Forwards to the Radix root `<div>`, so a consumer can measure it or scroll
+ * it into view.
  */
-export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, variant = 'standard', className }) => {
+export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
+  ({ tabs, defaultActiveId, onSelect, variant = 'standard', className }, ref) => {
   const [value, setValue] = React.useState<string | undefined>(() => findInitialId(tabs, defaultActiveId));
 
   React.useEffect(() => {
     setValue(findInitialId(tabs, defaultActiveId));
-     
+
   }, [defaultActiveId, tabs]);
 
   const handleChange = (id: string) => {
@@ -66,7 +69,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, var
   };
 
   return (
-    <TabsPrimitive.Root value={value} onValueChange={handleChange} className={cn('w-full', className)}>
+    <TabsPrimitive.Root ref={ref} value={value} onValueChange={handleChange} className={cn('w-full', className)}>
       <TabsPrimitive.List
         className={cn(tabsListVariants({ variant }))}
         style={{ borderColor: 'var(--role-border-default)', '--tabs-focus-ring': 'var(--role-focus-ring)' } as React.CSSProperties}
@@ -100,6 +103,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, defaultActiveId, onSelect, var
       ))}
     </TabsPrimitive.Root>
   );
-};
+});
+Tabs.displayName = 'Tabs';
 
 export default Tabs;

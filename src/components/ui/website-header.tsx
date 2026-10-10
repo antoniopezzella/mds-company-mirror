@@ -77,7 +77,11 @@ const defaultNavItems: WebsiteHeaderNavItem[] = [
   { label: 'Shop', href: '#shop', hasMenu: true },
 ];
 
-export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
+/**
+ * Forwards to the root `<header>` — the element a consumer measures to
+ * compensate sibling content for a `fixed`/`sticky` header's height.
+ */
+export const WebsiteHeader = React.forwardRef<HTMLElement, WebsiteHeaderProps>(({
   navItems = defaultNavItems,
   activeNavLabel = 'Solutions',
   languageLabel = 'English (US)',
@@ -95,7 +99,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
   showAuthActions = true,
   hideMenuButtonOnDesktop = false,
   className,
-}) => {
+}, ref) => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
 
@@ -139,6 +143,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
   return (
     <>
       <header
+        ref={ref}
         className={cn(
           'z-40 w-full isolate overflow-hidden',
           position === 'fixed' && 'fixed left-0',
@@ -294,6 +299,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({
       </Sheet>
     </>
   );
-};
+});
+WebsiteHeader.displayName = 'WebsiteHeader';
 
 export default WebsiteHeader;
