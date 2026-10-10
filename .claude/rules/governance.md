@@ -58,6 +58,44 @@ non-harness gate scripts are covered as of 2026-10-10; only the harness files
 themselves (`check-gate-selftests.js`, `check-a11y-gate.js`) are excluded by
 definition.
 
+## Type-checking the test files — `typecheck:tests` (added 2026-10-10)
+
+`npm run typecheck:tests` → `tsc -p tsconfig.test.json --noEmit`. Folded into
+`governance:ci` (runs second, right after `tokens:build`). It type-checks the
+~109 `*.test.ts(x)` / `*.spec.ts(x)` / `*.accessibility.test.tsx` files plus
+`src/setupTests.ts` — the exact set `tsconfig.app.json` **excludes** (see its
+`exclude` list). Before this, a test could assert a prop, element type, or
+import that no longer existed and still go green: Vitest runs the files but
+never type-checks them. The first run surfaced real rot — `button.test.tsx`
+rendered `<Button variant="inverseTertiary">` (an internal cva variant never
+exposed as a prop) and `typography.snapshot.test.ts` indexed
+`theme.typography` with a key type wide enough to include its non-variant
+members.
+
+Story files are **not** in this project: `tsconfig.app.json` does not exclude
+`*.stories.tsx`, so `tsc -b` / the app project already type-checks them.
+
+This is a `tsc` compile, not a directory-scanning `check-*.js` gate, so it has
+no `check-gate-selftests.js` entry and no `--selftest` flag — the probe would
+be adding a type error to a throwaway test and confirming `tsc` exits
+non-zero, which it does (verified 2026-10-10: a bogus
+`<Button variant="notARealVariant">` made it fail and name the file; removing
+it returned clean). If you touch `tsconfig.test.json`, re-run that probe —
+the two ways this check could silently stop working are (1) the `include`
+globs no longer matching the files (confirm with
+`tsc -p tsconfig.test.json --listFiles | grep -c '\.test\.'` — expect ~109),
+and (2) a `/// <reference types="jest" />` creeping back in. On (2): every
+test registers jest-dom via `@testing-library/jest-dom/vitest`, **never** the
+bare `@testing-library/jest-dom`. The bare entry's types do
+`/// <reference types="jest" />`, which pulls `@types/jest`'s global `expect`
+(single-argument, returning `JestMatchers`) into the program and shadows
+Vitest's — silently breaking the `expect(value, message)` overload and
+Vitest-only matchers like `toHaveBeenCalledOnce`. A triple-slash reference
+bypasses the tsconfig `types` allowlist, so the only defence is not importing
+the bare entry. `tsconfig.test.json` sets `types: ["node", "vitest/globals"]`
+for the same reason — to keep auto-included `@types/jest` and `@types/chai`
+globals from winning.
+
 ## Hex literals: enforced in `ui/`, advisory elsewhere
 
 Changed 2026-10-08. Hex was informational everywhere, which left "never

@@ -1,6 +1,6 @@
 import type { DataGridColumnDef } from './data-grid-features';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 
 

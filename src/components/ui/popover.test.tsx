@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { Popover, PopoverTrigger, PopoverContent } from './popover';
 
 // Same rationale as dialog.test.tsx / dropdown-menu.test.tsx: Radix

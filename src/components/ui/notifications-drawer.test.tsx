@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { NotificationsDrawer, type RiskNotification } from './notifications-drawer';
 
 const notifications: RiskNotification[] = [

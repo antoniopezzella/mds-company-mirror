@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, Modal } from './dialog';
 
 // Radix Dialog's open state is fully controllable via `open`/`onOpenChange`,

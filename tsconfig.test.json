@@ -1,0 +1,58 @@
+{
+  // Type-checks the ~109 test files, the test setup, and its ambient helpers —
+  // code that `tsc -b` / tsconfig.app.json deliberately EXCLUDES (see its
+  // `exclude` list) and that Vitest runs but never type-checks. Without this
+  // project a test could assert a prop, element type or import that no longer
+  // exists and still go green. `npm run typecheck:tests` runs it; it is wired
+  // into `governance:ci`.
+  //
+  // Story files are NOT listed here: tsconfig.app.json does NOT exclude
+  // *.stories.tsx, so `tsc -b` / the app project already type-checks them.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    // Not part of the `tsc -b` solution graph — this is a standalone check run
+    // directly via `tsc -p`, so it must not advertise itself as composite.
+    "composite": false,
+    "noEmit": true,
+    // Explicit `types` to control which packages inject GLOBALS. Left to
+    // auto-inclusion, node_modules/@types/jest and @types/chai (both present as
+    // transitive deps) each `declare global { ... expect ... }` — @types/jest's
+    // global `expect` takes a single argument and returns `JestMatchers`, which
+    // shadows Vitest's own `expect` and breaks the `expect(value, message)`
+    // overload plus Vitest-only matchers (`toHaveBeenCalledOnce`). Listing only
+    // the two packages whose globals the tests actually want keeps Vitest's
+    // `expect` authoritative. Types pulled in through explicit `import` (react,
+    // @tanstack/react-table, etc.) resolve regardless of this list — it governs
+    // auto-injected globals only. jest-dom's matcher types come from
+    // src/setupTests.ts's '@testing-library/jest-dom/vitest' import.
+    "types": ["node", "vitest/globals"]
+  },
+  "include": [
+    // Ambient declarations (vite/client's `*.svg` / `*.module.scss` /
+    // `import.meta.env`, the asset shim, etc.). tsconfig.app.json picks these
+    // up through `include: ["src"]`; the globs below only match test files, so
+    // without this line every source file a test imports reports TS2307 on its
+    // stylesheet/asset import and TS2339 on `import.meta.env`.
+    "src/**/*.d.ts",
+    // Vitest ambient globals (describe/it/expect/vi) — see file header.
+    "types/vitest-globals.d.ts",
+    "src/setupTests.ts",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/**/*.accessibility.test.tsx",
+    "api/**/*.test.ts",
+    "api/**/*.test.tsx",
+    "api/**/*.spec.ts",
+    "api/**/*.spec.tsx"
+  ],
+  "exclude": [
+    "src/**/*.old.tsx",
+    "src/**/*.old-test.tsx",
+    "src/**/*.backup.tsx",
+    "src/**/*.backup.*.tsx",
+    "**/node_modules/**"
+  ]
+}
