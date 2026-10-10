@@ -183,18 +183,22 @@ const PAIRS = [
   { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 }
 ];
 
-function runMode(mode) {
-  const sem = mode === 'dark' ? { ...baseSem, ...darkOverrides } : baseSem;
+/**
+ * Pure evaluator: a semantic-colour map in, pass/warn/fail rows out. No
+ * module-level state, so --selftest below can run it against a deliberately
+ * broken map without touching dist/tokens.json or any other file on disk.
+ */
+function evaluateMap(sem, pairs, includeInfo) {
   let failed = 0; let warned = 0; const rows = [];
-  function getColor(name) { if (!(name in sem)) throw new Error(`Semantic token ${name} not found in mode ${mode}`); return sem[name]; }
-  for (const p of PAIRS) {
+  function getColor(name) { if (!(name in sem)) throw new Error(`Semantic token ${name} not found`); return sem[name]; }
+  for (const p of pairs) {
     try {
       const fg = getColor(p.fg);
       const bg = getColor(p.bg);
       const ratio = contrast(fg, bg);
       const ratioStr = ratio.toFixed(2);
       let status = 'PASS';
-      if (p.informational && !includeInformational) {
+      if (p.informational && !includeInfo) {
         status = 'INFO';
       } else {
         if (ratio < p.required) { status = 'FAIL'; failed++; }
@@ -206,6 +210,38 @@ function runMode(mode) {
       failed++;
     }
   }
+  return { failed, warned, rows };
+}
+
+// --selftest: prove the gate can actually go red. The fixed PAIRS/thresholds
+// above are config, not a directory to drop a probe file into, so the proof
+// mutates an in-memory semantic-colour map instead — same category as
+// check-token-vars-sync.js's --selftest.
+if (process.argv.includes('--selftest')) {
+  const liveLight = evaluateMap(baseSem, PAIRS, false).failed;
+  const darkSem = { ...baseSem, ...darkOverrides };
+  const liveDark = evaluateMap(darkSem, PAIRS, false).failed;
+  if (liveLight || liveDark) {
+    console.error(`✗ self-test: the LIVE token set already fails ${liveLight + liveDark} enforced pair(s) in light/dark — fix those first.`);
+    process.exit(1);
+  }
+  const probePair = PAIRS.find((p) => p.fg === 'textPrimary' && p.bg === 'surfaceDefault');
+  // Collapse text onto its own background — white-on-white, the exact shape
+  // of the regression `textOnDanger`/`textOnHero` caused for real (see the
+  // comments on the pairs above).
+  const brokenLight = { ...baseSem, textPrimary: baseSem[probePair.bg] };
+  const brokenResult = evaluateMap(brokenLight, [probePair], false);
+  if (brokenResult.failed < 1) {
+    console.error(`✗ self-test: forced '${probePair.fg}' = '${probePair.bg}' (same colour) and the gate did NOT flag '${probePair.name}' — the gate is broken.`);
+    process.exit(1);
+  }
+  console.log(`✓ contrast self-test: the live token set passes every enforced pair; collapsing '${probePair.name}' to one colour is caught.`);
+  process.exit(0);
+}
+
+function runMode(mode) {
+  const sem = mode === 'dark' ? { ...baseSem, ...darkOverrides } : baseSem;
+  const { failed, warned, rows } = evaluateMap(sem, PAIRS, includeInformational);
   return { mode, failed, warned, rows };
 }
 

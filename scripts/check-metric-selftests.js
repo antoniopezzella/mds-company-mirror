@@ -326,11 +326,20 @@ const METRICS = [
     id: 'gate_selftests',
     dir: 'up',
     // Points a new entry at a gate that is real but not yet covered.
+    // `deprecations:check` was that gate until AGENT-3 (2026-10-10) gave
+    // check-deprecations.js its own harness entry — this probe would then
+    // point at an ALREADY-covered file and correctly fail to move anything,
+    // which is "the metric cannot see its own subject" for the wrong reason
+    // (the probe went stale, not the metric). `varsync:check` is the gate
+    // that remains genuinely uncovered: check-token-vars-sync.js already
+    // carries a real --selftest, but spells the marker "selftest" (no
+    // hyphen), which `self-test|GATE NOT WORKING` does not match — a
+    // separate, pre-existing gap this probe incidentally exercises.
     up: () =>
       patch(
         'scripts/check-gate-selftests.js',
         'const GATES = [',
-        "const GATES = [\n  { name: '__mprobe', script: 'deprecations:check', probe: 'src/components/ui/__mprobe_gate.tsx', content: 'export {};\\n' },"
+        "const GATES = [\n  { name: '__mprobe', script: 'varsync:check', probe: 'src/components/ui/__mprobe_gate.tsx', content: 'export {};\\n' },"
       ),
     flatWhy: 'it counts gate files against a self-test table; a wrong-reason pass would be a bug in that resolution, covered by check-gate-selftests itself',
   },

@@ -66,33 +66,72 @@ const dark = {};
 const darkRe = /^\s*(\w+):\s*tokens\.(\w+),/gm;
 while ((m = darkRe.exec(darkSection))) dark[m[1]] = resolveRef(m[2]);
 
-let inSync = 0;
-let drifted = 0;
-let missing = 0;
-const driftRows = [];
-const missingRows = [];
+/**
+ * Pure diff: snapshot entries + resolved light/dark maps in, sync/drift/
+ * missing out, plus a per-token status map — same shape as
+ * check-figma-drift.js's diffPrimitives, for the same reason (--selftest
+ * below reuses it instead of re-deriving the comparison).
+ */
+function diffSemantics(snapshotSemantics, lightMap, darkMap) {
+  let inSync = 0;
+  let drifted = 0;
+  let missing = 0;
+  const driftRows = [];
+  const missingRows = [];
+  const statusByToken = new Map();
 
-for (const entry of snapshot.semantics) {
-  const codeLight = light[entry.mdsToken];
-  const codeDark = dark[entry.mdsToken] ?? codeLight; // falls back to light if no dark override, matching runtime behavior
-  if (!codeLight) {
-    missing++;
-    missingRows.push(entry.mdsToken);
-    continue;
+  for (const entry of snapshotSemantics) {
+    const codeLight = lightMap[entry.mdsToken];
+    const codeDark = darkMap[entry.mdsToken] ?? codeLight; // falls back to light if no dark override, matching runtime behavior
+    if (!codeLight) {
+      missing++;
+      missingRows.push(entry.mdsToken);
+      statusByToken.set(entry.mdsToken, 'missing');
+      continue;
+    }
+    const lightOk = codeLight === entry.mdsLight.toUpperCase();
+    const darkOk = codeDark === entry.mdsDark.toUpperCase();
+    if (lightOk && darkOk) {
+      inSync++;
+      statusByToken.set(entry.mdsToken, 'inSync');
+    } else {
+      drifted++;
+      driftRows.push({
+        token: entry.mdsToken,
+        codeLight, snapshotLight: entry.mdsLight,
+        codeDark, snapshotDark: entry.mdsDark,
+      });
+      statusByToken.set(entry.mdsToken, 'drifted');
+    }
   }
-  const lightOk = codeLight === entry.mdsLight.toUpperCase();
-  const darkOk = codeDark === entry.mdsDark.toUpperCase();
-  if (lightOk && darkOk) {
-    inSync++;
-  } else {
-    drifted++;
-    driftRows.push({
-      token: entry.mdsToken,
-      codeLight, snapshotLight: entry.mdsLight,
-      codeDark, snapshotDark: entry.mdsDark,
-    });
-  }
+  return { inSync, drifted, missing, driftRows, missingRows, statusByToken };
 }
+
+// --selftest: prove the gate can actually go red. Same reasoning as
+// check-figma-drift.js's --selftest: two fixed files, so the proof mutates
+// an in-memory copy of the resolved `light` map, and does not require the
+// whole snapshot to be drift-free (6 of 21 already are, for real).
+if (process.argv.includes('--selftest')) {
+  const baseline = diffSemantics(snapshot.semantics, light, dark);
+  const cleanEntry = snapshot.semantics.find(
+    (e) => baseline.statusByToken.get(e.mdsToken) === 'inSync'
+  );
+  if (!cleanEntry) {
+    console.error('✗ self-test: no in-sync semantic token found to mutate — cannot certify this gate.');
+    process.exit(1);
+  }
+  const mutatedLight = { ...light, [cleanEntry.mdsToken]: '#123456' };
+  const mutated = diffSemantics(snapshot.semantics, mutatedLight, dark);
+  const caught = mutated.statusByToken.get(cleanEntry.mdsToken) === 'drifted';
+  if (!caught) {
+    console.error(`✗ self-test: forced ${cleanEntry.mdsToken}'s light value to #123456 and the gate did NOT flag it as drifted — the gate is broken.`);
+    process.exit(1);
+  }
+  console.log(`✓ figma-semantic-drift self-test: ${cleanEntry.mdsToken} is in sync in the live snapshot; forcing its light value to #123456 is caught as drift.`);
+  process.exit(0);
+}
+
+const { inSync, drifted, missing, driftRows, missingRows } = diffSemantics(snapshot.semantics, light, dark);
 
 console.log(`Figma semantic snapshot dated: ${snapshot.snapshotDate} (source: ${snapshot.snapshotSource})`);
 console.log(`Checked against snapshot's recorded MDS values (not live Figma) — this only catches code-side drift since the snapshot was taken.`);
