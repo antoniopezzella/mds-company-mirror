@@ -6,6 +6,8 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { ArrowLeftToLine, ArrowRightToLine, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, EyeOff, PinOff, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { useFormat } from '@/lib/format-context';
+import type { Formattable, FormatKind } from '@/lib/format';
 import { DataState } from './data-state';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './dropdown-menu';
 import { Input } from './input';
@@ -22,7 +24,7 @@ import {
   TableRow,
 } from './table-primitives';
 import { DENSITY_PADDING, useDataGrid } from './data-grid';
-import type { DataGridFeatures } from './data-grid-features';
+import type { DataGridColumnMeta, DataGridFeatures } from './data-grid-features';
 import {
   applyClear,
   applyFill,
@@ -207,6 +209,11 @@ export function DataGridTable<TData extends RowData>({
     density,
     maxHeight,
   } = useDataGrid<TData>();
+
+  // Formatters pre-bound to the ambient locale/currency. useFormat falls back
+  // to en-US/USD defaults when no FormatProvider is mounted, so this is safe
+  // for a library consumer who never adds one — see format-context.tsx.
+  const fmt = useFormat();
 
   const [hoveredRow, setHoveredRow] = React.useState<string | null>(null);
   // Reorder happens in a menu that closes on select, so the move is invisible
@@ -519,6 +526,50 @@ export function DataGridTable<TData extends RowData>({
   // text, so an interpolated class generates no CSS at all.
   const alignClass = (align?: 'left' | 'center' | 'right') =>
     align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
+
+  /**
+   * `meta.type` → the matching `formatValue` kind, for the types that have one.
+   *
+   * `text`, `status` and `boolean` are deliberately absent: they carry no
+   * numeric/date formatting, so a column of that type renders exactly as it did
+   * before. This is the hook `meta.type` always advertised (data-grid-features
+   * §columnMeta) but never wired — until now it only drove right-alignment.
+   */
+  const TYPE_TO_FORMAT: Partial<Record<NonNullable<DataGridColumnMeta['type']>, FormatKind>> = {
+    currency: 'currency',
+    number: 'number',
+    percent: 'percent',
+    date: 'date',
+  };
+
+  // The table's own fallback cell renderer. Every column's `columnDef.cell` is
+  // this exact reference UNLESS the consumer supplied their own — TanStack v9
+  // merges `...getDefaultColumnDef()` (which sets
+  // `cell: props => props.renderValue()?.toString?.() ?? null`) ahead of the
+  // column's def, and memoises it on `[defaultColumn]` so the reference is
+  // stable. Comparing against it is how a custom `cell` keeps winning: if the
+  // author wrote one, we never touch their output.
+  const defaultCellRenderer = table.getDefaultColumnDef().cell;
+
+  /**
+   * A cell's display content.
+   *
+   * Formats the raw value through the ambient formatter ONLY when the column
+   * declares a formattable `meta.type` AND renders with the default cell (no
+   * custom `cell`). Otherwise the column's own renderer runs unchanged, so an
+   * explicit `cell` — including one that formats differently — always wins, and
+   * a column without `meta.type` is byte-for-byte what it was.
+   */
+  const renderCellContent = (
+    cell: ReturnType<(typeof rows)[number]['getVisibleCells']>[number]
+  ): React.ReactNode => {
+    const type = (cell.column.columnDef.meta as DataGridColumnMeta | undefined)?.type;
+    const kind = type ? TYPE_TO_FORMAT[type] : undefined;
+    if (kind && cell.column.columnDef.cell === defaultCellRenderer) {
+      return fmt.value(cell.getValue() as Formattable, kind);
+    }
+    return flexRender(cell.column.columnDef.cell, cell.getContext());
+  };
 
   const cellPadding = DENSITY_PADDING[density];
 
@@ -881,7 +932,7 @@ export function DataGridTable<TData extends RowData>({
                       // the content in a button would add a second focus stop
                       // AND nest interactives when the cell renders a control
                       // of its own — an axe error-severity failure.
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                      renderCellContent(cell)
                     ) : isEditable ? (
                       // Legacy path: a button, not a div with onDoubleClick,
                       // because editing has to be reachable by keyboard too.
@@ -898,10 +949,10 @@ export function DataGridTable<TData extends RowData>({
                         style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                         title="Double-click or press Enter to edit"
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {renderCellContent(cell)}
                       </button>
                     ) : (
-                      flexRender(cell.column.columnDef.cell, cell.getContext())
+                      renderCellContent(cell)
                     )}
                   </TableCell>
                 );

@@ -40,6 +40,57 @@ import {
 import { dateRangeFilterFn } from './data-grid-filter-fns';
 
 /**
+ * Per-column metadata for tables built on {@link dataGridFeatures}.
+ *
+ * Extracted from the inline `columnMeta` slot below so consumers (and the grid
+ * itself) can name the shape — the formatter wiring in data-grid-table.tsx
+ * reads `meta.type` through this type rather than re-declaring it.
+ */
+export interface DataGridColumnMeta {
+  /** Opts a column into inline editing. Requires `onCellEdit` on the table. */
+  editable?: boolean;
+  /**
+   * Cell and header alignment. Numeric columns read far better right-aligned
+   * — this is `table.tsx`'s `align`, which the grid had no equivalent for.
+   */
+  align?: 'left' | 'center' | 'right';
+  /**
+   * What the column holds. Drives alignment AND cell formatting: a column
+   * declaring `currency`/`number`/`percent`/`date` and using no custom `cell`
+   * renders its value through `formatValue` (see data-grid-table.tsx), so a
+   * currency column shows "$1,234.50" rather than "1234.5".
+   *
+   * Numeric types align RIGHT automatically — digits only line up for
+   * comparison when their last significant figure does, which is the whole
+   * reason a table exists. Setting `align` explicitly still wins.
+   */
+  type?: 'text' | 'number' | 'currency' | 'percent' | 'date' | 'status' | 'boolean';
+  /**
+   * Spreadsheet-mode editing for this column.
+   *
+   * Richer than `editable`, which is text-only and hands the consumer a
+   * `string` to cast. `parse` turns pasted/typed text into the column's own
+   * type and may reject it; `format` is the inverse for copy.
+   */
+  cellEdit?: {
+    /** Editable at all. A function narrows it per row. */
+    editable?: boolean | ((row: unknown) => boolean);
+    /**
+     * Text -> value. Return `undefined` to REJECT the input: a paste of
+     * "abc" into a number column should be reported, not silently written
+     * or silently dropped.
+     */
+    parse?: (raw: string, row: unknown) => unknown;
+    /** Value -> text, for copy and for seeding the editor. */
+    format?: (value: unknown, row: unknown) => string;
+    /** What Delete writes. Defaults to an empty string. */
+    clearValue?: unknown;
+    /** Editor control. `textarea` for multi-line values. */
+    control?: 'text' | 'textarea';
+  };
+}
+
+/**
  * The single place this repo registers TanStack Table features.
  *
  * v9 replaced v8's "pass a row model per option" style with one explicit
@@ -134,47 +185,7 @@ export const dataGridFeatures = tableFeatures({
    * v9, whose `ColumnMeta` takes `TFeatures` as its first parameter. A slot is
    * scoped to this feature set and needs no module augmentation at all.
    */
-  columnMeta: {} as {
-    /** Opts a column into inline editing. Requires `onCellEdit` on the table. */
-    editable?: boolean;
-    /**
-     * Cell and header alignment. Numeric columns read far better right-aligned
-     * — this is `table.tsx`'s `align`, which the grid had no equivalent for.
-     */
-    align?: 'left' | 'center' | 'right';
-    /**
-     * What the column holds. Drives alignment, and is the hook for the wider
-     * data-type/formatting system the experience spec describes (§6).
-     *
-     * Numeric types align RIGHT automatically — digits only line up for
-     * comparison when their last significant figure does, which is the whole
-     * reason a table exists. Setting `align` explicitly still wins.
-     */
-    type?: 'text' | 'number' | 'currency' | 'percent' | 'date' | 'status' | 'boolean';
-    /**
-     * Spreadsheet-mode editing for this column.
-     *
-     * Richer than `editable`, which is text-only and hands the consumer a
-     * `string` to cast. `parse` turns pasted/typed text into the column's own
-     * type and may reject it; `format` is the inverse for copy.
-     */
-    cellEdit?: {
-      /** Editable at all. A function narrows it per row. */
-      editable?: boolean | ((row: unknown) => boolean);
-      /**
-       * Text -> value. Return `undefined` to REJECT the input: a paste of
-       * "abc" into a number column should be reported, not silently written
-       * or silently dropped.
-       */
-      parse?: (raw: string, row: unknown) => unknown;
-      /** Value -> text, for copy and for seeding the editor. */
-      format?: (value: unknown, row: unknown) => string;
-      /** What Delete writes. Defaults to an empty string. */
-      clearValue?: unknown;
-      /** Editor control. `textarea` for multi-line values. */
-      control?: 'text' | 'textarea';
-    };
-  },
+  columnMeta: {} as DataGridColumnMeta,
 });
 
 /**

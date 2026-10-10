@@ -434,3 +434,83 @@ export const ConsumerOwnedState: StoryObj = {
   },
   render: () => <OwnedState />,
 };
+
+interface TypedPolicy {
+  id: number;
+  name: string;
+  status: string;
+  /** RAW number, not a pre-formatted "$12,400" string. */
+  premium: number;
+  /** RAW number — a percentage, already expressed as such (12.5, not 0.125). */
+  lossRatio: number;
+  /** RAW ISO date string straight from an API. */
+  renewalDate: string;
+}
+
+const typedPolicies: TypedPolicy[] = [
+  { id: 1, name: 'Commercial Auto', status: 'Active', premium: 12400, lossRatio: 62.4, renewalDate: '2026-03-14' },
+  { id: 2, name: 'General Liability', status: 'Active', premium: 8200, lossRatio: 41.9, renewalDate: '2026-05-01' },
+  { id: 3, name: 'Cyber Liability', status: 'Pending', premium: 15900, lossRatio: 78.1, renewalDate: '2026-01-22' },
+  { id: 4, name: 'Property', status: 'Active', premium: 22000, lossRatio: 55.0, renewalDate: '2026-07-09' },
+  { id: 5, name: 'Workers Comp', status: 'Expired', premium: 9600, lossRatio: 88.7, renewalDate: '2025-11-30' },
+];
+
+// The whole point of this story: the numeric and date columns hold RAW values
+// and carry NO `cell` renderer — only `meta.type`. The grid runs them through
+// `formatValue`, so a currency column shows "$12,400.00" and a date column a
+// readable date, with no per-column formatting code. `status` keeps its custom
+// `cell` (a Badge), proving a custom renderer always wins over `meta.type`.
+const typedColumns: DataGridColumnDef<TypedPolicy>[] = [
+  { accessorKey: 'name', header: 'Policy', enableSorting: true },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ getValue }) => {
+      const v = getValue<string>();
+      return (
+        <Badge variant="soft" tone={v === 'Active' ? 'success' : v === 'Expired' ? 'danger' : 'warning'}>
+          {v}
+        </Badge>
+      );
+    },
+  },
+  { accessorKey: 'premium', header: 'Premium', enableSorting: true, meta: { type: 'currency' } },
+  { accessorKey: 'lossRatio', header: 'Loss ratio', enableSorting: true, meta: { type: 'percent' } },
+  { accessorKey: 'renewalDate', header: 'Renewal Date', enableSorting: true, meta: { type: 'date' } },
+];
+
+function TypedFormatting() {
+  const table = useDataGridTable({ columns: typedColumns, data: typedPolicies, pageSize: 5, pinFirstColumn: false });
+  return (
+    <DataGrid table={table} recordCount={typedPolicies.length}>
+      <DataGridContainer>
+        <DataGridScrollArea>
+          <DataGridTable />
+        </DataGridScrollArea>
+      </DataGridContainer>
+    </DataGrid>
+  );
+}
+
+export const TypedColumnFormatting: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Columns declare `meta: { type: 'currency' | 'percent' | 'date' }` and hold **raw** numbers and ISO strings — no `cell` renderer. The grid formats the value through `formatValue` (locale/currency from a `FormatProvider`, or `en-US`/`USD` by default), and numeric types align right automatically. The `Status` column keeps its custom `cell`, which always wins over `meta.type`.",
+      },
+    },
+  },
+  render: () => <TypedFormatting />,
+  play: async ({ canvasElement }) => {
+    const table = canvasElement.querySelector('table')!;
+    // Raw 12400 rendered as currency, not as "12400".
+    await expect(table.textContent).toContain('$12,400.00');
+    // Raw 62.4 rendered as a percentage.
+    await expect(table.textContent).toContain('62.4%');
+    // The ISO date is formatted away.
+    await expect(table.textContent).not.toContain('2026-03-14');
+    // The custom-cell Status column is untouched.
+    await expect(table.textContent).toContain('Active');
+  },
+};
