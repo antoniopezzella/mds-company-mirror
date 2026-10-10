@@ -12,6 +12,16 @@ import { roleVar } from '@/theme/roles';
  * repo's `roleVar()` role tokens instead of shadcn's default
  * CSS-variable palette.
  */
+export interface HoverCardProps extends React.ComponentProps<typeof HoverCardPrimitive.Root> {
+  /** Hover delay before the card opens, in ms. Radix default is `700`. */
+  openDelay?: number;
+  /**
+   * Hover delay before the card closes once the pointer leaves BOTH the
+   * trigger and the content, in ms. Radix default is `300` — raise it if
+   * a fast mouse move between trigger and content is dismissing the card.
+   */
+  closeDelay?: number;
+}
 
 const HoverCard = HoverCardPrimitive.Root;
 const HoverCardTrigger = HoverCardPrimitive.Trigger;

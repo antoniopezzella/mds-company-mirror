@@ -45,7 +45,14 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-export type CommandDialogProps = React.ComponentPropsWithoutRef<typeof Dialog>;
+export interface CommandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  /**
+   * Fires when the palette opens or closes, including on Escape/overlay
+   * click/Radix's own dismissal — not only on an explicit close call. Use
+   * it to reset search state (`CommandInput`'s value) between openings.
+   */
+  onOpenChange?: (open: boolean) => void;
+}
 
 const CommandDialog: React.FC<CommandDialogProps> = ({ children, ...props }) => (
   <Dialog {...props}>

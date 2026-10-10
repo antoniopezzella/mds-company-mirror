@@ -30,7 +30,15 @@ function getThumbColor(interaction: InteractionState): string {
   return 'var(--role-interactive-primary)';
 }
 
-export type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
+export interface SliderProps extends React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> {
+  /**
+   * Fires on every drag step with the FULL value array, one entry per
+   * thumb — even for a single-thumb slider this is `[value]`, not a bare
+   * number. Render one `Thumb` per entry in `value`/`defaultValue` to add
+   * a second handle (a range slider), rather than a separate prop.
+   */
+  onValueChange?: (value: number[]) => void;
+}
 
 /**
  * Design System Slider — shadcn/ui/Radix counterpart. No MDS twin exists yet;

@@ -74,15 +74,17 @@ export const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttribut
 );
 TableRow.displayName = 'TableRow';
 
-/**
- * A header cell. `scope` defaults to `col`, which is the case in ninety-odd
- * percent of tables and the one people forget — without it a screen reader
- * cannot associate the header with its column.
- */
-export const TableHead = React.forwardRef<
-  HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, scope = 'col', ...props }, ref) => (
+export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
+  /**
+   * Defaults to `'col'`, which is the case in ninety-odd percent of
+   * tables and the one people forget — without it a screen reader cannot
+   * associate the header with its column. Set `'row'` for a row-header
+   * cell (e.g. the leftmost `<th>` in a data row).
+   */
+  scope?: React.ThHTMLAttributes<HTMLTableCellElement>['scope'];
+}
+
+export const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(({ className, scope = 'col', ...props }, ref) => (
   <th
     ref={ref}
     scope={scope}

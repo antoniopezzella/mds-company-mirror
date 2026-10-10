@@ -26,7 +26,17 @@ import { cn } from '@/lib/utils';
 // through `modifiersStyles` (which would only tint the table cell, not the
 // circular button itself).
 
-export type CalendarProps = DayPickerProps;
+// `DayPickerProps` is a discriminated union keyed on `mode`
+// (single/multiple/range/default), so this is an intersection rather than
+// an `interface extends` — an interface cannot extend a union.
+export type CalendarProps = DayPickerProps & {
+  /**
+   * Fills the grid with dimmed days from the adjacent months so every row
+   * has 7 cells, rather than leaving the first/last week ragged. Defaults
+   * to `true`.
+   */
+  showOutsideDays?: boolean;
+};
 
 function CalendarChevron({ className, orientation, disabled, ...props }: ChevronProps) {
   const Icon = orientation === 'left' ? ChevronLeft : ChevronRight;

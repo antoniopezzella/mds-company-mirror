@@ -38,11 +38,22 @@ function QuestionnaireRoot({
   )
 }
 
+export interface QuestionnaireProgressProps
+  extends React.ComponentProps<typeof QuestionnairePrimitive.Progress> {
+  /**
+   * Overrides the default "Question X of Y" bar entirely. Receives the
+   * primitive's own `renderProps` (spread onto your root element) plus
+   * `state.current`/`state.total` — return your own markup rather than
+   * composing with the default, there is no merge.
+   */
+  render?: React.ComponentProps<typeof QuestionnairePrimitive.Progress>['render'];
+}
+
 function QuestionnaireProgress({
   className,
   render,
   ...props
-}: React.ComponentProps<typeof QuestionnairePrimitive.Progress>) {
+}: QuestionnaireProgressProps) {
   return (
     <QuestionnairePrimitive.Progress
       data-slot="questionnaire-progress"

@@ -219,6 +219,7 @@ export interface DSSelectProps {
   label?: string;
   placeholder?: string;
   helperText?: string;
+  /** Shorthand for `tone="error"` — set either one for the danger state; they agree in every current caller. */
   error?: boolean;
   tone?: 'default' | 'error' | 'success' | 'warning';
   size?: ControlSize | 'small' | 'medium';
@@ -226,6 +227,7 @@ export interface DSSelectProps {
   disabled?: boolean;
   value?: string | number;
   defaultValue?: string | number;
+  /** Receives the new value directly (Radix convention) — not a change event like a native `<select>`'s `onChange`. */
   onChange?: (value: string | number) => void;
   name?: string;
   className?: string;
