@@ -180,7 +180,30 @@ const PAIRS = [
   { name: 'statusDangerText on statusDangerBg', fg: 'statusDangerText', bg: 'statusDangerBg', required: 4.5, warn: 4.5 },
   { name: 'textOnLight on statusWarningBg (warning text)', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
   // Gold stays legal as a non-text accent (icon, border): 3:1, not 4.5:1.
-  { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 }
+  { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 },
+
+  // ── Chart series vs the chart surface ──────────────────────────────────────
+  // Series marks (bars, lines, slices) are graphical objects, so the WCAG
+  // floor is 1.4.11 Non-text Contrast: 3:1 against the surface. The chart
+  // surface is surfaceDefault (white light / #101010 dark — the surface the
+  // dark palette was explicitly re-validated against, see token-variables.css).
+  //
+  // INFORMATIONAL, not enforced, and this is deliberate rather than a dodge.
+  // The categorical palette is a VALIDATED UNIT (CVD-safe adjacency order,
+  // dataviz skill) whose legibility comes from legend + direct labels — never
+  // colour-alone, which chart.tsx enforces by always shipping both. Two of the
+  // ten members sit below 3:1 on the surface BY DESIGN and have no darker brand
+  // step to promote to without breaking the CVD ordering: chart.3 gold (light,
+  // ~2.57:1) and chart.4 purple (dark, ~2.70:1). Gating at 3:1 would demand
+  // changing the validated palette, which is exactly what must NOT be done
+  // silently. Same category as the WCAG-1.4.3-exempt interactiveDisabledFg pair
+  // above: tracked so the ratio is visible and a regression is caught by eye,
+  // not hard-gated. `--include-informational` surfaces the two sub-3:1 values.
+  { name: 'chartSeries1 on surfaceDefault', fg: 'chartSeries1', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
+  { name: 'chartSeries2 on surfaceDefault', fg: 'chartSeries2', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
+  { name: 'chartSeries3 on surfaceDefault', fg: 'chartSeries3', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
+  { name: 'chartSeries4 on surfaceDefault', fg: 'chartSeries4', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
+  { name: 'chartSeries5 on surfaceDefault', fg: 'chartSeries5', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true }
 ];
 
 /**
