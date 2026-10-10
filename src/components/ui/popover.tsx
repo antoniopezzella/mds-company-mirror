@@ -10,17 +10,30 @@ import { roleVar } from '@/theme/roles';
  * Popover — no MDS/Figma spec exists for this yet, so it's built matching
  * real shadcn/ui conventions directly (Radix Popover), styled with this
  * repo's `roleVar()` role tokens instead of shadcn's default
- * CSS-variable palette.
+ * CSS-variable palette. `PopoverContent` renders through a Radix Portal to
+ * `document.body`, so an ancestor class (a typography/dashboard scope, a
+ * `dir` attribute) does not reach it — reapply it on `PopoverContent`
+ * itself if the surface needs it.
  */
 
 const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 const PopoverAnchor = PopoverPrimitive.Anchor;
 
-const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, align = 'center', sideOffset = 8, ...props }, ref) => (
+export interface PopoverContentProps
+  extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> {
+  /**
+   * Preferred edge alignment relative to the trigger. Defaults to
+   * `'center'` here (Radix's own default is `'center'` too, but this
+   * component pins it explicitly since it's rendered through a Portal —
+   * see the component note above for why that matters for styling scope).
+   */
+  align?: 'start' | 'center' | 'end';
+  /** Gap in pixels between the trigger and the content. Defaults to `8`. */
+  sideOffset?: number;
+}
+
+const PopoverContent = React.forwardRef<React.ElementRef<typeof PopoverPrimitive.Content>, PopoverContentProps>(({ className, align = 'center', sideOffset = 8, ...props }, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}

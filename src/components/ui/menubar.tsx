@@ -48,10 +48,13 @@ const MenubarTrigger = React.forwardRef<
 ));
 MenubarTrigger.displayName = MenubarPrimitive.Trigger.displayName;
 
-const MenubarSubTrigger = React.forwardRef<
-  React.ElementRef<typeof MenubarPrimitive.SubTrigger>,
-  React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> & { inset?: boolean }
->(({ className, inset, children, ...props }, ref) => (
+export interface MenubarSubTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof MenubarPrimitive.SubTrigger> {
+  /** Adds a fixed left-aligned indent so this item's label lines up with sibling items that carry a checkmark or icon. */
+  inset?: boolean;
+}
+
+const MenubarSubTrigger = React.forwardRef<React.ElementRef<typeof MenubarPrimitive.SubTrigger>, MenubarSubTriggerProps>(({ className, inset, children, ...props }, ref) => (
   <MenubarPrimitive.SubTrigger
     ref={ref}
     className={cn(

@@ -33,7 +33,16 @@ const toggleVariants = cva(
   }
 );
 
-export interface ToggleProps extends React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>, VariantProps<typeof toggleVariants> {}
+export interface ToggleProps
+  extends React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>,
+    VariantProps<typeof toggleVariants> {
+  /**
+   * Controlled pressed state — pair with `onPressedChange`. Omit both
+   * (use `defaultPressed` instead, if anything) for an uncontrolled
+   * toggle that tracks its own state internally.
+   */
+  pressed?: boolean;
+}
 
 const Toggle = React.forwardRef<React.ElementRef<typeof TogglePrimitive.Root>, ToggleProps>(
   ({ className, variant, size, pressed, defaultPressed, onPressedChange, style, ...props }, ref) => {

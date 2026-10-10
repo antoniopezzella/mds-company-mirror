@@ -8,7 +8,16 @@ import { cn } from "@/lib/utils"
  * (apps/v4/registry/new-york-v4/ui/spinner.tsx) — needed by the
  * MessageScroller "thinking..." demo (Marker + Spinner).
  */
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
+export interface SpinnerProps extends React.ComponentProps<"svg"> {
+  /**
+   * Merged with the default `size-4 animate-spin` via `cn()` — pass a
+   * `size-*` utility to resize (the default is 16px) rather than a
+   * `width`/`height` attribute, which `animate-spin` does not scale.
+   */
+  className?: string;
+}
+
+function Spinner({ className, ...props }: SpinnerProps) {
   return (
     <Loader2Icon
       role="status"

@@ -12,10 +12,17 @@ import { roleVar } from '@/theme/roles';
  * `roleVar()` for the scrollbar thumb.
  */
 
-const ScrollArea = React.forwardRef<
-  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
->(({ className, children, ...props }, ref) => (
+export interface ScrollAreaProps extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
+  /**
+   * When the scrollbar is visible. Radix default is `'hover'` (shown
+   * while scrolling or hovering the area) — `'always'` suits a surface
+   * where the scrollbar doubles as a length cue, `'scroll'` hides it as
+   * soon as scrolling stops, `'auto'` defers to the native OS behaviour.
+   */
+  type?: 'auto' | 'always' | 'scroll' | 'hover';
+}
+
+const ScrollArea = React.forwardRef<React.ElementRef<typeof ScrollAreaPrimitive.Root>, ScrollAreaProps>(({ className, children, ...props }, ref) => (
   <ScrollAreaPrimitive.Root ref={ref} className={cn('relative overflow-hidden', className)} {...props}>
     {/* tabIndex={0} so a keyboard-only user can focus the viewport and scroll
         it with the arrow keys. Radix leaves this to the consumer, and without

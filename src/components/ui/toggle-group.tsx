@@ -18,10 +18,23 @@ const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariant
  *  to know the group's current value to compute its own pressed-state color. */
 const ToggleGroupValueContext = React.createContext<string | string[] | undefined>(undefined);
 
-const ToggleGroup = React.forwardRef<
-  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>
->(({ className, variant, size, children, value, ...props }, ref) => (
+// `ToggleGroupPrimitive.Root`'s own props are a discriminated UNION
+// (single | multiple), so this is an intersection type rather than an
+// `interface extends` — an interface cannot extend a union.
+export type ToggleGroupProps = React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
+  VariantProps<typeof toggleVariants> & {
+  /**
+   * `'single'` makes `value`/`onValueChange` a plain string (or
+   * `undefined`) — at most one item pressed, like a radio group.
+   * `'multiple'` makes them a string array — any number of items
+   * pressed, like a checkbox group. Required by Radix; changes the
+   * shape of every value you pass or receive, not just the selection
+   * behaviour.
+   */
+  type: 'single' | 'multiple';
+};
+
+const ToggleGroup = React.forwardRef<React.ElementRef<typeof ToggleGroupPrimitive.Root>, ToggleGroupProps>(({ className, variant, size, children, value, ...props }, ref) => (
   <ToggleGroupPrimitive.Root ref={ref} value={value as never} className={cn('flex items-center gap-1', className)} {...props}>
     <ToggleGroupContext.Provider value={{ variant, size }}>
       <ToggleGroupValueContext.Provider value={value}>{children}</ToggleGroupValueContext.Provider>

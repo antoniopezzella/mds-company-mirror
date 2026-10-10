@@ -99,11 +99,20 @@ const fieldVariants = cva(
   }
 )
 
+export interface FieldProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof fieldVariants> {
+  /**
+   * Layout of label vs. control. `"vertical"` stacks them (default);
+   * `"horizontal"` puts them side by side; `"responsive"` stacks on a
+   * narrow container and goes side-by-side once the enclosing
+   * `FieldGroup` passes the `@md` container breakpoint.
+   */
+  orientation?: "vertical" | "horizontal" | "responsive"
+}
+
 /** Forwards to the field's own wrapper `<div>` — the element to `scrollIntoView` for "jump to the first invalid field" on submit. */
-const Field = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & VariantProps<typeof fieldVariants>
->(({ className, orientation = "vertical", ...props }, ref) => {
+const Field = React.forwardRef<HTMLDivElement, FieldProps>(({ className, orientation = "vertical", ...props }, ref) => {
   return (
     <div
       ref={ref}

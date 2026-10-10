@@ -81,7 +81,9 @@ CircularProgress.displayName = 'CircularProgress';
 // ── Linear Progress ─────────────────────────────────────────────────────
 
 export interface LinearProgressProps {
+  /** Fill percentage (0–100). Ignored when `variant` is `'indeterminate'`. */
   value?: number;
+  /** `'determinate'` fills to `value`; `'indeterminate'` plays a looping scan animation for an unknown-length wait. */
   variant?: 'determinate' | 'indeterminate';
   tone?: ProgressTone;
   className?: string;

@@ -52,7 +52,12 @@ const sheetVariants = cva(
   }
 );
 
-export interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>, VariantProps<typeof sheetVariants> {}
+export interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {
+  /** Edge the panel slides in from. Defaults to `'right'`. `'top'`/`'bottom'` span the full width instead of sizing to content. */
+  side?: 'top' | 'bottom' | 'left' | 'right';
+}
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Content>, SheetContentProps>(
   ({ side = 'right', className, children, ...props }, ref) => (

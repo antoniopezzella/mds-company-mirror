@@ -51,11 +51,23 @@ const emptyMediaVariants = cva(
   }
 )
 
+export interface EmptyMediaProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof emptyMediaVariants> {
+  /**
+   * `"icon"` wraps the content in a 40px rounded, tinted box (the right
+   * treatment for a single Lucide icon). `"default"` renders the content
+   * unstyled — use it for an illustration or avatar that already carries
+   * its own sizing.
+   */
+  variant?: "default" | "icon"
+}
+
 function EmptyMedia({
   className,
   variant = "default",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants>) {
+}: EmptyMediaProps) {
   return (
     <div
       data-slot="empty-icon"
