@@ -148,7 +148,7 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   },
   'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
   'text.onSuccess': { semantic: 'textOnSuccess', description: 'Readable text over solid success surfaces (white light / Midnight dark)' },
-  'text.onWarning': { semantic: 'textOnWarning', description: 'Readable text over solid warning surfaces (Midnight; mode-invariant, white fails on gold)' },
+  'text.onWarning': { semantic: 'textOnWarning', description: 'Readable text over SOLID warning surfaces — white in light (on #c25600), Midnight in dark (on gold500), flipping like text.onSuccess/onDanger. Pale/soft warning surfaces use text.onLight instead.' },
   'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
   'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
   'text.placeholder': {

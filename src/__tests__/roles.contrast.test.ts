@@ -53,7 +53,10 @@ const ENFORCED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
   ['text.onInteractive', 'interactive.danger', 4.5],
   ['text.onInteractive', 'status.success.border', 4.5],
   ['text.onInteractive', 'status.danger.border', 4.5],
-  ['text.onLight', 'status.warning.border', 4.5],
+  // Warning's solid fill flips white/Midnight like success/danger now that V3's
+  // warning is a dark burnt orange (#c25600); the pale soft surface keeps
+  // mode-invariant Midnight (text.onLight on status.warning.bg below).
+  ['text.onWarning', 'status.warning.border', 4.5],
   ['text.onLight', 'status.warning.bg', 4.5],
 
   // ── Added 2026-10-01, after ten shipped sites were found pairing a fixed

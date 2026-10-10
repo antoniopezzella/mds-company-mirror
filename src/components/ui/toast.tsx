@@ -47,8 +47,8 @@ function getToneRoles(tone: ToastTone): { bg: RoleName; fg: RoleName } {
     case 'success':
       return { bg: 'status.success.bg', fg: 'status.success.fg' };
     case 'warning':
-      // warning is the exception: status.warning.fg (gold1000) on
-      // status.warning.bg is 3.34:1 — fine as an accent, unreadable as text.
+      // warning is the exception: status.warning.fg (#c25600) on
+      // status.warning.bg is 4.44:1 — fine as an accent, still under 4.5 as text.
       // text.onLight (17.71:1) exists for exactly this. See alert.tsx.
       return { bg: 'status.warning.bg', fg: 'text.onLight' };
     case 'danger':

@@ -1155,11 +1155,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.7961,
-          0.4941,
-          0.0118
+          0.7608,
+          0.3373,
+          0
         ],
-        "hex": "#cb7e03"
+        "hex": "#c25600"
       }
     },
     "statusSuccess": {
@@ -2507,7 +2507,7 @@
       },
       "statusWarningText": {
         "$type": "color",
-        "$value": "{color.gold1000}"
+        "$value": "{color.statusWarning}"
       },
       "statusDanger": {
         "$type": "color",
@@ -2564,7 +2564,7 @@
       },
       "textOnWarning": {
         "$type": "color",
-        "$value": "{color.blue1000}"
+        "$value": "{color.white}"
       },
       "chartSeries1": {
         "$type": "color",
@@ -2631,6 +2631,10 @@
         "$value": "{color.blue1000}"
       },
       "textOnSuccess": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "textOnWarning": {
         "$type": "color",
         "$value": "{color.blue1000}"
       },
@@ -3214,7 +3218,7 @@
         },
         "onWarning": {
           "$type": "color",
-          "$value": "{semantic.color.textOnWarning}"
+          "$value": "{semanticDark.color.textOnWarning}"
         },
         "onLight": {
           "$type": "color",

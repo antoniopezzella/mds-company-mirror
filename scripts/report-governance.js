@@ -71,7 +71,10 @@ const ENFORCED_ROLE_PAIRS = [
   ['text.onInteractive','interactive.danger',4.5],
   ['text.onInteractive','status.success.border',4.5],
   ['text.onInteractive','status.danger.border',4.5],
-  ['text.onLight','status.warning.border',4.5],
+  // Warning's SOLID fill flips white/Midnight like success/danger now that V3's
+  // warning is a dark burnt orange (#c25600) — see check-contrast.js. The pale
+  // soft surface keeps mode-invariant Midnight (text.onLight).
+  ['text.onWarning','status.warning.border',4.5],
   ['text.onLight','status.warning.bg',4.5],
   ['status.success.fg','status.success.bg',3.0],
   ['status.warning.fg','status.warning.bg',3.0],

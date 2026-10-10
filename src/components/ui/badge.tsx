@@ -97,24 +97,23 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
   },
   warning: {
     solidBg: 'status.warning.border',
-    // Warning's gold stays light/mid-toned in BOTH modes, so white text fails
-    // (2.12:1 solid, 3.41:1 soft). text.onWarning is mode-invariant Midnight —
-    // the dedicated on-* token for warning content (was proxied via onLight).
+    // Since V3's warning is a dark burnt orange (#c25600), the solid fill now
+    // behaves like success/danger: text.onWarning flips white (light, 4.54:1) →
+    // Midnight (dark, 13.41:1). It was the mode-invariant Midnight exception only
+    // while warning was pale gold, where white failed (2.12:1).
     solidFg: 'text.onWarning',
     softBg: 'status.warning.bg',
     softBorder: 'status.warning.border',
-    softFg: 'text.onWarning',
-    // The one tone that cannot be tonal. status.warning.fg is gold1000
-    // (#cb7623) and measures **3.41:1** on white — under AA for the 12px text
-    // this variant uses. The gold ramp BOTTOMS OUT there: gold1000 is the
-    // darkest Figma anchor, so there is no darker gold to reach for, and
-    // inventing one would drift from the synced palette.
-    //
-    // text.primary instead (Midnight light / white dark, 18.11 / 19.03). The
-    // gold border still carries the tone — the colour cue survives, the
-    // illegible text does not. Same reasoning as softFg above, which reaches
-    // for text.onLight for the mirror-image reason.
-    outlineFg: 'text.primary',
+    // Soft fill is the pale gold50 surface in both modes, so its text stays
+    // mode-invariant Midnight — text.onLight carries the exact pixels
+    // text.onWarning used to hold here, before it was repurposed for the
+    // flipping solid case above.
+    softFg: 'text.onLight',
+    // status.warning.fg is now the #c25600 accent at 4.54:1 on white — legible
+    // as this variant's 12px text, where the old gold1000 (3.41:1) was not and
+    // forced a fall back to text.primary. Kept on the accent so the outline
+    // badge reads in the warning hue.
+    outlineFg: 'status.warning.fg',
   },
   danger: {
     solidBg: 'status.danger.border',

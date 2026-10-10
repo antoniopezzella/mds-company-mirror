@@ -197,11 +197,18 @@ export const semanticColors = {
   statusSuccessBorder: ref('statusSuccess'),   // #14853d
   statusSuccessText:   ref('green1000'),       // #2f7d32 — Darkest for text contrast
 
-  // ── Status — Warning (Gold) ───────────────────────────────────────────────
-  statusWarning:       ref('statusWarning'),   // #cb7e03 — Utilities/Warning
-  statusWarningBg:     ref('gold50'),          // #fffcf8
-  statusWarningBorder: ref('statusWarning'),   // #cb7e03
-  statusWarningText:   ref('gold1000'),        // #cb7623 — Darker for text contrast
+  // ── Status — Warning (burnt orange) ───────────────────────────────────────
+  // Re-synced to Figma V3 2026-10-10: the accent moved from gold #cb7e03 to
+  // burnt orange #c25600 (see tokens.ts). The pale surface stays gold50 — a
+  // near-white warm tint reads correctly behind either accent, and Figma's own
+  // fill is untokenized. statusWarningText is now the accent itself (#c25600):
+  // the old gold1000 (#cb7623) bottomed out at 3.41:1 and could only be an
+  // accent; #c25600 reaches 4.54:1 on white, so the icon/outline is legible
+  // where gold was marginal.
+  statusWarning:       ref('statusWarning'),   // #c25600 — Utilities/Warning
+  statusWarningBg:     ref('gold50'),          // #fffcf8 — pale warm fill (kept)
+  statusWarningBorder: ref('statusWarning'),   // #c25600
+  statusWarningText:   ref('statusWarning'),   // #c25600 — icon/outline accent (4.44 on bg, 4.54 on white)
 
   // ── Status — Danger / Error (Red) ─────────────────────────────────────────
   statusDanger:       ref('statusCritical'),   // #c53532 — Utilities/Critical
@@ -232,7 +239,7 @@ export const semanticColors = {
   interactiveDangerActive: ref('red1000'),        // #8b1a1a — red scale (from crimson800, 2026-10-09)
   textOnDanger:            ref('white'),        // White text on red
   textOnSuccess:           ref('white'),        // White on solid success green (4.72:1); flips to Midnight in dark
-  textOnWarning:           ref('blue1000'),     // Midnight on solid warning gold (5.63:1) — white fails at 3.22, so mode-invariant
+  textOnWarning:           ref('white'),        // White on solid warning #c25600 (4.54:1); flips to Midnight in dark — now that V3's warning is a dark burnt orange it behaves exactly like textOnSuccess/textOnDanger, no longer the mode-invariant exception gold forced. Soft/pale warning surfaces use text.onLight, not this.
 
   // ── Chart — categorical data-visualisation series ─────────────────────────
   // Five-hue categorical palette for charts, consumed by recharts/chart.tsx
@@ -290,6 +297,7 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // 15.49:1 on status.danger.fg, 6.53:1 on dark interactive.danger.
   textOnDanger:      tokens.blue1000,        // #000f47 — was white, see above
   textOnSuccess:     tokens.blue1000,        // #000f47 — solid success border lightens in dark (11.64:1)
+  textOnWarning:     tokens.blue1000,        // #000f47 — solid warning border lightens to gold500 #ffd98a in dark, so Midnight (13.41:1), same flip as success/danger
   textOnLight:   tokens.blue1000,            // unchanged (rare context)
   textOnDark:    tokens.neutral50,           // #f8f8f8
   textDisabled:  tokens.neutral500,          // #878787
@@ -420,9 +428,9 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   statusSuccessText:   tokens.green100,         // #f2faef
 
   // Status Warning (Gold — lightened)
-  statusWarning:       tokens.gold500,          // #ff994a
+  statusWarning:       tokens.gold500,          // #ffd98a
   statusWarningBg:     tokens.gold1000,         // #cb7623
-  statusWarningBorder: tokens.gold500,          // #ff994a
+  statusWarningBorder: tokens.gold500,          // #ffd98a
   statusWarningText:   tokens.gold250,          // #fff2da
 
   // Status Danger (Red — lightened)

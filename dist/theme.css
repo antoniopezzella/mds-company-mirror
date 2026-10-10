@@ -92,7 +92,7 @@
   --primitive-white: #ffffff;
   --primitive-black: #000000;
   --primitive-status-critical: #c53532;
-  --primitive-status-warning: #cb7e03;
+  --primitive-status-warning: #c25600;
   --primitive-status-success: #14853d;
   --primitive-status-info: #6fb4ff;
   --primitive-focus-cyan: #009de0;
@@ -211,10 +211,10 @@
   --color-status-success-bg: #f8fcf7;
   --color-status-success-border: #14853d;
   --color-status-success-text: #2f7d32;
-  --color-status-warning: #cb7e03;
+  --color-status-warning: #c25600;
   --color-status-warning-bg: #fffcf8;
-  --color-status-warning-border: #cb7e03;
-  --color-status-warning-text: #cb7623;
+  --color-status-warning-border: #c25600;
+  --color-status-warning-text: #c25600;
   --color-status-danger: #c53532;
   --color-status-danger-bg: #fffafa;
   --color-status-danger-border: #c53532;
@@ -228,7 +228,7 @@
   --color-interactive-danger-active: #8b1a1a;
   --color-text-on-danger: #ffffff;
   --color-text-on-success: #ffffff;
-  --color-text-on-warning: #000f47;
+  --color-text-on-warning: #ffffff;
   --color-chart-series1: #54a731;
   --color-chart-series2: #1f60ff;
   --color-chart-series3: #e09015;
@@ -243,7 +243,7 @@
   --role-text-onPrimary: #ceecff;
   --role-text-onDanger: #ffffff;
   --role-text-onSuccess: #ffffff;
-  --role-text-onWarning: #000f47;
+  --role-text-onWarning: #ffffff;
   --role-text-onLight: #000f47;
   --role-text-disabled: #767676;
   --role-text-placeholder: #767676;
@@ -271,9 +271,9 @@
   --role-status-success-fg: #2f7d32;
   --role-status-success-bg: #f8fcf7;
   --role-status-success-border: #14853d;
-  --role-status-warning-fg: #cb7623;
+  --role-status-warning-fg: #c25600;
   --role-status-warning-bg: #fffcf8;
-  --role-status-warning-border: #cb7e03;
+  --role-status-warning-border: #c25600;
   --role-status-danger-fg: #8b1a1a;
   --role-status-danger-bg: #fffafa;
   --role-status-danger-border: #c53532;
