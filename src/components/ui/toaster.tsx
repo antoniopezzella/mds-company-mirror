@@ -1,6 +1,6 @@
 "use client"
 
-import { Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, type ToastTone } from './toast';
+import { Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTimestamp, ToastTitle, ToastViewport, type ToastTone } from './toast';
 import { toast, useToast } from './use-toast';
 
 /**
@@ -14,11 +14,12 @@ export function Toaster() {
 
   return (
     <ToastProvider duration={5000}>
-      {toasts.map(({ id, title, description, action, ...props }) => (
+      {toasts.map(({ id, title, description, timestamp, action, ...props }) => (
         <Toast key={id} {...props}>
           <div className="grid flex-1 gap-1">
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
+            {timestamp && <ToastTimestamp>{timestamp}</ToastTimestamp>}
           </div>
           {action}
           <ToastClose />

@@ -7,6 +7,7 @@ import {
   Toast,
   ToastTitle,
   ToastDescription,
+  ToastTimestamp,
   ToastClose,
   ToastAction,
 } from './toast';
@@ -55,20 +56,22 @@ describe('Toast', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  // Tone maps to a background/foreground role pair. Asserting via getRoleColor
+  // Tone maps to a background / accent / body-text role triple. The accent is
+  // the left-bar + icon colour; text is the copy. Asserting via getRoleColor
   // keeps these true when a role is retargeted, and proves the component reads
   // the role layer rather than hardcoding colour.
   it.each([
-    ['success', 'status.success.bg', 'status.success.fg'],
-    // warning deliberately does NOT use status.warning.fg for text: gold1000 on
-    // gold50 is 3.34:1, below the 4.5:1 body text requires, and no gold in the
-    // palette clears it. text.onLight is the role meant for warning gold
-    // (17.71:1) — see the note in alert.tsx. This row is the regression guard.
-    ['warning', 'status.warning.bg', 'text.onLight'],
-    ['danger', 'status.danger.bg', 'status.danger.fg'],
-    ['info', 'surface.accent', 'text.primary'],
-    ['default', 'surface.subtle', 'text.primary'],
-  ] as const)('tone="%s" uses the %s / %s roles', (tone, bg, fg) => {
+    ['success', 'status.success.bg', 'status.success.fg', 'status.success.fg'],
+    // warning deliberately does NOT use status.warning.fg for the body text:
+    // the #c25600 accent on status.warning.bg is 4.44:1 — a legible icon/bar
+    // (over 3:1) but a hair under the 4.5:1 body text requires. text.onLight is
+    // the role meant for warning copy (17.71:1) — see alert.tsx. This is the
+    // regression guard for that split.
+    ['warning', 'status.warning.bg', 'status.warning.fg', 'text.onLight'],
+    ['danger', 'status.danger.bg', 'status.danger.fg', 'status.danger.fg'],
+    ['info', 'surface.accent', 'text.primary', 'text.primary'],
+    ['default', 'surface.subtle', 'text.primary', 'text.primary'],
+  ] as const)('tone="%s" uses the %s bg / %s accent / %s text roles', (tone, bg, accent, text) => {
     renderToast(
       <Toast open tone={tone} data-testid="toast">
         <ToastTitle>Tone</ToastTitle>
@@ -76,7 +79,37 @@ describe('Toast', () => {
     );
     const ts = (screen.getByTestId('toast') as HTMLElement).style;
     expect(ts.backgroundColor).toBe(roleVar(bg));
-    expect(ts.color).toBe(roleVar(fg));
+    expect(ts.color).toBe(roleVar(text));
+    expect(ts.borderLeftColor).toBe(roleVar(accent));
+  });
+
+  it('renders a decorative leading status icon for a status tone, none for default', () => {
+    const { container, rerender } = renderToast(
+      <Toast open tone="success">
+        <ToastTitle>Saved</ToastTitle>
+      </Toast>
+    );
+    // aria-hidden SVG: present for a status tone, absent for the neutral default.
+    expect(container.querySelector('svg[aria-hidden="true"]')).toBeInTheDocument();
+    rerender(
+      <ToastProvider>
+        <Toast open tone="default">
+          <ToastTitle>Plain</ToastTitle>
+        </Toast>
+        <ToastViewport />
+      </ToastProvider>
+    );
+    expect(container.querySelector('svg[aria-hidden="true"]')).not.toBeInTheDocument();
+  });
+
+  it('renders an opt-in timestamp line only when one is provided', () => {
+    renderToast(
+      <Toast open>
+        <ToastTitle>Saved</ToastTitle>
+        <ToastTimestamp>May 12, 2025</ToastTimestamp>
+      </Toast>
+    );
+    expect(screen.getByText('May 12, 2025')).toBeInTheDocument();
   });
 
   it('fires onOpenChange when the close control is used', () => {

@@ -12,6 +12,8 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  /** Optional muted line at the foot of the toast (the Figma Toast's date). */
+  timestamp?: React.ReactNode;
 };
 
 const actionTypes = {
