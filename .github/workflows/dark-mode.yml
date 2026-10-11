@@ -1,0 +1,57 @@
+name: Dark-mode ratchet
+
+# Runs every story a SECOND time with colorMode flipped to dark
+# (vitest.dark.config.ts) and gates on the RATCHET, not on green:
+# scripts/check-dark-baseline.js blocks any story file that fails in dark mode
+# and is NOT already in scripts/dark-mode-baseline.json. 57 story tests fail
+# today (legacy MUI being deleted, marketing pages, 5 files in ui/) — those are
+# baselined, so this job is green now and goes red only on a NEW dark break.
+#
+# As files are fixed, remove them from the baseline; the list should only
+# shrink. Promote this into governance:ci (make it a required check) once the
+# baseline reaches zero — the warn-first ladder vitest.dark.config.ts describes.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  dark-mode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The dark pass is a real Playwright browser run (not jsdom), same as the
+      # storybook project in the main CI job.
+      - name: Install Chromium
+        run: npx playwright install chromium --with-deps
+
+      # Keep CI off Vite's cold-cache pre-bundle flake, matching ci.yml.
+      - name: Cache Storybook/Vite pre-bundle
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/storybook
+            node_modules/.vite
+          key: sb-prebundle-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: sb-prebundle-${{ runner.os }}-
+
+      - name: Build tokens
+        run: npm run tokens:build
+
+      # dark:check runs the dark suite to JSON (its own non-zero exit is
+      # swallowed by the `;` in the script) and then the ratchet decides: exit 0
+      # unless a story breaks in dark mode that is not in the baseline.
+      - name: Dark-mode ratchet
+        run: npm run dark:check

@@ -53,10 +53,35 @@ otherwise. So: **every gate needs a self-test that proves it can fail.**
   effect of this work.
 
 **Adding a gate means adding its probe** — either a `GATES` table entry in
-`check-gate-selftests.js`, or a `--selftest` flag on the gate itself. All 16
-non-harness gate scripts are covered as of 2026-10-10; only the harness files
+`check-gate-selftests.js`, or a `--selftest` flag on the gate itself. All 17
+non-harness gate scripts are covered as of 2026-10-11; only the harness files
 themselves (`check-gate-selftests.js`, `check-a11y-gate.js`) are excluded by
 definition.
+
+## The dark-mode ratchet — `dark:check` (added 2026-10-11)
+
+`npm run test:dark` re-runs every story with `colorMode: 'dark'`
+(`vitest.dark.config.ts`). 57 story tests fail today — almost all axe
+`color-contrast` in dark mode, concentrated in legacy `src/components/[A-Z]*`
+(being deleted), marketing `sections/`/`projects/`, and 5 files in the
+published `ui/` set. Folding that straight into `governance:ci` would turn every
+unrelated PR red, so it is gated by a **ratchet** instead, the same shape as the
+hex/palette gates: `scripts/check-dark-baseline.js` reads the dark run's JSON
+report, collects the story FILES with a dark failure, and compares against
+`scripts/dark-mode-baseline.json`.
+
+- A failing file **not** in the baseline → regression → exit 1.
+- A baseline file that now passes → reported as a tighten opportunity, does
+  **not** fail (a browser suite can flake one file green for a single run).
+- Failing set ⊆ baseline → exit 0.
+
+The count can only ratchet **down**: fix a file's dark contrast, then
+`npm run dark:baseline` to regenerate the list (it should only shrink). Runs in
+`.github/workflows/dark-mode.yml` on every PR — a real browser pass, so it is
+NOT in the fast `governance:ci`; only its logic probe (`dark:selftest`, which
+proves a new failing file is distinguished from the baseline) is. Promote the
+workflow to a required check once the baseline reaches zero — the warn-first
+ladder `vitest.dark.config.ts` describes.
 
 ## Type-checking the test files — `typecheck:tests` (added 2026-10-10)
 
