@@ -74,6 +74,49 @@ export const Tones: StoryObj = {
   ),
 };
 
+/**
+ * The full Figma Toast anatomy — leading status icon + bold title + body +
+ * a muted timestamp, with the tone's accent on the icon and the left bar.
+ * `timestamp` is opt-in: toasts without it render exactly as before.
+ */
+export const WithTimestamp: StoryObj = {
+  render: () => (
+    <>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            toast({
+              tone: 'success',
+              title: 'Policy saved',
+              description: 'Your changes are live for all reviewers.',
+              timestamp: 'May 12, 2025',
+            })
+          }
+        >
+          Success
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            toast({
+              tone: 'warning',
+              title: 'Storage almost full',
+              description: 'You are using 92% of your available space.',
+              timestamp: 'May 12, 2025',
+            })
+          }
+        >
+          Warning
+        </Button>
+      </div>
+      <Toaster />
+    </>
+  ),
+};
+
 export const WithAction: StoryObj = {
   render: () => (
     <>
