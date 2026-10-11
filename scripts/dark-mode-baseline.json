@@ -1,0 +1,23 @@
+{
+  "note": "Story files that fail `npm run test:dark` (dark-mode axe, mostly color-contrast). The dark ratchet (scripts/check-dark-baseline.js) blocks any failing file NOT listed here. Remove a file once its dark contrast is fixed — the list should only shrink.",
+  "generatedAt": "2026-10-11",
+  "knownFailingFiles": [
+    "src/components/Button/Button.stories.tsx",
+    "src/components/CardWebsite/CardWebsite.stories.tsx",
+    "src/components/Paper/Paper.stories.tsx",
+    "src/components/SideNavigation/SideNavigation.stories.tsx",
+    "src/components/Snackbar/Snackbar.stories.tsx",
+    "src/components/TextField/TextField.stories.tsx",
+    "src/components/sections/HeroBannerGrid/HeroBannerGrid.stories.tsx",
+    "src/components/sections/InsuranceDashboard/InsuranceDashboard.stories.tsx",
+    "src/components/sections/WireframeSlide/WireframeSlide.stories.tsx",
+    "src/components/ui/alert.stories.tsx",
+    "src/components/ui/button.stories.tsx",
+    "src/components/ui/header.stories.tsx",
+    "src/components/ui/mega-menu.stories.tsx",
+    "src/components/ui/side-navigation.stories.tsx",
+    "src/projects/marsh-one/components/ExpertiseCards.stories.tsx",
+    "src/projects/marsh-one/components/SolutionsGrid.stories.tsx",
+    "src/projects/marsh-one/pages/MarshOneHomepage.stories.tsx"
+  ]
+}

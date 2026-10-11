@@ -99,3 +99,4 @@ public/video/10394868-uhd_3840_2160_30fps.mp4
 # Visual-regression baselines — machine-specific PNG sets from
 # scripts/visual-baseline.js (npm run visual:capture). Never committed.
 visual-baseline/
+dark-results.json
