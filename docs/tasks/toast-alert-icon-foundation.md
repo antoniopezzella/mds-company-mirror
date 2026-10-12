@@ -21,12 +21,20 @@ wrong, which is exactly what this review-first process is meant to catch:
 
 That commit will be reverted/superseded as part of this task.
 
-## Decisions taken (2026-10-11)
+## Decisions taken
 
 - **Icons: Google Material Symbols, variable font** (`material-symbols` npm,
-  self-hosted — no CDN, works offline and in the published package).
+  self-hosted — no CDN, works offline and in the published package). *(2026-10-11)*
 - **One combined task**: icon foundation + Storybook "Foundations/Icons" page +
-  the Toast/Alert redesign ship together.
+  the Toast/Alert redesign ship together. *(2026-10-11)*
+- **Fill: strategy A — reuse `status.{tone}.bg`.** No new tokens; accept the
+  paler-than-Figma fill. This also settles the info-surface question — the info
+  fill is `status.info.bg` regardless. *(2026-10-12)*
+- **Card radius: 4px target** (Figma `Medium`), but 4px is **not on the current
+  allowed scale** (`radius:check` rejects `rounded-sm`), and remapping the scale
+  is its own task (**DEV-6**). So Toast/Alert ship at the closest current step,
+  **`rounded-md` (6px)**, meanwhile; DEV-6 moves them to 4px with the rest of the
+  library. *(2026-10-12)*
 
 ## The design — shared visual language
 
