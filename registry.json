@@ -312,8 +312,10 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "utils",
-        "mds-tokens"
+        "icon",
+        "icon-names",
+        "mds-tokens",
+        "utils"
       ],
       "files": [
         {
