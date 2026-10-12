@@ -89,6 +89,38 @@
    correct in Storybook, absent in the artifact. */
 @import './styles/component-utilities.css';
 
+/* Google Material Symbols (Outlined) SUBSET — the published twin of
+ * styles/material-symbols.css. Toast, Alert and <Icon> ship in this package and
+ * render glyphs from this font, so it must travel with the package: the woff2 is
+ * copied to dist-pkg/fonts/ by build:package, and this url is RELATIVE so it
+ * resolves next to dist-pkg/styles.css in the consumer's node_modules (the app's
+ * own stylesheet uses an absolute /fonts url instead). NOT the material-symbols
+ * npm package's 4 MB outlined.css — this is the ~290 KB subset. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('./fonts/material-symbols-outlined-subset.woff2') format('woff2');
+}
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+}
+
 /* Force the typography vocabulary into the SHIPPED stylesheet.
  *
  * `@utility` classes are emitted only when they appear in scanned content, and

@@ -131,6 +131,8 @@ export * from './components/ui/field';
 export * from './components/ui/filter-bar';
 export * from './components/ui/header';
 export * from './components/ui/hover-card';
+export * from './components/ui/icon';
+export * from './components/ui/icon-names';
 export * from './components/ui/image-with-fallback';
 export * from './components/ui/input-group';
 export * from './components/ui/input-otp';
