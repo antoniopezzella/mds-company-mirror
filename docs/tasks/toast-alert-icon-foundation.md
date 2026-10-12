@@ -1,6 +1,30 @@
 # Toast + Alert → Figma V3, on a Material Symbols icon foundation
 
-**Status:** requirements — not started · **Created:** 2026-10-11 · Backlog: `DEV-5`
+**Status:** in progress — components done, package font wiring remains ·
+**Created:** 2026-10-11 · Backlog: `DEV-5`
+
+## Progress (2026-10-12)
+
+- ✅ **Icon foundation** (`37b5b97`): `<Icon>` on self-hosted Material Symbols,
+  subset to **291 KB** (full font is 4.0 MB) via `scripts/subset-icons.mjs` —
+  weight/grade/opsz pinned, FILL axis kept; `icon-names.ts` drives the subset,
+  the `name` type and the gallery; Foundations/Icons Storybook page.
+- ✅ **Toast** (`625afc0`): full border, `shadow-xl` (Elevation/Medium),
+  `rounded-md`, optional filled `<Icon>`, optional timestamp; left bar removed.
+  Pixel-checked against the Figma node.
+- ✅ **Alert** (`f4a1c34`): same visual language, inline date, flat.
+  Pixel-checked.
+- ⏳ **Package font wiring** — the one remaining piece. Toast/Alert are published
+  components and now use `<Icon>`, so `dist-pkg/styles.css` needs the subset
+  `@font-face` and the woff2 shipped alongside. **Finding that makes this a
+  decision, not a wire-up:** the package ships **no fonts today** — Noto Sans is
+  referenced via `--typo-*` vars and left to the consumer. So either ship the
+  Material Symbols subset in the package (self-contained icons; a copy step into
+  `dist-pkg/fonts/` + a package-relative `@font-face`, verified against
+  `check-package-css.js`) or document it as a consumer-provided peer like Noto
+  Sans. Deferred to its own focused pass so the `pkg:css` gate gets the
+  attention it needs. Until then the icons render in the app and Storybook, not
+  in a bare package consumer.
 
 Scoped requirements for aligning Toast and Alert to the Figma V3 design, built
 on a new Google Material Symbols icon foundation. **Nothing is implemented yet
