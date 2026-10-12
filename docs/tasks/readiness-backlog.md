@@ -23,7 +23,7 @@
 
 ---
 
-## Why these eleven and not others
+## Why these twelve and not others
 
 Every task here **moves a specific `ds:score` v4 metric**, so "done" is a
 number that changed rather than a judgement someone made. That is the whole
@@ -297,6 +297,26 @@ export interface SpinnerProps extends React.ComponentProps<"svg"> {
 
 **Acceptance** — `prop_docs` ≥ 76, and no `src/components/ui` module has a
 Props interface whose only body content is a comment.
+
+### DEV-5 · Material Symbols icon foundation + Toast/Alert to Figma V3
+no metric yet · L · P1 · spec: [`toast-alert-icon-foundation.md`](./toast-alert-icon-foundation.md)
+
+Toast and Alert don't match Figma V3, and a first pass (`7ee9dca`) shipped a
+**left accent bar the design doesn't have**, `shadow-md` where it's
+Elevation/Medium, and an always-on icon where it's optional. The fix rides on a
+new **Google Material Symbols** icon foundation (self-hosted variable font) + a
+Storybook `Foundations/Icons` page — decided to ship together.
+
+**Requirements** — the full spec is
+[`toast-alert-icon-foundation.md`](./toast-alert-icon-foundation.md); approve it
+first. Open decisions there (fill strategy, info surface, radius, icon style)
+must be resolved before building. Border/foreground already map to exact coded
+primitives; the **fill** is the real call — our `status.{tone}.bg` (50-level) is
+the palest, worst match to Figma's `white @ 85%` composite, so recommend new
+notification-surface tokens rather than repointing the shared `.bg`.
+
+**Acceptance** — pixel diff of each coded status (Toast + Alert) reaches parity
+with the Figma node; `governance:ci` + `npm test` green; size budget holds.
 
 ### GOV-2 · Self-test the ds:score metrics, not just the gates
 no metric yet · M · P1
