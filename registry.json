@@ -1372,6 +1372,34 @@
       ]
     },
     {
+      "name": "icon",
+      "type": "registry:ui",
+      "title": "Icon",
+      "description": "Google Material Symbols (Outlined) via the self-hosted subset font; name typed to the blessed set, with a FILL-axis toggle.",
+      "registryDependencies": [
+        "icon-names",
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/icon.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "icon-names",
+      "type": "registry:lib",
+      "title": "Icon Names",
+      "description": "The blessed Material Symbols set — single source of truth for the subset font, the Icon name type, and the gallery.",
+      "files": [
+        {
+          "path": "src/components/ui/icon-names.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "image-with-fallback",
       "type": "registry:ui",
       "title": "Image With Fallback",
