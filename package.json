@@ -35,7 +35,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:package": "vite build --config vite.lib.config.ts && npm run build:css && node scripts/check-package-types.js",
+    "build:package": "vite build --config vite.lib.config.ts && npm run build:css && node scripts/copy-package-fonts.mjs && node scripts/check-package-types.js",
     "pkg:types:check": "node scripts/check-package-types.js",
     "pkg:types:selftest": "node scripts/check-package-types.js --selftest",
     "pretest": "node scripts/kill-storybook.js",
