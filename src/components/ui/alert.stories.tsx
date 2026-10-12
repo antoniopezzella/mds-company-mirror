@@ -41,6 +41,17 @@ export const Success: Story = {
   decorators: [(Story) => <div className="w-[420px]"><Story /></div>],
 };
 
+/** Optional timestamp, rendered inline next to the title — the Figma Alert's date. */
+export const WithTimestamp: Story = {
+  args: {
+    severity: 'info',
+    title: 'Message title',
+    timestamp: 'May 12, 2025',
+    children: 'Lorem ipsum dolor sit amet consectetur convallis tincidunt imperdiet pellentesque enim euismod arcu tristique.',
+  },
+  decorators: [(Story) => <div className="w-[640px]"><Story /></div>],
+};
+
 export const Warning: Story = {
   args: {
     severity: 'warning',
