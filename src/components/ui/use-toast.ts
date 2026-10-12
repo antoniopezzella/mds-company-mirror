@@ -14,6 +14,8 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement;
   /** Optional muted line at the foot of the toast (the Figma Toast's date). */
   timestamp?: React.ReactNode;
+  /** Show the tone's filled status icon. Default true. */
+  showIcon?: boolean;
 };
 
 const actionTypes = {

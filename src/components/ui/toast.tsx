@@ -3,10 +3,10 @@
 import * as React from 'react';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
 import { type RoleName, roleVar } from '@/theme/roles';
+import { Icon } from './icon';
+import type { IconName } from './icon-names';
 
 // ── Composable primitives (the idiomatic shadcn/ui shape) ─────────────────
 // Radix Toast is a queue/viewport system, not a single controlled instance —
@@ -38,66 +38,67 @@ ToastViewport.displayName = ToastPrimitive.Viewport.displayName;
 
 export type ToastTone = 'default' | 'success' | 'warning' | 'danger' | 'info';
 
-// shadow-md (not shadow-lg) is Figma's `Elevation/Small` to the pixel:
-// 0 4 6 -1 + 0 2 4 -2 at black@10%. The left accent bar (border-l-4) is drawn
-// per tone in the Toast component, matching the Figma Toast anatomy.
+// Figma Toast anatomy: a pale status fill, a FULL 1px status border (not a
+// left bar), rounded-md (4px target — DEV-6; 6px meanwhile), and shadow-xl,
+// which is Figma's `Elevation/Medium` to the pixel (0 20 25 -5 + 0 8 10 -6 @10%).
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-lg border-l-4 p-4 shadow-md transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full'
+  'group pointer-events-auto relative flex w-full items-start gap-3 overflow-hidden rounded-md border p-4 shadow-xl transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full'
 );
 
 /**
- * `bg` is the pale fill, `accent` the saturated status colour (icon + left
- * bar), `text` the body copy. accent and text diverge only for warning: its
- * #c25600 accent is a legible icon (4.44:1) but a hair under AA as body text,
- * so the copy falls to text.onLight — same split Alert makes.
+ * `bg` is the pale fill (strategy A — the existing `status.{tone}.bg`), `border`
+ * the full-card status border, `accent` the icon colour, `text` the body copy.
+ * accent and text diverge only for warning: its #c25600 accent is a legible icon
+ * (4.44:1) but a hair under AA as body text, so the copy falls to text.onLight —
+ * the same split Alert makes.
  */
-function getToneRoles(tone: ToastTone): { bg: RoleName; accent: RoleName; text: RoleName } {
+function getToneRoles(tone: ToastTone): { bg: RoleName; border: RoleName; accent: RoleName; text: RoleName } {
   switch (tone) {
     case 'success':
-      return { bg: 'status.success.bg', accent: 'status.success.fg', text: 'status.success.fg' };
+      return { bg: 'status.success.bg', border: 'status.success.border', accent: 'status.success.fg', text: 'status.success.fg' };
     case 'warning':
-      return { bg: 'status.warning.bg', accent: 'status.warning.fg', text: 'text.onLight' };
+      return { bg: 'status.warning.bg', border: 'status.warning.border', accent: 'status.warning.fg', text: 'text.onLight' };
     case 'danger':
-      return { bg: 'status.danger.bg', accent: 'status.danger.fg', text: 'status.danger.fg' };
+      return { bg: 'status.danger.bg', border: 'status.danger.border', accent: 'status.danger.fg', text: 'status.danger.fg' };
     case 'info':
-      return { bg: 'surface.accent', accent: 'text.primary', text: 'text.primary' };
+      return { bg: 'status.info.bg', border: 'status.info.border', accent: 'status.info.fg', text: 'text.primary' };
     default:
-      return { bg: 'surface.subtle', accent: 'text.primary', text: 'text.primary' };
+      return { bg: 'surface.subtle', border: 'border.default', accent: 'text.primary', text: 'text.primary' };
   }
 }
 
-const toneIcon: Partial<
-  Record<ToastTone, React.ComponentType<{ className?: string; style?: React.CSSProperties }>>
-> = {
-  success: CheckCircle2,
-  warning: AlertTriangle,
-  danger: AlertCircle,
-  info: Info,
+const toneIcon: Partial<Record<ToastTone, IconName>> = {
+  success: 'check_circle',
+  warning: 'warning',
+  danger: 'error',
+  info: 'info',
 };
 
 export interface ToastProps
   extends React.ComponentPropsWithoutRef<typeof ToastPrimitive.Root>,
     VariantProps<typeof toastVariants> {
-  /** Background/foreground pairing — `default`, `success`, `warning`, `danger`, etc. */
+  /** Background/border/foreground pairing — `default`, `success`, `warning`, `danger`, `info`. */
   tone?: ToastTone;
+  /** Show the tone's filled status icon. Default true; `false` for an icon-less toast. */
+  showIcon?: boolean;
 }
 
 const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitive.Root>, ToastProps>(
-  ({ className, tone = 'default', children, ...props }, ref) => {
-    const { bg, accent, text } = getToneRoles(tone);
-    const Icon = toneIcon[tone];
+  ({ className, tone = 'default', showIcon = true, children, ...props }, ref) => {
+    const { bg, border, accent, text } = getToneRoles(tone);
+    const iconName = toneIcon[tone];
     return (
       <ToastPrimitive.Root
         ref={ref}
         className={cn(toastVariants(), className)}
-        style={{ backgroundColor: roleVar(bg), color: roleVar(text), borderLeftColor: roleVar(accent) }}
+        style={{ backgroundColor: roleVar(bg), color: roleVar(text), borderColor: roleVar(border) }}
         {...props}
       >
-        {Icon && (
-          // Leading status icon in the accent colour, separate from the body
-          // text colour (they differ for warning). aria-hidden: the tone is
+        {showIcon && iconName && (
+          // Optional leading status icon in the accent colour (separate from the
+          // body text colour — they differ for warning). Decorative: the tone is
           // already conveyed by Radix's role and the toast copy.
-          <Icon className="mt-0.5 size-5 shrink-0" style={{ color: roleVar(accent) }} aria-hidden="true" />
+          <Icon name={iconName} fill size={20} className="mt-0.5 shrink-0" style={{ color: roleVar(accent) }} />
         )}
         {children}
       </ToastPrimitive.Root>
@@ -136,7 +137,7 @@ const ToastClose = React.forwardRef<
     toast-close=""
     {...props}
   >
-    <X className="h-4 w-4" />
+    <Icon name="close" size={16} />
   </ToastPrimitive.Close>
 ));
 ToastClose.displayName = ToastPrimitive.Close.displayName;
