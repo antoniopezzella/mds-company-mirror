@@ -56,22 +56,20 @@ describe('Toast', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  // Tone maps to a background / accent / body-text role triple. The accent is
-  // the left-bar + icon colour; text is the copy. Asserting via getRoleColor
-  // keeps these true when a role is retargeted, and proves the component reads
-  // the role layer rather than hardcoding colour.
+  // Tone maps to a background / full-border / body-text role triple. Asserting
+  // via getRoleColor keeps these true when a role is retargeted, and proves the
+  // component reads the role layer rather than hardcoding colour.
   it.each([
-    ['success', 'status.success.bg', 'status.success.fg', 'status.success.fg'],
+    ['success', 'status.success.bg', 'status.success.border', 'status.success.fg'],
     // warning deliberately does NOT use status.warning.fg for the body text:
-    // the #c25600 accent on status.warning.bg is 4.44:1 — a legible icon/bar
-    // (over 3:1) but a hair under the 4.5:1 body text requires. text.onLight is
-    // the role meant for warning copy (17.71:1) — see alert.tsx. This is the
-    // regression guard for that split.
-    ['warning', 'status.warning.bg', 'status.warning.fg', 'text.onLight'],
-    ['danger', 'status.danger.bg', 'status.danger.fg', 'status.danger.fg'],
-    ['info', 'surface.accent', 'text.primary', 'text.primary'],
-    ['default', 'surface.subtle', 'text.primary', 'text.primary'],
-  ] as const)('tone="%s" uses the %s bg / %s accent / %s text roles', (tone, bg, accent, text) => {
+    // the #c25600 accent on status.warning.bg is 4.44:1 — a legible icon (over
+    // 3:1) but a hair under the 4.5:1 body text requires. text.onLight is the
+    // role meant for warning copy (17.71:1) — see alert.tsx. Regression guard.
+    ['warning', 'status.warning.bg', 'status.warning.border', 'text.onLight'],
+    ['danger', 'status.danger.bg', 'status.danger.border', 'status.danger.fg'],
+    ['info', 'status.info.bg', 'status.info.border', 'text.primary'],
+    ['default', 'surface.subtle', 'border.default', 'text.primary'],
+  ] as const)('tone="%s" uses the %s bg / %s border / %s text roles', (tone, bg, border, text) => {
     renderToast(
       <Toast open tone={tone} data-testid="toast">
         <ToastTitle>Tone</ToastTitle>
@@ -80,26 +78,33 @@ describe('Toast', () => {
     const ts = (screen.getByTestId('toast') as HTMLElement).style;
     expect(ts.backgroundColor).toBe(roleVar(bg));
     expect(ts.color).toBe(roleVar(text));
-    expect(ts.borderLeftColor).toBe(roleVar(accent));
+    expect(ts.borderColor).toBe(roleVar(border));
   });
 
-  it('renders a decorative leading status icon for a status tone, none for default', () => {
+  it('renders a decorative leading status icon for a status tone, none for default or showIcon=false', () => {
+    const iconSel = 'span.material-symbols-outlined[aria-hidden="true"]';
     const { container, rerender } = renderToast(
       <Toast open tone="success">
         <ToastTitle>Saved</ToastTitle>
       </Toast>
     );
-    // aria-hidden SVG: present for a status tone, absent for the neutral default.
-    expect(container.querySelector('svg[aria-hidden="true"]')).toBeInTheDocument();
+    expect(container.querySelector(iconSel)).toBeInTheDocument();
+    // Neutral default has no status glyph.
     rerender(
       <ToastProvider>
-        <Toast open tone="default">
-          <ToastTitle>Plain</ToastTitle>
-        </Toast>
+        <Toast open tone="default"><ToastTitle>Plain</ToastTitle></Toast>
         <ToastViewport />
       </ToastProvider>
     );
-    expect(container.querySelector('svg[aria-hidden="true"]')).not.toBeInTheDocument();
+    expect(container.querySelector(iconSel)).not.toBeInTheDocument();
+    // showIcon=false suppresses it even on a status tone.
+    rerender(
+      <ToastProvider>
+        <Toast open tone="success" showIcon={false}><ToastTitle>No icon</ToastTitle></Toast>
+        <ToastViewport />
+      </ToastProvider>
+    );
+    expect(container.querySelector(iconSel)).not.toBeInTheDocument();
   });
 
   it('renders an opt-in timestamp line only when one is provided', () => {
