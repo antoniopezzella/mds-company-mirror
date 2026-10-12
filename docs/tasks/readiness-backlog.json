@@ -342,6 +342,31 @@
         "Supersede/revert the left-bar toast from commit 7ee9dca."
       ],
       "acceptance": "Pixel diff of each coded status (Toast + Alert) against the Figma node reaches parity; governance:ci green; npm test green; size budget holds; dark-mode baseline unchanged or justified."
+    },
+    {
+      "id": "DEV-6",
+      "title": "Remap corner radius to the 4-based token scale (4/8/12/16/24/32/full)",
+      "goal": "dev",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "detail": "Today radius is stock Tailwind: rounded-md 6 (96 uses), lg 8 (36), xl 12 (4), 2xl 16 (2), full (39); radius:check REJECTS 4/24/32 (rounded-sm/xs/3xl/4xl). Target scale drops 6 and adds 4/24/32/full. Also reconcile CONTROL_RADIUS/CLAUDE.md (claim rounded-sm 4px) vs the gate (6px)."
+      },
+      "size": "M",
+      "priority": "P2",
+      "blocked_by": [],
+      "blocks": [
+        "DEV-5"
+      ],
+      "requirements": [
+        "Review-first: write the decision record + per-step intent (what gets 4 vs 8 vs 12 vs 16 vs 24 vs 32) before migrating.",
+        "Define the scale as @theme --radius-* tokens; update scripts/check-radius.js allowed set to 4/8/12/16/24/32 + none/full; reject the rest.",
+        "Migrate ~140 usages: the 96 rounded-md (6px) controls move to 4 or 8 per the intent table; add 24/32 where cards/sheets want them.",
+        "Reconcile CONTROL_RADIUS (control-size.ts) and CLAUDE.md, which claim controls are rounded-sm 4px while the gate says 6px and rejects rounded-sm.",
+        "Visual diff: a radius change is invisible to tsc and most tests; screenshot-compare before/after across the library."
+      ],
+      "acceptance": "radius:check enforces 4/8/12/16/24/32 + none/full; no rounded-md(6)/sm-reject inconsistency; toast/alert land at 4px; visual baseline reviewed."
     }
   ]
 }

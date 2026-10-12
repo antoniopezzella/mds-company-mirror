@@ -23,7 +23,7 @@
 
 ---
 
-## Why these twelve and not others
+## Why these thirteen and not others
 
 Every task here **moves a specific `ds:score` v4 metric**, so "done" is a
 number that changed rather than a judgement someone made. That is the whole
@@ -317,6 +317,21 @@ notification-surface tokens rather than repointing the shared `.bg`.
 
 **Acceptance** — pixel diff of each coded status (Toast + Alert) reaches parity
 with the Figma node; `governance:ci` + `npm test` green; size budget holds.
+
+### DEV-6 · Remap corner radius to the 4-based token scale
+no metric yet · M · P2 · blocks DEV-5's 4px
+
+Radius today is stock Tailwind — `rounded-md` 6px (96 uses), `lg` 8, `xl` 12,
+`2xl` 16, `full` — and `radius:check` **rejects** 4/24/32. The target scale is
+**4 / 8 / 12 / 16 / 24 / 32 / full** (drops 6, adds 4/24/32). Cross-cutting: ~140
+usages migrate (the 96 6px controls to 4 or 8), the gate's allowed set changes,
+and the `CONTROL_RADIUS`/`CLAUDE.md` "rounded-sm 4px" claim vs the gate's 6px
+gets reconciled. Review-first; a radius change is invisible to tsc, so it needs
+a visual diff. Until it lands, Toast/Alert (DEV-5) sit at the closest current
+step, `rounded-md` 6px.
+
+**Acceptance** — `radius:check` enforces 4/8/12/16/24/32 + none/full; the 6px/
+rounded-sm inconsistency is gone; Toast/Alert reach 4px; visual baseline reviewed.
 
 ### GOV-2 · Self-test the ds:score metrics, not just the gates
 no metric yet · M · P1
