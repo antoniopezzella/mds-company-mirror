@@ -30,6 +30,12 @@
    them here meant they never shipped to consumers. See that file's header. */
 @import './styles/component-utilities.css';
 
+/* Google Material Symbols (Outlined), self-hosted SUBSET (~290 KB, not the
+   4 MB full font) — see styles/material-symbols.css. Drives the <Icon>
+   component. MUST stay among the @imports above @config, since CSS drops an
+   @import placed after any other at-rule. */
+@import './styles/material-symbols.css';
+
 @config "../tailwind.config.js";
 
 /* Class-based dark mode, declared in CSS rather than relying solely on

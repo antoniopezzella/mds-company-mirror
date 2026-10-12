@@ -1,0 +1,35 @@
+/* Google Material Symbols (Outlined) — self-hosted SUBSET.
+ *
+ * NOT `material-symbols/outlined.css` (that points at the 4 MB full font). This
+ * @font-face loads the ~290 KB subset built by `scripts/subset-icons.mjs` from
+ * the blessed set in `src/components/ui/icon-names.ts` — only those glyphs, with
+ * weight/grade/optical-size pinned and the FILL axis kept. Regenerate with
+ * `npm run icons:subset` after editing the allowlist, and commit the woff2.
+ *
+ * The file is served from /public, so the app and Storybook (staticDirs:
+ * ['../public']) both resolve the url at runtime. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/material-symbols-outlined-subset.woff2') format('woff2');
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* default; <Icon size> overrides inline */
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga'; /* ligature names → glyphs */
+}
