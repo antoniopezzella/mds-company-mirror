@@ -246,7 +246,7 @@ node -e "contrastChecker('#000f47', '#ffffff')"
 
 ## Updated Deployment
 
-**Preview URL:** https://marsh-design-system-cr4w7u7jc-antoniopezzellas-projects.vercel.app/hero-banner-test
+**Preview URL:** https://<preview-host>.vercel.app/hero-banner-test
 
 **New Features:**
 - ✅ Media type selector (Video/Image/Both)

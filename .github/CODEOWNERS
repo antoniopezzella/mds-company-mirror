@@ -1,30 +1,30 @@
 # Code owners — GitHub requests review from these owners automatically, and
 # (once branch protection requires owner review) blocks merge without it.
 #
-# Replace @antoniopezzella with a team handle once this repo moves to a
+# Replace @marsh-mds-maintainers with a team handle once this repo moves to a
 # Marsh-owned org — see docs/MAINSTREAM_REUSE_ASSESSMENT.md. A single personal
 # owner is a bus factor, not a review process.
 
 # Default owner for anything not matched below.
-*                           @antoniopezzella
+*                           @marsh-mds-maintainers
 
 # The token/role layer decides how every component renders. Changes here are
 # global by definition, so they should never land unreviewed.
-/src/tokens.ts              @antoniopezzella
-/src/semantic-tokens.ts     @antoniopezzella
-/src/theme/                 @antoniopezzella
-/dist/                      @antoniopezzella
+/src/tokens.ts              @marsh-mds-maintainers
+/src/semantic-tokens.ts     @marsh-mds-maintainers
+/src/theme/                 @marsh-mds-maintainers
+/dist/                      @marsh-mds-maintainers
 
 # Governance tooling — the checks everything else is trusted against.
-/scripts/                   @antoniopezzella
-/.github/workflows/         @antoniopezzella
-/.versionrc.json            @antoniopezzella
+/scripts/                   @marsh-mds-maintainers
+/.github/workflows/         @marsh-mds-maintainers
+/.versionrc.json            @marsh-mds-maintainers
 
 # The public API surface. An accidental change here breaks consumers silently.
-/src/index.ts               @antoniopezzella
-/registry.json              @antoniopezzella
-/package.json               @antoniopezzella
+/src/index.ts               @marsh-mds-maintainers
+/registry.json              @marsh-mds-maintainers
+/package.json               @marsh-mds-maintainers
 
 # Contributor-facing rules.
-/CLAUDE.md                  @antoniopezzella
-/docs/CONTRIBUTING.md       @antoniopezzella
+/CLAUDE.md                  @marsh-mds-maintainers
+/docs/CONTRIBUTING.md       @marsh-mds-maintainers

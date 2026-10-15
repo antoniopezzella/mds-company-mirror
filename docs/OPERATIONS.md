@@ -23,7 +23,7 @@ flowchart LR
 
 | Thing | Where | Notes |
 |---|---|---|
-| App | `https://marsh-design-system.vercel.app/` | Static Vite build, served from `dist/` |
+| App | `https://<company-storybook-host>/` | Static Vite build, served from `dist/` |
 | Storybook | `/storybook/` | Built in the same Vercel pipeline. A SECOND path also exists — see below |
 | Token artifacts | `/tokens.json`, `/theme.css`, `/tokens.tokens.json` | Tracked in git AND rebuilt each deploy |
 | AI endpoint | `/api/chat-stream` | Vercel **Edge** runtime, `api/chat-stream.ts` |
@@ -121,7 +121,7 @@ npx tsc -b --force          # --force matters; without it, tsc trusts its cache
 Compare the deployed artifact against the repo:
 
 ```bash
-curl -s https://marsh-design-system.vercel.app/tokens.json | python3 -c 'import sys,json;print(json.load(sys.stdin)["meta"])'
+curl -s https://<company-storybook-host>/tokens.json | python3 -c 'import sys,json;print(json.load(sys.stdin)["meta"])'
 python3 -c 'import json;print(json.load(open("dist/tokens.json"))["meta"])'
 ```
 
@@ -132,7 +132,7 @@ Differing `version` or `generated` means the last successful deploy is older tha
 ```bash
 # Is it up at all? 400 on an empty body is correct — it means it's alive.
 curl -s -o /dev/null -w '%{http_code}\n' -X POST \
-  https://marsh-design-system.vercel.app/api/chat-stream \
+  https://<company-storybook-host>/api/chat-stream \
   -H 'Content-Type: application/json' -d '{}'
 ```
 

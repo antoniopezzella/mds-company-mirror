@@ -177,7 +177,7 @@ If starting now (April 25, 2026), aim to complete by **May 2**:
 
 ```bash
 # 1. Make sure you're on latest main
-cd /Users/antoniopezzella/Documents/Marsh/Dashboard\ MVP\ B2B/Code/MDS-Platform
+cd /path/to/MarshDesignSystem
 git checkout main
 git pull
 

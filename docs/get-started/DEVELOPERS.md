@@ -150,7 +150,7 @@ import { getRoleColor } from 'src/theme/roles';
 Everything above assumes you're working *inside* this repo. If you're starting a **new, separate project** and want these components there, don't copy-paste files — use the `shadcn` CLI against this repo's [`registry.json`](../../registry.json) (a [shadcn GitHub registry](https://ui.shadcn.com/docs/registry/github)): no publish step, no separate hosting, the CLI reads directly from GitHub.
 
 ```bash
-pnpm dlx shadcn@latest add antoniopezzella/marsh-design-system/date-picker
+pnpm dlx shadcn@latest add mmctech/MarshDesignSystem/date-picker
 ```
 
 This pulls the real `date-picker.tsx` source into your project's `src/components/ui/`, plus everything it depends on automatically — `calendar`, `popover`, `button`, `input`, the `utils` helper, and MDS's own token layer (`tokens.ts` → `semantic-tokens.ts` → `theme/roles.ts`, shipped as the `mds-tokens` registry item) — so `getRoleColor()` calls inside the copied component resolve correctly from day one, rather than importing from a path that doesn't exist in your project.
@@ -163,7 +163,7 @@ npx shadcn@latest registry validate
 
 **The repo is private** — consumers need GitHub auth to fetch from it (`GH_TOKEN` env var, or an authenticated `gh` CLI session), not a public/anonymous fetch. This is still meaningfully lighter than the npm package route below (no PAT scoped to a personal account, no `.npmrc` registry config) since it reuses whatever git credentials a developer already has.
 
-**When to use this vs. the npm package** (`README.package.md`, root of the published package): the registry route copies *editable source* into your project — you own the code — good for a handful of components you'll likely customize. The npm package (`@antoniopezzella/marsh-design-system`) is a compiled, versioned dependency covering the full curated component set — better when you want the whole library without vendoring source. Both currently point at the same personal-account GitHub home; see [`docs/MAINSTREAM_REUSE_ASSESSMENT.md`](../MAINSTREAM_REUSE_ASSESSMENT.md) for the plan to move that to a real Marsh org.
+**When to use this vs. the npm package** (`README.package.md`, root of the published package): the registry route copies *editable source* into your project — you own the code — good for a handful of components you'll likely customize. The npm package (`marsh-mds`) is a compiled, versioned dependency covering the full curated component set — better when you want the whole library without vendoring source. Both currently point at the same personal-account GitHub home; see [`docs/MAINSTREAM_REUSE_ASSESSMENT.md`](../MAINSTREAM_REUSE_ASSESSMENT.md) for the plan to move that to a real Marsh org.
 
 ## 📚 Next Steps
 

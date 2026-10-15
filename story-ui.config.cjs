@@ -10,7 +10,7 @@ module.exports = {
     },
     "prohibitedElements": []
   },
-  "generatedStoriesPath": "/Users/antoniopezzella/Documents/Marsh/Dashboard MVP B2B/Code/MDS-Platform/src/stories/generated",
+  "generatedStoriesPath": require("path").join(__dirname, "src/stories/generated"),
   "storybookFramework": "@storybook/react-vite",
   "storyPrefix": "Generated/",
   "defaultAuthor": "Story UI AI",

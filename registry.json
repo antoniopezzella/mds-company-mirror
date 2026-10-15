@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "marsh-design-system",
-  "homepage": "https://github.com/antoniopezzella/marsh-design-system",
+  "homepage": "https://github.com/mmctech/MarshDesignSystem",
   "items": [
     {
       "name": "marsh-dashboard",

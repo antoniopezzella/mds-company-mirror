@@ -77,7 +77,7 @@ Paste the JSON and save.
 
 ### 8. Run Matcher
 ```bash
-cd "/Users/antoniopezzella/Documents/Marsh/Dashboard MVP B2B/Code/MDS-Platform"
+cd "/path/to/MarshDesignSystem"
 node scripts/automation/match-mds-variables.js system-alert-colors.json
 ```
 

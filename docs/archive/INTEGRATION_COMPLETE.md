@@ -281,7 +281,7 @@ Then explore:
 ## 🙋 Need Help?
 
 - **Documentation:** [AI_ASSISTANT_GUIDE.md](./AI_ASSISTANT_GUIDE.md)
-- **Issues:** https://github.com/antoniopezzella/Marsh-Design-System/issues
+- **Issues:** https://github.com/mmctech/MarshDesignSystem/issues
 - **OpenAI Docs:** https://platform.openai.com/docs
 - **Fastify Docs:** https://fastify.dev
 - **Material-UI:** https://mui.com

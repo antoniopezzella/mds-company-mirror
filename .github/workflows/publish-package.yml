@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '22'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@antoniopezzella'
+          scope: '@mmctech'
       - run: npm ci
 
       # Gates. This workflow previously went straight from `npm ci` to

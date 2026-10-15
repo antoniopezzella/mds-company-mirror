@@ -449,7 +449,7 @@ Very affordable for internal use or demos!
 
 ## Support
 
-**Issues:** https://github.com/antoniopezzella/Marsh-Design-System/issues
+**Issues:** https://github.com/mmctech/MarshDesignSystem/issues
 
 **Documentation:**
 - Backend: `apps/gateway/README.md`

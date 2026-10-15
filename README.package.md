@@ -1,10 +1,13 @@
-# @antoniopezzella/marsh-design-system
+# marsh-mds
 
 Marsh Design System — React component library (shadcn/Radix primitives + Tailwind) with governed design tokens.
 
 > **Status:** pre-1.0, under active development. Scoped deliberately to the shadcn/Radix component set plus the design-token and theming APIs — the actively-maintained, canonical half of the system. The MUI-only components in the source repo are not exported here; see [`docs/SHADCN_MIGRATION_STATUS.md`](./docs/SHADCN_MIGRATION_STATUS.md) for what remains and why.
 >
-> Published under a personal GitHub account (`antoniopezzella`) as an explicit stopgap, not the long-term home — it should move to a Marsh/Marsh McLennan GitHub org before being treated as a permanent dependency by other teams.
+> **Registry/scope not yet finalized.** This package is being handed to the
+> Marsh McLennan org (`mmctech`); the `@mmctech` scope and GitHub Packages
+> registry shown below are a **placeholder** to confirm against the org's actual
+> npm setup before any team treats this as a permanent dependency.
 
 ## Install
 
@@ -16,23 +19,23 @@ oversight. See `docs/MAINSTREAM_REUSE_ASSESSMENT.md` for the plan.
 Two routes, both authenticated:
 
 1. **npm package** (this document) — a compiled dependency you upgrade like any other.
-2. **shadcn registry** — `npx shadcn@latest add antoniopezzella/marsh-design-system/<component>`
+2. **shadcn registry** — `npx shadcn@latest add mmctech/MarshDesignSystem/<component>`
    copies the source into your project, using your existing `gh` credentials.
    Covers a few components the npm package doesn't. See
    `docs/get-started/DEVELOPERS.md` for the trade-offs.
 
-For route 1, add a `.npmrc` in your project (or update `~/.npmrc`) so npm knows where to resolve the `@antoniopezzella` scope:
+For route 1, add a `.npmrc` in your project (or update `~/.npmrc`) so npm knows where to resolve the `@mmctech` scope:
 
 ```
-@antoniopezzella:registry=https://npm.pkg.github.com
+@mmctech:registry=https://npm.pkg.github.com
 ```
 
-You'll also need a GitHub personal access token with `read:packages` scope, either via `npm login --scope=@antoniopezzella --registry=https://npm.pkg.github.com` or a `//npm.pkg.github.com/:_authToken=<token>` line in `.npmrc`.
+You'll also need a GitHub personal access token with `read:packages` scope, either via `npm login --scope=@mmctech --registry=https://npm.pkg.github.com` or a `//npm.pkg.github.com/:_authToken=<token>` line in `.npmrc`.
 
 Then:
 
 ```bash
-npm install @antoniopezzella/marsh-design-system
+npm install marsh-mds
 ```
 
 `react` and `react-dom` (^18 or ^19) are peer dependencies — bring your own, they're not bundled.
@@ -44,7 +47,7 @@ components render with the right markup and no styling at all:
 
 ```tsx
 // main.tsx / _app.tsx / layout.tsx — wherever your app boots
-import '@antoniopezzella/marsh-design-system/styles.css';
+import 'marsh-mds/styles.css';
 ```
 
 **You do not need Tailwind in your project** — the stylesheet is pre-compiled
@@ -154,7 +157,7 @@ just the classes you actually use.
 export default {
   content: [
     './src/**/*.{ts,tsx}',
-    './node_modules/@antoniopezzella/marsh-design-system/dist-pkg/**/*.{js,mjs,cjs}',
+    './node_modules/marsh-mds/dist-pkg/**/*.{js,mjs,cjs}',
   ],
 };
 ```
@@ -163,7 +166,7 @@ You still need the design-token custom properties the components resolve
 against, so import those on their own:
 
 ```tsx
-import '@antoniopezzella/marsh-design-system/styles.css'; // or extract just the :root block
+import 'marsh-mds/styles.css'; // or extract just the :root block
 ```
 
 For most teams the plain stylesheet import is the right call — it's ~12 kB
@@ -172,7 +175,7 @@ gzipped, and it removes a whole class of build-config problems.
 ### Components
 
 ```tsx
-import { Button, Card, getRoleColor } from '@antoniopezzella/marsh-design-system';
+import { Button, Card, getRoleColor } from 'marsh-mds';
 
 function Example() {
   return (

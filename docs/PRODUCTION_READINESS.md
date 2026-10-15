@@ -246,7 +246,7 @@ taxonomy entries) unless stated; run 3 used 79.
 
 | # | Finding | Evidence | Effort |
 |---|---|---|---|
-| P1-1 | **Distribution is a personal account.** PAT-only install, private repo, `@antoniopezzella` scope, 11/11 CODEOWNERS one person, 352/353 commits one author. | `package.json:2,11`; `README.package.md:11-14`; `.github/CODEOWNERS` | **L** (org) |
+| P1-1 | **Distribution is a personal account.** PAT-only install, private repo, `@mmctech` scope, 11/11 CODEOWNERS one person, 352/353 commits one author. | `package.json:2,11`; `README.package.md:11-14`; `.github/CODEOWNERS` | **L** (org) |
 | P1-2 | **Multi-brand impossible without a fork.** `ResolveRoleOptions` has no brand param; **515** `getRoleColor()` calls in **71 of 104** shipped modules resolve to hex inside **272** inline styles. Only 2 modules use `var(--role-*)`. | `roles.ts:219,230-243` | **L** |
 | P1-3 | **Dark mode measured, not gated.** `test:dark` exits 1 — 71 failing entries, **14 in `ui/`** across 9 modules. In no workflow. `header.tsx:125-126` pairs `surface.secondary` with `text.primary` → **1.72:1** in dark. | `vitest.dark.config.ts:43,67`; `roles.generated.css` dark block | **M** |
 | P1-4 | **Registry drifted 22 modules behind and the doc says otherwise.** `DEVELOPERS.md:158` claims "all 71 components"; registry holds 71 `registry:ui` items against **93** modules. Absent: the whole DataGrid family, the whole filter system, `page-shell`, `stack`, `data-state`, `error-state`, `sparkline`. All landed since run 3; nothing noticed. `registry validate` checks schema only. | `registry.json`; `DEVELOPERS.md:158` | **S** |

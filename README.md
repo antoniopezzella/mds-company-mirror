@@ -2,7 +2,7 @@
 
 ![Contrast Status Badge](./contrast-badge.svg)
 
-**🌐 Live Storybook:** <https://marsh-design-system.vercel.app/storybook/>
+**🌐 Live Storybook:** <https://<company-storybook-host>/storybook/>
 
 > React component library and governed design tokens for Marsh B2B dashboards.
 > Three-tier tokens (primitives → semantics → roles), shadcn/Radix + Tailwind v4,
@@ -18,11 +18,11 @@ stylesheet import, and the setup steps are in
 The short version:
 
 ```bash
-npm install @antoniopezzella/marsh-design-system
+npm install marsh-mds
 ```
 
 ```tsx
-import '@antoniopezzella/marsh-design-system/styles.css';
+import 'marsh-mds/styles.css';
 ```
 
 **You do not need Tailwind** — the stylesheet is pre-compiled and
@@ -35,34 +35,16 @@ self-contained. See [README.package.md](./README.package.md) for the
 
 ```bash
 npm install
-npm run dev          # http://localhost:5173
+npm run storybook    # http://localhost:6006
 ```
 
-**Start here:** browse **[/design-system](http://localhost:5173/design-system)** —
-every component in the current library, live, with guidance on which one to
-reach for and when. `npm run storybook` gives you the same components with
-controls and docs.
+**Start here:** Storybook is the live showcase — every component in the current
+library, with controls, docs, and guidance on which one to reach for and when.
+(This handoff ships the library + Storybook; the standalone demo app was trimmed
+out, so there is no `npm run dev` showcase here.)
 
 No API keys or extra setup are needed for any of that. New contributors:
 [`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md).
-
-<details>
-<summary><strong>Optional: the AI assistant gateway</strong></summary>
-
-A separate sub-project under `apps/gateway` — a RAG assistant for insurance
-queries, with conversation memory, input validation and audit logging,
-OpenTelemetry tracing, and an evaluation suite. **Not required to work on the
-design system**, and the only part of this repo that needs an API key.
-
-```bash
-cd apps/gateway && npm install && cd ../..
-cp .env.example .env     # add your OPENAI_API_KEY
-npm run dev              # serves the frontend and the gateway together
-```
-
-See [apps/gateway/README.md](./apps/gateway/README.md).
-
-</details>
 
 ---
 
@@ -87,13 +69,12 @@ See [apps/gateway/README.md](./apps/gateway/README.md).
 
 ---
 
-## �🚀 Quick Links
+## Quick Links
 
-- **Repository:** https://github.com/antoniopezzella/Marsh-Design-System
-- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Storybook (GitHub Pages, automated) + app (Vercel)
+- **Repository:** https://github.com/mmctech/MarshDesignSystem
+- **Deployment Guide:** [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Storybook (GitHub Pages, automated)
 - **Local Storybook:** `npm run storybook` → http://localhost:6006
-- **Component showcase:** `npm run dev` → http://localhost:5173/design-system
-- **AI Gateway:** [apps/gateway/README.md](./apps/gateway/README.md) - AI Assistant backend
+- **Component showcase:** `npm run storybook` → http://localhost:6006 (the live library)
 
 ---
 
@@ -183,10 +164,8 @@ export default tseslint.config([
 
 | Script | Purpose |
 |--------|---------|
-| `npm run dev` | Vite dev server, plus the AI gateway (`/design-system` lives here) |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview built output |
-| `npm run storybook` | Run Storybook (design system docs) |
+| `npm run storybook` | Run Storybook — the live component showcase (start here) |
+| `npm run build:package` | Build the publishable component library (`dist-pkg/`) |
 | `npm run build-storybook` | Static Storybook export |
 | `npm run storybook:clean` | Clear Storybook/Vite caches then start Storybook |
 | `npm run lint` | Run ESLint |

@@ -31,7 +31,6 @@ Deeper foundations content (Colors, Typography, Spacing, Grid, Elevation, Access
 | [`guides/STORYBOOK_BEST_PRACTICES.md`](./guides/STORYBOOK_BEST_PRACTICES.md) | Writing stories/docs the way this repo does it |
 | [`guides/VISUAL_REGRESSION.md`](./guides/VISUAL_REGRESSION.md) | Chromatic visual-regression setup — wired, inert until a repo admin adds `CHROMATIC_PROJECT_TOKEN`. The net for cross-cutting changes that alter many components with no type/test failure |
 | [`guides/TROUBLESHOOTING.md`](./guides/TROUBLESHOOTING.md) | Symptom → cause for common MDS issues (tokens, contrast, fonts, dark mode) |
-| [`guides/DEV_SERVER_MANAGEMENT.md`](./guides/DEV_SERVER_MANAGEMENT.md) | Local dev server troubleshooting |
 | [`guides/VERCEL_INTEGRATION.md`](./guides/VERCEL_INTEGRATION.md) | Vercel-specific deploy details (see [`OPERATIONS.md`](./OPERATIONS.md) for the operational picture) |
 | [`guides/PERFORMANCE_MONITORING.md`](./guides/PERFORMANCE_MONITORING.md) | RUM / Web Vitals |
 | [`guides/LIGHTHOUSE_GUIDE.md`](./guides/LIGHTHOUSE_GUIDE.md) | Lighthouse audits |

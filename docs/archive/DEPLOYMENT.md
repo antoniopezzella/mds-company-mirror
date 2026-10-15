@@ -14,12 +14,12 @@ https://marsh-design-system.netlify.app
 
 **Vercel:**
 ```
-https://marsh-design-system.vercel.app
+https://<company-storybook-host>
 ```
 
 **GitHub Pages (Requires Pro):**
 ```
-https://antoniopezzella.github.io/Marsh-Design-System/
+https://mmctech.github.io/MarshDesignSystem/
 ```
 
 ---
@@ -61,7 +61,7 @@ https://antoniopezzella.github.io/Marsh-Design-System/
    - **Output Directory:** `storybook-static`
 5. Click "Deploy"
 
-**Your URL will be:** `https://marsh-design-system.vercel.app`
+**Your URL will be:** `https://<company-storybook-host>`
 
 **✅ Features:**
 - Zero-config deployment
@@ -77,11 +77,11 @@ https://antoniopezzella.github.io/Marsh-Design-System/
 **Note:** GitHub Pages for private repositories requires GitHub Pro ($4/month).
 
 If you upgrade to GitHub Pro:
-1. Go to: https://github.com/antoniopezzella/Marsh-Design-System/settings/pages
+1. Go to: https://github.com/mmctech/MarshDesignSystem/settings/pages
 2. Under "Source", select: **GitHub Actions**
 3. Push triggers automatic deployment
 
-**Your URL will be:** `https://antoniopezzella.github.io/Marsh-Design-System/`
+**Your URL will be:** `https://mmctech.github.io/MarshDesignSystem/`
 
 ---
 
@@ -111,13 +111,13 @@ This will:
 ### Check Deployment Status
 
 **GitHub Actions:**
-1. Visit: https://github.com/antoniopezzella/Marsh-Design-System/actions
+1. Visit: https://github.com/mmctech/MarshDesignSystem/actions
 2. Look for "Deploy Storybook to GitHub Pages" workflow
 3. Check if it's green ✅ (success) or red ❌ (failed)
 
 **Live Site:**
 1. Wait 2-5 minutes after push
-2. Visit: https://antoniopezzella.github.io/Marsh-Design-System/
+2. Visit: https://mmctech.github.io/MarshDesignSystem/
 3. You should see your Storybook
 
 ---
@@ -150,7 +150,7 @@ This will:
 
 Send this link:
 ```
-https://antoniopezzella.github.io/Marsh-Design-System/
+https://mmctech.github.io/MarshDesignSystem/
 ```
 
 **Features for Team:**
@@ -206,14 +206,14 @@ npm run build-storybook
 ```
 
 **Check Workflow Logs:**
-1. Go to: https://github.com/antoniopezzella/Marsh-Design-System/actions
+1. Go to: https://github.com/mmctech/MarshDesignSystem/actions
 2. Click failed workflow
 3. Check error messages
 
 ### 404 Error on Live Site?
 
 **Verify GitHub Pages Settings:**
-1. Go to: https://github.com/antoniopezzella/Marsh-Design-System/settings/pages
+1. Go to: https://github.com/mmctech/MarshDesignSystem/settings/pages
 2. Ensure "Source" is set to **GitHub Actions**
 3. Wait 5-10 minutes for DNS propagation
 
@@ -230,7 +230,7 @@ git commit --allow-empty -m "chore: trigger deployment"
 git push
 
 # Option 2: Manual workflow trigger
-# Visit: https://github.com/antoniopezzella/Marsh-Design-System/actions
+# Visit: https://github.com/mmctech/MarshDesignSystem/actions
 # Click "Run workflow"
 ```
 
@@ -337,7 +337,7 @@ npx chromatic --project-token=YOUR_TOKEN
 ### For Team Standup:
 ```
 Team, the design system is now live at:
-https://antoniopezzella.github.io/Marsh-Design-System/
+https://mmctech.github.io/MarshDesignSystem/
 
 New updates:
 - ✅ Complete grid system with 300+ utilities
@@ -350,7 +350,7 @@ Check it out and share feedback!
 
 ### For Stakeholders:
 ```
-Design System Staging: https://antoniopezzella.github.io/Marsh-Design-System/
+Design System Staging: https://mmctech.github.io/MarshDesignSystem/
 
 Browse components, test responsive behavior, and see our design tokens.
 Updates automatically when we push to main branch.
@@ -358,7 +358,7 @@ Updates automatically when we push to main branch.
 
 ### For Developers:
 ```
-Component Library: https://antoniopezzella.github.io/Marsh-Design-System/
+Component Library: https://mmctech.github.io/MarshDesignSystem/
 
 - All components have live examples
 - Copy-paste code snippets
@@ -398,7 +398,7 @@ Your deployment is successful when:
 ## 📞 Support
 
 **GitHub Actions Issues:**
-- Check: https://github.com/antoniopezzella/Marsh-Design-System/actions
+- Check: https://github.com/mmctech/MarshDesignSystem/actions
 - Logs show detailed error messages
 
 **Storybook Issues:**
@@ -413,4 +413,4 @@ Your deployment is successful when:
 
 **Deployment Guide Version:** 1.0  
 **Last Updated:** November 9, 2025  
-**Repository:** https://github.com/antoniopezzella/Marsh-Design-System
+**Repository:** https://github.com/mmctech/MarshDesignSystem
