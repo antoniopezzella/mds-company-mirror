@@ -30,8 +30,14 @@ jobs:
 
       - name: Install dependencies
         env:
-          HUSKY: '0'            # never install git hooks on CI — husky's prepare crashes npm on the self-hosted runner
-        run: npm ci --no-audit --no-fund
+          HUSKY: '0'            # never install git hooks on CI
+        run: |
+          # The self-hosted runner reuses $HOME across jobs; a corrupted npm
+          # cacache entry from an earlier crashed run makes every subsequent
+          # `npm ci` die with "Exit handler never called". Wipe it first.
+          rm -rf "$HOME/.npm/_cacache" "$HOME/.npm/_logs" || true
+          npm install -g npm@10.9.2 || true   # pin a known-good npm in case the runner's bundled npm is the crashing one
+          npm ci --no-audit --no-fund
 
       - name: Build tokens
         run: npm run tokens:build
