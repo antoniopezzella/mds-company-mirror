@@ -1,0 +1,17 @@
+@use '../../../styles/tokens' as t;
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: t.$spacing-24;
+
+  &__value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-weight: 400;
+  }
+}

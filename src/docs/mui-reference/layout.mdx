@@ -1,0 +1,27 @@
+export const meta = { title: 'MUI Reference/Layout' };
+
+# Layout (Raw MUI)
+
+## TODO Roadmap
+- Box utility
+- Container maxWidth variants
+- Grid responsive spacing
+- Stack alignment
+- ImageList sample
+
+## Examples
+
+import { Box, Grid, Stack } from '@mui/material';
+export function Example() {
+  return (
+    <Stack spacing={2}>
+      <Box p={2} bgcolor="background.paper">Box block</Box>
+      <Grid container spacing={2}>
+        <Grid item xs={6}><Box p={2} bgcolor="background.paper">Grid 6</Box></Grid>
+        <Grid item xs={6}><Box p={2} bgcolor="background.paper">Grid 6</Box></Grid>
+      </Grid>
+    </Stack>
+  );
+}
+
+<Example />

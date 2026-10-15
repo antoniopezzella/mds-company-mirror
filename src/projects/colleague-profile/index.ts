@@ -1,0 +1,10 @@
+export { ColleagueProfile } from './pages/ColleagueProfile';
+export { default as ColleagueProfileDefault } from './pages/ColleagueProfile';
+export { ManageTeam } from './pages/ManageTeam';
+export { default as ManageTeamDefault } from './pages/ManageTeam';
+export { TeamCard } from './components/TeamCard';
+export { RoleSwitcher } from './components/RoleSwitcher';
+export { ColleagueShell } from './components/ColleagueShell';
+export { useColleagueRole } from './role-context';
+export { ROLES, can, roleLabel, type ColleagueRole, type Capability } from './roles';
+export type { Team, TeamMember } from './data';

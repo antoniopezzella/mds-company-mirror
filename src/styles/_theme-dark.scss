@@ -1,0 +1,47 @@
+// _theme-dark.scss
+// Dark theme mapping for semantic tokens
+@use './tokens' as *;
+
+// Brand
+$color-brand-primary: $color-primary-light; // #009de0 (lighter blue for dark bg)
+$color-brand-secondary: $color-secondary-inverted; // #4cb9af
+$color-brand-tertiary: $color-tertiary-light; // #283245
+
+// Surface
+$color-surface-default: $color-blue-gray-900;      // #283245
+$color-surface-alt: $color-blue-gray-800;          // #35425b
+$color-surface-inverse: $color-neutral-min;         // #ffffff
+
+// Text
+$color-text-primary: $color-neutral-min;           // #ffffff
+$color-text-secondary: $color-neutral-soft;        // #b3b3b3
+$color-text-inverse: $color-neutral-max;           // #000000
+$color-text-placeholder: $color-neutral-medium;    // #949494
+$color-text-disabled: $color-gray-600;             // #808080
+
+// Border
+$color-border-default: $color-blue-300;            // #76d3ff
+$color-border-focus: $color-primary-alt-inverted;   // #76d3ff
+$color-border-error: $color-alert;                 // #c53532
+
+// Feedback
+$color-feedback-success: $color-green-300;         // #addfb3
+$color-feedback-warning: $color-yellow-300;        // #ffe580
+$color-feedback-error: $color-crimson-300;         // #ffaea6
+
+// State/Interaction
+$color-interactive-hover: $color-blue-400;         // #3bb8f0
+$color-interactive-active: $color-blue-200;        // #9fe0ff
+$color-interactive-selected: $color-blue-300;      // #76d3ff
+$color-interactive-disabled: $color-blue-gray-700; // #4e6287
+
+// Accent
+$color-accent-teal: $color-accent-teal;
+$color-accent-blue-gray: $color-accent-blue-gray;
+
+// Utility/Neutral
+$color-neutral-max: $color-neutral-max;
+$color-neutral-min: $color-neutral-min;
+$color-neutral-medium: $color-neutral-medium;
+$color-neutral-soft: $color-neutral-soft;
+$color-neutral-low: $color-neutral-low;

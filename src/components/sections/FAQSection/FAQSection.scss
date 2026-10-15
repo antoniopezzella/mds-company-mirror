@@ -1,0 +1,63 @@
+@use '../../../styles/grid' as *;
+@use '../../../styles/tokens' as t;
+
+.faq-section {
+  padding: t.$spacing-96 0;
+  min-height: 980px; // From Figma
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include media-breakpoint-down(md) {
+    padding: t.$spacing-64 0;
+    min-height: auto;
+  }
+
+  // 'bordered' variant is embedded inside a much larger page (see
+  // CorporateHome.tsx's FAQ section) — the 980px min-height was sized for this
+  // component's own standalone Figma frame (2885:47835), not for embedding.
+  &--bordered {
+    min-height: auto;
+  }
+
+  &__container {
+    max-width: 1320px; // From Figma - centered container
+    margin: 0 auto;
+    padding: 0 t.$spacing-48;
+    width: 100%;
+
+    @include media-breakpoint-down(md) {
+      padding: 0 t.$spacing-24;
+    }
+  }
+
+  &__header {
+    margin-bottom: t.$spacing-64;
+
+    @include media-breakpoint-down(md) {
+      margin-bottom: t.$spacing-48;
+    }
+  }
+
+  &__title {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  &__description {
+    line-height: 1.5;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__accordion {
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}

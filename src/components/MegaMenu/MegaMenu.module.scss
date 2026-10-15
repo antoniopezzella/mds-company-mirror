@@ -1,0 +1,269 @@
+@use '../../styles/tokens' as t;
+
+.megaMenuWrapper {
+  position: fixed;
+  top: 64px; // placed below the AppBar/Toolbar on desktop
+  left: 0;
+  width: 100%;
+  background-color: var(--role-surface-secondary, #ceecff);
+  box-shadow: none; // Matching hover requirement of no shadows
+  border-top: 1px solid var(--mds-border-subtle, #dadada);
+  z-index: 1300;
+  padding: t.$spacing-24 0 t.$spacing-40;
+  animation: slideDown 0.3s ease-out;
+  pointer-events: auto; // Ensure interaction
+}
+
+.overlay {
+  position: fixed;
+  top: 64px; // start overlay below the fixed header
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 64px);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1299; // Behind wrapper
+  pointer-events: auto;
+}
+
+// Align mega menu with shorter header height on small screens
+@media (max-width: 767.98px) {
+  .megaMenuWrapper {
+    top: 56px;
+  }
+
+  .overlay {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.containerInner {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-24;
+}
+
+.sectionTitle {
+  display: block;
+  margin-bottom: t.$spacing-12;
+  color: var(--role-text-secondary, #595959);
+  font-weight: 600;
+  text-transform: none;
+}
+
+/* Quick actions removed — styles retained elsewhere if needed */
+
+.divider {
+  margin: 0 !important;
+  background-color: var(--mds-border-subtle, #dadada) !important;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-32;
+}
+
+.solutionsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-4;
+}
+
+.solutionsTitle {
+  color: var(--role-text-primary, #000f47);
+  font-weight: 700;
+}
+
+.solutionsSubtitle {
+  color: var(--role-text-secondary, #595959);
+}
+
+.pillarCard {
+  padding: t.$spacing-16;
+  background-color: var(--role-surface-accent, #f7f8f8);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.pillarTitle {
+  margin-bottom: t.$spacing-16 !important;
+  color: var(--role-text-primary, #000f47);
+  
+  strong {
+    font-weight: 900;
+  }
+}
+
+.pillarTags {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-8;
+  margin-bottom: t.$spacing-24;
+}
+
+.pillarTag {
+  color: var(--role-text-secondary, #595959);
+  font-size: 0.8rem !important;
+}
+
+.pillarCta {
+  margin-top: auto;
+  color: var(--role-text-primary, #000f47) !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.85rem !important;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.bottomSection {
+  margin-top: t.$spacing-16;
+}
+
+.listTitle {
+  margin-bottom: t.$spacing-16 !important;
+  color: var(--role-text-primary, #000f47);
+  font-weight: 700 !important;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-12;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: t.$spacing-8;
+  cursor: pointer;
+  color: var(--role-text-primary, #000f47);
+
+  &:hover {
+    color: var(--role-interactive-secondary, #0b4bff);
+  }
+}
+
+.badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  background-color: var(--mds-border-subtle, #dadada);
+  border-radius: 4px;
+  color: var(--role-text-secondary, #595959);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.aiSolutionTop {
+  display: flex;
+  flex-direction: column;
+  gap: t.$spacing-12;
+  background-color: #ffffff;
+  padding: t.$spacing-12 t.$spacing-20;
+  border-radius: 8px;
+  border: 1px solid var(--mds-border-subtle, #dadada);
+  max-width: 500px;
+}
+
+.aiHeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aiLogoCircleSmall {
+  width: 32px;
+  height: 32px;
+  background-color: var(--role-interactive-secondary, #0b4bff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aiLogoSmall {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+.aiChipsTop {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aiChipSmall {
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  height: 24px !important;
+  background: #f8f8f8 !important;
+  border-color: #e0e0e0 !important;
+}
+
+.bannerCta {
+  background-color: #d1f7f5; // Teal color from screenshot
+  border-radius: 8px;
+  padding: t.$spacing-32;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  &::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+  }
+}
+
+.bannerContent {
+  flex: 1;
+  z-index: 1;
+}
+
+.bannerImagePlaceholder {
+  width: 180px;
+  height: 120px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.aiSolutionFinder {
+  display: none; // Retired old version
+}

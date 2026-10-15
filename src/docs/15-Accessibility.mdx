@@ -1,0 +1,43 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Accessibility" />
+
+# Accessibility
+
+Accessibility is integral—not an afterthought. These guidelines summarize baseline expectations when building components.
+
+## Color & Contrast
+- Maintain WCAG AA contrast (4.5:1 for body, 3:1 for large text / UI affordances).
+- Avoid using only color to convey meaning; pair with iconography or text.
+- Validate themed variants in both light & dark backgrounds.
+
+## Focus States
+- All interactive elements must show a clearly visible focus ring (minimum 2px contrast outline or equivalent offset shadow).
+- Don’t remove outlines without providing an accessible replacement.
+
+## Keyboard Navigation
+- Tab order follows DOM order; avoid tabindex greater than 0.
+- Provide Escape to close modals, menus, popovers.
+- Use Arrow key patterns for composite widgets (menus, listboxes, tablists).
+
+## Roles & ARIA
+- Prefer native elements first (`button`, `input`, `select`) before custom roles.
+- When necessary, apply correct ARIA attributes (`aria-expanded`, `aria-selected`, `aria-live`) and keep them in sync with state.
+- Avoid redundant roles on native elements (e.g. `role="button"` on a `button` element).
+
+## Motion & Reduction
+- Respect prefers-reduced-motion: offer non-animated or simplified transitions.
+- Avoid large parallax / continuous motion in dashboards.
+
+## Testing Checklist
+- Can all primary flows be completed with keyboard only?
+- Do interactive components announce purpose, state, and changes to assistive tech?
+- Are error messages programmatically associated with inputs?
+- Are focus traps correctly released when layers close?
+
+---
+_Future: add live contrast checker + keyboard focus demo components._
+
+## A11y Implementation Checklist
+
+Track progress when integrating or auditing components (internal use):

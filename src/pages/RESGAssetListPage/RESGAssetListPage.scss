@@ -1,0 +1,278 @@
+// RESG Asset List Page Styles
+// Uses MDS grid system and design tokens
+@use '../../styles/grid' as grid;
+
+.resg-asset-list-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+
+  // Ensure the main application container has no padding
+  .resg-main {
+    padding: 0 !important;
+  }
+
+  // Header Section
+  .resg-header {
+    background-color: #001538; // Deep blue from Figma design
+    color: white;
+    padding: 0;
+    margin: 0;
+
+    .resg-top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 24px;
+      min-height: 56px;
+      gap: 16px;
+
+      @include grid.media-breakpoint-down(md) {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+    }
+
+    .resg-client-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+
+      @include grid.media-breakpoint-down(md) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    .resg-client-name {
+      font-family: var(--font-family-display, 'Noto Sans', sans-serif);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      margin: 0;
+      color: white;
+      width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-right: 16px;
+
+      @include grid.media-breakpoint-down(md) {
+        width: auto;
+        max-width: 100%;
+        text-align: center;
+      }
+    }
+
+    .resg-metrics {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      @include grid.media-breakpoint-down(md) {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    .resg-metric {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 4px;
+      font-family: var(--font-family-body, 'Noto Sans', sans-serif);
+      font-size: 14px;
+      line-height: 18px;
+
+      .resg-metric-label {
+        color: white;
+        font-weight: 400;
+      }
+
+      .resg-metric-value {
+        color: white;
+        font-weight: 700;
+      }
+    }
+
+    .resg-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      @include grid.media-breakpoint-down(md) {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    .resg-title-section {
+      padding: 16px 24px;
+      background-color: #ffffff;
+      
+      @include grid.media-breakpoint-down(md) {
+        padding: 12px 16px;
+      }
+    }
+
+    .resg-page-title {
+      font-family: var(--font-family-display, 'Noto Sans', sans-serif);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px;
+      color: #1b222f;
+      margin: 0;
+    }
+  }
+
+  // Main Content Section
+  .resg-content {
+    padding-top: 0;
+    
+    .resg-filters-section {
+      padding: 24px;
+      border-bottom: 1px solid #e9ecef;
+
+      @include grid.media-breakpoint-down(md) {
+        padding: 16px;
+      }
+    }
+
+    .resg-filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 0;
+      background-color: transparent;
+      border-radius: 0;
+
+      @include grid.media-breakpoint-down(md) {
+        justify-content: center;
+        padding: 12px;
+      }
+    }
+
+    .resg-search-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: space-between;
+
+      @include grid.media-breakpoint-down(md) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+    }
+
+    .resg-search-input {
+      flex: 1;
+      max-width: 320px;
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: var(--font-family-body, 'Noto Sans', sans-serif);
+      
+      &:focus {
+        outline: none;
+        border-color: #000f47;
+        box-shadow: 0 0 0 2px rgba(0, 15, 71, 0.2);
+      }
+
+      @include grid.media-breakpoint-down(md) {
+        max-width: 100%;
+      }
+    }
+
+    .resg-table-section {
+      padding: 0 24px 24px;
+
+      @include grid.media-breakpoint-down(md) {
+        padding: 0 16px 16px;
+      }
+    }
+
+    .resg-asset-table {
+      width: 100%;
+      margin-top: 16px;
+
+      // Enhanced table styles for asset data
+      .mds-table__cell {
+        vertical-align: middle;
+        
+        // Asset name column - make it bold
+        &:first-child {
+          font-weight: 600;
+          color: var(--role-text-primary);
+        }
+      }
+
+      // Status chip styling within table
+      .mds-table__cell .chip {
+        margin: 0;
+      }
+
+      // TIV column alignment
+      .mds-table__cell[style*="right"] {
+        font-weight: 600;
+        font-family: var(--font-family-mono, 'Monaco', monospace);
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @include grid.media-breakpoint-down(lg) {
+    .resg-header .resg-top-nav {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    
+    .resg-content .resg-filters-section,
+    .resg-content .resg-table-section {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+
+  @include grid.media-breakpoint-down(sm) {
+    .resg-header .resg-client-name {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .resg-header .resg-page-title {
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .resg-content .resg-filter-chips {
+      justify-content: flex-start;
+    }
+  }
+
+  // Print styles
+  @media print {
+    .resg-header .resg-actions,
+    .resg-content .resg-search-actions {
+      display: none;
+    }
+    
+    .resg-header {
+      background-color: transparent !important;
+      color: black !important;
+    }
+    
+    .resg-header .resg-client-name,
+    .resg-header .resg-metric-label,
+    .resg-header .resg-metric-value {
+      color: black !important;
+    }
+  }
+}

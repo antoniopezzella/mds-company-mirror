@@ -1,0 +1,374 @@
+{
+  "note": "Metric-bound readiness backlog. Each task names a ds:score v3 metric, so completion is a number that moved rather than a self-report. Companion prose: readiness-backlog.md",
+  "method": "current values measured at 04b0bfa by `npm run ds:score --json` on 2026-10-08, rubric v4. `current` is the metric's 0-100 SCORE, not its raw count; `raw` carries the underlying figures. v3 and v4 are NOT comparable: v3's prop_docs counted docblocks attached to no prop. Re-measure rather than trusting these.",
+  "caveat": "Four propose-only Claude Code subagents work this backlog: ds-backlog-pilot (triage + dispatch), ds-metric-closer (DEV-1/DEV-2/GLOBAL-2), ds-gate-author (AGENT-3 + new metrics), ds-code-connect-mapper (AGENT-1). Each applies, measures, reverts, and leaves a patch in .agent-proposals/ for a human to git apply. None commits. GLOBAL-1, GLOBAL-3 and DEV-3 are fenced off from all of them by explicit human decision. agents/design-system-agent is unrelated: it turns one Figma node into a component and has never been run end-to-end.",
+  "verify": "npm run ds:score --json | then read .parts[] for the named metric id",
+  "rubricVersion": 4,
+  "measuredAt": "04b0bfa",
+  "goals": {
+    "dev": {
+      "label": "Development readiness",
+      "score": 62,
+      "weight": 47
+    },
+    "gov": {
+      "label": "Governance & verification",
+      "score": 84,
+      "weight": 27
+    },
+    "global": {
+      "label": "Scalable global system",
+      "score": 1,
+      "weight": 14
+    },
+    "agentic": {
+      "label": "AI-agent readiness",
+      "score": 17,
+      "weight": 12
+    }
+  },
+  "tasks": [
+    {
+      "id": "GLOBAL-1",
+      "title": "Make the expression scope reach the package",
+      "goal": "global",
+      "metric": "expression_reach",
+      "current": 0,
+      "target": 100,
+      "raw": {
+        "expressionInPackage": 0,
+        "detail": "src/styles.package.css has 0 scope references"
+      },
+      "size": "M",
+      "priority": "P0",
+      "blocked_by": [],
+      "blocks": [
+        "colour-tier-conversion"
+      ],
+      "requirements": [
+        "Fix the three typography holes first - 15 variables, 8 call sites - before betting 110 role variables on the same mechanism",
+        "Radix portals render to document.body and do not inherit the scope; re-apply it as notifications-drawer.tsx does",
+        "Give the core a neutral default: :root is currently the marketing expression, so unscoped surfaces are silently opted in"
+      ],
+      "acceptance": "ds:score expression_reach = 100, and --typo-h1-font-family resolves to the same face in the app and dist-pkg"
+    },
+    {
+      "id": "AGENT-2",
+      "title": "Emit machine-readable component contracts",
+      "goal": "agentic",
+      "metric": "contracts_emitted",
+      "current": 0,
+      "target": 100,
+      "raw": {
+        "contractsEmitted": 0,
+        "storybookVersion": "10.6",
+        "flagAvailableSince": "10.1"
+      },
+      "size": "S",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "Add `features: { componentsManifest: true }` to .storybook/main.ts - it has no features block today",
+        "Record that the manifest schema is explicitly not stable and not a public API: consume, never fork",
+        "Confirm manifests/components.json actually contains props - a flag that emits an empty manifest is the failure mode this guards"
+      ],
+      "acceptance": "ds:score contracts_emitted = 100, and the built manifest has props for button and data-table"
+    },
+    {
+      "id": "AGENT-3",
+      "title": "Give every gate a self-test",
+      "goal": "gov",
+      "metric": "gate_selftests",
+      "current": 40,
+      "target": 100,
+      "raw": {
+        "gatesSelfTested": 6,
+        "gatesTotal": 15,
+        "remaining": [
+          "contrast",
+          "deprecations",
+          "docs-sprawl",
+          "figma-drift",
+          "figma-semantic-drift",
+          "package-css",
+          "package-types",
+          "registry",
+          "token-variables"
+        ]
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "Extend the GATES table in scripts/check-gate-selftests.js",
+        "Each probe must make the gate exit non-zero AND name the probe - exiting non-zero alone is not evidence, since a crash looks identical",
+        "Write the probe inside the gate's own scan root, or it is never read and the gate passes for the wrong reason",
+        "Suspect the probe before the gate: the props probe first used size=\"default\", which prop-compat.ts does not track"
+      ],
+      "acceptance": "check-gate-selftests.js exits 0 with 15 gates, and neutering any gate's failure branch takes it to exit 1 naming that gate"
+    },
+    {
+      "id": "AGENT-1",
+      "title": "Raise Code Connect coverage",
+      "goal": "agentic",
+      "metric": "code_connect_coverage",
+      "current": 25,
+      "target": 51,
+      "raw": {
+        "codeConnect": 30,
+        "uiModules": 118
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "orchestrator_fit": "closest of the nine to agents/design-system-agent's shape, via its code-connect-publisher subagent",
+      "requirements": [
+        "Pick targets by Figma library-analytics usage, not alphabetically - Figma's eval ties the measured savings to coverage of real instances",
+        "Six legacy mappings point at deleted or deprecated MUI components: MegaMenu, Snackbar, SideNavigation, Radio, TextField, ChartMetricCard",
+        "Expect deletions, not only rewrites: ui/mega-menu is data-driven (items[]) against the legacy overlay's isOpen/onClose, so its example cannot be ported",
+        "Do NOT run figma:publish - it changes what every designer sees and runs from CI with a repository secret"
+      ],
+      "acceptance": "ds:score code_connect_coverage >= 51, and `npx figma connect parse --exit-on-unreadable-files` exits 0"
+    },
+    {
+      "id": "DEV-1",
+      "title": "Document props on the most-used components",
+      "goal": "dev",
+      "metric": "prop_docs",
+      "current": 65,
+      "target": 76,
+      "raw": {
+        "withPropDocs": 77,
+        "uiModules": 118
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "A JSDoc block inside the exported *Props declaration is what makes Storybook Controls show a description",
+        "Prioritise by usage, not file order - avatar is 19 of 19 props undocumented",
+        "Document the three API traps: Button iconOnly silently discards children; Input has no adornment prop; Tooltip takes title, not content",
+        "A docblock must sit IMMEDIATELY BEFORE a prop line. An empty interface body containing only a comment does not count and never did -- react-docgen builds Controls descriptions per prop. v3's metric accepted it, which is how 14 hollow modules were produced; v4 does not."
+      ],
+      "acceptance": "ds:score prop_docs >= 76",
+      "history": "31 of 45 modules from the first ds-metric-closer patch applied in 4e1d87a (42 -> 65). The other 14 were hollow."
+    },
+    {
+      "id": "DEV-2",
+      "title": "Forward refs from load-bearing modules",
+      "goal": "dev",
+      "metric": "ref_paths",
+      "current": 35,
+      "target": 76,
+      "raw": {
+        "withRef": 41,
+        "uiModules": 118,
+        "peerRange": "^18 || ^19"
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "A React-19-only ref path is not enough - the peer range is ^18 || ^19",
+        "Prioritise form controls, overlays, and anything a consumer needs to focus or measure",
+        "forwardRef changes the public type surface: run build:package then pkg:types:check, because the published index.d.ts has shipped broken with all gates green"
+      ],
+      "acceptance": "ds:score ref_paths >= 76, and pkg:types:check passes"
+    },
+    {
+      "id": "GLOBAL-2",
+      "title": "Convert directional spacing to logical properties",
+      "goal": "global",
+      "metric": "rtl_readiness",
+      "current": 5,
+      "target": 80,
+      "raw": {
+        "logicalProps": 4,
+        "physicalProps": 69
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "ms-/me-/ps-/pe- mirror with dir; ml-/mr-/pl-/pr- do not, so an RTL locale breaks the layout instead of flipping it",
+        "Mechanical but not blind: some are genuinely physical, such as an icon that must stay left regardless of direction. Leave those and comment why",
+        "Once the ratio is high, consider promoting composition:check's advisory to a failure for src/components/ui/ - the same ratchet used for hex"
+      ],
+      "acceptance": "ds:score rtl_readiness >= 80, and a story under dir=\"rtl\" mirrors rather than breaking"
+    },
+    {
+      "id": "GLOBAL-3",
+      "title": "Make user-facing strings translatable",
+      "goal": "global",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "i18nLibrary": "none",
+        "hardcodedExamples": [
+          "Rows per page:",
+          "Select an option",
+          "Search...",
+          "User Avatar",
+          "Toggle row {row}"
+        ]
+      },
+      "size": "S for the metric, L for the conversion",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "ADD THE METRIC FIRST - this is the one task with no ds:score entry, so there is nothing to verify against",
+        "Count only user-facing strings. A first pass counted displayName assignments like 'CardHeader' as copy; those are not user-visible and must not inflate the number",
+        "src/lib/format.ts already takes locale? and caches Intl formatters - reuse it rather than adding a second mechanism",
+        "Choose deliberately: a full i18n runtime is a large dependency for a component library. Strings as props with English defaults may be the right answer"
+      ],
+      "acceptance": "a new global-goal metric exists, is proven able to fall by mutation, and reports the real ratio"
+    },
+    {
+      "id": "DEV-3",
+      "title": "Type-check the test files",
+      "goal": "dev",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "uncheckedTestFiles": 109
+      },
+      "size": "S",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "Add the test files to a tsconfig that `npx tsc -b` actually reaches, or give them their own project",
+        "Expect existing errors; fix them rather than loosening the config - a test asserting a dead signature is the defect this surfaces",
+        "Add a dev-goal metric so it cannot silently regress"
+      ],
+      "acceptance": "npx tsc -b covers all test files and exits 0, CONFIRMED with --listFiles rather than assumed - a run that silently excludes them also exits 0"
+    },
+    {
+      "id": "DEV-4",
+      "title": "Rework the 14 hollow prop docblocks",
+      "goal": "dev",
+      "metric": "prop_docs",
+      "current": 65,
+      "target": 76,
+      "raw": {
+        "hollowModules": [
+          "calendar",
+          "command",
+          "empty",
+          "field",
+          "label",
+          "popover",
+          "questionnaire",
+          "scroll-area",
+          "sheet",
+          "spinner",
+          "table-primitives",
+          "toaster",
+          "toggle-group",
+          "toggle"
+        ],
+        "alsoHollowBeforeAnyPatch": [
+          "progress",
+          "select",
+          "slider"
+        ]
+      },
+      "size": "S",
+      "priority": "P2",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "These 14 were left out of 4e1d87a because their docblock sat in an empty interface body, documenting nothing react-docgen can surface.",
+        "The prose is genuinely useful and should return ABOVE the declaration, where react-docgen reads it as the COMPONENT description rather than a prop description.",
+        "progress, select and slider were already hollow before any agent touched them -- pre-existing, not introduced.",
+        "A named exported Props type is still worth keeping even when every prop is inherited; the defect is where the comment sits, not that the interface exists."
+      ],
+      "acceptance": "ds:score prop_docs >= 76, and no src/components/ui module has a Props interface whose only body content is a comment"
+    },
+    {
+      "id": "GOV-2",
+      "title": "Self-test the ds:score metrics, not just the gates",
+      "goal": "gov",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "gatesWithSelfTests": "6/15 via check-gate-selftests.js",
+        "metricsWithSelfTests": 0,
+        "metricsTotal": 14
+      },
+      "size": "M",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "ADD THE METRIC FIRST if this is to be tracked -- it currently has none, like GLOBAL-3 and DEV-3.",
+        "Gates have check-gate-selftests.js; the 14 ds:score metrics have nothing equivalent, and prop_docs proved within hours of shipping that a metric can be satisfied without moving the thing it names.",
+        "A metric probe must assert BOTH directions: a change that should move it does, and a change that should NOT move it does not. prop_docs v4 was verified exactly this way -- a hollow docblock left the numerator at 49, a real one took it to 50.",
+        "Binary metrics are the priority: a typo in expression_reach or contracts_emitted reads as a permanent 0, indistinguishable from the real state."
+      ],
+      "acceptance": "a harness exists that mutates each metric's input in both directions and fails if a metric does not discriminate"
+    },
+    {
+      "id": "DEV-5",
+      "title": "Material Symbols icon foundation + Toast/Alert to Figma V3",
+      "goal": "dev",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "detail": "Toast/Alert do not match Figma V3 (full border not left bar, Elevation/Medium, optional icon/paragraph/timestamp); commit 7ee9dca shipped a wrong left-bar version. Icons to move to self-hosted Google Material Symbols (variable font).",
+        "spec": "docs/tasks/toast-alert-icon-foundation.md"
+      },
+      "size": "L",
+      "priority": "P1",
+      "blocked_by": [],
+      "blocks": [],
+      "requirements": [
+        "Review approved in docs/tasks/toast-alert-icon-foundation.md BEFORE building. Open decisions there must be resolved first: fill strategy (A reuse / B new surface tokens / C color-mix; recommend B), info surface source, card radius 4 vs 8, Material Symbols style.",
+        "Icons: self-host material-symbols variable font (no CDN), <Icon> wrapper with FILL/weight axes (design uses FILL 1), Storybook Foundations/Icons page. Account for .size-limit.cjs. lucide stays for unmigrated components.",
+        "Border is a FULL 1px card border in status colour, NOT a left bar. status.{tone}.border already matches Figma exactly for all four statuses.",
+        "Toast elevation = shadow-xl (= Figma Elevation/Medium exact); Alert is flat. Icon, paragraph and timestamp are all OPTIONAL.",
+        "Do NOT repoint the shared status.{tone}.bg (Badge/Chip/StatCard depend on the near-white value); if B, add dedicated notification-surface tokens through the 3-tier pipeline, contrast-gated.",
+        "Supersede/revert the left-bar toast from commit 7ee9dca."
+      ],
+      "acceptance": "Pixel diff of each coded status (Toast + Alert) against the Figma node reaches parity; governance:ci green; npm test green; size budget holds; dark-mode baseline unchanged or justified.",
+      "status": "done",
+      "completed": "2026-10-12 — icon foundation 37b5b97, toast 625afc0, alert f4a1c34, package font 15c56c3. True 4px radius follows with DEV-6."
+    },
+    {
+      "id": "DEV-6",
+      "title": "Remap corner radius to the 4-based token scale (4/8/12/16/24/32/full)",
+      "goal": "dev",
+      "metric": null,
+      "current": null,
+      "target": null,
+      "raw": {
+        "detail": "Today radius is stock Tailwind: rounded-md 6 (96 uses), lg 8 (36), xl 12 (4), 2xl 16 (2), full (39); radius:check REJECTS 4/24/32 (rounded-sm/xs/3xl/4xl). Target scale drops 6 and adds 4/24/32/full. Also reconcile CONTROL_RADIUS/CLAUDE.md (claim rounded-sm 4px) vs the gate (6px)."
+      },
+      "size": "M",
+      "priority": "P2",
+      "blocked_by": [],
+      "blocks": [
+        "DEV-5"
+      ],
+      "requirements": [
+        "Review-first: write the decision record + per-step intent (what gets 4 vs 8 vs 12 vs 16 vs 24 vs 32) before migrating.",
+        "Define the scale as @theme --radius-* tokens; update scripts/check-radius.js allowed set to 4/8/12/16/24/32 + none/full; reject the rest.",
+        "Migrate ~140 usages: the 96 rounded-md (6px) controls move to 4 or 8 per the intent table; add 24/32 where cards/sheets want them.",
+        "Reconcile CONTROL_RADIUS (control-size.ts) and CLAUDE.md, which claim controls are rounded-sm 4px while the gate says 6px and rejects rounded-sm.",
+        "Visual diff: a radius change is invisible to tsc and most tests; screenshot-compare before/after across the library."
+      ],
+      "acceptance": "radius:check enforces 4/8/12/16/24/32 + none/full; no rounded-md(6)/sm-reject inconsistency; toast/alert land at 4px; visual baseline reviewed."
+    }
+  ]
+}

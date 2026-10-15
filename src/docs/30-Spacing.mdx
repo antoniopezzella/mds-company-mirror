@@ -1,0 +1,358 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { spacing } from '../spacing';
+import { TokenTable } from './_components/TokenTable';
+
+<Meta title="Foundations/Spacing" />
+
+{/*
+  This page documents BOTH spacing tracks on purpose.
+
+  The previous version described only `theme.spacing(index)` — the MUI track —
+  while all 73 components in src/components/ui use Tailwind utility classes.
+  A developer reading it would not have found the API their component actually
+  needs. The mapping table below is generated from `spacing.ts` so the two
+  tracks cannot silently diverge in this document.
+*/}
+
+# Spacing
+
+Everything in this system sits on a **4px grid**. There is one grid and two ways
+to write it, because the component set spans two styling tracks.
+
+The important thing to know up front: **Tailwind's default spacing scale is
+already a 4px grid.** That is why `tailwind.config.js` does not extend
+`spacing` — it does not need to. Every step in the MDS scale is reachable with
+a stock Tailwind class, exactly.
+
+Since the v4 upgrade the whole scale derives from one variable:
+
+```css
+--spacing: 0.25rem;                    /* 4px */
+.p-4 { padding: calc(var(--spacing) * 4) }   /* 1rem */
+```
+
+Practically that means the entire grid can be retuned from a single value — a
+denser build could set `--spacing: 0.1875rem` (3px) and every utility follows.
+Nothing here does that today, and it should not be done casually, but it is
+worth knowing the lever exists.
+
+## Which API to use
+
+| You are working on… | Use | Example |
+| --- | --- | --- |
+| **Laying out children** (the common case) | `Stack` / `Inline` | `<Stack gap={4}>` |
+| A component in `src/components/ui/` (shadcn/Radix) | Tailwind utility classes | `className="p-4 gap-2"` |
+| An MUI-based component or an `sx` prop | `theme.spacing(index)` | `sx={{ p: 3, gap: 2 }}` |
+
+All three land on the same pixel values. Do not convert between them by hand —
+use the table below.
+
+**Prefer `Stack`/`Inline` when you are spacing siblings.** They take the same
+scale, but as a *type*: `gap={7}` (28px — not a step) is a compile error,
+whereas `className="gap-7"` compiles happily and is quietly 4px off. See
+**Components → Stack**.
+
+## The scale
+
+`spacing[i]` is **index-based**; the Tailwind class is **named for the pixel
+value ÷ 4**. This is the single most common source of confusion: `spacing[3]`
+is 16px, and 16px is `p-4`, not `p-3`.
+
+<TokenTable
+  columns={[
+    { key: 'index', label: 'spacing[i]', width: 90 },
+    { key: 'value', label: 'px', width: 55 },
+    { key: 'rem', label: 'rem', width: 70 },
+    { key: 'tw', label: 'Tailwind', width: 85 },
+    { key: 'mui', label: 'MUI sx', width: 80 },
+    { key: 'visual', label: 'Visual' }
+  ]}
+  rows={spacing.map((v, i) => ({
+    index: i,
+    value: v,
+    rem: `${v / 16}rem`,
+    tw: `p-${v / 4}`,
+    mui: `p: ${i}`,
+    visual: <div style={{ width: v, height: 12, background: '#002c77', borderRadius: 2 }} />
+  }))}
+  caption="All 15 MDS steps map exactly onto stock Tailwind classes — no config extension required. rem values assume the browser default 16px root, which this app does not override."
+/>
+
+### px or rem — they are not interchangeable here
+
+The two tracks emit **different units**, and that has a real consequence:
+
+| Track | What it emits | Under a user font-size change |
+| --- | --- | --- |
+| Tailwind (`p-4`) | `padding: 1rem` | **Scales** with the user's setting |
+| MUI (`sx={{ p: 3 }}`) | `padding: 16px` | **Fixed** |
+
+`spacing.ts` stores plain numbers and `src/theme.ts`'s `spacingFn` appends
+`px`, so every MUI-spaced component is pinned to absolute pixels while every
+shadcn component reflows. A user who raises their browser font size gets a
+layout where half the components grow and half do not.
+
+That matters for **WCAG 1.4.4 (Resize Text)**. It is not a defect in either
+track on its own — it is a consequence of the two coexisting, and it is worth
+knowing before choosing which to build a new dense layout in. Prefer the
+Tailwind track for anything text-adjacent.
+
+The `rem` column above is the conversion: divide px by 16.
+
+## One scale, many utilities
+
+The same 15 steps drive every spacing utility — padding, margin, gap, and the
+sizing/inset families. Picking a step is one decision; which property you apply
+it to is another.
+
+| Family | Tailwind | MUI `sx` | Used here |
+| --- | --- | --- | --- |
+| Gap (flex/grid) | `gap-4` `gap-x-2` `gap-y-6` | `gap: 3` | **231** |
+| Padding, all sides | `p-4` | `p: 3` | 90 |
+| Padding, axis | `px-4` `py-2` | `px: 3` `py: 1` | 177 |
+| Padding, one side | `pt-2` `pr-3` `pb-2` `pl-3` | `pt: 1` … | 42 |
+| Margin, all sides | `m-4` | `m: 3` | — |
+| Margin, axis | `mx-auto` `my-4` | `mx: 'auto'` `my: 3` | 7 |
+| Margin, one side | `mt-4` `mb-2` | `mt: 3` `mb: 1` | 65 |
+| Space between children | `space-y-2` `space-x-4` | — | 8 |
+
+Counts are live usage in `src/components/ui/`.
+
+### Prefer `gap` over margins
+
+`gap-*` outnumbers every margin utility here roughly three to one, and that is
+the house style rather than an accident. Gap spaces children from the parent, so
+it cannot collapse, cannot double up against a sibling's margin, and leaves no
+stray trailing space on the last child. Reach for a flex or grid container with
+`gap-*` before adding `mb-*` to a list of items.
+
+Margins are still right for pushing a single element away from its neighbours —
+`mt-*` on a section heading, `mb-*` on a standalone block. Both are in the
+system; the ordering is a default, not a prohibition.
+
+Negative margins (`-mt-2`, `-mx-4`) exist and are used sparingly — 5 occurrences,
+all for deliberate overlap such as pulling a border flush. They are legitimate
+but should be commented where they appear.
+
+### Physical vs logical properties
+
+Tailwind offers both physical (`ml-` `mr-` `pl-` `pr-`) and logical
+(`ms-` `me-` `ps-` `pe-`) directions. Logical properties flip automatically in
+right-to-left locales; physical ones do not.
+
+**Today this system uses 64 physical and 0 logical.** That is fine while every
+consumer is left-to-right, and it is the single thing that would need changing
+first if a right-to-left market is ever in scope. New components should prefer
+`ms-`/`me-`/`ps-`/`pe-` where the choice is arbitrary, so the retrofit shrinks
+rather than grows.
+
+## Dense half-steps
+
+Tailwind's default scale also offers **2px half-steps** (`1.5`, `2.5`, `3.5`)
+that the MDS index scale does not contain. These are **permitted in dense,
+list-like UI** — menu items, table rows, drawer rows, chips — where 4px is too
+tight and 8px too loose.
+
+| Class | px | rem | Where it is appropriate |
+| --- | --- | --- | --- |
+| `p-1.5` | 6px | `0.375rem` | Menu and dropdown items, compact chips |
+| `p-2.5` | 10px | `0.625rem` | Table cells at compact density, drawer rows |
+| `p-3.5` | 14px | `0.875rem` | Rare — prefer `p-3` (12px) or `p-4` (16px) first |
+
+They are a deliberate sub-scale, not an escape hatch. Reach for a full step
+first; use a half-step only when the full step is visibly wrong.
+
+## What not to do
+
+- **No arbitrary values.** `p-[13px]`, `gap-[7px]` and similar bypass the grid
+  entirely. This is now **enforced** — see below.
+- **Do not hand-convert between the tracks.** `spacing[6]` is 32px is `p-8`.
+  Guessing produces `p-6` (24px) and a layout that is one step out.
+- **Do not add a step to `spacing.ts` casually.** The scale is deliberately
+  curated — 4px micro-steps at the small end, widening to 16px intervals at the
+  large end. See the token request process before extending it.
+
+## Enforcement
+
+`npm run composition:check` reports, and `composition:check:strict` **fails**
+CI (via `governance:ci`) on two things:
+
+| Rejected | Why | Instead |
+| --- | --- | --- |
+| `p-[16px]`, `gap-[8px]` | An arbitrary value is a scale step spelled so it bypasses the scale | `p-4`, `gap-2` |
+| `gap-7` (28px), `pr-9` (36px) | Compiles fine; not a value in `spacing.ts` | `gap-6`/`gap-8`, `pr-8`/`pr-10` |
+
+`p-[var(--x)]` is allowed — reading a token is the sanctioned use of an
+arbitrary value.
+
+When the check was first run it found 20 arbitrary values and 5 off-scale
+steps, including `gap-[8px]` five times. Those are fixed; the gate keeps them
+fixed.
+
+**Escape hatches:** `spacing-allow` on the line, `spacing-allow-file` in the
+file. Legitimate for values derived from a control's **geometry** — the 28px
+indent aligning checkbox helper text under its label, the 36px padding
+clearing a calendar icon button — but not for dodging a spacing decision.
+Say which in the comment.
+
+A third check is **advisory and never fails**: physical properties
+(`ml-`/`mr-`/`pl-`/`pr-`) over logical ones (`ms-`/`me-`/`ps-`/`pe-`).
+Currently 61 physical, 0 logical. That number should shrink, not grow.
+
+## Layout guidance
+
+- Container padding: **16 / 24 / 32** (`p-4` / `p-6` / `p-8`) by breakpoint.
+- Vertical rhythm in dense panels: multiples of **8** (`gap-2`, `gap-4`).
+- Dashboard section gutters: **32–48** (`gap-8` … `gap-12`).
+- Compact table rows: **6–10** via the half-steps above.
+- Stacks and lists: a flex/grid parent with `gap-*`, not `mb-*` on each child —
+  or better, `<Stack gap={n}>`, which cannot drift off-scale.
+- Starting a whole page? Use the `PageShell` template rather than rebuilding
+  the frame. See **Components → PageShell**.
+
+### Control heights
+
+Every interactive control — buttons *and* fields — shares one height scale,
+defined in `src/components/ui/control-size.ts`:
+
+| `size` | Height | Padding | Type | Icon |
+| --- | --- | --- | --- | --- |
+| `sm` | 32px (`h-8`) | `px-2.5` | `text-sm` | 14px |
+| `md` | 40px (`h-10`) | `px-3` | `text-sm` | 16px |
+| `lg` | 48px (`h-12`) | `px-4` | `text-base` | 20px |
+
+The rule this enforces: **a control and a button declaring the same size are
+the same height.** They constantly sit side by side — filter bars, search
+rows, button groups — and nothing else checks it.
+
+It did not hold before. `size="md"` meant 48px on a Button and 40px on an
+Input and Select, so the button towered over the fields in every such row.
+Four more controls (Textarea, Combobox, DatePicker, InputOTP) had no size
+prop at all and had drifted to 40px, 32px and 40px respectively. The scale
+now lives in one file and every control reads from it; a height defined
+privately inside one component's cva block is how that drift started.
+
+Two deliberate exclusions:
+
+- **Textarea** takes the padding and type but no fixed height — its height
+  comes from content and `rows`.
+- **Checkbox, Radio, Switch** sit on their own scale. They are glyphs, not
+  text boxes, and stretching them to 40px would look broken.
+
+Grouped controls cascade: `<ButtonGroup size="sm">` and `<InputGroup size="sm">`
+publish the size through context, so children inherit it and a group with a
+mismatched child is not expressible by accident. A child's own `size` still
+wins for the deliberate exception.
+
+### Form rhythm
+
+Forms are the densest nesting in the system, so the steps are fixed and
+deliberately **tighten inward**:
+
+| Level | Component | Class | px |
+| --- | --- | --- | --- |
+| Section — legend ↔ groups | `FieldSet` | `gap-6` | 24 |
+| Between fields | `FieldGroup` | `gap-5` | 20 |
+| Label ↔ control | `Field` | `gap-3` | 12 |
+| Label ↔ description | `FieldContent` | `gap-1.5` | 6 |
+
+Two constraints produced these, and both matter if you ever revisit them:
+
+1. **Outer must be ≥ inner.** `FieldGroup` previously used `gap-7` (28px),
+   which was *looser* than the `FieldSet` (24px) containing it — so fields
+   read as less related to each other than to the heading above them.
+2. **Inter-field spacing must stay clear of the field's own 12px internal
+   gap.** At 20px the ratio is ~1.7×, enough to keep field boundaries
+   legible. 16px (1.3×) was tested and rejected: it starts to blur which
+   label belongs to which input.
+
+Checkbox and radio groups collapse to `gap-3` (12px) at both levels, because
+their rows are single-line and do not need field-sized separation.
+- Genuinely two-dimensional layout belongs in grid utilities, not nested
+  stacks — see **Foundations → Grid**.
+
+## Corner radius
+
+Radius uses **Tailwind's stock scale, unmodified**. Nothing is overridden; what
+this system adds is *intent* — which step means what — enforced in CI.
+
+| Class | px | Use |
+| --- | --- | --- |
+| `rounded-none` | 0 | Flush edges, table cells |
+| **`rounded-sm`** | **4** | **The control default.** Buttons, inputs, selects, comboboxes, date fields |
+| `rounded-md` | 6 | Chips, cells, menu items and other small surfaces |
+| `rounded-lg` | 8 | Badges, menu items, small surfaces |
+| `rounded-xl` | 12 | Cards, the data-grid shell, dialogs |
+| `rounded-2xl` | 16 | Large feature surfaces |
+| `rounded-full` | — | Pills, avatars |
+
+`rounded-full` and `rounded-none` are keywords, not steps. `rounded-xs`,
+`rounded-sm`, `rounded-3xl` and `rounded-4xl` are valid Tailwind but **rejected
+here** — a fifth and sixth corner size is how a scale stops being a scale.
+
+### The 2px era, and why it ended
+
+The system ran on a **2px** radius for its first year: small, squared-off, and
+a deliberate part of an institutional, precise feel. It was raised in
+**September 2026** — softer surfaces, crisper contents — after a visual review
+against contemporary data-grid references found the old value was the single
+largest contributor to the system reading as dated.
+
+This was a brand decision, not a tidy-up. If it is ever revisited, revisit it
+as one.
+
+### Why nothing is overridden — two failures, not one
+
+**First failure.** `tailwind.config.js` used to rescale `borderRadius` around a
+`--radius` variable, because shadcn's defaults assume `0.5rem`. It computed
+`rounded-md` as `calc(2px - 2px)` = **0** and drove `rounded-sm` negative, so
+roughly **110 components silently rendered square** while their class names
+said otherwise.
+
+**Second failure.** The fix for that was an `@theme` block redefining
+`--radius-xs` … `--radius-xl` with this system's own values. It held the ladder
+monotonic, but it made our class names disagree with the entire ecosystem:
+`rounded-lg` meant 12px here and 8px everywhere else, so any snippet copied
+from shadcn or the Tailwind docs rendered at the wrong size with no error. And
+because `src/styles.package.css` shipped that block, it **redefined `rounded-*`
+inside every consuming application** — the same category of mistake as a
+library imposing its own CSS reset.
+
+The stock scale already contains four of the five values this system needs, so
+neither workaround is necessary. The fifth (10px, for popovers) had exactly two
+call sites and was dropped to 8px.
+
+**Do not reintroduce a `borderRadius` override, and do not redeclare
+`--radius-*` in `@theme`.** Both are gated.
+
+### The trade-off, stated plainly
+
+There is no single lever any more. Moving the brand radius means a scripted
+rename across ~190 call sites rather than editing one variable. That is a real
+cost, accepted deliberately: a design system's radius changes rarely, the
+rename is mechanical and gate-verified, and the alternative was redefining
+words that belong to Tailwind.
+
+### What is gated
+
+`npm run radius:check` (in `governance:ci`) fails on:
+
+- an **arbitrary** radius (`rounded-[7px]`) or the **bare `rounded`** utility —
+  Tailwind inlines both, so they answer to nothing;
+- a step **outside the four sanctioned ones**, inside `src/components/ui`;
+- `src/index.css` or `src/styles.package.css` **reintroducing a `--radius-*`
+  override**;
+- **this table** disagreeing with those values.
+
+Before this gate existed, nothing in the repo inspected radius at all — not a
+script, not a test — so the 2px→6px change would have been invisible to CI.
+
+## Where the values live
+
+- `src/spacing.ts` — the canonical array, exported as `spacing` and consumed by
+  the MUI theme's `spacing` function (`src/theme.ts`).
+- `dist/tokens.json` — the same 15 steps, exported under `spacing` for Figma and
+  non-React consumers.
+- Tailwind — **not configured**, because its default scale already matches. If
+  the MDS scale ever gains a step that is not a multiple of 4px, Tailwind will
+  need an explicit `extend.spacing` entry at that point.

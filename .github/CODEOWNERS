@@ -1,0 +1,30 @@
+# Code owners — GitHub requests review from these owners automatically, and
+# (once branch protection requires owner review) blocks merge without it.
+#
+# Replace @antoniopezzella with a team handle once this repo moves to a
+# Marsh-owned org — see docs/MAINSTREAM_REUSE_ASSESSMENT.md. A single personal
+# owner is a bus factor, not a review process.
+
+# Default owner for anything not matched below.
+*                           @antoniopezzella
+
+# The token/role layer decides how every component renders. Changes here are
+# global by definition, so they should never land unreviewed.
+/src/tokens.ts              @antoniopezzella
+/src/semantic-tokens.ts     @antoniopezzella
+/src/theme/                 @antoniopezzella
+/dist/                      @antoniopezzella
+
+# Governance tooling — the checks everything else is trusted against.
+/scripts/                   @antoniopezzella
+/.github/workflows/         @antoniopezzella
+/.versionrc.json            @antoniopezzella
+
+# The public API surface. An accidental change here breaks consumers silently.
+/src/index.ts               @antoniopezzella
+/registry.json              @antoniopezzella
+/package.json               @antoniopezzella
+
+# Contributor-facing rules.
+/CLAUDE.md                  @antoniopezzella
+/docs/CONTRIBUTING.md       @antoniopezzella

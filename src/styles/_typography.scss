@@ -1,0 +1,206 @@
+// SCSS-based fluid typography for the Marsh Design System
+@use 'sass:math';
+// Source of truth moved into CSS variables, plus utility classes for use in CSS Modules.
+// Compatible with our current dual-scale system (headings vs body/UI) and clamp-based responsiveness.
+
+// Fonts
+$font-family-body: 'Noto Sans', sans-serif;
+$font-family-display: 'Marsh Serif', serif;
+$font-family-dashboard: 'Noto Sans', sans-serif;
+$font-family-serif: 'Marsh Serif', serif;
+
+// Utility: fluid clamp function derived from viewport bounds
+// fluid(minPx, maxPx, minViewportPx, maxViewportPx)
+@function fluid($min, $max, $vw-min: 360, $vw-max: 1536) {
+  $m: math.div(($max - $min), ($vw-max - $vw-min));
+  $m-vw: $m * 100; // convert to vw units (1vw = width/100)
+  $b: $min - $m * $vw-min;
+  @return clamp(#{$min}px, calc(#{$b}px + #{$m-vw}vw), #{$max}px);
+}
+
+// Utility: fluid clamp with REM output (accessible, scales with user font size)
+// fluid-rem(minPx, maxPx, baseFontSize, minViewportPx, maxViewportPx)
+@function fluid-rem($min, $max, $base: 16, $vw-min: 360, $vw-max: 1536) {
+  $min-rem: math.div($min, $base);
+  $max-rem: math.div($max, $base);
+  $m: math.div(($max - $min), ($vw-max - $vw-min));
+  $m-vw: $m * 100;
+  $b: $min - $m * $vw-min;
+  $b-rem: math.div($b, $base);
+  @return clamp(#{$min-rem}rem, calc(#{$b-rem}rem + #{$m-vw}vw), #{$max-rem}rem);
+}
+
+// CSS variables for each variant — aligns with our MUI variants
+// New Marsh Brand Scale - Marketing Website (Marsh One)
+:root {
+  --font-family-body: #{$font-family-body};
+  --font-family-display: #{$font-family-display};
+  --font-family-dashboard: #{$font-family-dashboard};
+
+  /* Headings - Marketing website scale */
+  --typo-h1-font-family: #{$font-family-display};
+  --typo-h1-font-weight: 400;
+  --typo-h1-font-size: #{fluid-rem(28, 36)}; // Page titles - clear hierarchy
+  --typo-h1-line-height: 1.25;
+  --typo-h1-letter-spacing: -0.01em;
+
+  /* Marketing Hero (Marsh Serif - Marsh One) */
+  --typo-hero-h1-font-family: #{$font-family-serif};
+  --typo-hero-h1-font-weight: 400; // Marsh Serif Regular
+  --typo-hero-h1-font-size: #{fluid-rem(40, 56)}; // Responsive: 2.5rem (40px) → 3.5rem (56px) - scales with user font size
+  --typo-hero-h1-line-height: 1.2; // Proportional line-height for responsive text
+  --typo-hero-h1-letter-spacing: -1px;
+
+  --typo-display-font-family: #{$font-family-display};
+  --typo-display-font-weight: 400;
+  --typo-display-font-size: #{fluid-rem(40, 72)};
+  --typo-display-line-height: 1.1;
+  --typo-display-letter-spacing: -0.01em;
+
+  --typo-h2-font-family: #{$font-family-display};
+  --typo-h2-font-weight: 400;
+  --typo-h2-font-size: #{fluid-rem(24, 28)}; // Section headers - 4-8px smaller than h1
+  --typo-h2-line-height: 1.3;
+  --typo-h2-letter-spacing: -0.005em;
+
+  --typo-h3-font-family: #{$font-family-display};
+  --typo-h3-font-weight: 400;
+  --typo-h3-font-size: #{fluid-rem(20, 24)}; // Subsections - clear step down
+  --typo-h3-line-height: 1.35;
+  --typo-h3-letter-spacing: 0em;
+
+  --typo-h4-font-family: #{$font-family-display};
+  --typo-h4-font-weight: 400;
+  --typo-h4-font-size: #{fluid-rem(18, 20)}; // Card titles - distinct from h5
+  --typo-h4-line-height: 1.4;
+  --typo-h4-letter-spacing: 0em;
+
+  --typo-h5-font-family: #{$font-family-display};
+  --typo-h5-font-weight: 400;
+  --typo-h5-font-size: #{fluid-rem(16, 18)}; // Small headings - 2px smaller than h4
+  --typo-h5-line-height: 1.4;
+  --typo-h5-letter-spacing: 0em;
+
+  --typo-h6-font-family: #{$font-family-display};
+  --typo-h6-font-weight: 400;
+  --typo-h6-font-size: #{fluid-rem(14, 16)}; // Smallest headings - accessible size
+  --typo-h6-line-height: 1.45;
+  --typo-h6-letter-spacing: 0em;
+
+  /* Body/UI (Major Second) */
+  --typo-body1-font-family: #{$font-family-body};
+  --typo-body1-font-weight: 400;
+  --typo-body1-font-size: #{fluid-rem(15, 16)};
+  --typo-body1-line-height: 1.6;
+  --typo-body1-letter-spacing: 0em;
+
+  --typo-body2-font-family: #{$font-family-body};
+  --typo-body2-font-weight: 400;
+  --typo-body2-font-size: #{fluid-rem(14, 15)};
+  --typo-body2-line-height: 1.55;
+  --typo-body2-letter-spacing: 0em;
+
+  --typo-subtitle1-font-family: #{$font-family-body};
+  --typo-subtitle1-font-weight: 500;
+  --typo-subtitle1-font-size: #{fluid-rem(15, 16)};
+  --typo-subtitle1-line-height: 1.5;
+  --typo-subtitle1-letter-spacing: 0.005em;
+
+  --typo-subtitle2-font-family: #{$font-family-body};
+  --typo-subtitle2-font-weight: 500;
+  --typo-subtitle2-font-size: #{fluid-rem(13, 14)};
+  --typo-subtitle2-line-height: 1.5;
+  --typo-subtitle2-letter-spacing: 0.005em;
+
+  --typo-caption-font-family: #{$font-family-body};
+  --typo-caption-font-weight: 400;
+  --typo-caption-font-size: #{fluid-rem(12, 13)};
+  --typo-caption-line-height: 1.4;
+  --typo-caption-letter-spacing: 0.01em;
+
+  --typo-overline-font-family: #{$font-family-body};
+  --typo-overline-font-weight: 400;
+  --typo-overline-font-size: #{fluid-rem(11, 12)};
+  --typo-overline-line-height: 1.4;
+  --typo-overline-letter-spacing: 0.08em;
+  --typo-overline-text-transform: uppercase;
+
+  --typo-button-font-family: #{$font-family-body};
+  --typo-button-font-weight: 500; // Noto Sans Medium
+  // rem, not px: a button label must grow with the user's browser font-size
+  // setting like every other variant. 16px/24px at a 16px root.
+  --typo-button-font-size: 1rem;
+  --typo-button-line-height: 1.5;
+  --typo-button-letter-spacing: 0em;
+  --typo-button-text-transform: none;
+}
+
+.mds-dashboard,
+[data-typography-context='dashboard'] {
+  --font-family-display: #{$font-family-dashboard};
+  --typo-display-font-family: #{$font-family-dashboard};
+  --typo-display-font-weight: 700;
+  --typo-h1-font-family: #{$font-family-dashboard};
+  --typo-h1-font-weight: 700;
+  --typo-h2-font-family: #{$font-family-dashboard};
+  --typo-h2-font-weight: 700;
+  --typo-h3-font-family: #{$font-family-dashboard};
+  --typo-h3-font-weight: 700;
+  --typo-h4-font-family: #{$font-family-dashboard};
+  --typo-h4-font-weight: 700;
+  --typo-h5-font-family: #{$font-family-dashboard};
+  --typo-h5-font-weight: 700;
+  --typo-h6-font-family: #{$font-family-dashboard};
+  --typo-h6-font-weight: 700;
+}
+
+.mds-marketing,
+[data-typography-context='marketing'] {
+  --font-family-display: #{$font-family-display};
+  --typo-display-font-family: #{$font-family-display};
+  --typo-display-font-weight: 400;
+  --typo-h1-font-family: #{$font-family-display};
+  --typo-h1-font-weight: 400;
+  --typo-h2-font-family: #{$font-family-display};
+  --typo-h2-font-weight: 400;
+  --typo-h3-font-family: #{$font-family-display};
+  --typo-h3-font-weight: 400;
+  --typo-h4-font-family: #{$font-family-display};
+  --typo-h4-font-weight: 400;
+  --typo-h5-font-family: #{$font-family-display};
+  --typo-h5-font-weight: 400;
+  --typo-h6-font-family: #{$font-family-display};
+  --typo-h6-font-weight: 400;
+}
+
+// Utility mixin to apply a variant by name
+@mixin apply-variant($name) {
+  font-family: var(--typo-#{$name}-font-family);
+  font-weight: var(--typo-#{$name}-font-weight);
+  font-size: var(--typo-#{$name}-font-size);
+  line-height: var(--typo-#{$name}-line-height);
+  letter-spacing: var(--typo-#{$name}-letter-spacing);
+  @if $name == overline {
+    text-transform: var(--typo-overline-text-transform);
+  }
+  @if $name == button {
+    letter-spacing: var(--typo-button-letter-spacing);
+    text-transform: var(--typo-button-text-transform);
+  }
+}
+
+// Prebuilt utility classes (optional, for quick usage in CSS Modules)
+.typography-h1 { @include apply-variant(h1); }
+.typography-h2 { @include apply-variant(h2); }
+.typography-h3 { @include apply-variant(h3); }
+.typography-h4 { @include apply-variant(h4); }
+.typography-h5 { @include apply-variant(h5); }
+.typography-h6 { @include apply-variant(h6); }
+.typography-display { @include apply-variant(display); }
+.typography-body1 { @include apply-variant(body1); }
+.typography-body2 { @include apply-variant(body2); }
+.typography-subtitle1 { @include apply-variant(subtitle1); }
+.typography-subtitle2 { @include apply-variant(subtitle2); }
+.typography-caption { @include apply-variant(caption); }
+.typography-overline { @include apply-variant(overline); }
+.typography-button { font-family: var(--typo-button-font-family); font-weight: var(--typo-button-font-weight); letter-spacing: var(--typo-button-letter-spacing); text-transform: var(--typo-button-text-transform); }

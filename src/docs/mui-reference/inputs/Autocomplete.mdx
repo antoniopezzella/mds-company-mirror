@@ -1,0 +1,25 @@
+export const meta = { title: 'MUI Reference/Inputs/Autocomplete' };
+
+import { useState } from 'react';
+import { Autocomplete, TextField, Box } from '@mui/material';
+
+# Autocomplete
+
+Minimal raw MUI example.
+
+export function Demo() {
+  const [value, setValue] = useState(null);
+  const options = ['One', 'Two', 'Three'];
+  return (
+    <Box sx={{ maxWidth: 320 }}>
+      <Autocomplete
+        value={value}
+        onChange={(_, v) => setValue(v)}
+        options={options}
+        renderInput={(params) => <TextField {...params} label="Choose" />}
+      />
+    </Box>
+  );
+}
+
+<Demo />

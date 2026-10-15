@@ -1,0 +1,310 @@
+/**
+ * Custom utility classes used by exported components.
+ *
+ * Why this file exists
+ * --------------------
+ * These four utilities (`scroll-fade-b`, `scroll-fade-x`, `shimmer`, plus the
+ * `::-webkit-scrollbar` half of `scrollbar-none`/`scrollbar-thin`) used to live
+ * in a `@layer utilities` block inside src/index.css. That had two defects,
+ * both silent:
+ *
+ *   1. index.css is the APP stylesheet. styles.package.css never imported it,
+ *      so none of these rules reached consumers. Measured in the shipped
+ *      artifact before this fix: `scroll-fade-b` 0 occurrences, `scroll-fade-x`
+ *      0, `mask-image` 0. message-scroller.tsx and attachment.tsx both render
+ *      the class names, so the edge fade simply did not exist for anyone who
+ *      installed the package — while looking correct in Storybook and the dev
+ *      app, which do load index.css.
+ *
+ *   2. A class declared in `@layer utilities` CANNOT take variants. Verified by
+ *      compiling both forms at v4.3.3: with `@layer utilities`,
+ *      `group-data-[state=processing]/attachment:shimmer` emits ZERO rules;
+ *      with `@utility`, it emits the rule correctly. attachment.tsx:116 uses
+ *      exactly that variant twice, so the shimmer on uploading/processing
+ *      attachment titles never animated — in the app as well as the package.
+ *      `@layer utilities` also appends at the END of the layer (line 4051 of
+ *      4100 in a probe build) instead of being sorted into place, so such a
+ *      class outranks every built-in utility and cannot be overridden.
+ *
+ * So: `@utility`, in a file BOTH stylesheets import. Same "imported, not
+ * duplicated" rule the token/role/typography tiers already follow — there is
+ * one definition, and the package cannot drift from the app.
+ *
+ * The comment this replaces claimed `@utility` was "unsupported on this
+ * project's Tailwind 3.4.19". The project is on 4.3.3 and has been for some
+ * time; `@utility` is the documented way to declare a custom utility.
+ *
+ * NOTE on the scrollbar utilities: stock Tailwind v4.3.3 already provides
+ * `scrollbar-none`, `scrollbar-thin` and `scrollbar-gutter-stable` (verified
+ * by compiling a bare `@import "tailwindcss"`), so `scrollbar-gutter-stable`
+ * is NOT redefined here — it needs nothing added. The two below are redefined
+ * only to ADD the `::-webkit-scrollbar` fallback, because `scrollbar-width`
+ * is unsupported before Chrome 121 / Safari 18.2. They are supersets of the
+ * stock rule, not a change to what the class means.
+ */
+
+/* Vertical edge fade — message-scroller.tsx's scroll viewport. */
+@utility scroll-fade-b {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+}
+
+/* Horizontal counterpart — attachment.tsx's AttachmentGroup, a horizontally
+   scrolling row of file/image chips. */
+@utility scroll-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+}
+
+/* Animated text sheen for in-progress states. Applied via a group variant in
+   attachment.tsx, which is why this MUST be `@utility` and not `@layer`. */
+@utility shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted-foreground) / 0.4) 0%,
+    hsl(var(--foreground)) 50%,
+    hsl(var(--muted-foreground) / 0.4) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Keyframes are a plain at-rule, not a utility — they belong outside
+   `@utility` and are referenced by name above. */
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* `-ms-overflow-style` retained from the original block for old Edge; the
+   nested pseudo-element is the one that matters on WebKit. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY — the two expressions, as explicit classes
+   ═══════════════════════════════════════════════════════════════════════════
+
+   Replaces the ambient `.mds-dashboard` scope, which had three silent defects:
+
+     1. `:root` is the MARKETING expression, so a product screen that forgot
+        the class rendered Marsh Serif headings. Wrong-looking, not unstyled —
+        no error, no failing test.
+     2. It does not survive a portal. Radix renders to `document.body`, so
+        notifications-drawer.tsx re-applies the class by hand, and every new
+        portalled surface inherits that tax.
+     3. It never shipped. `styles.package.css` had 0 references to it, so a
+        package consumer could not opt into the dashboard expression at all.
+
+   The only difference between the expressions is `display` and `h1`–`h6`:
+   face and weight. Body, UI and buttons are Noto Sans in both.
+
+   ── NAMING ──────────────────────────────────────────────────────────────────
+   `text-h1` is Noto Sans. `text-serif-h1` is Marsh Serif.
+
+   The unmarked name is the common case, because this system mostly builds
+   product UI — mark the exception, not the norm. `serif` is also
+   self-describing, where an earlier draft used Carbon's `expressive` /
+   `productive`: those both end in -ive, are the same length, and you have to
+   learn which is which. And it reads alongside Tailwind's own `font-serif` /
+   `font-sans`.
+
+   The cost, accepted knowingly: `serif` names the FACE, not the intent, so if
+   marketing ever moves off a serif the name lies. Marsh Serif is the brand
+   face and Atlas uses it too, and renaming a few classes later is cheap.
+
+   ── WHY THE SIZE TOKENS ARE NOT IN `--text-*` ───────────────────────────────
+   Because `--text-foo` in `@theme` makes Tailwind auto-generate a `text-foo`
+   font-size utility, which COLLIDES with an `@utility text-foo` of the same
+   name. The first draft of this file declared both, and the built package
+   emitted `.text-expressive-h1` TWICE — the generated size-only rule landing
+   after the pairing and overriding its `line-height` with
+   `var(--tw-leading, …)`. It rendered nearly correctly by ordering luck.
+
+   So the sizes live under `--typo-*`, which is not a Tailwind namespace and
+   generates nothing. Verified in the built artifact: one selector per class.
+
+   `--font-sans-productive` / `--font-serif-expressive` DO stay in the
+   `--font-*` namespace on purpose — the generated `font-*` utilities are
+   wanted, and page-shell.tsx uses one.
+
+   Sizes are copied from `_typography.scss`'s COMPILED output, not recomputed,
+   so nothing re-renders. Clamps are rem-based (WCAG 1.4.4) via d343370.
+*/
+
+@theme {
+  /* Faces — these SHOULD generate `font-*` utilities. */
+  --font-serif-expressive: 'Marsh Serif', serif;
+  --font-sans-productive: 'Noto Sans', sans-serif;
+}
+
+@theme {
+  /* Sizes — deliberately NOT `--text-*`; see the note above. */
+  --typo-serif-hero: clamp(2.5rem, 1.887755102rem + 2.7210884354vw, 4.5rem);
+  --typo-serif-h1: clamp(1.75rem, 1.5969387755rem + 0.6802721088vw, 2.25rem);
+  --typo-serif-h2: clamp(1.5rem, 1.4234693878rem + 0.3401360544vw, 1.75rem);
+  --typo-serif-h3: clamp(1.25rem, 1.1734693878rem + 0.3401360544vw, 1.5rem);
+  --typo-serif-h4: clamp(1.125rem, 1.0867346939rem + 0.1700680272vw, 1.25rem);
+  --typo-serif-h5: clamp(1rem, 0.9617346939rem + 0.1700680272vw, 1.125rem);
+  --typo-serif-h6: clamp(0.875rem, 0.8367346939rem + 0.1700680272vw, 1rem);
+}
+
+/* ── SERIF — Marsh Serif 400, fluid. Surfaces people READ. ─────────────────
+   One class per pairing rather than composable axes, because 117 of 122
+   headings are hand-written: composable would mean 117 chances to write
+   `font-serif-expressive font-bold`, i.e. Marsh Serif at 700 — a combination
+   nobody designed. Granular utilities remain available for the exception. */
+
+@utility text-serif-hero {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-hero);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+@utility text-serif-h1 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h1);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+@utility text-serif-h2 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h2);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+@utility text-serif-h3 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h3);
+  line-height: 1.35;
+}
+@utility text-serif-h4 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h4);
+  line-height: 1.4;
+}
+@utility text-serif-h5 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h5);
+  line-height: 1.4;
+}
+@utility text-serif-h6 {
+  font-family: var(--font-serif-expressive);
+  font-weight: 400;
+  font-size: var(--typo-serif-h6);
+  line-height: 1.45;
+}
+
+/* ── SANS — Noto Sans 700, fixed rem. Surfaces people OPERATE. ─────────────
+   The default expression, so the names are unmarked. Sizes are stock Tailwind
+   steps, which dashboard pages already write by hand (`text-2xl font-bold`
+   ×3, `text-3xl`, `text-xl`, `text-lg` ×2). These exist so the face and
+   weight travel with the size instead of being re-chosen each time. */
+
+@utility text-h1 {
+  font-family: var(--font-sans-productive);
+  font-weight: 700;
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+  letter-spacing: -0.01em;
+}
+@utility text-h2 {
+  font-family: var(--font-sans-productive);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+}
+@utility text-h3 {
+  font-family: var(--font-sans-productive);
+  font-weight: 700;
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
+}
+@utility text-h4 {
+  font-family: var(--font-sans-productive);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+}
+@utility text-h5 {
+  font-family: var(--font-sans-productive);
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+}
+@utility text-h6 {
+  font-family: var(--font-sans-productive);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+/* ── DASHBOARD ROLES — four, not fifteen. ──────────────────────────────────
+   A style earns a name only when it bundles THREE OR MORE decisions a
+   developer would otherwise re-derive. Below that bar Tailwind's own class is
+   better: shorter, precise, and it tells you the size. A `text-data-cell`
+   resolving to `text-sm` REMOVES information, which is why it is not here. */
+
+@utility text-metric-value {
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+@utility text-metric-delta {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* Consolidates five independent takes on "small uppercase label" — card,
+   list, notifications-drawer, stepper and toast ship three different
+   trackings and two sizes for one visual idea. */
+@utility text-data-header {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+/* Two decisions, kept deliberately: `tabular-nums` is the most-forgotten
+   decision in a data product, and appears in only 4 of 93 components. */
+@utility text-data-numeric {
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-variant-numeric: tabular-nums;
+}

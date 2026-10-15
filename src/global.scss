@@ -1,0 +1,8 @@
+@use './styles/grid' as *;
+@use './styles/typography' as *;
+
+// ─── Reset browser defaults ───────────────────────────────────────────────────
+figure {
+  margin: 0;
+  padding: 0;
+}

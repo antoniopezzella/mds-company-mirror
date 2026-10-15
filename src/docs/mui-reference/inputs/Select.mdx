@@ -1,0 +1,22 @@
+export const meta = { title: 'MUI Reference/Inputs/Select' };
+
+import { useState } from 'react';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+
+# Select
+
+export function Demo() {
+  const [age, setAge] = useState('');
+  return (
+    <FormControl sx={{ minWidth: 160 }}>
+      <InputLabel id="age-label">Age</InputLabel>
+      <Select labelId="age-label" label="Age" value={age} onChange={e => setAge(e.target.value)}>
+        <MenuItem value={10}>Ten</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </Select>
+    </FormControl>
+  );
+}
+
+<Demo />

@@ -1,0 +1,572 @@
+// Hero section styles
+.hero {
+  position: relative;
+  /* Full viewport height with sensible fallbacks */
+  height: 100vh; /* fallback */
+  height: 100svh; /* stable viewport height on mobile */
+  min-height: 560px; /* guard for very short viewports */
+  display: flex;
+  align-items: stretch;
+  isolation: isolate; // create new stacking context for blend/filters
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  /* Figma spec places block near top with 80px top padding and tight bottom (8px) */
+  justify-content: center;
+  padding-top: var(--hero-pt, 80px);
+  padding-bottom: var(--hero-pb, 8px);
+  gap: 24px; /* matches vertical gap between groups in container */
+}
+
+.wordWrap {
+  display: inline-block;
+  overflow: hidden; // masks the vertical reveal
+}
+
+.word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.logo {
+  display: block;
+  height: auto;
+  /* Allow actual spec width (558px) from component without being constrained */
+  max-width: 100%;
+  margin-bottom: 16px;
+}
+
+.gradientLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at 35% 40%, rgba(255,255,255,0.18), rgba(255,255,255,0) 55%),
+              linear-gradient(120deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.overlayNoise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/noise.png'); // placeholder; swap once asset exported
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.kicker {
+  max-width: 840px;
+  font-size: clamp(1rem, 1.05rem + 0.2vw, 1.25rem);
+}
+
+/* Figma hero title/body line (logo tagline) specs:
+   Font size: 40px desktop (responsive down on small screens)
+   Line height: 54px desktop (slightly tighter on small screens)
+   Uses display font family when available.
+*/
+.heroTitle {
+  /* Figma width spec: 786px */
+  max-width: 786px;
+  /* Use DS heading family (Marsh Serif via CSS var) */
+  font-family: var(--typo-h2-font-family), 'Marsh Serif', serif;
+  font-weight: 400;
+  /* Explicit spec per request */
+  font-size: 40px;
+  line-height: 64px;
+  letter-spacing: 0;
+  margin: 0 0 0 0;
+  padding: 0;
+}
+
+/* Ensure spacing below logo matches Figma (24px) and between tagline lines is controlled. */
+.logo + .heroTitle {
+  margin-top: 24px; /* Figma spacing between logo and tagline */
+}
+
+/* Tighten layout on very wide displays to avoid excessive vertical whitespace below logo */
+@media (min-width: 1600px) and (min-height: 900px) {
+  .content {
+    padding-top: var(--hero-pt, 96px);
+  }
+}
+
+@supports (height: 100dvh) {
+  .hero { height: 100dvh; }
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding-top: var(--hero-pt, 64px);
+    padding-bottom: var(--hero-pb, 32px);
+    gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word, .gradientLayer, .overlayNoise { transition: none !important; animation: none !important; }
+}
+
+// Pattern layer on the right side (placeholder vector pattern)
+.patternLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: none;
+  /* Use exported Marsh pattern asset; sized to cover and fade in from left */
+  background-image: url('../../../../assets/m-pattern-fade-left.svg');
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: cover;
+  /* Gradient mask to softly reveal pattern toward center (can tune stops) */
+  mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.75) 65%, rgba(0,0,0,1) 85%);
+}
+
+/* =============================================================================
+   ADVANCED SASS OPTIMIZATION FOR HERO ARROW ANIMATION
+   
+   This file demonstrates advanced Sass features learned from sass-lang.com:
+   • Variables with default values and type safety
+   • Functions for dynamic calculations
+   • Mixins with optional arguments and keyword parameters
+   • Content blocks (@content) for flexible styling
+   • Arbitrary arguments (...) for flexible parameter lists
+   • Responsive design patterns with Sass
+   ============================================================================= */
+
+/* Sass variables for better maintainability */
+$arrow-rotation-base: 270deg; // Base rotation for upward arrow
+$arrow-transition-duration: 0.3s;
+
+/* Responsive breakpoints using Sass variables */
+$mobile-max: 768px;
+$tablet-max: 1199px;
+$desktop-min: 1200px;
+
+/* Sass functions for dynamic calculations */
+@function calculate-arrow-overlap($base-size: 8px, $multiplier: 1) {
+  @return $base-size * $multiplier;
+}
+
+@function responsive-size($mobile: 60%, $tablet: 70%, $desktop: 80%, $current-breakpoint: 'desktop') {
+  @if $current-breakpoint == 'mobile' {
+    @return $mobile;
+  } @else if $current-breakpoint == 'tablet' {
+    @return $tablet;
+  } @else {
+    @return $desktop;
+  }
+}
+
+/* Calculate dynamic arrow overlap using function */
+$arrow-seam-overlap: calculate-arrow-overlap(8px, 1);
+
+/* =============================================================================
+   SASS MIXINS WITH ADVANCED FEATURES
+   ============================================================================= */
+
+/* Basic mixin - Foundation for all arrow elements */
+@mixin arrow-base {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-position: center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Mixin with default arguments - Responsive sizing with breakpoint logic */
+@mixin responsive-arrow-size($mobile-size: 60%, $tablet-size: 70%, $desktop-size: 80%) {
+  background-size: contain;
+  
+  @media (max-width: $mobile-max) {
+    background-size: $mobile-size auto;
+  }
+  
+  @media (min-width: #{$mobile-max + 1}) and (max-width: $tablet-max) {
+    background-size: $tablet-size auto;
+  }
+  
+  @media (min-width: $desktop-min) {
+    background-size: $desktop-size auto;
+  }
+}
+
+/* Mixin with interpolation - Dynamic property assignment */
+@mixin arrow-position($side: left, $transform-origin: center) {
+  #{$side}: calc(0px - #{$arrow-seam-overlap} / 2);
+  transform-origin: $transform-origin center;
+  width: calc(50% + #{$arrow-seam-overlap} / 2);
+}
+
+/* Advanced mixin with @content blocks - Accepts custom styles from caller */
+@mixin animated-arrow(
+  $size: 80%,
+  $position: center, 
+  $rotation: 0deg,
+  $opacity: 1,
+  $duration: $arrow-transition-duration,
+  $z-index: 1
+) {
+  @include arrow-base;
+  
+  background-size: $size auto;
+  background-position: $position;
+  transform: rotateZ($rotation);
+  opacity: $opacity;
+  z-index: $z-index;
+  
+  transition: transform $duration ease-in-out,
+              opacity $duration ease-in-out;
+  
+  /* @content directive allows caller to inject custom styles */
+  @content;
+}
+
+/* Sass mixin demonstrating arbitrary arguments (...) and keyword arguments */
+@mixin arrow-animation-states($base-rotation: 0deg, $states...) {
+  /* Base state */
+  transform: rotateZ($base-rotation);
+  
+  /* 
+   * Apply multiple animation states using arbitrary arguments (...)
+   * Expects each state to be a map with keys: selector, rotation, scale, opacity
+   * Example usage:
+   * @include arrow-animation-states(0deg,
+   *   (selector: ':hover', rotation: 5deg, scale: 1.1),
+   *   (selector: ':focus', rotation: -5deg, opacity: 0.8)
+   * );
+   */
+  @each $state in $states {
+    @if type-of($state) == 'map' {
+      $selector: map-get($state, 'selector');
+      $rotation: map-get($state, 'rotation');
+      $scale: map-get($state, 'scale') or 1;
+      $opacity: map-get($state, 'opacity') or 1;
+      
+      &#{$selector} {
+        transform: rotateZ($rotation) scale($scale);
+        opacity: $opacity;
+      }
+    }
+  }
+}
+
+/* Utility mixin demonstrating optional parameters with default values */
+@mixin arrow-hover-effect($scale: 1.05, $rotation-offset: 5deg, $transition-duration: 0.2s) {
+  &:hover {
+    transform: scale($scale) rotateZ(calc(var(--base-rotation, 0deg) + #{$rotation-offset}));
+    transition: transform $transition-duration ease-out;
+  }
+}
+
+/* Content block mixin for responsive behavior - demonstrates @content usage */
+@mixin responsive-behavior($mobile-content: null, $tablet-content: null, $desktop-content: null) {
+  @media (max-width: $mobile-max) {
+    @if $mobile-content {
+      @content($mobile-content);
+    } @else {
+      @content;
+    }
+  }
+  
+  @media (min-width: #{$mobile-max + 1}) and (max-width: $tablet-max) {
+    @if $tablet-content {
+      @content($tablet-content);
+    } @else {
+      @content;
+    }
+  }
+  
+  @media (min-width: $desktop-min) {
+    @if $desktop-content {
+      @content($desktop-content);
+    } @else {
+      @content;
+    }
+  }
+}
+
+/* Intro animation overlay */
+.introOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Word sequence animation container */
+.wordSequence {
+  position: absolute;
+  top: 65%; // Position below the M formation (adjusted for better spacing)
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  opacity: 0; // Initially hidden
+  
+  .word-item,
+  :global(.word-item) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font/family/display, 'Marsh Serif', serif);
+    font-size: 38px; // Perfect size to complement M formation
+    font-weight: 400; // Regular weight for elegance
+    line-height: 1.1;
+    color: #dbf3ff; // Light blue to match Marsh brand
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0; // Initially hidden
+    will-change: opacity, transform;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); // Subtle shadow for readability
+    letter-spacing: 0.01em; // Slight letter spacing for elegance
+  }
+}
+
+/* New M-Arrow elements for the complete animation sequence */
+.mArrowLeft,
+.mArrowRight {
+  position: absolute;
+  width: 99px; // Increased by 10% (90px + 9px = 99px)
+  height: 198px; // Increased by 10% (180px + 18px = 198px)
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mArrowLeft {
+  background-image: url('/src/assets/m-arrow-left.svg');
+  left: calc(50% - 99px); // Adjusted for new width
+}
+
+.mArrowRight {
+  background-image: url('/src/assets/m-arrow-right.svg');
+  left: 50%; // Start position right of center
+}
+
+/* Full MARSH logo - exact positioning from final frame */
+.fullLogo {
+  position: absolute;
+  top: 412px; // Exact positioning from Figma (80px + padding)
+  left: 48px; // Container padding alignment
+  opacity: 0; // Hidden initially, shown by animation
+  z-index: 15;
+  
+  img {
+    width: 558px; // Exact width from brand-logo.svg
+    height: 121px; // Exact height from brand-logo.svg
+    display: block;
+  }
+}
+
+/* Blue M Symbol (final position for right M arrow) - M pattern with stroke */
+.mSymbolFinal {
+  position: absolute;
+  top: 380px; // Moved up to align with the red box position
+  right: 180px; // Position from right edge to center in the highlighted area
+  width: 215.701px; // Keep same size from Figma
+  height: 220px; // Keep same size from Figma  
+  opacity: 0; // Hidden initially, shown by animation
+  transform: scale(0); // Start at scale 0 for animation
+  z-index: 15;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+}
+
+/* M Symbol Pattern in upper right - exact Figma positioning */
+.mSymbolPattern {
+  position: absolute;
+  top: 477px; // 412px (container top) + 65px offset from Figma
+  right: 48px; // 48px from right edge (instead of left: 1630px for responsive)
+  width: 137px;
+  height: 142.381px;
+  opacity: 0;
+  z-index: 15;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+}
+
+/* Headline text - exact positioning from final frame */
+.headline {
+  position: absolute;
+  top: 557px; // 412px (logo top) + 121px (logo height) + 24px (gap)
+  left: 48px; // Match container padding
+  width: 786px; // Exact width from Figma
+  opacity: 0; // Hidden initially, shown by animation
+  z-index: 15;
+  
+  h2, p {
+    color: #dbf3ff !important; // Light blue text from Figma
+    font-size: 40px !important;
+    line-height: 64px !important;
+    font-family: var(--font/family/display, 'Marsh Serif', serif) !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: pre-wrap; // Preserve line breaks
+  }
+}
+
+/* Sass mixin for arrows that form the M */
+@mixin m-arrow($side: left, $index: 1, $rotation: 45deg) {
+  @include arrow-base;
+  @include arrow-position($side: $side);
+  @include responsive-arrow-size($mobile-size: 60%, $tablet-size: 70%, $desktop-size: 80%);
+  
+  background-image: url('/images/figma-assets/arrow.svg');
+  height: 100%;
+  transform: rotateZ($rotation) #{if($side == left, null, scaleX(-1))};
+  z-index: #{$index};
+  
+  /* Add smooth transitions for rotation and position changes */
+  transition: transform $arrow-transition-duration ease-in-out;
+}
+
+/* Sass mixin for arrow that moves upward */
+@mixin upward-arrow($rotation: $arrow-rotation-base, $opacity: 0) {
+  @include arrow-base;
+  @include responsive-arrow-size($mobile-size: 40%, $tablet-size: 50%, $desktop-size: 60%);
+  
+  background-image: url('/images/figma-assets/arrow.svg');
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%) rotateZ($rotation);
+  transform-origin: center center;
+  opacity: $opacity;
+  z-index: 3;
+  
+  /* Smooth transitions for movement and rotation */
+  transition: transform $arrow-transition-duration ease-in-out,
+              opacity $arrow-transition-duration ease-in-out;
+}
+
+/* =============================================================================
+   HERO ARROW CLASSES - SIMPLIFIED FOR GSAP CONTROL
+   
+   These classes provide clean styling without interfering with GSAP animations.
+   No CSS transitions or transforms that compete with GSAP timeline control.
+   ============================================================================= */
+
+.arrowLeft { 
+  /* Exact positioning for perfect M formation using your provided assets */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%; /* Exact half for proper M formation */
+  
+  /* Use your provided M-arrow left side exactly as designed */
+  background-image: url('../../../../assets/m-arrow-left.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain; /* Preserve SVG proportions exactly */
+  
+  /* Transform settings for GSAP control */
+  transform-origin: right center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.arrowRight { 
+  /* Exact positioning for perfect M formation using your provided assets */
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 50%; /* Exact half for proper M formation */
+  
+  /* Use your provided M-arrow right side exactly as designed */
+  background-image: url('../../../../assets/m-arrow-right.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain; /* Preserve SVG proportions exactly */
+  
+  /* Transform settings for GSAP control */
+  transform-origin: left center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.arrowUp {
+  /* Single upward arrow from Figma design */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 146px; /* Match Figma arrow dimensions */
+  height: 300px; 
+  
+  /* Proper centering for GSAP control */
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  
+  /* Use Figma arrow asset */
+  background-image: url('../../../../assets/arrow-up-single.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  
+  /* Initial state - GSAP will override these */
+  opacity: 0;
+  z-index: 3;
+}
+
+/* Final wordmark that appears after M formation */
+.wordmarkFinal {
+  /* Position for left-aligned wordmark as per Figma */
+  align-self: flex-start;
+  will-change: opacity, transform;
+  
+  /* Responsive sizing */
+  @media (max-width: $mobile-max) {
+    max-width: 280px;
+  }
+  
+  @media (min-width: #{$mobile-max + 1}) and (max-width: $tablet-max) {
+    max-width: 400px;
+  }
+  
+  @media (min-width: $desktop-min) {
+    max-width: 558px; /* Figma spec */
+  }
+}
+
+.logoSwap {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  will-change: opacity, transform;
+}

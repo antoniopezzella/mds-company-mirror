@@ -1,0 +1,165 @@
+/**
+ * Design-token custom properties — the single definition of these values.
+ *
+ * NAMED token-variables.css, not tokens.css, on purpose: Sass resolves
+ * `@use '../../styles/tokens'` by extension-less match, so a sibling
+ * tokens.css shadows the _tokens.scss partial that 39 SCSS files rely on —
+ * every one of them then fails with "Undefined variable" because a CSS file
+ * carries no Sass variables. Found the hard way.
+ *
+ * Extracted from index.css so that BOTH this repo's app and the published
+ * package stylesheet (styles.package.css) can include them without one copying
+ * the other. Components resolve `var(--background)`, `var(--border)`,
+ * `hsl(var(--primary))` and friends against what is defined here, so a consumer
+ * that loads component CSS without these gets correctly-classed elements with
+ * no colours.
+ *
+ * Values are documented against their MDS role — the role layer in
+ * src/theme/roles.ts remains the source of truth; these are its CSS-variable
+ * projection for Tailwind's benefit.
+ */
+
+/* Plain :root / .dark — deliberately NOT wrapped in `@layer base`.
+   That wrapper requires a matching `@tailwind base` in whatever file consumes
+   it, which broke the build once this was imported from two places. Custom
+   properties have no specificity to manage, so the layer bought nothing and
+   cost portability: as plain rules these work in any CSS context, including the
+   published package stylesheet, which ships no preflight. */
+
+
+:root {
+  /* Core Colors */
+  --background: 0 0% 100%;                    /* white - MDS: surface.default */
+  --foreground: 227.3 100% 13.9%;                 /* #000f47 Midnight Blue - MDS: text.primary */
+  
+  /* Card */
+  --card: 0 0% 100%;                          /* white - MDS: surface.default */
+  --card-foreground: 227.3 100% 13.9%;            /* #000f47 - MDS: text.primary */
+  
+  /* Popover */
+  --popover: 0 0% 100%;                       /* white - MDS: surface.default */
+  --popover-foreground: 227.3 100% 13.9%;         /* #000f47 - MDS: text.primary */
+  
+  /* Primary (Midnight Blue - MODE Primary) */
+  --primary: 227.3 100% 13.9%;                    /* #000f47 Midnight - MDS: interactive.primary (realigned from #002c77 drift 2026-10-09) */
+  --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
+  
+  /* Secondary (Outline style) */
+  --secondary: 0 0% 97.3%;                       /* #f8f8f8 Neutral 50 - MDS: surface.accent */
+  --secondary-foreground: 227.3 100% 13.9%;       /* #000f47 - MDS: text.primary */
+  
+  /* Muted (Subtle backgrounds) */
+  --muted: 0 0% 97.3%;                       /* #f8f8f8 - MDS: surface.subtle */
+  --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
+  
+  /* Accent (Gold - Brand Secondary) */
+  --accent: 44.9 100% 50%;                      /* #ffbf00 Gold 750 - MDS: brand.accent */
+  --accent-foreground: 227.3 100% 13.9%;          /* #000f47 Midnight - MDS: interactive.primary (realigned from #002c77 drift 2026-10-09) */
+  
+  /* Destructive (Error/Danger state) */
+  /* Was `0 84% 60%` (#ee4343), a Tailwind default — despite the comment
+     claiming it mapped to status.danger. It didn't map to any MDS token, and
+     it failed AA as text: components using `text-destructive` (Field errors,
+     Bubble, Attachment) rendered error copy at 3.78:1 on white.
+     Now the real token: statusDanger / statusCritical #c53532, which is
+     5.34:1 both as text on white AND as a background under white, so it
+     serves `text-destructive` and `bg-destructive` correctly. */
+  --destructive: 1.2 59.5% 48.4%;                   /* #c53532 - MDS: statusDanger (Utilities/Critical) */
+  --destructive-foreground: 0 0% 100%;        /* white - 5.34:1 on the above */
+  
+  /* UI Elements */
+  /* Both comments already claimed `MDS: border.default`, but neither was set
+     to that role's actual value. #dadada is 1.38:1 on white — far under the
+     3:1 WCAG requires for a non-text boundary — so every component borrowing
+     the shared border (StatCard, Bubble, Marker, Drawer, MessageScroller,
+     Questionnaire, and anything using `border-input`) drew an edge nobody
+     with low vision could see. src/stories/_health/BorderContrast.stories.tsx
+     has documented this for some time; this is that fix applied.
+     border.default is neutral500 #878787, deliberately unchanged across modes
+     (3.59:1 light, 5.30:1 dark). */
+  --border: 0 0% 53%;                         /* #878787 neutral500 - MDS: border.default */
+  --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
+  
+  /* Focus Ring */
+  --ring: #3d7aff;                            /* MDS: focus.ring (light) — plain hex, not HSL: the
+                                                  prior HSL triplet (210 100% 50%) had silently
+                                                  drifted to #0080ff via an imprecise hand
+                                                  conversion; kept in sync with focus.ring by
+                                                  src/__tests__/ring-css-var.sync.test.ts */
+  
+  /* Border Radius */
+  /* NOTE: there is deliberately no `--radius` here. It used to sit in this
+     block at 0.125rem and had ZERO consumers — Tailwind v4 inlines its own
+     `--radius` under `@theme default inline`, so this one fed nothing while
+     looking exactly like the lever that controls the scale. The real scale is
+     the `@theme` block in src/index.css and src/styles.package.css. */
+  
+  /* Chart Colors — validated categorical palette (dataviz skill:
+     node scripts/validate_palette.js). Order (green, blue, gold, purple,
+     red) is load-bearing: it's the only arrangement of these five brand
+     hues with no adjacent-pair CVD collision at light-mode lightness —
+     reordering will reintroduce a red/green or red/gold confusion pair.
+     Always pair with a legend + direct labels (WARN-band contrast).
+
+     Now role-backed (chart.1..5 → chartSeries1..5 → primitives) and annotated
+     MDS so varsync tracks them against roles.generated.css. --chart-4 moved
+     #8f37c6 → #8f20de: its hand-authored HSL had gone stale when the
+     2026-09-15 Figma re-sync shifted purple750 (#8f37c6 → #8f20de). */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
+  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 - MDS: chart.2 */
+  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 - MDS: chart.3 */
+  --chart-4: 275.1 74.8% 49.8%;                   /* #8f20de Purple 750 - MDS: chart.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
+}
+
+/* Dark Mode */
+.dark {
+  --background: 0 0% 6.3%;                      /* #101010 Neutral 950 */
+  --foreground: 0 0% 100%;                    /* white */
+  
+  --card: 0 0% 14.5%;                           /* #252525 Neutral 900 */
+  --card-foreground: 0 0% 100%;               /* white */
+  
+  --popover: 0 0% 6.3%;                         /* #101010 */
+  --popover-foreground: 0 0% 100%;            /* white */
+  
+  --primary: 210 100% 60%;                    /* Blue 400 (lighter) */
+  --primary-foreground: 0 0% 6.3%;              /* #101010 */
+  
+  --secondary: 0 0% 14.5%;                      /* #252525 */
+  --secondary-foreground: 0 0% 100%;          /* white */
+  
+  --muted: 0 0% 14.5%;                          /* #252525 */
+  --muted-foreground: 0 0% 65%;               /* #a6a6a6 */
+  
+  --accent: 45 100% 55%;                      /* Gold (slightly lighter) */
+  --accent-foreground: 0 0% 100%;             /* white */
+  
+  /* Dark mode: semanticDarkOverrides.statusDanger is red500 (#ff6b6b), a
+     light red meant to sit on a dark surface. White on it is only 2.78:1, so
+     the foreground flips to the dark brand navy the way text.onInteractive
+     does — same reasoning as the destructive Button variant. */
+  --destructive: 0 100% 71%;                  /* #ff6b6b - MDS dark: statusDanger */
+  --destructive-foreground: 227 100% 14%;     /* #000f47 - 6.53:1 on the above */
+  
+  /* Same value in dark mode, on purpose: border.default is marked
+     "pivot — unchanged" in semantic-tokens.ts precisely because #878787
+     clears 3:1 against both grounds (3.59:1 light, 5.30:1 dark). The old
+     #404040 was 1.84:1 on the dark surface. */
+  --border: 0 0% 53%;                         /* #878787 - MDS: border.default */
+  --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
+  
+  --ring: #5e9aff;                             /* MDS: focus.ring (dark) */
+
+  /* Chart Colors — same validated series-to-hue mapping as light mode,
+     independently re-validated against the dark surface (#101010), not
+     an automatic flip: dark mode needs a lighter L band overall. Role-backed
+     via the chartSeries* dark overrides. --chart-2 moved #478aff → #5e9aff:
+     its hand-authored HSL had gone stale when the 2026-09-15 Figma re-sync
+     shifted blue600 (#478aff → #5e9aff). */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
+  --chart-2: 217.6 100% 68.4%;                    /* #5e9aff Blue 600 - MDS: chart.2 */
+  --chart-3: 29.6 70.6% 46.7%;                    /* #cb7623 Gold 1000 - MDS: chart.3 */
+  --chart-4: 280.2 59.1% 43.1%;                   /* #842daf Purple 800 - MDS: chart.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
+}

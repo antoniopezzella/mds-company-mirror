@@ -1,0 +1,139 @@
+@use '../../../styles/grid' as *;
+@use '../../../styles/tokens' as t;
+
+.hero-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+
+  // Video background
+  &__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.5; // Subtle background effect
+  }
+
+  .container-fluid {
+    position: relative;
+    z-index: 10; // Above video
+  }
+
+  &__row {
+    min-height: inherit;
+    align-items: center;
+  }
+
+  &__text-col {
+    display: flex;
+    align-items: center;
+    padding: t.$spacing-48;
+
+    @include media-breakpoint-down(md) {
+      padding: t.$spacing-32 t.$spacing-24;
+    }
+  }
+
+  &__content {
+    max-width: 100%; // Full width by default
+  }
+
+  &__title {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  &__description {
+    font-weight: 400;
+    line-height: 1.5;
+    //max-width: 1295px; // From Figma
+  }
+
+  &__cta {
+    padding: t.$spacing-12 t.$spacing-24;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__logo-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: t.$spacing-48;
+
+    @include media-breakpoint-down(md) {
+      padding: t.$spacing-32;
+    }
+  }
+
+  &__logo-container {
+    width: 260px;
+    height: 266px; // From Figma
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include media-breakpoint-down(md) {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  &__logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  &__scroll-indicator {
+    position: absolute;
+    bottom: t.$spacing-24;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &__scroll-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: currentColor;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Variant modifiers
+  &--dark {
+    .hero-section__scroll-btn {
+      color: white;
+    }
+  }
+
+  &--light,
+  &--blue {
+    .hero-section__scroll-btn {
+      color: #1a1a1a;
+    }
+  }
+}

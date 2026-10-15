@@ -1,0 +1,15 @@
+export const meta = { title: 'MUI Reference/Inputs/Switch' };
+
+import { useState } from 'react';
+import { Switch, FormControlLabel } from '@mui/material';
+
+# Switch
+
+export function Demo() {
+  const [on, setOn] = useState(true);
+  return (
+    <FormControlLabel control={<Switch checked={on} onChange={e => setOn(e.target.checked)} />} label={on ? 'On' : 'Off'} />
+  );
+}
+
+<Demo />

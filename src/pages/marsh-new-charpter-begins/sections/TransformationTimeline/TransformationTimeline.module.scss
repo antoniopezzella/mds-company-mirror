@@ -1,0 +1,39 @@
+.wrapper {
+  position: relative;
+}
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+
+  @supports (height: 100dvh) {
+    min-height: 100dvh;
+  }
+}
+
+.steps {
+  position: relative;
+}
+
+.step {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: center;
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  height: 3px;
+  background: rgba(255,255,255,0.2);
+}
+
+.progressBar {
+  height: 100%;
+  width: 0%;
+}

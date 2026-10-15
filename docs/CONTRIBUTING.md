@@ -1,0 +1,196 @@
+# Contributing to MDS Platform
+
+Thank you for your interest in contributing to the Marsh Design System (MDS) Platform! This guide covers environment setup, creating components, and submitting changes.
+
+## 🛠 Development Setup
+
+### Prerequisites
+- Node.js v22 (check `package.json` engines)
+- npm
+
+### Installation
+```bash
+git clone https://github.com/antoniopezzella/Marsh-Design-System.git
+npm install
+```
+
+### Key Commands
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Starts the Vite dev server for the platform app |
+| `npm run storybook` | Starts the Storybook environment (recommended for component dev) |
+| `npm test` | Runs the test suite (Vitest — unit tests + every story as a real browser test via Playwright, see README's Testing section) |
+| `npm run tokens:build` | Generates CSS and JSON artifacts from token definitions |
+| `npm run roles:check` | Validates role-token usage in code |
+| `npm run docs:lint` | Lints MDX docs + enforces repo-root doc placement (see `CLAUDE.md` → "Documentation Governance") |
+
+## Core principles
+
+- Single source of truth: component APIs live in CSF stories (Autodocs); conceptual/foundational narrative lives in MDX under `src/docs`. See `src/docs/60-Documentation-Guidelines.mdx` for the full MDX authoring rules (Meta usage, heading hierarchy, token sourcing) — not repeated here.
+- Keep stories minimal and focused on meaningful states.
+- Prefer composition over custom ad-hoc docs components.
+
+## Which stack do I use?
+
+Two component sets live here. **For anything new, use `src/components/ui/*`** —
+the shadcn/Radix + Tailwind set. It is the canonical half of the system and
+the only half exported to consumers.
+
+`src/components/*` (the MUI set) is being migrated away from. Don't add to it,
+and don't import from it in a new page. Some existing pages import from both
+(`LoginPage`, `RESGAssetListPage`) — that is migration residue, not a pattern
+to copy.
+
+If the component you need only exists on the MUI side, that's a gap worth
+raising rather than silently working around — check
+[`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) first, since the
+answer is often that a `ui/*` equivalent already exists under a different name
+(`DataGrid` → `DataTable`, `TextField` → `input`/`text-field`).
+
+## 🧩 Creating a New Component
+
+Check `/design-system` and existing components first — see `CLAUDE.md`'s "decision ladder" (does it exist already → do its props cover it → can you compose existing primitives → only then build new).
+
+1. **Scaffold files** in `src/components/MyComponent/` (or `src/components/ui/` for the current stack):
+   - `MyComponent.tsx`
+   - `MyComponent.stories.tsx`
+   - `MyComponent.test.tsx`
+2. **Follow conventions**:
+   - **Colors**: always `getRoleColor(...)` — never a hex code directly.
+   - **Spacing**: Tailwind spacing classes on the scale (`p-4`, `gap-2`) or `Stack`/`Inline` `gap` — no hardcoded pixels. (`theme.spacing()` is legacy MUI only, being removed.)
+   - **Exports**: via a barrel `index.ts`.
+3. **Storybook**: stories covering all meaningful states (Primary, Secondary, Disabled, Error, etc.) — see `docs/guides/STORYBOOK_BEST_PRACTICES.md` for naming/organization conventions.
+4. **Testing**: a render test at minimum; interaction tests if the component is interactive.
+
+### Directory layout
+```
+src/components/ComponentName/
+  ComponentName.tsx
+  ComponentName.stories.tsx
+  ComponentName.test.tsx
+```
+
+## 🎨 Token System Workflow
+
+**⚠️ Before adding or modifying a token, submit a token request for approval** — see [Token Request Process](./TOKEN_REQUEST_PROCESS.md). Quick links:
+- [⭐ Brand Token Request](../.github/ISSUE_TEMPLATE/token-request-brand.md) (VP approval)
+- [🎨 Semantic Token Request](../.github/ISSUE_TEMPLATE/token-request-semantic.md) (Design Lead)
+- [🔧 Role Token Request](../.github/ISSUE_TEMPLATE/token-request-role.md) (DS Team)
+
+Post-approval implementation:
+1. **Primitives** — `src/tokens.ts` (raw values).
+2. **Semantics** — `src/semantic-tokens.ts` (intent names, light + dark).
+3. **Roles** — `src/theme/roles.ts` (the component-facing API).
+4. **Build** — `npm run tokens:build` (regenerates `dist/tokens.json`, `dist/theme.css`, `dist/tokens.tokens.json` — generated, don't hand-edit).
+5. Commit the regenerated `dist/` artifacts so diffs are reviewable; `npm run tokens:diff` shows what changed vs. `HEAD`.
+
+## 🌿 Branches
+
+Keep them short — **hours to a few days**, then merge or close. `main` is the
+trunk and is protected; everything else is temporary.
+
+**The one rule worth memorising: never merge a branch older than the work it
+would touch.** Cherry-pick what you want out of it and delete the rest. A stale
+branch reverts newer work *without any conflict*, because it simply predates it
+— a clean merge is not evidence of a safe merge. This has already nearly cost
+this repo a day's accessibility fixes.
+
+Before deleting a branch, check whether it's merged:
+
+```bash
+git merge-base --is-ancestor origin/<branch> origin/main && echo merged || echo "NOT merged"
+```
+
+If it is **not** merged, it holds commits that exist nowhere else — extract what
+matters first, and record the SHA in the commit message so it can be restored.
+
+Full reasoning and the lifetimes table: [`GOVERNANCE.md` → Branch governance](./GOVERNANCE.md#4-branch-governance).
+
+## ✅ Pull Request Process
+
+1. `npm test` passes (unit + Storybook/Playwright tests).
+2. `npm run lint` passes (ESLint, including `eslint-plugin-storybook` rules on story files).
+3. `npm run docs:lint` passes.
+4. `npm run build-storybook` succeeds.
+5. `npm run tokens:build` succeeds if you touched any token file.
+
+Component coverage is tracked in [`SHADCN_MIGRATION_STATUS.md`](./SHADCN_MIGRATION_STATUS.md) (the old hand-maintained `COMPONENT_COVERAGE.md` is archived — see `docs/archive/COMPONENT_COVERAGE.md`).
+
+## 📦 Releases & versioning
+
+Releases are cut with `npm run release` (commit-and-tag-version), which reads
+the conventional-commit types since the last tag, works out the next version,
+writes `CHANGELOG.md`, and tags. Section labels live in `.versionrc.json`;
+a type that isn't mapped there is dropped from the changelog silently, so add
+one before using a new type.
+
+What the number means, pre-1.0:
+
+| Bump | Trigger | What a consumer should expect |
+| --- | --- | --- |
+| **patch** (`0.4.0` → `0.4.1`) | only `fix`/`perf`/`chore`/`docs` | No API change. Safe to take without reading anything. |
+| **minor** (`0.4.1` → `0.5.0`) | any `feat` | Additive only — new components, new optional props. Existing code keeps working. |
+| **major** (`0.x` → `1.0`) | `!` or a `BREAKING CHANGE:` footer | Something was removed or changed shape. Read the changelog entry before upgrading. |
+
+**While the package is `0.x`, breaking changes ship in a minor bump** — that
+is standard SemVer for pre-1.0, but it means consumers should pin a minor
+range (`~0.4.0`), not a caret range, if they want to avoid surprises. Anything
+genuinely breaking gets a `BREAKING CHANGE:` footer so it is visible in the
+changelog regardless of where the number lands.
+
+Removing or renaming an exported component, changing a prop's type, or
+changing a role token's resolved value all count as breaking. Adding an
+optional prop, adding a component, or changing an internal implementation
+that isn't observable through the public API do not.
+
+### Deprecation window
+
+**A deprecated API survives at least one further minor release AND 90
+calendar days.** Both conditions, not either.
+
+The date floor is the part that matters. This project shipped `0.5.0` and
+`0.6.0` two days apart, so a release-count rule on its own would have meant a
+window of about a week — technically honoured, useless to anyone trying to
+upgrade on their own schedule.
+
+Every `@deprecated` must say when it started and when it can end:
+
+```ts
+/** @deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.
+ *  Use `size`. */
+inputSize?: ControlSize;
+```
+
+- **since** — the version the deprecation first ships in.
+- **remove after** — the next minor. Removal may happen in that release or
+  any later one.
+- **date** — 90 days from the deprecation being authored. Authoring date, not
+  release date, because it is knowable when you write the tag; the release can
+  only be later, so the real window is never shorter than 90 days.
+
+Rules:
+
+- **Never remove in a patch.** A patch means "safe to take without reading
+  anything", and that has to stay true.
+- **The window is a floor, not a deadline.** Passing it makes removal
+  permitted, not required — removal is still a breaking change and still
+  needs a `BREAKING CHANGE:` footer.
+- **The old path must keep working for the whole window**, not just type-check.
+  Deprecated props route through `src/components/ui/prop-compat.ts`, which
+  normalises them and warns once per prop in development.
+- **A deprecation with no removal promise is not a deprecation**, it is a
+  comment. `npm run deprecations:check` fails on a bare `@deprecated`.
+
+This is enforced: `scripts/check-deprecations.js` validates every tag's form
+and ordering, reports which windows have closed, and runs in `governance:ci`.
+
+> Written after `prop-compat.ts` was found telling consumers that legacy
+> values "are removed at 1.0 per the deprecation window in
+> docs/CONTRIBUTING.md" — pointing at a section that did not exist. The code
+> was making a support commitment on behalf of a policy nobody had written.
+
+## Out of scope / anti-patterns
+
+- No raw hex colors or hardcoded pixel spacing in components — see `CLAUDE.md`'s token rules.
+- No duplicate variant stories that differ only by trivial args — prefer docs narrative if the distinction matters.
+- No new root-level `.md` files — see `CLAUDE.md` → "Documentation Governance."
