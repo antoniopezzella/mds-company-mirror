@@ -1,2 +1,0 @@
-// Deprecated placeholder file.
-export {};

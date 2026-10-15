@@ -1,0 +1,2 @@
+import{ar as s,Z as n}from"./iframe-CPBTUrEW.js";import"./preload-helper-PPVm8Dsz.js";const c={title:"MUI Reference/Inputs/Transfer List"};function r(e){const t={h1:"h1",p:"p",...s(),...e.components};return n.jsxs(n.Fragment,{children:[n.jsx(t.h1,{id:"transfer-list",children:"Transfer List"}),`
+`,n.jsx(t.p,{children:"This reference item is tracked but the full interactive example is deferred for now. Coming soon."})]})}function a(e={}){const{wrapper:t}={...s(),...e.components};return t?n.jsx(t,{...e,children:n.jsx(r,{...e})}):r(e)}export{a as default,c as meta};
