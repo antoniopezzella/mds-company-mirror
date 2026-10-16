@@ -129,6 +129,9 @@ const ToastClose = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitive.Close
     ref={ref}
+    // The close glyph is aria-hidden, so the button has no text of its own —
+    // without a name it fails axe `button-name`. Default here, overridable.
+    aria-label="Close"
     className={cn(
       'absolute right-2 top-2 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-hidden focus:ring-2',
       className
