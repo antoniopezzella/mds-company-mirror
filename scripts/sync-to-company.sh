@@ -93,9 +93,12 @@ while IFS= read -r f; do
     s{/Users/antoniopezzella}{/path/to/user}g;
   ' "$f"
 done < <(grep -rlI "antoniopezzella" "$REPO" --exclude-dir=.git 2>/dev/null || true)
-# Force the unscoped company package name — match both the personal form AND the
-# form the de-personalize pass above produces (@mmctech/MarshDesignSystem).
-perl -i -pe 's{"name":\s*"(\@antoniopezzella/marsh-design-system|\@mmctech/MarshDesignSystem|marsh-design-system)"}{"name": "marsh-mds"}' "$REPO/package.json" 2>/dev/null || true
+# Force the scoped company package name. GitHub Packages (the configured
+# publishConfig registry) REQUIRES the org scope, and README.package.md's npm
+# install instructions already use @mmctech — so the name must be scoped too.
+# (If MMC publishes to Artifactory instead, change this to the unscoped
+# "marsh-mds" and repoint publishConfig.registry — see docs/PUBLISHING.md.)
+perl -i -pe 's{"name":\s*"(\@antoniopezzella/marsh-design-system|\@mmctech/MarshDesignSystem|marsh-mds|marsh-design-system)"}{"name": "\@mmctech/marsh-mds"}' "$REPO/package.json" 2>/dev/null || true
 
 say "5/8  Safety guard — refuse to ship a secret or personal identity"
 GUARD_FAIL=0

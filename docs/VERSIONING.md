@@ -13,7 +13,7 @@ to be true before we call it `1.0`.
 ## What is the public API (the "stable surface")
 
 Semver applies to exactly what the package **exports** — the named exports of
-`src/index.ts`, which ship as `marsh-mds`:
+`src/index.ts`, which ship as `@mmctech/marsh-mds`:
 
 - The components in **`src/components/ui/`** that `index.ts` re-exports, and
   their documented props (the `*Props` interfaces).
@@ -30,7 +30,7 @@ Semver applies to exactly what the package **exports** — the named exports of
   enforced by `npm run mui-fence:check`.
 - Anything under `src/pages/`, `src/projects/`, `src/App.tsx` — demo/app code,
   trimmed out of the published repo entirely.
-- Internal module paths. Import from the package root (`marsh-mds`), never a
+- Internal module paths. Import from the package root (`@mmctech/marsh-mds`), never a
   deep path — deep paths are not a contract.
 
 ## What a version bump promises (semver)
@@ -65,7 +65,7 @@ While the version is `0.x`:
 
 - **Minor bumps (`0.8 → 0.9`) may contain breaking changes.** That is standard
   semver for `0.x` and it is true here — the API is still settling.
-- **Pin an exact version** (`"marsh-mds": "0.8.0"`, not `^0.8.0`) and upgrade
+- **Pin an exact version** (`"@mmctech/marsh-mds": "0.8.0"`, not `^0.8.0`) and upgrade
   deliberately, reading the changelog.
 - APIs marked experimental or components below `stable` maturity in
   `taxonomy.ts` are the most likely to move.
@@ -76,7 +76,7 @@ While the version is `0.x`:
 be kept. The checklist — **none of these is a `ds:score` metric; they are the
 real blockers:**
 
-- [ ] **Distribution works** — a consuming team can install `marsh-mds` from a
+- [ ] **Distribution works** — a consuming team can install `@mmctech/marsh-mds` from a
       registry they can reach (resolve the `@mmctech` scope → GitHub Packages
       or the internal Artifactory). *Today there is no working install path —
       this is the #1 blocker.*
@@ -104,5 +104,8 @@ npm run release              # bump + CHANGELOG + tag from conventional commits
 npm run release:prerelease   # an rc prerelease (e.g. 1.0.0-rc.0)
 ```
 
-Publishing is CI-only (see `.github/workflows/publish-package.yml`), gated on a
-green `governance:ci`. Never publish from a laptop.
+Publishing *should* be CI-only (`.github/workflows/publish-package.yml`, gated
+on green `governance:ci`). While the company runner can't reach the registry,
+releases are cut **manually** — the step-by-step is in
+[`PUBLISHING.md`](./PUBLISHING.md). Published as **`@mmctech/marsh-mds`** on
+GitHub Packages (the scope is required there).
