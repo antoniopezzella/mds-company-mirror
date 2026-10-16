@@ -59,13 +59,8 @@ const unitHint: Record<FilterUnit, string> = {
   percent: '%',
 };
 
-export function FilterNumberRange({
-  field,
-  value,
-  onValueChange,
-  size = 'md',
-  disabled = false,
-}: FilterNumberRangeProps) {
+export const FilterNumberRange = React.forwardRef<HTMLButtonElement, FilterNumberRangeProps>(
+  function FilterNumberRange({ field, value, onValueChange, size = 'md', disabled = false }, ref) {
   const [open, setOpen] = React.useState(false);
   // Draft state, committed on Apply. Filtering on every keystroke means a
   // half-typed "5" filters to everything over five dollars before the user
@@ -98,7 +93,7 @@ export function FilterNumberRange({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild disabled={disabled}>
-        <FilterChip label={label} selected={applied} hasMenu size={size} disabled={disabled} />
+        <FilterChip ref={ref} label={label} selected={applied} hasMenu size={size} disabled={disabled} />
       </PopoverTrigger>
       {/* Radix gives PopoverContent role="dialog"; a dialog without an
           accessible name is an axe failure (aria-dialog-name) and, more to
@@ -163,7 +158,9 @@ export function FilterNumberRange({
       </PopoverContent>
     </Popover>
   );
-}
+  }
+);
+FilterNumberRange.displayName = 'FilterNumberRange';
 
 export interface FilterBooleanProps {
   field: Extract<FilterField, { type: 'boolean' }>;
@@ -181,13 +178,8 @@ export interface FilterBooleanProps {
  * unbound policies" is a real question, and a toggle that only turns *on*
  * cannot express it. `undefined` is not the same as `false`.
  */
-export function FilterBoolean({
-  field,
-  value,
-  onValueChange,
-  size = 'md',
-  disabled = false,
-}: FilterBooleanProps) {
+export const FilterBoolean = React.forwardRef<HTMLButtonElement, FilterBooleanProps>(
+  function FilterBoolean({ field, value, onValueChange, size = 'md', disabled = false }, ref) {
   const applied = value !== undefined;
   const label = applied ? `${field.label}: ${describeFilterValue(field, value)}` : field.label;
   const current = value === undefined ? 'any' : value ? 'true' : 'false';
@@ -195,7 +187,7 @@ export function FilterBoolean({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild disabled={disabled}>
-        <FilterChip label={label} selected={applied} hasMenu size={size} disabled={disabled} />
+        <FilterChip ref={ref} label={label} selected={applied} hasMenu size={size} disabled={disabled} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-40">
         <DropdownMenuRadioGroup
@@ -209,4 +201,6 @@ export function FilterBoolean({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+  }
+);
+FilterBoolean.displayName = 'FilterBoolean';

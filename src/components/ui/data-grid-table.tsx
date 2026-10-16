@@ -179,24 +179,27 @@ export interface DataGridTableProps<TData extends RowData> {
  * recorded in the comments below survived the move deliberately; they are all
  * things that were got wrong once.
  */
-export function DataGridTable<TData extends RowData>({
-  loadingRowCount,
-  enableColumnReorder = false,
-  renderDetail,
-  enableVirtualization = false,
-  estimateRowSize = 44,
-  overscan = 8,
-  showFooter = false,
-  stickyFooter = false,
-  striped = false,
-  caption,
-  enableCellSelection = false,
-  enableFillHandle = false,
-  onCellsChange,
-  onRowClick,
-  onCellEdit,
-  className,
-}: DataGridTableProps<TData>) {
+function DataGridTableInner<TData extends RowData>(
+  {
+    loadingRowCount,
+    enableColumnReorder = false,
+    renderDetail,
+    enableVirtualization = false,
+    estimateRowSize = 44,
+    overscan = 8,
+    showFooter = false,
+    stickyFooter = false,
+    striped = false,
+    caption,
+    enableCellSelection = false,
+    enableFillHandle = false,
+    onCellsChange,
+    onRowClick,
+    onCellEdit,
+    className,
+  }: DataGridTableProps<TData>,
+  ref: React.ForwardedRef<HTMLTableElement>
+) {
   const {
     table,
     scrollElement,
@@ -985,6 +988,7 @@ export function DataGridTable<TData extends RowData>({
         {announcement}
       </span>
       <Table
+        ref={ref}
         className={cn('w-full border-collapse', className)}
         style={tableStyle}
         aria-busy={loading || undefined}
@@ -1331,5 +1335,19 @@ export function DataGridTable<TData extends RowData>({
     </>
   );
 }
+
+/**
+ * `forwardRef` + a generic component needs this double cast: `forwardRef`
+ * itself erases the type parameter, so the exported value is re-typed as the
+ * generic function callers actually need (`<DataGridTable<Policy> ... />`),
+ * while the real, ref-aware runtime object underneath keeps its
+ * `displayName`. Same shape as `DataTableDateFilter` / `DataTableSortList`.
+ */
+const DataGridTableImpl = React.forwardRef(DataGridTableInner);
+DataGridTableImpl.displayName = 'DataGridTable';
+
+export const DataGridTable = DataGridTableImpl as <TData extends RowData>(
+  props: DataGridTableProps<TData> & { ref?: React.ForwardedRef<HTMLTableElement> }
+) => ReturnType<typeof DataGridTableInner>;
 
 export default DataGridTable;

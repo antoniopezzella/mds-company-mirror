@@ -33,7 +33,10 @@ export interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
   options?: FacetOption[];
 }
 
-export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
+function DataTableFacetedFilterInner<TData extends RowData, TValue>(
+  { column, title, options }: DataTableFacetedFilterProps<TData, TValue>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const [open, setOpen] = React.useState(false);
 
   const filterValue = column?.getFilterValue();
@@ -82,6 +85,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
           the trigger grows rightward instead of reflowing internally.
         */}
         <Button
+          ref={ref}
           variant="outline"
           size="sm"
           className="gap-1.5 border-dashed px-2 text-xs font-normal"
@@ -154,5 +158,14 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
     </Popover>
   );
 }
+
+/** See `DataGridTable`'s note on this pattern — `forwardRef` + a generic
+ * component needs the double cast. */
+const DataTableFacetedFilterImpl = React.forwardRef(DataTableFacetedFilterInner);
+DataTableFacetedFilterImpl.displayName = 'DataTableFacetedFilter';
+
+export const DataTableFacetedFilter = DataTableFacetedFilterImpl as <TData extends RowData, TValue>(
+  props: DataTableFacetedFilterProps<TData, TValue> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+) => ReturnType<typeof DataTableFacetedFilterInner>;
 
 export default DataTableFacetedFilter;

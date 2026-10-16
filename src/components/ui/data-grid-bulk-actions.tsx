@@ -97,13 +97,8 @@ type RunState =
   | { phase: 'running'; action: BulkAction }
   | { phase: 'reported'; action: BulkAction; result: BulkActionResult };
 
-export function DataGridBulkActions({
-  actions,
-  selection,
-  itemNoun = 'row',
-  itemNounPlural,
-  className,
-}: DataGridBulkActionsProps) {
+export const DataGridBulkActions = React.forwardRef<HTMLDivElement, DataGridBulkActionsProps>(
+  function DataGridBulkActions({ actions, selection, itemNoun = 'row', itemNounPlural, className }, ref) {
   const [state, setState] = React.useState<RunState>({ phase: 'idle' });
 
   const many = itemNounPlural ?? `${itemNoun}s`;
@@ -153,6 +148,7 @@ export function DataGridBulkActions({
   return (
     <>
       <div
+        ref={ref}
         data-slot="data-grid-bulk-actions"
         className={cn('flex flex-wrap items-center gap-2', className)}
       >
@@ -249,4 +245,6 @@ export function DataGridBulkActions({
       )}
     </>
   );
-}
+  }
+);
+DataGridBulkActions.displayName = 'DataGridBulkActions';

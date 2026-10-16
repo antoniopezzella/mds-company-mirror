@@ -34,7 +34,10 @@ export interface DataTableDateFilterProps<TData extends RowData, TValue> {
 // predicate, even though the predicate now lives in data-grid-filter-fns.ts.
 export { dateRangeFilterFn };
 
-export function DataTableDateFilter<TData extends RowData, TValue>({ column, title }: DataTableDateFilterProps<TData, TValue>) {
+function DataTableDateFilterInner<TData extends RowData, TValue>(
+  { column, title }: DataTableDateFilterProps<TData, TValue>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const [open, setOpen] = React.useState(false);
 
   const filterValue = column?.getFilterValue() as { from?: string; to?: string } | undefined;
@@ -73,6 +76,7 @@ export function DataTableDateFilter<TData extends RowData, TValue>({ column, tit
             data-table-faceted-filter.tsx. The icon is constant so selecting a
             range appends a chip rather than reflowing the trigger. */}
         <Button
+          ref={ref}
           variant="outline"
           size="sm"
           className="gap-1.5 border-dashed px-2 text-xs font-normal"
@@ -111,5 +115,14 @@ export function DataTableDateFilter<TData extends RowData, TValue>({ column, tit
     </Popover>
   );
 }
+
+/** See `DataGridTable`'s note on this pattern — `forwardRef` + a generic
+ * component needs the double cast. */
+const DataTableDateFilterImpl = React.forwardRef(DataTableDateFilterInner);
+DataTableDateFilterImpl.displayName = 'DataTableDateFilter';
+
+export const DataTableDateFilter = DataTableDateFilterImpl as <TData extends RowData, TValue>(
+  props: DataTableDateFilterProps<TData, TValue> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+) => ReturnType<typeof DataTableDateFilterInner>;
 
 export default DataTableDateFilter;

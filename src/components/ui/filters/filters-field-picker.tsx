@@ -60,14 +60,18 @@ export interface FiltersFieldPickerProps {
   className?: string;
 }
 
-export function FiltersFieldPicker({
-  fields,
-  onSelect,
-  handleRef,
-  searchPlaceholder: searchPlaceholderProp,
-  emptyLabel = (t) => `No filters found for “${t}”`,
-  className,
-}: FiltersFieldPickerProps) {
+export const FiltersFieldPicker = React.forwardRef<HTMLDivElement, FiltersFieldPickerProps>(
+  function FiltersFieldPicker(
+    {
+      fields,
+      onSelect,
+      handleRef,
+      searchPlaceholder: searchPlaceholderProp,
+      emptyLabel = (t) => `No filters found for “${t}”`,
+      className,
+    },
+    ref
+  ) {
   // Defaulted here rather than in the signature so a parent may forward an
   // undefined `messages.searchPlaceholder` without blanking the label.
   const searchPlaceholder = searchPlaceholderProp ?? 'Search filters…';
@@ -174,7 +178,7 @@ export function FiltersFieldPicker({
   const muted = getRoleColor('text.secondary');
 
   return (
-    <div className={cn('flex w-72 flex-col gap-1', className)}>
+    <div ref={ref} className={cn('flex w-72 flex-col gap-1', className)}>
       <div className="relative">
         <Search
           className="pointer-events-none absolute start-2 top-1/2 size-3.5 -translate-y-1/2"
@@ -260,7 +264,9 @@ export function FiltersFieldPicker({
       </div>
     </div>
   );
-}
+  }
+);
+FiltersFieldPicker.displayName = 'FiltersFieldPicker';
 
 function Option({
   id,

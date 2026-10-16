@@ -76,21 +76,29 @@ export interface DataGridToolbarProps {
  * empty state also needs it (to tell "no data" from "no results"), and two
  * places naming the same column independently is how they drift apart.
  */
-export function DataGridToolbar<TData extends RowData>({
-  filters,
-  fields,
-  facetedFilters,
-  dateFilters,
-  searchPlaceholder = 'Search...',
-  enableSortList = false,
-  enableDensityToggle = false,
-  enableColumnVisibility = false,
-  enableExport = false,
-  exportFilename = 'export',
-  children,
-  className,
-}: DataGridToolbarProps) {
-  const { table, density, setDensity, searchKey } = useDataGrid<TData>();
+export const DataGridToolbar = React.forwardRef<HTMLDivElement, DataGridToolbarProps>(
+  function DataGridToolbar(
+    {
+      filters,
+      fields,
+      facetedFilters,
+      dateFilters,
+      searchPlaceholder = 'Search...',
+      enableSortList = false,
+      enableDensityToggle = false,
+      enableColumnVisibility = false,
+      enableExport = false,
+      exportFilename = 'export',
+      children,
+      className,
+    },
+    ref
+  ) {
+  // `TData` was a dead generic here too (see data-grid-pagination.tsx's note)
+  // — never present in `DataGridToolbarProps`, only used to call
+  // `useDataGrid<TData>()`, which nothing could ever supply a real type
+  // argument for. `useDataGrid<RowData>()` is what it already resolved to.
+  const { table, density, setDensity, searchKey } = useDataGrid<RowData>();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
 
   const columnFilters = table.state.columnFilters;
@@ -123,7 +131,7 @@ export function DataGridToolbar<TData extends RowData>({
     // data-slot, as the other grid parts carry: the toolbar's controls share
     // names with the column headers they filter ("Status", "Bound"), so both
     // tests and consumers need a way to say which one they mean.
-    <div data-slot="data-grid-toolbar" className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
+    <div ref={ref} data-slot="data-grid-toolbar" className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
       <div className="flex flex-wrap items-center gap-2">
         {searchKey && (
           // Input has no adornment slot, so the clear control is positioned
@@ -251,6 +259,8 @@ export function DataGridToolbar<TData extends RowData>({
       </div>
     </div>
   );
-}
+  }
+);
+DataGridToolbar.displayName = 'DataGridToolbar';
 
 export default DataGridToolbar;

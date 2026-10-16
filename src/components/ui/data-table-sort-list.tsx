@@ -20,7 +20,10 @@ export interface DataTableSortListProps<TData extends RowData> {
   table: DataGridTableInstance<TData>;
 }
 
-export function DataTableSortList<TData extends RowData>({ table }: DataTableSortListProps<TData>) {
+function DataTableSortListInner<TData extends RowData>(
+  { table }: DataTableSortListProps<TData>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const [open, setOpen] = React.useState(false);
   const sorting = table.state.sorting;
 
@@ -40,7 +43,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
       <PopoverTrigger asChild>
         {/* Compact to match the faceted-filter triggers — see the note in
             data-table-faceted-filter.tsx. Height stays on the control scale. */}
-        <Button variant="outline" size="sm" className="gap-1.5 px-2 text-xs font-normal">
+        <Button ref={ref} variant="outline" size="sm" className="gap-1.5 px-2 text-xs font-normal">
           <ArrowDownUp className="size-3.5 shrink-0 opacity-70" aria-hidden="true" />
           Sort
           {sorting.length > 0 && (
@@ -117,5 +120,14 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
     </Popover>
   );
 }
+
+/** See `DataGridTable`'s note on this pattern — `forwardRef` + a generic
+ * component needs the double cast. */
+const DataTableSortListImpl = React.forwardRef(DataTableSortListInner);
+DataTableSortListImpl.displayName = 'DataTableSortList';
+
+export const DataTableSortList = DataTableSortListImpl as <TData extends RowData>(
+  props: DataTableSortListProps<TData> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+) => ReturnType<typeof DataTableSortListInner>;
 
 export default DataTableSortList;

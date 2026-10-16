@@ -96,19 +96,22 @@ const DEFAULTS = {
   editAdvanced: 'Edit in advanced builder',
 };
 
-export function Filters({
-  fields,
-  query: controlled,
-  defaultQuery,
-  onQueryChange,
-  size = 'sm',
-  readOnly = false,
-  disabled = false,
-  className,
-  onEditAdvanced,
-  editors,
-  messages,
-}: FiltersProps) {
+export const Filters = React.forwardRef<HTMLDivElement, FiltersProps>(function Filters(
+  {
+    fields,
+    query: controlled,
+    defaultQuery,
+    onQueryChange,
+    size = 'sm',
+    readOnly = false,
+    disabled = false,
+    className,
+    onEditAdvanced,
+    editors,
+    messages,
+  },
+  ref
+) {
   const t = { ...DEFAULTS, ...messages };
   const [internal, setInternal] = React.useState<FilterQuery>(() => defaultQuery ?? createFilterQuery());
   const [adding, setAdding] = React.useState(false);
@@ -155,6 +158,7 @@ export function Filters({
 
   return (
     <div
+      ref={ref}
       data-slot="filters"
       className={cn('flex flex-wrap items-center gap-2', className)}
       // `role` is required for the label to exist at all: the implicit role
@@ -299,4 +303,5 @@ export function Filters({
       )}
     </div>
   );
-}
+});
+Filters.displayName = 'Filters';

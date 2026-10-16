@@ -140,17 +140,25 @@ export interface DataGridDetailPanelProps {
 /**
  * Standard padding/background for a master-detail panel, so every consumer's
  * `renderDetail` doesn't re-invent the same frame.
+ *
+ * The one real component in this file — the `create*Column` helpers above are
+ * column-definition factories that return a plain object for TanStack and
+ * never mount a DOM root to attach a ref to.
  */
-export function DataGridDetailPanel({ children, className }: DataGridDetailPanelProps) {
+export const DataGridDetailPanel = React.forwardRef<HTMLDivElement, DataGridDetailPanelProps>(
+  function DataGridDetailPanel({ children, className }, ref) {
   return (
     <div
+      ref={ref}
       className={cn('px-6 py-4 text-sm', className)}
       style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-primary)' }}
     >
       {children}
     </div>
   );
-}
+  }
+);
+DataGridDetailPanel.displayName = 'DataGridDetailPanel';
 
 /** Narrow helper so consumers can type a `renderDetail` without naming the feature set. */
 export type DataGridRow<TData extends RowData> = Row<DataGridFeatures, TData>;

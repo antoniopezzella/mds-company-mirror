@@ -116,20 +116,23 @@ export interface FiltersGroupProps extends FiltersGroupHandlers {
   messages?: Partial<FiltersGroupMessages & NonNullable<FiltersRuleProps['messages']>>;
 }
 
-export function FiltersGroup({
-  group,
-  fields,
-  addRef,
-  depth,
-  maxDepth,
-  isRoot = false,
-  editors,
-  size = 'sm',
-  readOnly = false,
-  disabled = false,
-  messages,
-  ...h
-}: FiltersGroupProps) {
+export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(function FiltersGroupInner(
+  {
+    group,
+    fields,
+    addRef,
+    depth,
+    maxDepth,
+    isRoot = false,
+    editors,
+    size = 'sm',
+    readOnly = false,
+    disabled = false,
+    messages,
+    ...h
+  },
+  ref
+) {
   const t = { ...FILTERS_GROUP_MESSAGES, ...messages };
   const [addingTo, setAddingTo] = React.useState(false);
   const pickerRef = React.useRef<FieldPickerHandle | null>(null);
@@ -163,6 +166,7 @@ export function FiltersGroup({
 
   return (
     <div
+      ref={ref}
       data-slot="filters-group"
       data-combinator={group.combinator}
       data-depth={depth}
@@ -367,7 +371,8 @@ export function FiltersGroup({
       )}
     </div>
   );
-}
+});
+FiltersGroup.displayName = 'FiltersGroup';
 
 /**
  * And / Or for one group.
