@@ -17,9 +17,11 @@ import { ColleagueShell } from '../components/ColleagueShell';
 import { RemoveMemberDialog } from '../components/RemoveMemberDialog';
 import { AddMemberDialog } from '../components/AddMemberDialog';
 import { ClientPivotView } from '../components/ClientPivotView';
+import { TeamSetup } from '../components/TeamSetup';
+import { useTeams } from '../components/TeamsContext';
 import { useColleagueRole } from '../role-context';
 import { deniedReason } from '../roles';
-import { TEAMS, TEAM_CLIENT_COUNT, TEAM_MEMBERS, type TeamMember } from '../data';
+import { TEAM_CLIENT_COUNT, TEAM_MEMBERS, type Team, type TeamMember } from '../data';
 
 /**
  * Colleague Profile — a single team.
@@ -86,7 +88,8 @@ function RolesCell({ member }: { member: TeamMember }) {
  *  RoleProvider, so the component that renders the shell cannot read the role. */
 export function ManageTeam() {
   const { teamId } = useParams<{ teamId: string }>();
-  const team = TEAMS.find((t) => t.id === teamId) ?? TEAMS[0];
+  const { getTeam, teams } = useTeams();
+  const team = (teamId && getTeam(teamId)) || teams[0];
 
   return (
     <ColleagueShell currentPath="/colleague-profile">
@@ -95,8 +98,9 @@ export function ManageTeam() {
   );
 }
 
-function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
+function TeamContent({ team }: { team: Team }) {
   const { can } = useColleagueRole();
+  const { updateTeam } = useTeams();
 
   const canRemove = can('member:remove');
   const [removing, setRemoving] = React.useState<TeamMember | null>(null);
@@ -231,7 +235,7 @@ function TeamContent({ team }: { team: (typeof TEAMS)[number] }) {
     {
       id: 'setup',
       title: 'Team Setup',
-      content: notBuilt('Team setup not in this rebuild', 'Team name, capacity and specialties.'),
+      content: <TeamSetup team={team} onSave={(patch) => updateTeam(team.id, patch)} />,
     },
     {
       id: 'delegate',

@@ -3,18 +3,22 @@ import { MemoryRouter } from 'react-router-dom';
 import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ColleagueProfile } from './ColleagueProfile';
+import { TeamsProvider } from '../components/TeamsContext';
 
 const meta: Meta<typeof ColleagueProfile> = {
   title: 'Projects/Colleague Profile/My Teams',
   component: ColleagueProfile,
   tags: ['autodocs'],
-  // The page, the Header and the rail all call `useNavigate`. There is no
-  // global router decorator in .storybook/preview.tsx, which is why
-  // dashboard-demo has no story at all — it needs this and never got it.
+  // The page, the Header and the rail all call `useNavigate`, and the page
+  // reads teams via `useTeams()`. There is no global router/teams decorator in
+  // .storybook/preview.tsx, so both have to be supplied here — omitting
+  // TeamsProvider is what broke this story's play test and the dark-mode check.
   decorators: [
     (Story) => (
       <MemoryRouter initialEntries={['/colleague-profile']}>
-        <Story />
+        <TeamsProvider>
+          <Story />
+        </TeamsProvider>
       </MemoryRouter>
     ),
   ],

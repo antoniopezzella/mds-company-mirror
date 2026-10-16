@@ -10,24 +10,87 @@ import type { SideNavItem } from '@/components/ui/side-navigation';
  * others (see `TeamCard`).
  */
 
+/**
+ * How a team's members are populated.
+ *   manual    — the manager adds colleagues by hand in "Manage Team".
+ *   auto-sync — the manager's Workday direct reports flow in automatically.
+ */
+export type CreationMode = 'manual' | 'auto-sync';
+
+/** One colleague covering a client role on a team (a "chair"). */
+export interface TeamCoverage {
+  id: string;
+  colleagueId: string;
+  name: string;
+}
+
+/** A client role the team supports, with the colleagues who cover it. */
+export interface TeamClientRole {
+  id: string;
+  /** e.g. 'Account Executive', 'Claims Advisor'. */
+  role: string;
+  coverage: TeamCoverage[];
+}
+
 export interface Team {
   id: string;
   name: string;
   /** Optional one-line description. Only some teams carry one. */
   description?: string;
-  /** Specialty tags. Empty for most teams. */
+  /**
+   * Specialty / qualifier tags. Empty for most teams. Surfaced as "Qualifiers"
+   * on the Team Setup screen — the same concept, one field.
+   */
   specialties: string[];
   members: number;
+  /** Target team size — the headcount the team is being staffed toward. */
   capacity: number;
+  /** How members are populated. Absent on legacy fixtures (treated as manual). */
+  creationMode?: CreationMode;
+  /** Client roles the team supports + their coverage. Configured on Team Setup. */
+  roles?: TeamClientRole[];
   /**
    * Who delegated this team to the current user, if anyone. A delegated team
    * is one you manage on someone else's behalf — worth flagging, because the
    * actions available on it differ.
    */
   delegatedBy?: string;
+  /**
+   * Whose team this is, captured at creation. `self` for your own; `manager`
+   * when created on behalf of a manager who delegated access to you.
+   */
+  createdFor?: { kind: 'self' | 'manager'; managerId?: string; managerName?: string };
   /** Whether this team can be transferred to another manager. */
   transferable?: boolean;
 }
+
+/**
+ * Managers who have delegated access to the current user. Non-empty here means
+ * the Create Team drawer shows its "Who is this team for?" choice; empty means
+ * every team you create is simply your own and the question never appears.
+ * Derived from the `delegatedBy` values the fixtures already carry.
+ */
+export const MY_DELEGATORS: { id: string; name: string }[] = [
+  { id: 'grant-chukerman', name: 'Grant Chukerman' },
+  { id: 'dylan-meek', name: 'Dylan Meek' },
+];
+
+/**
+ * Client roles a team can be configured to support (Team Setup → Add Role).
+ * A curated list rather than free text, so coverage rolls up across teams.
+ */
+export const CLIENT_ROLES: string[] = [
+  'Account Executive',
+  'Associate Account Executive',
+  'Client Representative',
+  'Claims Advisor',
+  'Placement Broker',
+  'Risk Analyst',
+  'Health Actuary',
+  'Strategy & Planning',
+  'Insurance Operations',
+  'Sales Leader',
+];
 
 export const TEAMS: Team[] = [
   {

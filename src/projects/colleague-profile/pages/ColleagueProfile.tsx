@@ -11,8 +11,10 @@ import { getRoleColor } from '@/theme/roles';
 
 import { ColleagueShell } from '../components/ColleagueShell';
 import { TeamCard } from '../components/TeamCard';
+import { CreateTeamDrawer } from '../components/CreateTeamDrawer';
+import { useTeams } from '../components/TeamsContext';
 import { useColleagueRole } from '../role-context';
-import { TEAM_FILTER_OPTIONS, TEAMS, type Team } from '../data';
+import { TEAM_FILTER_OPTIONS, type Team } from '../data';
 
 /**
  * Colleague Profile — "My Teams".
@@ -47,17 +49,19 @@ export function ColleagueProfile() {
 function MyTeamsContent() {
   const navigate = useNavigate();
   const { can } = useColleagueRole();
+  const { teams: allTeams } = useTeams();
+  const [creating, setCreating] = React.useState(false);
   const [teamFilter, setTeamFilter] = React.useState<string | number>('all');
   const [search, setSearch] = React.useState('');
 
   const teams = React.useMemo(() => {
     const term = search.trim().toLowerCase();
-    return TEAMS.filter((team) => {
+    return allTeams.filter((team) => {
       if (teamFilter === 'delegated' && !team.delegatedBy) return false;
       if (teamFilter === 'owned' && team.delegatedBy) return false;
       return !term || team.name.toLowerCase().includes(term);
     });
-  }, [search, teamFilter]);
+  }, [allTeams, search, teamFilter]);
 
   const handleTransfer = (team: Team) => navigate(`/colleague-profile/teams/${team.id}`);
 
@@ -65,7 +69,7 @@ function MyTeamsContent() {
     <>
       <PageHeading
         title="My Teams"
-        description={`Teams you manage — ${TEAMS.length} teams`}
+        description={`Teams you manage — ${allTeams.length} teams`}
         actions={
           // HIDDEN rather than disabled. A page-level action a role can never
           // perform is not a locked door, it is a door that does not exist —
@@ -79,7 +83,12 @@ function MyTeamsContent() {
               </Button>
             )}
             {can('team:create') && (
-              <Button variant="primary" size="md" startIcon={<Plus className="size-4" />}>
+              <Button
+                variant="primary"
+                size="md"
+                startIcon={<Plus className="size-4" />}
+                onClick={() => setCreating(true)}
+              >
                 Create Team
               </Button>
             )}
@@ -143,6 +152,8 @@ function MyTeamsContent() {
           )}
         </section>
       </Stack>
+
+      <CreateTeamDrawer open={creating} onOpenChange={setCreating} />
     </>
   );
 }

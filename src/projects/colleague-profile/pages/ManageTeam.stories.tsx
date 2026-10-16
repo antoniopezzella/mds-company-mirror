@@ -4,6 +4,7 @@ import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 
 import { ManageTeam } from './ManageTeam';
 import { TEAM_CLIENT_COUNT, TEAM_MEMBERS } from '../data';
+import { TeamsProvider } from '../components/TeamsContext';
 
 const meta: Meta<typeof ManageTeam> = {
   title: 'Projects/Colleague Profile/Manage Team',
@@ -11,13 +12,17 @@ const meta: Meta<typeof ManageTeam> = {
   tags: ['autodocs'],
   // The page reads `:teamId` from the route, so the decorator has to supply a
   // matching path — a bare MemoryRouter would leave useParams empty and the
-  // page would silently fall back to the first team.
+  // page would silently fall back to the first team. It also reads the team via
+  // `useTeams()`, so TeamsProvider has to wrap it — omitting it is what broke
+  // this story's play test and the dark-mode check.
   decorators: [
     (Story) => (
       <MemoryRouter initialEntries={['/colleague-profile/teams/aaaa-grant-c-test']}>
-        <Routes>
-          <Route path="/colleague-profile/teams/:teamId" element={<Story />} />
-        </Routes>
+        <TeamsProvider>
+          <Routes>
+            <Route path="/colleague-profile/teams/:teamId" element={<Story />} />
+          </Routes>
+        </TeamsProvider>
       </MemoryRouter>
     ),
   ],
@@ -110,12 +115,16 @@ export const RowActionsAreNamed: StoryObj = {
   },
 };
 
-/** The unbuilt tabs say so rather than showing invented content. */
+/**
+ * The still-unbuilt tabs say so rather than showing invented content. Team
+ * Setup has since been built (it now renders `<TeamSetup>`), so Delegate is the
+ * remaining placeholder — that's what this pins.
+ */
 export const UnbuiltTabs: StoryObj = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('switch to Team Setup', async () => {
-      await userEvent.click(canvas.getByRole('tab', { name: 'Team Setup' }));
+    await step('switch to Delegate', async () => {
+      await userEvent.click(canvas.getByRole('tab', { name: 'Delegate' }));
       await expect(await canvas.findByText(/not in this rebuild/i)).toBeInTheDocument();
     });
   },
