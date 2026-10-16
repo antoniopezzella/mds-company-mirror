@@ -41,12 +41,14 @@ export interface StatusCardProps {
  * Design System StatusCard — shadcn/ui counterpart for the MDS StatusCard.
  * Same `status`/`title`/`message`/`icon` API as the MUI twin.
  */
-export const StatusCard: React.FC<StatusCardProps> = ({ status, title, message, icon, className }) => {
+export const StatusCard = React.forwardRef<HTMLDivElement, StatusCardProps>(
+  ({ status, title, message, icon, className }, ref) => {
   const { bg, fg, border } = getRoles(status);
   const Icon = ICONS[status];
 
   return (
     <div
+      ref={ref}
       role="alert"
       aria-live="polite"
       className={className}
@@ -78,6 +80,8 @@ export const StatusCard: React.FC<StatusCardProps> = ({ status, title, message, 
       </p>
     </div>
   );
-};
+  }
+);
+StatusCard.displayName = 'StatusCard';
 
 export default StatusCard;

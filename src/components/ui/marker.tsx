@@ -27,23 +27,22 @@ export interface MarkerProps
   asChild?: boolean
 }
 
-function Marker({
-  className,
-  variant = "default",
-  asChild = false,
-  ...props
-}: MarkerProps) {
-  const Comp = asChild ? Slot : "div"
+const Marker = React.forwardRef<HTMLDivElement, MarkerProps>(
+  ({ className, variant = "default", asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div"
 
-  return (
-    <Comp
-      data-slot="marker"
-      data-variant={variant}
-      className={cn(markerVariants({ variant, className }))}
-      {...props}
-    />
-  )
-}
+    return (
+      <Comp
+        ref={ref}
+        data-slot="marker"
+        data-variant={variant}
+        className={cn(markerVariants({ variant, className }))}
+        {...props}
+      />
+    )
+  }
+)
+Marker.displayName = "Marker"
 
 function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
   return (

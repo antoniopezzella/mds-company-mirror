@@ -49,20 +49,21 @@ const errorStateVariants = cva('flex min-w-0 flex-col items-center text-center t
   defaultVariants: { variant: 'block' },
 });
 
-function ErrorState({
-  className,
-  variant,
-  ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof errorStateVariants>) {
+const ErrorState = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<'div'> & VariantProps<typeof errorStateVariants>
+>(({ className, variant, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-slot="error-state"
       role="alert"
       className={cn(errorStateVariants({ variant, className }))}
       {...props}
     />
   );
-}
+});
+ErrorState.displayName = "ErrorState";
 
 function ErrorStateHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
