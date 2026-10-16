@@ -2,6 +2,23 @@
 
 Tracks the MUI → shadcn/Radix migration on `feature/shadcn-ui-migration`, specifically the 20 components that existed in both forms simultaneously. Written as part of assessing production/external-consumption readiness — see [`MAINSTREAM_REUSE_ASSESSMENT.md`](./MAINSTREAM_REUSE_ASSESSMENT.md) for the business context.
 
+## The fence — enforced (2026-10-16)
+
+The migration is not finished (17 legacy `src/components/[A-Z]…` MUI dirs
+remain, used only by demo/app code under `pages/`, `projects/`, `App.tsx` —
+none of which ships). But the **published surface is already clean**:
+`src/index.ts` re-exports `ui/` and **none** of the legacy MUI dirs, so a
+consumer of `marsh-mds` never sees two overlapping component sets or an
+`@mui/*` peer dependency.
+
+That fence is now **enforced**, not just a convention: `npm run
+mui-fence:check` (in `governance:ci`) fails if `index.ts` or any `ui/` source
+file imports a legacy MUI dir — relative or `@/`-aliased. So legacy MUI can't
+leak back into the package even by accident. Stories/tests are exempt (they
+legitimately show a legacy component beside its replacement). The versioning
+contract in [`VERSIONING.md`](./VERSIONING.md) states the same boundary for
+consumers.
+
 ## Resolved — MUI deleted, shadcn is canonical (17)
 
 Confirmed real prop/feature parity, all consumers migrated, Figma Code Connect repointed, `tsc --noEmit` clean, zero remaining references to the old import paths.
