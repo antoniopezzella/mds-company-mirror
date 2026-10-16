@@ -152,7 +152,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 pl-2 pr-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 ps-2 pe-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     style={{ color: 'var(--role-text-primary)' }}
@@ -170,7 +170,7 @@ const SelectItem = React.forwardRef<
       props.onBlur?.(e);
     }}
   >
-    <span className="absolute right-2 flex h-4 w-4 items-center justify-center">
+    <span className="absolute end-2 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
         <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </SelectPrimitive.ItemIndicator>

@@ -169,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right: utilities */}
       <div className="flex items-center gap-1">
-        <div className="mr-2 hidden items-center gap-1.5 text-sm sm:flex">
+        <div className="me-2 hidden items-center gap-1.5 text-sm sm:flex">
           <Globe className="h-4 w-4" />
           <span>{language}</span>
         </div>
@@ -207,7 +207,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="User profile menu"
               onMouseEnter={() => setProfileHover(true)}
               onMouseLeave={() => setProfileHover(false)}
-              className="group ml-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors focus-visible:outline-hidden focus-visible:ring-2"
+              className="group ms-1 flex items-center gap-2 rounded-md px-1.5 py-1 transition-colors focus-visible:outline-hidden focus-visible:ring-2"
               style={{ color: 'inherit', backgroundColor: profileHover ? hoverBg : 'transparent' }}
             >
               <Avatar initials={user.initials} size="sm" tone={isPrimary ? 'default' : 'primary'} />

@@ -59,14 +59,14 @@ const MenubarSubTrigger = React.forwardRef<React.ElementRef<typeof MenubarPrimit
     ref={ref}
     className={cn(
       'flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden data-[state=open]:bg-[var(--menubar-hover-bg)]',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
     style={{ color: 'var(--role-text-primary)', '--menubar-hover-bg': 'var(--role-surface-subtle)' } as React.CSSProperties}
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className="ms-auto h-4 w-4" />
   </MenubarPrimitive.SubTrigger>
 ));
 MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName;
@@ -116,7 +116,7 @@ const MenubarItem = React.forwardRef<
     ref={ref}
     className={cn(
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
     style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
@@ -146,14 +146,14 @@ const MenubarCheckboxItem = React.forwardRef<
   <MenubarPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     style={{ color: 'var(--role-text-primary)' }}
     checked={checked}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
         <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </MenubarPrimitive.ItemIndicator>
@@ -170,13 +170,13 @@ const MenubarRadioItem = React.forwardRef<
   <MenubarPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     style={{ color: 'var(--role-text-primary)' }}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
         <Circle className="h-2 w-2 fill-current" style={{ color: 'var(--role-interactive-primary)' }} />
       </MenubarPrimitive.ItemIndicator>
@@ -192,7 +192,7 @@ const MenubarLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <MenubarPrimitive.Label
     ref={ref}
-    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'pl-8', className)}
+    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'ps-8', className)}
     style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
@@ -213,7 +213,7 @@ const MenubarSeparator = React.forwardRef<
 MenubarSeparator.displayName = MenubarPrimitive.Separator.displayName;
 
 const MenubarShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-  <span className={cn('ml-auto text-xs tracking-widest opacity-60', className)} {...props} />
+  <span className={cn('ms-auto text-xs tracking-widest opacity-60', className)} {...props} />
 );
 MenubarShortcut.displayName = 'MenubarShortcut';
 

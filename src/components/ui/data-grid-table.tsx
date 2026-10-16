@@ -1068,7 +1068,7 @@ function DataGridTableInner<TData extends RowData>(
                             focus, no keyboard, no ARIA. */}
                         <button
                           type="button"
-                          className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
+                          className="-ms-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
                           style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
                           // Shift-click keeps its meaning as "add to the
                           // multi-sort" rather than opening the menu — Radix
@@ -1098,21 +1098,21 @@ function DataGridTableInner<TData extends RowData>(
                         {canSort && (
                           <>
                             <DropdownMenuCheckboxItem checked={sortState === 'asc'} onCheckedChange={() => header.column.toggleSorting(false)}>
-                              <ChevronUp className="mr-2 h-4 w-4 opacity-60" /> Asc
+                              <ChevronUp className="me-2 h-4 w-4 opacity-60" /> Asc
                             </DropdownMenuCheckboxItem>
                             <DropdownMenuCheckboxItem checked={sortState === 'desc'} onCheckedChange={() => header.column.toggleSorting(true)}>
-                              <ChevronDown className="mr-2 h-4 w-4 opacity-60" /> Desc
+                              <ChevronDown className="me-2 h-4 w-4 opacity-60" /> Desc
                             </DropdownMenuCheckboxItem>
                             {sortState && (
                               <DropdownMenuItem onSelect={() => header.column.clearSorting()}>
-                                <X className="mr-2 h-4 w-4 opacity-60" /> Reset
+                                <X className="me-2 h-4 w-4 opacity-60" /> Reset
                               </DropdownMenuItem>
                             )}
                           </>
                         )}
                         {canHide && (
                           <DropdownMenuItem onSelect={() => header.column.toggleVisibility(false)}>
-                            <EyeOff className="mr-2 h-4 w-4 opacity-60" /> Hide
+                            <EyeOff className="me-2 h-4 w-4 opacity-60" /> Hide
                           </DropdownMenuItem>
                         )}
 
@@ -1124,17 +1124,17 @@ function DataGridTableInner<TData extends RowData>(
                             <DropdownMenuSeparator />
                             {header.column.getIsPinned() !== 'start' && (
                               <DropdownMenuItem onSelect={() => header.column.pin('start')}>
-                                <ArrowLeftToLine className="mr-2 h-4 w-4 opacity-60" /> Pin to start
+                                <ArrowLeftToLine className="me-2 h-4 w-4 opacity-60" /> Pin to start
                               </DropdownMenuItem>
                             )}
                             {header.column.getIsPinned() !== 'end' && (
                               <DropdownMenuItem onSelect={() => header.column.pin('end')}>
-                                <ArrowRightToLine className="mr-2 h-4 w-4 opacity-60" /> Pin to end
+                                <ArrowRightToLine className="me-2 h-4 w-4 opacity-60" /> Pin to end
                               </DropdownMenuItem>
                             )}
                             {header.column.getIsPinned() && (
                               <DropdownMenuItem onSelect={() => header.column.pin(false)}>
-                                <PinOff className="mr-2 h-4 w-4 opacity-60" /> Unpin
+                                <PinOff className="me-2 h-4 w-4 opacity-60" /> Unpin
                               </DropdownMenuItem>
                             )}
                           </>
@@ -1153,13 +1153,13 @@ function DataGridTableInner<TData extends RowData>(
                               disabled={!canMoveEarlier}
                               onSelect={() => moveColumn(header.column.id, -1)}
                             >
-                              <ChevronLeft className="mr-2 h-4 w-4 opacity-60" /> Move left
+                              <ChevronLeft className="me-2 h-4 w-4 opacity-60" /> Move left
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               disabled={!canMoveLater}
                               onSelect={() => moveColumn(header.column.id, 1)}
                             >
-                              <ChevronRight className="mr-2 h-4 w-4 opacity-60" /> Move right
+                              <ChevronRight className="me-2 h-4 w-4 opacity-60" /> Move right
                             </DropdownMenuItem>
                           </>
                         )}

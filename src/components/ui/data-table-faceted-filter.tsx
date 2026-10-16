@@ -123,7 +123,7 @@ function DataTableFacetedFilterInner<TData extends RowData, TValue>(
                 return (
                   <CommandItem key={option.value} onSelect={() => toggle(option.value)}>
                     <span
-                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
+                      className={cn('me-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
                       style={{
                         borderColor: 'var(--role-interactive-primary)',
                         backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',

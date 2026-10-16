@@ -212,7 +212,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
       <Input
         value={text}
         placeholder={INPUT_DATE_FORMAT.toUpperCase()}
-        className="pr-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
+        className="pe-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
         onChange={(e) => setText(e.target.value)}
         onBlur={(e) => commitText(e.target.value)}
         onKeyDown={(e) => {
@@ -224,7 +224,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ date, onDateCh
           <button
             type="button"
             aria-label="Open calendar"
-            className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
+            className="absolute end-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
             style={{ color: 'var(--role-text-secondary)' }}
           >
             {/* Fixed 32px affordance inside the field — does not scale. */}
@@ -347,7 +347,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
         <Input
           value={text}
           placeholder={placeholder}
-          className="pr-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
+          className="pe-9" /* spacing-allow: clears the 36px calendar icon button, geometry-derived */
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && parsed) onDateChange?.(parsed);
@@ -358,7 +358,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
             <button
               type="button"
               aria-label="Open calendar"
-              className="absolute right-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
+              className="absolute end-1 inline-flex h-8 w-8 items-center justify-center rounded-md"
               style={{ color: 'var(--role-text-secondary)' }}
             >
               <CalendarIcon className="h-4 w-4" />
@@ -388,7 +388,7 @@ export const SmartDatePicker: React.FC<SmartDatePickerProps> = ({
               {date?.getTime() !== parsed.getTime() && (
                 <button
                   type="button"
-                  className="ml-1 underline underline-offset-2"
+                  className="ms-1 underline underline-offset-2"
                   style={{ color: 'var(--role-interactive-primary)' }}
                   onClick={() => onDateChange?.(parsed)}
                 >

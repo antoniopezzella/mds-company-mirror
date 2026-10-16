@@ -56,7 +56,7 @@ const checkboxLabelVariants = cva(
    plus the 12px gap — so the helper text lines up under the label rather than
    under the box. It tracks the checkbox, not the spacing scale. */
 const checkboxHelperVariants = cva(
-  'ml-7 flex min-h-5 items-start gap-1 font-sans-productive text-sm font-normal leading-5 tracking-normal' // spacing-allow
+  'ms-7 flex min-h-5 items-start gap-1 font-sans-productive text-sm font-normal leading-5 tracking-normal' // spacing-allow
 );
 
 const checkboxHelperIconVariants = cva('mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center');

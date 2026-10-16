@@ -33,9 +33,9 @@ const chipVariants = cva(
 );
 
 const iconSizeClass: Record<ChipSize, string> = {
-  sm: 'h-4 w-4 -ml-0.5',
-  md: 'h-5 w-5 -ml-0.5',
-  lg: 'h-6 w-6 -ml-1',
+  sm: 'h-4 w-4 -ms-0.5',
+  md: 'h-5 w-5 -ms-0.5',
+  lg: 'h-6 w-6 -ms-1',
 };
 
 const deleteIconSizeClass: Record<ChipSize, string> = {

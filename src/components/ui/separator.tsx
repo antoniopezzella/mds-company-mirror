@@ -73,7 +73,7 @@ export const Divider: React.FC<DividerProps> = ({
     );
   }
 
-  const insetClass = variant === 'inset' ? (orientation === 'horizontal' ? 'ml-4' : 'mt-0') : '';
+  const insetClass = variant === 'inset' ? (orientation === 'horizontal' ? 'ms-4' : 'mt-0') : '';
   const middleClass = variant === 'middle' ? (orientation === 'horizontal' ? 'my-3' : 'mx-3') : '';
 
   // Rendered as a bordered (not background-filled) element so `dashed` can

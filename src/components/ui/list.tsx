@@ -131,7 +131,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
                   className={cn(
                     'flex w-full items-center gap-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50',
                     dense ? 'px-3 py-1.5' : 'px-4 py-2.5',
-                    selectable ? 'pl-2' : undefined
+                    selectable ? 'ps-2' : undefined
                   )}
                   style={{ color: item.disabled ? 'var(--role-text-disabled)' : 'var(--role-text-primary)' }}
                 >

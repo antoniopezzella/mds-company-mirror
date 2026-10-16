@@ -107,7 +107,7 @@ function DataTableSortListInner<TData extends RowData>(
               disabled={unsorted.length === 0}
               onClick={() => table.setSorting([...sorting, { id: unsorted[0].id, desc: false }])}
             >
-              <Plus className="mr-1.5 h-4 w-4" /> Add sort
+              <Plus className="me-1.5 h-4 w-4" /> Add sort
             </Button>
             {sorting.length > 0 && (
               <Button variant="ghost" size="sm" onClick={() => table.resetSorting()}>

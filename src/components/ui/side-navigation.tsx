@@ -360,7 +360,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   {!collapsed && item.dot && (
                     <span
                       aria-hidden="true"
-                      className="mr-1 h-1.5 w-1.5 shrink-0 rounded-full"
+                      className="me-1 h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
                     />
                   )}
@@ -421,7 +421,7 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                             {sub.dot && (
                               <span
                                 aria-hidden="true"
-                                className="ml-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                                className="ms-2 h-1.5 w-1.5 shrink-0 rounded-full"
                                 style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
                               />
                             )}

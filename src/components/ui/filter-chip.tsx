@@ -221,7 +221,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
     // Two actions means two controls, side by side inside a non-interactive
     // wrapper that carries the chip styling.
     return (
-      <span className={cn(filterChipVariants({ size, interactive: false }), 'pr-1.5', className)} style={chipStyle}>
+      <span className={cn(filterChipVariants({ size, interactive: false }), 'pe-1.5', className)} style={chipStyle}>
         <button
           ref={ref}
           {...shared}
@@ -237,7 +237,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           disabled={disabled}
           aria-label={removeLabel ?? `Remove ${typeof label === 'string' ? label : 'filter'}`}
           onClick={onRemove}
-          className="ml-1 inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0.5 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
+          className="ms-1 inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0.5 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
           style={{ ['--tw-ring-color' as string]: 'var(--role-focus-ring)' }}
         >
           <X className={ICON[size]} aria-hidden="true" />
@@ -419,7 +419,7 @@ export function FilterChipMenu({
           >
             <span className="flex-1">{option.label}</span>
             {option.count !== undefined && (
-              <span className="ml-2 tabular-nums text-xs opacity-60">{option.count}</span>
+              <span className="ms-2 tabular-nums text-xs opacity-60">{option.count}</span>
             )}
           </DropdownMenuCheckboxItem>
         ))}

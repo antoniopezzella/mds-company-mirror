@@ -28,14 +28,14 @@ const ContextMenuSubTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden data-[state=open]:bg-[var(--context-menu-hover-bg)]',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
     style={{ color: 'var(--role-text-primary)', '--context-menu-hover-bg': 'var(--role-surface-subtle)' } as React.CSSProperties}
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className="ms-auto h-4 w-4" />
   </ContextMenuPrimitive.SubTrigger>
 ));
 ContextMenuSubTrigger.displayName = ContextMenuPrimitive.SubTrigger.displayName;
@@ -90,7 +90,7 @@ const ContextMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
     style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
@@ -120,14 +120,14 @@ const ContextMenuCheckboxItem = React.forwardRef<
   <ContextMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     style={{ color: 'var(--role-text-primary)' }}
     checked={checked}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <ContextMenuPrimitive.ItemIndicator>
         <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </ContextMenuPrimitive.ItemIndicator>
@@ -144,13 +144,13 @@ const ContextMenuRadioItem = React.forwardRef<
   <ContextMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     style={{ color: 'var(--role-text-primary)' }}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <ContextMenuPrimitive.ItemIndicator>
         <Circle className="h-2 w-2 fill-current" style={{ color: 'var(--role-interactive-primary)' }} />
       </ContextMenuPrimitive.ItemIndicator>
@@ -166,7 +166,7 @@ const ContextMenuLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <ContextMenuPrimitive.Label
     ref={ref}
-    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'pl-8', className)}
+    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'ps-8', className)}
     style={{ color: 'var(--role-text-secondary)' }}
     {...props}
   />
@@ -188,7 +188,7 @@ ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName;
 
 const ContextMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
   <span
-    className={cn('ml-auto text-xs tracking-widest opacity-60', className)}
+    className={cn('ms-auto text-xs tracking-widest opacity-60', className)}
     {...props}
   />
 );

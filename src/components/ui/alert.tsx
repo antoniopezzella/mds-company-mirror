@@ -121,7 +121,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-mr-1 -mt-1 shrink-0 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
+            className="-me-1 -mt-1 shrink-0 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
             style={{ color: 'inherit' }}
           >
             <Icon name="close" size={16} />
