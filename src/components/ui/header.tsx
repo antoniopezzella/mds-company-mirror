@@ -123,7 +123,13 @@ export const Header: React.FC<HeaderProps> = ({
 
   const isPrimary = variant === 'primary';
   const bg = roleVar(isPrimary ? 'surface.navigation' : 'surface.secondary');
-  const fg = roleVar(isPrimary ? 'text.onHero' : 'text.primary');
+  // surface.secondary is a brand sky-blue that stays light in BOTH modes
+  // (#ceecff light, #95caff dark), so the header text must be dark on it in both.
+  // text.primary flips to white in dark mode (white-on-#95caff = 1.72:1), which
+  // is why the secondary header failed dark axe. text.onLight is the
+  // mode-invariant Midnight (#000f47) made for exactly these stay-light surfaces
+  // — identical to text.primary in light mode, so light rendering is unchanged.
+  const fg = roleVar(isPrimary ? 'text.onHero' : 'text.onLight');
   const hoverBg = 'var(--role-surface-navigation-hover)';
   const [profileHover, setProfileHover] = React.useState(false);
 

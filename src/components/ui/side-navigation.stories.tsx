@@ -505,9 +505,9 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
     },
   },
   render: () => (
-    <div className="h-screen flex gap-4 p-4 bg-gray-100">
+    <div className="h-screen flex gap-4 p-4 bg-muted">
       <div className="w-64 flex flex-col gap-2">
-        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+        <div className="text-sm font-semibold text-center py-2 bg-card text-card-foreground rounded-md shadow">
           Primary (Midnight Blue)
         </div>
         <div className="flex-1 rounded-md overflow-hidden shadow-lg">
@@ -526,7 +526,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
         </div>
       </div>
       <div className="w-64 flex flex-col gap-2">
-        <div className="text-sm font-semibold text-center py-2 bg-white rounded-md shadow">
+        <div className="text-sm font-semibold text-center py-2 bg-card text-card-foreground rounded-md shadow">
           Secondary (Sky Blue)
         </div>
         <div className="flex-1 rounded-md overflow-hidden shadow-lg">
@@ -544,7 +544,7 @@ Both schemes feature **visual connecting lines** for expanded groups, following 
           />
         </div>
       </div>
-      <div className="flex-1 p-8 bg-white rounded-md shadow">
+      <div className="flex-1 p-8 bg-card text-card-foreground rounded-md shadow">
         <h2 className="text-2xl font-bold mb-4">Color Scheme Guide</h2>
         <div className="space-y-4">
           <div>

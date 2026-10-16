@@ -84,7 +84,7 @@ export const SingleItem: Story = {
 export const InHeaderContext: StoryObj = {
   render: () => (
     <div className="flex items-center justify-between border-b px-4 py-3">
-      <span className="font-bold" style={{ color: '#000f47' }}>Marsh</span>
+      <span className="font-bold text-foreground">Marsh</span>
       <MegaMenu items={solutionsMenu} />
       <span className="text-sm text-muted-foreground">Sign in</span>
     </div>

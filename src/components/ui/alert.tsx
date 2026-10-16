@@ -73,6 +73,15 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ severity, title, timestamp, outlined = false, onClose, hideIcon = false, children, className, style, ...rest }, ref) => {
     const { fg, bg, border, text } = getSeverityRoles(severity);
+    // The per-severity `text` role (e.g. warning's `text.onLight`) is tuned for
+    // the pale status FILL, which stays light in dark mode. The outlined variant
+    // drops that fill, so the body copy sits on the PAGE surface, which flips per
+    // mode — `text.onLight` (#000f47) would then be midnight-on-#101010 (1.05:1)
+    // in dark. `text.primary` flips with the page (Midnight in light, white in
+    // dark) and is identical to the current value in light mode, so it fixes dark
+    // without touching the light rendering. The status accent still reads on the
+    // border and icon (`fg`).
+    const bodyText: RoleName = outlined ? 'text.primary' : text;
     const iconName = SEVERITY_ICON[severity];
 
     return (
@@ -84,9 +93,9 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         // (DEV-6; 6px meanwhile).
         className={cn('flex items-start gap-3 rounded-md border p-4', className)}
         style={{
-          // Body copy uses `text` (4.5:1); the icon keeps `fg` as the accent,
-          // which only needs 3:1. See getSeverityRoles.
-          color: roleVar(text),
+          // Body copy uses `bodyText` (4.5:1); the icon keeps `fg` as the accent,
+          // which only needs 3:1. See getSeverityRoles and the bodyText note above.
+          color: roleVar(bodyText),
           backgroundColor: outlined ? 'transparent' : roleVar(bg),
           borderColor: roleVar(border),
           ...style,

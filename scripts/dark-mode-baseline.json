@@ -11,11 +11,6 @@
     "src/components/sections/HeroBannerGrid/HeroBannerGrid.stories.tsx",
     "src/components/sections/InsuranceDashboard/InsuranceDashboard.stories.tsx",
     "src/components/sections/WireframeSlide/WireframeSlide.stories.tsx",
-    "src/components/ui/alert.stories.tsx",
-    "src/components/ui/button.stories.tsx",
-    "src/components/ui/header.stories.tsx",
-    "src/components/ui/mega-menu.stories.tsx",
-    "src/components/ui/side-navigation.stories.tsx",
     "src/projects/marsh-one/components/ExpertiseCards.stories.tsx",
     "src/projects/marsh-one/components/SolutionsGrid.stories.tsx",
     "src/projects/marsh-one/pages/MarshOneHomepage.stories.tsx"
