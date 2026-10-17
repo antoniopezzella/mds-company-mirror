@@ -24,7 +24,7 @@ Six Figma variable collections, 508 variables:
 
 | Collection | Vars | Modes |
 |---|---|---|
-| **COLOR** (semantic) | 190 | Light · Dark · **Inverse (On dark surface)** |
+| **COLOR** (semantic) | 190 | Light · Dark |
 | **COLOR PRIMITIVES** | 201 | Number |
 | **SPACING PRIMITIVES** | 22 | Pixel |
 | **DEVICE LAYOUT** | 81 | Wide XL/XXL · Desktop LG · Tablet MD · Mobile SM/XS |
@@ -90,7 +90,7 @@ changing a value is invisible until someone hand-re-pulls.
 
 The new taxonomy makes real automation possible, because every variable is:
 - **aliased** (semantic → base → primitive — the dependency chain survives export),
-- **moded** (Light/Dark/Inverse values per token),
+- **moded** (Light/Dark values per token),
 - **scoped** (each carries `scopes` like `TEXT_FILL`, `STROKE_COLOR`, `FRAME_FILL`),
 - **described** (human docstrings, e.g. *"≥4.5:1 on white, the critical tint and the dark page"*).
 
@@ -100,23 +100,23 @@ so the pipeline inverts cleanly: **Figma Variables → DTCG export → `build-to
 input → `--role-*` CSS vars**, retiring the manual snapshots and turning the
 drift gates into a *generation* step. What's required is covered in the roadmap.
 
-## 5. Light / Dark / Inverse — resolved values
+## 5. Light / Dark — resolved values
 
-Pulled live, all three modes, with the BASE alias each resolves through:
+Pulled live, both themes, with the BASE alias each resolves through:
 
-| Semantic token | Light | Dark | Inverse | aliases → |
-|---|---|---|---|---|
-| `foreground/primary/default` | `#000F47` | `#000F47` | `#000F47` | base/brand/primary *(mode-invariant)* |
-| `foreground/neutral/subtle` | `#56544F` | `#56544F` | `#56544F` | base/neutral/7 |
-| `foreground/critical/default` | `#AF2625` | `#FF9D9D` | `#FF9D9D` | red/900 → red/400 *(flips light)* |
-| `foreground/success/default` | `#2F7500` | `#C3E3AE` | `#C3E3AE` | green/1000 → green/400 |
-| `foreground/warning/default` | `#8F5400` | `#FFD98A` | `#FFD98A` | orange/800 → gold/500 |
-| `background/default` | `#FFFFFF` | `#1F1E1B` | `#CEECFF` | neutral/0 → neutral/1200 → on-primary |
-| `background/page/application` | `#F7F3EE` | `#131210` | `#000F47` | neutral/250 → neutral/1400 → blue/1000 |
-| `background/warning/default` (fill) | `#C25600` | `#C25600` | `#C25600` | base/status/warning *(mode-invariant)* |
-| `background/neutral/subtle` | `#FAF7F4` | `#FAF7F4` | `#FAF7F4` | base/neutral/1 |
-| `border/default` | `#878580` | `#878580` | `#878580` | base/neutral/5 |
-| `border/subtle` | `#DEDBD6` | `#DEDBD6` | `#DEDBD6` | base/neutral/3 |
+| Semantic token | Light | Dark | aliases → |
+|---|---|---|---|
+| `foreground/primary/default` | `#000F47` | `#000F47` | base/brand/primary *(mode-invariant)* |
+| `foreground/neutral/subtle` | `#56544F` | `#56544F` | base/neutral/7 |
+| `foreground/critical/default` | `#AF2625` | `#FF9D9D` | red/900 → red/400 *(flips light)* |
+| `foreground/success/default` | `#2F7500` | `#C3E3AE` | green/1000 → green/400 |
+| `foreground/warning/default` | `#8F5400` | `#FFD98A` | orange/800 → gold/500 |
+| `background/default` | `#FFFFFF` | `#1F1E1B` | neutral/0 → neutral/1200 |
+| `background/page/application` | `#F7F3EE` | `#131210` | neutral/250 → neutral/1400 |
+| `background/warning/default` (fill) | `#C25600` | `#C25600` | base/status/warning *(mode-invariant)* |
+| `background/neutral/subtle` | `#FAF7F4` | `#FAF7F4` | base/neutral/1 |
+| `border/default` | `#878580` | `#878580` | base/neutral/5 |
+| `border/subtle` | `#DEDBD6` | `#DEDBD6` | base/neutral/3 |
 
 Two resolutions of coded open questions fall straight out of this table:
 
@@ -131,14 +131,11 @@ Two resolutions of coded open questions fall straight out of this table:
   code's single `#c25600` that "is a hair under AA as body text" and falls back
   to `text.onLight`.
 
-The third COLOR mode, **"Inverse (On dark surface)"**, is a **Figma authoring
-convenience** — it lets a designer drop a token onto a dark/primary surface and
-preview the right value (`background/default` → `#CEECFF` sky). It is **not a
-third theme to adopt**: the code already expresses on-surface content as
-discrete `text.onX` / `foreground/on-*` roles, which is the correct model for a
-runtime. So treat the taxonomy as **two themes (Light/Dark)** for integration
-purposes; the Inverse column below is shown only because it confirms the
-on-surface pairings, not because the build needs a third mode.
+> The COLOR collection also carries a third Figma mode, *Inverse (On dark
+> surface)* — a designer-only preview for on-dark content. It is **excluded from
+> this assessment**: the code already models on-surface content with `text.onX` /
+> `foreground/on-*` roles (the right runtime model), so the build needs only
+> Light + Dark.
 
 ## 6. Scalability
 
