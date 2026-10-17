@@ -9,7 +9,7 @@ treating a value as current.
 
 > **Verdict (short):** **Yes — adopt it.** The new taxonomy is a complete,
 > DTCG-ready, correctly-tiered system (primitive → **BASE** → semantic →
-> component, three modes, typed scopes) that maps almost 1:1 onto the coded
+> component, Light/Dark modes, typed scopes) that maps almost 1:1 onto the coded
 > *role* layer and resolves **nearly every open recommendation** from the
 > 2026-09 primitive/semantic assessments. The remaining work is not the
 > taxonomy — it's the **integration plumbing** (a naming bridge + a Figma-DTCG
@@ -131,10 +131,14 @@ Two resolutions of coded open questions fall straight out of this table:
   code's single `#c25600` that "is a hair under AA as body text" and falls back
   to `text.onLight`.
 
-**Inverse** is a third mode for content *on a dark/primary surface* — the same
-token resolves differently there (`background/default` → `#CEECFF` sky). The code
-models this with separate `text.onX` roles; the taxonomy models it as a *mode*,
-which is more expressive.
+The third COLOR mode, **"Inverse (On dark surface)"**, is a **Figma authoring
+convenience** — it lets a designer drop a token onto a dark/primary surface and
+preview the right value (`background/default` → `#CEECFF` sky). It is **not a
+third theme to adopt**: the code already expresses on-surface content as
+discrete `text.onX` / `foreground/on-*` roles, which is the correct model for a
+runtime. So treat the taxonomy as **two themes (Light/Dark)** for integration
+purposes; the Inverse column below is shown only because it confirms the
+on-surface pairings, not because the build needs a third mode.
 
 ## 6. Scalability
 
@@ -142,7 +146,8 @@ The new taxonomy scales in ways the code currently can't:
 - **BASE tier** — retune the brand (e.g. Midnight → the future-state navy
   `blue1100`) in one place; every semantic follows. The code would need to touch
   many semantics.
-- **Three modes** + an Inverse mode — vs the code's binary `:root`/`.dark`.
+- **Light/Dark** cleanly separated at the token level (the Inverse "mode" is a
+  Figma preview affordance, not a runtime theme — see §5).
 - **Component tokens** (`--mds-space-table-cell-gap`, `--mds-size-table-row-height`)
   — a per-component theming layer the code lacks, already in `--mds-*` CSS-var
   naming (directly consumable).
@@ -167,8 +172,9 @@ The new taxonomy scales in ways the code currently can't:
    looks like a missing dark override to confirm with the designer.)*
 3. **Adopt the warning text/fill split and the darker dark-surfaces** (§5) — both
    strict improvements over the current code.
-4. **Inverse mode vs `text.onX` roles** — decide whether the build emits a third
-   mode or keeps resolving on-surface pairs as discrete roles.
+4. **Ignore the Inverse mode for the build** — it's a Figma preview affordance;
+   the code's existing `text.onX` / `foreground/on-*` roles are the right runtime
+   model for on-surface content. Integrate only Light + Dark.
 
 ## 8. Adoption roadmap
 
@@ -193,8 +199,9 @@ Ordered; each step names a concrete file/gate so it's independently executable.
    the warning text/fill split and dark `#131210`/`#1F1E1B`.
 6. **Add the component-token tier** — ingest `--mds-space/size-*` as a fourth
    tier so component sizing/spacing is tokenised and themeable.
-7. **Fold in the extras** incrementally — the Inverse mode, `color/data/*`
-   charts, `color/static/*`, the responsive DEVICE LAYOUT tokens.
+7. **Fold in the extras** incrementally — `color/data/*` charts,
+   `color/static/*`, the responsive DEVICE LAYOUT tokens. (The Inverse "mode" is
+   a Figma-only preview affordance — skip it; `text.onX` roles already cover it.)
 
 **Net:** the taxonomy is ready and genuinely better; adoption is a bounded
 plumbing + one-decision effort, not a redesign. It is the first version of this
