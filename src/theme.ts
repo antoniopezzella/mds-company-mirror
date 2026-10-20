@@ -46,14 +46,14 @@ const lightPalette = {
   },
   background: {
     default: tokens.white,
-    paper: tokens.neutral50,        // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
+    paper: tokens.neutral150,        // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
   },
   text: {
     primary: tokens.blue1000,       // #000f47 — Brand-tinted text
-    secondary: tokens.neutral700,   // #595959
-    disabled: tokens.neutral600,    // #767676
+    secondary: tokens.neutral900,   // #595959
+    disabled: tokens.neutral750,    // #767676
   },
-  divider: tokens.neutral250,       // #dadada
+  divider: tokens.neutral350,       // #dadada
 };
 
 
@@ -62,13 +62,13 @@ const darkPalette = {
     main: tokens.blue400,           // #95caff — Lightened for dark bg
     light: tokens.blue300,          // #bbe1ff
     dark: tokens.blue750,           // #0b4bff (Active)
-    contrastText: tokens.neutral950, // #101010
+    contrastText: tokens.neutral1400, // #101010
   },
   secondary: {
     main: tokens.blue400,           // #95caff — Lightened Sky Blue
     light: tokens.blue300,          // #bbe1ff
     dark: tokens.blue600,           // #478aff
-    contrastText: tokens.neutral950,
+    contrastText: tokens.neutral1400,
   },
   error: {
     main: tokens.red500,            // #ff6b6b — Lightened red
@@ -76,22 +76,22 @@ const darkPalette = {
   },
   warning: {
     main: tokens.gold500,           // #ff994a — Lightened gold
-    contrastText: tokens.neutral950,
+    contrastText: tokens.neutral1400,
   },
   success: {
     main: tokens.green500,          // #8dcc92 — Lightened green
-    contrastText: tokens.neutral950,
+    contrastText: tokens.neutral1400,
   },
   background: {
-    default: tokens.neutral950,     // #101010 — Near black
-    paper: tokens.neutral900,       // #252525 — Elevated dark surface
+    default: tokens.neutral1400,     // #101010 — Near black
+    paper: tokens.neutral1100,       // #252525 — Elevated dark surface
   },
   text: {
     primary: tokens.white,          // #ffffff
-    secondary: tokens.neutral250,   // #dadada
-    disabled: tokens.neutral500,    // #878787
+    secondary: tokens.neutral350,   // #dadada
+    disabled: tokens.neutral700,    // #878787
   },
-  divider: tokens.neutral700,       // #595959
+  divider: tokens.neutral900,       // #595959
 };
 
 // --- Typography via CSS variables ------------------------------------------

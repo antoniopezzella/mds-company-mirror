@@ -13,18 +13,62 @@ import { tokens } from './tokens.js';
 // Helper to ensure reference exists; returns the primitive value.
 const ref = (name: keyof typeof tokens) => tokens[name];
 
+// ─── BASE tier (Figma color/base/*) — the mode-aware anchor layer ────────────
+// The ~28 "principal" tokens: the ONLY ones that point directly at primitives.
+// Semantics alias THESE (not primitives) so a colour decision changes in one
+// place. Defined as referenceable consts (light = `base`, dark = `baseDark`) so
+// the semantic maps below can point at them. Inverse mode arrives in Phase 2.
+const base = {
+  // neutral emphasis ladder (1 = quiet bg → 8 = primary text / bold fill)
+  neutral1: ref('neutral150'), neutral2: ref('neutral300'), neutral3: ref('neutral350'),
+  neutral4: ref('neutral450'), neutral5: ref('neutral700'), neutral6: ref('neutral800'),
+  neutral7: ref('neutral900'), neutral8: ref('neutral1000'),
+  brandPrimary: ref('blue1000'), brandAccent: ref('gold750'), brandSecondary: ref('blue250'),
+  pairOnPrimary: ref('blue250'), pairOnSecondary: ref('blue1000'), pairOnAccent: ref('blue1000'),
+  pairOnCritical: ref('neutral0'), pairOnSuccess: ref('neutral0'), pairOnWarning: ref('neutral0'),
+  pairOnNeutral: ref('neutral0'), pairOnInteractive: ref('blue250'), pairOnInfo: ref('neutral0'),
+  statusCritical: ref('red850'), statusSuccess: ref('green1000'), statusWarning: ref('statusWarning'), statusInfo: ref('blue850'),
+  interactiveDefault: ref('blue750'), systemFocus: ref('focusBlue'),
+  accentPurple: ref('purple750'), accentGreen: ref('green750'),
+} as const;
+const baseDark = {
+  neutral1: tokens.neutral1300, neutral2: tokens.neutral1000, neutral3: tokens.neutral950,
+  neutral4: tokens.neutral900, neutral5: tokens.neutral750, neutral6: tokens.neutral550,
+  neutral7: tokens.neutral450, neutral8: tokens.neutral250,
+  brandPrimary: tokens.blue250, brandAccent: tokens.gold750, brandSecondary: tokens.blue600,
+  pairOnPrimary: tokens.blue1000, pairOnSecondary: tokens.blue1000, pairOnAccent: tokens.blue1000,
+  pairOnCritical: tokens.blue1000, pairOnSuccess: tokens.blue1000, pairOnWarning: tokens.blue1000,
+  pairOnNeutral: tokens.neutral1400, pairOnInteractive: tokens.blue1000, pairOnInfo: tokens.blue1000,
+  statusCritical: tokens.red700, statusSuccess: tokens.greenLegacy400, statusWarning: tokens.orange400, statusInfo: tokens.blue400,
+  interactiveDefault: tokens.blue400, systemFocus: tokens.blue600,
+  accentPurple: tokens.purple500, accentGreen: tokens.green500,
+} as const;
+
 export const semanticColors = {
   // ── Brand Identity ────────────────────────────────────────────────────────
   brandPrimary:   ref('blue1000'),        // #000f47 — Midnight Blue (legacy)
   brandPrimaryDark: ref('blue1100'),      // #002c77 — MODE Primary (Figma future-state)
   brandSecondary: ref('blue250'),         // #ceecff — Sky Blue
-  brandAccent:    ref('gold750'),         // #ffbf00 — Supporting accent (legacy CTA)
+  brandAccent:    base.brandAccent,               // #ffbf00 — Supporting accent (legacy CTA)
+
+  // ── BASE tier — exported under token names; values come from the `base` const
+  //    defined above, so the semantic maps below can alias the SAME anchors.
+  baseNeutral1: base.neutral1, baseNeutral2: base.neutral2, baseNeutral3: base.neutral3,
+  baseNeutral4: base.neutral4, baseNeutral5: base.neutral5, baseNeutral6: base.neutral6,
+  baseNeutral7: base.neutral7, baseNeutral8: base.neutral8,
+  baseBrandPrimary: base.brandPrimary, baseBrandAccent: base.brandAccent, baseBrandSecondary: base.brandSecondary,
+  basePairOnPrimary: base.pairOnPrimary, basePairOnSecondary: base.pairOnSecondary, basePairOnAccent: base.pairOnAccent,
+  basePairOnCritical: base.pairOnCritical, basePairOnSuccess: base.pairOnSuccess, basePairOnWarning: base.pairOnWarning,
+  basePairOnNeutral: base.pairOnNeutral, basePairOnInteractive: base.pairOnInteractive, basePairOnInfo: base.pairOnInfo,
+  baseStatusCritical: base.statusCritical, baseStatusSuccess: base.statusSuccess, baseStatusWarning: base.statusWarning, baseStatusInfo: base.statusInfo,
+  baseInteractiveDefault: base.interactiveDefault, baseSystemFocus: base.systemFocus,
+  baseAccentPurple: base.accentPurple, baseAccentGreen: base.accentGreen,
 
   // ── Typography ────────────────────────────────────────────────────────────
   textPrimary:   ref('blue1000'),         // #000f47 — Primary body text (legacy)
   textPrimaryMode: ref('blue1100'),       // #002c77 — MODE Primary (Figma future-state)
-  textSecondary: ref('neutral700'),       // #595959 — Secondary / muted text
-  textTertiary:  ref('neutral600'),       // #767676 — Tertiary / placeholder
+  textSecondary: base.neutral7,               // #595959 — Secondary / muted text
+  textTertiary:  ref('neutral750'),       // #767676 — Tertiary / placeholder
   textOnAccent:  ref('white'),            // Light text on primary accent surfaces (e.g. Midnight buttons)
   // Distinct from textOnAccent: interactive.primary/secondary/danger all
   // LIGHTEN in dark mode (e.g. interactivePrimary dark = #95caff) instead of
@@ -49,16 +93,16 @@ export const semanticColors = {
    * Button's primary variant hardcoded `#ceecff`/`dark:#000f47` for months
    * precisely because this had no name.
    */
-  textOnPrimary: ref('blue250'),          // #ceecff — Sky on Midnight (flips; see dark overrides)
-  textDisabled:  ref('neutral600'),       // #767676 — Disabled text
+  textOnPrimary: base.pairOnPrimary,            // #ceecff — Sky on Midnight (flips; see dark overrides)
+  textDisabled:  ref('neutral750'),       // #767676 — Disabled text
   textOnLight:   ref('blue1000'),         // Dark text on light backgrounds
   textOnDark:    ref('white'),            // White text on dark backgrounds
 
   // ── Surfaces ──────────────────────────────────────────────────────────────
   surfaceDefault:         ref('white'),           // Default page background
-  surfaceSubtle:          ref('neutral50'),        // #f8f8f8 — Slight elevation
-  surfaceMuted:           ref('neutral200'),       // #e3e3e3 — Muted backgrounds
-  surfaceAccent:          ref('neutral50'),        // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
+  surfaceSubtle:          base.neutral1,             // #f8f8f8 — Slight elevation
+  surfaceMuted:           base.neutral2,            // #e3e3e3 — Muted backgrounds
+  surfaceAccent:          ref('neutral150'),        // #f8f8f8 — Brand neutral (de-warmed from gray250 2026-10-09)
   surfaceSecondaryHover:  ref('blue100'),          // #ebf7ff — Lighter sky tint; hover overlay on sky-surface cards
   /**
    * Hovered TABLE ROW. Sky Blue in light, unchanged neutral in dark.
@@ -109,9 +153,9 @@ export const semanticColors = {
   // Approximations of white overlays blended on `#000f47` to produce stable hex values
   surfaceNavigationHover:  ref('blue975'),           // #1a2759 — ~white@10% over #000f47
   surfaceNavigationActive: ref('blue990'),           // #333f6b — ~white@20% over #000f47
-  surfaceAccentStrong:    ref('neutral300'),       // #c4c4c4 — Brand neutral (de-warmed from gray400 2026-10-09)
+  surfaceAccentStrong:    ref('neutral450'),       // #c4c4c4 — Brand neutral (de-warmed from gray400 2026-10-09)
   surfaceHero:            ref('blue1000'),          // #000f47 — Midnight Navy — dark hero sections
-  surfaceDisabled:        ref('neutral200'),       // #e3e3e3 — Disabled state
+  surfaceDisabled:        ref('neutral300'),       // #e3e3e3 — Disabled state
   /**
    * A surface that sits ABOVE the page rather than flush with it.
    *
@@ -135,12 +179,12 @@ export const semanticColors = {
    * Not a substitute for borderDefault: anything that needs a 3:1 boundary
    * (an input outline, a focusable control) must keep using that.
    */
-  borderSubtle:  ref('neutral200'),       // #e3e3e3 — hairline rules inside a dense surface
-  borderDefault: ref('neutral500'),       // #878787 — Standard borders
-  borderStrong:  ref('neutral700'),       // #595959 — Strong emphasis borders
-  borderFocus:   ref('focusBlue'),        // #3d7aff — Figma-verified: passes 3:1 vs every surface this system uses (light)
+  borderSubtle:  ref('neutral350'),       // #dedbd6 — warm; matches Figma border/subtle (base/neutral/3). Re-pointed from neutral200 2026-10-19 to align with the authoritative Figma step.
+  borderDefault: ref('neutral700'),       // #878580 — warm; in sync with Figma border/default (base/neutral/5)
+  borderStrong:  ref('neutral900'),       // #56544f — warm; strong-emphasis border (base/neutral/7 range)
+  borderFocus:   base.systemFocus,          // #3d7aff — Figma-verified: passes 3:1 vs every surface this system uses (light)
   borderFocusMode: ref('focusCyan'),      // #009de0 — MODE/Border/Focus (Figma future-state)
-  focusRing:     ref('focusBlue'),        // #3d7aff — Alias for borderFocus (roles.ts)
+  focusRing:     base.systemFocus,          // #3d7aff — Alias for borderFocus (roles.ts)
 
   // ── Interactive — Primary (Midnight / CTA) ────────────────────────────────
   // The ramp LIGHTENS with interaction intensity: Midnight → 900 → 750.
@@ -159,7 +203,7 @@ export const semanticColors = {
   interactivePrimary:         ref('blue1000'),      // #000f47 — Midnight Blue
   interactivePrimaryHover:    ref('blue900'),       // #082d9e — Blue/900
   interactivePrimaryActive:   ref('blue750'),       // #0b4bff — Blue/750 (Active)
-  interactivePrimaryDisabled: ref('neutral250'),    // #dadada
+  interactivePrimaryDisabled: ref('neutral350'),    // #dadada
 
   // ── Interactive — Disabled (shared by every Button variant) ───────────────
   // Deliberately separate from textDisabled/surfaceDisabled, which stay as
@@ -168,8 +212,8 @@ export const semanticColors = {
   // 3.69:1 across the whole system for the sake of one component.
   //
   // Dark matches what Button already shipped as literals.
-  interactiveDisabledBg: ref('neutral200'),         // #e3e3e3 — Brand neutral (de-warmed from gray300 2026-10-09)
-  interactiveDisabledFg: ref('neutral500'),         // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
+  interactiveDisabledBg: ref('neutral300'),         // #e3e3e3 — Brand neutral (de-warmed from gray300 2026-10-09)
+  interactiveDisabledFg: ref('neutral700'),         // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
 
   // ── Interactive — Accent (Gold / primaryAlt Button hover-active) ──────────
   // Base color is brandAccent (gold750) — these are only the hover/active
@@ -187,9 +231,9 @@ export const semanticColors = {
   interactiveSecondaryVisited: ref('purple750'),    // #8f37c6 — Visited links
 
   // ── Interactive — Tertiary (Neutral) ──────────────────────────────────────
-  interactiveTertiary:       ref('neutral500'),     // #878787
-  interactiveTertiaryHover:  ref('neutral600'),     // #767676
-  interactiveTertiaryActive: ref('neutral700'),     // #595959
+  interactiveTertiary:       ref('neutral700'),     // #878787
+  interactiveTertiaryHover:  ref('neutral750'),     // #767676
+  interactiveTertiaryActive: ref('neutral900'),     // #595959
 
   // ── Status — Success (Green) ──────────────────────────────────────────────
   statusSuccess:       ref('statusSuccess'),   // #14853d — Utilities/Success
@@ -272,12 +316,25 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // Brand (inverted)
   brandPrimary:   tokens.white,              // #ffffff
   brandSecondary: tokens.blue400,            // #95caff — Lightened Sky Blue (dark)
-  brandAccent:    tokens.gold750,            // #ffbf00 (unchanged — CTA stays)
+  brandAccent:    baseDark.brandAccent,               // #ffbf00 (unchanged — CTA stays)
+
+  // ── BASE tier — dark values from the `baseDark` const. The ladder INVERTS here
+  //    (step 8 → lightest, step 1 → darkest): the whole neutral flip lives in base.
+  baseNeutral1: baseDark.neutral1, baseNeutral2: baseDark.neutral2, baseNeutral3: baseDark.neutral3,
+  baseNeutral4: baseDark.neutral4, baseNeutral5: baseDark.neutral5, baseNeutral6: baseDark.neutral6,
+  baseNeutral7: baseDark.neutral7, baseNeutral8: baseDark.neutral8,
+  baseBrandPrimary: baseDark.brandPrimary, baseBrandAccent: baseDark.brandAccent, baseBrandSecondary: baseDark.brandSecondary,
+  basePairOnPrimary: baseDark.pairOnPrimary, basePairOnSecondary: baseDark.pairOnSecondary, basePairOnAccent: baseDark.pairOnAccent,
+  basePairOnCritical: baseDark.pairOnCritical, basePairOnSuccess: baseDark.pairOnSuccess, basePairOnWarning: baseDark.pairOnWarning,
+  basePairOnNeutral: baseDark.pairOnNeutral, basePairOnInteractive: baseDark.pairOnInteractive, basePairOnInfo: baseDark.pairOnInfo,
+  baseStatusCritical: baseDark.statusCritical, baseStatusSuccess: baseDark.statusSuccess, baseStatusWarning: baseDark.statusWarning, baseStatusInfo: baseDark.statusInfo,
+  baseInteractiveDefault: baseDark.interactiveDefault, baseSystemFocus: baseDark.systemFocus,
+  baseAccentPurple: baseDark.accentPurple, baseAccentGreen: baseDark.accentGreen,
 
   // Typography (light text on dark backgrounds)
   textPrimary:   tokens.white,               // #ffffff
-  textSecondary: tokens.neutral250,          // #dadada
-  textTertiary:  tokens.neutral300,          // #c4c4c4
+  textSecondary: baseDark.neutral7,                 // #dadada
+  textTertiary:  tokens.neutral450,          // #c4c4c4
   textOnAccent:  tokens.white,               // #ffffff on Midnight / accent buttons
   // Dark mode: interactivePrimary/Secondary/Danger all lighten instead of
   // staying dark (e.g. #95caff), so this flips to dark text instead of
@@ -286,7 +343,7 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   textOnInteractive: tokens.blue1000,        // #000f47
   // The flip that is the whole point of this token: interactivePrimary goes
   // from Midnight to #95caff in dark, so its label has to go the other way.
-  textOnPrimary:     tokens.blue1000,        // #000f47 — Midnight on Sky
+  textOnPrimary:     baseDark.pairOnPrimary,          // #000f47 — Midnight on Sky
   // BUG FIX (2026-09-30). textOnDanger was `white` in BOTH modes while every
   // danger surface flips light in dark — status.danger.fg goes #8b1a1a →
   // #ffe8e8. Its one consumer, stepper.tsx:157, rendered a white error glyph
@@ -299,13 +356,13 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   textOnSuccess:     tokens.blue1000,        // #000f47 — solid success border lightens in dark (11.64:1)
   textOnWarning:     tokens.blue1000,        // #000f47 — solid warning border lightens to gold500 #ffd98a in dark, so Midnight (13.41:1), same flip as success/danger
   textOnLight:   tokens.blue1000,            // unchanged (rare context)
-  textOnDark:    tokens.neutral50,           // #f8f8f8
-  textDisabled:  tokens.neutral500,          // #878787
+  textOnDark:    tokens.neutral150,           // #f8f8f8
+  textDisabled:  tokens.neutral700,          // #878787
 
   // Surfaces (dark backgrounds)
-  surfaceDefault:          tokens.neutral950,                // #101010
-  surfaceSubtle:           tokens.neutral900,                // #252525
-  surfaceMuted:            tokens.neutral800,                // #3b3b3b
+  surfaceDefault:          tokens.neutral1400,                // #101010
+  surfaceSubtle:           baseDark.neutral1,                      // #252525
+  surfaceMuted:            baseDark.neutral2,                      // #3b3b3b
   // #303c37. Was gray800 (#6a6e6b), which inverted the light-mode relationship:
   // light's accent sits -6.3 luminance BELOW the page, but #6a6e6b sat +14.8
   // ABOVE it — a mid-grey slab rather than a subtle tint, which is why accent
@@ -323,7 +380,7 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // and surfaceSubtle (#f8f8f8) are already one unit apart, and neutral900 is
   // exactly surfaceSubtle's dark value. This mirrors the light-mode
   // relationship rather than inventing a new one.
-  surfaceAccent:           tokens.neutral900,                // #252525 — true neutral (was gray1000 #303c37, green)
+  surfaceAccent:           tokens.neutral1100,                // #252525 — true neutral (was gray1000 #303c37, green)
   // App chrome goes NEUTRAL in dark mode rather than staying midnight blue.
   //
   // Keeping the brand navy looked deliberate but failed in practice: #000f47
@@ -337,21 +394,21 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // Only app chrome consumes these (header, side navigation, dashboard header,
   // nav bar). The marketing website-header does NOT use surface.navigation, so
   // its branding is unaffected.
-  surfaceNavigation:       tokens.neutral950,                // #101010 — deep chrome (light: #000f47)
-  surfaceNavigationHover:  tokens.neutral900,                // #252525 — ~white@8% lift
-  surfaceNavigationActive: tokens.neutral800,                // #3b3b3b — ~white@16% lift
+  surfaceNavigation:       tokens.neutral1400,                // #101010 — deep chrome (light: #000f47)
+  surfaceNavigationHover:  tokens.neutral1100,                // #252525 — ~white@8% lift
+  surfaceNavigationActive: tokens.neutral1000,                // #3b3b3b — ~white@16% lift
   // The light-mode Sky Blue would be near-white here and fail against dark
   // mode's white textPrimary (1.73:1), so selection uses the navy step the
   // navigation surfaces already use.
   // Row hover stays exactly where it was in dark: the brief was light-mode
   // only. Same value as surfaceSubtle by intent, NOT by accident — if that
   // ever diverges, this should follow it rather than drift.
-  surfaceRowHover:         tokens.neutral900,                // #252525 — unchanged from surfaceSubtle
+  surfaceRowHover:         tokens.neutral1100,                // #252525 — unchanged from surfaceSubtle
   surfaceSelected:         tokens.blue975,                   // #1a2759 — white on it: 14.20:1
   // Dark needs no lightening: status text inverts to the near-white end of
   // each ramp, so it clears easily on the navy. Same value as surfaceSelected.
   surfaceSelectedSubtle:   tokens.blue975,                   // #1a2759
-  surfaceAccentStrong:     tokens.neutral500,                // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
+  surfaceAccentStrong:     tokens.neutral700,                // #878787 — Brand neutral (de-warmed from gray700 2026-10-09)
   // The hero surface is the BRAND surface, and the brand colour does not
   // change between modes — so this holds blue1000 in dark exactly as in light.
   //
@@ -374,11 +431,11 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   // which overrides to #ffffff in dark — aliasing it would paint the hero
   // white. It is the primitive.
   surfaceHero:             tokens.blue1000,                  // #000f47 — brand navy, both modes
-  surfaceDisabled:         tokens.neutral800,                // #3b3b3b
+  surfaceDisabled:         tokens.neutral1000,                // #3b3b3b
   // Deliberately NOT neutral900: surfaceSubtle already is #252525, and a panel
   // whose header band matches the panel has no band. Three steps, not two —
   // page #101010, panel #1a1a1a, band #252525.
-  surfaceRaised:           tokens.neutral925,                // #1a1a1a — between the page and surfaceSubtle
+  surfaceRaised:           tokens.neutral1300,                // #1a1a1a — between the page and surfaceSubtle
 
   // Borders (inverted)
   /**
@@ -388,22 +445,22 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
    * light's approach would be wrong: #e4e4e4 on #101010 is a bright line.
    */
   borderSubtle:  tokens.shadesWhite10,       // rgba(255,255,255,0.10) — see the note above
-  borderDefault: tokens.neutral500,          // #878787 (pivot — unchanged)
-  borderStrong:  tokens.neutral250,          // #dadada
-  borderFocus:   tokens.focusBlueDark,       // #5e9aff — Figma-verified: passes 3:1 vs every surface this system uses (dark)
-  focusRing:     tokens.focusBlueDark,       // #5e9aff (mirror borderFocus)
+  borderDefault: tokens.neutral700,          // #878787 (pivot — unchanged)
+  borderStrong:  tokens.neutral350,          // #dadada
+  borderFocus:   baseDark.systemFocus,          // #5e9aff — Figma-verified: passes 3:1 vs every surface this system uses (dark)
+  focusRing:     baseDark.systemFocus,          // #5e9aff (mirror borderFocus)
 
   // Interactive Primary (Blue — bright on dark)
   interactivePrimary:         tokens.blue400,        // #95caff
   interactivePrimaryHover:    tokens.blue300,        // #bbe1ff
   interactivePrimaryActive:   tokens.blue200,        // #d8f0ff
-  interactivePrimaryDisabled: tokens.neutral800,     // #3b3b3b
+  interactivePrimaryDisabled: tokens.neutral1000,     // #3b3b3b
 
   // Disabled, dark. Exactly the values Button already hand-wrote as its
   // `dark:disabled:` literals — this just gives them a name, so the dark
   // variant stops being a second place to keep in sync by hand.
-  interactiveDisabledBg: tokens.neutral800,          // #3b3b3b
-  interactiveDisabledFg: tokens.neutral500,          // #878787
+  interactiveDisabledBg: tokens.neutral1000,          // #3b3b3b
+  interactiveDisabledFg: tokens.neutral700,          // #878787
 
   // Interactive Secondary (Blue — lightened for dark bg)
   interactiveSecondary:        tokens.blue400,        // #95caff
@@ -412,9 +469,9 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   interactiveSecondaryVisited: tokens.purple750,      // #8f37c6
 
   // Interactive Tertiary (Neutral — lightened)
-  interactiveTertiary:       tokens.neutral300,      // #c4c4c4
-  interactiveTertiaryHover:  tokens.neutral250,      // #dadada
-  interactiveTertiaryActive: tokens.neutral200,      // #e3e3e3
+  interactiveTertiary:       tokens.neutral450,      // #c4c4c4
+  interactiveTertiaryHover:  tokens.neutral350,      // #dadada
+  interactiveTertiaryActive: tokens.neutral300,      // #e3e3e3
 
   // Status Success (Green — lightened)
   statusSuccess:       tokens.green500,         // #8dcc92

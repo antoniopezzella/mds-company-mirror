@@ -166,6 +166,18 @@
         "hex": "#093fda"
       }
     },
+    "blue850": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0392,
+          0.2275,
+          0.8
+        ],
+        "hex": "#0a3acc"
+      }
+    },
     "blue900": {
       "$type": "color",
       "$value": {
@@ -543,11 +555,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.3922,
-          0.7373,
+          0.4157,
+          0.749,
           0.1882
         ],
-        "hex": "#64bc30"
+        "hex": "#6abf30"
       }
     },
     "green800": {
@@ -592,10 +604,10 @@
         "colorSpace": "srgb",
         "components": [
           0.1843,
-          0.4902,
-          0.1961
+          0.4588,
+          0
         ],
-        "hex": "#2f7d32"
+        "hex": "#2f7500"
       }
     },
     "red50": {
@@ -728,6 +740,18 @@
           0.1882
         ],
         "hex": "#d33330"
+      }
+    },
+    "red850": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7765,
+          0.2039,
+          0.1922
+        ],
+        "hex": "#c63431"
       }
     },
     "red900": {
@@ -934,16 +958,28 @@
         "hex": "#5e0f95"
       }
     },
+    "neutral0": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff"
+      }
+    },
     "neutral50": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.9725,
-          0.9725,
-          0.9725
+          0.9922,
+          0.9882,
+          0.9804
         ],
-        "hex": "#f8f8f8"
+        "hex": "#fdfcfa"
       }
     },
     "neutral100": {
@@ -951,11 +987,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.9333,
-          0.9333,
-          0.9333
+          0.9882,
+          0.9804,
+          0.9686
         ],
-        "hex": "#eeeeee"
+        "hex": "#fcfaf7"
+      }
+    },
+    "neutral150": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9804,
+          0.9686,
+          0.9569
+        ],
+        "hex": "#faf7f4"
       }
     },
     "neutral200": {
@@ -963,11 +1011,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.8902,
-          0.8902,
-          0.8902
+          0.9765,
+          0.9608,
+          0.9451
         ],
-        "hex": "#e3e3e3"
+        "hex": "#f9f5f1"
       }
     },
     "neutral250": {
@@ -975,11 +1023,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.8549,
-          0.8549,
-          0.8549
+          0.9686,
+          0.9529,
+          0.9333
         ],
-        "hex": "#dadada"
+        "hex": "#f7f3ee"
       }
     },
     "neutral300": {
@@ -987,11 +1035,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.7686,
-          0.7686,
-          0.7686
+          0.9216,
+          0.9059,
+          0.8863
         ],
-        "hex": "#c4c4c4"
+        "hex": "#ebe7e2"
+      }
+    },
+    "neutral350": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8706,
+          0.8588,
+          0.8392
+        ],
+        "hex": "#dedbd6"
       }
     },
     "neutral400": {
@@ -999,11 +1059,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.6588,
-          0.6588,
-          0.6588
+          0.8235,
+          0.8078,
+          0.7882
         ],
-        "hex": "#a8a8a8"
+        "hex": "#d2cec9"
+      }
+    },
+    "neutral450": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7725,
+          0.7608,
+          0.7412
+        ],
+        "hex": "#c5c2bd"
       }
     },
     "neutral500": {
@@ -1011,11 +1083,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.5294,
-          0.5294,
-          0.5294
+          0.7255,
+          0.7137,
+          0.6941
         ],
-        "hex": "#878787"
+        "hex": "#b9b6b1"
+      }
+    },
+    "neutral550": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6784,
+          0.6667,
+          0.6471
+        ],
+        "hex": "#adaaa5"
       }
     },
     "neutral600": {
@@ -1023,11 +1107,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.4627,
-          0.4627,
-          0.4627
+          0.6275,
+          0.6196,
+          0.6
         ],
-        "hex": "#767676"
+        "hex": "#a09e99"
+      }
+    },
+    "neutral650": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5804,
+          0.5686,
+          0.549
+        ],
+        "hex": "#94918c"
       }
     },
     "neutral700": {
@@ -1035,11 +1131,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.349,
-          0.349,
-          0.349
+          0.5294,
+          0.5216,
+          0.502
         ],
-        "hex": "#595959"
+        "hex": "#878580"
       }
     },
     "neutral750": {
@@ -1047,11 +1143,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.2902,
-          0.2902,
-          0.2902
+          0.4824,
+          0.4745,
+          0.4549
         ],
-        "hex": "#4a4a4a"
+        "hex": "#7b7974"
       }
     },
     "neutral800": {
@@ -1059,11 +1155,23 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.2314,
-          0.2314,
-          0.2314
+          0.4353,
+          0.4275,
+          0.4078
         ],
-        "hex": "#3b3b3b"
+        "hex": "#6f6d68"
+      }
+    },
+    "neutral850": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3843,
+          0.3804,
+          0.3608
+        ],
+        "hex": "#62615c"
       }
     },
     "neutral900": {
@@ -1071,23 +1179,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.1451,
-          0.1451,
-          0.1451
+          0.3373,
+          0.3294,
+          0.3098
         ],
-        "hex": "#252525"
-      }
-    },
-    "neutral925": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.102,
-          0.102,
-          0.102
-        ],
-        "hex": "#1a1a1a"
+        "hex": "#56544f"
       }
     },
     "neutral950": {
@@ -1095,11 +1191,11 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.0627,
-          0.0627,
-          0.0627
+          0.2863,
+          0.2824,
+          0.2627
         ],
-        "hex": "#101010"
+        "hex": "#494843"
       }
     },
     "neutral1000": {
@@ -1107,11 +1203,59 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0,
-          0,
-          0
+          0.2392,
+          0.2353,
+          0.2157
         ],
-        "hex": "#000000"
+        "hex": "#3d3c37"
+      }
+    },
+    "neutral1100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.149,
+          0.1451,
+          0.1333
+        ],
+        "hex": "#262522"
+      }
+    },
+    "neutral1200": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1216,
+          0.1176,
+          0.1059
+        ],
+        "hex": "#1f1e1b"
+      }
+    },
+    "neutral1300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.098,
+          0.0941,
+          0.0863
+        ],
+        "hex": "#191816"
+      }
+    },
+    "neutral1400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0745,
+          0.0706,
+          0.0627
+        ],
+        "hex": "#131210"
       }
     },
     "white": {
@@ -1220,6 +1364,30 @@
           1
         ],
         "hex": "#5e9aff"
+      }
+    },
+    "orange400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.6706,
+          0.2902
+        ],
+        "hex": "#ffab4a"
+      }
+    },
+    "greenLegacy400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3412,
+          0.7765,
+          0.4784
+        ],
+        "hex": "#57c67a"
       }
     },
     "shadesWhite90": {
@@ -2283,6 +2451,158 @@
         "$type": "color",
         "$value": "{color.gold750}"
       },
+      "baseNeutral1": {
+        "$type": "color",
+        "$value": "{color.neutral150}"
+      },
+      "baseNeutral2": {
+        "$type": "color",
+        "$value": "{color.neutral300}"
+      },
+      "baseNeutral3": {
+        "$type": "color",
+        "$value": "{color.neutral350}"
+      },
+      "baseNeutral4": {
+        "$type": "color",
+        "$value": "{color.neutral450}"
+      },
+      "baseNeutral5": {
+        "$type": "color",
+        "$value": "{color.neutral700}"
+      },
+      "baseNeutral6": {
+        "$type": "color",
+        "$value": "{color.neutral800}"
+      },
+      "baseNeutral7": {
+        "$type": "color",
+        "$value": "{color.neutral900}"
+      },
+      "baseNeutral8": {
+        "$type": "color",
+        "$value": "{color.neutral1000}"
+      },
+      "baseBrandPrimary": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "baseBrandAccent": {
+        "$type": "color",
+        "$value": "{color.gold750}"
+      },
+      "baseBrandSecondary": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
+      "basePairOnPrimary": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
+      "basePairOnSecondary": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnAccent": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnCritical": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "basePairOnSuccess": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "basePairOnWarning": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "basePairOnNeutral": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "basePairOnInteractive": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
+      "basePairOnInfo": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "baseStatusCritical": {
+        "$type": "color",
+        "$value": "{color.red850}"
+      },
+      "baseStatusSuccess": {
+        "$type": "color",
+        "$value": "{color.green1000}"
+      },
+      "baseStatusWarning": {
+        "$type": "color",
+        "$value": "{color.statusWarning}"
+      },
+      "baseStatusInfo": {
+        "$type": "color",
+        "$value": "{color.blue850}"
+      },
+      "baseInteractiveDefault": {
+        "$type": "color",
+        "$value": "{color.blue750}"
+      },
+      "baseSystemFocus": {
+        "$type": "color",
+        "$value": "{color.focusBlue}"
+      },
+      "baseAccentPurple": {
+        "$type": "color",
+        "$value": "{color.purple750}"
+      },
+      "baseAccentGreen": {
+        "$type": "color",
+        "$value": "{color.green750}"
+      },
       "textPrimary": {
         "$type": "color",
         "$value": "{color.blue1000}"
@@ -2293,19 +2613,35 @@
       },
       "textSecondary": {
         "$type": "color",
-        "$value": "{color.neutral700}"
+        "$value": "{color.neutral900}"
       },
       "textTertiary": {
         "$type": "color",
-        "$value": "{color.neutral600}"
+        "$value": "{color.neutral750}"
       },
       "textOnAccent": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "textOnInteractive": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "textOnHero": {
         "$type": "color",
@@ -2317,7 +2653,7 @@
       },
       "textDisabled": {
         "$type": "color",
-        "$value": "{color.neutral600}"
+        "$value": "{color.neutral750}"
       },
       "textOnLight": {
         "$type": "color",
@@ -2325,23 +2661,39 @@
       },
       "textOnDark": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "surfaceDefault": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "surfaceSubtle": {
         "$type": "color",
-        "$value": "{color.neutral50}"
+        "$value": "{color.neutral150}"
       },
       "surfaceMuted": {
         "$type": "color",
-        "$value": "{color.neutral200}"
+        "$value": "{color.neutral300}"
       },
       "surfaceAccent": {
         "$type": "color",
-        "$value": "{color.neutral50}"
+        "$value": "{color.neutral150}"
       },
       "surfaceSecondaryHover": {
         "$type": "color",
@@ -2377,7 +2729,7 @@
       },
       "surfaceAccentStrong": {
         "$type": "color",
-        "$value": "{color.neutral300}"
+        "$value": "{color.neutral450}"
       },
       "surfaceHero": {
         "$type": "color",
@@ -2385,23 +2737,31 @@
       },
       "surfaceDisabled": {
         "$type": "color",
-        "$value": "{color.neutral200}"
+        "$value": "{color.neutral300}"
       },
       "surfaceRaised": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "borderSubtle": {
         "$type": "color",
-        "$value": "{color.neutral200}"
+        "$value": "{color.neutral350}"
       },
       "borderDefault": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "borderStrong": {
         "$type": "color",
-        "$value": "{color.neutral700}"
+        "$value": "{color.neutral900}"
       },
       "borderFocus": {
         "$type": "color",
@@ -2429,15 +2789,15 @@
       },
       "interactivePrimaryDisabled": {
         "$type": "color",
-        "$value": "{color.neutral250}"
+        "$value": "{color.neutral350}"
       },
       "interactiveDisabledBg": {
         "$type": "color",
-        "$value": "{color.neutral200}"
+        "$value": "{color.neutral300}"
       },
       "interactiveDisabledFg": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "interactiveAccentHover": {
         "$type": "color",
@@ -2465,15 +2825,15 @@
       },
       "interactiveTertiary": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "interactiveTertiaryHover": {
         "$type": "color",
-        "$value": "{color.neutral600}"
+        "$value": "{color.neutral750}"
       },
       "interactiveTertiaryActive": {
         "$type": "color",
-        "$value": "{color.neutral700}"
+        "$value": "{color.neutral900}"
       },
       "statusSuccess": {
         "$type": "color",
@@ -2556,15 +2916,39 @@
       },
       "textOnDanger": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "textOnSuccess": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "textOnWarning": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "chartSeries1": {
         "$type": "color",
@@ -2592,7 +2976,15 @@
     "color": {
       "brandPrimary": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "brandSecondary": {
         "$type": "color",
@@ -2602,21 +2994,165 @@
         "$type": "color",
         "$value": "{color.gold750}"
       },
-      "textPrimary": {
+      "baseNeutral1": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": "{color.neutral1300}"
       },
-      "textSecondary": {
+      "baseNeutral2": {
+        "$type": "color",
+        "$value": "{color.neutral1000}"
+      },
+      "baseNeutral3": {
+        "$type": "color",
+        "$value": "{color.neutral950}"
+      },
+      "baseNeutral4": {
+        "$type": "color",
+        "$value": "{color.neutral900}"
+      },
+      "baseNeutral5": {
+        "$type": "color",
+        "$value": "{color.neutral750}"
+      },
+      "baseNeutral6": {
+        "$type": "color",
+        "$value": "{color.neutral550}"
+      },
+      "baseNeutral7": {
+        "$type": "color",
+        "$value": "{color.neutral450}"
+      },
+      "baseNeutral8": {
         "$type": "color",
         "$value": "{color.neutral250}"
       },
+      "baseBrandPrimary": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
+      "baseBrandAccent": {
+        "$type": "color",
+        "$value": "{color.gold750}"
+      },
+      "baseBrandSecondary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3686,
+            0.6039,
+            1
+          ],
+          "hex": "#5e9aff"
+        }
+      },
+      "basePairOnPrimary": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnSecondary": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnAccent": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnCritical": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnSuccess": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnWarning": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnNeutral": {
+        "$type": "color",
+        "$value": "{color.neutral1400}"
+      },
+      "basePairOnInteractive": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "basePairOnInfo": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "baseStatusCritical": {
+        "$type": "color",
+        "$value": "{color.red700}"
+      },
+      "baseStatusSuccess": {
+        "$type": "color",
+        "$value": "{color.greenLegacy400}"
+      },
+      "baseStatusWarning": {
+        "$type": "color",
+        "$value": "{color.orange400}"
+      },
+      "baseStatusInfo": {
+        "$type": "color",
+        "$value": "{color.blue400}"
+      },
+      "baseInteractiveDefault": {
+        "$type": "color",
+        "$value": "{color.blue400}"
+      },
+      "baseSystemFocus": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0.3686,
+            0.6039,
+            1
+          ],
+          "hex": "#5e9aff"
+        }
+      },
+      "baseAccentPurple": {
+        "$type": "color",
+        "$value": "{color.purple500}"
+      },
+      "baseAccentGreen": {
+        "$type": "color",
+        "$value": "{color.green500}"
+      },
+      "textPrimary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "textSecondary": {
+        "$type": "color",
+        "$value": "{color.neutral450}"
+      },
       "textTertiary": {
         "$type": "color",
-        "$value": "{color.neutral300}"
+        "$value": "{color.neutral450}"
       },
       "textOnAccent": {
         "$type": "color",
-        "$value": "{color.white}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
       },
       "textOnInteractive": {
         "$type": "color",
@@ -2644,43 +3180,43 @@
       },
       "textOnDark": {
         "$type": "color",
-        "$value": "{color.neutral50}"
+        "$value": "{color.neutral150}"
       },
       "textDisabled": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "surfaceDefault": {
         "$type": "color",
-        "$value": "{color.neutral950}"
+        "$value": "{color.neutral1400}"
       },
       "surfaceSubtle": {
         "$type": "color",
-        "$value": "{color.neutral900}"
+        "$value": "{color.neutral1300}"
       },
       "surfaceMuted": {
         "$type": "color",
-        "$value": "{color.neutral800}"
+        "$value": "{color.neutral1000}"
       },
       "surfaceAccent": {
         "$type": "color",
-        "$value": "{color.neutral900}"
+        "$value": "{color.neutral1100}"
       },
       "surfaceNavigation": {
         "$type": "color",
-        "$value": "{color.neutral950}"
+        "$value": "{color.neutral1400}"
       },
       "surfaceNavigationHover": {
         "$type": "color",
-        "$value": "{color.neutral900}"
+        "$value": "{color.neutral1100}"
       },
       "surfaceNavigationActive": {
         "$type": "color",
-        "$value": "{color.neutral800}"
+        "$value": "{color.neutral1000}"
       },
       "surfaceRowHover": {
         "$type": "color",
-        "$value": "{color.neutral900}"
+        "$value": "{color.neutral1100}"
       },
       "surfaceSelected": {
         "$type": "color",
@@ -2692,7 +3228,7 @@
       },
       "surfaceAccentStrong": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "surfaceHero": {
         "$type": "color",
@@ -2700,11 +3236,11 @@
       },
       "surfaceDisabled": {
         "$type": "color",
-        "$value": "{color.neutral800}"
+        "$value": "{color.neutral1000}"
       },
       "surfaceRaised": {
         "$type": "color",
-        "$value": "{color.neutral925}"
+        "$value": "{color.neutral1300}"
       },
       "borderSubtle": {
         "$type": "color",
@@ -2712,11 +3248,11 @@
       },
       "borderDefault": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "borderStrong": {
         "$type": "color",
-        "$value": "{color.neutral250}"
+        "$value": "{color.neutral350}"
       },
       "borderFocus": {
         "$type": "color",
@@ -2756,15 +3292,15 @@
       },
       "interactivePrimaryDisabled": {
         "$type": "color",
-        "$value": "{color.neutral800}"
+        "$value": "{color.neutral1000}"
       },
       "interactiveDisabledBg": {
         "$type": "color",
-        "$value": "{color.neutral800}"
+        "$value": "{color.neutral1000}"
       },
       "interactiveDisabledFg": {
         "$type": "color",
-        "$value": "{color.neutral500}"
+        "$value": "{color.neutral700}"
       },
       "interactiveSecondary": {
         "$type": "color",
@@ -2784,15 +3320,15 @@
       },
       "interactiveTertiary": {
         "$type": "color",
-        "$value": "{color.neutral300}"
+        "$value": "{color.neutral450}"
       },
       "interactiveTertiaryHover": {
         "$type": "color",
-        "$value": "{color.neutral250}"
+        "$value": "{color.neutral350}"
       },
       "interactiveTertiaryActive": {
         "$type": "color",
-        "$value": "{color.neutral200}"
+        "$value": "{color.neutral300}"
       },
       "statusSuccess": {
         "$type": "color",

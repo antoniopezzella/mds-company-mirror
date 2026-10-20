@@ -43,16 +43,16 @@ const contrastRatio = (hex1: string, hex2: string): number => {
 const defaultPairs: Pair[] = [
   { fg: tokens.blue750, bg: tokens.white, label: 'Blue750 (Active/links) on White' },
   { fg: tokens.white, bg: tokens.blue750, label: 'White on Blue750' },
-  { fg: tokens.blue1000, bg: tokens.neutral50, label: 'Blue1000 (brand) on Neutral50' },
+  { fg: tokens.blue1000, bg: tokens.neutral150, label: 'Blue1000 (brand) on Neutral50' },
   { fg: tokens.white, bg: tokens.blue1000, label: 'White on Blue1000 (Midnight)' },
-  { fg: tokens.neutral1000, bg: tokens.white, label: 'Neutral1000 on White' },
-  { fg: tokens.neutral700, bg: tokens.white, label: 'Neutral700 on White' },
+  { fg: tokens.black, bg: tokens.white, label: 'Neutral1000 on White' },
+  { fg: tokens.neutral900, bg: tokens.white, label: 'Neutral700 on White' },
   { fg: tokens.statusSuccess, bg: tokens.white, label: 'StatusSuccess on White' },
   { fg: tokens.gold750, bg: tokens.blue1000, label: 'Gold750 (CTA) on Blue1000' },
   // Dark mode focused pairs
-  { fg: tokens.blue500, bg: tokens.neutral950, label: 'Blue500 on Neutral950 (dark bg)' },
-  { fg: tokens.neutral500, bg: tokens.neutral950, label: 'Neutral500 on Neutral950' },
-  { fg: tokens.green400, bg: tokens.neutral950, label: 'Green400 on Neutral950' },
+  { fg: tokens.blue500, bg: tokens.neutral1400, label: 'Blue500 on Neutral950 (dark bg)' },
+  { fg: tokens.neutral700, bg: tokens.neutral1400, label: 'Neutral500 on Neutral950' },
+  { fg: tokens.green400, bg: tokens.neutral1400, label: 'Green400 on Neutral950' },
   { fg: tokens.statusCritical, bg: tokens.white, label: 'StatusCritical on White' },
   // Warning semantic examples (foreground on background + on white)
   { fg: tokens.statusWarning, bg: tokens.gold50, label: 'Warning Text on Warning Bg' },
