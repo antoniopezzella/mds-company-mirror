@@ -49,6 +49,51 @@
 import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens.js';
 
 export type RoleName =
+  // ── Figma-aligned Phase-3 aliases (resolve identically to the legacy names) ──
+  | 'fg.primary'
+  | 'fg.neutral.subtle'
+  | 'fg.on-dark'
+  | 'fg.disabled'
+  | 'fg.input.placeholder'
+  | 'fg.on-accent'
+  | 'fg.on-interactive'
+  | 'fg.on-primary'
+  | 'fg.on-success'
+  | 'fg.on-warning'
+  | 'fg.on-critical'
+  | 'fg.on-light'
+  | 'fg.success'
+  | 'fg.warning'
+  | 'fg.critical'
+  | 'fg.info'
+  | 'bg.default'
+  | 'bg.neutral.subtle'
+  | 'bg.disabled'
+  | 'bg.raised'
+  | 'bg.secondary'
+  | 'bg.secondary.hover'
+  | 'bg.selected.subtle'
+  | 'bg.row-hover'
+  | 'bg.selected'
+  | 'bg.shell'
+  | 'bg.shell.hover'
+  | 'bg.shell.active'
+  | 'bg.primary'
+  | 'bg.accent'
+  | 'bg.success.subtle'
+  | 'bg.warning.subtle'
+  | 'bg.critical.subtle'
+  | 'bg.info.subtle'
+  | 'border.focus'
+  | 'border.success'
+  | 'border.warning'
+  | 'border.critical'
+  | 'border.info'
+  | 'data.1'
+  | 'data.2'
+  | 'data.3'
+  | 'data.4'
+  | 'data.5'
   | 'text.primary'
   | 'text.secondary'
   | 'text.inverse'
@@ -128,6 +173,51 @@ interface RoleMapEntry {
 // NOTE: Keep each entry on its own line with the quoted role key first – tooling
 // (e.g., governance report parser) relies on a simple regex to extract `role -> semantic`.
 const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
+  // ── Figma-aligned Phase-3 aliases ──
+  'fg.primary': { semantic: 'textPrimary', description: 'Figma-aligned (Phase 3) — alias of text.primary.' },
+  'fg.neutral.subtle': { semantic: 'textSecondary', description: 'Figma-aligned (Phase 3) — alias of text.secondary.' },
+  'fg.on-dark': { semantic: 'textOnAccent', description: 'Figma-aligned (Phase 3) — alias of text.inverse.' },
+  'fg.disabled': { semantic: 'textDisabled', description: 'Figma-aligned (Phase 3) — alias of text.disabled.' },
+  'fg.input.placeholder': { semantic: 'textTertiary', description: 'Figma-aligned (Phase 3) — alias of text.placeholder.' },
+  'fg.on-accent': { semantic: 'textOnAccent', description: 'Figma-aligned (Phase 3) — alias of text.onAccent.' },
+  'fg.on-interactive': { semantic: 'textOnInteractive', description: 'Figma-aligned (Phase 3) — alias of text.onInteractive.' },
+  'fg.on-primary': { semantic: 'textOnHero', description: 'Figma-aligned (Phase 3) — alias of text.onHero.' },
+  'fg.on-success': { semantic: 'textOnSuccess', description: 'Figma-aligned (Phase 3) — alias of text.onSuccess.' },
+  'fg.on-warning': { semantic: 'textOnWarning', description: 'Figma-aligned (Phase 3) — alias of text.onWarning.' },
+  'fg.on-critical': { semantic: 'textOnDanger', description: 'Figma-aligned (Phase 3) — alias of text.onDanger.' },
+  'fg.on-light': { semantic: 'textOnLight', description: 'Figma-aligned (Phase 3) — alias of text.onLight.' },
+  'fg.success': { semantic: 'statusSuccessText', description: 'Figma-aligned (Phase 3) — alias of status.success.fg.' },
+  'fg.warning': { semantic: 'statusWarningText', description: 'Figma-aligned (Phase 3) — alias of status.warning.fg.' },
+  'fg.critical': { semantic: 'statusDangerText', description: 'Figma-aligned (Phase 3) — alias of status.danger.fg.' },
+  'fg.info': { semantic: 'statusInfoText', description: 'Figma-aligned (Phase 3) — alias of status.info.fg.' },
+  'bg.default': { semantic: 'surfaceDefault', description: 'Figma-aligned (Phase 3) — alias of surface.default.' },
+  'bg.neutral.subtle': { semantic: 'surfaceSubtle', description: 'Figma-aligned (Phase 3) — alias of surface.subtle.' },
+  'bg.disabled': { semantic: 'surfaceDisabled', description: 'Figma-aligned (Phase 3) — alias of surface.disabled.' },
+  'bg.raised': { semantic: 'surfaceRaised', description: 'Figma-aligned (Phase 3) — alias of surface.raised.' },
+  'bg.secondary': { semantic: 'brandSecondary', description: 'Figma-aligned (Phase 3) — alias of surface.secondary.' },
+  'bg.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Figma-aligned (Phase 3) — alias of surface.secondary-hover.' },
+  'bg.selected.subtle': { semantic: 'surfaceSelectedSubtle', description: 'Figma-aligned (Phase 3) — alias of surface.selected-subtle.' },
+  'bg.row-hover': { semantic: 'surfaceRowHover', description: 'Figma-aligned (Phase 3) — alias of surface.row-hover.' },
+  'bg.selected': { semantic: 'surfaceSelected', description: 'Figma-aligned (Phase 3) — alias of surface.selected.' },
+  'bg.shell': { semantic: 'surfaceNavigation', description: 'Figma-aligned (Phase 3) — alias of surface.navigation.' },
+  'bg.shell.hover': { semantic: 'surfaceNavigationHover', description: 'Figma-aligned (Phase 3) — alias of surface.navigation-hover.' },
+  'bg.shell.active': { semantic: 'surfaceNavigationActive', description: 'Figma-aligned (Phase 3) — alias of surface.navigation-active.' },
+  'bg.primary': { semantic: 'surfaceHero', description: 'Figma-aligned (Phase 3) — alias of surface.hero.' },
+  'bg.accent': { semantic: 'brandAccent', description: 'Figma-aligned (Phase 3) — alias of brand.accent.' },
+  'bg.success.subtle': { semantic: 'statusSuccessBg', description: 'Figma-aligned (Phase 3) — alias of status.success.bg.' },
+  'bg.warning.subtle': { semantic: 'statusWarningBg', description: 'Figma-aligned (Phase 3) — alias of status.warning.bg.' },
+  'bg.critical.subtle': { semantic: 'statusDangerBg', description: 'Figma-aligned (Phase 3) — alias of status.danger.bg.' },
+  'bg.info.subtle': { semantic: 'statusInfoBg', description: 'Figma-aligned (Phase 3) — alias of status.info.bg.' },
+  'border.focus': { semantic: 'focusRing', description: 'Figma-aligned (Phase 3) — alias of focus.ring.' },
+  'border.success': { semantic: 'statusSuccessBorder', description: 'Figma-aligned (Phase 3) — alias of status.success.border.' },
+  'border.warning': { semantic: 'statusWarningBorder', description: 'Figma-aligned (Phase 3) — alias of status.warning.border.' },
+  'border.critical': { semantic: 'statusDangerBorder', description: 'Figma-aligned (Phase 3) — alias of status.danger.border.' },
+  'border.info': { semantic: 'statusInfoBorder', description: 'Figma-aligned (Phase 3) — alias of status.info.border.' },
+  'data.1': { semantic: 'chartSeries1', description: 'Figma-aligned (Phase 3) — alias of chart.1.' },
+  'data.2': { semantic: 'chartSeries2', description: 'Figma-aligned (Phase 3) — alias of chart.2.' },
+  'data.3': { semantic: 'chartSeries3', description: 'Figma-aligned (Phase 3) — alias of chart.3.' },
+  'data.4': { semantic: 'chartSeries4', description: 'Figma-aligned (Phase 3) — alias of chart.4.' },
+  'data.5': { semantic: 'chartSeries5', description: 'Figma-aligned (Phase 3) — alias of chart.5.' },
   'text.primary': { semantic: 'textPrimary', description: 'Primary body & UI text' },
   'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
   /**
