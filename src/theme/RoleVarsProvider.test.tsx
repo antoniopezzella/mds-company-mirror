@@ -21,8 +21,8 @@ describe('RoleVarsProvider', () => {
     );
     const wrapper = container.firstElementChild as HTMLElement;
     const style = wrapper.getAttribute('style') ?? '';
-    expect(style).toContain('--role-text-primary');
-    expect(style).toContain('--role-surface-default');
+    expect(style).toContain('--role-fg-primary');
+    expect(style).toContain('--role-bg-default');
   });
 
   it('injects CSS variables for dark mode when mode="dark"', () => {
@@ -81,7 +81,7 @@ describe('portalled content', () => {
         <span>a</span>
       </RoleVarsProvider>
     );
-    const light = document.documentElement.style.getPropertyValue('--role-surface-default');
+    const light = document.documentElement.style.getPropertyValue('--role-bg-default');
     unmount();
 
     render(
@@ -89,6 +89,6 @@ describe('portalled content', () => {
         <span>a</span>
       </RoleVarsProvider>
     );
-    expect(document.documentElement.style.getPropertyValue('--role-surface-default')).not.toBe(light);
+    expect(document.documentElement.style.getPropertyValue('--role-bg-default')).not.toBe(light);
   });
 });

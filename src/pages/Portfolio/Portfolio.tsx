@@ -394,8 +394,8 @@ const Portfolio: React.FC = () => {
         <Reveal stagger delay={100}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 48 }}>
             {[
-              { category: 'text.*', roles: ['text.primary','text.secondary','text.tertiary','text.disabled','text.onAccent'], color: '#000f47' },
-              { category: 'surface.*', roles: ['surface.default','surface.subtle','surface.muted','surface.navigation','surface.hero'], color: '#0b4bff' },
+              { category: 'text.*', roles: ['fg.primary','fg.neutral.subtle','text.tertiary','fg.disabled','fg.on-accent'], color: '#000f47' },
+              { category: 'surface.*', roles: ['bg.default','bg.neutral.subtle','surface.muted','bg.shell','bg.primary'], color: '#0b4bff' },
               { category: 'interactive.*', roles: ['interactive.primary','interactive.primary.hover','interactive.primary.active','interactive.primary.disabled'], color: '#042791' },
             ].map(group => (
               <div key={group.category} style={{

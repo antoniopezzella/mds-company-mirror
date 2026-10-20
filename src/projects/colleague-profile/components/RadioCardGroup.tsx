@@ -63,23 +63,23 @@ export function RadioCardGroup({
             // selected fill (surface.selected.subtle = the sky tint). A missing
             // required choice tints the whole group's borders danger.
             invalid
-              ? 'border-[var(--role-status-danger-border)]'
+              ? 'border-[var(--role-border-critical)]'
               : 'border-[var(--role-border-default)] hover:border-[var(--role-border-strong)]',
-            'focus-visible:ring-[var(--role-focus-ring)]',
+            'focus-visible:ring-[var(--role-border-focus)]',
             'data-[state=checked]:border-[var(--role-interactive-primary)]',
-            'data-[state=checked]:bg-[var(--role-surface-selected-subtle)]'
+            'data-[state=checked]:bg-[var(--role-bg-selected-subtle)]'
           )}
         >
           <span
             className="font-sans-productive text-sm font-semibold"
-            style={{ color: 'var(--role-text-primary)' }}
+            style={{ color: 'var(--role-fg-primary)' }}
           >
             {opt.title}
           </span>
           {opt.description && (
             <span
               className="font-sans-productive text-sm leading-snug"
-              style={{ color: 'var(--role-text-secondary)' }}
+              style={{ color: 'var(--role-fg-neutral-subtle)' }}
             >
               {opt.description}
             </span>

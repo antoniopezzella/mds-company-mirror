@@ -75,31 +75,31 @@ const RADIUS: Record<AvatarVariant, string> = {
 function getToneColors(tone: AvatarTone): { bg: RoleName; fg: RoleName } {
   switch (tone) {
     case 'primary':
-      return { bg: 'surface.accent', fg: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary' };
     case 'secondary':
-      return { bg: 'surface.subtle', fg: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary' };
     case 'success':
-      return { bg: 'status.success.bg', fg: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', fg: 'fg.success' };
     case 'warning':
       // warning is the exception: status.warning.fg (#c25600) on
       // status.warning.bg is 4.44:1 — fine as an accent, still under 4.5 as text.
       // text.onLight (17.71:1) exists for exactly this. See alert.tsx.
-      return { bg: 'status.warning.bg', fg: 'text.onLight' };
+      return { bg: 'bg.warning.subtle', fg: 'fg.on-light' };
     case 'danger':
-      return { bg: 'status.danger.bg', fg: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', fg: 'fg.critical' };
     default:
-      return { bg: 'surface.subtle', fg: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary' };
   }
 }
 
 function getStatusColor(status?: AvatarStatus): RoleName {
   switch (status) {
     case 'online':
-      return 'status.success.bg';
+      return 'bg.success.subtle';
     case 'away':
-      return 'status.warning.bg';
+      return 'bg.warning.subtle';
     case 'busy':
-      return 'status.danger.bg';
+      return 'bg.critical.subtle';
     default:
       return 'border.default';
   }
@@ -168,7 +168,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(({
           height: sizePx,
           borderRadius: RADIUS[variant],
           fontSize: FONT_SIZE[resolvedSize],
-          border: `2px solid ${'var(--role-surface-default)'}`,
+          border: `2px solid ${'var(--role-bg-default)'}`,
           boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
         }}
       >
@@ -189,7 +189,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(({
             width: statusPx,
             height: statusPx,
             backgroundColor: roleVar(getStatusColor(status)),
-            border: `2px solid ${'var(--role-surface-default)'}`,
+            border: `2px solid ${'var(--role-bg-default)'}`,
             boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
           }}
         />

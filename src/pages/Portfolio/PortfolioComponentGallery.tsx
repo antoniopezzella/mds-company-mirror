@@ -149,9 +149,9 @@ function ActionsPanel() {
         tokens={[
           { name: 'interactive.primary', color: '#000f47' },
           { name: 'interactive.secondary', color: '#0b4bff' },
-          { name: 'status.danger.fg', color: '#e53e3e' },
-          { name: 'status.success.fg', color: '#64bc30' },
-          { name: 'focus.ring', color: '#0b4bff' },
+          { name: 'fg.critical', color: '#e53e3e' },
+          { name: 'fg.success', color: '#64bc30' },
+          { name: 'border.focus', color: '#0b4bff' },
         ]}
       >
         {/* Variants */}
@@ -197,10 +197,10 @@ function ActionsPanel() {
         desc="7 semantic tones · filled & outlined variants · selectable · deletable"
         tag="Chip · 8 stories"
         tokens={[
-          { name: 'status.success.bg', color: '#def2d7' },
-          { name: 'status.warning.bg', color: '#fff2da' },
-          { name: 'status.danger.bg', color: '#ffe8e8' },
-          { name: 'surface.accent', color: '#f7f8f8' },
+          { name: 'bg.success.subtle', color: '#def2d7' },
+          { name: 'bg.warning.subtle', color: '#fff2da' },
+          { name: 'bg.critical.subtle', color: '#ffe8e8' },
+          { name: 'bg.neutral.subtle', color: '#f7f8f8' },
         ]}
       >
         <div className={styles.rowLabel}>Filled — all tones</div>
@@ -243,10 +243,10 @@ function DataPanel() {
         desc="Sortable · striped · row selection · integrated pagination · sticky header · scroll shadows"
         tag="Table · 18 stories"
         tokens={[
-          { name: 'surface.subtle', color: '#f8f8f8' },
+          { name: 'bg.neutral.subtle', color: '#f8f8f8' },
           { name: 'border.default', color: '#878787' },
           { name: 'interactive.primary', color: '#000f47' },
-          { name: 'text.primary', color: '#000f47' },
+          { name: 'fg.primary', color: '#000f47' },
         ]}
       >
         <DataTable<PolicyRow, unknown>
@@ -270,10 +270,10 @@ function DataPanel() {
         desc="5 semantic tones · dot / number / text variants · configurable position"
         tag="Badge · 6 stories"
         tokens={[
-          { name: 'status.success.bg', color: '#def2d7' },
-          { name: 'status.warning.bg', color: '#fff2da' },
-          { name: 'status.danger.bg', color: '#ffe8e8' },
-          { name: 'surface.accent', color: '#f7f8f8' },
+          { name: 'bg.success.subtle', color: '#def2d7' },
+          { name: 'bg.warning.subtle', color: '#fff2da' },
+          { name: 'bg.critical.subtle', color: '#ffe8e8' },
+          { name: 'bg.neutral.subtle', color: '#f7f8f8' },
         ]}
       >
         <div className={styles.badgeGrid}>
@@ -335,8 +335,8 @@ function FormsPanel() {
         tokens={[
           { name: 'border.default', color: '#878787' },
           { name: 'border.focus', color: '#0b4bff' },
-          { name: 'status.danger.fg', color: '#e53e3e' },
-          { name: 'status.success.fg', color: '#64bc30' },
+          { name: 'fg.critical', color: '#e53e3e' },
+          { name: 'fg.success', color: '#64bc30' },
           { name: 'text.tertiary', color: '#767676' },
         ]}
       >
@@ -393,7 +393,7 @@ function FormsPanel() {
           tokens={[
             { name: 'border.default', color: '#878787' },
             { name: 'border.focus', color: '#0b4bff' },
-            { name: 'text.primary', color: '#000f47' },
+            { name: 'fg.primary', color: '#000f47' },
           ]}
         >
           <div className={styles.formStack}>
@@ -584,7 +584,7 @@ function NavigationPanel() {
         tokens={[
           { name: 'interactive.secondary', color: '#0b4bff' },
           { name: 'border.default', color: '#878787' },
-          { name: 'text.primary', color: '#000f47' },
+          { name: 'fg.primary', color: '#000f47' },
         ]}
       >
         {/* enableKeyboardNavigation was an MUI-era opt-in prop; the current
@@ -601,9 +601,9 @@ function NavigationPanel() {
           desc="vertical & horizontal · 4 status states · clickable steps · content panels"
           tag="Stepper · 9 stories"
           tokens={[
-            { name: 'status.success.fg', color: '#64bc30' },
+            { name: 'fg.success', color: '#64bc30' },
             { name: 'interactive.primary', color: '#000f47' },
-            { name: 'text.secondary', color: '#595959' },
+            { name: 'fg.neutral.subtle', color: '#595959' },
           ]}
         >
           <div className={styles.stepperWrap}>
@@ -621,7 +621,7 @@ function NavigationPanel() {
           desc="default · compact · elevated variants · single & multi-expand · icons"
           tag="Accordion · 7 stories"
           tokens={[
-            { name: 'surface.subtle', color: '#f8f8f8' },
+            { name: 'bg.neutral.subtle', color: '#f8f8f8' },
             { name: 'border.default', color: '#878787' },
             { name: 'interactive.primary', color: '#000f47' },
           ]}
@@ -650,11 +650,11 @@ function FeedbackPanel() {
         desc="4 severity levels · optional title · closable · outlined variant · ARIA live regions"
         tag="Alert · 8 stories"
         tokens={[
-          { name: 'status.success.bg', color: '#def2d7' },
-          { name: 'status.success.fg', color: '#1a5c0f' },
-          { name: 'status.warning.bg', color: '#fff2da' },
-          { name: 'status.danger.bg', color: '#ffe8e8' },
-          { name: 'surface.subtle', color: '#f8f8f8' },
+          { name: 'bg.success.subtle', color: '#def2d7' },
+          { name: 'fg.success', color: '#1a5c0f' },
+          { name: 'bg.warning.subtle', color: '#fff2da' },
+          { name: 'bg.critical.subtle', color: '#ffe8e8' },
+          { name: 'bg.neutral.subtle', color: '#f8f8f8' },
         ]}
       >
         <div className={styles.alertStack}>

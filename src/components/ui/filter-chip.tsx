@@ -139,21 +139,21 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
     // whatever mode first rendered.
     const style: React.CSSProperties = disabled
       ? {
-          backgroundColor: selected ? 'var(--role-surface-disabled)' : 'transparent',
-          color: 'var(--role-text-disabled)',
+          backgroundColor: selected ? 'var(--role-bg-disabled)' : 'transparent',
+          color: 'var(--role-fg-disabled)',
           border: `1px solid ${'var(--role-border-subtle)'}`,
         }
       : selected
         ? {
             // Filled tonal when applied — the chip should read as "on" at a
             // glance across a row of filters.
-            backgroundColor: 'var(--role-surface-selected)',
-            color: 'var(--role-text-primary)',
+            backgroundColor: 'var(--role-bg-selected)',
+            color: 'var(--role-fg-primary)',
             border: `1px solid ${'var(--role-interactive-primary)'}`,
           }
         : {
             backgroundColor: 'transparent',
-            color: 'var(--role-text-primary)',
+            color: 'var(--role-fg-primary)',
             // border.default, not border.subtle: this is the outline of a
             // control the user operates, which WCAG 1.4.11 holds to 3:1.
             // border.subtle is for rules inside a surface.
@@ -162,10 +162,10 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
 
     const chipStyle = {
       ...style,
-      '--tw-ring-color': 'var(--role-focus-ring)',
+      '--tw-ring-color': 'var(--role-border-focus)',
       // Tailwind's ring-offset-2 defaults its gap to white, which is wrong on a
       // dark surface. Same fix as Chip and Checkbox.
-      '--tw-ring-offset-color': 'var(--role-surface-default)',
+      '--tw-ring-offset-color': 'var(--role-bg-default)',
       ...styleProp,
     } as React.CSSProperties;
 
@@ -227,7 +227,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           {...shared}
           onClick={toggle}
           className="inline-flex items-center gap-1.5 border-0 bg-transparent p-0 text-inherit focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ ['--tw-ring-color' as string]: 'var(--role-focus-ring)' }}
+          style={{ ['--tw-ring-color' as string]: 'var(--role-border-focus)' }}
           {...rest}
         >
           {body}
@@ -238,7 +238,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           aria-label={removeLabel ?? `Remove ${typeof label === 'string' ? label : 'filter'}`}
           onClick={onRemove}
           className="ms-1 inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0.5 text-inherit opacity-70 hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ ['--tw-ring-color' as string]: 'var(--role-focus-ring)' }}
+          style={{ ['--tw-ring-color' as string]: 'var(--role-border-focus)' }}
         >
           <X className={ICON[size]} aria-hidden="true" />
         </button>

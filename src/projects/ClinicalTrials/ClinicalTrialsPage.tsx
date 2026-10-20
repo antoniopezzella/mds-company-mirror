@@ -60,10 +60,10 @@ export const ClinicalTrialsPage: React.FC = () => {
 
         <Section>
           <Box sx={{ mb: 6 }}>
-            <Typography variant="h4" sx={{ color: 'var(--role-text-primary)', fontWeight: 700, mb: 1 }}>
+            <Typography variant="h4" sx={{ color: 'var(--role-fg-primary)', fontWeight: 700, mb: 1 }}>
               Sponsor Details
             </Typography>
-            <Typography variant="body1" sx={{ color: 'var(--role-text-secondary)', maxWidth: 800 }}>
+            <Typography variant="body1" sx={{ color: 'var(--role-fg-neutral-subtle)', maxWidth: 800 }}>
               The Sponsor will appear as the primary insured on the policy unless you choose to enter a Local Sponsor below.
             </Typography>
           </Box>
@@ -87,7 +87,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             </div>
           </div>
 
-          <Typography variant="h5" sx={{ color: 'var(--role-text-primary)', fontWeight: 700, mb: 4 }}>
+          <Typography variant="h5" sx={{ color: 'var(--role-fg-primary)', fontWeight: 700, mb: 4 }}>
             Primary Sponsor Information
           </Typography>
 
@@ -102,7 +102,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             </div>
           </div>
 
-          <Typography variant="subtitle1" sx={{ color: 'var(--role-text-primary)', fontWeight: 700, mt: 6, mb: 4 }}>
+          <Typography variant="subtitle1" sx={{ color: 'var(--role-fg-primary)', fontWeight: 700, mt: 6, mb: 4 }}>
             Address
           </Typography>
 
@@ -175,7 +175,7 @@ export const ClinicalTrialsPage: React.FC = () => {
 
           {/* Additional Insured Section */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-            <Typography variant="h5" sx={{ color: 'var(--role-text-primary)', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: 'var(--role-fg-primary)', fontWeight: 700 }}>
               Additional Insured 1
             </Typography>
             <Typography 
@@ -211,7 +211,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             </div>
           </div>
 
-          <Typography variant="subtitle1" sx={{ color: 'var(--role-text-primary)', fontWeight: 700, mt: 6, mb: 4 }}>
+          <Typography variant="subtitle1" sx={{ color: 'var(--role-fg-primary)', fontWeight: 700, mt: 6, mb: 4 }}>
             Address
           </Typography>
 
@@ -302,7 +302,7 @@ export const ClinicalTrialsPage: React.FC = () => {
             <div className="mds-row justify-between items-center">
               <div 
                 className="mds-col-auto flex items-center gap-2 cursor-pointer" 
-                style={{ color: 'var(--role-text-primary)' }}
+                style={{ color: 'var(--role-fg-primary)' }}
               >
                 <ArrowBackIcon sx={{ fontSize: 20 }} />
                 <Typography variant="button" sx={{ fontWeight: 700, textTransform: 'none', fontSize: '16px' }}>

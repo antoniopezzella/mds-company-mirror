@@ -118,7 +118,7 @@ export function FilterBarField({ label, children, className }: FilterBarFieldPro
         <label
           htmlFor={id}
           className="text-xs font-medium"
-          style={{ color: 'var(--role-text-secondary)' }}
+          style={{ color: 'var(--role-fg-neutral-subtle)' }}
         >
           {label}
         </label>
@@ -152,7 +152,7 @@ export const FilterBarSearch = React.forwardRef<HTMLInputElement, FilterBarSearc
         <Search
           aria-hidden="true"
           className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2"
-          style={{ color: 'var(--role-text-secondary)' }}
+          style={{ color: 'var(--role-fg-neutral-subtle)' }}
         />
         <Input
           ref={ref}
@@ -342,7 +342,7 @@ export function FilterBarChips({
       className={cn('w-full', className)}
       {...props}
     >
-      <span className="text-xs font-medium" style={{ color: 'var(--role-text-secondary)' }}>
+      <span className="text-xs font-medium" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
         Filtering by
       </span>
       {/* One tab stop for the whole applied-filters row, not one per filter.
@@ -361,7 +361,7 @@ export function FilterBarChips({
           // "EMEA" on its own is not.
           label={
             <>
-              <span style={{ color: 'var(--role-text-secondary)' }}>{f.label}: </span>
+              <span style={{ color: 'var(--role-fg-neutral-subtle)' }}>{f.label}: </span>
               {f.value}
             </>
           }

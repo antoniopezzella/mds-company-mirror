@@ -32,11 +32,11 @@ const CanvasProvider: React.ComponentType<{ children: React.ReactNode }> =
   (({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children));
 
 // The placeholder used a hardcoded #868e96, which is 3.32:1 on white — under
-// AA, and not an MDS token either. var(--role-text-secondary) is published by
+// AA, and not an MDS token either. var(--role-fg-neutral-subtle) is published by
 // RoleVarsProvider (mounted in .storybook/preview.tsx), so it resolves inside
 // the react-live preview and follows the theme.
 const PLACEHOLDER = `const Canvas = () => (
-  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--role-text-secondary)' }}>
+  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--role-fg-neutral-subtle)' }}>
     Voice Canvas is ready — describe what you want to build
   </div>
 );

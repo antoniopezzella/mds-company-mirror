@@ -28,36 +28,36 @@ function contrast(hex1:string, hex2:string) {
 // monitored: logged as warnings when below target but do not fail yet.
 // Each entry: [fgRole, bgRole, requiredContrast]
 const ENFORCED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
-  ['text.primary', 'surface.default', 4.5],
-  ['text.secondary', 'surface.default', 3.0],
+  ['fg.primary', 'bg.default', 4.5],
+  ['fg.neutral.subtle', 'bg.default', 3.0],
   // surface.accent is now a light warm surface (#f7f8f8); test dark text on it
-  ['text.primary', 'surface.accent', 4.5],
+  ['fg.primary', 'bg.neutral.subtle', 4.5],
   // Status pairs now enforced after dark overrides improvement
-  ['status.success.fg', 'status.success.bg', 3.0],
-  ['status.warning.fg', 'status.warning.bg', 3.0],
-  ['status.danger.fg', 'status.danger.bg', 3.0],
+  ['fg.success', 'bg.success.subtle', 3.0],
+  ['fg.warning', 'bg.warning.subtle', 3.0],
+  ['fg.critical', 'bg.critical.subtle', 3.0],
   // Focus ring must be visible against every surface it can appear on —
   // previously mode-invariant (#0b4bff in both light/dark) and failed 3:1
   // against surface.hero (navy) in both modes. Fixed via Figma-verified
   // mode-aware values; these two pairs are the regression guard.
-  ['focus.ring', 'surface.default', 3.0],
-  ['focus.ring', 'surface.hero', 3.0],
+  ['border.focus', 'bg.default', 3.0],
+  ['border.focus', 'bg.primary', 3.0],
   // text.onInteractive (not text.onAccent) — interactive.primary's dark-mode
   // value lightens (#95caff) instead of staying dark, so text.onAccent's
   // fixed white fails there; text.onInteractive is dark-mode-aware
   // specifically for interactive.primary/secondary/danger. Was previously
   // monitored (non-blocking) while this was a known, unfixed gap; now fixed
   // and enforced so it can't silently regress.
-  ['text.onInteractive', 'interactive.primary', 4.5],
-  ['text.onInteractive', 'interactive.primary.hover', 4.5],
-  ['text.onInteractive', 'interactive.danger', 4.5],
-  ['text.onInteractive', 'status.success.border', 4.5],
-  ['text.onInteractive', 'status.danger.border', 4.5],
+  ['fg.on-interactive', 'interactive.primary', 4.5],
+  ['fg.on-interactive', 'interactive.primary.hover', 4.5],
+  ['fg.on-interactive', 'interactive.danger', 4.5],
+  ['fg.on-interactive', 'border.success', 4.5],
+  ['fg.on-interactive', 'border.critical', 4.5],
   // Warning's solid fill flips white/Midnight like success/danger now that V3's
   // warning is a dark burnt orange (#c25600); the pale soft surface keeps
   // mode-invariant Midnight (text.onLight on status.warning.bg below).
-  ['text.onWarning', 'status.warning.border', 4.5],
-  ['text.onLight', 'status.warning.bg', 4.5],
+  ['fg.on-warning', 'border.warning', 4.5],
+  ['fg.on-light', 'bg.warning.subtle', 4.5],
 
   // ── Added 2026-10-01, after ten shipped sites were found pairing a fixed
   // near-white foreground with a fill that LIGHTENS in dark mode.
@@ -70,10 +70,10 @@ const ENFORCED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [
   // These pairs are the regression guard for that fix. The durable answer is
   // ROLE_PAIRS; this list is the floor beneath it.
   ['text.onPrimary', 'interactive.primary', 4.5],      // was text.onAccent  → 1.73 dark
-  ['text.onInteractive', 'interactive.secondary', 4.5], // was text.onAccent  → 1.73 dark
-  ['text.onLight', 'brand.accent', 4.5],                // was text.onAccent  → 1.65 BOTH
-  ['text.onLight', 'surface.secondary', 4.5],           // was text.primary   → 1.73 dark
-  ['text.primary', 'surface.subtle', 4.5],              // was status.warning.fg → 3.21 light
+  ['fg.on-interactive', 'interactive.secondary', 4.5], // was text.onAccent  → 1.73 dark
+  ['fg.on-light', 'bg.accent', 4.5],                // was text.onAccent  → 1.65 BOTH
+  ['fg.on-light', 'bg.secondary', 4.5],           // was text.primary   → 1.73 dark
+  ['fg.primary', 'bg.neutral.subtle', 4.5],              // was status.warning.fg → 3.21 light
 ];
 
 const MONITORED_ROLE_CONTRAST: Array<[RoleName, RoleName, number]> = [

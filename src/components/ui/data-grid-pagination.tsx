@@ -54,7 +54,7 @@ export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPagin
   const totalItems = manual ? recordCount : filteredCount;
 
   const borderColor = 'var(--role-border-default)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const handlePageChange = (page: number) => {
     table.setPageIndex(page - 1);

@@ -15,15 +15,15 @@ const ICONS: Record<StatusCardStatus, React.ComponentType<{ className?: string }
 function getRoles(status: StatusCardStatus): { bg: RoleName; fg: RoleName; border: RoleName } {
   switch (status) {
     case 'success':
-      return { bg: 'status.success.bg', fg: 'status.success.fg', border: 'status.success.border' };
+      return { bg: 'bg.success.subtle', fg: 'fg.success', border: 'border.success' };
     case 'warning':
       // fg is applied to the title and body copy, so it must clear 4.5:1;
       // status.warning.fg (#c25600) manages 4.44:1 on this background — over 3:1 as an accent, under 4.5 as text.
-      return { bg: 'status.warning.bg', fg: 'text.onLight', border: 'status.warning.border' };
+      return { bg: 'bg.warning.subtle', fg: 'fg.on-light', border: 'border.warning' };
     case 'error':
-      return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.border' };
+      return { bg: 'bg.critical.subtle', fg: 'fg.critical', border: 'border.critical' };
     default:
-      return { bg: 'status.info.bg', fg: 'status.info.fg', border: 'status.info.border' };
+      return { bg: 'bg.info.subtle', fg: 'fg.info', border: 'border.info' };
   }
 }
 

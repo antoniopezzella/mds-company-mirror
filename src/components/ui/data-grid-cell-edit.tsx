@@ -83,7 +83,7 @@ export const DataGridCellEditor = React.forwardRef<
     onBlur: () => onCommit(draft),
     className: cn('w-full', invalid && 'ring-2'),
     style: invalid
-      ? ({ '--tw-ring-color': 'var(--role-status-danger-fg)' } as React.CSSProperties)
+      ? ({ '--tw-ring-color': 'var(--role-fg-critical)' } as React.CSSProperties)
       : undefined,
   };
 

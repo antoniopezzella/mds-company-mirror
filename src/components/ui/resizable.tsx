@@ -74,7 +74,7 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
     style={
       {
         backgroundColor: 'var(--role-border-default)',
-        '--resizable-focus-ring': 'var(--role-focus-ring)',
+        '--resizable-focus-ring': 'var(--role-border-focus)',
       } as React.CSSProperties
     }
     {...props}
@@ -83,11 +83,11 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
       <div
         className="z-10 flex h-4 w-3 items-center justify-center rounded-md border"
         style={{
-          backgroundColor: 'var(--role-surface-default)',
+          backgroundColor: 'var(--role-bg-default)',
           borderColor: 'var(--role-border-default)',
         }}
       >
-        <GripVertical className="h-2.5 w-2.5" style={{ color: 'var(--role-text-secondary)' }} />
+        <GripVertical className="h-2.5 w-2.5" style={{ color: 'var(--role-fg-neutral-subtle)' }} />
       </div>
     )}
   </Separator>

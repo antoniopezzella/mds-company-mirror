@@ -65,7 +65,7 @@ function DataTableFacetedFilterInner<TData extends RowData, TValue>(
 
   const reset = () => column?.setFilterValue(undefined);
 
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -127,7 +127,7 @@ function DataTableFacetedFilterInner<TData extends RowData, TValue>(
                       style={{
                         borderColor: 'var(--role-interactive-primary)',
                         backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',
-                        color: 'var(--role-text-onInteractive)',
+                        color: 'var(--role-fg-on-interactive)',
                       }}
                     >
                       <Check className={cn('h-3 w-3', !isSelected && 'invisible')} />

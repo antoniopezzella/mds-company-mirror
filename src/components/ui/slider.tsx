@@ -71,7 +71,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
       return `${rootLabel} (handle ${index + 1})`;
     };
 
-    const thumbColor = disabled ? 'var(--role-text-disabled)' : getThumbColor(interaction);
+    const thumbColor = disabled ? 'var(--role-fg-disabled)' : getThumbColor(interaction);
 
     return (
       <SliderPrimitive.Root
@@ -106,7 +106,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
         >
           <SliderPrimitive.Range
             className={sliderRangeVariants()}
-            style={{ backgroundColor: disabled ? 'var(--role-text-disabled)' : 'var(--role-interactive-primary)' }}
+            style={{ backgroundColor: disabled ? 'var(--role-fg-disabled)' : 'var(--role-interactive-primary)' }}
           />
         </SliderPrimitive.Track>
         {Array.from({ length: thumbCount }).map((_, index) => (
@@ -116,9 +116,9 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
             className={sliderThumbVariants()}
             style={
               {
-                backgroundColor: 'var(--role-surface-default)',
+                backgroundColor: 'var(--role-bg-default)',
                 borderColor: thumbColor,
-                '--slider-focus-ring': 'var(--role-focus-ring)',
+                '--slider-focus-ring': 'var(--role-border-focus)',
               } as React.CSSProperties
             }
           />

@@ -53,18 +53,18 @@ const buttonVariants = cva(
         // so neither could express Sky-on-Midnight. The last colour literal
         // and the last dark: override in this variant went with it.
         primary:
-          'bg-[var(--role-interactive-primary)] text-[var(--role-text-onPrimary)] shadow-none hover:bg-[var(--role-interactive-primary-hover)] active:bg-[var(--role-interactive-primary-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
+          'bg-[var(--role-interactive-primary)] text-[var(--role-text-onPrimary)] shadow-none hover:bg-[var(--role-interactive-primary-hover)] active:bg-[var(--role-interactive-primary-active)] disabled:bg-[var(--role-bg-disabled)] disabled:text-[var(--role-fg-disabled)]',
 
         // PRIMARY ALT - Gold (role: brand.accent) - Hero/Marketing CTAs
         // brandAccent and its hover/active are deliberately unchanged in
         // semanticDarkOverrides ("unchanged — CTA stays"), so the gold is
         // mode-invariant by design rather than by omission.
         primaryAlt:
-          'bg-[var(--role-brand-accent)] text-[var(--role-text-onLight)] shadow-none hover:bg-[var(--role-interactive-accent-hover)] active:bg-[var(--role-interactive-accent-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
+          'bg-[var(--role-bg-accent)] text-[var(--role-fg-on-light)] shadow-none hover:bg-[var(--role-interactive-accent-hover)] active:bg-[var(--role-interactive-accent-active)] disabled:bg-[var(--role-bg-disabled)] disabled:text-[var(--role-fg-disabled)]',
 
         // SECONDARY - Outline with midnight blue border (role: interactive.primary)
         secondary:
-          'bg-transparent text-[var(--role-interactive-primary)] border-2 border-[var(--role-interactive-primary)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] hover:border-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] active:border-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] disabled:border-[var(--role-interactive-disabled-fg)] ' +
+          'bg-transparent text-[var(--role-interactive-primary)] border-2 border-[var(--role-interactive-primary)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] hover:border-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] active:border-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-fg-disabled)] disabled:border-[var(--role-fg-disabled)] ' +
           // The only dark: left on this variant. These are translucent WASHES
           // over whatever is behind the button, not palette colours — a role
           // would have to be opaque, and the light/dark flip is black-vs-white
@@ -73,12 +73,12 @@ const buttonVariants = cva(
 
         // TERTIARY - Transparent/Ghost (role: interactive.primary)
         tertiary:
-          'bg-transparent text-[var(--role-interactive-primary)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] ' +
+          'bg-transparent text-[var(--role-interactive-primary)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-primary-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-primary-active)] disabled:bg-transparent disabled:text-[var(--role-fg-disabled)] ' +
           'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
 
         // DESTRUCTIVE - Traffic/Crimson (applied when destructive=true)
         //
-        // NOTE the camelCase in --role-text-onInteractive. RoleVarsProvider
+        // NOTE the camelCase in --role-fg-on-interactive. RoleVarsProvider
         // derives var names with role.replaceAll('.', '-') and does NOT
         // kebab-case the segments. This read `--role-text-on-interactive` for
         // a while, which resolves to nothing, so the colour silently fell back
@@ -90,14 +90,14 @@ const buttonVariants = cva(
         // (2.78:1). The role gives white in light and Midnight in dark —
         // 5.34:1 and 6.53:1 — with no manual override.
         destructivePrimary:
-          'bg-[var(--role-interactive-danger)] text-[var(--role-text-onInteractive)] shadow-none hover:bg-[var(--role-interactive-danger-hover)] active:bg-[var(--role-interactive-danger-active)] disabled:bg-[var(--role-interactive-disabled-bg)] disabled:text-[var(--role-interactive-disabled-fg)]',
+          'bg-[var(--role-interactive-danger)] text-[var(--role-fg-on-interactive)] shadow-none hover:bg-[var(--role-interactive-danger-hover)] active:bg-[var(--role-interactive-danger-active)] disabled:bg-[var(--role-bg-disabled)] disabled:text-[var(--role-fg-disabled)]',
 
         destructiveSecondary:
-          'bg-transparent text-[var(--role-interactive-danger-hover)] border-2 border-[var(--role-interactive-danger)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] hover:border-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] active:border-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] disabled:border-[var(--role-interactive-disabled-fg)] ' +
+          'bg-transparent text-[var(--role-interactive-danger-hover)] border-2 border-[var(--role-interactive-danger)] hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] hover:border-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] active:border-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-fg-disabled)] disabled:border-[var(--role-fg-disabled)] ' +
           'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
 
         destructiveTertiary:
-          'bg-transparent text-[var(--role-interactive-danger-hover)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-interactive-disabled-fg)] ' +
+          'bg-transparent text-[var(--role-interactive-danger-hover)] border-none hover:bg-[rgba(0,0,0,0.08)] hover:text-[var(--role-interactive-danger-hover)] active:bg-[rgba(0,0,0,0.03)] active:text-[var(--role-interactive-danger-active)] disabled:bg-transparent disabled:text-[var(--role-fg-disabled)] ' +
           'dark:hover:bg-[rgba(255,255,255,0.08)] dark:active:bg-[rgba(255,255,255,0.03)]',
         
         // INVERSE variants (for dark backgrounds)

@@ -251,13 +251,13 @@ function DataGridTableInner<TData extends RowData>(
   // separating content the user is already inside. In dark it is translucent
   // white, so it composites over the row beneath rather than sitting on it.
   const borderColor = 'var(--role-border-subtle)';
-  const textColor = 'var(--role-text-primary)';
+  const textColor = 'var(--role-fg-primary)';
   const activeColor = 'var(--role-interactive-primary)';
-  const rowBg = 'var(--role-surface-raised)';
+  const rowBg = 'var(--role-bg-raised)';
   // Sky Blue in light (#ceecff), unchanged #252525 in dark. Its own role, not
   // surface.subtle, because stripeBg and headerBg below still want the neutral
   // lift and must NOT follow hover into brand blue.
-  const hoverBg = 'var(--role-surface-row-hover)';
+  const hoverBg = 'var(--role-bg-row-hover)';
   // surface.selected, not surface.accent: accent (#f7f8f8) is one unit from
   // surface.subtle (#f8f8f8) in light, so a selected row and a hovered row
   // were indistinguishable. surface.selected is the role whose own
@@ -267,7 +267,7 @@ function DataGridTableInner<TData extends RowData>(
   // under AA, and green1000 is the darkest green there is. The lighter tint
   // restores that; the left accent bar below is what keeps selected
   // distinguishable from hovered, since no tint satisfies both.
-  const selectedBg = 'var(--role-surface-selected-subtle)';
+  const selectedBg = 'var(--role-bg-selected-subtle)';
   const selectedEdge = 'var(--role-interactive-primary)';
   // The header band. It used to equal the row background exactly, so the
   // column row floated with nothing anchoring it. surface.subtle is one step
@@ -275,9 +275,9 @@ function DataGridTableInner<TData extends RowData>(
   //
   // This is also why surface.raised is NOT neutral900: surface.subtle already
   // is #252525 in dark, and a band the same colour as its panel is not a band.
-  const headerBg = 'var(--role-surface-subtle)';
-  const stripeBg = 'var(--role-surface-subtle)';
-  const selectionBg = 'var(--role-surface-selected-subtle)';
+  const headerBg = 'var(--role-bg-neutral-subtle)';
+  const stripeBg = 'var(--role-bg-neutral-subtle)';
+  const selectionBg = 'var(--role-bg-selected-subtle)';
 
   // Before anything is focused, TanStack reports tabIndex -1 for every cell —
   // correct for "there is no roving position yet", but it leaves the grid
@@ -848,7 +848,7 @@ function DataGridTableInner<TData extends RowData>(
                             {
                               backgroundColor: selectionEdge,
                               zIndex: Z_INDEX.stickyRaised,
-                              '--tw-ring-color': 'var(--role-focus-ring)',
+                              '--tw-ring-color': 'var(--role-border-focus)',
                             } as React.CSSProperties
                           }
                         />
@@ -949,7 +949,7 @@ function DataGridTableInner<TData extends RowData>(
                           }
                         }}
                         className="-mx-1 flex h-7 w-full items-center rounded-lg px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
-                        style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                        style={{ '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                         title="Double-click or press Enter to edit"
                       >
                         {renderCellContent(cell)}
@@ -1010,7 +1010,7 @@ function DataGridTableInner<TData extends RowData>(
             where an aria-label on a <table> is not, and it is visible, which
             helps everyone rather than only screen-reader users. */}
         {caption && (
-          <TableCaption className="p-2 text-left text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+          <TableCaption className="p-2 text-left text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {caption}
           </TableCaption>
         )}
@@ -1069,7 +1069,7 @@ function DataGridTableInner<TData extends RowData>(
                         <button
                           type="button"
                           className="-ms-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
-                          style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                          style={{ color: textColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                           // Shift-click keeps its meaning as "add to the
                           // multi-sort" rather than opening the menu — Radix
                           // opens on pointerdown, so it has to be intercepted
@@ -1214,7 +1214,7 @@ function DataGridTableInner<TData extends RowData>(
                       className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-hidden focus-visible:ring-2"
                       style={{
                         backgroundColor: header.column.getIsResizing() ? activeColor : 'transparent',
-                        '--tw-ring-color': 'var(--role-focus-ring)',
+                        '--tw-ring-color': 'var(--role-border-focus)',
                       } as React.CSSProperties}
                     />
                     /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */

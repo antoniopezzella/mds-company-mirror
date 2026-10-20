@@ -79,7 +79,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     <TabsPrimitive.Root ref={ref} value={value} onValueChange={handleChange} className={cn('w-full', className)}>
       <TabsPrimitive.List
         className={cn(tabsListVariants({ variant }))}
-        style={{ borderColor: 'var(--role-border-default)', '--tabs-focus-ring': 'var(--role-focus-ring)' } as React.CSSProperties}
+        style={{ borderColor: 'var(--role-border-default)', '--tabs-focus-ring': 'var(--role-border-focus)' } as React.CSSProperties}
       >
         {tabs.map((tab) => {
           const isActive = tab.id === value;
@@ -91,10 +91,10 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
               className={cn(tabTriggerVariants())}
               style={{
                 color: tab.disabled
-                  ? 'var(--role-text-disabled)'
+                  ? 'var(--role-fg-disabled)'
                   : isActive
                     ? 'var(--role-interactive-primary)'
-                    : 'var(--role-text-secondary)',
+                    : 'var(--role-fg-neutral-subtle)',
                 borderBottomColor: isActive ? 'var(--role-interactive-primary)' : 'transparent',
               }}
             >

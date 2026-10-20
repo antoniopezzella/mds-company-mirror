@@ -61,7 +61,7 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
             CONTROL_HEIGHT[resolved],
             className
           )}
-          style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+          style={{ borderColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
           {...props}
         />
       </ControlSizeContext.Provider>
@@ -102,7 +102,7 @@ function InputGroupAddon({
       data-slot="input-group-addon"
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
-      style={{ color: 'var(--role-text-secondary)' }}
+      style={{ color: 'var(--role-fg-neutral-subtle)' }}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('button')) return;
         (e.currentTarget.parentElement?.querySelector('input, textarea') as HTMLElement | null)?.focus();
@@ -154,7 +154,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
       className={cn('flex items-center gap-2 text-sm [&_svg]:pointer-events-none', className)}
-      style={{ color: 'var(--role-text-secondary)' }}
+      style={{ color: 'var(--role-fg-neutral-subtle)' }}
       {...props}
     />
   )
@@ -170,7 +170,7 @@ const InputGroupInput = React.forwardRef<HTMLInputElement, React.ComponentProps<
         'flex-1 border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
-      style={{ color: 'var(--role-text-primary)', ...style }}
+      style={{ color: 'var(--role-fg-primary)', ...style }}
       {...props}
     />
   )
@@ -186,7 +186,7 @@ const InputGroupTextarea = React.forwardRef<HTMLTextAreaElement, React.Component
         'flex-1 resize-none border-0 bg-transparent px-3 py-2 text-sm shadow-none outline-hidden placeholder:opacity-60 disabled:cursor-not-allowed disabled:opacity-50',
         className
       )}
-      style={{ color: 'var(--role-text-primary)', ...style }}
+      style={{ color: 'var(--role-fg-primary)', ...style }}
       {...props}
     />
   )

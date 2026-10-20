@@ -163,10 +163,10 @@ const CarouselNavButton = React.forwardRef<HTMLButtonElement, CarouselNavButtonP
         )}
         style={
           {
-            backgroundColor: hover ? 'var(--role-surface-subtle)' : 'var(--role-surface-default)',
+            backgroundColor: hover ? 'var(--role-bg-neutral-subtle)' : 'var(--role-bg-default)',
             borderColor: 'var(--role-border-default)',
-            color: 'var(--role-text-primary)',
-            '--tw-ring-color': 'var(--role-focus-ring)',
+            color: 'var(--role-fg-primary)',
+            '--tw-ring-color': 'var(--role-border-focus)',
           } as React.CSSProperties
         }
         {...props}

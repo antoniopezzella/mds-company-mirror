@@ -88,11 +88,11 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
 
 
   return (
-    <div ref={ref} className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: 'var(--role-surface-default)', ...style }}>
+    <div ref={ref} className={cn('w-full overflow-hidden rounded-md', className)} style={{ backgroundColor: 'var(--role-bg-default)', ...style }}>
       {subheader && (
         <div
           className="px-4 py-2 text-xs font-semibold uppercase tracking-wide"
-          style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-primary)' }}
+          style={{ backgroundColor: 'var(--role-bg-neutral-subtle)', color: 'var(--role-fg-primary)' }}
         >
           {subheader}
         </div>
@@ -117,7 +117,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
           return (
             <React.Fragment key={item.id}>
               <li
-                style={{ backgroundColor: isSelected ? 'var(--role-surface-subtle)' : isHovered ? 'var(--role-surface-subtle)' : 'transparent' }}
+                style={{ backgroundColor: isSelected ? 'var(--role-bg-neutral-subtle)' : isHovered ? 'var(--role-bg-neutral-subtle)' : 'transparent' }}
               >
                 <button
                   type="button"
@@ -133,7 +133,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
                     dense ? 'px-3 py-1.5' : 'px-4 py-2.5',
                     selectable ? 'ps-2' : undefined
                   )}
-                  style={{ color: item.disabled ? 'var(--role-text-disabled)' : 'var(--role-text-primary)' }}
+                  style={{ color: item.disabled ? 'var(--role-fg-disabled)' : 'var(--role-fg-primary)' }}
                 >
                   {selectable && (
                     // Purely presentational. This used to render the real
@@ -150,7 +150,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
                       style={{
                         borderColor: isSelected ? 'var(--role-interactive-primary)' : 'var(--role-border-default)',
                         backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',
-                        color: 'var(--role-text-onInteractive)',
+                        color: 'var(--role-fg-on-interactive)',
                       }}
                     >
                       {isSelected && <Check className="h-3 w-3" />}
@@ -160,7 +160,7 @@ export const List = React.forwardRef<HTMLDivElement, ListProps>(({
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm">{item.primary}</span>
                     {item.secondary && (
-                      <span className="block truncate text-xs" style={{ color: item.disabled ? 'var(--role-text-disabled)' : 'var(--role-text-secondary)' }}>
+                      <span className="block truncate text-xs" style={{ color: item.disabled ? 'var(--role-fg-disabled)' : 'var(--role-fg-neutral-subtle)' }}>
                         {item.secondary}
                       </span>
                     )}

@@ -55,15 +55,15 @@ const toastVariants = cva(
 function getToneRoles(tone: ToastTone): { bg: RoleName; border: RoleName; accent: RoleName; text: RoleName } {
   switch (tone) {
     case 'success':
-      return { bg: 'status.success.bg', border: 'status.success.border', accent: 'status.success.fg', text: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', border: 'border.success', accent: 'fg.success', text: 'fg.success' };
     case 'warning':
-      return { bg: 'status.warning.bg', border: 'status.warning.border', accent: 'status.warning.fg', text: 'text.onLight' };
+      return { bg: 'bg.warning.subtle', border: 'border.warning', accent: 'fg.warning', text: 'fg.on-light' };
     case 'danger':
-      return { bg: 'status.danger.bg', border: 'status.danger.border', accent: 'status.danger.fg', text: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', border: 'border.critical', accent: 'fg.critical', text: 'fg.critical' };
     case 'info':
-      return { bg: 'status.info.bg', border: 'status.info.border', accent: 'status.info.fg', text: 'text.primary' };
+      return { bg: 'bg.info.subtle', border: 'border.info', accent: 'fg.info', text: 'fg.primary' };
     default:
-      return { bg: 'surface.subtle', border: 'border.default', accent: 'text.primary', text: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', border: 'border.default', accent: 'fg.primary', text: 'fg.primary' };
   }
 }
 

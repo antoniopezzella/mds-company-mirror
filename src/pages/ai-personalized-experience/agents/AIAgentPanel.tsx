@@ -43,7 +43,7 @@ export default function AIAgentPanel(props: AIAgentPanelProps) {
             <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
               {agent.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Typography variant="body2" color="fg.neutral.subtle" sx={{ mb: 2 }}>
               Type: {agent.type} | {agent.personality}
             </Typography>
             <Button

@@ -223,7 +223,7 @@ export function CreateTeamDrawer({ open, onOpenChange }: CreateTeamDrawerProps) 
                 rows={3}
                 maxLength={DESCRIPTION_MAX}
               />
-              <span className="self-end text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+              <span className="self-end text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                 {description.length}/{DESCRIPTION_MAX}
               </span>
             </div>
@@ -246,7 +246,7 @@ export function CreateTeamDrawer({ open, onOpenChange }: CreateTeamDrawerProps) 
 function RequiredMark() {
   return (
     <>
-      <span aria-hidden="true" style={{ color: 'var(--role-status-danger-fg)' }}>
+      <span aria-hidden="true" style={{ color: 'var(--role-fg-critical)' }}>
         *
       </span>
       <span className="sr-only">(required)</span>

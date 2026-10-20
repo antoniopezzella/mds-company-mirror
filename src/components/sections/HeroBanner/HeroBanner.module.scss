@@ -11,7 +11,7 @@
   overflow: hidden;
 
   &--dark {
-    background-color: var(--role-surface-hero, #000f47);
+    background-color: var(--role-bg-primary, #000f47);
   }
 
   &--light {
@@ -157,7 +157,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: var(--role-surface-hero, #000f47);
+  background-color: var(--role-bg-primary, #000f47);
 }
 
 .mediaCover iframe {
@@ -231,7 +231,7 @@
   }
 
   .heroBanner--light & {
-    color: var(--role-text-primary, #000f47);
+    color: var(--role-fg-primary, #000f47);
   }
 
   &__word {
@@ -249,7 +249,7 @@
   }
 
   .heroBanner--light & {
-    color: var(--role-text-primary, #000f47);
+    color: var(--role-fg-primary, #000f47);
   }
 }
 

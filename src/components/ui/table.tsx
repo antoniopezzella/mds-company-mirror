@@ -188,15 +188,15 @@ function TableComponent<T extends object>({
   };
 
   const borderColor = 'var(--role-border-default)';
-  const headerBg = 'var(--role-surface-subtle)';
-  const rowBg = 'var(--role-surface-default)';
-  const stripeBg = 'var(--role-surface-subtle)';
+  const headerBg = 'var(--role-bg-neutral-subtle)';
+  const rowBg = 'var(--role-bg-default)';
+  const stripeBg = 'var(--role-bg-neutral-subtle)';
   // Sky Blue in light, unchanged in dark. headerBg and stripeBg above keep the
   // neutral lift deliberately — only the hovered row goes brand.
-  const hoverBg = 'var(--role-surface-row-hover)';
-  const selectedBg = 'var(--role-surface-accent)';
-  const textColor = 'var(--role-text-primary)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const hoverBg = 'var(--role-bg-row-hover)';
+  const selectedBg = 'var(--role-bg-neutral-subtle)';
+  const textColor = 'var(--role-fg-primary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const cellPadding = SIZE_PADDING[size];
   const bordered = variant === 'bordered';

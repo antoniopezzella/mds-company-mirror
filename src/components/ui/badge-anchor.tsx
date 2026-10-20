@@ -80,7 +80,7 @@ export const BadgeAnchor = React.forwardRef<HTMLSpanElement, BadgeAnchorProps>((
                 ? 'h-5 min-w-[20px] px-1 text-[0.65rem]'
                 : 'h-6 min-w-[24px] px-1 text-xs'
           )}
-          style={{ borderColor: 'var(--role-surface-default)' }}
+          style={{ borderColor: 'var(--role-bg-default)' }}
         >
           {isDot ? null : content}
         </Badge>

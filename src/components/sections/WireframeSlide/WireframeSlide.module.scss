@@ -52,7 +52,7 @@
     // background. These boxes carry real labels ("Chart", "Image"), so the
     // text has to be readable; the dashed border and tinted fill already do
     // the work of signalling "placeholder".
-    color: var(--role-text-secondary);
+    color: var(--role-fg-neutral-subtle);
     font-weight: 500;
   }
 
@@ -65,7 +65,7 @@
     .wireframe-slide__placeholder {
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.24);
-      color: var(--role-text-onAccent);
+      color: var(--role-fg-on-accent);
     }
   }
 }

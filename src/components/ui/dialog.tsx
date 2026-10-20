@@ -76,7 +76,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
           size === 'fullscreen' ? 'max-h-screen overflow-y-auto' : 'max-h-[85vh] overflow-y-auto',
           className
         )}
-        style={{ backgroundColor: 'var(--role-surface-default)' }}
+        style={{ backgroundColor: 'var(--role-bg-default)' }}
         {...props}
       >
         {children}
@@ -92,7 +92,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
             // grew, nothing moved. `DialogHeader`'s `pr-12` is the matching
             // clearance (the box now reaches 44px in).
             className="absolute right-2 top-2 flex size-9 items-center justify-center rounded-md opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2"
-            style={{ color: 'var(--role-text-secondary)' }}
+            style={{ color: 'var(--role-fg-neutral-subtle)' }}
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -137,7 +137,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn('font-sans-productive text-lg font-semibold leading-none', className)}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     {...props}
   />
 ));
@@ -150,7 +150,7 @@ const DialogDescription = React.forwardRef<
   <DialogPrimitive.Description
     ref={ref}
     className={cn('font-sans-productive text-sm', className)}
-    style={{ color: 'var(--role-text-secondary)' }}
+    style={{ color: 'var(--role-fg-neutral-subtle)' }}
     {...props}
   />
 ));

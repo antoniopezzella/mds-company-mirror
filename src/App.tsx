@@ -241,7 +241,7 @@ function App() {
 
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h2">Active Policies</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Current insurance policies and coverage details</Typography>
+                        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mt: 0.5 }}>Current insurance policies and coverage details</Typography>
                       </Box>
                       <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
@@ -264,8 +264,8 @@ function App() {
                               width: 110,
                               renderCell: (params) => {
                                 const v = params.value as string;
-                                const bgRole = v === 'Active' ? 'status.success.bg' : v === 'Pending' ? 'status.warning.bg' : 'status.danger.bg';
-                                const fgRole = v === 'Active' ? 'status.success.fg' : v === 'Pending' ? 'status.warning.fg' : 'status.danger.fg';
+                                const bgRole = v === 'Active' ? 'bg.success.subtle' : v === 'Pending' ? 'bg.warning.subtle' : 'bg.critical.subtle';
+                                const fgRole = v === 'Active' ? 'fg.success' : v === 'Pending' ? 'fg.warning' : 'fg.critical';
                                 return (
                                   <span style={{ 
                                     padding: '3px 10px', 
@@ -355,7 +355,7 @@ function App() {
 
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h2">Risk Exposure by Line</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Breakdown of insured value across coverage lines</Typography>
+                        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mt: 0.5 }}>Breakdown of insured value across coverage lines</Typography>
                       </Box>
                       <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
@@ -371,8 +371,8 @@ function App() {
                               width: 110,
                               renderCell: (params) => {
                                 const v = params.value as string;
-                                const bgRole = v === 'A' || v === 'B' ? 'status.success.bg' : v === 'C' ? 'status.warning.bg' : 'status.danger.bg';
-                                const fgRole = v === 'A' || v === 'B' ? 'status.success.fg' : v === 'C' ? 'status.warning.fg' : 'status.danger.fg';
+                                const bgRole = v === 'A' || v === 'B' ? 'bg.success.subtle' : v === 'C' ? 'bg.warning.subtle' : 'bg.critical.subtle';
+                                const fgRole = v === 'A' || v === 'B' ? 'fg.success' : v === 'C' ? 'fg.warning' : 'fg.critical';
                                 return (
                                   <span style={{ 
                                     padding: '3px 10px', 
@@ -430,7 +430,7 @@ function App() {
 
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h2">Claims Register</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>All open and recently settled claims</Typography>
+                        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mt: 0.5 }}>All open and recently settled claims</Typography>
                       </Box>
                       <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
@@ -447,16 +447,16 @@ function App() {
                               renderCell: (params) => {
                                 const v = params.value as string;
                                 const roleMap: Record<string, { bg: string; fg: string }> = {
-                                  Open:       { bg: 'status.warning.bg', fg: 'status.warning.fg' },
+                                  Open:       { bg: 'bg.warning.subtle', fg: 'fg.warning' },
                                   // text.onPrimary is the role that pairs with
                                   // interactive.primary. text.onAccent is a fixed
                                   // near-white, and this fill lightens to #95caff
                                   // in dark — 1.73:1.
                                   'In Review':{ bg: 'interactive.primary', fg: 'text.onPrimary' },
-                                  Settled:    { bg: 'status.success.bg', fg: 'status.success.fg' },
-                                  Denied:     { bg: 'status.danger.bg', fg: 'status.danger.fg' },
+                                  Settled:    { bg: 'bg.success.subtle', fg: 'fg.success' },
+                                  Denied:     { bg: 'bg.critical.subtle', fg: 'fg.critical' },
                                 };
-                                const roles = roleMap[v] ?? { bg: 'surface.disabled', fg: 'text.disabled' };
+                                const roles = roleMap[v] ?? { bg: 'bg.disabled', fg: 'fg.disabled' };
                                 return (
                                   <span style={{ 
                                     padding: '3px 10px', 
@@ -516,7 +516,7 @@ function App() {
 
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h2">Upcoming Renewals</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Policies due for renewal in the next 90 days</Typography>
+                        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mt: 0.5 }}>Policies due for renewal in the next 90 days</Typography>
                       </Box>
                       <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
@@ -534,11 +534,11 @@ function App() {
                               renderCell: (params) => {
                                 const v = params.value as string;
                                 const roleMap: Record<string, { bg: string; fg: string }> = {
-                                  Confirmed:  { bg: 'status.success.bg', fg: 'status.success.fg' },
-                                  Pending:    { bg: 'status.warning.bg', fg: 'status.warning.fg' },
-                                  'At Risk':  { bg: 'status.danger.bg', fg: 'status.danger.fg' },
+                                  Confirmed:  { bg: 'bg.success.subtle', fg: 'fg.success' },
+                                  Pending:    { bg: 'bg.warning.subtle', fg: 'fg.warning' },
+                                  'At Risk':  { bg: 'bg.critical.subtle', fg: 'fg.critical' },
                                 };
-                                const roles = roleMap[v] ?? { bg: 'surface.disabled', fg: 'text.disabled' };
+                                const roles = roleMap[v] ?? { bg: 'bg.disabled', fg: 'fg.disabled' };
                                 return (
                                   <span style={{ 
                                     padding: '3px 10px', 
@@ -582,7 +582,7 @@ function App() {
                     <>
                       <Box sx={{ mb: 3 }}>
                         <Typography variant="h2">Reports &amp; Exports</Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Download portfolio summaries, loss runs and compliance documents</Typography>
+                        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mt: 0.5 }}>Download portfolio summaries, loss runs and compliance documents</Typography>
                       </Box>
                       <Grid container spacing={2} sx={{ mt: 1 }}>
                         {([
@@ -597,11 +597,11 @@ function App() {
                             <Box sx={{ bgcolor: 'white', borderRadius: 2, border: '1px solid', borderColor: 'divider', p: 3, height: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <Typography variant="subtitle1" fontWeight={600}>{r.title}</Typography>
-                                <Box component="span" sx={{ px: 1, py: 0.25, borderRadius: 1, fontSize: '0.7rem', fontWeight: 700, bgcolor: 'grey.100', color: 'text.secondary', letterSpacing: '0.05em' }}>{r.badge}</Box>
+                                <Box component="span" sx={{ px: 1, py: 0.25, borderRadius: 1, fontSize: '0.7rem', fontWeight: 700, bgcolor: 'grey.100', color: 'fg.neutral.subtle', letterSpacing: '0.05em' }}>{r.badge}</Box>
                               </Box>
-                              <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>{r.desc}</Typography>
+                              <Typography variant="body2" color="fg.neutral.subtle" sx={{ flexGrow: 1 }}>{r.desc}</Typography>
                               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
-                                <Typography variant="caption" color="text.disabled">{r.updated}</Typography>
+                                <Typography variant="caption" color="fg.disabled">{r.updated}</Typography>
                                 <Button size="small" variant="outlined">Download</Button>
                               </Box>
                             </Box>

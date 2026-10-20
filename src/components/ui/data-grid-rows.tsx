@@ -69,7 +69,7 @@ export function createExpandColumn<TData extends RowData>({
           style={
             {
               marginLeft: row.depth * indent,
-              '--tw-ring-color': 'var(--role-focus-ring)',
+              '--tw-ring-color': 'var(--role-border-focus)',
             } as React.CSSProperties
           }
         >
@@ -119,7 +119,7 @@ export function createRowPinColumn<TData extends RowData>({
           aria-pressed={!!pinned}
           aria-label={(pinned ? unpinLabel : pinLabel).replace('{row}', n)}
           className="flex size-6 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
         >
           {pinned ? <PinOff className="size-4" aria-hidden="true" /> : <Pin className="size-4" aria-hidden="true" />}
         </button>
@@ -151,7 +151,7 @@ export const DataGridDetailPanel = React.forwardRef<HTMLDivElement, DataGridDeta
     <div
       ref={ref}
       className={cn('px-6 py-4 text-sm', className)}
-      style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-primary)' }}
+      style={{ backgroundColor: 'var(--role-bg-neutral-subtle)', color: 'var(--role-fg-primary)' }}
     >
       {children}
     </div>

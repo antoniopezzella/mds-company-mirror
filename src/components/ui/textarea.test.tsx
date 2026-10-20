@@ -41,9 +41,9 @@ describe('Textarea', () => {
   // Textarea shares Input's InputTone union and tone→role mapping; these
   // assertions exist so the two can't silently drift apart.
   it.each([
-    ['error', 'status.danger.fg'],
-    ['success', 'status.success.fg'],
-    ['warning', 'status.warning.fg'],
+    ['error', 'fg.critical'],
+    ['success', 'fg.success'],
+    ['warning', 'fg.warning'],
   ] as const)('tone="%s" borders with the %s role', (tone, role) => {
     render(<Textarea placeholder="Tone" tone={tone} />);
     expect((screen.getByPlaceholderText('Tone') as HTMLElement).style.borderColor).toBe(roleVar(role));

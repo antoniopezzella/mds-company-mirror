@@ -19,12 +19,12 @@ import { getRoleColor, type RoleName } from '../../theme/roles';
 type Tone = 'neutral' | 'brand' | 'success' | 'danger' | 'warning' | 'info';
 
 const TONE_ROLES: Record<Tone, { bg: RoleName; border: RoleName; fg: RoleName }> = {
-  neutral: { bg: 'surface.subtle', border: 'border.default', fg: 'text.primary' },
-  brand: { bg: 'surface.hero', border: 'border.strong', fg: 'text.onHero' },
-  success: { bg: 'status.success.bg', border: 'status.success.border', fg: 'status.success.fg' },
-  danger: { bg: 'status.danger.bg', border: 'status.danger.border', fg: 'status.danger.fg' },
-  warning: { bg: 'status.warning.bg', border: 'status.warning.border', fg: 'status.warning.fg' },
-  info: { bg: 'status.info.bg', border: 'status.info.border', fg: 'status.info.fg' },
+  neutral: { bg: 'bg.neutral.subtle', border: 'border.default', fg: 'fg.primary' },
+  brand: { bg: 'bg.primary', border: 'border.strong', fg: 'fg.on-primary' },
+  success: { bg: 'bg.success.subtle', border: 'border.success', fg: 'fg.success' },
+  danger: { bg: 'bg.critical.subtle', border: 'border.critical', fg: 'fg.critical' },
+  warning: { bg: 'bg.warning.subtle', border: 'border.warning', fg: 'fg.warning' },
+  info: { bg: 'bg.info.subtle', border: 'border.info', fg: 'fg.info' },
 };
 
 const FlowModeContext = createContext<'light' | 'dark'>('light');
@@ -242,7 +242,7 @@ export const TokenGovernanceFlow: React.FC = () => (
       <FlowArrow direction="right" />
       <FlowStep title="Semantic" detail={`src/semantic-tokens.ts\ntextPrimary: ref('blue1000')`} tone="neutral" width={210} />
       <FlowArrow direction="right" />
-      <FlowStep title="Role" detail={`src/theme/roles.ts\n'text.primary' → textPrimary`} tone="neutral" width={190} />
+      <FlowStep title="Role" detail={`src/theme/roles.ts\n'fg.primary' → textPrimary`} tone="neutral" width={190} />
       <FlowArrow direction="right" />
       <FlowStep title="Component" detail={`getRoleColor('fg.primary')`} tone="info" width={190} />
     </FlowBranches>

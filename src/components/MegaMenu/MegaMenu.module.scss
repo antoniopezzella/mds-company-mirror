@@ -5,7 +5,7 @@
   top: 64px; // placed below the AppBar/Toolbar on desktop
   left: 0;
   width: 100%;
-  background-color: var(--role-surface-secondary, #ceecff);
+  background-color: var(--role-bg-secondary, #ceecff);
   box-shadow: none; // Matching hover requirement of no shadows
   border-top: 1px solid var(--mds-border-subtle, #dadada);
   z-index: 1300;
@@ -57,7 +57,7 @@
 .sectionTitle {
   display: block;
   margin-bottom: t.$spacing-12;
-  color: var(--role-text-secondary, #595959);
+  color: var(--role-fg-neutral-subtle, #595959);
   font-weight: 600;
   text-transform: none;
 }
@@ -82,17 +82,17 @@
 }
 
 .solutionsTitle {
-  color: var(--role-text-primary, #000f47);
+  color: var(--role-fg-primary, #000f47);
   font-weight: 700;
 }
 
 .solutionsSubtitle {
-  color: var(--role-text-secondary, #595959);
+  color: var(--role-fg-neutral-subtle, #595959);
 }
 
 .pillarCard {
   padding: t.$spacing-16;
-  background-color: var(--role-surface-accent, #f7f8f8);
+  background-color: var(--role-bg-neutral-subtle, #f7f8f8);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -107,7 +107,7 @@
 
 .pillarTitle {
   margin-bottom: t.$spacing-16 !important;
-  color: var(--role-text-primary, #000f47);
+  color: var(--role-fg-primary, #000f47);
   
   strong {
     font-weight: 900;
@@ -122,13 +122,13 @@
 }
 
 .pillarTag {
-  color: var(--role-text-secondary, #595959);
+  color: var(--role-fg-neutral-subtle, #595959);
   font-size: 0.8rem !important;
 }
 
 .pillarCta {
   margin-top: auto;
-  color: var(--role-text-primary, #000f47) !important;
+  color: var(--role-fg-primary, #000f47) !important;
   font-weight: 700 !important;
   cursor: pointer;
   text-decoration: none;
@@ -145,7 +145,7 @@
 
 .listTitle {
   margin-bottom: t.$spacing-16 !important;
-  color: var(--role-text-primary, #000f47);
+  color: var(--role-fg-primary, #000f47);
   font-weight: 700 !important;
 }
 
@@ -160,7 +160,7 @@
   align-items: center;
   gap: t.$spacing-8;
   cursor: pointer;
-  color: var(--role-text-primary, #000f47);
+  color: var(--role-fg-primary, #000f47);
 
   &:hover {
     color: var(--role-interactive-secondary, #0b4bff);
@@ -172,7 +172,7 @@
   padding: 2px 6px;
   background-color: var(--mds-border-subtle, #dadada);
   border-radius: 4px;
-  color: var(--role-text-secondary, #595959);
+  color: var(--role-fg-neutral-subtle, #595959);
   text-transform: uppercase;
   font-weight: 700;
 }

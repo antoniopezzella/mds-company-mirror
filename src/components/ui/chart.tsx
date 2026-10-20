@@ -186,7 +186,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
     <div
       ref={ref}
       className={cn('grid min-w-[8rem] gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-md', className)}
-      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)', color: 'var(--role-text-primary)' }}
+      style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)', color: 'var(--role-fg-primary)' }}
     >
       {!hideLabel && label !== undefined && (
         <div className="font-medium">{labelFormatter ? labelFormatter(label, payload) : (config[label as string]?.label ?? label)}</div>
@@ -205,7 +205,7 @@ const ChartTooltipContent = React.forwardRef<HTMLDivElement, ChartTooltipContent
                 />
               )}
               <div className="flex flex-1 items-center justify-between gap-4 leading-none">
-                <span style={{ color: 'var(--role-text-secondary)' }}>{itemConfig?.label ?? entry.name}</span>
+                <span style={{ color: 'var(--role-fg-neutral-subtle)' }}>{itemConfig?.label ?? entry.name}</span>
                 {entry.value !== undefined && <span className="font-mono font-medium">{entry.value.toLocaleString()}</span>}
               </div>
             </div>
@@ -245,7 +245,7 @@ const ChartLegendContent = React.forwardRef<HTMLDivElement, ChartLegendContentPr
         return (
           <div key={String(key)} className="flex items-center gap-1.5 text-xs">
             {!hideIcon && <span className="h-2.5 w-2.5 shrink-0 rounded-md" style={{ backgroundColor: entry.color }} />}
-            <span style={{ color: 'var(--role-text-secondary)' }}>{itemConfig?.label ?? entry.value}</span>
+            <span style={{ color: 'var(--role-fg-neutral-subtle)' }}>{itemConfig?.label ?? entry.value}</span>
           </div>
         );
       })}

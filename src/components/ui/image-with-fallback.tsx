@@ -83,7 +83,7 @@ export const ImageWithFallback = React.forwardRef<HTMLImageElement, ImageWithFal
       {error && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center gap-1"
-          style={{ backgroundColor: 'var(--role-surface-subtle)', color: 'var(--role-text-secondary)' }}
+          style={{ backgroundColor: 'var(--role-bg-neutral-subtle)', color: 'var(--role-fg-neutral-subtle)' }}
         >
           <ImageOff className="h-8 w-8 opacity-40" />
           <span className="text-xs opacity-60">Image unavailable</span>

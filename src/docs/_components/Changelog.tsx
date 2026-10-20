@@ -9,11 +9,11 @@ import { parseChangelog } from './changelog-parse';
 
 /** Section name -> role used for its accent. Unlisted sections fall back to neutral. */
 const SECTION_TONE: Record<string, RoleName> = {
-  Features: 'status.success.fg',
-  'Bug Fixes': 'status.danger.fg',
-  Performance: 'status.info.fg',
-  Refactoring: 'status.warning.fg',
-  Documentation: 'text.secondary',
+  Features: 'fg.success',
+  'Bug Fixes': 'fg.critical',
+  Performance: 'fg.info',
+  Refactoring: 'fg.warning',
+  Documentation: 'fg.neutral.subtle',
 };
 
 const monoStack = 'ui-monospace, SFMono-Regular, Menlo, monospace';
@@ -77,7 +77,7 @@ export const Changelog: React.FC<{ source?: string }> = ({ source = changelogSou
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: getRoleColor(SECTION_TONE[s.title] ?? 'text.secondary'),
+                    color: getRoleColor(SECTION_TONE[s.title] ?? 'fg.neutral.subtle'),
                   }}
                 >
                   {s.title}

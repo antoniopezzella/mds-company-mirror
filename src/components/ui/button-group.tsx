@@ -109,9 +109,9 @@ function ButtonGroupText({ className, asChild = false, style, ...props }: Button
         className
       )}
       style={{
-        backgroundColor: 'var(--role-surface-subtle)',
+        backgroundColor: 'var(--role-bg-neutral-subtle)',
         borderColor: 'var(--role-border-default)',
-        color: 'var(--role-text-primary)',
+        color: 'var(--role-fg-primary)',
         ...style,
       }}
       {...props}

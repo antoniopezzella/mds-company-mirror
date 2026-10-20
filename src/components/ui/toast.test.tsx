@@ -60,15 +60,15 @@ describe('Toast', () => {
   // via getRoleColor keeps these true when a role is retargeted, and proves the
   // component reads the role layer rather than hardcoding colour.
   it.each([
-    ['success', 'status.success.bg', 'status.success.border', 'status.success.fg'],
+    ['success', 'bg.success.subtle', 'border.success', 'fg.success'],
     // warning deliberately does NOT use status.warning.fg for the body text:
     // the #c25600 accent on status.warning.bg is 4.44:1 — a legible icon (over
     // 3:1) but a hair under the 4.5:1 body text requires. text.onLight is the
     // role meant for warning copy (17.71:1) — see alert.tsx. Regression guard.
-    ['warning', 'status.warning.bg', 'status.warning.border', 'text.onLight'],
-    ['danger', 'status.danger.bg', 'status.danger.border', 'status.danger.fg'],
-    ['info', 'status.info.bg', 'status.info.border', 'text.primary'],
-    ['default', 'surface.subtle', 'border.default', 'text.primary'],
+    ['warning', 'bg.warning.subtle', 'border.warning', 'fg.on-light'],
+    ['danger', 'bg.critical.subtle', 'border.critical', 'fg.critical'],
+    ['info', 'bg.info.subtle', 'border.info', 'fg.primary'],
+    ['default', 'bg.neutral.subtle', 'border.default', 'fg.primary'],
   ] as const)('tone="%s" uses the %s bg / %s border / %s text roles', (tone, bg, border, text) => {
     renderToast(
       <Toast open tone={tone} data-testid="toast">

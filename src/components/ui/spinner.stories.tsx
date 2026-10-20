@@ -38,7 +38,7 @@ export const Tinted: Story = {
   render: () => (
     <div className="flex items-center gap-6">
       <Spinner className="size-6" style={{ color: 'var(--role-interactive-primary)' }} />
-      <Spinner className="size-6" style={{ color: 'var(--role-text-secondary)' }} />
+      <Spinner className="size-6" style={{ color: 'var(--role-fg-neutral-subtle)' }} />
     </div>
   ),
 };

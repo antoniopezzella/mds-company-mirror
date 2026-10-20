@@ -237,13 +237,13 @@ const Marsh1DER: React.FC = () => {
   // visible color jump right where the footer begins. 'bottom center'
   // only needs half a viewport of trailing scroll room, which the footer
   // does have.
-  useScrollBackgroundFade(ctaRef, { from: 'surface.default', to: 'surface.hero', end: 'bottom center' });
+  useScrollBackgroundFade(ctaRef, { from: 'bg.default', to: 'bg.primary', end: 'bottom center' });
   // Crossfades the headline's own text color in lockstep with the section
   // background above — surface.default→surface.hero and text.primary→
   // text.onHero share the same scroll span, so the headline stays readable
   // as the navy handoff completes (text.primary is #000f47, the same hex
   // as surface.hero, so without this it would fade to invisible).
-  useScrollBackgroundFade(ctaHeadlineRef, { from: 'text.primary', to: 'text.onHero', trigger: ctaRef, end: 'bottom center', property: 'color' });
+  useScrollBackgroundFade(ctaHeadlineRef, { from: 'fg.primary', to: 'fg.on-primary', trigger: ctaRef, end: 'bottom center', property: 'color' });
   useScrollTextReveal(ctaHeadlineRef, { type: 'lines' });
 
   return (

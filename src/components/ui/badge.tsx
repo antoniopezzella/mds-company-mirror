@@ -77,51 +77,51 @@ const TONE_ROLES: Record<Exclude<BadgeTone, 'default' | 'disabled'>, ToneRoles> 
     // text.onInteractive, not text.onAccent: interactive.primary lightens in
     // dark mode (#95caff) instead of staying dark, so a fixed white fails
     // there (1.73:1) — text.onInteractive resolves white/Midnight per mode.
-    solidFg: 'text.onInteractive',
+    solidFg: 'fg.on-interactive',
     // TODO(token-request): no existing role represents a light tint of the
     // brand-primary navy Figma uses for "Informative" — surface.accent is
     // the closest already-approved role, not a semantic match.
-    softBg: 'surface.accent',
+    softBg: 'bg.neutral.subtle',
     softBorder: 'interactive.primary',
-    softFg: 'text.primary',
+    softFg: 'fg.primary',
     // 18.11 light / 11.03 dark — interactive.primary is already mode-aware.
     outlineFg: 'interactive.primary',
   },
   success: {
-    solidBg: 'status.success.border',
-    solidFg: 'text.onSuccess', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
-    softBg: 'status.success.bg',
-    softBorder: 'status.success.border',
-    softFg: 'text.primary',
-    outlineFg: 'status.success.fg', // 5.12 light / 17.85 dark
+    solidBg: 'border.success',
+    solidFg: 'fg.on-success', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
+    softBg: 'bg.success.subtle',
+    softBorder: 'border.success',
+    softFg: 'fg.primary',
+    outlineFg: 'fg.success', // 5.12 light / 17.85 dark
   },
   warning: {
-    solidBg: 'status.warning.border',
+    solidBg: 'border.warning',
     // Since V3's warning is a dark burnt orange (#c25600), the solid fill now
     // behaves like success/danger: text.onWarning flips white (light, 4.54:1) →
     // Midnight (dark, 13.41:1). It was the mode-invariant Midnight exception only
     // while warning was pale gold, where white failed (2.12:1).
-    solidFg: 'text.onWarning',
-    softBg: 'status.warning.bg',
-    softBorder: 'status.warning.border',
+    solidFg: 'fg.on-warning',
+    softBg: 'bg.warning.subtle',
+    softBorder: 'border.warning',
     // Soft fill is the pale gold50 surface in both modes, so its text stays
     // mode-invariant Midnight — text.onLight carries the exact pixels
     // text.onWarning used to hold here, before it was repurposed for the
     // flipping solid case above.
-    softFg: 'text.onLight',
+    softFg: 'fg.on-light',
     // status.warning.fg is now the #c25600 accent at 4.54:1 on white — legible
     // as this variant's 12px text, where the old gold1000 (3.41:1) was not and
     // forced a fall back to text.primary. Kept on the accent so the outline
     // badge reads in the warning hue.
-    outlineFg: 'status.warning.fg',
+    outlineFg: 'fg.warning',
   },
   danger: {
-    solidBg: 'status.danger.border',
-    solidFg: 'text.onDanger', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
-    softBg: 'status.danger.bg',
-    softBorder: 'status.danger.border',
-    softFg: 'text.primary',
-    outlineFg: 'status.danger.fg', // 9.29 light / 16.27 dark
+    solidBg: 'border.critical',
+    solidFg: 'fg.on-critical', // white light / Midnight dark — dedicated on-* (was proxied via text.onInteractive)
+    softBg: 'bg.critical.subtle',
+    softBorder: 'border.critical',
+    softFg: 'fg.primary',
+    outlineFg: 'fg.critical', // 9.29 light / 16.27 dark
   },
 };
 
@@ -163,10 +163,10 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
     if (tone === 'default') {
       backgroundColor = 'transparent';
-      color = 'var(--role-text-primary)';
+      color = 'var(--role-fg-primary)';
       borderColor = 'var(--role-border-default)';
     } else if (tone === 'disabled') {
-      backgroundColor = 'var(--role-surface-disabled)';
+      backgroundColor = 'var(--role-bg-disabled)';
       // text.secondary, not text.disabled. WCAG 1.4.3 exempts text that is part
       // of an *inactive user interface component* — but a Badge is a status
       // label, not a control the user is locked out of. "Disabled" here is a
@@ -177,7 +177,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       // Deliberately scoped to the Badge rather than changing text.disabled
       // globally, where the exemption does legitimately apply (disabled inputs,
       // disabled buttons).
-      color = 'var(--role-text-secondary)';
+      color = 'var(--role-fg-neutral-subtle)';
       borderColor = undefined;
     } else {
       const roles = TONE_ROLES[tone];

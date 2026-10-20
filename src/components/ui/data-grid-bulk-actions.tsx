@@ -228,10 +228,10 @@ export const DataGridBulkActions = React.forwardRef<HTMLDivElement, DataGridBulk
             </Button>
           }
         >
-          <ul className="max-h-48 overflow-auto text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+          <ul className="max-h-48 overflow-auto text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {state.result.failed?.map((f) => (
               <li key={f.id} className="flex gap-2 py-0.5">
-                <span className="font-medium" style={{ color: 'var(--role-text-primary)' }}>
+                <span className="font-medium" style={{ color: 'var(--role-fg-primary)' }}>
                   {f.id}
                 </span>
                 <span>{f.reason}</span>

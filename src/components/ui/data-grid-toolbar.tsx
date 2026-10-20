@@ -103,7 +103,7 @@ export const DataGridToolbar = React.forwardRef<HTMLDivElement, DataGridToolbarP
 
   const columnFilters = table.state.columnFilters;
   const searchValue = searchKey ? ((table.getColumn(searchKey)?.getFilterValue() as string) ?? '') : '';
-  const textColor = 'var(--role-text-secondary)';
+  const textColor = 'var(--role-fg-neutral-subtle)';
 
   const exportableColumns = React.useMemo(
     () => table.getAllLeafColumns().filter((c) => c.getCanHide()),
@@ -156,7 +156,7 @@ export const DataGridToolbar = React.forwardRef<HTMLDivElement, DataGridToolbarP
                   searchInputRef.current?.focus();
                 }}
                 className="absolute end-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-                style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                style={{ color: textColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
               >
                 <X className="h-3.5 w-3.5" />
               </button>

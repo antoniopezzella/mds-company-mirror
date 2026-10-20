@@ -65,7 +65,7 @@ export const Divider: React.FC<DividerProps> = ({
         )}
       >
         {(labelPosition === 'start' || labelPosition === 'center') && <div style={lineStyle} />}
-        <span className="whitespace-nowrap text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+        <span className="whitespace-nowrap text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
           {label}
         </span>
         {(labelPosition === 'end' || labelPosition === 'center') && <div style={lineStyle} />}

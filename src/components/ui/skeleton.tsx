@@ -48,7 +48,7 @@ export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
       data-slot="skeleton"
       className={cn(skeletonVariants({ variant, animation: animation === false ? 'none' : animation }), className)}
       style={{
-        backgroundColor: 'var(--role-surface-subtle)',
+        backgroundColor: 'var(--role-bg-neutral-subtle)',
         width: width ?? (variant === 'circular' ? 40 : '100%'),
         height: height ?? defaultHeight,
         ...style,

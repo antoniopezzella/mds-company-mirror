@@ -98,7 +98,7 @@ export function TeamSetup({ team, onSave }: TeamSetupProps) {
 
   return (
     <Stack gap={6}>
-      <p className="text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+      <p className="text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
         Configure your team settings and how members are managed in the portal.
       </p>
 
@@ -147,7 +147,7 @@ export function TeamSetup({ team, onSave }: TeamSetupProps) {
                   value={draft.description}
                   onChange={(e) => set('description', e.target.value.slice(0, DESCRIPTION_MAX))}
                 />
-                <span className="self-end text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+                <span className="self-end text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                   {draft.description.length}/{DESCRIPTION_MAX}
                 </span>
               </div>
@@ -293,17 +293,17 @@ function RolesEditor({ roles, onChange }: { roles: TeamClientRole[]; onChange: (
                   className="flex items-center justify-between gap-2 rounded-md border px-3 py-2"
                   style={{
                     borderColor: active ? 'var(--role-interactive-primary)' : 'var(--role-border-default)',
-                    backgroundColor: active ? 'var(--role-surface-selected-subtle)' : 'transparent',
+                    backgroundColor: active ? 'var(--role-bg-selected-subtle)' : 'transparent',
                   }}
                 >
                   <button
                     type="button"
                     className="flex-1 text-left text-sm font-medium outline-none"
-                    style={{ color: 'var(--role-text-primary)' }}
+                    style={{ color: 'var(--role-fg-primary)' }}
                     onClick={() => setSelectedId(r.id)}
                   >
                     {r.role}
-                    <span className="ml-2 text-xs font-normal" style={{ color: 'var(--role-text-secondary)' }}>
+                    <span className="ml-2 text-xs font-normal" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                       {r.coverage.length} covering
                     </span>
                   </button>
@@ -346,7 +346,7 @@ function RolesEditor({ roles, onChange }: { roles: TeamClientRole[]; onChange: (
               />
             </div>
             {selected.coverage.length === 0 ? (
-              <p className="text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+              <p className="text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                 No one covers this role yet.
               </p>
             ) : (
@@ -358,7 +358,7 @@ function RolesEditor({ roles, onChange }: { roles: TeamClientRole[]; onChange: (
             )}
           </Stack>
         ) : (
-          <div className="flex h-full items-center justify-center text-center text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+          <div className="flex h-full items-center justify-center text-center text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             Select a role to add coverage.
           </div>
         )}

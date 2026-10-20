@@ -29,14 +29,14 @@ export type AlertSeverity = 'error' | 'warning' | 'info' | 'success';
 function getSeverityRoles(severity: AlertSeverity): { fg: RoleName; bg: RoleName; border: RoleName; text: RoleName } {
   switch (severity) {
     case 'success':
-      return { fg: 'status.success.fg', bg: 'status.success.bg', border: 'status.success.border', text: 'status.success.fg' };
+      return { fg: 'fg.success', bg: 'bg.success.subtle', border: 'border.success', text: 'fg.success' };
     case 'warning':
-      return { fg: 'status.warning.fg', bg: 'status.warning.bg', border: 'status.warning.border', text: 'text.onLight' };
+      return { fg: 'fg.warning', bg: 'bg.warning.subtle', border: 'border.warning', text: 'fg.on-light' };
     case 'error':
-      return { fg: 'status.danger.fg', bg: 'status.danger.bg', border: 'status.danger.border', text: 'status.danger.fg' };
+      return { fg: 'fg.critical', bg: 'bg.critical.subtle', border: 'border.critical', text: 'fg.critical' };
     case 'info':
     default:
-      return { fg: 'status.info.fg', bg: 'status.info.bg', border: 'status.info.border', text: 'text.primary' };
+      return { fg: 'fg.info', bg: 'bg.info.subtle', border: 'border.info', text: 'fg.primary' };
   }
 }
 
@@ -81,7 +81,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     // dark) and is identical to the current value in light mode, so it fixes dark
     // without touching the light rendering. The status accent still reads on the
     // border and icon (`fg`).
-    const bodyText: RoleName = outlined ? 'text.primary' : text;
+    const bodyText: RoleName = outlined ? 'fg.primary' : text;
     const iconName = SEVERITY_ICON[severity];
 
     return (

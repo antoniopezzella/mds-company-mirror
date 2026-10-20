@@ -33,7 +33,7 @@ export const Default: Story = {
           <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, marginBottom: '8px' }}>
             Explore the Mountains
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+          <Typography variant="body2" color="fg.neutral.subtle" sx={{ lineHeight: 1.6 }}>
             Discover breathtaking mountain landscapes and hidden trails that lead to some of nature's most stunning vistas. Perfect for adventurers and nature lovers alike.
           </Typography>
         </CardContent>
@@ -60,7 +60,7 @@ export const WithLongContent: Story = {
           <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, marginBottom: '8px' }}>
             Urban Architecture & Design
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+          <Typography variant="body2" color="fg.neutral.subtle" sx={{ lineHeight: 1.6 }}>
             A deep dive into modern urban architecture, exploring how cities are reshaping their skylines with bold, sustainable designs. From glass towers to repurposed industrial spaces, the urban landscape is constantly evolving to meet the needs of a growing population.
           </Typography>
         </CardContent>
@@ -88,7 +88,7 @@ export const HorizontalCard: Story = {
             <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, marginBottom: '8px' }}>
               Coastal Getaways
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+            <Typography variant="body2" color="fg.neutral.subtle" sx={{ lineHeight: 1.6 }}>
               Escape to serene coastal destinations where the sound of waves meets golden sand. Ideal for a refreshing retreat.
             </Typography>
           </CardContent>
@@ -152,7 +152,7 @@ export const CardGrid: Story = {
               <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 600, fontSize: '1rem', marginBottom: '8px' }}>
                 {card.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+              <Typography variant="body2" color="fg.neutral.subtle" sx={{ lineHeight: 1.6 }}>
                 {card.description}
               </Typography>
             </CardContent>
@@ -184,7 +184,7 @@ export const MinimalCard: Story = {
           <Typography variant="h6" component="h2" sx={{ fontWeight: 700, marginBottom: '12px' }}>
             The Art of Minimalism
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+          <Typography variant="body2" color="fg.neutral.subtle" sx={{ lineHeight: 1.7 }}>
             Less is more. Explore how minimalist design principles can create powerful, focused experiences.
           </Typography>
         </CardContent>

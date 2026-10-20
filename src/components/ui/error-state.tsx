@@ -102,11 +102,11 @@ function ErrorStateMedia({
       style={
         variant === 'icon'
           ? {
-              backgroundColor: 'var(--role-status-danger-bg)',
-              color: 'var(--role-status-danger-fg)',
+              backgroundColor: 'var(--role-bg-critical-subtle)',
+              color: 'var(--role-fg-critical)',
               ...style,
             }
-          : { color: 'var(--role-status-danger-fg)', ...style }
+          : { color: 'var(--role-fg-critical)', ...style }
       }
       {...props}
     />
@@ -118,7 +118,7 @@ function ErrorStateTitle({ className, style, ...props }: React.ComponentProps<'d
     <div
       data-slot="error-state-title"
       className={cn('text-lg font-medium tracking-tight', className)}
-      style={{ color: 'var(--role-text-primary)', ...style }}
+      style={{ color: 'var(--role-fg-primary)', ...style }}
       {...props}
     />
   );
@@ -129,7 +129,7 @@ function ErrorStateDescription({ className, style, ...props }: React.ComponentPr
     <div
       data-slot="error-state-description"
       className={cn('text-sm/relaxed', className)}
-      style={{ color: 'var(--role-text-secondary)', ...style }}
+      style={{ color: 'var(--role-fg-neutral-subtle)', ...style }}
       {...props}
     />
   );
@@ -198,7 +198,7 @@ function DataError({
             </Button>
           )}
           {detail && (
-            <span className="font-mono text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+            <span className="font-mono text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
               {detail}
             </span>
           )}

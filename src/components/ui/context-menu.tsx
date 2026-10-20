@@ -31,7 +31,7 @@ const ContextMenuSubTrigger = React.forwardRef<
       inset && 'ps-8',
       className
     )}
-    style={{ color: 'var(--role-text-primary)', '--context-menu-hover-bg': 'var(--role-surface-subtle)' } as React.CSSProperties}
+    style={{ color: 'var(--role-fg-primary)', '--context-menu-hover-bg': 'var(--role-bg-neutral-subtle)' } as React.CSSProperties}
     {...props}
   >
     {children}
@@ -50,7 +50,7 @@ const ContextMenuSubContent = React.forwardRef<
       'z-[1500] min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
       className
     )}
-    style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
+    style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));
@@ -67,7 +67,7 @@ const ContextMenuContent = React.forwardRef<
         'z-[1500] min-w-[10rem] overflow-hidden rounded-lg border p-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className
       )}
-      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
+      style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)' }}
       {...props}
     />
   </ContextMenuPrimitive.Portal>
@@ -93,7 +93,7 @@ const ContextMenuItem = React.forwardRef<
       inset && 'ps-8',
       className
     )}
-    style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    style={{ color: roleVar(tone === 'danger' ? 'fg.critical' : 'fg.primary') }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
@@ -101,7 +101,7 @@ const ContextMenuItem = React.forwardRef<
     {...props}
     onFocus={(e) => {
       (e.currentTarget as HTMLElement).style.backgroundColor = roleVar(
-        tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
+        tone === 'danger' ? 'bg.critical.subtle' : 'bg.neutral.subtle'
       );
       props.onFocus?.(e);
     }}
@@ -123,7 +123,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     checked={checked}
     {...props}
   >
@@ -147,7 +147,7 @@ const ContextMenuRadioItem = React.forwardRef<
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     {...props}
   >
     <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -167,7 +167,7 @@ const ContextMenuLabel = React.forwardRef<
   <ContextMenuPrimitive.Label
     ref={ref}
     className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'ps-8', className)}
-    style={{ color: 'var(--role-text-secondary)' }}
+    style={{ color: 'var(--role-fg-neutral-subtle)' }}
     {...props}
   />
 ));

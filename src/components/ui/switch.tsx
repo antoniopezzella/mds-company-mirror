@@ -59,15 +59,15 @@ function getRootStyle({
   interaction: InteractionState;
 }): React.CSSProperties {
   const focusVars = {
-    '--switch-focus-ring': 'var(--role-focus-ring)',
-    '--switch-focus-inner-ring': 'var(--role-surface-default)',
+    '--switch-focus-ring': 'var(--role-border-focus)',
+    '--switch-focus-inner-ring': 'var(--role-bg-default)',
   } as React.CSSProperties;
 
   if (disabled) {
     return {
       ...focusVars,
-      backgroundColor: 'var(--role-surface-disabled)',
-      borderColor: 'var(--role-text-disabled)',
+      backgroundColor: 'var(--role-bg-disabled)',
+      borderColor: 'var(--role-fg-disabled)',
     };
   }
 
@@ -150,7 +150,7 @@ const DSSwitch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>,
       if (!disabled) setInteraction(next);
     };
 
-    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'fg.disabled' : 'fg.primary');
     const rootStyle = getRootStyle({ checked: currentChecked, disabled, tone, interaction });
 
     const switchElement = (
@@ -198,7 +198,7 @@ const DSSwitch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>,
       >
         <SwitchPrimitive.Thumb
           className={switchThumbVariants()}
-          style={{ backgroundColor: 'var(--role-surface-default)' }}
+          style={{ backgroundColor: 'var(--role-bg-default)' }}
         />
       </SwitchPrimitive.Root>
     );

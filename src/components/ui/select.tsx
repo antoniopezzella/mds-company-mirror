@@ -55,10 +55,10 @@ const SelectTrigger = React.forwardRef<
     )}
     style={
       {
-        borderColor: invalid ? 'var(--role-status-danger-border)' : 'var(--role-border-default)',
-        color: 'var(--role-text-primary)',
-        backgroundColor: 'var(--role-surface-default)',
-        '--tw-ring-color': invalid ? 'var(--role-status-danger-border)' : 'var(--role-focus-ring)',
+        borderColor: invalid ? 'var(--role-border-critical)' : 'var(--role-border-default)',
+        color: 'var(--role-fg-primary)',
+        backgroundColor: 'var(--role-bg-default)',
+        '--tw-ring-color': invalid ? 'var(--role-border-critical)' : 'var(--role-border-focus)',
       } as React.CSSProperties
     }
     {...props}
@@ -112,7 +112,7 @@ const SelectContent = React.forwardRef<
         position === 'popper' && 'data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1',
         className
       )}
-      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
+      style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)' }}
       position={position}
       {...props}
     >
@@ -139,7 +139,7 @@ const SelectLabel = React.forwardRef<
   <SelectPrimitive.Label
     ref={ref}
     className={cn('px-2 py-1.5 text-xs font-semibold', className)}
-    style={{ color: 'var(--role-text-secondary)' }}
+    style={{ color: 'var(--role-fg-neutral-subtle)' }}
     {...props}
   />
 ));
@@ -155,14 +155,14 @@ const SelectItem = React.forwardRef<
       'relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 ps-2 pe-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
     // inside it, written for exactly that case, became dead code.
     {...props}
     onFocus={(e) => {
-      (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-surface-subtle)';
+      (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-bg-neutral-subtle)';
       props.onFocus?.(e);
     }}
     onBlur={(e) => {
@@ -249,10 +249,10 @@ export interface DSSelectProps {
 }
 
 function getToneRoles(tone: NonNullable<DSSelectProps['tone']>, error?: boolean): { border: RoleName; text: RoleName } {
-  if (error || tone === 'error') return { border: 'status.danger.border', text: 'status.danger.fg' };
-  if (tone === 'success') return { border: 'interactive.primary', text: 'status.success.fg' };
-  if (tone === 'warning') return { border: 'status.warning.fg', text: 'status.warning.fg' };
-  return { border: 'border.default', text: 'text.secondary' };
+  if (error || tone === 'error') return { border: 'border.critical', text: 'fg.critical' };
+  if (tone === 'success') return { border: 'interactive.primary', text: 'fg.success' };
+  if (tone === 'warning') return { border: 'fg.warning', text: 'fg.warning' };
+  return { border: 'border.default', text: 'fg.neutral.subtle' };
 }
 
 // Radix's <Select.Item> rejects an empty-string value outright (it's
@@ -351,7 +351,7 @@ export const DSSelect: React.FC<DSSelectProps> = ({
         <label
           htmlFor={generatedId}
           className="font-sans-productive text-sm font-medium"
-          style={{ color: 'var(--role-text-secondary)' }}
+          style={{ color: 'var(--role-fg-neutral-subtle)' }}
         >
           {label}
         </label>

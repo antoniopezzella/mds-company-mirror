@@ -193,7 +193,7 @@ function RowActionsCell<TData>({
             // Destructive gets the danger colour whether or not it is
             // icon-only — the confirmation is the safeguard, the colour is
             // the warning that one is coming.
-            style={primaryAction.destructive ? { color: 'var(--role-status-danger-fg)' } : undefined}
+            style={primaryAction.destructive ? { color: 'var(--role-fg-critical)' } : undefined}
             {...(primaryAction.iconOnly
               ? { iconOnly: true, icon: primaryAction.icon }
               : {})}
@@ -238,7 +238,7 @@ function RowActionsCell<TData>({
                       disabled={disabled}
                       title={disabled ? action.disabledReason : undefined}
                       onSelect={() => activate(action)}
-                      style={action.destructive ? { color: 'var(--role-status-danger-fg)' } : undefined}
+                      style={action.destructive ? { color: 'var(--role-fg-critical)' } : undefined}
                     >
                       {action.icon}
                       {action.label}

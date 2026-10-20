@@ -31,7 +31,7 @@ const Section: React.FC<SectionProps> = ({ title, subtitle, children }) => (
       </Typography>
     )}
     {subtitle && (
-      <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4 }}>
+      <Typography variant="body1" sx={{ color: 'fg.neutral.subtle', mb: 4 }}>
         {subtitle}
       </Typography>
     )}

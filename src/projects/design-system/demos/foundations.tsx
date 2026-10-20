@@ -214,30 +214,30 @@ export function TokensDemo() {
 // header's theme control to see the same roles resolve for dark mode.
 
 const COLOR_GROUPS: Array<{ label: string; roles: import('@/theme/roles').RoleName[] }> = [
-  { label: 'Brand & text', roles: ['brand.accent', 'text.primary', 'text.secondary', 'text.disabled'] },
-  { label: 'Surface', roles: ['surface.default', 'surface.subtle', 'surface.accent', 'surface.navigation'] },
-  { label: 'Border & focus', roles: ['border.default', 'border.strong', 'focus.ring'] },
+  { label: 'Brand & text', roles: ['bg.accent', 'fg.primary', 'fg.neutral.subtle', 'fg.disabled'] },
+  { label: 'Surface', roles: ['bg.default', 'bg.neutral.subtle', 'bg.neutral.subtle', 'bg.shell'] },
+  { label: 'Border & focus', roles: ['border.default', 'border.strong', 'border.focus'] },
   { label: 'Interactive', roles: ['interactive.primary', 'interactive.primary.hover', 'interactive.secondary', 'interactive.danger'] },
   {
     label: 'Status',
     roles: [
-      'status.success.fg',
-      'status.success.bg',
-      'status.warning.fg',
-      'status.warning.bg',
-      'status.danger.fg',
-      'status.danger.bg',
-      'status.info.fg',
-      'status.info.bg',
+      'fg.success',
+      'bg.success.subtle',
+      'fg.warning',
+      'bg.warning.subtle',
+      'fg.critical',
+      'bg.critical.subtle',
+      'fg.info',
+      'bg.info.subtle',
     ],
   },
 ];
 
 const LIGHT_DARK_COMPARISON: Array<{ role: import('@/theme/roles').RoleName; note: string }> = [
   { role: 'interactive.primary', note: 'Lightens rather than inverts to white — buttons stay legible and colored on dark, not plain white-on-navy chrome.' },
-  { role: 'text.primary', note: 'Inverts fully: Midnight Blue on light, white on dark.' },
-  { role: 'surface.default', note: 'Inverts fully: white page background on light, near-black (#101010) on dark.' },
-  { role: 'brand.accent', note: 'Deliberately unchanged — the gold CTA accent stays fixed in both modes.' },
+  { role: 'fg.primary', note: 'Inverts fully: Midnight Blue on light, white on dark.' },
+  { role: 'bg.default', note: 'Inverts fully: white page background on light, near-black (#101010) on dark.' },
+  { role: 'bg.accent', note: 'Deliberately unchanged — the gold CTA accent stays fixed in both modes.' },
 ];
 
 export function ColorDemo() {

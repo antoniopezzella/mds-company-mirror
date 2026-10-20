@@ -35,7 +35,7 @@ function DataTableSortListInner<TData extends RowData>(
     return typeof header === 'string' ? header : id;
   };
 
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
   const borderColor = 'var(--role-border-default)';
 
   return (
@@ -70,7 +70,7 @@ function DataTableSortListInner<TData extends RowData>(
                     table.setSorting(next);
                   }}
                   className="flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                 >
                   {[s.id, ...unsorted.map((c) => c.id)].map((id) => (
                     <option key={id} value={id}>
@@ -83,7 +83,7 @@ function DataTableSortListInner<TData extends RowData>(
                   value={s.desc ? 'desc' : 'asc'}
                   onChange={(e) => table.setSorting(sorting.map((x) => (x.id === s.id ? { ...x, desc: e.target.value === 'desc' } : x)))}
                   className="w-24 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                 >
                   <option value="asc">Asc</option>
                   <option value="desc">Desc</option>

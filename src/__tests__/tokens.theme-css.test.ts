@@ -54,7 +54,7 @@ describe('CSS variable generation', () => {
   test('camelCase role segments are preserved, not kebab-cased', () => {
     const content = read('src', 'styles', 'roles.generated.css');
     if (content === null) return;
-    expect(content).toMatch(/--role-text-onInteractive:/);
+    expect(content).toMatch(/--role-fg-on-interactive:/);
     expect(content).not.toMatch(/--role-text-on-interactive:/); // roles-allow-dangling — naming the wrong form IS the assertion
   });
 });

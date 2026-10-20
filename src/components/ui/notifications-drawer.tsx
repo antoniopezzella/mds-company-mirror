@@ -49,12 +49,12 @@ const DEFAULT_NOTIFICATIONS: RiskNotification[] = [
 // The role system doesn't have a "watch"/"advisory" tier — approximated
 // against the closest severity in the existing status.* roles.
 const SEVERITY_CONFIG: Record<RiskNotification['severity'], { label: string; fg: RoleName; bg: RoleName }> = {
-  warning: { label: 'Warning', fg: 'status.danger.fg', bg: 'status.danger.bg' },
+  warning: { label: 'Warning', fg: 'fg.critical', bg: 'bg.critical.subtle' },
   // fg here is rendered as text; status.warning.fg on status.warning.bg is
   // 4.44:1. text.onLight (17.71:1) is the role intended for warning text.
-  watch: { label: 'Watch', fg: 'text.onLight', bg: 'status.warning.bg' },
-  advisory: { label: 'Advisory', fg: 'status.info.fg', bg: 'status.info.bg' },
-  action: { label: 'Action Required', fg: 'interactive.primary', bg: 'surface.accent' },
+  watch: { label: 'Watch', fg: 'fg.on-light', bg: 'bg.warning.subtle' },
+  advisory: { label: 'Advisory', fg: 'fg.info', bg: 'bg.info.subtle' },
+  action: { label: 'Action Required', fg: 'interactive.primary', bg: 'bg.neutral.subtle' },
 };
 
 function highlightNumbers(text: string) {
@@ -68,17 +68,17 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
   const [filter, setFilter] = React.useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
 
-  const textPrimary = 'var(--role-text-primary)';
-  const textSecondary = 'var(--role-text-secondary)';
+  const textPrimary = 'var(--role-fg-primary)';
+  const textSecondary = 'var(--role-fg-neutral-subtle)';
   const borderDefault = 'var(--role-border-default)';
-  const surfaceSubtle = 'var(--role-surface-subtle)';
-  const surfaceDefault = 'var(--role-surface-default)';
+  const surfaceSubtle = 'var(--role-bg-neutral-subtle)';
+  const surfaceDefault = 'var(--role-bg-default)';
   const primaryBlue = 'var(--role-interactive-primary)';
   // `text.onInteractive`, NOT `text.onAccent`. interactive.primary LIGHTENS in
   // dark mode (#000f47 -> #95caff), so white-on-accent drops to 1.73:1 there —
   // a clear AA failure. text.onInteractive exists for exactly these surfaces
   // and resolves to #000f47 in dark, giving 10.50:1.
-  const textOnInteractive = 'var(--role-text-onInteractive)';
+  const textOnInteractive = 'var(--role-fg-on-interactive)';
 
   const unreadCount = notifications.filter((n) => n.unread).length;
   const actionCount = notifications.filter((n) => n.actionRequired).length;
@@ -181,12 +181,12 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                         className="relative rounded-lg border p-3.5"
                         style={{
                           borderColor: borderDefault,
-                          backgroundColor: n.unread ? 'var(--role-surface-accent)' : surfaceDefault,
+                          backgroundColor: n.unread ? 'var(--role-bg-neutral-subtle)' : surfaceDefault,
                         }}
                       >
                         <div className="mb-1.5 flex items-start justify-between gap-2">
                           <div className="flex min-w-0 flex-1 items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--role-status-danger-fg)' }} />
+                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--role-fg-critical)' }} />
                             <span className="text-sm font-bold leading-tight" style={{ color: textPrimary }}>
                               {n.title}
                             </span>

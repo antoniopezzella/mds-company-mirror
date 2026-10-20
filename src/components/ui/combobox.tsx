@@ -99,9 +99,9 @@ export const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(({
           style={
             {
               borderColor: 'var(--role-border-default)',
-              backgroundColor: 'var(--role-surface-default)',
-              color: selected ? 'var(--role-text-primary)' : 'var(--role-text-secondary)',
-              '--tw-ring-color': 'var(--role-focus-ring)',
+              backgroundColor: 'var(--role-bg-default)',
+              color: selected ? 'var(--role-fg-primary)' : 'var(--role-fg-neutral-subtle)',
+              '--tw-ring-color': 'var(--role-border-focus)',
             } as React.CSSProperties
           }
         >

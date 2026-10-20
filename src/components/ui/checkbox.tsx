@@ -86,8 +86,8 @@ function getControlStyle({
 }): React.CSSProperties {
   const checkedVisual = isCheckedLike(checked);
   const focusVars = {
-    '--checkbox-focus-ring': 'var(--role-focus-ring)',
-    '--checkbox-focus-inner-ring': 'var(--role-surface-default)',
+    '--checkbox-focus-ring': 'var(--role-border-focus)',
+    '--checkbox-focus-inner-ring': 'var(--role-bg-default)',
   } as React.CSSProperties;
 
   if (disabled) {
@@ -100,17 +100,17 @@ function getControlStyle({
       return {
         ...style,
         ...focusVars,
-        backgroundColor: 'var(--role-text-disabled)',
-        borderColor: 'var(--role-text-disabled)',
-        color: 'var(--role-surface-default)',
+        backgroundColor: 'var(--role-fg-disabled)',
+        borderColor: 'var(--role-fg-disabled)',
+        color: 'var(--role-bg-default)',
       };
     }
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-disabled)',
+      backgroundColor: 'var(--role-bg-disabled)',
       borderColor: 'var(--role-border-default)',
-      color: 'var(--role-text-disabled)',
+      color: 'var(--role-fg-disabled)',
     };
   }
 
@@ -130,7 +130,7 @@ function getControlStyle({
       ...focusVars,
       backgroundColor: roleVar(role),
       borderColor: roleVar(role),
-      color: 'var(--role-text-onInteractive)',
+      color: 'var(--role-fg-on-interactive)',
     };
   }
 
@@ -142,23 +142,23 @@ function getControlStyle({
   // verified — extrapolated from the non-invalid pattern, same as the MUI
   // version this ports from).
   if (interaction === 'default') {
-    const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
+    const borderRole: RoleName = invalid ? 'border.critical' : 'border.default';
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-default)',
+      backgroundColor: 'var(--role-bg-default)',
       borderColor: roleVar(borderRole),
       color: roleVar(invalid ? 'interactive.danger' : 'interactive.primary'),
     };
   }
 
-  const uncheckedInteractiveColor = invalid ? 'var(--role-status-danger-border)' : 'var(--role-interactive-secondary)';
+  const uncheckedInteractiveColor = invalid ? 'var(--role-border-critical)' : 'var(--role-interactive-secondary)';
   const washPercent = interaction === 'active' ? 20 : 10; // Figma: ~#..1a (10%) hover, ~#..33 (20%) active
 
   return {
     ...style,
     ...focusVars,
-    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${'var(--role-surface-default)'} ${100 - washPercent}%)`,
+    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${'var(--role-bg-default)'} ${100 - washPercent}%)`,
     borderColor: uncheckedInteractiveColor,
     color: uncheckedInteractiveColor,
   };
@@ -306,9 +306,9 @@ const DSCheckbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Ro
       onCheckedChange?.(nextChecked);
     };
 
-    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'fg.disabled' : 'fg.primary');
     const helperColor = roleVar(
-      disabled ? 'text.disabled' : invalid ? 'status.danger.fg' : 'text.primary'
+      disabled ? 'fg.disabled' : invalid ? 'fg.critical' : 'fg.primary'
     );
     const controlStyle = getControlStyle({
       checked: currentChecked,

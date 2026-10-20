@@ -90,7 +90,7 @@ function ClientListItem({
       className={cn(
         'w-full rounded-lg border p-3 text-left transition-colors',
         'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
-        selected ? 'border-l-4' : 'hover:bg-[var(--role-surface-subtle)]'
+        selected ? 'border-l-4' : 'hover:bg-[var(--role-bg-neutral-subtle)]'
       )}
       style={{
         borderColor: selected ? getRoleColor('interactive.primary') : getRoleColor('border.default'),

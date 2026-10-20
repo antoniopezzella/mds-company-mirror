@@ -207,10 +207,10 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
     // follow the theme without a separate `dark:` variant.
     const badgeStyle: React.CSSProperties =
       sentiment === 'up'
-        ? { color: 'var(--role-status-success-fg)', backgroundColor: 'var(--role-status-success-bg)' }
+        ? { color: 'var(--role-fg-success)', backgroundColor: 'var(--role-bg-success-subtle)' }
         : sentiment === 'down'
-          ? { color: 'var(--role-status-danger-fg)', backgroundColor: 'var(--role-status-danger-bg)' }
-          : { color: 'var(--role-text-secondary)', backgroundColor: 'var(--role-surface-subtle)' };
+          ? { color: 'var(--role-fg-critical)', backgroundColor: 'var(--role-bg-critical-subtle)' }
+          : { color: 'var(--role-fg-neutral-subtle)', backgroundColor: 'var(--role-bg-neutral-subtle)' };
 
     const shell = cn(
       'flex flex-col gap-4',

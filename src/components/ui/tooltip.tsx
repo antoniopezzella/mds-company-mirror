@@ -58,25 +58,25 @@ function placementToSideAlign(placement: TooltipPlacement): {
 function getToneColors(tone: TooltipTone): { bg: RoleName; fg: RoleName } {
   switch (tone) {
     case 'dark':
-      return { bg: 'surface.disabled', fg: 'text.primary' };
+      return { bg: 'bg.disabled', fg: 'fg.primary' };
     case 'info':
       // Was status.warning.fg (copy/paste from the 'warning' case below) —
       // also switched bg to surface.subtle to match: surface.accent's dark
       // value (#6a6e6b) only gives 4.21:1 against statusInfoText, just under
       // 4.5; surface.subtle's dark value (#252525) gives 12.46:1.
-      return { bg: 'surface.subtle', fg: 'status.info.fg' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.info' };
     case 'warning':
       // text.primary, not status.warning.fg. Gold on the light subtle surface
       // is 3.21:1 — fine as an accent, unreadable as the label. This is the
       // same call badge.tsx makes for its warning outline, and for the same
       // reason: gold1000 is the darkest gold there is. 17.06 / 15.33.
-      return { bg: 'surface.subtle', fg: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary' };
     case 'danger':
-      return { bg: 'status.danger.bg', fg: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', fg: 'fg.critical' };
     case 'success':
-      return { bg: 'status.success.bg', fg: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', fg: 'fg.success' };
     default:
-      return { bg: 'surface.disabled', fg: 'text.primary' };
+      return { bg: 'bg.disabled', fg: 'fg.primary' };
   }
 }
 
@@ -198,8 +198,8 @@ export const TooltipContent = React.forwardRef<
         className
       )}
       style={{
-        backgroundColor: 'var(--role-surface-disabled)',
-        color: 'var(--role-text-primary)',
+        backgroundColor: 'var(--role-bg-disabled)',
+        color: 'var(--role-fg-primary)',
         borderRadius: '6px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
         ...style,

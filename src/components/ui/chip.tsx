@@ -47,26 +47,26 @@ const deleteIconSizeClass: Record<ChipSize, string> = {
 function getToneRoles(tone: ChipTone): { bg: RoleName; fg: RoleName; border: RoleName } {
   switch (tone) {
     case 'primary':
-      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'interactive.primary' };
     case 'secondary':
-      return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'border.default' };
     case 'success':
-      return { bg: 'status.success.bg', fg: 'status.success.fg', border: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', fg: 'fg.success', border: 'fg.success' };
     case 'warning':
       // fg is the label colour; the border keeps the gold accent.
       // status.warning.fg on status.warning.bg is 4.44:1 — fine for the 3:1
       // border, unreadable as text. See alert.tsx for the full reasoning.
-      return { bg: 'status.warning.bg', fg: 'text.onLight', border: 'status.warning.fg' };
+      return { bg: 'bg.warning.subtle', fg: 'fg.on-light', border: 'fg.warning' };
     case 'danger':
-      return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', fg: 'fg.critical', border: 'fg.critical' };
     case 'info':
       // interactive.primary, not status.warning.fg. Every other tone borders
       // in its own colour; info alone borrowed warning's GOLD, which made an
       // informational chip read as a caution. Matches Badge's info tone, which
       // already uses interactive.primary as its border.
-      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'interactive.primary' };
     default:
-      return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'border.default' };
   }
 }
 
@@ -105,8 +105,8 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const style: React.CSSProperties = disabled
       ? {
-          backgroundColor: 'var(--role-surface-disabled)',
-          color: 'var(--role-text-disabled)',
+          backgroundColor: 'var(--role-bg-disabled)',
+          color: 'var(--role-fg-disabled)',
           borderColor: 'transparent',
         }
       : {
@@ -122,7 +122,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           // against the page surface; the tightest is success at 5.12:1.
           color: roleVar(fg),
           border: variant === 'outlined' ? `1px solid ${roleVar(border)}` : 'none',
-          boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-focus-ring)'}` : undefined,
+          boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-border-focus)'}` : undefined,
         };
 
     const chipClassName = cn(
@@ -133,12 +133,12 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const chipStyle = {
       ...style,
-      '--tw-ring-color': 'var(--role-focus-ring)',
+      '--tw-ring-color': 'var(--role-border-focus)',
       // Tailwind's ring-offset-2 defaults its gap color to white — wrong
       // against a dark surface. Tying it to surface.default keeps the ring's
       // inner gap correct in both modes, matching Checkbox's
       // --checkbox-focus-inner-ring pattern.
-      '--tw-ring-offset-color': 'var(--role-surface-default)',
+      '--tw-ring-offset-color': 'var(--role-bg-default)',
       // Caller override last, so it wins over (not replaces) the tone-based
       // style above — style was destructured out of ...rest specifically so a
       // plain spread couldn't clobber this object.

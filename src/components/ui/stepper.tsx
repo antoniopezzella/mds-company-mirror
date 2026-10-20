@@ -120,11 +120,11 @@ function getLabelRole(status?: StepStatus): RoleName {
   switch (status) {
     case 'completed':
     case 'active':
-      return 'text.primary';
+      return 'fg.primary';
     case 'error':
-      return 'status.danger.fg';
+      return 'fg.critical';
     default:
-      return 'text.secondary';
+      return 'fg.neutral.subtle';
   }
 }
 
@@ -143,18 +143,18 @@ interface IndicatorColors {
 
 function indicatorColors(status: StepStatus | undefined, completedTone: 'primary' | 'success'): IndicatorColors {
   const primary = 'var(--role-interactive-primary)';
-  const onInteractive = 'var(--role-text-onInteractive)';
+  const onInteractive = 'var(--role-fg-on-interactive)';
 
   switch (status) {
     case 'completed': {
-      const bg = completedTone === 'success' ? 'var(--role-status-success-fg)' : primary;
-      return { bg, fg: 'var(--role-text-inverse)', border: bg };
+      const bg = completedTone === 'success' ? 'var(--role-fg-success)' : primary;
+      return { bg, fg: 'var(--role-fg-on-dark)', border: bg };
     }
     case 'active':
       return { bg: primary, fg: onInteractive, border: primary };
     case 'error': {
-      const bg = 'var(--role-status-danger-fg)';
-      return { bg, fg: 'var(--role-text-onDanger)', border: bg };
+      const bg = 'var(--role-fg-critical)';
+      return { bg, fg: 'var(--role-fg-on-critical)', border: bg };
     }
     default:
       // reui's inactive indicator is `bg-accent` — a neutral muted fill. The
@@ -162,7 +162,7 @@ function indicatorColors(status: StepStatus | undefined, completedTone: 'primary
       // that maps to brand Sky Blue and reads as a *state*, not a resting
       // step; `surface.disabled` is this system's neutral gray at the same
       // visual weight.
-      return { bg: 'var(--role-surface-disabled)', fg: 'var(--role-text-secondary)', border: 'var(--role-border-default)' };
+      return { bg: 'var(--role-bg-disabled)', fg: 'var(--role-fg-neutral-subtle)', border: 'var(--role-border-default)' };
   }
 }
 
@@ -184,7 +184,7 @@ function StepIndicator({ step, index, status, indicator, completedTone }: StepIn
     return (
       <div
         className="h-1 w-full shrink-0 rounded-full"
-        style={{ backgroundColor: status === 'error' ? 'var(--role-status-danger-fg)' : filled ? colors.bg : 'var(--role-border-default)' }}
+        style={{ backgroundColor: status === 'error' ? 'var(--role-fg-critical)' : filled ? colors.bg : 'var(--role-border-default)' }}
       >
         <span className="sr-only">{step.label}</span>
       </div>
@@ -321,7 +321,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
   };
 
   const separatorColor = 'var(--role-border-default)';
-  const completedSeparatorColor = completedTone === 'success' ? 'var(--role-status-success-fg)' : 'var(--role-interactive-primary)';
+  const completedSeparatorColor = completedTone === 'success' ? 'var(--role-fg-success)' : 'var(--role-interactive-primary)';
   const indicatorSize = isBar ? 0 : INDICATOR_SIZE[indicator];
   const navGap = variant === 'compact' ? 8 : 12;
 
@@ -332,7 +332,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
     return (
       <div className={cn('flex flex-col', align === 'center' ? 'items-center text-center' : 'items-start text-left', step.description || showStatusBadge ? 'gap-1' : 'gap-0.5')}>
         {showStepEyebrow && (
-          <span className="text-[10px] font-semibold uppercase leading-none" style={{ color: 'var(--role-text-secondary)' }}>
+          <span className="text-[10px] font-semibold uppercase leading-none" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             Step {index + 1}
           </span>
         )}
@@ -346,7 +346,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
           {step.label}
         </span>
         {step.description && (
-          <span className={cn('leading-snug', variant === 'compact' ? 'text-[11px]' : 'text-sm')} style={{ color: 'var(--role-text-secondary)' }}>
+          <span className={cn('leading-snug', variant === 'compact' ? 'text-[11px]' : 'text-sm')} style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {step.description}
           </span>
         )}
@@ -388,7 +388,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
       isInteractive && !isDisabled && 'cursor-pointer rounded-md focus-visible:outline-hidden focus-visible:ring-2',
       isInteractive && isDisabled && 'cursor-not-allowed opacity-50'
     );
-    const focusStyle = isInteractive ? ({ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties) : undefined;
+    const focusStyle = isInteractive ? ({ '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties) : undefined;
 
     // ── Horizontal, labels stacked below (reui demos 5/6/8/11) ──────────
     // The separator can't be a flex sibling here: it has to span the gap
@@ -461,7 +461,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
           <div className="mt-0.5 flex flex-col gap-2">
             {renderLabels(step, index, status, 'start')}
             {step.content && contentMode === 'inline' && (
-              <div className="text-sm" style={{ color: 'var(--role-text-primary)' }}>
+              <div className="text-sm" style={{ color: 'var(--role-fg-primary)' }}>
                 {step.content}
               </div>
             )}
@@ -503,7 +503,7 @@ export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(({
           id={`stepper-panel-${activeStepConfig.id}`}
           aria-labelledby={isInteractive ? `stepper-tab-${activeStepConfig.id}` : undefined}
           className="text-sm"
-          style={{ color: 'var(--role-text-primary)' }}
+          style={{ color: 'var(--role-fg-primary)' }}
         >
           {activeStepConfig.content}
         </div>

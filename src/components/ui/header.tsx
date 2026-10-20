@@ -122,15 +122,15 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const isPrimary = variant === 'primary';
-  const bg = roleVar(isPrimary ? 'surface.navigation' : 'surface.secondary');
+  const bg = roleVar(isPrimary ? 'bg.shell' : 'bg.secondary');
   // surface.secondary is a brand sky-blue that stays light in BOTH modes
   // (#ceecff light, #95caff dark), so the header text must be dark on it in both.
   // text.primary flips to white in dark mode (white-on-#95caff = 1.72:1), which
   // is why the secondary header failed dark axe. text.onLight is the
   // mode-invariant Midnight (#000f47) made for exactly these stay-light surfaces
   // — identical to text.primary in light mode, so light rendering is unchanged.
-  const fg = roleVar(isPrimary ? 'text.onHero' : 'text.onLight');
-  const hoverBg = 'var(--role-surface-navigation-hover)';
+  const fg = roleVar(isPrimary ? 'fg.on-primary' : 'fg.on-light');
+  const hoverBg = 'var(--role-bg-shell-hover)';
   const [profileHover, setProfileHover] = React.useState(false);
 
   return (
@@ -147,7 +147,7 @@ export const Header: React.FC<HeaderProps> = ({
         // A delineating edge fixes that without lightening the brand navy or
         // disturbing the nav hover/active scale, which already occupy the
         // lighter blues.
-        borderBottomColor: 'var(--role-surface-navigation-active)',
+        borderBottomColor: 'var(--role-bg-shell-active)',
       }}
     >
       {/* Left: sidebar toggle + brand */}
@@ -193,7 +193,7 @@ export const Header: React.FC<HeaderProps> = ({
               // near-white; interactive.danger LIGHTENS to #ff6b6b in dark, so
               // white-on-it measured 2.78:1 and the count was unreadable.
               // onInteractive flips to Midnight in dark: 5.34 / 6.53.
-              style={{ backgroundColor: 'var(--role-interactive-danger)', color: 'var(--role-text-onInteractive)' }}
+              style={{ backgroundColor: 'var(--role-interactive-danger)', color: 'var(--role-fg-on-interactive)' }}
             >
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
@@ -222,16 +222,16 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-3 px-3 py-3">
               <Avatar initials={user.initials} size="md" tone="primary" />
               <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--role-text-primary)' }}>
+                <p className="text-sm font-semibold" style={{ color: 'var(--role-fg-primary)' }}>
                   {user.name}
                 </p>
                 {user.role && (
-                  <p className="text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+                  <p className="text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                     {user.role}
                   </p>
                 )}
                 {user.organization && (
-                  <p className="mt-0.5 text-[11px]" style={{ color: 'var(--role-text-secondary)' }}>
+                  <p className="mt-0.5 text-[11px]" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
                     {user.organization}
                   </p>
                 )}

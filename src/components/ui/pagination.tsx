@@ -85,12 +85,12 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(({
     onPageChange(page);
   };
 
-  const focusRing = 'var(--role-focus-ring)';
-  const hoverBg = 'var(--role-surface-subtle)';
+  const focusRing = 'var(--role-border-focus)';
+  const hoverBg = 'var(--role-bg-neutral-subtle)';
   const activeBg = 'var(--role-interactive-primary)';
-  const activeFg = 'var(--role-text-onInteractive)';
-  const textColor = 'var(--role-text-primary)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const activeFg = 'var(--role-fg-on-interactive)';
+  const textColor = 'var(--role-fg-primary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const pluralizedItemLabel = itemLabel && (totalItems === 1 ? itemLabel : `${itemLabel}s`);
 
@@ -125,7 +125,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(({
                 if (currentPage > Math.ceil(totalItems / newSize)) onPageChange(1);
               }}
               className="rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-surface-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
+              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-bg-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             >
               {pageSizeOptions.map((option) => (
                 <option key={option} value={option}>
@@ -244,7 +244,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(({
               }}
               aria-label="Jump to page"
               className="w-14 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-surface-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
+              style={{ borderColor: 'var(--role-border-default)', backgroundColor: 'var(--role-bg-default)', color: textColor, '--tw-ring-color': focusRing } as React.CSSProperties}
             />
             <span style={{ color: mutedColor }}>of {totalPages}</span>
           </div>

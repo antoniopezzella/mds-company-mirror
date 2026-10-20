@@ -39,9 +39,9 @@ export interface SparklineProps extends Omit<React.ComponentProps<'svg'>, 'child
 }
 
 const SENTIMENT_ROLE = {
-  positive: 'status.success.fg',
-  negative: 'status.danger.fg',
-  neutral: 'text.secondary',
+  positive: 'fg.success',
+  negative: 'fg.critical',
+  neutral: 'fg.neutral.subtle',
 } as const;
 
 export const Sparkline = React.forwardRef<SVGSVGElement, SparklineProps>(
