@@ -100,3 +100,6 @@ public/video/10394868-uhd_3840_2160_30fps.mp4
 # scripts/visual-baseline.js (npm run visual:capture). Never committed.
 visual-baseline/
 dark-results.json
+
+# Never commit a registry token — .npmrc is generated in CI / set per-user
+.npmrc

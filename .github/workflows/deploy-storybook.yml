@@ -26,10 +26,35 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+
+      # Registry selection — the SAME file works in both places:
+      #   • Company repo (MMC self-hosted runner, no public npm): the
+      #     ARTIFACTORY_NPM_TOKEN secret is set → write an .npmrc pointing at the
+      #     internal JFrog Artifactory virtual npm repo.
+      #   • Personal mirror (GitHub-hosted runner, can't reach the internal host):
+      #     no secret → skip, fall back to the default public npm registry.
+      # The token is expanded by npm from the environment at read time, so it is
+      # never written to disk — the .npmrc holds only the ${ARTIFACTORY_NPM_TOKEN}
+      # placeholder. Secret: Settings → Secrets and variables → Actions.
+      - name: Configure npm — internal Artifactory when available, else public
+        env:
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+        run: |
+          if [ -n "$ARTIFACTORY_NPM_TOKEN" ]; then
+            echo "Artifactory token present → using the internal MMC registry"
+            {
+              echo 'registry=https://mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/'
+              echo '//mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/:_authToken=${ARTIFACTORY_NPM_TOKEN}'
+              echo 'always-auth=true'
+            } > .npmrc
+          else
+            echo "No Artifactory token → using the default public npm registry"
+          fi
 
       - name: Install dependencies
         run: npm ci
+        env:
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
 
       - name: Build tokens
         run: npm run tokens:build
