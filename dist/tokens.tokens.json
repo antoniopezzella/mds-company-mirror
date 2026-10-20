@@ -2603,6 +2603,62 @@
         "$type": "color",
         "$value": "{color.green750}"
       },
+      "dataQualitative1": {
+        "$type": "color",
+        "$value": "{color.blue1000}"
+      },
+      "dataQualitative2": {
+        "$type": "color",
+        "$value": "{color.blue750}"
+      },
+      "dataQualitative3": {
+        "$type": "color",
+        "$value": "{color.blue500}"
+      },
+      "dataQualitative4": {
+        "$type": "color",
+        "$value": "{color.neutral1000}"
+      },
+      "dataQualitative5": {
+        "$type": "color",
+        "$value": "{color.neutral750}"
+      },
+      "dataQualitative6": {
+        "$type": "color",
+        "$value": "{color.neutral450}"
+      },
+      "dataQualitative7": {
+        "$type": "color",
+        "$value": "{color.gold1000}"
+      },
+      "dataQualitative8": {
+        "$type": "color",
+        "$value": "{color.gold750}"
+      },
+      "dataQualitative9": {
+        "$type": "color",
+        "$value": "{color.gold500}"
+      },
+      "dataQualitative10": {
+        "$type": "color",
+        "$value": "{color.green1000}"
+      },
+      "staticBackgroundWhite": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            1,
+            1,
+            1
+          ],
+          "hex": "#ffffff"
+        }
+      },
+      "staticBackgroundSky": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
       "textPrimary": {
         "$type": "color",
         "$value": "{color.blue1000}"
@@ -3119,6 +3175,46 @@
         "$value": "{color.purple500}"
       },
       "baseAccentGreen": {
+        "$type": "color",
+        "$value": "{color.green500}"
+      },
+      "dataQualitative1": {
+        "$type": "color",
+        "$value": "{color.blue250}"
+      },
+      "dataQualitative2": {
+        "$type": "color",
+        "$value": "{color.blue500}"
+      },
+      "dataQualitative3": {
+        "$type": "color",
+        "$value": "{color.blue750}"
+      },
+      "dataQualitative4": {
+        "$type": "color",
+        "$value": "{color.neutral150}"
+      },
+      "dataQualitative5": {
+        "$type": "color",
+        "$value": "{color.neutral450}"
+      },
+      "dataQualitative6": {
+        "$type": "color",
+        "$value": "{color.neutral750}"
+      },
+      "dataQualitative7": {
+        "$type": "color",
+        "$value": "{color.gold250}"
+      },
+      "dataQualitative8": {
+        "$type": "color",
+        "$value": "{color.gold500}"
+      },
+      "dataQualitative9": {
+        "$type": "color",
+        "$value": "{color.gold750}"
+      },
+      "dataQualitative10": {
         "$type": "color",
         "$value": "{color.green500}"
       },

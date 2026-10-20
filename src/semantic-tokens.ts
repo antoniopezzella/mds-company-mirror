@@ -64,6 +64,26 @@ export const semanticColors = {
   baseInteractiveDefault: base.interactiveDefault, baseSystemFocus: base.systemFocus,
   baseAccentPurple: base.accentPurple, baseAccentGreen: base.accentGreen,
 
+  // ── DATA tier (Figma color/data/*) — categorical chart series ───────────────
+  //    Added 2026-10-20 (Phase 1). Use the series IN ORDER; don't attach meaning
+  //    to a colour. Flips per mode (dark values in semanticDarkOverrides). This
+  //    replaces the old chart.1–5 set once the rename maps chart→data (Phase 3).
+  dataQualitative1:  ref('blue1000'),     // #000f47
+  dataQualitative2:  ref('blue750'),      // #0b4bff
+  dataQualitative3:  ref('blue500'),      // #82baff
+  dataQualitative4:  ref('neutral1000'),  // #3d3c37
+  dataQualitative5:  ref('neutral750'),   // #7b7974
+  dataQualitative6:  ref('neutral450'),   // #c5c2bd
+  dataQualitative7:  ref('gold1000'),     // #cb7e03
+  dataQualitative8:  ref('gold750'),      // #ffbf00
+  dataQualitative9:  ref('gold500'),      // #ffd98a
+  dataQualitative10: ref('green1000'),    // #2f7500
+
+  // ── STATIC tier (Figma color/static/*) — fixed colours, same in EVERY mode ──
+  //    Brand decoration only (e.g. Quote marks). No dark override by design.
+  staticBackgroundWhite: ref('neutral0'), // #ffffff — always white
+  staticBackgroundSky:   ref('blue250'),  // #ceecff — always Sky
+
   // ── Typography ────────────────────────────────────────────────────────────
   textPrimary:   ref('blue1000'),         // #000f47 — Primary body text (legacy)
   textPrimaryMode: ref('blue1100'),       // #002c77 — MODE Primary (Figma future-state)
@@ -330,6 +350,19 @@ export const semanticDarkOverrides: Partial<Record<SemanticColorName, string>> =
   baseStatusCritical: baseDark.statusCritical, baseStatusSuccess: baseDark.statusSuccess, baseStatusWarning: baseDark.statusWarning, baseStatusInfo: baseDark.statusInfo,
   baseInteractiveDefault: baseDark.interactiveDefault, baseSystemFocus: baseDark.systemFocus,
   baseAccentPurple: baseDark.accentPurple, baseAccentGreen: baseDark.accentGreen,
+
+  // ── DATA tier — dark (chart series flip for contrast on a dark canvas) ───────
+  dataQualitative1:  tokens.blue250,      // #ceecff
+  dataQualitative2:  tokens.blue500,      // #82baff
+  dataQualitative3:  tokens.blue750,      // #0b4bff
+  dataQualitative4:  tokens.neutral150,   // #faf7f4
+  dataQualitative5:  tokens.neutral450,   // #c5c2bd
+  dataQualitative6:  tokens.neutral750,   // #7b7974
+  dataQualitative7:  tokens.gold250,      // #fff3da
+  dataQualitative8:  tokens.gold500,      // #ffd98a
+  dataQualitative9:  tokens.gold750,      // #ffbf00
+  dataQualitative10: tokens.green500,     // #b0dc92
+  // static/* intentionally has NO dark override — fixed in every mode.
 
   // Typography (light text on dark backgrounds)
   textPrimary:   tokens.white,               // #ffffff
