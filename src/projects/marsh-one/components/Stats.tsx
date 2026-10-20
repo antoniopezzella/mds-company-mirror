@@ -346,7 +346,7 @@ const ctx = gsap.context(() => {
                     fontWeight: 400,
                     fontSize: { xs: '60px', md: '104px' },
                     lineHeight: '128px',
-                    color: getRoleColor('brand.accent'),
+                    color: getRoleColor('bg.accent'),
                   }}
                 >
                   {/* Initial value - will be animated */}
@@ -430,14 +430,14 @@ const ctx = gsap.context(() => {
               <Box sx={{ position: 'absolute', top: '-59px', right: '9px', display: 'flex', gap: '24px', zIndex: 3 }}>
                 <IconButton
                   onClick={() => scrollCards('left')}
-                  sx={{ backgroundColor: getRoleColor('brand.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
+                  sx={{ backgroundColor: getRoleColor('bg.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
                   aria-label="Scroll insights left"
                 >
                   <ArrowBackIcon sx={{ fontSize: '20px', color: '#000f47' }} />
                 </IconButton>
                 <IconButton
                   onClick={() => scrollCards('right')}
-                  sx={{ backgroundColor: getRoleColor('brand.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
+                  sx={{ backgroundColor: getRoleColor('bg.accent'), width: '48px', height: '48px', '&:hover': { backgroundColor: '#FFD54F' } }}
                   aria-label="Scroll insights right"
                 >
                   <ArrowForwardIcon sx={{ fontSize: '20px', color: '#000f47' }} />

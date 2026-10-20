@@ -285,8 +285,8 @@ export const ShareableLink: StoryObj = {
           data-testid="link"
           className="block overflow-x-auto rounded-md px-3 py-2 text-xs"
           style={{
-            backgroundColor: getRoleColor('surface.subtle'),
-            color: getRoleColor('text.secondary'),
+            backgroundColor: getRoleColor('bg.neutral.subtle'),
+            color: getRoleColor('fg.neutral.subtle'),
           }}
         >
           {link}
@@ -327,15 +327,15 @@ export const StaleLink: StoryObj = {
         <code
           className="block overflow-x-auto rounded-md px-3 py-2 text-xs"
           style={{
-            backgroundColor: getRoleColor('surface.subtle'),
-            color: getRoleColor('text.secondary'),
+            backgroundColor: getRoleColor('bg.neutral.subtle'),
+            color: getRoleColor('fg.neutral.subtle'),
           }}
         >
           ?filter={incoming}
         </code>
         <Filters fields={FIELDS} defaultQuery={parsed.query} />
         {!parsed.ok && (
-          <p className="text-sm" data-testid="dropped" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="text-sm" data-testid="dropped" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             {parsed.dropped.length} filter(s) from this link could not be applied:{' '}
             {parsed.dropped.map((d) => d.reason).join(', ')}.
           </p>

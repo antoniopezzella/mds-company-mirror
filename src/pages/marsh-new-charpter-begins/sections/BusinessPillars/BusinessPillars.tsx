@@ -79,9 +79,9 @@ const BusinessPillars: React.FC = () => {
   });
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="pillars-heading" style={{ background: getRoleColor('surface.default') }}>
+    <section ref={sectionRef} className={styles.section} aria-labelledby="pillars-heading" style={{ background: getRoleColor('bg.default') }}>
       <Container maxWidth="xl">
-        <Typography id="pillars-heading" variant="h3" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(4) }}>
+        <Typography id="pillars-heading" variant="h3" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(4) }}>
           Unified Capabilities
         </Typography>
         
@@ -94,7 +94,7 @@ const BusinessPillars: React.FC = () => {
               style={{
                 padding: '2rem',
                 borderRadius: '12px',
-                background: getRoleColor('surface.subtle'),
+                background: getRoleColor('bg.neutral.subtle'),
                 border: `1px solid rgba(0, 0, 0, 0.08)`,
                 cursor: 'pointer',
                 transition: 'box-shadow 0.2s ease',
@@ -103,7 +103,7 @@ const BusinessPillars: React.FC = () => {
               <Typography 
                 variant="h5" 
                 sx={{ 
-                  color: getRoleColor('text.primary'), 
+                  color: getRoleColor('fg.primary'), 
                   mb: (t) => t.spacing(2),
                   fontWeight: 600,
                 }}
@@ -113,7 +113,7 @@ const BusinessPillars: React.FC = () => {
               <Typography 
                 variant="body1" 
                 sx={{ 
-                  color: getRoleColor('text.secondary'),
+                  color: getRoleColor('fg.neutral.subtle'),
                   lineHeight: 1.6,
                 }}
               >

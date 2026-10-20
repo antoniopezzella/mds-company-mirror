@@ -61,10 +61,10 @@ export function PrinciplesDemo() {
     <div className="grid gap-4 sm:grid-cols-2">
       {PRINCIPLES.map((p) => (
         <div key={p.title} className="rounded-lg border p-4" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
-          <h5 className="text-sm font-semibold" style={{ color: getRoleColor('text.primary', { mode }) }}>
+          <h5 className="text-sm font-semibold" style={{ color: getRoleColor('fg.primary', { mode }) }}>
             {p.title}
           </h5>
-          <p className="mt-1 text-sm" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <p className="mt-1 text-sm" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             {p.body}
           </p>
         </div>
@@ -88,18 +88,18 @@ function TokenArchitectureRow({ step, file, name, value, note }: { step: string;
     <div className="flex items-start gap-4 border-b py-3 last:border-b-0" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
       <span
         className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-        style={{ backgroundColor: getRoleColor('surface.subtle', { mode }), color: getRoleColor('text.primary', { mode }) }}
+        style={{ backgroundColor: getRoleColor('bg.neutral.subtle', { mode }), color: getRoleColor('fg.primary', { mode }) }}
       >
         {step}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-xs" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+        <p className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
           {file}
         </p>
-        <p className="font-mono text-sm" style={{ color: getRoleColor('text.primary', { mode }) }}>
-          {name} <span style={{ color: getRoleColor('text.secondary', { mode }) }}>= {value}</span>
+        <p className="font-mono text-sm" style={{ color: getRoleColor('fg.primary', { mode }) }}>
+          {name} <span style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>= {value}</span>
         </p>
-        <p className="mt-0.5 text-xs" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+        <p className="mt-0.5 text-xs" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
           {note}
         </p>
       </div>
@@ -109,8 +109,8 @@ function TokenArchitectureRow({ step, file, name, value, note }: { step: string;
 
 export function TokensDemo() {
   const { mode } = useThemeMode();
-  const bodyColor = getRoleColor('text.secondary', { mode });
-  const headingColor = getRoleColor('text.primary', { mode });
+  const bodyColor = getRoleColor('fg.neutral.subtle', { mode });
+  const headingColor = getRoleColor('fg.primary', { mode });
 
   return (
     <div className="space-y-8">
@@ -242,8 +242,8 @@ const LIGHT_DARK_COMPARISON: Array<{ role: import('@/theme/roles').RoleName; not
 
 export function ColorDemo() {
   const { mode } = useThemeMode();
-  const bodyColor = getRoleColor('text.secondary', { mode });
-  const headingColor = getRoleColor('text.primary', { mode });
+  const bodyColor = getRoleColor('fg.neutral.subtle', { mode });
+  const headingColor = getRoleColor('fg.primary', { mode });
 
   return (
     <div className="space-y-8">
@@ -295,7 +295,7 @@ export function ColorDemo() {
         </p>
         {COLOR_GROUPS.map((group) => (
         <div key={group.label}>
-          <h5 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <h5 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             {group.label}
           </h5>
           <div className="flex flex-wrap gap-3">
@@ -308,7 +308,7 @@ export function ColorDemo() {
                     style={{ backgroundColor: value, borderColor: getRoleColor('border.default', { mode }) }}
                     title={value}
                   />
-                  <span className="max-w-[72px] text-center text-[10px] leading-tight" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+                  <span className="max-w-[72px] text-center text-[10px] leading-tight" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
                     {role}
                   </span>
                 </div>
@@ -355,7 +355,7 @@ export function IconsDemo() {
   const { mode } = useThemeMode();
   return (
     <div>
-      <p className="text-sm" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+      <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
         <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="underline">
           lucide-react
         </a>{' '}
@@ -367,10 +367,10 @@ export function IconsDemo() {
           <div
             key={name}
             className="flex flex-col items-center gap-1.5 rounded-md p-3"
-            style={{ color: getRoleColor('text.primary', { mode }) }}
+            style={{ color: getRoleColor('fg.primary', { mode }) }}
           >
             <Icon className="h-5 w-5" />
-            <span className="text-[10px]" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+            <span className="text-[10px]" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
               {name}
             </span>
           </div>
@@ -400,12 +400,12 @@ export function TypographyDemo() {
     <div className="space-y-4">
       {TYPE_VARIANTS.map((v) => (
         <div key={v.key} className="flex items-baseline gap-4 border-b pb-3" style={{ borderColor: getRoleColor('border.default', { mode }) }}>
-          <span className="w-32 shrink-0 text-xs" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <span className="w-32 shrink-0 text-xs" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             {v.label}
           </span>
           <span
             style={{
-              color: getRoleColor('text.primary', { mode }),
+              color: getRoleColor('fg.primary', { mode }),
               fontFamily: `var(--typo-${v.key}-font-family)`,
               fontWeight: `var(--typo-${v.key}-font-weight)` as unknown as number,
               fontSize: `var(--typo-${v.key}-font-size)`,
@@ -430,7 +430,7 @@ export function SpacingDemo() {
     <div className="space-y-2">
       {spacing.map((px) => (
         <div key={px} className="flex items-center gap-3">
-          <span className="w-10 shrink-0 text-right text-xs font-mono" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <span className="w-10 shrink-0 text-right text-xs font-mono" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             {px}
           </span>
           <div
@@ -455,7 +455,7 @@ function CodeBlock({ children }: { children: string }) {
   return (
     <pre
       className="mt-3 overflow-x-auto rounded-md p-3 text-xs"
-      style={{ backgroundColor: getRoleColor('surface.subtle', { mode }), color: getRoleColor('text.primary', { mode }) }}
+      style={{ backgroundColor: getRoleColor('bg.neutral.subtle', { mode }), color: getRoleColor('fg.primary', { mode }) }}
     >
       <code className="font-mono">{children}</code>
     </pre>
@@ -464,8 +464,8 @@ function CodeBlock({ children }: { children: string }) {
 
 export function GridDemo() {
   const { mode } = useThemeMode();
-  const labelColor = getRoleColor('text.secondary', { mode });
-  const cellStyle = { backgroundColor: getRoleColor('surface.subtle', { mode }), color: labelColor };
+  const labelColor = getRoleColor('fg.neutral.subtle', { mode });
+  const cellStyle = { backgroundColor: getRoleColor('bg.neutral.subtle', { mode }), color: labelColor };
 
   return (
     <div className="space-y-8">
@@ -514,10 +514,10 @@ export function ElevationDemo() {
         <div key={s.level} className="flex flex-col items-center gap-2">
           <div
             className="h-16 w-16 rounded-md"
-            style={{ boxShadow: s.value, backgroundColor: getRoleColor('surface.default', { mode }) }}
+            style={{ boxShadow: s.value, backgroundColor: getRoleColor('bg.default', { mode }) }}
             title={s.usage}
           />
-          <span className="text-xs" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             Level {s.level}
           </span>
         </div>
@@ -544,7 +544,7 @@ export function RadiusDemo() {
             className="h-16 w-16"
             style={{ borderRadius: r.px, backgroundColor: getRoleColor('interactive.primary', { mode }) }}
           />
-          <span className="text-xs font-mono" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <span className="text-xs font-mono" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             {r.label} — {r.px}px
           </span>
         </div>
@@ -557,7 +557,7 @@ export function RadiusDemo() {
 
 export function AccessibilityDemo() {
   const { mode } = useThemeMode();
-  const textColor = getRoleColor('text.secondary', { mode });
+  const textColor = getRoleColor('fg.neutral.subtle', { mode });
   return (
     <div className="space-y-4">
       <ul className="list-disc space-y-1.5 pl-5 text-sm" style={{ color: textColor }}>

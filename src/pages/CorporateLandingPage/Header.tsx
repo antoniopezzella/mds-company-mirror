@@ -86,7 +86,7 @@ export const CorporateHeader: React.FC = () => {
                   px: 2,
                   py: 1.5,
                   typography: 'subtitle1',
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',
                   borderRadius: '2px',

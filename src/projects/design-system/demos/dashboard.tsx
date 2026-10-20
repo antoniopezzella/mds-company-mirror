@@ -34,7 +34,7 @@ import { useThemeMode } from '@/theme/ThemeModeContext';
 const Label = ({ children }: { children: React.ReactNode }) => {
   const { mode } = useThemeMode();
   return (
-    <span className="text-xs font-medium" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+    <span className="text-xs font-medium" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
       {children}
     </span>
   );

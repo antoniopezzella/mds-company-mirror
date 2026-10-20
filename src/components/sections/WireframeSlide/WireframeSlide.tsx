@@ -32,12 +32,12 @@ export const WireframeSlide: React.FC<WireframeSlideProps> = ({
     if (backgroundColor) return backgroundColor;
     switch (variant) {
       case 'dark':
-        return getRoleColor('surface.secondary');
+        return getRoleColor('bg.secondary');
       case 'hero':
-        return getRoleColor('surface.hero');
+        return getRoleColor('bg.primary');
       case 'light':
       default:
-        return getRoleColor('surface.default');
+        return getRoleColor('bg.default');
     }
   };
 
@@ -51,10 +51,10 @@ export const WireframeSlide: React.FC<WireframeSlideProps> = ({
   const isDarkSurface = variant === 'hero';
 
   const getTextColor = () =>
-    isDarkSurface ? getRoleColor('text.inverse') : getRoleColor('text.primary');
+    isDarkSurface ? getRoleColor('fg.on-dark') : getRoleColor('fg.primary');
 
   const getSecondaryColor = () =>
-    isDarkSurface ? getRoleColor('text.onAccent') : getRoleColor('text.secondary');
+    isDarkSurface ? getRoleColor('fg.on-accent') : getRoleColor('fg.neutral.subtle');
 
   const variantClass = styles[`wireframe-slide--${variant}`] ?? '';
 

@@ -126,7 +126,7 @@ export const AllVariants: Story = {
 
     const Row: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium" style={{ color: getRoleColor('text.secondary') }}>
+        <span className="text-sm font-medium" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           {label}
         </span>
         {children}

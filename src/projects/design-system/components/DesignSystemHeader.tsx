@@ -16,9 +16,9 @@ const STORYBOOK_URL = 'https://marsh-design-system.vercel.app/storybook';
 function ThemeModeSegment() {
   const { mode, toggleMode } = useThemeMode();
   const border = getRoleColor('border.default', { mode });
-  const activeBg = getRoleColor('surface.subtle', { mode });
-  const activeText = getRoleColor('text.primary', { mode });
-  const inactiveText = getRoleColor('text.secondary', { mode });
+  const activeBg = getRoleColor('bg.neutral.subtle', { mode });
+  const activeText = getRoleColor('fg.primary', { mode });
+  const inactiveText = getRoleColor('fg.neutral.subtle', { mode });
 
   const select = (next: ThemeMode) => {
     if (next !== mode) toggleMode();
@@ -56,8 +56,8 @@ function ThemeModeSegment() {
 export const DesignSystemHeader: React.FC = () => {
   const { mode } = useThemeMode();
   const border = getRoleColor('border.default', { mode });
-  const bg = getRoleColor('surface.default', { mode });
-  const text = getRoleColor('text.primary', { mode });
+  const bg = getRoleColor('bg.default', { mode });
+  const text = getRoleColor('fg.primary', { mode });
 
   return (
     <div

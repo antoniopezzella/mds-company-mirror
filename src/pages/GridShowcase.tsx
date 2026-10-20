@@ -4,31 +4,31 @@ import '../global.scss'; // Ensure grid styles are loaded
 
 export default function GridShowcase() {
   return (
-    <Box sx={{ py: 4, backgroundColor: getRoleColor('surface.default') }}>
+    <Box sx={{ py: 4, backgroundColor: getRoleColor('bg.default') }}>
       <Container maxWidth="xl">
-        <Typography variant="h3" sx={{ mb: 1, color: getRoleColor('text.primary') }}>
+        <Typography variant="h3" sx={{ mb: 1, color: getRoleColor('fg.primary') }}>
           Grid System Showcase
         </Typography>
-        <Typography variant="body1" sx={{ mb: 4, color: getRoleColor('text.secondary') }}>
+        <Typography variant="body1" sx={{ mb: 4, color: getRoleColor('fg.neutral.subtle') }}>
           Demonstrating Phase 1 scalability enhancements: custom column counts, row spanning, extended gaps, and advanced utilities.
         </Typography>
 
         {/* Non-12-Column Grids */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             1. Non-12-Column Grids
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Use <code>.grid-cols-{'{N}'}</code> to create grids with any column count
           </Typography>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               5-Column Grid
             </Typography>
             <div className="grid-cols-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.accent') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Col {i + 1}</Typography>
                   </CardContent>
@@ -38,12 +38,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               7-Column Dashboard Grid
             </Typography>
             <div className="grid-cols-7 gap-3">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.subtle') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">{i + 1}</Typography>
                   </CardContent>
@@ -53,12 +53,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               Responsive: 1 col mobile → 3 col tablet → 5 col desktop
             </Typography>
             <div className="grid-cols-1 mds-legacy-grid-cols-md-3 mds-legacy-grid-cols-lg-5 gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.hero') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.primary') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2" sx={{ color: 'white' }}>Item {i + 1}</Typography>
                   </CardContent>
@@ -70,10 +70,10 @@ export default function GridShowcase() {
 
         {/* Row Spanning */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             2. Row Spanning (Dashboard Widgets)
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Use <code>.row-span-{'{N}'}</code> to create widgets that span multiple rows
           </Typography>
 
@@ -86,13 +86,13 @@ export default function GridShowcase() {
               </CardContent>
             </Card>
 
-            <Card sx={{ background: getRoleColor('surface.accent') }}>
+            <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Widget A</Typography>
               </CardContent>
             </Card>
 
-            <Card className="row-span-4" sx={{ background: getRoleColor('status.success.bg') }}>
+            <Card className="row-span-4" sx={{ background: getRoleColor('bg.success.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="body1" sx={{ textAlign: 'center' }}>
                   Full Height<br />(4 rows)
@@ -100,13 +100,13 @@ export default function GridShowcase() {
               </CardContent>
             </Card>
 
-            <Card sx={{ background: getRoleColor('surface.accent') }}>
+            <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Widget B</Typography>
               </CardContent>
             </Card>
 
-            <Card className="row-span-2" sx={{ background: getRoleColor('status.warning.bg') }}>
+            <Card className="row-span-2" sx={{ background: getRoleColor('bg.warning.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="body2" sx={{ textAlign: 'center' }}>
                   Medium<br />(2 rows)
@@ -114,13 +114,13 @@ export default function GridShowcase() {
               </CardContent>
             </Card>
 
-            <Card sx={{ background: getRoleColor('surface.accent') }}>
+            <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Widget C</Typography>
               </CardContent>
             </Card>
 
-            <Card sx={{ background: getRoleColor('surface.accent') }}>
+            <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Widget D</Typography>
               </CardContent>
@@ -130,20 +130,20 @@ export default function GridShowcase() {
 
         {/* Extended Gaps */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             3. Extended Gap Scale
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             New gaps: .gap-9 (36px), .gap-12 (48px), .gap-16 (64px), .gap-20 (80px), .gap-24 (96px)
           </Typography>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .gap-16 (64px spacing)
             </Typography>
             <div className="grid-cols-3 gap-16">
               {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.accent') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 3 }}>
                     <Typography variant="body2">Spacious!</Typography>
                   </CardContent>
@@ -153,12 +153,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .gap-24 (96px spacing)
             </Typography>
             <div className="grid-cols-2 gap-24">
               {Array.from({ length: 2 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.subtle') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 4 }}>
                     <Typography variant="body2">Extra Spacious!</Typography>
                   </CardContent>
@@ -170,10 +170,10 @@ export default function GridShowcase() {
 
         {/* Dense Packing */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             4. Dense Grid Packing
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Use <code>.grid-flow-dense</code> for masonry-like layouts that fill gaps
           </Typography>
 
@@ -187,7 +187,7 @@ export default function GridShowcase() {
             </Card>
 
             {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i} sx={{ background: getRoleColor('surface.accent') }}>
+              <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                 <CardContent sx={{ textAlign: 'center', py: 2 }}>
                   <Typography variant="body2">{i + 1}</Typography>
                 </CardContent>
@@ -198,21 +198,21 @@ export default function GridShowcase() {
 
         {/* Asymmetric Presets */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             5. Asymmetric Layout Presets
           </Typography>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .grid-cols-sidebar (250px + flexible)
             </Typography>
             <div className="mds-legacy-grid-cols-sidebar gap-4">
-              <Card sx={{ background: getRoleColor('surface.subtle') }}>
+              <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                 <CardContent>
                   <Typography variant="body2">Sidebar<br />250px fixed</Typography>
                 </CardContent>
               </Card>
-              <Card sx={{ background: getRoleColor('surface.accent') }}>
+              <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                 <CardContent>
                   <Typography variant="body2">Main Content (flexible width)</Typography>
                 </CardContent>
@@ -221,16 +221,16 @@ export default function GridShowcase() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .grid-cols-two-thirds (2fr + 1fr)
             </Typography>
             <div className="mds-legacy-grid-cols-two-thirds gap-4">
-              <Card sx={{ background: getRoleColor('surface.hero') }}>
+              <Card sx={{ background: getRoleColor('bg.primary') }}>
                 <CardContent>
                   <Typography variant="body2" sx={{ color: 'white' }}>Main Content (2/3 width)</Typography>
                 </CardContent>
               </Card>
-              <Card sx={{ background: getRoleColor('surface.subtle') }}>
+              <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                 <CardContent>
                   <Typography variant="body2">Aside (1/3 width)</Typography>
                 </CardContent>
@@ -241,20 +241,20 @@ export default function GridShowcase() {
 
         {/* Auto-Fit Presets */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             6. Auto-Fit Grid Presets
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Pre-configured auto-fit grids with common minimum widths
           </Typography>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .grid-auto-fit-sm (200px min)
             </Typography>
             <div className="grid-auto-fit-sm gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.accent') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Card {i + 1}</Typography>
                   </CardContent>
@@ -264,12 +264,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               .grid-auto-fit-md (300px min)
             </Typography>
             <div className="grid-auto-fit-md gap-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} sx={{ background: getRoleColor('surface.subtle') }}>
+                <Card key={i} sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 3 }}>
                     <Typography variant="body2">Product {i + 1}</Typography>
                   </CardContent>
@@ -281,10 +281,10 @@ export default function GridShowcase() {
 
         {/* Auto-Sized Columns */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             7. Auto-Sized Columns
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Use <code>.col-auto</code> for content-based sizing
           </Typography>
 
@@ -297,14 +297,14 @@ export default function GridShowcase() {
               </Card>
             </div>
             <div className="mds-legacy-col">
-              <Card sx={{ background: getRoleColor('surface.accent') }}>
+              <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                 <CardContent sx={{ py: 1 }}>
                   <Typography variant="body2">Flexible content takes remaining space</Typography>
                 </CardContent>
               </Card>
             </div>
             <div className="mds-legacy-col-auto">
-              <Card sx={{ background: getRoleColor('status.danger.bg') }}>
+              <Card sx={{ background: getRoleColor('bg.critical.subtle') }}>
                 <CardContent sx={{ py: 1 }}>
                   <Typography variant="button">Delete</Typography>
                 </CardContent>
@@ -315,10 +315,10 @@ export default function GridShowcase() {
 
         {/* Complex Dashboard Example */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             8. Complex Dashboard Layout
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ mb: 2, color: getRoleColor('fg.neutral.subtle') }}>
             Combining multiple features: custom columns, row spanning, dense packing
           </Typography>
 
@@ -329,43 +329,43 @@ export default function GridShowcase() {
               </CardContent>
             </Card>
 
-            <Card className="col-span-3 row-span-2" sx={{ background: getRoleColor('status.success.bg') }}>
+            <Card className="col-span-3 row-span-2" sx={{ background: getRoleColor('bg.success.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h6">Analytics</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2" sx={{ background: getRoleColor('surface.accent') }}>
+            <Card className="col-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Metric 1</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2" sx={{ background: getRoleColor('surface.accent') }}>
+            <Card className="col-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Metric 2</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2" sx={{ background: getRoleColor('surface.accent') }}>
+            <Card className="col-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ textAlign: 'center' }}>
                 <Typography variant="body2">Metric 3</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('surface.subtle') }}>
+            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="body1">Widget A</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('surface.subtle') }}>
+            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="body1">Widget B</Typography>
               </CardContent>
             </Card>
 
-            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('surface.subtle') }}>
+            <Card className="col-span-2 row-span-2" sx={{ background: getRoleColor('bg.neutral.subtle') }}>
               <CardContent sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="body1">Widget C</Typography>
               </CardContent>
@@ -375,31 +375,31 @@ export default function GridShowcase() {
 
         {/* Bootstrap-Inspired Patterns */}
         <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('text.primary') }}>
+          <Typography variant="h5" sx={{ mb: 2, color: getRoleColor('fg.primary') }}>
             9. Bootstrap-Inspired Patterns
           </Typography>
           
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               Equal-Width Columns (.col without number)
             </Typography>
             <div className="mds-legacy-row gap-4">
               <div className="mds-legacy-col">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 1</Typography>
                   </CardContent>
                 </Card>
               </div>
               <div className="mds-legacy-col">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 2</Typography>
                   </CardContent>
                 </Card>
               </div>
               <div className="mds-legacy-col">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto 3</Typography>
                   </CardContent>
@@ -409,12 +409,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               Column Ordering (.order-* utilities)
             </Typography>
             <div className="mds-legacy-row gap-4">
               <div className="mds-legacy-col order-3">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">First in DOM (order: 3)</Typography>
                   </CardContent>
@@ -428,7 +428,7 @@ export default function GridShowcase() {
                 </Card>
               </div>
               <div className="mds-legacy-col order-2">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Third in DOM (order: 2)</Typography>
                   </CardContent>
@@ -438,12 +438,12 @@ export default function GridShowcase() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               Mixed Fixed + Auto Columns
             </Typography>
             <div className="mds-legacy-row gap-4">
               <div className="mds-legacy-col">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto-width</Typography>
                   </CardContent>
@@ -457,7 +457,7 @@ export default function GridShowcase() {
                 </Card>
               </div>
               <div className="mds-legacy-col">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent sx={{ textAlign: 'center', py: 2 }}>
                     <Typography variant="body2">Auto-width</Typography>
                   </CardContent>
@@ -467,19 +467,19 @@ export default function GridShowcase() {
           </Box>
 
           <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('text.secondary') }}>
+            <Typography variant="subtitle2" sx={{ mb: 1, color: getRoleColor('fg.neutral.subtle') }}>
               Responsive Order (sidebar-first on desktop)
             </Typography>
             <div className="mds-legacy-row gap-4">
               <div className="mds-legacy-col-12 mds-legacy-col-md mds-legacy-order-md-2">
-                <Card sx={{ background: getRoleColor('surface.accent') }}>
+                <Card sx={{ background: getRoleColor('bg.neutral.subtle') }}>
                   <CardContent>
                     <Typography variant="body2">Main Content (first on mobile, second on desktop)</Typography>
                   </CardContent>
                 </Card>
               </div>
               <div className="mds-legacy-col-12 mds-legacy-col-md mds-legacy-order-md-1">
-                <Card sx={{ background: getRoleColor('surface.hero') }}>
+                <Card sx={{ background: getRoleColor('bg.primary') }}>
                   <CardContent>
                     <Typography variant="body2" sx={{ color: 'white' }}>Sidebar (second on mobile, first on desktop)</Typography>
                   </CardContent>
@@ -490,10 +490,10 @@ export default function GridShowcase() {
         </Paper>
 
         <Paper sx={{ p: 3, textAlign: 'center' }}>
-          <Typography variant="h6" sx={{ mb: 1, color: getRoleColor('text.primary') }}>
+          <Typography variant="h6" sx={{ mb: 1, color: getRoleColor('fg.primary') }}>
             ✅ Phase 1 Complete + Bootstrap-Inspired
           </Typography>
-          <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
+          <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
             Grid system now supports custom column counts, row spanning, extended gaps (36-96px),
             dense packing, asymmetric presets, auto-fit layouts, equal-width columns, and column ordering.
             Scalability increased from 8/10 to 9.5/10.

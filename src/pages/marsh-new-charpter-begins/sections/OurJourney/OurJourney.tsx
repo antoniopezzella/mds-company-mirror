@@ -98,7 +98,7 @@ const OurJourney: React.FC = () => {
       ref={sectionRef} 
       className={styles.section} 
       aria-labelledby="journey-heading"
-      style={{ background: getRoleColor('surface.default') }}
+      style={{ background: getRoleColor('bg.default') }}
     >
       <Container maxWidth="xl">
         <Typography 
@@ -106,7 +106,7 @@ const OurJourney: React.FC = () => {
           variant="h2" 
           component="h2"
           sx={{ 
-            color: getRoleColor('text.primary'), 
+            color: getRoleColor('fg.primary'), 
             mb: (t) => t.spacing(6),
             textAlign: 'center',
             fontWeight: 600,
@@ -127,7 +127,7 @@ const OurJourney: React.FC = () => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  background: getRoleColor('surface.subtle'),
+                  background: getRoleColor('bg.neutral.subtle'),
                   borderRadius: '12px',
                   overflow: 'hidden',
                   boxShadow: 'none',
@@ -146,7 +146,7 @@ const OurJourney: React.FC = () => {
                     alt={card.image.alt}
                     sx={{ 
                       objectFit: 'cover',
-                      background: getRoleColor('surface.accent'),
+                      background: getRoleColor('bg.neutral.subtle'),
                     }}
                   />
                 )}
@@ -154,7 +154,7 @@ const OurJourney: React.FC = () => {
                   <div 
                     style={{ 
                       height: '240px', 
-                      background: getRoleColor('surface.accent'),
+                      background: getRoleColor('bg.neutral.subtle'),
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -162,7 +162,7 @@ const OurJourney: React.FC = () => {
                   >
                     <Typography 
                       variant="body2" 
-                      sx={{ color: getRoleColor('text.secondary') }}
+                      sx={{ color: getRoleColor('fg.neutral.subtle') }}
                     >
                       {card.image.alt}
                     </Typography>
@@ -178,7 +178,7 @@ const OurJourney: React.FC = () => {
                     variant="h5" 
                     component="h3"
                     sx={{ 
-                      color: getRoleColor('text.primary'), 
+                      color: getRoleColor('fg.primary'), 
                       mb: (t) => t.spacing(2),
                       fontWeight: 600,
                     }}
@@ -188,7 +188,7 @@ const OurJourney: React.FC = () => {
                   <Typography 
                     variant="body1" 
                     sx={{ 
-                      color: getRoleColor('text.secondary'),
+                      color: getRoleColor('fg.neutral.subtle'),
                       lineHeight: 1.6,
                     }}
                   >

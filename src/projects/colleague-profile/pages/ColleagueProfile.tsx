@@ -132,7 +132,7 @@ function MyTeamsContent() {
           </h2>
 
           {teams.length === 0 ? (
-            <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+            <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
               No teams match “{search}”.
             </p>
           ) : (

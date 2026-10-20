@@ -47,7 +47,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
 }) => {
   return (
     <Paper elevation={1} sx={{ p: 3 }}>
-      <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600, mb: 3 }}>
+      <Typography variant="h6" component="h2" sx={{ color: getRoleColor('fg.primary'), fontWeight: 600, mb: 3 }}>
         Quick Actions
       </Typography>
 
@@ -63,11 +63,11 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
               p: 2,
               textAlign: 'left',
               borderColor: getRoleColor('border.default'),
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               transition: 'all 0.2s ease',
               '&:hover': {
                 borderColor: getRoleColor('interactive.primary'),
-                backgroundColor: getRoleColor('surface.subtle'),
+                backgroundColor: getRoleColor('bg.neutral.subtle'),
                 transform: 'translateY(-2px)',
               },
             }}
@@ -76,7 +76,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
               <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
                 {action.label}
               </Typography>
-              <Typography variant="caption" sx={{ color: getRoleColor('text.secondary') }}>
+              <Typography variant="caption" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
                 {action.description}
               </Typography>
             </Box>

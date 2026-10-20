@@ -88,9 +88,9 @@ const ClientOutcomes: React.FC = () => {
   }, [prefersReduced]);
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="outcomes-heading" style={{ background: getRoleColor('surface.default') }}>
+    <section ref={sectionRef} className={styles.section} aria-labelledby="outcomes-heading" style={{ background: getRoleColor('bg.default') }}>
       <Container maxWidth="xl">
-        <Typography id="outcomes-heading" variant="h3" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(2), textAlign: 'center' }}>
+        <Typography id="outcomes-heading" variant="h3" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(2), textAlign: 'center' }}>
           Client Outcomes
         </Typography>
         
@@ -100,7 +100,7 @@ const ClientOutcomes: React.FC = () => {
               key={outcome.title}
               className="mds-legacy-col-12 mds-legacy-col-md-6 mb-4 outcome-card"
               style={{
-                backgroundColor: getRoleColor('surface.subtle'),
+                backgroundColor: getRoleColor('bg.neutral.subtle'),
                 borderRadius: '16px',
                 padding: '1.5rem',
                 textAlign: 'center',
@@ -113,7 +113,7 @@ const ClientOutcomes: React.FC = () => {
               <Typography
                 variant="h5"
                 sx={{
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   marginBottom: '0.75rem',
                   fontWeight: 600,
                 }}
@@ -123,7 +123,7 @@ const ClientOutcomes: React.FC = () => {
               <Typography
                 variant="body1"
                 sx={{
-                  color: getRoleColor('text.secondary'),
+                  color: getRoleColor('fg.neutral.subtle'),
                   lineHeight: 1.6,
                 }}
               >

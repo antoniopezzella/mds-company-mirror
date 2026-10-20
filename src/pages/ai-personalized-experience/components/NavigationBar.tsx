@@ -13,7 +13,7 @@ export default function NavigationBar({ preferences, onPreferenceChange }: Navig
       position="fixed"
       elevation={0}
       sx={{
-        bgcolor: getRoleColor('surface.navigation'),
+        bgcolor: getRoleColor('bg.shell'),
         backdropFilter: 'blur(10px)',
         borderBottom: `1px solid ${getRoleColor('border.default')}`,
       }}
@@ -24,7 +24,7 @@ export default function NavigationBar({ preferences, onPreferenceChange }: Navig
           sx={{
             flexGrow: 1,
             fontWeight: 700,
-            color: getRoleColor('text.primary')
+            color: getRoleColor('fg.primary')
           }}
         >
           AI Personalized Experience

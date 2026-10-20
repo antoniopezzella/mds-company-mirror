@@ -15,9 +15,9 @@ interface Claim {
 const getStatusColor = (status: Claim['status']) => {
   switch (status) {
     case 'approved':
-      return getRoleColor('status.success.fg');
+      return getRoleColor('fg.success');
     case 'rejected':
-      return getRoleColor('status.danger.fg');
+      return getRoleColor('fg.critical');
       // text.onLight for warning: status.warning.fg is gold1000, which is
       // 3.34:1 on its own status.warning.bg and 3.2:1 on the card surface —
       // both under the 4.5:1 text needs, and no gold in the palette clears
@@ -25,34 +25,34 @@ const getStatusColor = (status: Claim['status']) => {
       // still reads through the chip background and the warning icon, which
       // need only 3:1. See ui/alert.tsx for the full reasoning.
     case 'investigating':
-      return getRoleColor('text.onLight');
+      return getRoleColor('fg.on-light');
     default:
-      return getRoleColor('status.info.fg');
+      return getRoleColor('fg.info');
   }
 };
 
 const getStatusBg = (status: Claim['status']) => {
   switch (status) {
     case 'approved':
-      return getRoleColor('status.success.bg');
+      return getRoleColor('bg.success.subtle');
     case 'rejected':
-      return getRoleColor('status.danger.bg');
+      return getRoleColor('bg.critical.subtle');
     case 'investigating':
-      return getRoleColor('status.warning.bg');
+      return getRoleColor('bg.warning.subtle');
     default:
-      return getRoleColor('status.info.bg');
+      return getRoleColor('bg.info.subtle');
   }
 };
 
 const getPriorityColor = (priority: Claim['priority']) => {
   switch (priority) {
     case 'high':
-      return getRoleColor('status.danger.fg');
+      return getRoleColor('fg.critical');
     case 'medium':
       // Same as getStatusColor above — this drives label text.
-      return getRoleColor('text.onLight');
+      return getRoleColor('fg.on-light');
     default:
-      return getRoleColor('status.info.fg');
+      return getRoleColor('fg.info');
   }
 };
 
@@ -107,7 +107,7 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
   return (
     <Paper elevation={1} sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
+        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('fg.primary'), fontWeight: 600 }}>
           Recent Claims
         </Typography>
         <Typography
@@ -133,7 +133,7 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
               transition: 'all 0.2s ease',
               '&:hover': {
                 borderColor: getRoleColor('interactive.primary'),
-                backgroundColor: getRoleColor('surface.subtle'),
+                backgroundColor: getRoleColor('bg.neutral.subtle'),
               },
             }}
           >
@@ -150,10 +150,10 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
                   {claim.policyHolder.charAt(0)}
                 </Avatar>
                 <Box>
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: getRoleColor('text.primary') }}>
+                  <Typography variant="body1" sx={{ fontWeight: 600, color: getRoleColor('fg.primary') }}>
                     {claim.policyHolder}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: getRoleColor('text.secondary'), fontSize: '0.875rem' }}>
+                  <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle'), fontSize: '0.875rem' }}>
                     {claim.id} • {claim.type}
                   </Typography>
                 </Box>
@@ -175,7 +175,7 @@ export const RecentClaims: React.FC<RecentClaimsProps> = ({
               <Typography variant="h6" component="h2" sx={{ color: getRoleColor('interactive.primary'), fontWeight: 700 }}>
                 {claim.amount}
               </Typography>
-              <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
+              <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
                 {new Date(claim.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
               </Typography>
             </Box>

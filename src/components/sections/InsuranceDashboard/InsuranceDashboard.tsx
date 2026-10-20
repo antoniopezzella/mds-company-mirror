@@ -141,7 +141,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
     <Box
       sx={{
         minHeight: '100vh',
-        backgroundColor: getRoleColor('surface.default'),
+        backgroundColor: getRoleColor('bg.default'),
       }}
     >
       {/* Header Navigation */}
@@ -156,7 +156,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
       {/* Page Title & Breadcrumbs */}
       <Box
         sx={{
-          backgroundColor: getRoleColor('surface.subtle'),
+          backgroundColor: getRoleColor('bg.neutral.subtle'),
           borderBottom: `1px solid ${getRoleColor('border.default')}`,
           py: 3,
         }}
@@ -171,7 +171,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
             variant="h3"
             component="h1"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               fontWeight: 600,
             }}
           >
@@ -180,7 +180,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               mt: 0.5,
             }}
           >
@@ -220,7 +220,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                 variant="h5"
                 component="h2"
                 sx={{
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   mb: 3,
                   fontWeight: 600,
                 }}
@@ -252,11 +252,11 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                     p: 3,
                     border: `1px solid ${getRoleColor('border.default')}`,
                     borderRadius: 2,
-                    bgcolor: getRoleColor('surface.subtle'),
+                    bgcolor: getRoleColor('bg.neutral.subtle'),
                   }}
                 >
                   <Typography variant="h6" component="h2">Quick Actions</Typography>
-                  <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
+                  <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
                     Common tasks and workflows
                   </Typography>
                   <Stack spacing={2} sx={{ mt: 2 }}>
@@ -283,11 +283,11 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                     p: 3,
                     border: `1px solid ${getRoleColor('border.default')}`,
                     borderRadius: 2,
-                    bgcolor: getRoleColor('surface.subtle'),
+                    bgcolor: getRoleColor('bg.neutral.subtle'),
                   }}
                 >
                   <Typography variant="h6" component="h2">Recent Policies</Typography>
-                  <Typography variant="body2" sx={{ color: getRoleColor('text.secondary') }}>
+                  <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
                     Latest policy updates and renewals
                   </Typography>
                   <Box sx={{ mt: 2 }}>
@@ -306,7 +306,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                 variant="h5"
                 component="h2"
                 sx={{
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   mb: 3,
                   fontWeight: 600,
                 }}
@@ -329,7 +329,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
                 variant="h5"
                 component="h2"
                 sx={{
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   fontWeight: 600,
                 }}
               >
@@ -349,7 +349,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
         {/* Tab Content: Claims */}
         {activeTab === 'claims' && (
           <Box>
-            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
+            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('fg.primary'), mb: 3 }}>
               Claims Management
             </Typography>
             <Alert severity="warning" title="Pending Claims">
@@ -361,7 +361,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
         {/* Tab Content: Analytics */}
         {activeTab === 'analytics' && (
           <Box>
-            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('text.primary'), mb: 3 }}>
+            <Typography variant="h5" component="h2" sx={{ color: getRoleColor('fg.primary'), mb: 3 }}>
               Analytics & Insights
             </Typography>
             <Grid container spacing={3}>

@@ -37,10 +37,10 @@ export default function AIPersonalizedExperience() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: getRoleColor('surface.default'),
+          bgcolor: getRoleColor('bg.default'),
         }}
       >
-        <Typography variant="h5" color={getRoleColor('text.primary')}>
+        <Typography variant="h5" color={getRoleColor('fg.primary')}>
           Loading personalized experience...
         </Typography>
       </Box>
@@ -52,7 +52,7 @@ export default function AIPersonalizedExperience() {
       className="ai-personalized-experience"
       sx={{
         minHeight: '100vh',
-        bgcolor: getRoleColor('surface.default'),
+        bgcolor: getRoleColor('bg.default'),
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -81,7 +81,7 @@ export default function AIPersonalizedExperience() {
           className="hero-title"
           sx={{
             mb: 4,
-            color: getRoleColor('text.primary'),
+            color: getRoleColor('fg.primary'),
             fontWeight: 700
           }}
         >
@@ -93,7 +93,7 @@ export default function AIPersonalizedExperience() {
           className="hero-subtitle"
           sx={{
             mb: 6,
-            color: getRoleColor('text.secondary'),
+            color: getRoleColor('fg.neutral.subtle'),
             maxWidth: 800
           }}
         >

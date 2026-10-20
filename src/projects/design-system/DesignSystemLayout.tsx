@@ -41,7 +41,7 @@ const DesignSystemLayout: React.FC = () => {
   }));
 
   return (
-    <div className="flex min-h-screen" style={{ backgroundColor: getRoleColor('surface.default', { mode }) }}>
+    <div className="flex min-h-screen" style={{ backgroundColor: getRoleColor('bg.default', { mode }) }}>
       <aside className="sticky top-0 h-screen w-64 flex-shrink-0">
         <SideNavigation
           items={items}

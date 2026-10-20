@@ -65,7 +65,7 @@ const SOCIAL_ICONS = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const Marsh1DERFooter: React.FC = () => (
-  <Box component="footer" sx={{ backgroundColor: getRoleColor('surface.hero') }}>
+  <Box component="footer" sx={{ backgroundColor: getRoleColor('bg.primary') }}>
 
     {/* ── Brand tagline ── */}
     <Box sx={{ maxWidth: 1540, mx: 'auto', px: { xs: '16px', sm: '24px', lg: '48px' }, pt: { xs: 8, md: 15 }, pb: { xs: 6, md: 10 } }}>
@@ -77,7 +77,7 @@ const Marsh1DERFooter: React.FC = () => (
           fontSize: 'clamp(36px, 4.7vw, 72px)',
           lineHeight: 1.11,
           letterSpacing: '-0.01em',
-          color: getRoleColor('text.onHero'),
+          color: getRoleColor('fg.on-primary'),
           maxWidth: 900,
         }}
       >
@@ -117,7 +117,7 @@ const Marsh1DERFooter: React.FC = () => (
                 fontSize: 16,
                 fontWeight: 700,
                 lineHeight: '24px',
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 textDecoration: 'none',
                 opacity: 0.9,
                 '&:hover': { opacity: 1, textDecoration: 'underline' },
@@ -140,7 +140,7 @@ const Marsh1DERFooter: React.FC = () => (
           fontSize: 14,
           fontWeight: 400,
           lineHeight: '20px',
-          color: getRoleColor('text.onHero'),
+          color: getRoleColor('fg.on-primary'),
           opacity: 0.7,
           maxWidth: 560,
           flex: '1 0 280px',
@@ -164,7 +164,7 @@ const Marsh1DERFooter: React.FC = () => (
                 width: 40,
                 height: 40,
                 borderRadius: '50%',
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 opacity: 0.7,
                 transition: 'opacity 0.15s, background-color 0.15s',
                 '&:hover': { opacity: 1, backgroundColor: 'rgba(206,236,255,0.1)' },
@@ -188,7 +188,7 @@ const Marsh1DERFooter: React.FC = () => (
               fontSize: 14,
               fontWeight: 400,
               lineHeight: '20px',
-              color: getRoleColor('text.onHero'),
+              color: getRoleColor('fg.on-primary'),
               opacity: 0.65,
               textDecoration: 'none',
               '&:hover': { opacity: 1, textDecoration: 'underline' },
@@ -204,7 +204,7 @@ const Marsh1DERFooter: React.FC = () => (
         fontFamily: 'var(--typo-body1-font-family)',
         fontSize: 14,
         lineHeight: '20px',
-        color: getRoleColor('text.onHero'),
+        color: getRoleColor('fg.on-primary'),
         opacity: 0.5,
         pb: 2,
       }}>

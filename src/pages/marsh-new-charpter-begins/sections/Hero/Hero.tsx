@@ -188,13 +188,13 @@ const Hero: React.FC = () => {
       className={`${styles.section} ${heroStyles.hero}`} 
       aria-labelledby="hero-heading" 
       style={{ 
-        background: getRoleColor('surface.hero')
+        background: getRoleColor('bg.primary')
       }} 
       data-debug-motion-disabled={prefersReduced || isMotionDisabled() ? '1' : '0'}
     >
       {/* Parallax background layer */}
       <Box ref={bgRef} className={heroStyles.bg} sx={{
-        background: `linear-gradient(180deg, ${getRoleColor('surface.hero')} 0%, ${getRoleColor('surface.hero')} 100%)`
+        background: `linear-gradient(180deg, ${getRoleColor('bg.primary')} 0%, ${getRoleColor('bg.primary')} 100%)`
       }} />
       <Box ref={gradientRef} className={heroStyles.gradientLayer} />
       <Box aria-hidden className={heroStyles.patternLayer} />
@@ -305,13 +305,13 @@ const Hero: React.FC = () => {
           </Typography>
         </div>
         {content.hero.eyebrow && (
-          <Typography variant="overline" sx={{ color: getRoleColor('text.onHero'), display: 'block', mb: (t) => t.spacing(1), opacity: 0 }}>
+          <Typography variant="overline" sx={{ color: getRoleColor('fg.on-primary'), display: 'block', mb: (t) => t.spacing(1), opacity: 0 }}>
             {content.hero.eyebrow}
           </Typography>
         )}
         {/* Hide original headline and body during animation */}
         {words.length > 0 && (
-          <Typography id="hero-heading" variant="h2" sx={{ color: getRoleColor('text.onHero'), mb: (t) => t.spacing(2), lineHeight: 1.05, opacity: 0 }}>
+          <Typography id="hero-heading" variant="h2" sx={{ color: getRoleColor('fg.on-primary'), mb: (t) => t.spacing(2), lineHeight: 1.05, opacity: 0 }}>
             {words.map((w: string, i: number) => (
               <React.Fragment key={`${w}-${i}`}>
                 <span className={heroStyles.wordWrap}>
@@ -329,7 +329,7 @@ const Hero: React.FC = () => {
           </Typography>
         )}
         {content.hero.kicker && (
-          <Typography ref={kickerRef} variant="subtitle1" className={heroStyles.kicker} data-hero-tagline sx={{ color: getRoleColor('text.onHero'), opacity: 0, mb: (t) => t.spacing(2) }}>
+          <Typography ref={kickerRef} variant="subtitle1" className={heroStyles.kicker} data-hero-tagline sx={{ color: getRoleColor('fg.on-primary'), opacity: 0, mb: (t) => t.spacing(2) }}>
             {content.hero.kicker}
           </Typography>
         )}
@@ -340,7 +340,7 @@ const Hero: React.FC = () => {
             ref={(el) => { if (el) paragraphRefs.current[i] = el; }}
             className={heroStyles.heroTitle}
             data-hero-body
-            sx={{ color: getRoleColor('text.onHero'), opacity: 0, fontWeight: 400, typography: 'h2' }}
+            sx={{ color: getRoleColor('fg.on-primary'), opacity: 0, fontWeight: 400, typography: 'h2' }}
           >
             {p}
           </Typography>

@@ -117,10 +117,10 @@ const FilmMetaRow: React.FC<FilmMetaRowProps> = ({
         sx={{
           width: 40,
           height: 40,
-          backgroundColor: getRoleColor('surface.disabled'),
-          color: getRoleColor('text.inverse'),
+          backgroundColor: getRoleColor('bg.disabled'),
+          color: getRoleColor('fg.on-dark'),
           pointerEvents: 'none',
-          '&:hover': { backgroundColor: getRoleColor('surface.disabled') },
+          '&:hover': { backgroundColor: getRoleColor('bg.disabled') },
         }}
       >
         <PlayArrowIcon fontSize="small" />
@@ -135,7 +135,7 @@ const FilmMetaRow: React.FC<FilmMetaRowProps> = ({
               fontFamily: 'var(--typo-body1-font-family)',
               fontSize: 12,
               fontWeight: 600,
-              color: getRoleColor('text.inverse'),
+              color: getRoleColor('fg.on-dark'),
             }}
           >
             {durationLabel}
@@ -146,7 +146,7 @@ const FilmMetaRow: React.FC<FilmMetaRowProps> = ({
             sx={{
               fontFamily: 'var(--typo-body1-font-family)',
               fontSize: 12,
-              color: getRoleColor('text.onHero'),
+              color: getRoleColor('fg.on-primary'),
               opacity: 0.85,
             }}
           >
@@ -169,7 +169,7 @@ const FilmMetaRow: React.FC<FilmMetaRowProps> = ({
       >
         <Typography
           sx={{
-            color: getRoleColor('text.inverse'),
+            color: getRoleColor('fg.on-dark'),
             fontFamily: 'var(--typo-body1-font-family)',
             fontSize: 12,
             fontWeight: 500,

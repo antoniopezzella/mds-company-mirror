@@ -29,7 +29,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLab
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-        <Typography variant="body2" sx={{ color: getRoleColor('text.secondary'), fontWeight: 500 }}>
+        <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle'), fontWeight: 500 }}>
           {title}
         </Typography>
         {icon && (
@@ -48,7 +48,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLab
               and putting "$2.4M" into a screen reader's heading list. The h3
               variant keeps the type scale. */}
               <Typography variant="h3" component="p" sx={{ 
-        color: getRoleColor('text.primary'),
+        color: getRoleColor('fg.primary'),
         fontWeight: 700,
         mb: 1,
         fontSize: { xs: '1.75rem', md: '2.5rem' },
@@ -58,14 +58,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLab
       
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         {isPositive ? (
-          <TrendingUpIcon sx={{ fontSize: 18, color: getRoleColor('status.success.fg') }} />
+          <TrendingUpIcon sx={{ fontSize: 18, color: getRoleColor('fg.success') }} />
         ) : (
-          <TrendingDownIcon sx={{ fontSize: 18, color: getRoleColor('status.danger.fg') }} />
+          <TrendingDownIcon sx={{ fontSize: 18, color: getRoleColor('fg.critical') }} />
         )}
         <Typography
           variant="body2"
           sx={{
-            color: isPositive ? getRoleColor('status.success.fg') : getRoleColor('status.danger.fg'),
+            color: isPositive ? getRoleColor('fg.success') : getRoleColor('fg.critical'),
             fontWeight: 600,
           }}
         >

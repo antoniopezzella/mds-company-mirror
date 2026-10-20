@@ -26,7 +26,7 @@ const CategoryPage: React.FC = () => {
   if (!category) {
     return (
       <div className="px-6 py-16 text-center">
-        <p className="text-lg font-semibold" style={{ color: getRoleColor('text.primary', { mode }) }}>
+        <p className="text-lg font-semibold" style={{ color: getRoleColor('fg.primary', { mode }) }}>
           Category not found
         </p>
         <Link to="/design-system" className="mt-2 inline-block text-sm underline" style={{ color: getRoleColor('interactive.primary', { mode }) }}>
@@ -38,11 +38,11 @@ const CategoryPage: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
-      <h2 className="text-3xl font-semibold" style={{ color: getRoleColor('text.primary', { mode }) }}>
+      <h2 className="text-3xl font-semibold" style={{ color: getRoleColor('fg.primary', { mode }) }}>
         {category.label}
       </h2>
       {category.description && (
-        <p className="mt-2 text-base" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+        <p className="mt-2 text-base" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
           {category.description}
         </p>
       )}

@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
     <footer 
       role="contentinfo"
       style={{ 
-        background: getRoleColor('surface.hero'),
+        background: getRoleColor('bg.primary'),
         paddingTop: '4rem',
         paddingBottom: '4rem',
       }}
@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
             <Typography 
               variant="body1" 
               sx={{ 
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 lineHeight: 1.6,
                 mb: (t) => t.spacing(3),
               }}
@@ -58,10 +58,10 @@ const Footer: React.FC = () => {
                   href={link.href}
                   aria-label={link.label}
                   sx={{
-                    color: getRoleColor('text.onHero'),
+                    color: getRoleColor('fg.on-primary'),
                     transition: 'color 0.2s ease',
                     '&:hover': {
-                      color: getRoleColor('text.onAccent'),
+                      color: getRoleColor('fg.on-accent'),
                     },
                   }}
                 >
@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
               variant="h6" 
               component="h3"
               sx={{ 
-                color: getRoleColor('text.inverse'), 
+                color: getRoleColor('fg.on-dark'), 
                 mb: (t) => t.spacing(3),
                 fontWeight: 600,
                 fontSize: '1rem',
@@ -95,12 +95,12 @@ const Footer: React.FC = () => {
                   key={link.label}
                   href={link.href}
                   sx={{
-                    color: getRoleColor('text.onHero'),
+                    color: getRoleColor('fg.on-primary'),
                     textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.2s ease',
                     '&:hover': {
-                      color: getRoleColor('text.onAccent'),
+                      color: getRoleColor('fg.on-accent'),
                       textDecoration: 'underline',
                     },
                   }}
@@ -117,7 +117,7 @@ const Footer: React.FC = () => {
               variant="h6" 
               component="h3"
               sx={{ 
-                color: getRoleColor('text.inverse'), 
+                color: getRoleColor('fg.on-dark'), 
                 mb: (t) => t.spacing(3),
                 fontWeight: 600,
                 fontSize: '1rem',
@@ -139,12 +139,12 @@ const Footer: React.FC = () => {
                   key={link.label}
                   href={link.href}
                   sx={{
-                    color: getRoleColor('text.onHero'),
+                    color: getRoleColor('fg.on-primary'),
                     textDecoration: 'none',
                     fontSize: '0.9rem',
                     transition: 'color 0.2s ease',
                     '&:hover': {
-                      color: getRoleColor('text.onAccent'),
+                      color: getRoleColor('fg.on-accent'),
                       textDecoration: 'underline',
                     },
                   }}
@@ -167,7 +167,7 @@ const Footer: React.FC = () => {
           <Typography 
             variant="body2" 
             sx={{ 
-              color: getRoleColor('text.onHero'),
+              color: getRoleColor('fg.on-primary'),
               fontSize: '0.875rem',
             }}
           >

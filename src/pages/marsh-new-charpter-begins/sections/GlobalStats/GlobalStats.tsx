@@ -207,7 +207,7 @@ const GlobalStats: React.FC = () => {
       className={styles.section} 
       aria-labelledby="stats-heading" 
       style={{ 
-        background: getRoleColor('surface.default'),
+        background: getRoleColor('bg.default'),
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center'
@@ -222,7 +222,7 @@ const GlobalStats: React.FC = () => {
               variant="h2" 
               component="h2"
               sx={{ 
-                color: getRoleColor('text.primary'), 
+                color: getRoleColor('fg.primary'), 
                 mb: (t) => t.spacing(3),
                 textAlign: 'left'
               }}
@@ -233,7 +233,7 @@ const GlobalStats: React.FC = () => {
               variant="body1" 
               data-stats-description
               sx={{ 
-                color: getRoleColor('text.secondary'),
+                color: getRoleColor('fg.neutral.subtle'),
                 textAlign: 'left',
                 fontSize: '1.125rem',
                 lineHeight: 1.6
@@ -275,7 +275,7 @@ const GlobalStats: React.FC = () => {
                     variant="h1" 
                     data-stat-number
                     sx={{ 
-                      color: getRoleColor('text.primary'), 
+                      color: getRoleColor('fg.primary'), 
                       lineHeight: 1, 
                       mb: 2,
                       fontWeight: 700,
@@ -288,7 +288,7 @@ const GlobalStats: React.FC = () => {
                     variant="h6" 
                     data-stat-label
                     sx={{ 
-                      color: getRoleColor('text.secondary'),
+                      color: getRoleColor('fg.neutral.subtle'),
                       textTransform: 'uppercase',
                       letterSpacing: '0.1em',
                       fontWeight: 600

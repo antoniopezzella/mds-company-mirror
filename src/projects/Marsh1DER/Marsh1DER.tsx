@@ -264,7 +264,7 @@ const Marsh1DER: React.FC = () => {
         outside, as true siblings, on purpose. */}
     <Box id="smooth-wrapper" ref={smoothWrapperRef}>
     <Box id="smooth-content" ref={smoothContentRef}>
-    <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('surface.default') }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('bg.default') }}>
 
     {/* ── 2. Hero — 50/50 split, looping video + animated M mark (Figma V1) ── */}
     <HeroBanner

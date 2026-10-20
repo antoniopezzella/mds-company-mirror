@@ -138,7 +138,7 @@ const ctx = gsap.context(() => {
     >
       {/* Background layers */}
       <Box aria-hidden="true" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <Box sx={{ position: 'absolute', inset: 0, backgroundColor: getRoleColor('surface.hero') }} />
+        <Box sx={{ position: 'absolute', inset: 0, backgroundColor: getRoleColor('bg.primary') }} />
         
         {/* Video Background */}
         <Box
@@ -246,7 +246,7 @@ const ctx = gsap.context(() => {
             mb: '48px',
           }}
         >
-          <AutoAwesomeIcon sx={{ fontSize: '32px', color: getRoleColor('brand.accent'), flexShrink: 0 }} />
+          <AutoAwesomeIcon sx={{ fontSize: '32px', color: getRoleColor('bg.accent'), flexShrink: 0 }} />
           <InputBase
             placeholder={searchPlaceholder}
             fullWidth

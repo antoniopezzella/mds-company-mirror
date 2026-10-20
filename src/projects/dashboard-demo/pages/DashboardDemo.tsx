@@ -199,7 +199,7 @@ export function DashboardDemo() {
     // extracted FROM this file and then had zero consumers — it does now.
     <PageShell
       className="mds-dashboard"
-      style={{ backgroundColor: getRoleColor('surface.subtle') }}
+      style={{ backgroundColor: getRoleColor('bg.neutral.subtle') }}
       sidebarOpen={sidebarOpen && !isDesktop}
       onSidebarClose={() => setSidebarOpen(false)}
       header={

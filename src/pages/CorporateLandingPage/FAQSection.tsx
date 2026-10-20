@@ -88,7 +88,7 @@ export const FAQSection: React.FC = () => {
               fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
               fontSize: '40px',
               lineHeight: '48px',
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               textAlign: 'center',
               fontWeight: 400,
             }}

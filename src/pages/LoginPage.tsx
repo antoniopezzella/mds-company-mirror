@@ -64,9 +64,9 @@ const LoginPage: React.FC = () => {
     }, 1800);
   };
 
-  const pageBg = getRoleColor('surface.subtle', { mode });
-  const textPrimary = getRoleColor('text.primary', { mode });
-  const textSecondary = getRoleColor('text.secondary', { mode });
+  const pageBg = getRoleColor('bg.neutral.subtle', { mode });
+  const textPrimary = getRoleColor('fg.primary', { mode });
+  const textSecondary = getRoleColor('fg.neutral.subtle', { mode });
   const brandAccent = getRoleColor('interactive.primary', { mode });
   const dividerColor = getRoleColor('border.default', { mode });
 
@@ -116,7 +116,7 @@ const LoginPage: React.FC = () => {
               1.65:1 on gold in BOTH modes: this lock icon has never been
               visible. onLight is the mode-invariant Midnight intended for
               exactly these surfaces: 10.96:1. */}
-          <LockOutlinedIcon sx={{ color: getRoleColor('text.onLight', { mode }), fontSize: 24 }} />
+          <LockOutlinedIcon sx={{ color: getRoleColor('fg.on-light', { mode }), fontSize: 24 }} />
         </Box>
         <Typography
           sx={{

@@ -20,12 +20,12 @@ const Announcement: React.FC = () => {
   });
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="announcement-heading" style={{ background: getRoleColor('surface.default') }}>
+    <section ref={sectionRef} className={styles.section} aria-labelledby="announcement-heading" style={{ background: getRoleColor('bg.default') }}>
       <Container maxWidth="lg">
-        <Typography id="announcement-heading" variant="h3" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(2) }}>
+        <Typography id="announcement-heading" variant="h3" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(2) }}>
           {content.announcement.title}
         </Typography>
-        <Typography variant="body1" sx={{ color: getRoleColor('text.secondary'), maxWidth: 900 }}>
+        <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle'), maxWidth: 900 }}>
           {content.announcement.body}
         </Typography>
       </Container>

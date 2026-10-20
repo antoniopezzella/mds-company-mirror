@@ -85,7 +85,7 @@ const BusinessDescriptors: React.FC = () => (
               fontSize: 'var(--typo-display-font-size)',
               fontWeight: 400,
               lineHeight: 1.1,
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               mb: 2,
             }}
           >
@@ -96,7 +96,7 @@ const BusinessDescriptors: React.FC = () => (
               fontFamily: 'var(--typo-body1-font-family)',
               fontSize: 18,
               lineHeight: '28px',
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
             }}
           >
             Explore our capabilities across risk, strategy, people, and investments.

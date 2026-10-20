@@ -27,7 +27,7 @@ export const FourBrandsSection: React.FC<FourBrandsSectionProps> = ({
   title,
   description,
   businesses,
-  backgroundColor = getRoleColor('surface.default'),
+  backgroundColor = getRoleColor('bg.default'),
 }) => {
   return (
     <section className="four-brands-section" style={{ backgroundColor }}>
@@ -37,7 +37,7 @@ export const FourBrandsSection: React.FC<FourBrandsSectionProps> = ({
             variant="h2"
             className="four-brands-section__title"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               textAlign: 'center',
               mb: (theme) => theme.spacing(2),
             }}
@@ -48,7 +48,7 @@ export const FourBrandsSection: React.FC<FourBrandsSectionProps> = ({
             variant="body1"
             className="four-brands-section__description"
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               textAlign: 'center',
             }}
           >

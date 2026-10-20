@@ -20,7 +20,7 @@ export function CardDemo() {
           <CardDescription>Policy MB-0042 · renews Mar 2027</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+          <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
             Coverage limit $2.4M, deductible $10,000.
           </p>
         </CardContent>
@@ -74,7 +74,7 @@ export function BadgeDemo() {
           </Badge>
         ))}
       </div>
-      <p className="text-xs" style={{ color: getRoleColor('text.secondary', { mode }) }}>
+      <p className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>
         Not to be confused with <code className="font-mono">badge-anchor.tsx</code> — an overlay indicator pinned to a child element, a different pattern entirely.
       </p>
     </div>

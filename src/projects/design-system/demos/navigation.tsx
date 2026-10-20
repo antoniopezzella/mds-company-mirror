@@ -13,10 +13,10 @@ export function TabsDemo() {
   return (
     <Tabs
       tabs={[
-        { id: 'overview', title: 'Overview', content: <p style={{ color: getRoleColor('text.secondary', { mode }) }}>Policy summary and key dates.</p> },
-        { id: 'coverage', title: 'Coverage', content: <p style={{ color: getRoleColor('text.secondary', { mode }) }}>Line-by-line coverage breakdown.</p> },
-        { id: 'documents', title: 'Documents', content: <p style={{ color: getRoleColor('text.secondary', { mode }) }}>Signed forms and certificates.</p> },
-        { id: 'archived', title: 'Archived', content: <p style={{ color: getRoleColor('text.secondary', { mode }) }}>Superseded policy versions.</p>, disabled: true },
+        { id: 'overview', title: 'Overview', content: <p style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>Policy summary and key dates.</p> },
+        { id: 'coverage', title: 'Coverage', content: <p style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>Line-by-line coverage breakdown.</p> },
+        { id: 'documents', title: 'Documents', content: <p style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>Signed forms and certificates.</p> },
+        { id: 'archived', title: 'Archived', content: <p style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>Superseded policy versions.</p>, disabled: true },
       ]}
     />
   );
@@ -24,7 +24,7 @@ export function TabsDemo() {
 
 export function AccordionDemo() {
   const { mode } = useThemeMode();
-  const body = (text: string) => <p style={{ color: getRoleColor('text.secondary', { mode }) }}>{text}</p>;
+  const body = (text: string) => <p style={{ color: getRoleColor('fg.neutral.subtle', { mode }) }}>{text}</p>;
   return (
     <Accordion
       defaultExpanded={['coverage']}

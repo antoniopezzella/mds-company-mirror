@@ -16,8 +16,8 @@ function GuidanceBlock({ componentId }: { componentId: string }) {
   if (!entry || (entry.use.length === 0 && entry.avoid.length === 0)) return null;
 
   const linkColor = getRoleColor('interactive.primary', { mode });
-  const textColor = getRoleColor('text.secondary', { mode });
-  const headingColor = getRoleColor('text.primary', { mode });
+  const textColor = getRoleColor('fg.neutral.subtle', { mode });
+  const headingColor = getRoleColor('fg.primary', { mode });
 
   return (
     <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -61,11 +61,11 @@ function GuidanceBlock({ componentId }: { componentId: string }) {
 
 export const ComponentSection: React.FC<ComponentSectionProps> = ({ entry }) => {
   const { mode } = useThemeMode();
-  const titleColor = getRoleColor('text.primary', { mode });
-  const summaryColor = getRoleColor('text.secondary', { mode });
-  const sourceColor = getRoleColor('text.secondary', { mode });
+  const titleColor = getRoleColor('fg.primary', { mode });
+  const summaryColor = getRoleColor('fg.neutral.subtle', { mode });
+  const sourceColor = getRoleColor('fg.neutral.subtle', { mode });
   const borderColor = getRoleColor('border.default', { mode });
-  const demoBg = getRoleColor('surface.subtle', { mode });
+  const demoBg = getRoleColor('bg.neutral.subtle', { mode });
 
   return (
     <section id={entry.id} className="scroll-mt-20 border-b py-10 first:pt-0 last:border-b-0" style={{ borderColor }}>

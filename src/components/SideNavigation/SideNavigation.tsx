@@ -74,19 +74,19 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
       // System is in dark mode: Both variants converge to same dark appearance
       if (mode === 'dark') {
         return {
-          navBg: getRoleColor('surface.subtle', { mode: 'dark' }),
-          navText: getRoleColor('text.primary', { mode: 'dark' }),
-          sectionHeaderText: getRoleColor('text.primary', { mode: 'dark' }),
-          itemHoverBg: getRoleColor('surface.default', { mode: 'dark' }),
+          navBg: getRoleColor('bg.neutral.subtle', { mode: 'dark' }),
+          navText: getRoleColor('fg.primary', { mode: 'dark' }),
+          sectionHeaderText: getRoleColor('fg.primary', { mode: 'dark' }),
+          itemHoverBg: getRoleColor('bg.default', { mode: 'dark' }),
           activeBg: 'rgba(149, 202, 255, 0.16)', // Light blue tint for dark mode
           activeHoverBg: 'rgba(149, 202, 255, 0.24)',
-          activeText: getRoleColor('text.primary', { mode: 'dark' }),
+          activeText: getRoleColor('fg.primary', { mode: 'dark' }),
           activeBorder: getRoleColor('interactive.secondary', { mode: 'dark' }),
           divider: getRoleColor('border.default', { mode: 'dark' }),
-          ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
-          ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+          ctaBg: getRoleColor('bg.default', { mode: 'dark' }),
+          ctaText: getRoleColor('fg.primary', { mode: 'dark' }),
           ctaBtnBg: getRoleColor('interactive.secondary', { mode: 'dark' }),
-          ctaBtnText: getRoleColor('text.onInteractive', { mode: 'dark' }),
+          ctaBtnText: getRoleColor('fg.on-interactive', { mode: 'dark' }),
           ctaBtnHover: getRoleColor('interactive.secondary.hover', { mode: 'dark' })
         };
       }
@@ -95,41 +95,41 @@ const SideNavigation: React.FC<SideNavigationProps> = ({ items, onSupport, onClo
       if (variant === 'light') {
         // White sidebar variant
         return {
-          navBg: getRoleColor('surface.default'),
-          navText: getRoleColor('text.primary'),
-          sectionHeaderText: getRoleColor('text.primary'),
-          itemHoverBg: getRoleColor('surface.subtle'),
+          navBg: getRoleColor('bg.default'),
+          navText: getRoleColor('fg.primary'),
+          sectionHeaderText: getRoleColor('fg.primary'),
+          itemHoverBg: getRoleColor('bg.neutral.subtle'),
           activeBg: 'rgba(11, 75, 255, 0.08)', // Light blue tint for active state
           activeHoverBg: 'rgba(11, 75, 255, 0.12)',
-          activeText: getRoleColor('text.primary'),
+          activeText: getRoleColor('fg.primary'),
           activeBorder: getRoleColor('interactive.secondary'),
           divider: getRoleColor('border.default'),
-          ctaBg: getRoleColor('surface.subtle'),
-          ctaText: getRoleColor('text.primary'),
+          ctaBg: getRoleColor('bg.neutral.subtle'),
+          ctaText: getRoleColor('fg.primary'),
           ctaBtnBg: getRoleColor('interactive.secondary'),
           // onInteractive, not onAccent: interactive.secondary lightens to
           // #95caff in dark, where a fixed near-white is 1.73:1.
-          ctaBtnText: getRoleColor('text.onInteractive'),
+          ctaBtnText: getRoleColor('fg.on-interactive'),
           ctaBtnHover: getRoleColor('interactive.secondary.hover')
         };
       }
 
       // Navy blue sidebar variant
       return {
-        navBg: getRoleColor('surface.navigation'),
-        navText: getRoleColor('text.onHero'),
-        sectionHeaderText: getRoleColor('text.onHero'),
+        navBg: getRoleColor('bg.shell'),
+        navText: getRoleColor('fg.on-primary'),
+        sectionHeaderText: getRoleColor('fg.on-primary'),
         itemHoverBg: getRoleColor('surface.navigation.hover'),
         activeBg: getRoleColor('surface.navigation.active'),
         activeHoverBg: getRoleColor('surface.navigation.active'),
-        activeText: getRoleColor('text.onAccent'),
+        activeText: getRoleColor('fg.on-accent'),
         activeBorder: getRoleColor('interactive.secondary'),
         divider: getRoleColor('border.default'),
-        ctaBg: getRoleColor('surface.navigation'),
-        ctaText: getRoleColor('text.onHero'),
+        ctaBg: getRoleColor('bg.shell'),
+        ctaText: getRoleColor('fg.on-primary'),
         ctaBtnBg: getRoleColor('interactive.secondary'),
         // onInteractive, not onAccent — see the light-variant branch above.
-        ctaBtnText: getRoleColor('text.onInteractive'),
+        ctaBtnText: getRoleColor('fg.on-interactive'),
         ctaBtnHover: getRoleColor('interactive.secondary.hover')
       };
     },

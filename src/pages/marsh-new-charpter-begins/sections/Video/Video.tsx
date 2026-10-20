@@ -182,7 +182,7 @@ const Video: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        background: getRoleColor('surface.hero'),
+        background: getRoleColor('bg.primary'),
         padding: '80px 0'
       }}
     >
@@ -194,7 +194,7 @@ const Video: React.FC = () => {
           width: '100vw',
           height: '100vh',
           overflow: 'visible',
-          backgroundColor: getRoleColor('surface.hero'),
+          backgroundColor: getRoleColor('bg.primary'),
           willChange: 'clip-path',
         }}
       >

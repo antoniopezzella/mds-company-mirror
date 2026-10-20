@@ -33,10 +33,10 @@ const TransformationTimeline: React.FC = () => {
   });
 
   return (
-    <section ref={sectionRef} className={`${styles.section} ${tlStyles.wrapper}`} aria-labelledby="timeline-heading" style={{ background: getRoleColor('surface.subtle') }}>
+    <section ref={sectionRef} className={`${styles.section} ${tlStyles.wrapper}`} aria-labelledby="timeline-heading" style={{ background: getRoleColor('bg.neutral.subtle') }}>
       <div ref={sceneRef} className={tlStyles.scene}>
         <Container maxWidth="xl">
-          <Typography id="timeline-heading" variant="h3" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(2) }}>
+          <Typography id="timeline-heading" variant="h3" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(2) }}>
             Transformation Timeline
           </Typography>
 
@@ -50,10 +50,10 @@ const TransformationTimeline: React.FC = () => {
                 ref={(el) => { if (el) stepRefs.current[i] = el; }}
               >
                 <Container maxWidth="md">
-                  <Typography id={`step-${i}-title`} variant="h4" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(1) }}>
+                  <Typography id={`step-${i}-title`} variant="h4" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(1) }}>
                     {s.title}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+                  <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
                     {s.body}
                   </Typography>
                 </Container>

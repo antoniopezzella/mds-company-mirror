@@ -143,9 +143,9 @@ export const InteractiveExample: Story = {
           variant="contained"
           onClick={() => showWarning('Warning message!')}
           sx={{
-            backgroundColor: getRoleColor('status.warning.bg'),
-            color: getRoleColor('text.onLight'),
-            '&:hover': { backgroundColor: getRoleColor('status.warning.bg') },
+            backgroundColor: getRoleColor('bg.warning.subtle'),
+            color: getRoleColor('fg.on-light'),
+            '&:hover': { backgroundColor: getRoleColor('bg.warning.subtle') },
           }}
         >
           Show Warning

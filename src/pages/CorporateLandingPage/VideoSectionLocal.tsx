@@ -164,7 +164,7 @@ export const VideoSectionLocal: React.FC<VideoSectionLocalProps> = ({
             width: '100%',
             height: '70vh',
             overflow: 'visible',
-            backgroundColor: getRoleColor('surface.hero'),
+            backgroundColor: getRoleColor('bg.primary'),
             willChange: 'clip-path',
           }}
         >

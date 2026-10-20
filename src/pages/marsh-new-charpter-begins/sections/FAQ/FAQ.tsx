@@ -68,7 +68,7 @@ const FAQ: React.FC = () => {
       ref={sectionRef} 
       className={styles.section} 
       aria-labelledby="faq-heading"
-      style={{ background: getRoleColor('surface.subtle') }}
+      style={{ background: getRoleColor('bg.neutral.subtle') }}
     >
       <Container maxWidth="md">
         <Typography 
@@ -76,7 +76,7 @@ const FAQ: React.FC = () => {
           variant="h2" 
           component="h2"
           sx={{ 
-            color: getRoleColor('text.primary'), 
+            color: getRoleColor('fg.primary'), 
             mb: (t) => t.spacing(6),
             textAlign: 'center',
             fontWeight: 600,
@@ -94,7 +94,7 @@ const FAQ: React.FC = () => {
               className="faq-accordion"
               sx={{
                 mb: (t) => t.spacing(2),
-                background: getRoleColor('surface.default'),
+                background: getRoleColor('bg.default'),
                 borderRadius: '8px !important',
                 boxShadow: 'none',
                 border: `1px solid rgba(0, 0, 0, 0.08)`,
@@ -128,7 +128,7 @@ const FAQ: React.FC = () => {
                 <Typography 
                   variant="h6"
                   sx={{ 
-                    color: getRoleColor('text.primary'),
+                    color: getRoleColor('fg.primary'),
                     fontWeight: 500,
                   }}
                 >
@@ -145,7 +145,7 @@ const FAQ: React.FC = () => {
                 <Typography 
                   variant="body1"
                   sx={{ 
-                    color: getRoleColor('text.secondary'),
+                    color: getRoleColor('fg.neutral.subtle'),
                     lineHeight: 1.7,
                   }}
                 >

@@ -20,7 +20,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography 
               variant="overline" 
               sx={{ 
-                color: getRoleColor('text.secondary'),
+                color: getRoleColor('fg.neutral.subtle'),
                 mb: 2,
                 display: 'block'
               }}
@@ -30,7 +30,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h1" sx={{ mb: 3 }}>
               Hero Headline (h1)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Marsh Serif Regular • 48-96px fluid scale • Used for hero headlines
             </Typography>
           </Box>
@@ -40,7 +40,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h2" sx={{ mb: 2 }}>
               Section Headline (h2)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Marsh Serif Regular • 40-80px fluid scale • Used for section titles
             </Typography>
           </Box>
@@ -50,7 +50,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h3" sx={{ mb: 2 }}>
               Sub-section Headline (h3)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Marsh Serif Regular • 32-56px fluid scale • Used for sub-sections
             </Typography>
           </Box>
@@ -60,7 +60,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h4" sx={{ mb: 2 }}>
               Card Title (h4)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Marsh Serif Regular • 24-40px fluid scale • Used for card titles
             </Typography>
           </Box>
@@ -70,7 +70,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h5" sx={{ mb: 2 }}>
               Subheading (h5)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Noto Sans Semibold • 18-24px fluid scale • Used for subheadings
             </Typography>
           </Box>
@@ -79,7 +79,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography variant="h6" sx={{ mb: 2 }}>
               Small Heading (h6)
             </Typography>
-            <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+            <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
               Noto Sans Semibold • 16-20px fluid scale • Used for small headings
             </Typography>
           </Box>
@@ -87,7 +87,7 @@ export const TypographyDemo: React.FC = () => {
           {/* Body Text Examples */}
           <Box sx={{ 
             p: 4, 
-            backgroundColor: getRoleColor('surface.default'),
+            backgroundColor: getRoleColor('bg.default'),
             borderRadius: 2
           }}>
             <Typography variant="h5" sx={{ mb: 3 }}>
@@ -112,7 +112,7 @@ export const TypographyDemo: React.FC = () => {
           {/* Comparison Box */}
           <Box sx={{ 
             p: 4, 
-            backgroundColor: getRoleColor('surface.accent'),
+            backgroundColor: getRoleColor('bg.neutral.subtle'),
             borderRadius: 2
           }}>
             <Typography variant="h4" sx={{ mb: 3 }}>
@@ -154,14 +154,14 @@ export const TypographyDemo: React.FC = () => {
           {/* Real Marsh One Example */}
           <Box sx={{ 
             p: 6, 
-            backgroundColor: getRoleColor('surface.hero'),
+            backgroundColor: getRoleColor('bg.primary'),
             borderRadius: 2,
             textAlign: 'center'
           }}>
             <Typography 
               variant="h5" 
               sx={{ 
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 mb: 2 
               }}
             >
@@ -171,7 +171,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography 
               variant="h1" 
               sx={{ 
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 mb: 3,
                 maxWidth: '800px',
                 mx: 'auto'
@@ -183,7 +183,7 @@ export const TypographyDemo: React.FC = () => {
             <Typography 
               variant="body1" 
               sx={{ 
-                color: getRoleColor('text.onHero'),
+                color: getRoleColor('fg.on-primary'),
                 opacity: 0.9,
                 maxWidth: '600px',
                 mx: 'auto'

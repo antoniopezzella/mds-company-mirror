@@ -20,16 +20,16 @@ const LeadershipQuote: React.FC = () => {
   });
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="quote-heading" style={{ background: getRoleColor('surface.default') }}>
+    <section ref={sectionRef} className={styles.section} aria-labelledby="quote-heading" style={{ background: getRoleColor('bg.default') }}>
       <Container maxWidth="md">
-        <Typography id="quote-heading" variant="h3" sx={{ color: getRoleColor('text.primary'), mb: (t) => t.spacing(2) }}>
+        <Typography id="quote-heading" variant="h3" sx={{ color: getRoleColor('fg.primary'), mb: (t) => t.spacing(2) }}>
           Leadership Perspective
         </Typography>
         <blockquote style={{ margin: 0 }}>
-          <Typography component="p" variant="h5" sx={{ color: getRoleColor('text.primary') }}>
+          <Typography component="p" variant="h5" sx={{ color: getRoleColor('fg.primary') }}>
             “{content.quote.text}”
           </Typography>
-          <Typography variant="body2" sx={{ color: getRoleColor('text.secondary'), mt: (t) => t.spacing(1) }}>
+          <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle'), mt: (t) => t.spacing(1) }}>
             — {content.quote.attribution}{content.quote.role ? `, ${content.quote.role}` : ''}
           </Typography>
         </blockquote>

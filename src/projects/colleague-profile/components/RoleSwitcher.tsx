@@ -109,7 +109,7 @@ export function RoleSwitcher({
             <span className="block truncate text-sm font-semibold">{userName}</span>
             <span
               className="block truncate text-xs"
-              style={{ color: getRoleColor('text.secondary') }}
+              style={{ color: getRoleColor('fg.neutral.subtle') }}
             >
               {roleLabel(role)}
             </span>
@@ -133,7 +133,7 @@ export function RoleSwitcher({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" side={collapsed ? 'right' : 'bottom'} className="w-72">
-        <DropdownMenuLabel style={{ color: getRoleColor('text.secondary') }}>
+        <DropdownMenuLabel style={{ color: getRoleColor('fg.neutral.subtle') }}>
           Switch role
         </DropdownMenuLabel>
 
@@ -155,7 +155,7 @@ export function RoleSwitcher({
                 <span className="block truncate">{option.label}</span>
                 <span
                   className="block truncate text-xs"
-                  style={{ color: getRoleColor('text.secondary') }}
+                  style={{ color: getRoleColor('fg.neutral.subtle') }}
                 >
                   {/* Roles change what the screens offer, so saying what each
                       one can do beats making the user switch to find out. */}

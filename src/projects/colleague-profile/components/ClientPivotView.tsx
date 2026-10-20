@@ -96,17 +96,17 @@ function ClientListItem({
         borderColor: selected ? getRoleColor('interactive.primary') : getRoleColor('border.default'),
         backgroundColor: selected ? getRoleColor('surface.selected.subtle') : undefined,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ring colour is a CSS custom property
-        ['--tw-ring-color' as any]: getRoleColor('focus.ring'),
+        ['--tw-ring-color' as any]: getRoleColor('border.focus'),
       }}
     >
       <Stack gap={0}>
         <span
           className="text-sm font-semibold"
-          style={{ color: getRoleColor('text.primary') }}
+          style={{ color: getRoleColor('fg.primary') }}
         >
           {clientLabel(client)}
         </span>
-        <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           {clientMeta(client)}
         </span>
       </Stack>
@@ -156,7 +156,7 @@ const ASSIGNMENT_COLUMNS: DataGridColumnDef<AssignmentRow>[] = [
       // the row keeps the count honest and gives support something to search.
       if (!member) {
         return (
-          <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <span className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             Unknown colleague ({assignment.memberId}) — assignment retained
           </span>
         );
@@ -166,19 +166,19 @@ const ASSIGNMENT_COLUMNS: DataGridColumnDef<AssignmentRow>[] = [
         <Inline gap={2} className="items-center" wrap={false}>
           <Avatar initials={member.initials} size="sm" alt="" />
           <Stack gap={0}>
-            <span className="text-sm font-medium" style={{ color: getRoleColor('text.primary') }}>
+            <span className="text-sm font-medium" style={{ color: getRoleColor('fg.primary') }}>
               {member.name}
             </span>
-            <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+            <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
               {member.jobTitle}
             </span>
             <Inline gap={1} className="items-center" wrap={false}>
               <MapPin
                 className="size-3 shrink-0"
                 aria-hidden="true"
-                style={{ color: getRoleColor('text.secondary') }}
+                style={{ color: getRoleColor('fg.neutral.subtle') }}
               />
-              <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+              <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                 {member.locationDetail
                   ? `${member.location} - ${member.locationDetail}`
                   : member.location}
@@ -194,10 +194,10 @@ const ASSIGNMENT_COLUMNS: DataGridColumnDef<AssignmentRow>[] = [
     header: 'Team name',
     cell: ({ row }) => (
       <Stack gap={0}>
-        <span className="text-sm" style={{ color: getRoleColor('text.primary') }}>
+        <span className="text-sm" style={{ color: getRoleColor('fg.primary') }}>
           {row.original.teamName}
         </span>
-        <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           Source: {row.original.assignment.source}
         </span>
       </Stack>
@@ -285,7 +285,7 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
           className="flex items-center justify-between border-b px-4 py-3"
           style={{ borderColor: getRoleColor('border.default') }}
         >
-          <span className="text-sm font-semibold" style={{ color: getRoleColor('text.primary') }}>
+          <span className="text-sm font-semibold" style={{ color: getRoleColor('fg.primary') }}>
             Select a Client
           </span>
           <Tooltip title="Filter and sort clients">
@@ -320,7 +320,7 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
 
         <Stack gap={2} className="px-3 pb-3">
           {pagedClients.length === 0 ? (
-            <p className="px-1 py-6 text-center text-sm" style={{ color: getRoleColor('text.secondary') }}>
+            <p className="px-1 py-6 text-center text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
               No client matches “{query}”.
             </p>
           ) : (
@@ -384,11 +384,11 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
                 <Stack gap={0} className="min-w-0">
                   <h3
                     className="text-base font-semibold"
-                    style={{ color: getRoleColor('text.primary') }}
+                    style={{ color: getRoleColor('fg.primary') }}
                   >
                     {clientLabel(selected)}
                   </h3>
-                  <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+                  <span className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                     {clientMeta(selected)}
                   </span>
                 </Stack>
@@ -421,11 +421,11 @@ export function ClientPivotView({ defaultClientCn, className }: ClientPivotViewP
               <div className="flex items-center justify-between px-4 py-3">
                 <span
                   className="text-sm font-semibold"
-                  style={{ color: getRoleColor('text.primary') }}
+                  style={{ color: getRoleColor('fg.primary') }}
                 >
                   Assigned Team Members
                 </span>
-                <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+                <span className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                   {assignments.length} {assignments.length === 1 ? 'member' : 'members'}
                 </span>
               </div>

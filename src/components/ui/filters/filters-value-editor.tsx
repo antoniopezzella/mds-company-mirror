@@ -236,7 +236,7 @@ function NumberRangeEditor({ field, value, onChange, onDone }: FiltersValueEdito
         </div>
       </div>
       {error && (
-        <p id={`err-${field.id}`} role="alert" className="text-xs" style={{ color: getRoleColor('status.danger.fg') }}>
+        <p id={`err-${field.id}`} role="alert" className="text-xs" style={{ color: getRoleColor('fg.critical') }}>
           {error}
         </p>
       )}
@@ -309,7 +309,7 @@ function BooleanEditor({ field, value, onChange, onDone }: FiltersValueEditorPro
           onKeyDown={roving.onKeyDown}
           onClick={() => pick(v)}
           className="flex items-center justify-between rounded-md px-2 py-1.5 text-left text-sm"
-          style={{ backgroundColor: value === v ? getRoleColor('surface.subtle') : undefined }}
+          style={{ backgroundColor: value === v ? getRoleColor('bg.neutral.subtle') : undefined }}
         >
           {v ? (field.trueLabel ?? 'Yes') : (field.falseLabel ?? 'No')}
           {value === v && <Check className="size-3.5" aria-hidden="true" />}
@@ -372,7 +372,7 @@ function OptionsEditor({
         className="max-h-56 overflow-y-auto"
       >
         {shown.length === 0 && (
-          <p className="px-2 py-2 text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="px-2 py-2 text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             No options
           </p>
         )}
@@ -396,7 +396,7 @@ function OptionsEditor({
                 'flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-sm',
                 option.disabled && 'cursor-not-allowed opacity-50'
               )}
-              style={{ backgroundColor: on ? getRoleColor('surface.subtle') : undefined }}
+              style={{ backgroundColor: on ? getRoleColor('bg.neutral.subtle') : undefined }}
             >
               <span className="min-w-0 flex-1 truncate">{option.label}</span>
               {on && <Check className="size-3.5 shrink-0" aria-hidden="true" />}

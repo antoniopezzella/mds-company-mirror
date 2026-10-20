@@ -43,7 +43,7 @@ function MemberCell({ member }: { member: TeamMember }) {
       <Avatar initials={member.initials} size="sm" tone="primary" alt="" />
       <Stack gap={0}>
         <span className="font-semibold">{member.name}</span>
-        <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           ID: {member.colleagueId}
         </span>
       </Stack>
@@ -55,7 +55,7 @@ function RolesCell({ member }: { member: TeamMember }) {
   if (member.roles.length === 0) {
     // An em dash, with the meaning spelled out for anyone not seeing it.
     return (
-      <span style={{ color: getRoleColor('text.secondary') }}>
+      <span style={{ color: getRoleColor('fg.neutral.subtle') }}>
         <span aria-hidden="true">—</span>
         <span className="sr-only">No roles assigned</span>
       </span>
@@ -120,7 +120,7 @@ function TeamContent({ team }: { team: Team }) {
           <Stack gap={0}>
             <span>{row.original.location}</span>
             {row.original.locationDetail && (
-              <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+              <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                 {row.original.locationDetail}
               </span>
             )}
@@ -133,7 +133,7 @@ function TeamContent({ team }: { team: Team }) {
         cell: ({ row }) => (
           <Stack gap={0}>
             <span>{row.original.jobTitle}</span>
-            <span className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+            <span className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
               {row.original.jobCode}
             </span>
           </Stack>
@@ -183,7 +183,7 @@ function TeamContent({ team }: { team: Team }) {
               aria-label={`Remove from team ${member.name}`}
               disabled={!canRemove}
               title={canRemove ? undefined : deniedReason('member:remove')}
-              style={{ color: getRoleColor('status.danger.fg') }}
+              style={{ color: getRoleColor('fg.critical') }}
               onClick={() => setRemoving(member)}
             />
           );

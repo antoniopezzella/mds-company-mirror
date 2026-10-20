@@ -93,7 +93,7 @@ const IntroLoader: React.FC<IntroLoaderProps> = ({ message = 'Welcome to Marsh',
         overflow: 'hidden',
       }}
     >
-      <Box ref={bgRef} sx={{ position: 'absolute', inset: 0, backgroundColor: getRoleColor('surface.hero') }} />
+      <Box ref={bgRef} sx={{ position: 'absolute', inset: 0, backgroundColor: getRoleColor('bg.primary') }} />
 
       <Box
         ref={contentRef}

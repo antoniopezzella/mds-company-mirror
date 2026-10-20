@@ -148,14 +148,14 @@ export default function GoToMarket() {
     setNotice("Decision brief download requested.");
   };
   const style = {
-    "--gtm-ink": getRoleColor("text.primary"),
-    "--gtm-muted": getRoleColor("text.secondary"),
-    "--gtm-surface": getRoleColor("surface.default"),
-    "--gtm-soft": getRoleColor("surface.subtle"),
+    "--gtm-ink": getRoleColor("fg.primary"),
+    "--gtm-muted": getRoleColor("fg.neutral.subtle"),
+    "--gtm-surface": getRoleColor("bg.default"),
+    "--gtm-soft": getRoleColor("bg.neutral.subtle"),
     "--gtm-line": getRoleColor("border.default"),
     "--gtm-brand": getRoleColor("interactive.primary"),
-    "--gtm-on-brand": getRoleColor("text.onInteractive"),
-    "--gtm-focus": getRoleColor("focus.ring"),
+    "--gtm-on-brand": getRoleColor("fg.on-interactive"),
+    "--gtm-focus": getRoleColor("border.focus"),
   } as CSSProperties;
 
   const overview = (

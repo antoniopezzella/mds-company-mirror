@@ -256,7 +256,7 @@ export const FiltersBuilder = React.forwardRef<HTMLDivElement, FiltersBuilderPro
 
       {count > 0 && (
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             {/* Counts executable RULES, not groups: the group is structure,
                 and a user who set three conditions expects to be told 3 (§25). */}
             {count === 1 ? t.summaryOne : t.summaryMany.replace('{count}', String(count))}

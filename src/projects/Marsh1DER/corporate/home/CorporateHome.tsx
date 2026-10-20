@@ -117,7 +117,7 @@ const CorporateHome: React.FC = () => {
   const [introDone, setIntroDone] = useState(false);
 
   return (
-  <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('surface.default') }}>
+  <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('bg.default') }}>
 
     {/* ── 0. Intro loader ── */}
     <IntroLoader onComplete={() => setIntroDone(true)} />

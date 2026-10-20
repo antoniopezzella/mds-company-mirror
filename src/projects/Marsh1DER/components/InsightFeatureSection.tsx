@@ -72,7 +72,7 @@ const InsightFeatureSection: React.FC<InsightFeatureSectionProps> = ({
               fontWeight: 400,
               fontSize: 'clamp(36px, 5vw, 72px)',
               lineHeight: 1.1,
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               maxWidth: { md: '997px' },
             }}
           >
@@ -116,7 +116,7 @@ const InsightFeatureSection: React.FC<InsightFeatureSectionProps> = ({
                   fontWeight: 400,
                   fontSize: '30px',
                   lineHeight: 'normal',
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                 }}
               >
                 {topic.title}
@@ -138,7 +138,7 @@ const InsightFeatureSection: React.FC<InsightFeatureSectionProps> = ({
                   fontWeight: 600,
                   fontSize: '14px',
                   lineHeight: 'normal',
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   mt: '8px',
                 }}
               >

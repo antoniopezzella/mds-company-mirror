@@ -10,12 +10,12 @@ const NewsroomCTA: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section ref={sectionRef} className={styles.section} aria-labelledby="newsroom-heading" style={{ background: getRoleColor('surface.accent') }}>
+    <section ref={sectionRef} className={styles.section} aria-labelledby="newsroom-heading" style={{ background: getRoleColor('bg.neutral.subtle') }}>
       <Container maxWidth="md">
-        <Typography id="newsroom-heading" variant="h3" sx={{ color: getRoleColor('text.onAccent'), mb: (t) => t.spacing(2) }}>
+        <Typography id="newsroom-heading" variant="h3" sx={{ color: getRoleColor('fg.on-accent'), mb: (t) => t.spacing(2) }}>
           {content.newsroomCta.heading}
         </Typography>
-        <Typography variant="body1" sx={{ color: getRoleColor('text.onAccent'), mb: (t) => t.spacing(3) }}>
+        <Typography variant="body1" sx={{ color: getRoleColor('fg.on-accent'), mb: (t) => t.spacing(3) }}>
           {content.newsroomCta.body}
         </Typography>
         <Button variant="contained" color="primary" href={content.newsroomCta.button.href} aria-label={content.newsroomCta.button.label}>

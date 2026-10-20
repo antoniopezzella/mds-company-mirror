@@ -81,7 +81,7 @@ function ColleagueShellInner({
   return (
     <PageShell
       className="mds-dashboard"
-      style={{ backgroundColor: getRoleColor('surface.subtle') }}
+      style={{ backgroundColor: getRoleColor('bg.neutral.subtle') }}
       sidebarOpen={sidebarOpen && !isDesktop}
       onSidebarClose={() => setSidebarOpen(false)}
       header={

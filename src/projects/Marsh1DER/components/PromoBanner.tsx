@@ -39,10 +39,10 @@ export interface PromoBannerProps {
 // the navy 'hero' surface.
 
 const bannerBg = (surface: PromoBannerProps['surface']) =>
-  surface === 'secondary' ? getRoleColor('surface.secondary') : getRoleColor('surface.hero');
+  surface === 'secondary' ? getRoleColor('bg.secondary') : getRoleColor('bg.primary');
 
 const bannerText = (surface: PromoBannerProps['surface']) =>
-  surface === 'secondary' ? getRoleColor('text.primary') : getRoleColor('text.onHero');
+  surface === 'secondary' ? getRoleColor('fg.primary') : getRoleColor('fg.on-primary');
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -106,7 +106,7 @@ const PromoBanner: React.FC<PromoBannerProps> = ({
               {/* Eyebrow — only when no logo is present */}
               {!logoSrc && eyebrow && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Box sx={{ width: 40, height: 2, backgroundColor: getRoleColor('brand.accent'), flexShrink: 0 }} />
+                  <Box sx={{ width: 40, height: 2, backgroundColor: getRoleColor('bg.accent'), flexShrink: 0 }} />
                   <Typography sx={{
                     fontFamily: 'var(--typo-body1-font-family)',
                     fontSize: 16,

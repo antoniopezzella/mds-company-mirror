@@ -180,7 +180,7 @@ export const Filters = React.forwardRef<HTMLDivElement, FiltersProps>(function F
 
       {!flat && (
         <>
-          <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             {/* §24's critical rule: rendering A AND (B OR C) as three chips
                 would read as A AND B AND C — a different query. Rather than
                 flatten and lie, say so and hand it to the advanced builder. */}

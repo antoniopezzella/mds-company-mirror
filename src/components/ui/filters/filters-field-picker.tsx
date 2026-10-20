@@ -175,7 +175,7 @@ export const FiltersFieldPicker = React.forwardRef<HTMLDivElement, FiltersFieldP
     // levels per keypress.
   };
 
-  const muted = getRoleColor('text.secondary');
+  const muted = getRoleColor('fg.neutral.subtle');
 
   return (
     <div ref={ref} className={cn('flex w-72 flex-col gap-1', className)}>
@@ -306,13 +306,13 @@ function Option({
         disabled && 'cursor-not-allowed opacity-50'
       )}
       style={{
-        backgroundColor: active ? getRoleColor('surface.subtle') : undefined,
-        color: getRoleColor('text.primary'),
+        backgroundColor: active ? getRoleColor('bg.neutral.subtle') : undefined,
+        color: getRoleColor('fg.primary'),
       }}
     >
       <span className="min-w-0 flex-1 truncate">
         {context && (
-          <span className="mr-1 text-xs" style={{ color: getRoleColor('text.secondary') }}>
+          <span className="mr-1 text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
             {context} ›
           </span>
         )}

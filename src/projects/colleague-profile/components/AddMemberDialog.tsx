@@ -114,7 +114,7 @@ export function AddMemberDialog({ open, onClose, existingMemberIds, onAdd }: Add
     }
   };
 
-  const muted = getRoleColor('text.secondary');
+  const muted = getRoleColor('fg.neutral.subtle');
 
   return (
     <Modal
@@ -205,9 +205,9 @@ export function AddMemberDialog({ open, onClose, existingMemberIds, onAdd }: Add
                   style={{
                     backgroundColor:
                       i === active && !alreadyOnTeam
-                        ? getRoleColor('surface.subtle')
+                        ? getRoleColor('bg.neutral.subtle')
                         : selected
-                          ? getRoleColor('surface.accent')
+                          ? getRoleColor('bg.neutral.subtle')
                           : undefined,
                   }}
                 >

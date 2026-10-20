@@ -105,7 +105,7 @@ const EnhancedBusinessPillars: React.FC = () => {
               duration: 0.3
             }, 0)
             .to(cardTitle, {
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               duration: 0.3
             }, 0);
         });
@@ -139,7 +139,7 @@ const EnhancedBusinessPillars: React.FC = () => {
       className={`${styles.section} enhanced-pillars-section`} 
       aria-labelledby="pillars-heading" 
       style={{ 
-        background: getRoleColor('surface.default'),
+        background: getRoleColor('bg.default'),
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -153,7 +153,7 @@ const EnhancedBusinessPillars: React.FC = () => {
           left: '10%',
           width: '60px',
           height: '60px',
-          background: `linear-gradient(45deg, ${getRoleColor('interactive.primary')}, ${getRoleColor('surface.accent')})`,
+          background: `linear-gradient(45deg, ${getRoleColor('interactive.primary')}, ${getRoleColor('bg.neutral.subtle')})`,
           borderRadius: '50%',
           opacity: 0.1,
           zIndex: 0
@@ -167,7 +167,7 @@ const EnhancedBusinessPillars: React.FC = () => {
           right: '15%',
           width: '40px',
           height: '40px',
-          background: `linear-gradient(135deg, ${getRoleColor('surface.accent')}, ${getRoleColor('interactive.primary')})`,
+          background: `linear-gradient(135deg, ${getRoleColor('bg.neutral.subtle')}, ${getRoleColor('interactive.primary')})`,
           borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
           opacity: 0.08,
           zIndex: 0
@@ -195,7 +195,7 @@ const EnhancedBusinessPillars: React.FC = () => {
             id="pillars-heading" 
             variant="h3" 
             sx={{ 
-              color: getRoleColor('text.primary'), 
+              color: getRoleColor('fg.primary'), 
               mb: 2,
               fontWeight: 700,
               fontSize: { xs: '2rem', md: '2.5rem', lg: '3rem' }
@@ -206,7 +206,7 @@ const EnhancedBusinessPillars: React.FC = () => {
           <Typography 
             variant="h6" 
             sx={{ 
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               maxWidth: '600px',
               margin: '0 auto',
               fontWeight: 400
@@ -231,7 +231,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                 sx={{
                   p: 4,
                   borderRadius: '16px',
-                  background: getRoleColor('surface.subtle'),
+                  background: getRoleColor('bg.neutral.subtle'),
                   border: `1px solid ${getRoleColor('border.default')}`,
                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                   transition: 'all 0.3s ease',
@@ -247,7 +247,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                     left: 0,
                     right: 0,
                     height: '4px',
-                    background: `linear-gradient(90deg, ${getRoleColor('interactive.primary')}, ${getRoleColor('surface.accent')})`,
+                    background: `linear-gradient(90deg, ${getRoleColor('interactive.primary')}, ${getRoleColor('bg.neutral.subtle')})`,
                     opacity: 0,
                     transition: 'opacity 0.3s ease'
                   },
@@ -263,7 +263,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                     width: 64,
                     height: 64,
                     borderRadius: '12px',
-                    background: `linear-gradient(135deg, ${getRoleColor('interactive.primary')}15, ${getRoleColor('surface.accent')}15)`,
+                    background: `linear-gradient(135deg, ${getRoleColor('interactive.primary')}15, ${getRoleColor('bg.neutral.subtle')}15)`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -283,7 +283,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                   <Typography 
                     variant="h5" 
                     sx={{ 
-                      color: getRoleColor('text.primary'), 
+                      color: getRoleColor('fg.primary'), 
                       mb: 2,
                       fontWeight: 600,
                       transition: 'color 0.3s ease'
@@ -295,7 +295,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                   <Typography 
                     variant="body1" 
                     sx={{ 
-                      color: getRoleColor('text.secondary'),
+                      color: getRoleColor('fg.neutral.subtle'),
                       lineHeight: 1.6,
                       flex: 1
                     }}
@@ -354,7 +354,7 @@ const EnhancedBusinessPillars: React.FC = () => {
           <Typography 
             variant="h6" 
             sx={{ 
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               mb: 3
             }}
           >
@@ -396,7 +396,7 @@ const EnhancedBusinessPillars: React.FC = () => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    color: getRoleColor('text.secondary'),
+                    color: getRoleColor('fg.neutral.subtle'),
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px',
                     fontSize: '0.75rem'

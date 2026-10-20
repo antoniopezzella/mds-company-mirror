@@ -56,7 +56,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({
             variant="h2"
             className="journey-section__title"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               mb: (theme) => theme.spacing(2),
             }}
           >
@@ -66,7 +66,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({
             variant="body1"
             className="journey-section__description"
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
             }}
           >
             {description}
@@ -106,7 +106,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({
                       <Typography
                         variant="caption"
                         className="journey-section__card-date"
-                        sx={{ color: getRoleColor('text.secondary') }}
+                        sx={{ color: getRoleColor('fg.neutral.subtle') }}
                       >
                         {card.date}
                       </Typography>
@@ -114,14 +114,14 @@ export const JourneySection: React.FC<JourneySectionProps> = ({
                     <Typography
                       variant="h5"
                       className="journey-section__card-title"
-                      sx={{ color: getRoleColor('text.primary') }}
+                      sx={{ color: getRoleColor('fg.primary') }}
                     >
                       {card.title}
                     </Typography>
                     <Typography
                       variant="body2"
                       className="journey-section__card-description"
-                      sx={{ color: getRoleColor('text.secondary') }}
+                      sx={{ color: getRoleColor('fg.neutral.subtle') }}
                     >
                       {card.description}
                     </Typography>

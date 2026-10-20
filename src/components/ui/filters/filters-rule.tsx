@@ -144,7 +144,7 @@ export function FiltersRule({
           onClick={onNegate}
           aria-label={`${t.negate} ${label}`}
           className="font-semibold"
-          style={{ color: getRoleColor('status.danger.fg') }}
+          style={{ color: getRoleColor('fg.critical') }}
         >
           {t.not}
         </Button>
@@ -188,7 +188,7 @@ export function FiltersRule({
             aria-label={operatorDef ? `Condition: ${operatorDef.label}` : t.selectCondition}
             // A draft reads as unfinished, not as an error — §13 is explicit
             // that alarming styling on a half-built rule is hostile.
-            style={operatorDef ? undefined : { color: getRoleColor('text.secondary') }}
+            style={operatorDef ? undefined : { color: getRoleColor('fg.neutral.subtle') }}
           >
             {operatorDef?.label ?? t.selectCondition}
             <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
@@ -212,7 +212,7 @@ export function FiltersRule({
               aria-label={
                 rule.value === undefined ? t.selectValue : `Value: ${describeRuleValue(rule, field)}`
               }
-              style={rule.value === undefined ? { color: getRoleColor('text.secondary') } : undefined}
+              style={rule.value === undefined ? { color: getRoleColor('fg.neutral.subtle') } : undefined}
               className="max-w-48"
             >
               <span className="truncate">
@@ -253,7 +253,7 @@ export function FiltersRule({
             {onNegate && <DropdownMenuItem onSelect={onNegate}>{t.negate}</DropdownMenuItem>}
             {onGroup && <DropdownMenuItem onSelect={onGroup}>{t.group}</DropdownMenuItem>}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={onRemove} style={{ color: getRoleColor('status.danger.fg') }}>
+            <DropdownMenuItem onSelect={onRemove} style={{ color: getRoleColor('fg.critical') }}>
               {t.remove}
             </DropdownMenuItem>
           </DropdownMenuContent>

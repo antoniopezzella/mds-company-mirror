@@ -99,7 +99,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
 
     gsap.to(headerRef.current, {
       backgroundColor: isBackgroundSolid ? semanticColors.brandSecondary : 'transparent',
-      color: isBackgroundSolid ? getRoleColor('text.primary') : 'white',
+      color: isBackgroundSolid ? getRoleColor('fg.primary') : 'white',
       duration: reducedMotion ? 0 : 0.35,
       ease: 'power2.out',
     });
@@ -122,7 +122,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
           backgroundColor: isBackgroundSolid 
             ? semanticColors.brandSecondary // Sky Blue (#ceecff)
             : 'transparent',
-          color: isContentDark ? getRoleColor('text.primary') : 'white',
+          color: isContentDark ? getRoleColor('fg.primary') : 'white',
           backdropFilter: 'none',
           transition: 'all 0.3s ease-in-out',
           boxShadow: 'none',
@@ -201,7 +201,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                     href={item.href}
                     sx={{
                       color: isContentDark 
-                        ? getRoleColor('text.primary')      // Dark text on sky blue
+                        ? getRoleColor('fg.primary')      // Dark text on sky blue
                         : 'white',                          // White text on transparent
                       fontSize: '16px',
                       fontWeight: 500,
@@ -236,7 +236,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                 <Button
                   startIcon={<LanguageIcon sx={{ fontSize: '18px !important' }} />}
                   sx={{
-                    color: isContentDark ? getRoleColor('text.primary') : 'white',
+                    color: isContentDark ? getRoleColor('fg.primary') : 'white',
                     textTransform: 'none',
                     fontWeight: 500,
                     fontSize: '15px'
@@ -247,7 +247,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                 
                 <Button
                   sx={{
-                    color: isContentDark ? getRoleColor('text.primary') : 'white',
+                    color: isContentDark ? getRoleColor('fg.primary') : 'white',
                     textTransform: 'none',
                     fontWeight: 500,
                     fontSize: '15px'
@@ -260,8 +260,8 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                   variant="contained"
                   sx={{
                     ml: 1,
-                    backgroundColor: getRoleColor('brand.accent'),
-                    color: getRoleColor('text.primary'),
+                    backgroundColor: getRoleColor('bg.accent'),
+                    color: getRoleColor('fg.primary'),
                     textTransform: 'none',
                     fontWeight: 600,
                     fontSize: '14px',
@@ -284,7 +284,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
               onClick={toggleMobileMenu}
               sx={{
                 display: { xs: 'flex', md: 'none' },
-                color: isContentDark ? getRoleColor('text.primary') : 'white',
+                color: isContentDark ? getRoleColor('fg.primary') : 'white',
               }}
               aria-label="Open menu"
             >
@@ -326,7 +326,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: (theme) => theme.spacing(2) }}>
             <IconButton
               onClick={toggleMobileMenu}
-              sx={{ color: getRoleColor('text.primary') }}  // Dark icon on sky blue background
+              sx={{ color: getRoleColor('fg.primary') }}  // Dark icon on sky blue background
               aria-label="Close menu"
             >
               <CloseIcon />
@@ -351,7 +351,7 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
                     primary={item.label}
                     sx={{
                       '& .MuiTypography-root': {
-                        color: getRoleColor('text.primary'),     // Dark text on sky blue
+                        color: getRoleColor('fg.primary'),     // Dark text on sky blue
                         fontSize: '18px',
                         fontWeight: 400,
                       },
@@ -368,8 +368,8 @@ export const MarshOneHeader: React.FC<MarshOneHeaderProps> = ({
               variant="contained"
               fullWidth
               sx={{
-                backgroundColor: getRoleColor('brand.accent'),
-                color: getRoleColor('text.primary'),
+                backgroundColor: getRoleColor('bg.accent'),
+                color: getRoleColor('fg.primary'),
                 textTransform: 'none',
                 fontWeight: 600,
                 py: (theme) => theme.spacing(1.5),

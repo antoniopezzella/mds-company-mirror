@@ -143,7 +143,7 @@ export const ContentCards: React.FC<ContentCardsProps> = ({
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: `linear-gradient(to top, ${getRoleColor('surface.hero')} 0%, transparent 100%)`,
+                    background: `linear-gradient(to top, ${getRoleColor('bg.primary')} 0%, transparent 100%)`,
                     transition: 'background-color 0.3s ease',
                   }}
                 />

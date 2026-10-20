@@ -77,7 +77,7 @@ export const JourneySection: React.FC = () => {
             fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
             fontSize: { xs: '32px', md: '48px' },
             lineHeight: { xs: '40px', md: '52px' },
-            color: getRoleColor('text.primary'),
+            color: getRoleColor('fg.primary'),
             fontWeight: 400,
           }}
         >
@@ -217,7 +217,7 @@ export const JourneySection: React.FC = () => {
             onClick={() => handleScroll('left')}
             aria-label="Scroll timeline left"
             sx={{
-              backgroundColor: getRoleColor('brand.accent'),
+              backgroundColor: getRoleColor('bg.accent'),
               width: 48,
               height: 48,
               pointerEvents: 'auto',
@@ -232,7 +232,7 @@ export const JourneySection: React.FC = () => {
             onClick={() => handleScroll('right')}
             aria-label="Scroll timeline right"
             sx={{
-              backgroundColor: getRoleColor('brand.accent'),
+              backgroundColor: getRoleColor('bg.accent'),
               width: 48,
               height: 48,
               pointerEvents: 'auto',

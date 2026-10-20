@@ -240,7 +240,7 @@ export const FourBrandsSection: React.FC = () => {
                       sx={{
                         fontFamily: 'var(--font-family-display, "Marsh Serif", serif)',
                         fontSize: '20px',
-                        color: getRoleColor('text.primary'),
+                        color: getRoleColor('fg.primary'),
                       }}
                     >
                       {brand.logo}

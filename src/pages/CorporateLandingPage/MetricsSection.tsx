@@ -81,7 +81,7 @@ export const MetricsSection: React.FC = () => {
       sx={{
         width: '100%',
         minHeight: '100vh',
-        backgroundColor: getRoleColor('surface.hero'), // GSAP MARK: Solid dark blue background (no transition)
+        backgroundColor: getRoleColor('bg.primary'), // GSAP MARK: Solid dark blue background (no transition)
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -157,7 +157,7 @@ export const MetricsSection: React.FC = () => {
                   sx={{
                     fontSize: '104px',
                     lineHeight: '128px',
-                    color: getRoleColor('brand.accent'),
+                    color: getRoleColor('bg.accent'),
                     fontWeight: 400,
                   }}
                 >

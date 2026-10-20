@@ -85,12 +85,12 @@ const CASUALTY_EXPOSURE_ROWS: CasualtyExposureRow[] = [
 // varies per row) with one helper.
 function renderDelta(value: string): React.ReactNode {
   if (value.startsWith('(') || value.startsWith('-')) {
-    return <span style={{ color: getRoleColor('status.danger.fg') }}>{value}</span>;
+    return <span style={{ color: getRoleColor('fg.critical') }}>{value}</span>;
   }
   if (value.startsWith('+')) {
-    return <span style={{ color: getRoleColor('status.success.fg') }}>{value}</span>;
+    return <span style={{ color: getRoleColor('fg.success') }}>{value}</span>;
   }
-  return <span style={{ color: getRoleColor('text.secondary') }}>{value}</span>;
+  return <span style={{ color: getRoleColor('fg.neutral.subtle') }}>{value}</span>;
 }
 
 const SUBHEADER_TABS: TabItem[] = [
@@ -131,7 +131,7 @@ function InfoHint({ text }: { text: string }) {
   return (
     <Tooltip title={text}>
       <button type="button" aria-label="More info" className="inline-flex">
-        <Info className="h-3.5 w-3.5" style={{ color: getRoleColor('text.secondary') }} />
+        <Info className="h-3.5 w-3.5" style={{ color: getRoleColor('fg.neutral.subtle') }} />
       </button>
     </Tooltip>
   );
@@ -145,21 +145,21 @@ function MidTermActivityCard() {
       </h3>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <PlusCircle className="h-5 w-5" style={{ color: getRoleColor('status.success.fg') }} />
+          <PlusCircle className="h-5 w-5" style={{ color: getRoleColor('fg.success') }} />
           <div>
             <div className="text-xs text-muted-foreground">Added (Bound)</div>
             <div className="text-2xl font-bold tabular-nums">69</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <MinusCircle className="h-5 w-5" style={{ color: getRoleColor('status.danger.fg') }} />
+          <MinusCircle className="h-5 w-5" style={{ color: getRoleColor('fg.critical') }} />
           <div>
             <div className="text-xs text-muted-foreground">Deleted (Bound)</div>
             <div className="text-2xl font-bold tabular-nums">17</div>
           </div>
         </div>
       </div>
-      <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>
+      <p className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
         Updates occur only after approval (Bound).
       </p>
     </div>
@@ -213,7 +213,7 @@ export function ClientSummary() {
   ];
 
   return (
-    <div className="grid min-h-screen grid-rows-[auto_1fr]" style={{ backgroundColor: getRoleColor('surface.subtle') }}>
+    <div className="grid min-h-screen grid-rows-[auto_1fr]" style={{ backgroundColor: getRoleColor('bg.neutral.subtle') }}>
       <Header
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
@@ -228,12 +228,12 @@ export function ClientSummary() {
           DashboardDemo.tsx and RESGAssetListPage.tsx already use). */}
       <div
         className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4 md:px-8"
-        style={{ backgroundColor: getRoleColor('surface.default'), borderColor: getRoleColor('border.default') }}
+        style={{ backgroundColor: getRoleColor('bg.default'), borderColor: getRoleColor('border.default') }}
       >
         <div className="flex flex-wrap items-center gap-3">
           <h2
             className="text-xl font-semibold"
-            style={{ color: getRoleColor('text.primary'), fontFamily: 'var(--typo-h5-font-family, var(--font-family-dashboard))' }}
+            style={{ color: getRoleColor('fg.primary'), fontFamily: 'var(--typo-h5-font-family, var(--font-family-dashboard))' }}
           >
             Acme Realty Ltd
           </h2>
@@ -263,12 +263,12 @@ export function ClientSummary() {
         <main className="min-w-0 flex-1 px-6 py-6 md:px-8 md:py-8">
           <div className="flex flex-col gap-1 mb-6">
             <h1
-              style={{ fontFamily: 'var(--typo-h3-font-family, var(--font-family-dashboard))', color: getRoleColor('text.primary') }}
+              style={{ fontFamily: 'var(--typo-h3-font-family, var(--font-family-dashboard))', color: getRoleColor('fg.primary') }}
               className="text-2xl font-semibold"
             >
               Client Summary
             </h1>
-            <p style={{ color: getRoleColor('text.secondary') }} className="text-sm">
+            <p style={{ color: getRoleColor('fg.neutral.subtle') }} className="text-sm">
               Bound portfolio overview for the current policy term.
             </p>
           </div>
@@ -276,7 +276,7 @@ export function ClientSummary() {
           {/* Filter row */}
           <div className="flex flex-wrap items-end gap-4 mb-6">
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium" style={{ color: getRoleColor('text.secondary') }}>Program</span>
+              <span className="text-xs font-medium" style={{ color: getRoleColor('fg.neutral.subtle') }}>Program</span>
               <Select value={program} onValueChange={setProgram}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="All Programs" />
@@ -289,7 +289,7 @@ export function ClientSummary() {
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium" style={{ color: getRoleColor('text.secondary') }}>Product Line</span>
+              <span className="text-xs font-medium" style={{ color: getRoleColor('fg.neutral.subtle') }}>Product Line</span>
               <Select value={productLine} onValueChange={setProductLine}>
                 <SelectTrigger className="w-[200px]">
                   <SelectValue placeholder="All Product Lines" />
@@ -302,7 +302,7 @@ export function ClientSummary() {
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: getRoleColor('text.secondary') }}>
+              <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                 As of <InfoHint text="Portfolio figures as of this date." />
               </span>
               <DatePicker date={asOfDate} onDateChange={setAsOfDate} />
@@ -313,7 +313,7 @@ export function ClientSummary() {
           <Card className="relative pt-8 px-6 pb-6 mb-6">
             <span
               className="absolute -top-2.5 left-4 px-2 text-xs font-semibold uppercase tracking-wide"
-              style={{ color: getRoleColor('text.secondary'), backgroundColor: getRoleColor('surface.default') }}
+              style={{ color: getRoleColor('fg.neutral.subtle'), backgroundColor: getRoleColor('bg.default') }}
             >
               Portfolio Overview
             </span>
@@ -366,7 +366,7 @@ export function ClientSummary() {
               </CardHeader>
               <CardContent className="flex flex-col gap-2">
                 <DataTable columns={catRiskColumns} data={CAT_RISK_ROWS} defaultDensity="compact" pinFirstColumn={false} />
-                <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>All values are Bound TIVs only.</p>
+                <p className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>All values are Bound TIVs only.</p>
               </CardContent>
             </Card>
           </div>
@@ -378,14 +378,14 @@ export function ClientSummary() {
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               <DataTable columns={casualtyColumns} data={CASUALTY_EXPOSURE_ROWS} defaultDensity="compact" pinFirstColumn={false} />
-              <p className="text-xs" style={{ color: getRoleColor('text.secondary') }}>Casualty exposure values represent Bound values only.</p>
+              <p className="text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>Casualty exposure values represent Bound values only.</p>
             </CardContent>
           </Card>
 
           {/* Footer assumptions bar */}
           <div
             className="flex items-start gap-2 rounded-md border px-4 py-3 text-sm"
-            style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('surface.subtle'), color: getRoleColor('text.secondary') }}
+            style={{ borderColor: getRoleColor('border.default'), backgroundColor: getRoleColor('bg.neutral.subtle'), color: getRoleColor('fg.neutral.subtle') }}
           >
             <Info className="h-4 w-4 shrink-0 mt-0.5" />
             <span>

@@ -202,13 +202,13 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
 
   const primaryBlue   = getRoleColor('interactive.primary');
   const primaryHover  = getRoleColor('interactive.primary.hover');
-  const surfaceDefault = getRoleColor('surface.default');
-  const surfaceSubtle  = getRoleColor('surface.subtle');
-  const surfaceAccent  = getRoleColor('surface.accent');
-  const textPrimary    = getRoleColor('text.primary');
-  const textSecondary  = getRoleColor('text.secondary');
+  const surfaceDefault = getRoleColor('bg.default');
+  const surfaceSubtle  = getRoleColor('bg.neutral.subtle');
+  const surfaceAccent  = getRoleColor('bg.neutral.subtle');
+  const textPrimary    = getRoleColor('fg.primary');
+  const textSecondary  = getRoleColor('fg.neutral.subtle');
   const borderDefault  = getRoleColor('border.default');
-  const textOnAccent   = getRoleColor('text.onAccent');
+  const textOnAccent   = getRoleColor('fg.on-accent');
 
   return (
     <Box

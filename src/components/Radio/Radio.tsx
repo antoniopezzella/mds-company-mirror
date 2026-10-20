@@ -31,7 +31,7 @@ const DSRadio: React.FC<DSRadioProps> = ({
   const checkedHoverColor = tone === 'danger'
     ? getRoleColor('interactive.danger.hover')
     : getRoleColor('interactive.primary.hover');
-  const textColor = getRoleColor('text.primary');
+  const textColor = getRoleColor('fg.primary');
 
   const radioElement = (
     <MuiRadio
@@ -132,12 +132,12 @@ export const DSRadioGroup: React.FC<DSRadioGroupProps> = ({
       {label && (
         <FormLabel
           sx={{
-            color: getRoleColor('text.primary'),
+            color: getRoleColor('fg.primary'),
             fontFamily: 'var(--typo-body-font-family)',
             fontWeight: 600,
             mb: 1,
             '&.Mui-focused': {
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
             },
           }}
         >

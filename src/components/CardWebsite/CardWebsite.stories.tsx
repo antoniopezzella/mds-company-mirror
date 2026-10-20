@@ -11,9 +11,9 @@ import type { InsightItem } from '../sections/CarouselSection/CarouselSection';
 // the plain Storybook canvas. 'neutral'/'sky'/'white' use dark text and read
 // fine on a light canvas, so only 'primary' needs a colored wrapper.
 const SURFACE_BG: Record<string, string | undefined> = {
-  primary: getRoleColor('surface.hero'),
-  neutral: getRoleColor('surface.accent'),
-  sky: getRoleColor('surface.secondary'),
+  primary: getRoleColor('bg.primary'),
+  neutral: getRoleColor('bg.neutral.subtle'),
+  sky: getRoleColor('bg.secondary'),
   white: undefined, // plain canvas
 };
 

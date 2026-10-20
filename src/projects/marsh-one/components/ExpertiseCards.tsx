@@ -108,7 +108,7 @@ const ctx = gsap.context(() => {
                 fontWeight: 400,
                 fontSize: { xs: '36px', md: '56px' },
                 lineHeight: { xs: '44px', md: '72px' },
-                color: getRoleColor('text.primary'),
+                color: getRoleColor('fg.primary'),
               }}
             >
                 <div ref={headlineRef}>{title}</div>
@@ -195,7 +195,7 @@ const ctx = gsap.context(() => {
                       fontWeight: 400,
                       fontSize: { xs: '24px', md: '40px' },
                       lineHeight: '18px',
-                      color: getRoleColor('text.primary'),
+                      color: getRoleColor('fg.primary'),
                     }}
                   >
                     {card.title}
@@ -234,7 +234,7 @@ const ctx = gsap.context(() => {
         <IconButton
           onClick={() => scroll('left')}
           sx={{
-            backgroundColor: getRoleColor('brand.accent'),
+            backgroundColor: getRoleColor('bg.accent'),
             width: '48px',
             height: '48px',
             '&:hover': { backgroundColor: '#FFD54F' },
@@ -250,7 +250,7 @@ const ctx = gsap.context(() => {
         <IconButton
           onClick={() => scroll('right')}
           sx={{
-            backgroundColor: getRoleColor('brand.accent'),
+            backgroundColor: getRoleColor('bg.accent'),
             width: '48px',
             height: '48px',
             '&:hover': { backgroundColor: '#FFD54F' },

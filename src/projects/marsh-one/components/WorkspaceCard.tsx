@@ -53,7 +53,7 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
         borderRadius: 3,
         overflow: 'hidden',
         minWidth: 0,
-        backgroundColor: getRoleColor('surface.default'),
+        backgroundColor: getRoleColor('bg.default'),
         border: `1px solid ${getRoleColor('border.default')}`,
         boxShadow: '0 24px 64px rgba(0, 15, 71, 0.08)',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -82,7 +82,7 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
           sx={{
             position: 'absolute',
             inset: 0,
-            background: `linear-gradient(180deg, transparent 0%, ${alpha(getRoleColor('surface.hero'), 0.88)} 65%)`,
+            background: `linear-gradient(180deg, transparent 0%, ${alpha(getRoleColor('bg.primary'), 0.88)} 65%)`,
           }}
         />
 
@@ -95,8 +95,8 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
               px: 1.5,
               py: 0.75,
               borderRadius: 1,
-              backgroundColor: alpha(getRoleColor('surface.default'), 0.92),
-              color: getRoleColor('text.primary'),
+              backgroundColor: alpha(getRoleColor('bg.default'), 0.92),
+              color: getRoleColor('fg.primary'),
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: '0.01em',
@@ -121,7 +121,7 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
           <Typography
             component="h3"
             sx={{
-              color: getRoleColor('text.onHero'),
+              color: getRoleColor('fg.on-primary'),
               fontFamily: "'Marsh Serif', sans-serif",
               fontWeight: 400,
               fontSize: { xs: '28px', md: '36px' },
@@ -146,7 +146,7 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
         {description && (
           <Typography
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               fontSize: 15,
               lineHeight: 1.75,
             }}
@@ -165,8 +165,8 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
                   px: 1.5,
                   py: 0.75,
                   borderRadius: 1,
-                  backgroundColor: getRoleColor('surface.subtle'),
-                  color: getRoleColor('text.primary'),
+                  backgroundColor: getRoleColor('bg.neutral.subtle'),
+                  color: getRoleColor('fg.primary'),
                   fontSize: 12,
                   fontWeight: 700,
                 }}
@@ -178,7 +178,7 @@ export const WorkspaceCard: React.FC<WorkspaceCardProps> = ({
         )}
 
         {footerNote && (
-          <Typography sx={{ color: getRoleColor('text.secondary'), fontSize: 12, lineHeight: 1.5 }}>
+          <Typography sx={{ color: getRoleColor('fg.neutral.subtle'), fontSize: 12, lineHeight: 1.5 }}>
             {footerNote}
           </Typography>
         )}

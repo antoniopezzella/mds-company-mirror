@@ -46,25 +46,25 @@ const DSSnackbar: React.FC<DSSnackbarProps> = ({
     switch (severity) {
       case 'success':
         return {
-          fg: getRoleColor('status.success.fg'),
-          bg: getRoleColor('status.success.bg'),
+          fg: getRoleColor('fg.success'),
+          bg: getRoleColor('bg.success.subtle'),
         };
       case 'error':
         return {
-          fg: getRoleColor('status.danger.fg'),
-          bg: getRoleColor('status.danger.bg'),
+          fg: getRoleColor('fg.critical'),
+          bg: getRoleColor('bg.critical.subtle'),
         };
       case 'warning':
         return {
           // See ui/alert.tsx: gold1000 on gold50 is 3.34:1, unreadable as
           // text. text.onLight is the role for warning gold (17.71:1).
-          fg: getRoleColor('text.onLight'),
-          bg: getRoleColor('status.warning.bg'),
+          fg: getRoleColor('fg.on-light'),
+          bg: getRoleColor('bg.warning.subtle'),
         };
       default:
         return {
-          fg: getRoleColor('text.primary'),
-          bg: getRoleColor('surface.subtle'),
+          fg: getRoleColor('fg.primary'),
+          bg: getRoleColor('bg.neutral.subtle'),
         };
     }
   };

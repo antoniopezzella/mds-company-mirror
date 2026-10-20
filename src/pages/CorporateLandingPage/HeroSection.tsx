@@ -199,8 +199,8 @@ export const HeroSection: React.FC = () => {
                   size="md"
                   endIcon={<span>→</span>}
                   style={{
-                    backgroundColor: getRoleColor('brand.accent'),
-                    borderColor: getRoleColor('brand.accent'),
+                    backgroundColor: getRoleColor('bg.accent'),
+                    borderColor: getRoleColor('bg.accent'),
                     color: '#1B222F',
                   }}
                 >
@@ -220,7 +220,7 @@ export const HeroSection: React.FC = () => {
                 display: 'flex',
                 overflow: 'hidden',
                 position: 'relative',
-                backgroundColor: getRoleColor('surface.hero'),
+                backgroundColor: getRoleColor('bg.primary'),
                 clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)',
               }}
             >
@@ -272,7 +272,7 @@ export const HeroSection: React.FC = () => {
             width: 48,
             height: 48,
             borderRadius: '50px',
-            backgroundColor: getRoleColor('brand.accent'),
+            backgroundColor: getRoleColor('bg.accent'),
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
@@ -296,7 +296,7 @@ export const HeroSection: React.FC = () => {
           <KeyboardArrowDown
             sx={{
               fontSize: 24,
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
             }}
           />
         </Box>

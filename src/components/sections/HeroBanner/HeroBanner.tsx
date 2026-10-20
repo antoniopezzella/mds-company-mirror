@@ -490,7 +490,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
     //
     // surface.hero is #000f47 in BOTH modes precisely because hero surfaces stay
     // dark (see roles.ts on text.onHero). #ceecff on it is 14.72:1.
-    backgroundColor: isDark ? getRoleColor('surface.hero') : getRoleColor('surface.default'),
+    backgroundColor: isDark ? getRoleColor('bg.primary') : getRoleColor('bg.default'),
     position: 'relative',
     overflow: 'hidden',
     '@media (min-width: 992px)': {
@@ -532,8 +532,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   // a background that doesn't is what caused the 1.40:1 failure fixed above.
   // For the same reason `text.onPrimary` is NOT usable here — it flips to
   // #000f47 in dark, which on #000f47 is 1.00:1, i.e. invisible.
-  const heroText = isDark ? getRoleColor('text.onHero') : getRoleColor('text.primary');
-  const heroTextMuted = isDark ? getRoleColor('text.onHero') : getRoleColor('text.secondary');
+  const heroText = isDark ? getRoleColor('fg.on-primary') : getRoleColor('fg.primary');
+  const heroTextMuted = isDark ? getRoleColor('fg.on-primary') : getRoleColor('fg.neutral.subtle');
   const isSplitMediaLeft = layout === 'split' && imagePosition === 'left';
   const isSplitMediaRight = layout === 'split' && imagePosition === 'right';
   const contentColumnClassName = 'col-12 col-lg-6';
@@ -566,7 +566,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             sx={{
               width: '40px',
               height: '2px',
-              backgroundColor: getRoleColor('brand.accent'),
+              backgroundColor: getRoleColor('bg.accent'),
               flexShrink: 0,
             }}
           />
@@ -810,7 +810,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         }}
       >
         {vimeoId && !vimeoFailed ? (
-          <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('surface.hero'), containerType: 'size' }}>
+          <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('bg.primary'), containerType: 'size' }}>
             <iframe
               ref={iframeRef}
               src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}
@@ -900,12 +900,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             <path
               ref={mLogoLeftRef}
               d="M0 0V123.885H22.5715V68.0532L58.2372 85.1171H59.9602L2.23957 0H0Z"
-              fill={getRoleColor('text.inverse')}
+              fill={getRoleColor('fg.on-dark')}
             />
             <path
               ref={mLogoRightRef}
               d="M118.026 0L60.3051 85.1171H62.0282L97.6938 68.0532V123.885H120.265V0H118.026Z"
-              fill={getRoleColor('text.inverse')}
+              fill={getRoleColor('fg.on-dark')}
             />
           </Box>
         </Box>
@@ -959,7 +959,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               no gap is ever exposed at the edges. */}
           <Box ref={mediaRef} sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '115%' }}>
           {vimeoId && !vimeoFailed ? (
-            <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('surface.hero'), containerType: 'size' }}>
+            <Box className={styles.mediaCover} sx={{ backgroundColor: getRoleColor('bg.primary'), containerType: 'size' }}>
               <iframe
                 ref={iframeRef}
                 src={`https://player.vimeo.com/video/${vimeoId}?autoplay=${autoPlayVideo ? 1 : 0}&loop=1&autopause=0&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1&background=1`}

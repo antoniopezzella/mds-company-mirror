@@ -135,11 +135,11 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
   const [filter, setFilter] = useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
-  const surfaceDefault = getRoleColor('surface.default', { mode });
-  const textPrimary    = getRoleColor('text.primary', { mode });
-  const textSecondary  = getRoleColor('text.secondary', { mode });
+  const surfaceDefault = getRoleColor('bg.default', { mode });
+  const textPrimary    = getRoleColor('fg.primary', { mode });
+  const textSecondary  = getRoleColor('fg.neutral.subtle', { mode });
   const borderDefault  = getRoleColor('border.default', { mode });
-  const surfaceSubtle  = getRoleColor('surface.subtle', { mode });
+  const surfaceSubtle  = getRoleColor('bg.neutral.subtle', { mode });
   const primaryBlue    = getRoleColor('interactive.primary', { mode });
 
   const unreadCount  = NOTIFICATIONS.filter(n => n.unread).length;

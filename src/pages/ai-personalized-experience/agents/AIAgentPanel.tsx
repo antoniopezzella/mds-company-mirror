@@ -20,7 +20,7 @@ export default function AIAgentPanel(props: AIAgentPanelProps) {
 
   return (
     <Box sx={{ mt: 6 }}>
-      <Typography variant="h4" sx={{ mb: 4, color: getRoleColor('text.primary'), fontWeight: 600 }}>
+      <Typography variant="h4" sx={{ mb: 4, color: getRoleColor('fg.primary'), fontWeight: 600 }}>
         AI Agents
       </Typography>
 

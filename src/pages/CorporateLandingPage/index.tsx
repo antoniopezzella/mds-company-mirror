@@ -60,8 +60,8 @@ const CorporateLandingPage: React.FC = () => {
       if (!backgroundRef.current) return;
 
       // Define section color transitions - GSAP MARK: Adjusted to start fading earlier
-      const heroSurface = getRoleColor('surface.hero');
-      const defaultSurface = getRoleColor('surface.default');
+      const heroSurface = getRoleColor('bg.primary');
+      const defaultSurface = getRoleColor('bg.default');
       const colorTransitions = [
         { trigger: heroRef.current, color: heroSurface, start: 'top bottom', end: 'center center' }, // GSAP MARK: Starts when section enters viewport
         { trigger: heroRef.current, color: '#F7F3EE', start: 'bottom bottom', end: 'bottom top' }, // GSAP MARK: Starts at hero scroll button position (using heroRef) — #F7F3EE has no token yet (see semantic-tokens.ts audit), stays literal
@@ -125,7 +125,7 @@ const CorporateLandingPage: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: getRoleColor('surface.hero'),
+          backgroundColor: getRoleColor('bg.primary'),
           zIndex: 0,
           transition: 'background-color 0.8s ease-in-out',
         }}

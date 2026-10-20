@@ -94,7 +94,7 @@ const ASPECT_CSS: Record<CardAR, string> = {
 // ThemeProvider dependency just to read palette.mode.
 
 const surfaceText = (s: CardSurface): string =>
-  s === 'primary' ? getRoleColor('text.onHero') : getRoleColor('text.primary');
+  s === 'primary' ? getRoleColor('fg.on-primary') : getRoleColor('fg.primary');
 
 // Active title colour per Figma: #0b4bff on light surfaces, #95caff on primary
 const surfaceActiveTitle = (s: CardSurface): string =>
@@ -104,7 +104,7 @@ const surfaceActiveTitle = (s: CardSurface): string =>
 const hoverWash = (s: CardSurface): string => {
   if (s === 'primary') return getRoleColor('interactive.secondary'); // #0b4bff — Active Blue, per Figma hover-state spec
   if (s === 'sky')     return getRoleColor('surface.secondary.hover'); // #ebf7ff
-  return getRoleColor('surface.secondary'); // #ceecff for white + neutral
+  return getRoleColor('bg.secondary'); // #ceecff for white + neutral
 };
 
 // Hover state-layer border — primary (navy) and neutral (light/gold-250
@@ -115,7 +115,7 @@ const hoverWash = (s: CardSurface): string => {
 // before this consistency pass.
 const hoverBorder = (s: CardSurface): string | null => {
   if (s === 'primary') return getRoleColor('interactive.secondary'); // #0b4bff — Active Blue
-  if (s === 'neutral') return getRoleColor('surface.secondary');    // #ceecff — same hue as neutral's own wash, mirrors primary's identical fill/border pairing
+  if (s === 'neutral') return getRoleColor('bg.secondary');    // #ceecff — same hue as neutral's own wash, mirrors primary's identical fill/border pairing
   return null;
 };
 
@@ -195,7 +195,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
   const activeText = surfaceActiveTitle(surface);
   const wash       = hoverWash(surface);
   const washBorder = hoverBorder(surface);
-  const focusColor = getRoleColor('focus.ring');
+  const focusColor = getRoleColor('border.focus');
   const arCSS      = ASPECT_CSS[aspectRatio];
 
   // Auto-resolved from `category` when it matches a known content type (see
@@ -296,7 +296,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
           {hasHeader && (category || timestamp) && (
             <div className="mb-2 flex items-center gap-2">
               {category && (
-                <span style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 14, lineHeight: '20px', color: getRoleColor('text.onHero'), opacity: 0.85 }}>
+                <span style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 14, lineHeight: '20px', color: getRoleColor('fg.on-primary'), opacity: 0.85 }}>
                   {category}
                 </span>
               )}
@@ -305,7 +305,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
                 <time
                   dateTime={datetime ?? timestamp}
                   className="shrink-0"
-                  style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 14, lineHeight: '20px', color: getRoleColor('text.onHero'), opacity: 0.85 }}
+                  style={{ fontFamily: 'var(--typo-body1-font-family)', fontSize: 14, lineHeight: '20px', color: getRoleColor('fg.on-primary'), opacity: 0.85 }}
                 >
                   {timestamp}
                 </time>
@@ -371,7 +371,7 @@ const CardWebsite: React.FC<CardWebsiteProps> = ({
             )
           : showImage &&
             imageSrc && (
-              <figure className="w-full shrink-0 overflow-hidden" style={{ aspectRatio: '1 / 1', backgroundColor: getRoleColor('surface.subtle') }}>
+              <figure className="w-full shrink-0 overflow-hidden" style={{ aspectRatio: '1 / 1', backgroundColor: getRoleColor('bg.neutral.subtle') }}>
                 {/* draggable={false} — see the image-bg layout's <img> above
                     for why (native image drag hijacks Embla carousel panning). */}
                 <img

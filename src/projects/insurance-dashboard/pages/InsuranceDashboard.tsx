@@ -14,7 +14,7 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
   userName = 'User',
 }) => {
   return (
-    <Box className="mds-dashboard" sx={{ backgroundColor: getRoleColor('surface.default'), minHeight: '100vh', py: 4 }}>
+    <Box className="mds-dashboard" sx={{ backgroundColor: getRoleColor('bg.default'), minHeight: '100vh', py: 4 }}>
       <Container maxWidth="xl">
         {/* Header */}
         <Box sx={{ mb: 4 }}>
@@ -27,14 +27,14 @@ export const InsuranceDashboard: React.FC<InsuranceDashboardProps> = ({
             variant="h3"
             component="h1"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               fontWeight: 700,
               mb: 1,
             }}
           >
             Welcome back, {userName}
           </Typography>
-          <Typography variant="body1" sx={{ color: getRoleColor('text.secondary') }}>
+          <Typography variant="body1" sx={{ color: getRoleColor('fg.neutral.subtle') }}>
             Here's what's happening with your insurance portfolio today
           </Typography>
         </Box>

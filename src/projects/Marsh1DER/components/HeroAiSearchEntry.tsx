@@ -54,7 +54,7 @@ export const HeroAiSearchEntry: React.FC<HeroAiSearchEntryProps> = ({
           >
             <Typography
               sx={{
-                color: getRoleColor('text.inverse'),
+                color: getRoleColor('fg.on-dark'),
                 fontFamily: 'var(--typo-body1-font-family)',
                 fontSize: 14,
                 fontWeight: 500,
@@ -68,7 +68,7 @@ export const HeroAiSearchEntry: React.FC<HeroAiSearchEntryProps> = ({
             sx={{
               flex: 1,
               minWidth: 0,
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               fontFamily: 'var(--typo-body1-font-family)',
               fontSize: 18,
               lineHeight: '28px',
@@ -96,7 +96,7 @@ export const HeroAiSearchEntry: React.FC<HeroAiSearchEntryProps> = ({
             size="md"
             onClick={() => onAsk?.(`Tell me more about ${label}.`)}
             style={{
-              color: getRoleColor('text.inverse'),
+              color: getRoleColor('fg.on-dark'),
               borderColor: 'rgba(206, 236, 255, 0.4)',
             }}
           />
@@ -109,7 +109,7 @@ export const HeroAiSearchEntry: React.FC<HeroAiSearchEntryProps> = ({
               height: 32,
               px: '14px',
               borderRadius: '1000px',
-              backgroundColor: getRoleColor('text.inverse'),
+              backgroundColor: getRoleColor('fg.on-dark'),
               border: `1px solid ${getRoleColor('interactive.primary.hover')}`,
             }}
           >

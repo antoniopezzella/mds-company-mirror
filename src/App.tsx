@@ -97,7 +97,7 @@ function App() {
     <Box className="mds-dashboard" sx={{ 
       display: 'flex', 
       minHeight: '100vh',
-      bgcolor: (theme) => getRoleColor('surface.default', { mode: theme.palette.mode })
+      bgcolor: (theme) => getRoleColor('bg.default', { mode: theme.palette.mode })
     }}>
       <DashboardHeader
         sidebarOpen={sidebarOpen}
@@ -171,7 +171,7 @@ function App() {
         maxWidth={false}
         sx={{
           flexGrow: 1,
-          bgcolor: (theme) => getRoleColor('surface.default', { mode: theme.palette.mode }),
+          bgcolor: (theme) => getRoleColor('bg.default', { mode: theme.palette.mode }),
           p: { xs: 2, md: 3 },
           mt: '64px',
           ml: { xs: 0, md: sidebarOpen ? `${sidebarWidth}px` : '64px' },
@@ -243,7 +243,7 @@ function App() {
                         <Typography variant="h2">Active Policies</Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Current insurance policies and coverage details</Typography>
                       </Box>
-                      <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
+                      <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
                           columns={[
                             { field: 'policyNumber', headerName: 'Policy Number', width: 150 },
@@ -357,7 +357,7 @@ function App() {
                         <Typography variant="h2">Risk Exposure by Line</Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Breakdown of insured value across coverage lines</Typography>
                       </Box>
-                      <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
+                      <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
                           columns={[
                             { field: 'line', headerName: 'Coverage Line', flex: 1, minWidth: 180 },
@@ -432,7 +432,7 @@ function App() {
                         <Typography variant="h2">Claims Register</Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>All open and recently settled claims</Typography>
                       </Box>
-                      <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
+                      <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
                           columns={[
                             { field: 'claimId', headerName: 'Claim ID', width: 130 },
@@ -518,7 +518,7 @@ function App() {
                         <Typography variant="h2">Upcoming Renewals</Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Policies due for renewal in the next 90 days</Typography>
                       </Box>
-                      <Box sx={{ bgcolor: (theme) => getRoleColor('surface.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
+                      <Box sx={{ bgcolor: (theme) => getRoleColor('bg.neutral.subtle', { mode: theme.palette.mode }), borderRadius: 1, mb: 3 }}>
                         <MDSDataGrid
                           columns={[
                             { field: 'policyNumber', headerName: 'Policy Number', width: 150 },
@@ -629,7 +629,7 @@ function App() {
               </>
             }
           >
-            <Typography sx={{ fontFamily: 'Noto Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: getRoleColor('text.primary', { mode }) }}>
+            <Typography sx={{ fontFamily: 'Noto Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: getRoleColor('fg.primary', { mode }) }}>
               This action will be logged and assigned to your account. You can review all actions in the Activity Log under Settings.
             </Typography>
           </Modal>

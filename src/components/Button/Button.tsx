@@ -132,7 +132,7 @@ const DSButton: React.FC<DSButtonProps> = ({
     primarySurfaceHover: '#082d9e',
     primarySurfaceActive: '#0b4bff',
     primaryTextInverted: '#ceecff',
-    primaryAltSurface: getRoleColor('brand.accent'),
+    primaryAltSurface: getRoleColor('bg.accent'),
     primaryAltSurfaceHover: '#eaa501',
     primaryAltSurfaceActive: '#d58b02',
     primaryAltText: '#000f47', // stays literal — always-navy-on-gold text has no role yet (textOnLight is orphaned)
@@ -219,13 +219,13 @@ const DSButton: React.FC<DSButtonProps> = ({
       // PRIMARY - Midnight Blue filled (#000f47)
       case 'primary':
         return inverse ? {
-          backgroundColor: getRoleColor('surface.default'), // white
+          backgroundColor: getRoleColor('bg.default'), // white
           color: v3ButtonColors.primarySurface,
           '&:hover': { 
-            backgroundColor: alpha(getRoleColor('surface.default'), 0.9),
+            backgroundColor: alpha(getRoleColor('bg.default'), 0.9),
           },
           '&:active': { 
-            backgroundColor: alpha(getRoleColor('surface.default'), 0.8),
+            backgroundColor: alpha(getRoleColor('bg.default'), 0.8),
           },
         } : {
           backgroundColor: v3ButtonColors.primarySurface,
@@ -264,18 +264,18 @@ const DSButton: React.FC<DSButtonProps> = ({
       case 'secondary':
         return inverse ? {
           backgroundColor: 'transparent',
-          color: getRoleColor('surface.secondary'),              // #ceecff (sky blue)
-          border: `2px solid ${getRoleColor('surface.secondary')}`,
+          color: getRoleColor('bg.secondary'),              // #ceecff (sky blue)
+          border: `2px solid ${getRoleColor('bg.secondary')}`,
           '&:hover': {
-            backgroundColor: alpha(getRoleColor('surface.secondary'), 0.1),
+            backgroundColor: alpha(getRoleColor('bg.secondary'), 0.1),
           },
           '&:active': {
-            backgroundColor: alpha(getRoleColor('surface.secondary'), 0.2),
+            backgroundColor: alpha(getRoleColor('bg.secondary'), 0.2),
           },
           '&.Mui-disabled': {
             backgroundColor: 'transparent',
-            color: alpha(getRoleColor('surface.secondary'), 0.35),
-            borderColor: alpha(getRoleColor('surface.secondary'), 0.35),
+            color: alpha(getRoleColor('bg.secondary'), 0.35),
+            borderColor: alpha(getRoleColor('bg.secondary'), 0.35),
           },
         } : {
           backgroundColor: v3ButtonColors.secondarySurface,
@@ -302,14 +302,14 @@ const DSButton: React.FC<DSButtonProps> = ({
       case 'tertiary':
         return inverse ? {
           backgroundColor: 'transparent',
-          color: getRoleColor('text.inverse'),                   // white
+          color: getRoleColor('fg.on-dark'),                   // white
           border: 'none',
           '&:hover': {
-            backgroundColor: alpha(getRoleColor('text.inverse'), 0.1),
+            backgroundColor: alpha(getRoleColor('fg.on-dark'), 0.1),
             border: 'none',
           },
           '&:active': {
-            backgroundColor: alpha(getRoleColor('text.inverse'), 0.2),
+            backgroundColor: alpha(getRoleColor('fg.on-dark'), 0.2),
             border: 'none',
           },
           '&.Mui-disabled': {

@@ -6,9 +6,9 @@ import { categories } from './registry/categories';
 
 const DesignSystemIndexPage: React.FC = () => {
   const { mode } = useThemeMode();
-  const titleColor = getRoleColor('text.primary', { mode });
-  const bodyColor = getRoleColor('text.secondary', { mode });
-  const cardBg = getRoleColor('surface.subtle', { mode });
+  const titleColor = getRoleColor('fg.primary', { mode });
+  const bodyColor = getRoleColor('fg.neutral.subtle', { mode });
+  const cardBg = getRoleColor('bg.neutral.subtle', { mode });
   const cardBorder = getRoleColor('border.default', { mode });
   const linkColor = getRoleColor('interactive.primary', { mode });
 

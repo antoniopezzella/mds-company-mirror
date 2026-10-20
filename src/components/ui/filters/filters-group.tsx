@@ -183,23 +183,23 @@ export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(
           ? undefined
           : {
               borderColor: group.negated
-                ? getRoleColor('status.danger.border')
+                ? getRoleColor('border.critical')
                 : getRoleColor('border.subtle'),
-              backgroundColor: getRoleColor('surface.subtle'),
+              backgroundColor: getRoleColor('bg.neutral.subtle'),
             }
       }
     >
       {group.negated && !isRoot && (
         <p
           className="text-xs font-semibold tracking-wide"
-          style={{ color: getRoleColor('status.danger.fg') }}
+          style={{ color: getRoleColor('fg.critical') }}
         >
           {t.not}
         </p>
       )}
 
       {group.rules.length === 0 && (
-        <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+        <p className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           {t.empty}
         </p>
       )}
@@ -211,7 +211,7 @@ export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(
               harder to read than the nesting itself does. */}
           <div className="w-20 shrink-0 pt-1">
             {index === 0 ? (
-              <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+              <span className="text-sm" style={{ color: getRoleColor('fg.neutral.subtle') }}>
                 {t.where}
               </span>
             ) : index === 1 && !inert ? (
@@ -228,7 +228,7 @@ export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(
               // same value would imply three independent choices.
               <span
                 className="text-sm"
-                style={{ color: getRoleColor('text.secondary') }}
+                style={{ color: getRoleColor('fg.neutral.subtle') }}
                 aria-hidden="true"
               >
                 {word}
@@ -360,7 +360,7 @@ export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onSelect={() => h.onRemoveNode(group.id)}
-                  style={{ color: getRoleColor('status.danger.fg') }}
+                  style={{ color: getRoleColor('fg.critical') }}
                 >
                   {t.removeGroup}
                 </DropdownMenuItem>

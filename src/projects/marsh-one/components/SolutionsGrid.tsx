@@ -162,7 +162,7 @@ const ctx = gsap.context(() => {
                   fontWeight: 400,
                   fontSize: '30px',
                   lineHeight: 'normal',
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                 }}
               >
                 {topic.title}
@@ -184,7 +184,7 @@ const ctx = gsap.context(() => {
                   fontWeight: 600,
                   fontSize: '14px',
                   lineHeight: 'normal',
-                  color: getRoleColor('text.primary'),
+                  color: getRoleColor('fg.primary'),
                   mt: '8px',
                 }}
               >

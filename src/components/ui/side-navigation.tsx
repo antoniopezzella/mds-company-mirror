@@ -175,15 +175,15 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
     const colors = React.useMemo(() => {
       if (mode === 'dark') {
         return {
-          navBg: getRoleColor('surface.subtle', { mode: 'dark' }),
-          navText: getRoleColor('text.primary', { mode: 'dark' }),
-          itemHoverBg: getRoleColor('surface.default', { mode: 'dark' }),
+          navBg: getRoleColor('bg.neutral.subtle', { mode: 'dark' }),
+          navText: getRoleColor('fg.primary', { mode: 'dark' }),
+          itemHoverBg: getRoleColor('bg.default', { mode: 'dark' }),
           activeBg: 'rgba(149, 202, 255, 0.16)',
           activeHoverBg: 'rgba(149, 202, 255, 0.24)',
           activeBorder: getRoleColor('interactive.secondary', { mode: 'dark' }),
           border: getRoleColor('border.default', { mode: 'dark' }),
-          ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
-          ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+          ctaBg: getRoleColor('bg.default', { mode: 'dark' }),
+          ctaText: getRoleColor('fg.primary', { mode: 'dark' }),
           ctaInverse: true,
         };
       }

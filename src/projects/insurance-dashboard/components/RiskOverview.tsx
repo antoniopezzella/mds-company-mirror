@@ -15,12 +15,12 @@ export interface RiskOverviewProps {
 }
 
 const getRiskLevel = (score: number): { label: string; color: string } => {
-  if (score >= 80) return { label: 'High Risk', color: getRoleColor('status.danger.fg') };
+  if (score >= 80) return { label: 'High Risk', color: getRoleColor('fg.critical') };
   // text.onLight, not status.warning.fg — this colour is applied to the score
   // text ("68/100"), and gold1000 on the card surface is 3.2:1. The risk level
   // is still carried by the progress bar's fill, which needs only 3:1.
-  if (score >= 50) return { label: 'Medium Risk', color: getRoleColor('text.onLight') };
-  return { label: 'Low Risk', color: getRoleColor('status.success.fg') };
+  if (score >= 50) return { label: 'Medium Risk', color: getRoleColor('fg.on-light') };
+  return { label: 'Low Risk', color: getRoleColor('fg.success') };
 };
 
 export const RiskOverview: React.FC<RiskOverviewProps> = ({
@@ -54,8 +54,8 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
   return (
     <Paper elevation={1} sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-        <WarningAmberIcon sx={{ color: getRoleColor('status.warning.fg') }} />
-        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('text.primary'), fontWeight: 600 }}>
+        <WarningAmberIcon sx={{ color: getRoleColor('fg.warning') }} />
+        <Typography variant="h6" component="h2" sx={{ color: getRoleColor('fg.primary'), fontWeight: 600 }}>
           Risk Overview
         </Typography>
       </Box>
@@ -67,7 +67,7 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
           return (
             <Box key={category.name}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                <Typography variant="body1" sx={{ fontWeight: 600, color: getRoleColor('text.primary') }}>
+                <Typography variant="body1" sx={{ fontWeight: 600, color: getRoleColor('fg.primary') }}>
                   {category.name}
                 </Typography>
                 <Typography
@@ -93,7 +93,7 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
                 sx={{
                   height: 8,
                   borderRadius: 4,
-                  backgroundColor: getRoleColor('surface.subtle'),
+                  backgroundColor: getRoleColor('bg.neutral.subtle'),
                   mb: 1,
                   '& .MuiLinearProgress-bar': {
                     backgroundColor: riskLevel.color,
@@ -103,7 +103,7 @@ export const RiskOverview: React.FC<RiskOverviewProps> = ({
               />
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: getRoleColor('text.secondary'), fontSize: '0.875rem' }}>
+                <Typography variant="body2" sx={{ color: getRoleColor('fg.neutral.subtle'), fontSize: '0.875rem' }}>
                   {category.description}
                 </Typography>
                 <Typography

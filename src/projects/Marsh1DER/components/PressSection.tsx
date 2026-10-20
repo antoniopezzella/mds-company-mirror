@@ -135,7 +135,7 @@ const PressSection: React.FC<PressSectionProps> = ({
       aria-label="Client testimonials"
       sx={{
         /* sky blue — surface.secondary = #ceecff */
-        backgroundColor: getRoleColor('surface.secondary'),
+        backgroundColor: getRoleColor('bg.secondary'),
         py: 12,
         position: 'relative',
         overflow: 'hidden',
@@ -209,7 +209,7 @@ const PressSection: React.FC<PressSectionProps> = ({
                   fontFamily: 'var(--typo-body1-font-family)',
                   fontSize: 28,
                   lineHeight: '36px',
-                  color: getRoleColor('text.secondary'),
+                  color: getRoleColor('fg.neutral.subtle'),
                 }}
               >
                 {index + 1} / {total}
@@ -220,7 +220,7 @@ const PressSection: React.FC<PressSectionProps> = ({
                 fontFamily: 'var(--typo-body1-font-family)',
                 fontSize: 28,
                 lineHeight: '36px',
-                color: getRoleColor('text.primary'),
+                color: getRoleColor('fg.primary'),
               }}
             >
               {eyebrow}
@@ -245,7 +245,7 @@ const PressSection: React.FC<PressSectionProps> = ({
               fontSize: 'var(--typo-display-font-size)',
               lineHeight: 1.1,
               letterSpacing: '-0.01em',
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               m: 0,
               maxWidth: 993,
             }}
@@ -267,7 +267,7 @@ const PressSection: React.FC<PressSectionProps> = ({
                 fontSize: 16,
                 fontWeight: 700,
                 lineHeight: '24px',
-                color: getRoleColor('text.secondary'),
+                color: getRoleColor('fg.neutral.subtle'),
               }}>
                 {current.authorName}
               </Typography>
@@ -276,7 +276,7 @@ const PressSection: React.FC<PressSectionProps> = ({
                 fontSize: 16,
                 fontWeight: 400,
                 lineHeight: '24px',
-                color: getRoleColor('text.secondary'),
+                color: getRoleColor('fg.neutral.subtle'),
               }}>
                 {current.authorTitle}
               </Typography>

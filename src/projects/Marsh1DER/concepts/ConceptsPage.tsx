@@ -20,7 +20,7 @@ import { conceptEntries } from './registry';
  */
 const ConceptsPage: React.FC = () => {
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('surface.default') }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: getRoleColor('bg.default') }}>
       <WebsiteHeader position="fixed" signInLabel="Log in" onSignInClick={() => {}} />
 
       {/* Intro */}
@@ -46,7 +46,7 @@ const ConceptsPage: React.FC = () => {
               fontWeight: 400,
               fontSize: 'clamp(32px, 4vw, 56px)',
               lineHeight: 1.15,
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               maxWidth: 900,
               mb: 3,
             }}
@@ -58,7 +58,7 @@ const ConceptsPage: React.FC = () => {
               fontFamily: 'var(--typo-body1-font-family)',
               fontSize: 18,
               lineHeight: 1.6,
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
               maxWidth: 720,
             }}
           >
@@ -85,7 +85,7 @@ const ConceptsPage: React.FC = () => {
                     borderRadius: '999px',
                     px: 2,
                     py: '6px',
-                    '&:hover': { backgroundColor: getRoleColor('surface.subtle') },
+                    '&:hover': { backgroundColor: getRoleColor('bg.neutral.subtle') },
                   }}
                 >
                   {entry.referenceLabel} — {entry.title}
@@ -100,7 +100,7 @@ const ConceptsPage: React.FC = () => {
       {conceptEntries.map((entry) => (
         <Box key={entry.id} component="section" id={entry.id} sx={{ borderTop: `1px solid ${getRoleColor('border.default')}` }}>
           {/* Label bar — identifies the entry before the live component renders */}
-          <Box sx={{ backgroundColor: getRoleColor('surface.subtle'), py: 3 }}>
+          <Box sx={{ backgroundColor: getRoleColor('bg.neutral.subtle'), py: 3 }}>
             <Box
               sx={{
                 maxWidth: 1540,
@@ -132,7 +132,7 @@ const ConceptsPage: React.FC = () => {
                     fontFamily: 'var(--typo-h1-font-family)',
                     fontWeight: 400,
                     fontSize: 24,
-                    color: getRoleColor('text.primary'),
+                    color: getRoleColor('fg.primary'),
                     mb: 0.5,
                   }}
                 >
@@ -143,7 +143,7 @@ const ConceptsPage: React.FC = () => {
                     fontFamily: 'var(--typo-body1-font-family)',
                     fontSize: 14,
                     lineHeight: 1.5,
-                    color: getRoleColor('text.secondary'),
+                    color: getRoleColor('fg.neutral.subtle'),
                     maxWidth: 720,
                   }}
                 >

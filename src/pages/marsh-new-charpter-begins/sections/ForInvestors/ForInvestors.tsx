@@ -74,7 +74,7 @@ const ForInvestors: React.FC = () => {
       ref={sectionRef} 
       className={styles.section} 
       aria-labelledby="investors-heading"
-      style={{ background: getRoleColor('surface.default') }}
+      style={{ background: getRoleColor('bg.default') }}
     >
       <Container maxWidth="xl">
         {/* Two-column layout: text on left, image on right */}
@@ -86,7 +86,7 @@ const ForInvestors: React.FC = () => {
               variant="h2" 
               component="h2"
               sx={{ 
-                color: getRoleColor('text.primary'), 
+                color: getRoleColor('fg.primary'), 
                 mb: (t) => t.spacing(4),
                 fontWeight: 600,
               }}
@@ -99,7 +99,7 @@ const ForInvestors: React.FC = () => {
                 key={index}
                 variant="body1" 
                 sx={{ 
-                  color: getRoleColor('text.secondary'),
+                  color: getRoleColor('fg.neutral.subtle'),
                   lineHeight: 1.7,
                   mb: (t) => t.spacing(3),
                 }}
@@ -114,7 +114,7 @@ const ForInvestors: React.FC = () => {
               sx={{
                 mt: (t) => t.spacing(2),
                 backgroundColor: getRoleColor('interactive.primary'),
-                color: getRoleColor('text.inverse'),
+                color: getRoleColor('fg.on-dark'),
                 textTransform: 'none',
                 fontSize: '1rem',
                 fontWeight: 500,
@@ -149,7 +149,7 @@ const ForInvestors: React.FC = () => {
                 sx={{
                   width: '100%',
                   height: '400px',
-                  background: getRoleColor('surface.accent'),
+                  background: getRoleColor('bg.neutral.subtle'),
                   borderRadius: '12px',
                   display: 'flex',
                   alignItems: 'center',
@@ -158,7 +158,7 @@ const ForInvestors: React.FC = () => {
               >
                 <Typography 
                   variant="body2" 
-                  sx={{ color: getRoleColor('text.secondary') }}
+                  sx={{ color: getRoleColor('fg.neutral.subtle') }}
                 >
                   {content.forInvestors.image.alt}
                 </Typography>
