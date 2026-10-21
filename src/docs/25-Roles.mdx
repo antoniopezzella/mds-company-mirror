@@ -11,7 +11,7 @@ Roles are an intent-focused abstraction above semantic tokens. Components should
 ## Why Roles?
 - Decouples component styling from raw semantic token names
 - Enables alternative mode mappings (e.g. high-contrast) without component churn
-- Provides a vocabulary aligning design + engineering (text.primary, surface.subtle, status.success)
+- Provides a vocabulary aligning design + engineering (fg.primary, bg.neutral.subtle, bg.success.subtle)
 - Simplifies validation: we can test role → color resolution instead of every component path
 
 ## Role Directory
@@ -39,7 +39,7 @@ Below is the current role map. Dark mode values are derived automatically via se
       const isAlpha = (c) => /rgba|hsla/i.test(String(c));
       const swatchStyle = (color) => ({
         background: isAlpha(color)
-          ? `linear-gradient(90deg, #ffffff 50%, #101010 50%)`
+          ? `linear-gradient(90deg, #ffffff 50%, #131210 50%)`
           : color,
         boxShadow: isAlpha(color) ? `inset 0 0 0 999px ${color}` : undefined,
         border: '1px solid #e2e2e4',
@@ -104,20 +104,22 @@ brightest line on the screen, which is the bug this replaced.
 
 ## Choosing a surface role
 
-`surface.raised` is a panel sitting *above* the page. In light it is the same
-white as `surface.default` — paper on paper needs no lift, the border does that
-work. In dark it is genuinely lighter (`#1a1a1a` against the `#101010` page), so
+`bg.raised` is a panel sitting *above* the page. In light it is the same
+white as `bg.default` — paper on paper needs no lift, the border does that
+work. In dark it is genuinely lighter (`#191816` against the `#131210` page), so
 a grid or card reads as a surface rather than a hole cut into the background.
 
 For a row's state, the roles are not interchangeable either: **selection** is
-`surface.selected` (a brand tint — a state the user caused), while **hover** and
-**striping** are `surface.subtle` (a neutral lift). Using `surface.accent` for
-selection is a mistake this codebase has already made: it is one unit away from
-`surface.subtle` in light, so selected and hovered rows rendered identically.
+`bg.selected` (a brand tint — a state the user caused), while **hover** and
+**striping** are `bg.neutral.subtle` (a neutral lift). Reusing the neutral lift
+for selection is a mistake this codebase has already made: the old
+`surface.accent` sat one step from `surface.subtle` in light — so selected and
+hovered rows rendered identically — and the two have since collapsed into the
+single `bg.neutral.subtle`. Selection must be `bg.selected`, never the lift.
 
 ## Guidelines
 - Introduce a new role only when multiple components share the intent and a semantic token name would leak implementation.
-- Avoid duplicating semantic names as roles (e.g. no `textPrimary` role) — prefer `text.primary` pattern.
+- Avoid duplicating semantic names as roles (e.g. no `textPrimary` role) — prefer `fg.primary` pattern.
 - Mark deprecated roles in future via metadata and surface during validation.
 
 ## Next Steps
