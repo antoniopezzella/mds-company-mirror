@@ -203,7 +203,7 @@ measured this run is flat-to-improved; no prior RESOLVED item regressed.
   actual file list. **DEFERRED-020.**
 - **RESOLVED — DEFERRED-002** (`Button.tsx` `destructivePrimary` hardcoded,
   no dark-mode variant): source now reads
-  `bg-[var(--role-interactive-danger)] text-[var(--role-text-onInteractive)]`
+  `bg-[var(--role-interactive-danger)] text-[var(--role-fg-on-interactive)]`
   with an explanatory comment documenting the exact fix and a subtle
   camelCase-vs-kebab-case CSS-var-name trap caught along the way. Matches
   `governance:report:strict`'s live enforced pair (`text.onInteractive` on
@@ -678,7 +678,7 @@ separately.
 | ID | First flagged | Status | Description |
 |----|----------------|--------|-------------|
 | DEFERRED-001 | 2026-08-28 | **RESOLVED (2026-09-05)** | `npm run build` fails on 7 files (shadcn `Button`/`Chip`/`List` receiving MUI `sx` props). Re-confirmed clean again 2026-10-15 (exit 0, 0 `error TS`). |
-| DEFERRED-002 | 2026-08-28 | **RESOLVED (2026-10-15)** | `Button.tsx` `destructivePrimary`: now `bg-[var(--role-interactive-danger)] text-[var(--role-text-onInteractive)]`, no hardcoded hex, dark-mode-aware. Matches live enforced-pair contrast (5.34:1 light / 6.53:1 dark). |
+| DEFERRED-002 | 2026-08-28 | **RESOLVED (2026-10-15)** | `Button.tsx` `destructivePrimary`: now `bg-[var(--role-interactive-danger)] text-[var(--role-fg-on-interactive)]`, no hardcoded hex, dark-mode-aware. Matches live enforced-pair contrast (5.34:1 light / 6.53:1 dark). |
 | DEFERRED-003 | 2026-08-28 | STILL OPEN — narrowed (2026-10-15) | `Checkbox.tsx` checked+invalid: source now routes through the same `interactive.danger` role as the now-fixed Button, no longer hardcoded. Exact checked-icon-on-fill ratio not independently re-measured this run — confirm the number next run before marking resolved. |
 | DEFERRED-004 | 2026-08-28 | STILL OPEN — narrowed (2026-10-15) | `marker.tsx`/`spinner.tsx` raw-Tailwind-class sub-item resolved (0 hex/palette violations, confirmed live). Broader Badge/Chip/Alert solid-status-variant and Tooltip-info-tone question not re-swept this run; carried forward. |
 | DEFERRED-005 | 2026-08-28 | STILL OPEN (6+ runs) | `CarouselSection.module.scss` still hardcodes `$gutter-xs: 16px; $gutter-md: 32px;` (no 48px tier), lines 59-60, unchanged since first flagged. |

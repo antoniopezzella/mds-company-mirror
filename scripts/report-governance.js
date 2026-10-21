@@ -47,7 +47,7 @@ function parseRoleMap() {
   const mapBlockMatch = src.match(/const ROLE_MAP:[\s\S]*?= ({[\s\S]*?});/);
   if (!mapBlockMatch) return {};
   const objText = mapBlockMatch[1];
-  // Rough parse: extract lines like '"text.primary": { semantic: 'textPrimary'
+  // Rough parse: extract lines like '"fg.primary": { semantic: 'textPrimary'
   const lineRegex = /'([^']+)'\s*:\s*{\s*semantic:\s*'([^']+)'/g;
   const map = {};
   let m; while((m=lineRegex.exec(objText))!==null){ map[m[1]] = m[2]; }
@@ -58,27 +58,27 @@ function parseRoleMap() {
 // If future incremental improvements are needed, reintroduce MONITORED_ROLE_PAIRS
 // and keep them out of ENFORCED_ROLE_PAIRS until they meet thresholds.
 const ENFORCED_ROLE_PAIRS = [
-  ['text.primary','surface.default',4.5],
-  ['text.secondary','surface.default',3.0],
+  ['fg.primary','bg.default',4.5],
+  ['fg.neutral.subtle','bg.default',3.0],
   // text.inverse/surface.accent removed 2026-08-31: an architecturally
   // invalid pairing (surface.accent is a light neutral; text.inverse is for
   // dark/saturated surfaces only) that can never pass 4.5:1 regardless of
   // implementation — every real usage (chip/avatar/toggle/toggle-group/
   // mega-menu) has been migrated to text.primary instead. Re-add only if a
   // genuine new use case needs it, and confirm the token values changed too.
-  ['text.onInteractive','interactive.primary',4.5],
-  ['text.onInteractive','interactive.primary.hover',4.5],
-  ['text.onInteractive','interactive.danger',4.5],
-  ['text.onInteractive','status.success.border',4.5],
-  ['text.onInteractive','status.danger.border',4.5],
+  ['fg.on-interactive','interactive.primary',4.5],
+  ['fg.on-interactive','interactive.primary.hover',4.5],
+  ['fg.on-interactive','interactive.danger',4.5],
+  ['fg.on-interactive','border.success',4.5],
+  ['fg.on-interactive','border.critical',4.5],
   // Warning's SOLID fill flips white/Midnight like success/danger now that V3's
   // warning is a dark burnt orange (#c25600) — see check-contrast.js. The pale
   // soft surface keeps mode-invariant Midnight (text.onLight).
-  ['text.onWarning','status.warning.border',4.5],
-  ['text.onLight','status.warning.bg',4.5],
-  ['status.success.fg','status.success.bg',3.0],
-  ['status.warning.fg','status.warning.bg',3.0],
-  ['status.danger.fg','status.danger.bg',3.0],
+  ['fg.on-warning','border.warning',4.5],
+  ['fg.on-light','bg.warning.subtle',4.5],
+  ['fg.success','bg.success.subtle',3.0],
+  ['fg.warning','bg.warning.subtle',3.0],
+  ['fg.critical','bg.critical.subtle',3.0],
 ];
 const MONITORED_ROLE_PAIRS = [
   // none

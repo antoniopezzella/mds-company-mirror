@@ -165,7 +165,7 @@ for (const file of componentFiles) {
 // ─── Dangling --role-* CSS variables ────────────────────────────────────────
 // RoleVarsProvider publishes one custom property per role, named
 // `--role-${role.replaceAll('.', '-')}` — note it does NOT kebab-case the
-// segment, so `text.onInteractive` becomes `--role-text-onInteractive`.
+// segment, so `text.onInteractive` becomes `--role-fg-on-interactive`.
 // A reference to a name that isn't published resolves to nothing, and CSS
 // fails silently: the declaration is dropped and the property inherits or
 // falls back to a browser default. Nothing catches that — not tsc, not the
@@ -173,7 +173,7 @@ for (const file of componentFiles) {
 //
 // This is not hypothetical. It shipped three times:
 //   • button.tsx asked for `--role-text-on-interactive` (kebab) instead of
-//     `--role-text-onInteractive`, so every destructive primary button
+//     `--role-fg-on-interactive`, so every destructive primary button
 //     rendered inherited navy text on the red fill (3.38:1) instead of white.
 //   • `--role-border-subtle` and `--role-shadow-low` were referenced but had
 //     no corresponding role at all — shadows aren't in the role system, and
@@ -195,14 +195,17 @@ const publishedRoleVars = (() => {
   );
   const start = rolesSrc.indexOf('export type RoleName');
   const union = rolesSrc.slice(start, rolesSrc.indexOf(';', start));
-  const names = [...union.matchAll(/'([a-zA-Z][a-zA-Z0-9.]*)'/g)].map((m) => m[1]);
+  // char class includes '-': role segments can be hyphenated (e.g. fg.on-primary,
+  // bg.row-hover). Without it the parser stopped at the hyphen (fg.on-primary →
+  // 'fg.on') and every hyphen-segment var read as "no such role" — advisory noise.
+  const names = [...union.matchAll(/'([a-zA-Z][a-zA-Z0-9.-]*)'/g)].map((m) => m[1]);
 
   // A floor, not a zero-check. The original guard only fired on 0 names, which
   // is why a 6-name parse sailed through: a partial parse is the failure mode
   // this script actually has, and it is indistinguishable from success unless
   // the count is asserted. Cross-check against ROLE_MAP, the other place every
   // role is listed, so the two have to disagree before this passes wrongly.
-  const mapEntries = (rolesSrc.match(/^\s*'[a-zA-Z][a-zA-Z0-9.]*':\s*\{/gm) ?? []).length;
+  const mapEntries = (rolesSrc.match(/^\s*'[a-zA-Z][a-zA-Z0-9.-]*':\s*\{/gm) ?? []).length;
   if (names.length === 0) {
     console.error('check-role-usage: could not parse RoleName union from src/theme/roles.ts');
     process.exit(2);

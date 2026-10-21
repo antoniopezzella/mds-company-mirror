@@ -49,7 +49,6 @@
 import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens.js';
 
 export type RoleName =
-  // ── Figma-aligned Phase-3 aliases (resolve identically to the legacy names) ──
   | 'fg.primary'
   | 'fg.neutral.subtle'
   | 'fg.on-dark'
@@ -94,54 +93,15 @@ export type RoleName =
   | 'data.3'
   | 'data.4'
   | 'data.5'
-  | 'text.primary'
-  | 'text.secondary'
-  | 'text.inverse'
-  | 'text.onAccent'
-  | 'text.onInteractive'
-  | 'text.onHero'
-  // ⚠️ `text.onPrimary` is NOT `text.primary`. One is the label ON a primary
-  // fill (Sky, flipping to Midnight); the other is body text (Midnight).
-  // Writing `text.primary` on a primary button gives navy on navy at 1.00:1
-  // and no gate catches it, because both are valid role names.
   | 'text.onPrimary'
-  | 'text.onDanger'
-  | 'text.onSuccess'
-  | 'text.onWarning'
-  | 'text.onLight'
-  | 'text.disabled'
-  | 'text.placeholder'
-  | 'surface.default'
-  | 'surface.subtle'
-  | 'surface.disabled'
-  | 'surface.accent'
-  | 'surface.raised'
-  | 'surface.secondary'
   | 'surface.secondary.hover'
   | 'surface.row.hover'
-  | 'surface.selected'
   | 'surface.selected.subtle'
-  | 'surface.navigation'
   | 'surface.navigation.hover'
   | 'surface.navigation.active'
-  | 'surface.hero'
   | 'border.default'
   | 'border.subtle'
   | 'border.strong'
-  | 'focus.ring'
-  | 'status.success.fg'
-  | 'status.success.bg'
-  | 'status.success.border'
-  | 'status.warning.fg'
-  | 'status.warning.bg'
-  | 'status.warning.border'
-  | 'status.danger.fg'
-  | 'status.danger.bg'
-  | 'status.danger.border'
-  | 'status.info.fg'
-  | 'status.info.bg'
-  | 'status.info.border'
-  | 'brand.accent'
   | 'interactive.accent.hover'
   | 'interactive.accent.active'
   | 'interactive.primary'
@@ -152,17 +112,7 @@ export type RoleName =
   | 'interactive.secondary.active'
   | 'interactive.danger'
   | 'interactive.danger.hover'
-  | 'interactive.danger.active'
-  | 'interactive.disabled.bg'
-  | 'interactive.disabled.fg'
-  // Categorical chart series. Consumed by recharts/chart.tsx via the
-  // `--chart-1..5` Tailwind vars, which annotate `MDS: chart.N` so varsync
-  // tracks them. Order is CVD-safe and load-bearing — see chart.tsx.
-  | 'chart.1'
-  | 'chart.2'
-  | 'chart.3'
-  | 'chart.4'
-  | 'chart.5';
+  | 'interactive.danger.active';
 
 interface RoleMapEntry {
   semantic: SemanticColorName;
@@ -218,8 +168,6 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'data.3': { semantic: 'chartSeries3', description: 'Figma-aligned (Phase 3) — alias of chart.3.' },
   'data.4': { semantic: 'chartSeries4', description: 'Figma-aligned (Phase 3) — alias of chart.4.' },
   'data.5': { semantic: 'chartSeries5', description: 'Figma-aligned (Phase 3) — alias of chart.5.' },
-  'text.primary': { semantic: 'textPrimary', description: 'Primary body & UI text' },
-  'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
   /**
    * @deprecated since 0.8.0; remove after 0.9.0 / 2027-01-09. Use `text.onAccent`.
    * Redundant alias of textOnAccent with a vague "inverse" meaning and zero
@@ -227,43 +175,11 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
    * (surface.primary + text.onPrimary), never an "inverse" token — see
    * docs/tasks/token-authority-decision.md.
    */
-  'text.inverse': { semantic: 'textOnAccent', description: 'DEPRECATED — use text.onAccent' },
-  'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
-  'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
-  'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface — mode-INVARIANT Sky, because hero surfaces stay dark in both modes. For a label on interactive.primary, which does flip, use text.onPrimary' },
   'text.onPrimary': {
     semantic: 'textOnPrimary',
     description:
       'Label on interactive.primary — Sky in light, Midnight in dark, flipping with the fill beneath it (14.72:1 / 10.50:1). NOT text.primary, which is body text',
   },
-  'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
-  'text.onSuccess': { semantic: 'textOnSuccess', description: 'Readable text over solid success surfaces (white light / Midnight dark)' },
-  'text.onWarning': { semantic: 'textOnWarning', description: 'Readable text over SOLID warning surfaces — white in light (on #c25600), Midnight in dark (on gold500), flipping like text.onSuccess/onDanger. Pale/soft warning surfaces use text.onLight instead.' },
-  'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
-  'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
-  'text.placeholder': {
-    semantic: 'textTertiary',
-    description:
-      'Placeholder text in empty inputs. Distinct from text.disabled — a placeholder ' +
-      'sits in an ENABLED field and must stay legible; disabled text is deliberately ' +
-      'de-emphasised and is WCAG 1.4.3-exempt. Also distinct from text.secondary, ' +
-      'which is real content.\n\n' +
-      'Promotes `textTertiary`, which has existed since the Figma sync (bound to ' +
-      '"V3/Text & icon/Placeholder" in figma-variable-map-semantic.json) but was ' +
-      'reachable from no role. Because of that, input.tsx, textarea.tsx, command.tsx ' +
-      'and input-group.tsx each faked it with `placeholder:opacity-70` or `-60` — ' +
-      'three different values, none of them the token, each dimming whatever colour ' +
-      'happened to be inherited rather than using the specified placeholder colour.',
-  },
-  'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
-  'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
-  'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
-  'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
-  'surface.raised': {
-    semantic: 'surfaceRaised',
-    description: 'A panel sitting above the page. Same as default in light; lifted in dark',
-  },
-  'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
   'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
   'surface.selected.subtle': {
     semantic: 'surfaceSelectedSubtle',
@@ -274,33 +190,16 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
     description:
       'Hovered table row — Sky Blue in light, unchanged neutral in dark. Status badges inside a row must set variant="soft"/"solid": the default outline badge is transparent and a success badge measures 4.16:1 on Sky, under AA',
   },
-  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint. Row hover is surface.row.hover (also Sky), so the two are told apart by the selected row\'s left accent bar, not by hue' },
-  'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
   'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
   'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
-  'surface.hero': { semantic: 'surfaceHero', description: 'Hero brand background surface' },
   'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
   'border.subtle': {
     semantic: 'borderSubtle',
     description: 'Hairline rules inside a dense surface — table rows, list dividers, grid shells',
   },
   'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
-  'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
-  'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },
   'interactive.accent.hover': { semantic: 'interactiveAccentHover', description: 'Gold accent hover (Button primaryAlt variant)' },
   'interactive.accent.active': { semantic: 'interactiveAccentActive', description: 'Gold accent active (Button primaryAlt variant)' },
-  'status.success.fg': { semantic: 'statusSuccessText', description: 'Success text/icon color' },
-  'status.success.bg': { semantic: 'statusSuccessBg', description: 'Success background' },
-  'status.success.border': { semantic: 'statusSuccessBorder', description: 'Success border color' },
-  'status.warning.fg': { semantic: 'statusWarningText', description: 'Warning text/icon color' },
-  'status.warning.bg': { semantic: 'statusWarningBg', description: 'Warning background' },
-  'status.warning.border': { semantic: 'statusWarningBorder', description: 'Warning border color' },
-  'status.danger.fg': { semantic: 'statusDangerText', description: 'Danger text/icon color' },
-  'status.danger.bg': { semantic: 'statusDangerBg', description: 'Danger background' },
-  'status.danger.border': { semantic: 'statusDangerBorder', description: 'Danger border color' },
-  'status.info.fg': { semantic: 'statusInfoText', description: 'Informational text/icon color' },
-  'status.info.bg': { semantic: 'statusInfoBg', description: 'Informational background' },
-  'status.info.border': { semantic: 'statusInfoBorder', description: 'Informational border color' },
   'interactive.primary': { semantic: 'interactivePrimary', description: 'Primary interactive base' },
   'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' },
   'interactive.primary.active': { semantic: 'interactivePrimaryActive', description: 'Primary interactive active' },
@@ -310,21 +209,6 @@ const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
   'interactive.danger': { semantic: 'interactiveDanger', description: 'Destructive interactive base' },
   'interactive.danger.hover': { semantic: 'interactiveDangerHover', description: 'Destructive hover' },
   'interactive.danger.active': { semantic: 'interactiveDangerActive', description: 'Destructive active' },
-  'interactive.disabled.bg': {
-    semantic: 'interactiveDisabledBg',
-    description:
-      "Disabled fill for interactive controls. Separate from surface.disabled, which is the general disabled surface — this one is Figma's Neutral/Gray/300 and is what every Button variant uses",
-  },
-  'interactive.disabled.fg': {
-    semantic: 'interactiveDisabledFg',
-    description:
-      'Disabled label/icon on interactive.disabled.bg. Separate from text.disabled for the same reason. The pair measures below 4.5:1 by design — WCAG 1.4.3 exempts inactive controls',
-  },
-  'chart.1': { semantic: 'chartSeries1', description: 'Categorical chart series 1 — green. Order is CVD-safe and load-bearing; pair with legend + direct labels (chart.tsx)' },
-  'chart.2': { semantic: 'chartSeries2', description: 'Categorical chart series 2 — blue' },
-  'chart.3': { semantic: 'chartSeries3', description: 'Categorical chart series 3 — gold. Below 3:1 on the light surface by design — legible via legend + direct labels, never colour-alone' },
-  'chart.4': { semantic: 'chartSeries4', description: 'Categorical chart series 4 — purple. Below 3:1 on the dark surface by design — legible via legend + direct labels, never colour-alone' },
-  'chart.5': { semantic: 'chartSeries5', description: 'Categorical chart series 5 — red' }
 };
 
 export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }
@@ -370,8 +254,8 @@ export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): 
  * genuinely need the resolved hex at call time (a canvas fill, a computed
  * contrast check, or a mode explicitly forced via its options).
  *
- * The name mapping (dots → dashes, camelCase segments preserved: `text.primary`
- * → `--role-text-primary`, `text.onInteractive` → `--role-text-onInteractive`)
+ * The name mapping (dots → dashes, camelCase segments preserved: `interactive.primary`
+ * → `--role-interactive-primary`, `text.onPrimary` → `--role-text-onPrimary`)
  * lives HERE and only here. It was previously duplicated in
  * RoleVarsProvider.tsx's `roleNameToVar` and again in its test; both now import
  * this, so the transform has a single source of truth and cannot drift.

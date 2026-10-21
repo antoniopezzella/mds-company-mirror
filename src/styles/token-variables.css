@@ -45,12 +45,12 @@
   --primary-foreground: 0 0% 100%;            /* white - MDS: text.onAccent */
   
   /* Secondary (Outline style) */
-  --secondary: 0 0% 97.3%;                       /* #f8f8f8 Neutral 50 - MDS: surface.accent */
+  --secondary: 30 37.5% 96.9%;                   /* #faf7f4 - MDS: surface.accent */
   --secondary-foreground: 227.3 100% 13.9%;       /* #000f47 - MDS: text.primary */
   
   /* Muted (Subtle backgrounds) */
-  --muted: 0 0% 97.3%;                       /* #f8f8f8 - MDS: surface.subtle */
-  --muted-foreground: 0 0% 35%;               /* #595959 Neutral 700 - MDS: text.secondary */
+  --muted: 30 37.5% 96.9%;                   /* #faf7f4 - MDS: surface.subtle */
+  --muted-foreground: 42.9 4.2% 32.4%;        /* #56544f - MDS: text.secondary */
   
   /* Accent (Gold - Brand Secondary) */
   --accent: 44.9 100% 50%;                      /* #ffbf00 Gold 750 - MDS: brand.accent */
@@ -77,8 +77,8 @@
      has documented this for some time; this is that fix applied.
      border.default is neutral500 #878787, deliberately unchanged across modes
      (3.59:1 light, 5.30:1 dark). */
-  --border: 0 0% 53%;                         /* #878787 neutral500 - MDS: border.default */
-  --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
+  --border: 42.9 2.8% 51.6%;                  /* #878580 - MDS: border.default */
+  --input: 42.9 2.8% 51.6%;                   /* #878580 - MDS: border.default */
   
   /* Focus Ring */
   --ring: #3d7aff;                            /* MDS: focus.ring (light) — plain hex, not HSL: the
@@ -105,11 +105,11 @@
      MDS so varsync tracks them against roles.generated.css. --chart-4 moved
      #8f37c6 → #8f20de: its hand-authored HSL had gone stale when the
      2026-09-15 Figma re-sync shifted purple750 (#8f37c6 → #8f20de). */
-  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
-  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 - MDS: chart.2 */
-  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 - MDS: chart.3 */
-  --chart-4: 275.1 74.8% 49.8%;                   /* #8f20de Purple 750 - MDS: chart.4 */
-  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: data.1 */
+  --chart-2: 222.6 100% 56.1%;                    /* #1f60ff Blue 700 - MDS: data.2 */
+  --chart-3: 36.4 82.9% 48%;                      /* #e09015 Gold 900 - MDS: data.3 */
+  --chart-4: 275.1 74.8% 49.8%;                   /* #8f20de Purple 750 - MDS: data.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: data.5 */
 }
 
 /* Dark Mode */
@@ -146,8 +146,8 @@
      "pivot — unchanged" in semantic-tokens.ts precisely because #878787
      clears 3:1 against both grounds (3.59:1 light, 5.30:1 dark). The old
      #404040 was 1.84:1 on the dark surface. */
-  --border: 0 0% 53%;                         /* #878787 - MDS: border.default */
-  --input: 0 0% 53%;                          /* #878787 - MDS: border.default */
+  --border: 42.9 2.8% 51.6%;                  /* #878580 - MDS: border.default */
+  --input: 42.9 2.8% 51.6%;                   /* #878580 - MDS: border.default */
   
   --ring: #5e9aff;                             /* MDS: focus.ring (dark) */
 
@@ -157,9 +157,9 @@
      via the chartSeries* dark overrides. --chart-2 moved #478aff → #5e9aff:
      its hand-authored HSL had gone stale when the 2026-09-15 Figma re-sync
      shifted blue600 (#478aff → #5e9aff). */
-  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: chart.1 */
-  --chart-2: 217.6 100% 68.4%;                    /* #5e9aff Blue 600 - MDS: chart.2 */
-  --chart-3: 29.6 70.6% 46.7%;                    /* #cb7623 Gold 1000 - MDS: chart.3 */
-  --chart-4: 280.2 59.1% 43.1%;                   /* #842daf Purple 800 - MDS: chart.4 */
-  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: chart.5 */
+  --chart-1: 102.2 54.6% 42.4%;                   /* #54a731 Green 800 - MDS: data.1 */
+  --chart-2: 217.6 100% 68.4%;                    /* #5e9aff Blue 600 - MDS: data.2 */
+  --chart-3: 29.6 70.6% 46.7%;                    /* #cb7623 Gold 1000 - MDS: data.3 */
+  --chart-4: 280.2 59.1% 43.1%;                   /* #842daf Purple 800 - MDS: data.4 */
+  --chart-5: 1.1 64.9% 50.8%;                     /* #d33330 Red 800 - MDS: data.5 */
 }

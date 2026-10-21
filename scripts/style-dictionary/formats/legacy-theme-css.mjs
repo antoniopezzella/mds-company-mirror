@@ -30,7 +30,7 @@ const roleVarName = (role) =>
   // classes are generated from that convention.
   //
   // Do NOT reach for camelToKebab here. `text.onInteractive` has to stay
-  // `--role-text-onInteractive`; kebab-casing the segments yields
+  // `--role-fg-on-interactive`; kebab-casing the segments yields
   // `--role-text-on-interactive`, which resolves to nothing, and every
   // destructive button silently falls back to inherited navy at 3.38:1. That
   // exact bug already shipped once — see src/components/ui/button.tsx:53-65.
