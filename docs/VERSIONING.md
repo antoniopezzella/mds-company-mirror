@@ -81,7 +81,7 @@ real blockers:**
       or the internal Artifactory). *Today there is no working install path —
       this is the #1 blocker.*
 - [ ] **CI runs on the authoritative repo** — tests, governance, and contrast
-      gates execute on `mmctech/MarshDesignSystem` (today its self-hosted
+      gates execute on `mmctech/MarshDesignSystemOfficial` (today its self-hosted
       runner can't reach npm, so nothing runs). An unguarded design system
       can't promise stability.
 - [ ] **The work is on `main`** — not an unmerged feature branch.

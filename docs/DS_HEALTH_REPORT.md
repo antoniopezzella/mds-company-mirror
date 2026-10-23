@@ -17,7 +17,7 @@ worktree, do not commit to `main`, do not push. This file is therefore updated
 branch, same branch the 2026-10-15 run used) and has **not** been pushed or
 opened as a PR this time — a human needs to decide whether to push that branch
 and open its PR. Carrying forward the 2026-10-15 run's own process finding
-unchanged, since nothing has resolved it: **PR [#2](https://github.com/mmctech/MarshDesignSystem/pull/2)**
+unchanged, since nothing has resolved it: **PR [#2](https://github.com/mmctech/MarshDesignSystemOfficial/pull/2)**
 ("MDS Health Report — 2026-09-05") is still open against `main`, now even more
 stale; `chore/ds-health-report-2026-09-26` and `chore/ds-health-report-2026-10-08`
 remain orphaned branches with no PR; **and now `chore/ds-health-report-2026-10-15`

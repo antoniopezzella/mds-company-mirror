@@ -10,7 +10,7 @@ Thank you for your interest in contributing to the Marsh Design System (MDS) Pla
 
 ### Installation
 ```bash
-git clone https://github.com/mmctech/MarshDesignSystem.git
+git clone https://github.com/mmctech/MarshDesignSystemOfficial.git
 npm install
 ```
 

@@ -32,7 +32,7 @@ to the org**, so the published name is:
   infra block the runner hits, and it's a platform-team question.
 - A **GitHub PAT** (classic) with `write:packages` scope, authorized for the
   `mmctech` org (SSO).
-- Node 22, a clean checkout of `mmctech/MarshDesignSystem` at the commit you're
+- Node 22, a clean checkout of `mmctech/MarshDesignSystemOfficial` at the commit you're
   releasing.
 
 ## Steps
