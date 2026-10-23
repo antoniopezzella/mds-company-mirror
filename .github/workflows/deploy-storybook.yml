@@ -26,17 +26,65 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+
+      # The MMC runner has no route to the public npm registry — every install
+      # MUST go through the internal JFrog Artifactory virtual npm repo. The
+      # token is expanded by npm from the environment at read time, so the
+      # .npmrc on disk holds only the ${ARTIFACTORY_NPM_TOKEN} placeholder.
+      # Written to $HOME as well as the workspace so that global installs and
+      # any tool that shells out to npm use the same registry.
+      # Secret: Settings -> Secrets and variables -> Actions.
+      - name: Configure npm for the internal Artifactory registry
+        env:
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+        run: |
+          if [ -z "$ARTIFACTORY_NPM_TOKEN" ]; then
+            echo "::error::ARTIFACTORY_NPM_TOKEN is not set — this runner cannot reach public npm."
+            exit 1
+          fi
+          echo "Artifactory token present — using the internal MMC registry"
+          {
+            echo 'registry=https://mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/'
+            echo '//mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/:_authToken=${ARTIFACTORY_NPM_TOKEN}'
+            echo 'always-auth=true'
+          } > .npmrc
+          cp .npmrc "$HOME/.npmrc"
+
+      # Diagnostic: Xray returns 403 "forbidden by your security policy" for
+      # package versions it rates CRITICAL, at download time. This prints
+      # ALLOWED/BLOCKED per version so a blocked dependency can be pinned to an
+      # allowed one without guessing. Never fails the build; drop it once the
+      # pins are settled.
+      - name: Probe which versions Artifactory allows
+        continue-on-error: true
+        env:
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+        run: |
+          REG="https://mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm"
+          probe() {
+            pkg="$1"; shift
+            echo "== $pkg =="
+            for v in "$@"; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" \
+                -H "Authorization: Bearer $ARTIFACTORY_NPM_TOKEN" \
+                "$REG/$pkg/-/$pkg-$v.tgz")
+              case "$code" in
+                200) s="ALLOWED  ";; 403) s="BLOCKED  ";; 404) s="not-found";; 401) s="auth-fail";; *) s="?????????";;
+              esac
+              printf "  %-16s %s (%s)\n" "$pkg@$v" "$s" "$code"
+            done
+          }
+          probe undici 7.29.1 7.30.0 7.30.1
 
       - name: Install dependencies
         env:
           HUSKY: '0'            # never install git hooks on CI
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
         run: |
           # The self-hosted runner reuses $HOME across jobs; a corrupted npm
           # cacache entry from an earlier crashed run makes every subsequent
           # `npm ci` die with "Exit handler never called". Wipe it first.
           rm -rf "$HOME/.npm/_cacache" "$HOME/.npm/_logs" || true
-          npm install -g npm@10.9.2 || true   # pin a known-good npm in case the runner's bundled npm is the crashing one
           npm ci --no-audit --no-fund
 
       - name: Build tokens
