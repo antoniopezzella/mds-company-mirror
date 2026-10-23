@@ -61,8 +61,6 @@ lhci-data/
 # Local Netlify folder
 .netlify
 
-src/stories/generated
-.story-ui-history/
 
 # Test coverage output — fully derived, regenerated on every
 # `npm run test:coverage` run, was accidentally tracked previously.

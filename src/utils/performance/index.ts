@@ -14,17 +14,5 @@ export {
   type PerformanceReport,
 } from './webVitals';
 
-// Lighthouse
-export {
-  runLighthouseAudit,
-  runFullAudit,
-  checkPerformanceBudget,
-  desktopConfig,
-  mobileConfig,
-  type LighthouseConfig,
-  type LighthouseResult,
-  type PerformanceBudget,
-} from './lighthouse';
-
 // React Hooks
 export { useWebVitals, usePerformanceMetrics, type UseWebVitalsOptions } from '../../hooks/useWebVitals';

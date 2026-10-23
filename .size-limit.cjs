@@ -32,8 +32,9 @@
  * tailwind.config.js, every `bg-card`/`text-muted-foreground` on a shipped
  * component resolves through them. The old hand-written variables they replace
  * are still in token-variables.css for ~190 direct `var(--border)`-style
- * references (mostly the dev-only StoryUI panel); deleting those is the next
- * cleanup and should take this number back down.
+ * references; deleting those is the next cleanup and should take this number
+ * back down. (180 of the ~190 were in the dev-only StoryUI panel, removed
+ * 2026-10-23 — so the remaining references are now few.)
  */
 module.exports = [
   {

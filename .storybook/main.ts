@@ -12,7 +12,6 @@ const config: StorybookConfig = {
     '../src/projects/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/blocks/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/_health/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-  ,
     '../src/stories/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
   addons: [

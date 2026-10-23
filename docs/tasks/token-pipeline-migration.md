@@ -201,9 +201,10 @@ Do these in order, each as its own PR. Every step keeps the app working.
 
    **Deliberately NOT done here:** the hand-written variables in
    `src/styles/token-variables.css` stay. They no longer feed any utility, but
-   ~190 direct `var(--border)`-style references still read them — 180 of those
-   in `src/stories/StoryUI/StoryUIPanel.css` (a dev-only Storybook panel), plus
-   bubble.tsx ×7, component-utilities.css ×3, ExpertiseCards ×1. They are HSL
+   ~190 direct `var(--border)`-style references still read them — ~~180 of those
+   in `src/stories/StoryUI/StoryUIPanel.css` (a dev-only Storybook panel)~~ —
+   Resolved 2026-10-23: Story UI was removed entirely, taking those 180 with it.
+   What remains: bubble.tsx ×7, component-utilities.css ×3, ExpertiseCards ×1. They are HSL
    triples consumed as `hsl(var(--x))`, so they cannot simply be re-pointed at
    an MDS hex variable — those call sites need converting first. Until then
    `varsync`, `tokens:check-vars` and `check-figma-semantic-drift` keep working

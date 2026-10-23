@@ -5,7 +5,7 @@ Reusable performance monitoring tools for measuring user experience across MDS p
 ## 🚀 Features
 
 - **Web Vitals Monitoring**: Track Core Web Vitals (CLS, FID, FCP, LCP, TTFB, INP)
-- **Lighthouse Audits**: Automated performance, accessibility, and SEO audits
+- **Lighthouse Audits**: `npm run lighthouse` (a script, not a library export — see below)
 - **React Hooks**: Easy integration with React applications
 - **Analytics Integration**: Send metrics to custom analytics endpoints
 - **Performance Budgets**: Automated checks against performance budgets
@@ -17,7 +17,6 @@ The utilities are already included in the MDS Platform. For other projects:
 
 ```bash
 npm install web-vitals
-npm install lighthouse chrome-launcher --save-dev
 ```
 
 ## 🎯 Web Vitals Monitoring
@@ -80,63 +79,22 @@ function App() {
 
 ## 🔍 Lighthouse Audits
 
-### Run Desktop Audit
-
-```typescript
-import { runLighthouseAudit } from '@/utils/performance';
-
-const result = await runLighthouseAudit({
-  url: 'http://localhost:5173',
-  formFactor: 'desktop',
-  outputDir: './lighthouse-reports',
-  projectId: 'mds-platform',
-  verbose: true,
-});
-
-console.log('Performance Score:', result.performanceScore);
-console.log('LCP:', result.coreWebVitals.lcp);
+```bash
+LIGHTHOUSE_URL=http://localhost:4173 npm run lighthouse   # budgeted audit, JSON + HTML
+npm run lighthouse:quick                                  # one-off HTML report
 ```
 
-### Run Full Audit (Desktop + Mobile)
+`scripts/lighthouse-audit.js` runs the lighthouse CLI via `npx` at a pinned
+version, prints category scores and Core Web Vitals against the budget, and
+exits non-zero on a miss when `LIGHTHOUSE_ENFORCE=1`.
 
-```typescript
-import { runFullAudit } from '@/utils/performance';
-
-const results = await runFullAudit('http://localhost:5173', {
-  outputDir: './reports',
-  projectId: 'mds-platform',
-  verbose: true,
-});
-
-console.log('Desktop Score:', results.desktop.performanceScore);
-console.log('Mobile Score:', results.mobile.performanceScore);
-```
-
-### Performance Budget Checker
-
-```typescript
-import { runLighthouseAudit, checkPerformanceBudget } from '@/utils/performance';
-
-const result = await runLighthouseAudit({
-  url: 'http://localhost:5173',
-  formFactor: 'desktop',
-});
-
-const budgetCheck = checkPerformanceBudget(result, {
-  fcp: 1800,        // First Contentful Paint < 1.8s
-  lcp: 2500,        // Largest Contentful Paint < 2.5s
-  cls: 0.1,         // Cumulative Layout Shift < 0.1
-  tbt: 200,         // Total Blocking Time < 200ms
-  tti: 3800,        // Time to Interactive < 3.8s
-  performanceScore: 90,  // Performance score >= 90
-});
-
-if (!budgetCheck.passed) {
-  console.error('Performance budget violations:');
-  budgetCheck.violations.forEach(v => console.error(`  - ${v}`));
-  process.exit(1);
-}
-```
+> **Changed 2026-10-23.** This module used to export `runLighthouseAudit`,
+> `runFullAudit` and `checkPerformanceBudget` from `./lighthouse.ts`, with
+> `lighthouse` + `chrome-launcher` as devDependencies. Nothing imported
+> them, and lighthouse's dependency tree carried 23 advisories (one,
+> `extract-zip`, with no fixed release) that MMC Artifactory/Xray can refuse
+> during `npm ci`. The module and both dependencies were removed; those
+> imports no longer resolve.
 
 ## 📊 Metric Thresholds
 
@@ -169,9 +127,7 @@ Add these scripts to your `package.json`:
 {
   "scripts": {
     "lighthouse": "node scripts/lighthouse-audit.js",
-    "lighthouse:desktop": "LIGHTHOUSE_FORM_FACTOR=desktop npm run lighthouse",
-    "lighthouse:mobile": "LIGHTHOUSE_FORM_FACTOR=mobile npm run lighthouse",
-    "lighthouse:full": "npm run lighthouse:desktop && npm run lighthouse:mobile"
+    "lighthouse:quick": "npx -y lighthouse@12.8.2 http://localhost:5173 --output html --output-path ./lighthouse-quick-report.html --chrome-flags=\"--headless\""
   }
 }
 ```
@@ -183,8 +139,7 @@ src/
 ├── utils/
 │   └── performance/
 │       ├── index.ts           # Main exports
-│       ├── webVitals.ts       # Web Vitals monitoring
-│       └── lighthouse.ts      # Lighthouse utilities
+│       └── webVitals.ts       # Web Vitals monitoring
 └── hooks/
     └── useWebVitals.ts        # React hook
 ```
@@ -293,12 +248,11 @@ To use these utilities in other MDS projects:
 2. **Install dependencies**:
    ```bash
    npm install web-vitals
-   npm install lighthouse chrome-launcher --save-dev
    ```
 
 3. **Import and use**:
    ```typescript
-   import { initWebVitals, runLighthouseAudit } from '@/utils/performance';
+   import { initWebVitals } from '@/utils/performance';
    ```
 
 ## 🐛 Troubleshooting
