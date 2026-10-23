@@ -313,7 +313,7 @@ After generating code, validate:
 3. No hardcoded hex values or pixel sizes
 4. TypeScript props match Figma component properties
 5. Storybook story includes all variants
-6. Focus states use getRoleColor('focus.ring')
+6. Focus states use getRoleColor('border.focus')
 7. Accessibility: aria-labels for icon-only, keyboard navigation
 
 Run: npm run roles:check && npm run tokens:contrast:all

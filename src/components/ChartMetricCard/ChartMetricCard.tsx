@@ -18,15 +18,15 @@ export interface ChartMetricCardProps {
 }
 
 const getTrendColors = (mode: 'light' | 'dark') => ({
-  up: getRoleColor('status.success.fg', { mode }),
-  down: getRoleColor('status.danger.fg', { mode }),
-  neutral: getRoleColor('text.secondary', { mode }),
+  up: getRoleColor('fg.success', { mode }),
+  down: getRoleColor('fg.critical', { mode }),
+  neutral: getRoleColor('fg.neutral.subtle', { mode }),
 });
 
 const getTrendBg = (mode: 'light' | 'dark') => ({
-  up: getRoleColor('status.success.bg', { mode }),
-  down: getRoleColor('status.danger.bg', { mode }),
-  neutral: getRoleColor('surface.accent', { mode }),
+  up: getRoleColor('bg.success.subtle', { mode }),
+  down: getRoleColor('bg.critical.subtle', { mode }),
+  neutral: getRoleColor('bg.neutral.subtle', { mode }),
 });
 
 const TREND_ARROW: Record<ChartMetricCardProps['trend'], string> = {
@@ -50,15 +50,15 @@ export const ChartMetricCard: React.FC<ChartMetricCardProps> = ({
   const TREND_BG = getTrendBg(mode);
 
   const lineColor = trend === 'up'
-    ? getRoleColor('status.success.fg', { mode })
+    ? getRoleColor('fg.success', { mode })
     : trend === 'down'
-      ? getRoleColor('status.danger.fg', { mode })
+      ? getRoleColor('fg.critical', { mode })
       : getRoleColor('interactive.primary', { mode });
 
   return (
     <Box
       sx={{
-        bgcolor: getRoleColor('surface.subtle', { mode }),
+        bgcolor: getRoleColor('bg.neutral.subtle', { mode }),
         borderRadius: 2,
         border: `1px solid ${getRoleColor('border.default', { mode })}`,
         p: (theme) => theme.spacing(3),
@@ -73,7 +73,7 @@ export const ChartMetricCard: React.FC<ChartMetricCardProps> = ({
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography
           variant="body2"
-          sx={{ color: getRoleColor('text.secondary', { mode }), fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', fontSize: '0.6875rem' }}
+          sx={{ color: getRoleColor('fg.neutral.subtle', { mode }), fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', fontSize: '0.6875rem' }}
         >
           {label}
         </Typography>
@@ -99,12 +99,12 @@ export const ChartMetricCard: React.FC<ChartMetricCardProps> = ({
         <Typography
           variant="h4"
           component="p"
-          sx={{ color: getRoleColor('text.primary', { mode }), fontWeight: 700, lineHeight: 1.1 }}
+          sx={{ color: getRoleColor('fg.primary', { mode }), fontWeight: 700, lineHeight: 1.1 }}
         >
           {value}
         </Typography>
         {sublabel && (
-          <Typography variant="caption" sx={{ color: getRoleColor('text.secondary', { mode }), mt: 0.25, display: 'block' }}>
+          <Typography variant="caption" sx={{ color: getRoleColor('fg.neutral.subtle', { mode }), mt: 0.25, display: 'block' }}>
             {sublabel}
           </Typography>
         )}
@@ -126,8 +126,8 @@ export const ChartMetricCard: React.FC<ChartMetricCardProps> = ({
                 padding: '4px 8px',
                 border: `1px solid ${getRoleColor('border.default', { mode })}`,
                 borderRadius: 6,
-                backgroundColor: getRoleColor('surface.subtle', { mode }),
-                color: getRoleColor('text.primary', { mode }),
+                backgroundColor: getRoleColor('bg.neutral.subtle', { mode }),
+                color: getRoleColor('fg.primary', { mode }),
               }}
               formatter={(val) => [val ?? '', label]}
               labelFormatter={() => ''}

@@ -175,30 +175,36 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
     const colors = React.useMemo(() => {
       if (mode === 'dark') {
         return {
-          navBg: getRoleColor('surface.subtle', { mode: 'dark' }),
-          navText: getRoleColor('text.primary', { mode: 'dark' }),
-          itemHoverBg: getRoleColor('surface.default', { mode: 'dark' }),
+          // getRoleColor with an explicit mode, NOT roleVar: this rail is
+          // always dark, in a light page as well, so it needs the dark value
+          // baked in. `var(--role-*)` would follow the page mode and turn the
+          // rail white in light mode. These are the only getRoleColor calls
+          // left in src/components/ui — the rest became roleVar() so they
+          // stay themeable (docs/tasks/token-pipeline-migration.md).
+          navBg: getRoleColor('bg.neutral.subtle', { mode: 'dark' }),
+          navText: getRoleColor('fg.primary', { mode: 'dark' }),
+          itemHoverBg: getRoleColor('bg.default', { mode: 'dark' }),
           activeBg: 'rgba(149, 202, 255, 0.16)',
           activeHoverBg: 'rgba(149, 202, 255, 0.24)',
           activeBorder: getRoleColor('interactive.secondary', { mode: 'dark' }),
           border: getRoleColor('border.default', { mode: 'dark' }),
-          ctaBg: getRoleColor('surface.default', { mode: 'dark' }),
-          ctaText: getRoleColor('text.primary', { mode: 'dark' }),
+          ctaBg: getRoleColor('bg.default', { mode: 'dark' }),
+          ctaText: getRoleColor('fg.primary', { mode: 'dark' }),
           ctaInverse: true,
         };
       }
 
       if (variant === 'light') {
         return {
-          navBg: 'var(--role-surface-default)',
-          navText: 'var(--role-text-primary)',
-          itemHoverBg: 'var(--role-surface-subtle)',
+          navBg: 'var(--role-bg-default)',
+          navText: 'var(--role-fg-primary)',
+          itemHoverBg: 'var(--role-bg-neutral-subtle)',
           activeBg: 'rgba(11, 75, 255, 0.08)',
           activeHoverBg: 'rgba(11, 75, 255, 0.12)',
           activeBorder: 'var(--role-interactive-secondary)',
           border: 'var(--role-border-default)',
-          ctaBg: 'var(--role-surface-subtle)',
-          ctaText: 'var(--role-text-primary)',
+          ctaBg: 'var(--role-bg-neutral-subtle)',
+          ctaText: 'var(--role-fg-primary)',
           ctaInverse: false,
         };
       }
@@ -207,11 +213,11 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
       // `colorScheme` picks the hue — navy (primary) or sky blue (secondary).
       const isSecondary = colorScheme === 'secondary';
       return {
-        navBg: roleVar(isSecondary ? 'surface.secondary' : 'surface.navigation'),
-        navText: roleVar(isSecondary ? 'text.primary' : 'text.onHero'),
-        itemHoverBg: roleVar(isSecondary ? 'surface.secondary.hover' : 'surface.navigation.hover'),
-        activeBg: 'var(--role-surface-navigation-active)',
-        activeHoverBg: 'var(--role-surface-navigation-active)',
+        navBg: roleVar(isSecondary ? 'bg.secondary' : 'bg.shell'),
+        navText: roleVar(isSecondary ? 'fg.primary' : 'fg.on-primary'),
+        itemHoverBg: roleVar(isSecondary ? 'bg.secondary.hover' : 'bg.shell.hover'),
+        activeBg: 'var(--role-bg-shell-active)',
+        activeHoverBg: 'var(--role-bg-shell-active)',
         activeBorder: 'var(--role-interactive-secondary)',
         // The active pill's background is the same dark navy
         // (surface.navigation.active, #333f6b) for BOTH colour schemes, so the
@@ -219,10 +225,10 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
         // rail's. On the secondary (sky-blue) rail navText is the dark
         // text.primary, which put #000f47 on #333f6b — 1.78:1, effectively
         // invisible, on every active item. text.onHero measures 8.27:1 there.
-        activeText: 'var(--role-text-onHero)',
+        activeText: 'var(--role-fg-on-primary)',
         border: 'var(--role-border-default)',
-        ctaBg: roleVar(isSecondary ? 'surface.secondary' : 'surface.navigation'),
-        ctaText: roleVar(isSecondary ? 'text.primary' : 'text.onHero'),
+        ctaBg: roleVar(isSecondary ? 'bg.secondary' : 'bg.shell'),
+        ctaText: roleVar(isSecondary ? 'fg.primary' : 'fg.on-primary'),
         // Sky-blue (secondary) rail is a light surface — same navy button
         // as the light-mode case reads fine there. Only the navy (primary)
         // rail is dark enough to need the inverse (light-on-dark) treatment.
@@ -360,8 +366,8 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                   {!collapsed && item.dot && (
                     <span
                       aria-hidden="true"
-                      className="mr-1 h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
+                      className="me-1 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: 'var(--role-fg-warning)' }}
                     />
                   )}
                   {!collapsed && isGroup && (
@@ -421,8 +427,8 @@ const SideNavigation = React.forwardRef<HTMLElement, SideNavigationProps>(
                             {sub.dot && (
                               <span
                                 aria-hidden="true"
-                                className="ml-2 h-1.5 w-1.5 shrink-0 rounded-full"
-                                style={{ backgroundColor: 'var(--role-status-warning-fg)' }}
+                                className="ms-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                                style={{ backgroundColor: 'var(--role-fg-warning)' }}
                               />
                             )}
                           </button>

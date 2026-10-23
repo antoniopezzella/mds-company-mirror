@@ -188,15 +188,15 @@ function TableComponent<T extends object>({
   };
 
   const borderColor = 'var(--role-border-default)';
-  const headerBg = 'var(--role-surface-subtle)';
-  const rowBg = 'var(--role-surface-default)';
-  const stripeBg = 'var(--role-surface-subtle)';
+  const headerBg = 'var(--role-bg-neutral-subtle)';
+  const rowBg = 'var(--role-bg-default)';
+  const stripeBg = 'var(--role-bg-neutral-subtle)';
   // Sky Blue in light, unchanged in dark. headerBg and stripeBg above keep the
   // neutral lift deliberately — only the hovered row goes brand.
-  const hoverBg = 'var(--role-surface-row-hover)';
-  const selectedBg = 'var(--role-surface-accent)';
-  const textColor = 'var(--role-text-primary)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const hoverBg = 'var(--role-bg-row-hover)';
+  const selectedBg = 'var(--role-bg-neutral-subtle)';
+  const textColor = 'var(--role-fg-primary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const cellPadding = SIZE_PADDING[size];
   const bordered = variant === 'bordered';
@@ -205,9 +205,23 @@ function TableComponent<T extends object>({
 
   return (
     <div className="flex flex-col gap-3">
+      {/*
+        tabIndex 0 on the scroll container, not decoration: a table that
+        overflows (wide columns, or `maxHeight` with many rows) is a scrollable
+        region, and a keyboard user with no pointer cannot reach its hidden
+        content unless something inside it — or the container itself — takes
+        focus. Table cells here are plain text, so there usually is nothing,
+        which is what axe's `scrollable-region-focusable` reports. Same remedy
+        GOV.UK uses for wide tables; `role="region"` comes with it only when a
+        caption can name it, because a region with no accessible name is worse
+        than no region at all.
+      */}
       <div
         className={cn('overflow-auto rounded-md', bordered && 'border')}
         style={{ maxHeight, borderColor: bordered ? borderColor : undefined }}
+        tabIndex={0}
+        role={caption ? 'region' : undefined}
+        aria-label={caption || undefined}
       >
         <table className={cn('w-full border-collapse', className)} aria-busy={loading || undefined}>
           {caption && (

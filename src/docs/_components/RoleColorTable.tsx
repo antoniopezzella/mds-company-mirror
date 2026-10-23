@@ -11,18 +11,20 @@ function isHexLight(hex: string): boolean {
   return r * 0.299 + g * 0.587 + b * 0.114 > 150;
 }
 
+// Status roles no longer carry a `status.` prefix: the category-first rename
+// (2026-10-20) folded them into fg./bg./border. and they are now identified by
+// their TONE segment — success / warning / critical / info — appearing anywhere
+// in the name (e.g. `bg.success.subtle`, `fg.critical`, `fg.on-warning`,
+// `border.info`). Everything that is neither interactive nor status-toned is a
+// text/surface/border role (fg.*, bg.*, surface.*, border.*, text.*).
+const STATUS_TONE = /(?:^|[.-])(?:success|warning|critical|info)(?:[.-]|$)/;
+
 function filterByCategory(role: RoleName, category: CategoryFilter): boolean {
-  if (category === 'text-surface-border') {
-    return (
-      role.startsWith('text.') ||
-      role.startsWith('surface.') ||
-      role.startsWith('border.') ||
-      role.startsWith('focus.') ||
-      role.startsWith('brand.')
-    );
-  }
-  if (category === 'interactive') return role.startsWith('interactive.');
-  if (category === 'status') return role.startsWith('status.');
+  const interactive = role.startsWith('interactive.');
+  const status = STATUS_TONE.test(role);
+  if (category === 'interactive') return interactive;
+  if (category === 'status') return status && !interactive;
+  if (category === 'text-surface-border') return !interactive && !status;
   return false;
 }
 

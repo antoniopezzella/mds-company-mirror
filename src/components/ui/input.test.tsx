@@ -46,9 +46,9 @@ describe('Input', () => {
   // than a literal hex is deliberate: the test then verifies the component
   // consumes the role layer, and keeps passing when a role is retargeted.
   it.each([
-    ['error', 'status.danger.fg'],
-    ['success', 'status.success.fg'],
-    ['warning', 'status.warning.fg'],
+    ['error', 'fg.critical'],
+    ['success', 'fg.success'],
+    ['warning', 'fg.warning'],
   ] as const)('tone="%s" borders with the %s role', (tone, role) => {
     render(<Input placeholder="Tone" tone={tone} />);
     expect((screen.getByPlaceholderText('Tone') as HTMLElement).style.borderColor).toBe(roleVar(role));

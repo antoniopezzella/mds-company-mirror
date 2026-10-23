@@ -1,0 +1,30 @@
+{
+  "--mds-color-background-disabled": {
+    "to": "--mds-color-background-disabled-default",
+    "since": "2026-10-23"
+  },
+  "--mds-color-border-default-alpha": {
+    "to": "--mds-color-border-translucent-default",
+    "since": "2026-10-23"
+  },
+  "--mds-color-border-subtle-alpha": {
+    "to": "--mds-color-border-translucent-subtle",
+    "since": "2026-10-23"
+  },
+  "--mds-color-border-input-active": {
+    "to": "--mds-color-border-input-hover",
+    "since": "2026-10-23"
+  },
+  "--mds-color-overlay-primary-bold": {
+    "to": "--mds-color-overlay-media-brand",
+    "since": "2026-10-23"
+  },
+  "--mds-color-overlay-neutral-bold": {
+    "to": "--mds-color-overlay-media-default",
+    "since": "2026-10-23"
+  },
+  "--mds-color-background-scrim": {
+    "to": "--mds-color-overlay-scrim",
+    "since": "2026-10-23"
+  }
+}

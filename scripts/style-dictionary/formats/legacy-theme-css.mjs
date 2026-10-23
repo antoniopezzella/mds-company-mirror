@@ -30,7 +30,7 @@ const roleVarName = (role) =>
   // classes are generated from that convention.
   //
   // Do NOT reach for camelToKebab here. `text.onInteractive` has to stay
-  // `--role-text-onInteractive`; kebab-casing the segments yields
+  // `--role-fg-on-interactive`; kebab-casing the segments yields
   // `--role-text-on-interactive`, which resolves to nothing, and every
   // destructive button silently falls back to inherited navy at 3.38:1. That
   // exact bug already shipped once — see src/components/ui/button.tsx:53-65.
@@ -39,14 +39,22 @@ const roleVarName = (role) =>
 export const legacyThemeCssFormat = {
   name: 'legacy/theme-css',
   format: ({ options }) => {
-    const { tokens, semanticColors, semanticDarkOverrides, roleMap } = options.originalValues;
+    const { tokens, semanticColors, semanticDarkOverrides, roleMap, getRoleColor } = options.originalValues;
 
     const light = semanticColors;
     const dark = { ...semanticColors, ...semanticDarkOverrides };
 
-    const roleLines = (palette) =>
-      Object.entries(roleMap ?? {}).map(
-        ([role, entry]) => `  ${roleVarName(role)}: ${palette[entry.semantic]};`
+    // Resolve through getRoleColor, the same way build-tokens.js emits
+    // roles.generated.css. This used to index the semantic palette directly —
+    // a second copy of the resolution rules, and once roles could be PINNED to
+    // a Figma token (step 4 of the token-pipeline migration) that copy went
+    // stale: the role tier followed Figma while this export, which external
+    // consumers read, kept the old semantic value. Found on 2026-10-23, two
+    // days after the pin landed, because Figma moved border/default and only
+    // one of the two outputs followed.
+    const roleLines = (mode) =>
+      Object.keys(roleMap ?? {}).map(
+        (role) => `  ${roleVarName(role)}: ${getRoleColor(role, { mode })};`
       );
 
     const linesRoot = [':root {'];
@@ -54,14 +62,17 @@ export const legacyThemeCssFormat = {
       linesRoot.push(`  --primitive-${camelToKebab(k)}: ${v};`);
     }
     for (const [k, v] of Object.entries(light)) {
-      linesRoot.push(`  --color-${camelToKebab(k)}: ${v};`);
+      // semantic keys are dotted (fg.primary) since the 2026-10-21 rename;
+      // dots are illegal-ish in a CSS var name and inconsistent with --role-*,
+      // so collapse them to dashes (camelToKebab leaves dots untouched).
+      linesRoot.push(`  --color-${camelToKebab(k).replaceAll('.', '-')}: ${v};`);
     }
-    linesRoot.push(...roleLines(light));
+    linesRoot.push(...roleLines('light'));
     linesRoot.push('}');
 
     const darkDecls = [
-      ...Object.entries(dark).map(([k, v]) => `  --color-${camelToKebab(k)}: ${v};`),
-      ...roleLines(dark),
+      ...Object.entries(dark).map(([k, v]) => `  --color-${camelToKebab(k).replaceAll('.', '-')}: ${v};`),
+      ...roleLines('dark'),
     ];
 
     // BOTH dark selectors, deliberately.

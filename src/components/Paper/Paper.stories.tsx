@@ -59,7 +59,7 @@ export const Default: Story = {
   render: (args) => (
     <Paper {...args}>
       <Typography variant="h6">Default Paper</Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: 'fg.neutral.subtle' }}>
         This is a paper container with default elevation and padding
       </Typography>
     </Paper>
@@ -90,13 +90,13 @@ export const Variants: Story = {
     <Box sx={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
       <Paper variant="elevation" elevation={1} sx={{ padding: '16px', minWidth: '200px' }}>
         <Typography variant="subtitle2">Elevation Variant</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'fg.neutral.subtle' }}>
           Uses box shadow for depth
         </Typography>
       </Paper>
       <Paper variant="outlined" sx={{ padding: '16px', minWidth: '200px' }}>
         <Typography variant="subtitle2">Outlined Variant</Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: 'fg.neutral.subtle' }}>
           Uses border for definition
         </Typography>
       </Paper>
@@ -151,7 +151,7 @@ export const Hoverable: Story = {
   render: () => (
     <Paper hover elevation={1} sx={{ padding: '16px', cursor: 'pointer' }}>
       <Typography variant="h6">Hover Me</Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: 'fg.neutral.subtle' }}>
         This paper lifts on hover
       </Typography>
     </Paper>
@@ -178,7 +178,7 @@ export const PolicyCard: Story = {
         <PolicyIcon />
         <Box>
           <Typography variant="h6">Policy #POL-2024-001</Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography variant="caption" sx={{ color: 'fg.neutral.subtle' }}>
             Commercial Liability
           </Typography>
         </Box>
@@ -220,18 +220,18 @@ export const StyledSection: Story = {
       <Typography variant="h5" sx={{ marginBottom: '8px' }}>
         Coverage Summary
       </Typography>
-      <Typography variant="body2" sx={{ color: 'text.secondary', marginBottom: '16px' }}>
+      <Typography variant="body2" sx={{ color: 'fg.neutral.subtle', marginBottom: '16px' }}>
         Updated December 22, 2024
       </Typography>
       <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <Box>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography variant="caption" sx={{ color: 'fg.neutral.subtle' }}>
             Liability Limit
           </Typography>
           <Typography variant="h6">$1,000,000</Typography>
         </Box>
         <Box>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          <Typography variant="caption" sx={{ color: 'fg.neutral.subtle' }}>
             Deductible
           </Typography>
           <Typography variant="h6">$1,000</Typography>

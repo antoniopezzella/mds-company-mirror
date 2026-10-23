@@ -48,7 +48,7 @@ Role tokens are the only color API. They resolve to CSS custom properties, consu
 import { getRoleColor } from '@/theme/roles';
 
 // ✅ DO
-<div style={{ color: getRoleColor('text.primary') }} />
+<div style={{ color: getRoleColor('fg.primary') }} />
 
 // ❌ DON'T
 <div style={{ color: '#000000' }} />
@@ -132,7 +132,7 @@ Same role system as above, via the `sx` prop instead of `style`:
 // ✅ DO
 import { getRoleColor } from 'src/theme/roles';
 
-<Box sx={{ backgroundColor: getRoleColor('surface.default') }} />
+<Box sx={{ backgroundColor: getRoleColor('bg.default') }} />
 
 // ❌ DON'T
 <Box sx={{ color: '#000000' }} />       // no hardcoded hex
@@ -163,7 +163,7 @@ npx shadcn@latest registry validate
 
 **The repo is private** — consumers need GitHub auth to fetch from it (`GH_TOKEN` env var, or an authenticated `gh` CLI session), not a public/anonymous fetch. This is still meaningfully lighter than the npm package route below (no PAT scoped to a personal account, no `.npmrc` registry config) since it reuses whatever git credentials a developer already has.
 
-**When to use this vs. the npm package** (`README.package.md`, root of the published package): the registry route copies *editable source* into your project — you own the code — good for a handful of components you'll likely customize. The npm package (`marsh-mds`) is a compiled, versioned dependency covering the full curated component set — better when you want the whole library without vendoring source. Both currently point at the same personal-account GitHub home; see [`docs/MAINSTREAM_REUSE_ASSESSMENT.md`](../MAINSTREAM_REUSE_ASSESSMENT.md) for the plan to move that to a real Marsh org.
+**When to use this vs. the npm package** (`README.package.md`, root of the published package): the registry route copies *editable source* into your project — you own the code — good for a handful of components you'll likely customize. The npm package (`@mmctech/MarshDesignSystem`) is a compiled, versioned dependency covering the full curated component set — better when you want the whole library without vendoring source. Both currently point at the same personal-account GitHub home; see [`docs/MAINSTREAM_REUSE_ASSESSMENT.md`](../MAINSTREAM_REUSE_ASSESSMENT.md) for the plan to move that to a real Marsh org.
 
 ## 📚 Next Steps
 

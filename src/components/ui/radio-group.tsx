@@ -109,17 +109,17 @@ function getControlStyle({
   style?: React.CSSProperties;
 }): React.CSSProperties {
   const focusVars = {
-    '--radio-focus-ring': 'var(--role-focus-ring)',
-    '--radio-focus-inner-ring': 'var(--role-surface-default)',
+    '--radio-focus-ring': 'var(--role-border-focus)',
+    '--radio-focus-inner-ring': 'var(--role-bg-default)',
   } as React.CSSProperties;
 
   if (disabled) {
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-disabled)',
-      borderColor: 'var(--role-text-disabled)',
-      color: 'var(--role-text-disabled)',
+      backgroundColor: 'var(--role-bg-disabled)',
+      borderColor: 'var(--role-fg-disabled)',
+      color: 'var(--role-fg-disabled)',
     };
   }
 
@@ -133,19 +133,19 @@ function getControlStyle({
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-default)',
+      backgroundColor: 'var(--role-bg-default)',
       borderColor: roleVar(role),
       color: roleVar(role),
     };
   }
 
-  const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
+  const borderRole: RoleName = invalid ? 'border.critical' : 'border.default';
   const backgroundColor =
     interaction === 'active'
-      ? `color-mix(in srgb, ${'var(--role-surface-default)'} 80%, ${'var(--role-interactive-primary)'} 20%)`
+      ? `color-mix(in srgb, ${'var(--role-bg-default)'} 80%, ${'var(--role-interactive-primary)'} 20%)`
       : interaction === 'hover'
-        ? `color-mix(in srgb, ${'var(--role-surface-default)'} 90%, ${'var(--role-interactive-primary)'} 10%)`
-        : 'var(--role-surface-default)';
+        ? `color-mix(in srgb, ${'var(--role-bg-default)'} 90%, ${'var(--role-interactive-primary)'} 10%)`
+        : 'var(--role-bg-default)';
 
   return {
     ...style,
@@ -239,7 +239,7 @@ const DSRadio = React.forwardRef<React.ElementRef<typeof RadioGroupPrimitive.Ite
       if (!disabled) setInteraction(next);
     };
 
-    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'fg.disabled' : 'fg.primary');
     const controlStyle = getControlStyle({ checked, disabled, invalid: isDanger, interaction, style });
 
     return (
@@ -360,7 +360,7 @@ export const DSRadioGroup = React.forwardRef<HTMLDivElement, DSRadioGroupProps>(
     return (
       <div ref={ref} className={cn(radioGroupVariants({ fullWidth }), className)}>
         {label && (
-          <span className={radioGroupLabelVariants()} style={{ color: 'var(--role-text-primary)' }}>
+          <span className={radioGroupLabelVariants()} style={{ color: 'var(--role-fg-primary)' }}>
             {label}
           </span>
         )}
@@ -388,7 +388,7 @@ export const DSRadioGroup = React.forwardRef<HTMLDivElement, DSRadioGroupProps>(
           <span
             id={helperId}
             className={radioGroupHelperVariants()}
-            style={{ color: error ? 'var(--role-status-danger-fg)' : 'var(--role-text-primary)' }}
+            style={{ color: error ? 'var(--role-fg-critical)' : 'var(--role-fg-primary)' }}
           >
             {helperText}
           </span>

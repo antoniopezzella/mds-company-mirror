@@ -33,11 +33,11 @@ const getBorderColor = (borderColor: PaperProps['borderColor']): string => {
     case 'primary':
       return getRoleColor('interactive.primary');
     case 'success':
-      return getRoleColor('status.success.bg');
+      return getRoleColor('bg.success.subtle');
     case 'warning':
-      return getRoleColor('status.warning.bg');
+      return getRoleColor('bg.warning.subtle');
     case 'danger':
-      return getRoleColor('status.danger.bg');
+      return getRoleColor('bg.critical.subtle');
     case 'default':
     default:
       return getRoleColor('border.default');
@@ -68,7 +68,7 @@ export const Paper: React.FC<PaperProps> = ({
       square={square}
       sx={{
         padding: paddingValue,
-        backgroundColor: getRoleColor('surface.default'),
+        backgroundColor: getRoleColor('bg.default'),
         borderRadius: square ? '0' : '8px',
         border: variant === 'outlined' ? `1px solid ${getBorderColor(borderColor)}` : 'none',
         transition: hover ? 'all 0.2s ease-in-out' : 'none',

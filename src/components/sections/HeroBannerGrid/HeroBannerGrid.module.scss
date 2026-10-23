@@ -36,7 +36,7 @@
   }
 
   &--light {
-    background-color: var(--role-surface-default, #{t.$color-neutral-min});
+    background-color: var(--role-bg-default, #{t.$color-neutral-min});
   }
 }
 
@@ -246,7 +246,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background-color: var(--role-surface-hero, #000f47);
+  background-color: var(--role-bg-primary, #000f47);
   container-type: size;
 }
 
@@ -476,7 +476,7 @@
   }
 
   .heroBanner--light & {
-    color: var(--role-text-primary, #000f47);
+    color: var(--role-fg-primary, #000f47);
   }
 
   &__word {
@@ -509,7 +509,7 @@
   }
 
   .heroBanner--light & {
-    color: var(--role-text-primary, #000f47);
+    color: var(--role-fg-primary, #000f47);
   }
 }
 

@@ -41,17 +41,17 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
 
   // Get current state color for borders and labels
   const stateColor = isError 
-    ? getRoleColor('status.danger.fg') 
+    ? getRoleColor('fg.critical') 
     : isSuccess 
-      ? getRoleColor('status.success.fg') 
+      ? getRoleColor('fg.success') 
       : isWarning 
-        ? getRoleColor('status.warning.fg') 
+        ? getRoleColor('fg.warning') 
         : null;
 
   // Build custom styles
   const customSx = {
     '& .MuiOutlinedInput-root': {
-      color: getRoleColor('text.primary'),
+      color: getRoleColor('fg.primary'),
       fontFamily: 'var(--typo-body1-font-family)',
       fontSize: 'var(--typo-body1-font-size)',
       lineHeight: 'var(--typo-body1-line-height)',
@@ -63,7 +63,7 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
         borderColor: stateColor || getRoleColor('border.strong'),
       },
       '&.Mui-focused fieldset': {
-        borderColor: stateColor || getRoleColor('focus.ring', { mode }),
+        borderColor: stateColor || getRoleColor('border.focus', { mode }),
         borderWidth: '2px',
       },
       '&.Mui-disabled fieldset': {
@@ -72,18 +72,18 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       },
     },
     '& .MuiInputLabel-root': {
-      color: getRoleColor('text.secondary'),
+      color: getRoleColor('fg.neutral.subtle'),
       fontFamily: 'var(--typo-body1-font-family)',
       fontSize: 'var(--typo-body1-font-size)',
       '&.Mui-focused': {
-        color: stateColor || getRoleColor('focus.ring', { mode }),
+        color: stateColor || getRoleColor('border.focus', { mode }),
       },
       '&.Mui-error, &.Mui-focused.Mui-error': {
-        color: getRoleColor('status.danger.fg'),
+        color: getRoleColor('fg.critical'),
       },
       // Handle success/warning colors for non-error focused states if needed
-      ...(isSuccess && { color: `${getRoleColor('status.success.fg')} !important` }),
-      ...(isWarning && { color: `${getRoleColor('status.warning.fg')} !important` }),
+      ...(isSuccess && { color: `${getRoleColor('fg.success')} !important` }),
+      ...(isWarning && { color: `${getRoleColor('fg.warning')} !important` }),
     },
     '& .MuiFormHelperText-root': {
       fontFamily: 'var(--typo-caption-font-family)',
@@ -91,9 +91,9 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       lineHeight: 'var(--typo-caption-line-height)',
       margin: (theme: Theme) => theme.spacing(1, 0, 0, 0),
       '&.Mui-error': {
-        color: getRoleColor('status.danger.fg'),
+        color: getRoleColor('fg.critical'),
       },
-      ...(isSuccess && { color: getRoleColor('status.success.fg') }),
+      ...(isSuccess && { color: getRoleColor('fg.success') }),
       // text.onLight, not status.warning.fg, for HELPER TEXT specifically.
       // status.warning.fg is gold1000 (#cb7623) and measures 3.41:1 on white —
       // under the 4.5:1 body text requires, and no gold in the palette clears
@@ -101,10 +101,10 @@ const DSTextField: React.FC<DSTextFieldProps> = ({
       // text.onLight is the role meant for warning gold. The warning is still
       // signalled by the field's own gold border, which needs only 3:1 as a
       // non-text element. Same resolution as ui/alert.tsx.
-      ...(isWarning && { color: getRoleColor('text.onLight') }),
+      ...(isWarning && { color: getRoleColor('fg.on-light') }),
     },
     '& .MuiInputBase-input::placeholder': {
-      color: getRoleColor('text.secondary'),
+      color: getRoleColor('fg.neutral.subtle'),
       opacity: 0.7,
     },
     ...sx,

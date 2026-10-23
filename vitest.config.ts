@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import { playwright } from '@vitest/browser-playwright';
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
@@ -149,7 +150,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: 'playwright',
+            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
             instances: [
               {
                 browser: 'chromium',
@@ -170,7 +171,6 @@ export default defineConfig({
                 // this repo is now expected to honour the preference, so if one
                 // regresses and animates anyway, these tests go flaky again and
                 // say so.
-                context: { reducedMotion: 'reduce' },
               },
             ],
           },

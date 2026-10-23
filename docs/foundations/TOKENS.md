@@ -22,7 +22,7 @@ These map primitives to abstract intents. This layer handles **Dark Mode**.
 ### 3. Role Tokens (`src/theme/roles.ts`)
 These are the **Public API** for the design system. They describe *where* and *how* a color is used on a specific UI element type.
 *   **Naming Convention**: `{category}.{element}[.variant][.state]`
-*   **Example**: `interactive.primary.hover`, `surface.card`, `text.secondary`
+*   **Example**: `interactive.primary.hover`, `bg.default`, `fg.neutral.subtle`
 *   **Usage**: **ALWAYS** use these in your components via `getRoleColor()`.
 
 ---
@@ -45,17 +45,17 @@ usually **guess a role's name before looking it up**:
 
 Reading a few names this way:
 
-- `text.secondary` → category `text`, element `secondary` — the muted-text color.
+- `fg.neutral.subtle` → category `text`, element `secondary` — the muted-text color.
 - `interactive.primary.hover` → category `interactive`, element `primary`, state `hover` — what a primary button/link turns on hover.
-- `status.success.bg` → category `status`, element `success`, state `bg` — the background for a success badge/alert.
+- `bg.success.subtle` → category `status`, element `success`, state `bg` — the background for a success badge/alert.
 
 If a role you need doesn't exist yet, it's very likely a **valid, missing**
-combination of these slots (e.g. `interactive.danger.disabled`) — that's a
+combination of these slots (e.g. `interactive.danger`) — that's a
 signal to request a new role via the [token request process](../TOKEN_REQUEST_PROCESS.md), not to reach for a raw hex value.
 
 > **Watch out:** "secondary" shows up on two unrelated axes and it's easy to
 > conflate them. `brandSecondary` (a semantic token, Sky Blue) names a
-> position in the brand-identity palette. `text.secondary` (a role) names a
+> position in the brand-identity palette. `fg.neutral.subtle` (a role) names a
 > position on the text-emphasis scale (primary vs. de-emphasized body text)
 > — it resolves to a muted gray, not to Sky Blue. Same word, two independent
 > scales. **Confirmed intentional (2026-09-15):** Figma's own equivalent
@@ -78,7 +78,7 @@ underlying value — only the API for reading it differs.
 import { getRoleColor } from '@/theme/roles';
 
 // Good ✅
-<div style={{ color: getRoleColor('text.primary') }} />
+<div style={{ color: getRoleColor('fg.primary') }} />
 
 // Bad ❌
 <div style={{ color: 'blue' }} /> // Ambiguous, not a role
@@ -94,8 +94,8 @@ syntax:
 import { getRoleColor } from '@/theme/roles';
 
 // Good ✅
-<div style={{ color: getRoleColor('text.primary') }} />
-<div className={cn('rounded-md', className)} style={{ backgroundColor: getRoleColor('surface.card') }} />
+<div style={{ color: getRoleColor('fg.primary') }} />
+<div className={cn('rounded-md', className)} style={{ backgroundColor: getRoleColor('bg.default') }} />
 
 // Bad ❌
 <div className="text-[#13284B]" /> // Hardcoded, bypasses the role layer

@@ -108,8 +108,8 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
   className,
 }, ref) => {
   const rootStyle = {
-    '--accordion-focus-ring': 'var(--role-focus-ring)',
-    '--accordion-shadow-color': 'var(--role-surface-subtle)',
+    '--accordion-focus-ring': 'var(--role-border-focus)',
+    '--accordion-shadow-color': 'var(--role-bg-neutral-subtle)',
     borderColor: 'var(--role-border-default)',
   } as React.CSSProperties;
 
@@ -125,7 +125,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
         value={item.id}
         disabled={item.disabled}
         className={cn(accordionItemVariants({ variant }))}
-        style={{ backgroundColor: 'var(--role-surface-default)' }}
+        style={{ backgroundColor: 'var(--role-bg-default)' }}
       >
         <AccordionPrimitive.Header className="flex">
           <AccordionPrimitive.Trigger
@@ -135,14 +135,14 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
             <span className="flex-1">
               <span
                 className="block font-sans-productive text-base font-semibold"
-                style={{ color: roleVar(item.disabled ? 'text.disabled' : 'text.primary') }}
+                style={{ color: roleVar(item.disabled ? 'fg.disabled' : 'fg.primary') }}
               >
                 {item.title}
               </span>
               {item.subtitle && (
                 <span
                   className="mt-1 block font-sans-productive text-sm"
-                  style={{ color: 'var(--role-text-secondary)' }}
+                  style={{ color: 'var(--role-fg-neutral-subtle)' }}
                 >
                   {item.subtitle}
                 </span>
@@ -150,14 +150,14 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
             </span>
             <ChevronDown
               className="h-5 w-5 shrink-0 transition-transform duration-200"
-              style={{ color: 'var(--role-text-secondary)' }}
+              style={{ color: 'var(--role-fg-neutral-subtle)' }}
             />
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
         <AccordionPrimitive.Content className={cn(accordionContentVariants({ variant }))}>
           <div
             className="border-t pt-4 font-sans-productive text-base"
-            style={{ borderColor: 'var(--role-border-default)', color: 'var(--role-text-primary)' }}
+            style={{ borderColor: 'var(--role-border-default)', color: 'var(--role-fg-primary)' }}
           >
             {item.content}
           </div>

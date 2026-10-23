@@ -33,9 +33,9 @@ const chipVariants = cva(
 );
 
 const iconSizeClass: Record<ChipSize, string> = {
-  sm: 'h-4 w-4 -ml-0.5',
-  md: 'h-5 w-5 -ml-0.5',
-  lg: 'h-6 w-6 -ml-1',
+  sm: 'h-4 w-4 -ms-0.5',
+  md: 'h-5 w-5 -ms-0.5',
+  lg: 'h-6 w-6 -ms-1',
 };
 
 const deleteIconSizeClass: Record<ChipSize, string> = {
@@ -47,26 +47,30 @@ const deleteIconSizeClass: Record<ChipSize, string> = {
 function getToneRoles(tone: ChipTone): { bg: RoleName; fg: RoleName; border: RoleName } {
   switch (tone) {
     case 'primary':
-      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'interactive.primary' };
     case 'secondary':
-      return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'border.default' };
     case 'success':
-      return { bg: 'status.success.bg', fg: 'status.success.fg', border: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', fg: 'fg.success', border: 'fg.success' };
     case 'warning':
-      // fg is the label colour; the border keeps the gold accent.
-      // status.warning.fg on status.warning.bg is 4.44:1 — fine for the 3:1
-      // border, unreadable as text. See alert.tsx for the full reasoning.
-      return { bg: 'status.warning.bg', fg: 'text.onLight', border: 'status.warning.fg' };
+      // ~~fg.warning is unreadable as text (4.44:1 on this surface)~~ —
+      // Resolved 2026-10-22: that held while fg.warning was #c25600. The role
+      // is now pinned to Figma's foreground/warning/default (#8f5400 light,
+      // #ffd98a dark), which is 5.22:1 on the warning surface and 5.96:1 on the
+      // page — so warning finally takes its own tone as text, like every other
+      // tone, instead of borrowing fg.on-light. The old navy-on-warning pairing
+      // also broke outright in Dark once the surface became #4b3a27 (1.67:1).
+      return { bg: 'bg.warning.subtle', fg: 'fg.warning', border: 'fg.warning' };
     case 'danger':
-      return { bg: 'status.danger.bg', fg: 'status.danger.fg', border: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', fg: 'fg.critical', border: 'fg.critical' };
     case 'info':
       // interactive.primary, not status.warning.fg. Every other tone borders
       // in its own colour; info alone borrowed warning's GOLD, which made an
       // informational chip read as a caution. Matches Badge's info tone, which
       // already uses interactive.primary as its border.
-      return { bg: 'surface.accent', fg: 'text.primary', border: 'interactive.primary' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'interactive.primary' };
     default:
-      return { bg: 'surface.subtle', fg: 'text.primary', border: 'border.default' };
+      return { bg: 'bg.neutral.subtle', fg: 'fg.primary', border: 'border.default' };
   }
 }
 
@@ -105,8 +109,8 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const style: React.CSSProperties = disabled
       ? {
-          backgroundColor: 'var(--role-surface-disabled)',
-          color: 'var(--role-text-disabled)',
+          backgroundColor: 'var(--role-bg-disabled)',
+          color: 'var(--role-fg-disabled)',
           borderColor: 'transparent',
         }
       : {
@@ -122,7 +126,7 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
           // against the page surface; the tightest is success at 5.12:1.
           color: roleVar(fg),
           border: variant === 'outlined' ? `1px solid ${roleVar(border)}` : 'none',
-          boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-focus-ring)'}` : undefined,
+          boxShadow: selectable && selected ? `inset 0 0 0 2px ${'var(--role-border-focus)'}` : undefined,
         };
 
     const chipClassName = cn(
@@ -133,12 +137,12 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
 
     const chipStyle = {
       ...style,
-      '--tw-ring-color': 'var(--role-focus-ring)',
+      '--tw-ring-color': 'var(--role-border-focus)',
       // Tailwind's ring-offset-2 defaults its gap color to white — wrong
       // against a dark surface. Tying it to surface.default keeps the ring's
       // inner gap correct in both modes, matching Checkbox's
       // --checkbox-focus-inner-ring pattern.
-      '--tw-ring-offset-color': 'var(--role-surface-default)',
+      '--tw-ring-offset-color': 'var(--role-bg-default)',
       // Caller override last, so it wins over (not replaces) the tone-based
       // style above — style was destructured out of ...rest specifically so a
       // plain spread couldn't clobber this object.

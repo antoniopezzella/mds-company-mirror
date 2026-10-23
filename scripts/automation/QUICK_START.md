@@ -50,7 +50,7 @@ Paste the JSON and save.
 ### 6️⃣ Run Matcher
 
 ```bash
-cd "/path/to/MarshDesignSystem"
+cd <repo root>
 node scripts/automation/match-mds-variables.js scripts/automation/system-alert-colors.json
 ```
 

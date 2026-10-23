@@ -50,13 +50,13 @@ export const MDSDataGrid: React.FC<MDSDataGridProps> = ({ sx, ...props }) => {
           borderRadius: '8px',
           fontFamily: '"Noto Sans", sans-serif',
           fontSize: '0.875rem',
-          color: getRoleColor('text.primary', { mode }),
-          backgroundColor: getRoleColor('surface.default', { mode }),
+          color: getRoleColor('fg.primary', { mode }),
+          backgroundColor: getRoleColor('bg.default', { mode }),
 
           // Column headers
           '& .MuiDataGrid-columnHeaders': {
-            backgroundColor: getRoleColor('surface.subtle', { mode }),
-            color: getRoleColor('text.primary', { mode }),
+            backgroundColor: getRoleColor('bg.neutral.subtle', { mode }),
+            color: getRoleColor('fg.primary', { mode }),
             borderBottom: `2px solid ${getRoleColor('border.default', { mode })}`,
           },
           '& .MuiDataGrid-columnHeader': {
@@ -73,7 +73,7 @@ export const MDSDataGrid: React.FC<MDSDataGridProps> = ({ sx, ...props }) => {
             color: getRoleColor('interactive.primary', { mode }),
           },
           '& .MuiDataGrid-menuIconButton': {
-            color: getRoleColor('text.secondary', { mode }),
+            color: getRoleColor('fg.neutral.subtle', { mode }),
           },
 
           // Rows
@@ -93,7 +93,7 @@ export const MDSDataGrid: React.FC<MDSDataGridProps> = ({ sx, ...props }) => {
           // Cells
           '& .MuiDataGrid-cell': {
             borderRight: 'none',
-            color: getRoleColor('text.primary', { mode }),
+            color: getRoleColor('fg.primary', { mode }),
           },
           '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within': {
             outline: `2px solid ${getRoleColor('interactive.primary', { mode })}`,
@@ -123,24 +123,24 @@ export const MDSDataGrid: React.FC<MDSDataGridProps> = ({ sx, ...props }) => {
           // Pagination footer
           '& .MuiDataGrid-footerContainer': {
             borderTop: `1px solid ${getRoleColor('border.default', { mode })}`,
-            backgroundColor: getRoleColor('surface.subtle', { mode }),
+            backgroundColor: getRoleColor('bg.neutral.subtle', { mode }),
           },
           '& .MuiTablePagination-root': {
-            color: getRoleColor('text.secondary', { mode }),
+            color: getRoleColor('fg.neutral.subtle', { mode }),
           },
           '& .MuiTablePagination-selectIcon': {
-            color: getRoleColor('text.secondary', { mode }),
+            color: getRoleColor('fg.neutral.subtle', { mode }),
           },
           '& .MuiIconButton-root': {
             color: getRoleColor('interactive.primary', { mode }),
             '&.Mui-disabled': {
-              color: getRoleColor('text.disabled', { mode }),
+              color: getRoleColor('fg.disabled', { mode }),
             },
           },
 
           // Loading overlay
           '& .MuiDataGrid-loadingOverlay': {
-            backgroundColor: `${getRoleColor('surface.default', { mode })}cc`,
+            backgroundColor: `${getRoleColor('bg.default', { mode })}cc`,
           },
         },
         // Allow per-instance sx overrides

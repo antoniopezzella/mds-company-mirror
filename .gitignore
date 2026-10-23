@@ -27,7 +27,10 @@ dist-pkg
 
 # Transient, fully-derived DTCG token source Style Dictionary reads from —
 # regenerated fresh every `tokens:build`, nothing else consumes it.
-.tmp-token-build/tokens-dtcg/
+# Everything here is derived: build-tokens.js deletes and recreates the whole
+# directory on every run (rmSync, line 42). The five compiled token files were
+# tracked until 2026-10-22, which meant every build dirtied the tree.
+.tmp-token-build/
 
 # Environment variables (secrets)
 .env
@@ -100,3 +103,6 @@ public/video/10394868-uhd_3840_2160_30fps.mp4
 # scripts/visual-baseline.js (npm run visual:capture). Never committed.
 visual-baseline/
 dark-results.json
+
+# Never commit a registry token — .npmrc is generated in CI / set per-user
+.npmrc

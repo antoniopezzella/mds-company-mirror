@@ -50,48 +50,28 @@ export default {
         // call site at once. A `borderRadius` override here would go back to
         // rescaling the whole ladder and reintroduce the collapse above;
         // `npm run radius:check` gates the rest.
-      colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'var(--ring)', // plain hex custom property now (MDS: focus.ring) — not HSL, no opacity-modifier call sites exist for this utility
-        chart: {
-          '1': 'hsl(var(--chart-1))',
-          '2': 'hsl(var(--chart-2))',
-          '3': 'hsl(var(--chart-3))',
-          '4': 'hsl(var(--chart-4))',
-          '5': 'hsl(var(--chart-5))',
-        },
-      },
+      // COLOURS LIVE IN src/styles/generated/tailwind.tokens.css.
+      //
+      // Until 2026-10-22 this block defined 19 shadcn colour names as
+      // `hsl(var(--background))` etc., hand-kept in src/styles/token-variables.css
+      // and drifting from Figma in Light and Dark. The generated layer now
+      // defines the same class names (plus 114 MDS ones) from the Figma export —
+      // see docs/tasks/token-pipeline-migration.md step 3.
+      //
+      // Do NOT re-add a colour here: a `theme.extend.colors` entry and a
+      // generated `@utility` of the same name both emit into one rule, and the
+      // config's declaration is emitted LAST, so it silently wins and the token
+      // pipeline stops being the source of truth. Measured, not theorised.
+      //
+      // The one thing lost with the theme entries is the `/opacity` modifier
+      // (`bg-primary/5`), which a static @utility cannot take. The 15 call sites
+      // that used it now write `bg-[var(--mds-color-…)]/5` — same colour, same
+      // alpha, MDS as the source. New code should use an `overlay/*` token
+      // instead of inventing an alpha.
+      //
+      // `chart-1..5` went with them: no `bg-chart-*` class was ever used (charts
+      // read `getRoleColor('data.N')`), and the `--chart-*` variables themselves
+      // stay in token-variables.css, still gated by varsync.
       keyframes: {
         'accordion-down': {
           from: { height: '0' },

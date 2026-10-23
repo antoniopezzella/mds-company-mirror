@@ -121,8 +121,8 @@ import { getRoleColor } from '../../../theme/roles';
 
 // ✅ Colors via role tokens
 sx={{
-  backgroundColor: getRoleColor('surface.default'),
-  color: getRoleColor('text.primary'),
+  backgroundColor: getRoleColor('bg.default'),
+  color: getRoleColor('fg.primary'),
   borderBottom: `1px solid ${getRoleColor('border.default')}`,
 }}
 
@@ -134,7 +134,7 @@ sx={{
 }}
 
 // ✅ Typography via MUI variants
-<Typography variant="h3" sx={{ color: getRoleColor('text.primary') }}>
+<Typography variant="h3" sx={{ color: getRoleColor('fg.primary') }}>
   Dashboard Title
 </Typography>
 ```
@@ -393,7 +393,7 @@ Modify the tab rendering logic in the component:
 ```typescript
 // If role doesn't exist, add it:
 export type RoleName =
-  | 'text.primary'
+  | 'fg.primary'
   | 'your.new.role'; // Add here
 
 const ROLE_MAP = {

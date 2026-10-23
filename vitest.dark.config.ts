@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import { playwright } from '@vitest/browser-playwright';
 
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
@@ -75,7 +76,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: 'playwright',
+            provider: playwright({ contextOptions: { reducedMotion: 'reduce' } }),
             instances: [
               {
                 browser: 'chromium',
@@ -83,7 +84,6 @@ export default defineConfig({
                 // opacity 0, so a story sampled mid-flight reports colour
                 // contrast for a half-faded element — real readings, not real
                 // defects. Reduced motion settles the DOM before axe looks.
-                context: { reducedMotion: 'reduce' },
               },
             ],
           },

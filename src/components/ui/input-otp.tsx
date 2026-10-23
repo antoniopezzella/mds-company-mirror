@@ -62,10 +62,10 @@ const InputOTPSlot = React.forwardRef<
       )}
       style={
         {
-          borderColor: isActive ? 'var(--role-focus-ring)' : 'var(--role-border-default)',
-          color: 'var(--role-text-primary)',
-          backgroundColor: 'var(--role-surface-default)',
-          '--tw-ring-color': 'var(--role-focus-ring)',
+          borderColor: isActive ? 'var(--role-border-focus)' : 'var(--role-border-default)',
+          color: 'var(--role-fg-primary)',
+          backgroundColor: 'var(--role-bg-default)',
+          '--tw-ring-color': 'var(--role-border-focus)',
           ...style,
         } as React.CSSProperties
       }
@@ -76,7 +76,7 @@ const InputOTPSlot = React.forwardRef<
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div
             className="h-4 w-px animate-caret-blink"
-            style={{ backgroundColor: 'var(--role-text-primary)' }}
+            style={{ backgroundColor: 'var(--role-fg-primary)' }}
           />
         </div>
       )}
@@ -88,7 +88,7 @@ InputOTPSlot.displayName = 'InputOTPSlot';
 const InputOTPSeparator = React.forwardRef<React.ElementRef<'div'>, React.ComponentPropsWithoutRef<'div'>>(
   ({ ...props }, ref) => (
     <div ref={ref} role="separator" {...props}>
-      <Dot style={{ color: 'var(--role-text-secondary)' }} />
+      <Dot style={{ color: 'var(--role-fg-neutral-subtle)' }} />
     </div>
   )
 );

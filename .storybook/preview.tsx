@@ -64,6 +64,9 @@ export const decorators = [
     // state instead of a click handler this project owns).
     if (typeof document !== 'undefined') {
       document.documentElement.classList.toggle('dark', mode === 'dark');
+      // The generated token layer keys off this attribute, not the class, so
+      // the toolbar has to set both until the class is retired.
+      document.documentElement.dataset.theme = mode;
     }
 
     // Adaptive styling based on layout type:

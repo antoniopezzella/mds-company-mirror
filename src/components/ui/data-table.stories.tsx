@@ -137,7 +137,7 @@ export const SelectAllResults: StoryObj = {
           pageSize={3}
           onSelectionChange={setSelection}
         />
-        <pre className="rounded-lg p-3 text-xs" style={{ background: 'var(--role-surface-subtle)' }}>
+        <pre className="rounded-lg p-3 text-xs" style={{ background: 'var(--role-bg-neutral-subtle)' }}>
 {JSON.stringify(
   {
     selectedRowIds: selection?.selectedRowIds ?? [],

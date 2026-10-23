@@ -54,7 +54,7 @@ export const SecureFormExample: React.FC = () => {
         Secure Contact Form
       </Typography>
       
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography variant="body2" color="fg.neutral.subtle" sx={{ mb: 3 }}>
         This form demonstrates automatic input sanitization to prevent XSS attacks.
         Try entering HTML, JavaScript, or SQL injection patterns - they'll be safely sanitized.
       </Typography>
@@ -146,7 +146,7 @@ export const SafeHTMLDisplay: React.FC<{ userContent: string }> = ({ userContent
         }}
       />
       
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+      <Typography variant="caption" color="fg.neutral.subtle" sx={{ mt: 2, display: 'block' }}>
         ⚠️ This content has been sanitized using DOMPurify to prevent XSS attacks
       </Typography>
     </Paper>

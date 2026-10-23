@@ -54,16 +54,17 @@ function resolveRef(name) {
   return primitives[name] ? normalize(primitives[name]) : null;
 }
 
-// semanticColors: `key: ref('primitiveName'),`
+// semanticColors: `'dotted.key': ref('primitiveName'),` (keys were camelCase
+// before the 2026-10-21 Figma-grammar rename; now quoted dotted names)
 const lightSection = semanticSrc.split('export const semanticDarkOverrides')[0];
 const light = {};
-const lightRe = /^\s*(\w+):\s*ref\('(\w+)'\)/gm;
+const lightRe = /^\s*'?([\w.-]+)'?:\s*ref\('(\w+)'\)/gm;
 while ((m = lightRe.exec(lightSection))) light[m[1]] = resolveRef(m[2]);
 
-// semanticDarkOverrides: `key: tokens.primitiveName,`
+// semanticDarkOverrides: `'dotted.key': tokens.primitiveName,`
 const darkSection = semanticSrc.split('export const semanticDarkOverrides')[1] || '';
 const dark = {};
-const darkRe = /^\s*(\w+):\s*tokens\.(\w+),/gm;
+const darkRe = /^\s*'?([\w.-]+)'?:\s*tokens\.(\w+),/gm;
 while ((m = darkRe.exec(darkSection))) dark[m[1]] = resolveRef(m[2]);
 
 /**

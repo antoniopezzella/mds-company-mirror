@@ -42,9 +42,9 @@ The token architecture uses a strict layering system to decouple visual primitiv
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ ROLES (src/theme/roles.ts)                                  │
-│ Component consumption API: text.primary, surface.accent,    │
-│ interactive.primary.hover, status.success.bg                │
-│ 62 roles — the ONLY API components should use               │
+│ Component consumption API: fg.primary, bg.neutral.subtle,   │
+│ interactive.primary.hover, bg.success.subtle                │
+│ 59 roles — the ONLY API components should use               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -67,7 +67,7 @@ export const tokens = {
 
 **Naming:** `[palette][scale]` where scale = 50, 100, 200, ..., 1000, 1100  
 **Source:** Synced from Figma "Primitive Colors" collection  
-**Count:** 156 color tokens + spacing + shadow primitives
+**Count:** 170 color tokens (hex + rgba) + spacing + shadow primitives
 
 > Counts here are checked mechanically by `npm run ds:score` (the
 > `token_doc_accuracy` metric). They drifted to 9/5/6 out before that gate
@@ -110,7 +110,7 @@ export const semanticDarkOverrides = {
 
 **Naming:** `[category][Intent][State]` (camelCase)  
 **Categories:** `brand`, `text`, `surface`, `border`, `interactive`, `status`, `chart`  
-**Count:** 79 semantic tokens  
+**Count:** 188 semantic tokens  
 **Dark Mode:** Defined in `semanticDarkOverrides` object
 
 #### **Roles (`src/theme/roles.ts`)**
@@ -118,23 +118,23 @@ export const semanticDarkOverrides = {
 import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
 
 export type RoleName =
-  | 'text.primary'
-  | 'text.secondary'
-  | 'text.inverse'
-  | 'surface.default'
-  | 'surface.accent'
-  | 'surface.navigation'
+  | 'fg.primary'
+  | 'fg.neutral.subtle'
+  | 'fg.on-dark'
+  | 'bg.default'
+  | 'bg.neutral.subtle'
+  | 'bg.shell'
   | 'interactive.primary'
   | 'interactive.primary.hover'
-  | 'status.success.fg'
-  | 'status.success.bg';
+  | 'fg.success'
+  | 'bg.success.subtle';
   
 const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
-  'text.primary': { 
+  'fg.primary': { 
     semantic: 'textPrimary', 
     description: 'Primary body & UI text' 
   },
-  'surface.accent': { 
+  'bg.neutral.subtle': { 
     semantic: 'surfaceAccent', 
     description: 'Accent background surfaces' 
   },
@@ -166,8 +166,16 @@ export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): 
 ```
 
 **Naming:** `[category].[element][.variant][.state]` (kebab-case with dots)  
-**Examples:** `text.primary`, `surface.navigation.hover`, `interactive.danger.active`  
-**Count:** 62 roles (growing as components need them)  
+**Examples:** `fg.primary`, `bg.shell.hover`, `interactive.danger.active`  
+**Count:** 59 roles (29 of them pinned to a Figma token; see docs/tasks/token-pipeline-migration.md)
+
+> ~~`text.primary`, `surface.accent`, `status.success.bg`, `focus.ring`~~ —
+> Corrected 2026-10-23. These files taught those names until today; they were
+> retired on 2026-10-21 and `getRoleColor('text.primary')` now **throws**.
+> 30 dead names across CLAUDE.md and the two rules files were repointed
+> (`text.*`→`fg.*`, `surface.*`→`bg.*`, `status.<tone>.bg`→`bg.<tone>.subtle`,
+> `focus.ring`→`border.focus`). Found by the health score, which flagged the
+> token counts and led here — the counts were stale for the same reason.  
 **Usage:** Components use `getRoleColor('role.name')` ONLY
 
 ### Critical Rules for Token Usage
@@ -329,5 +337,5 @@ headings in Marsh Serif 400, dashboard headings in Noto Sans 700.
 |-------|---------|---------|
 | Primitive | `[palette][scale]` | `blue1000`, `neutral250`, `gold750` |
 | Semantic | `[category][Intent][State]` | `textPrimary`, `interactivePrimaryHover` |
-| Role | `[category].[element][.variant][.state]` | `text.primary`, `interactive.button.primary.hover` |
+| Role | `[category].[element][.variant][.state]` | `fg.primary`, `interactive.button.primary.hover` |
 

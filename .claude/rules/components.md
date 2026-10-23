@@ -120,7 +120,7 @@ const DSButton: React.FC<DSButtonProps> = ({
     height,
     minWidth: iconOnly ? height : undefined,
     '&:focus-visible': {
-      outline: `2px solid ${getRoleColor('focus.ring')}`,
+      outline: `2px solid ${getRoleColor('border.focus')}`,
       outlineOffset: 2,
     },
   };
@@ -130,27 +130,27 @@ const DSButton: React.FC<DSButtonProps> = ({
       case 'primary':
         return {
           backgroundColor: getRoleColor(baseRole),
-          color: getRoleColor('text.onAccent'),
+          color: getRoleColor('fg.on-accent'),
           '&:hover': { backgroundColor: getRoleColor(baseHoverRole) },
         };
       case 'secondary':
         return {
-          backgroundColor: getRoleColor('surface.hero'),
-          color: getRoleColor('text.onHero'),
-          '&:hover': { backgroundColor: getRoleColor('surface.navigation.hover') },
+          backgroundColor: getRoleColor('bg.primary'),
+          color: getRoleColor('fg.on-primary'),
+          '&:hover': { backgroundColor: getRoleColor('bg.shell.hover') },
         };
       case 'outline':
         return {
           border: `1px solid ${getRoleColor(baseRole)}`,
           color: getRoleColor(baseRole),
           backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: getRoleColor('surface.subtle') },
+          '&:hover': { backgroundColor: getRoleColor('bg.neutral.subtle') },
         };
       case 'ghost':
         return {
           color: getRoleColor(baseRole),
           backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: getRoleColor('surface.subtle') },
+          '&:hover': { backgroundColor: getRoleColor('bg.neutral.subtle') },
         };
     }
   })();
@@ -308,7 +308,7 @@ export const AllVariants: Story = {
 #### **When to Use `sx` Prop (Emotion/MUI)**
 
 ✅ **Use for:**
-- Token-based colors: `sx={{ color: getRoleColor('text.primary') }}`
+- Token-based colors: `sx={{ color: getRoleColor('fg.primary') }}`
 - Spacing: `sx={{ p: 3, mb: 2, gap: (theme) => theme.spacing(4) }}`
 - Simple layout: `sx={{ display: 'flex', alignItems: 'center' }}`
 - Responsive breakpoints: `sx={{ display: { xs: 'none', md: 'block' } }}`
@@ -323,11 +323,11 @@ export const AllVariants: Story = {
     alignItems: 'center',
     gap: (theme) => theme.spacing(2),
     p: 3,
-    backgroundColor: getRoleColor('surface.accent'),
-    color: getRoleColor('text.primary'),
+    backgroundColor: getRoleColor('bg.neutral.subtle'),
+    color: getRoleColor('fg.primary'),
     borderRadius: 'var(--radius-md)',
     '&:hover': {
-      backgroundColor: getRoleColor('surface.subtle'),
+      backgroundColor: getRoleColor('bg.neutral.subtle'),
     },
   }}
 >
@@ -446,8 +446,8 @@ function Component() {
   return (
     <Box
       sx={{
-        backgroundColor: getRoleColor('surface.default', mode),
-        color: getRoleColor('text.primary', mode),
+        backgroundColor: getRoleColor('bg.default', mode),
+        color: getRoleColor('fg.primary', mode),
       }}
     >
       Content adapts to theme mode
@@ -626,7 +626,7 @@ import { getRoleColor } from '@/theme/roles';
   sx={{
     color: getRoleColor('interactive.danger'),
     '&:hover': {
-      backgroundColor: getRoleColor('status.danger.bg'),
+      backgroundColor: getRoleColor('bg.critical.subtle'),
     },
   }}
 >
@@ -724,7 +724,7 @@ When creating a new component:
 
 3. **States**
    - [ ] Hover, active, disabled, focus states defined
-   - [ ] Focus ring using `getRoleColor('focus.ring')`
+   - [ ] Focus ring using `getRoleColor('border.focus')`
    - [ ] Loading state (if interactive)
 
 4. **Accessibility**

@@ -15,7 +15,7 @@ describe('CSS variable generation', () => {
     const content = read('dist', 'theme.css');
     if (content === null) return; // skip gracefully if not built in this run
     expect(content).toContain('[data-theme="dark"]');
-    expect(content).toMatch(/--color-text-primary:/);
+    expect(content).toMatch(/--color-fg-primary:/);
   });
 
   // The role tier had NO static CSS representation anywhere — it was set only
@@ -54,7 +54,7 @@ describe('CSS variable generation', () => {
   test('camelCase role segments are preserved, not kebab-cased', () => {
     const content = read('src', 'styles', 'roles.generated.css');
     if (content === null) return;
-    expect(content).toMatch(/--role-text-onInteractive:/);
+    expect(content).toMatch(/--role-fg-on-interactive:/);
     expect(content).not.toMatch(/--role-text-on-interactive:/); // roles-allow-dangling — naming the wrong form IS the assertion
   });
 });

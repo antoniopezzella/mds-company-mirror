@@ -51,32 +51,32 @@ function loadMdsPalette() {
     // Brand Identity
     brandPrimary: '#000f47',
     brandPrimaryDark: '#002c77',
-    brandSecondary: '#ceecff',
-    brandAccent: '#ffb700',
+    bgSecondary: '#ceecff',
+    bgAccent: '#ffb700',
 
     // Typography
-    textPrimary: '#000f47',
+    fgPrimary: '#000f47',
     textPrimaryMode: '#002c77',
-    textSecondary: '#595959',
-    textTertiary: '#767676',
-    textOnAccent: '#ffffff',
-    textOnHero: '#ffffff',
-    textDisabled: '#767676',
-    textOnLight: '#000f47',
+    fgNeutralSubtle: '#595959',
+    fgInputPlaceholder: '#767676',
+    fgOnAccent: '#ffffff',
+    fgOnPrimary: '#ffffff',
+    fgDisabled: '#767676',
+    fgOnLight: '#000f47',
     textOnDark: '#ffffff',
 
     // Surfaces
-    surfaceDefault: '#ffffff',
-    surfaceSubtle: '#f8f8f8',
+    bgDefault: '#ffffff',
+    bgNeutralSubtle: '#f8f8f8',
     surfaceMuted: '#e3e3e3',
     surfaceAccent: '#f7f8f8',
-    surfaceNavigation: '#000f47',
+    bgShell: '#000f47',
     surfaceNavigationMode: '#002c77',
-    surfaceNavigationHover: '#1a2759',
-    surfaceNavigationActive: '#333f6b',
+    bgShellHover: '#1a2759',
+    bgShellActive: '#333f6b',
     surfaceAccentStrong: '#cfd0cd',
-    surfaceHero: '#303c37',
-    surfaceDisabled: '#e3e3e3',
+    bgPrimary: '#303c37',
+    bgDisabled: '#e3e3e3',
 
     // Borders
     borderSubtle: '#dadada',
@@ -105,30 +105,30 @@ function loadMdsPalette() {
 
     // Status - Success
     statusSuccess: '#14853d',
-    statusSuccessBg: '#f8fcf7',
-    statusSuccessBorder: '#14853d',
-    statusSuccessText: '#2f7d32',
+    bgSuccessSubtle: '#f8fcf7',
+    borderSuccess: '#14853d',
+    fgSuccess: '#2f7d32',
     statusSuccessFg: '#2f7d32', // Alias for text
 
     // Status - Warning
     statusWarning: '#ed9400',
-    statusWarningBg: '#fffaee',
-    statusWarningBorder: '#ed9400',
-    statusWarningText: '#ed9400',
+    bgWarningSubtle: '#fffaee',
+    borderWarning: '#ed9400',
+    fgWarning: '#ed9400',
     statusWarningFg: '#ed9400',
 
     // Status - Danger/Error
     statusDanger: '#c53532',
-    statusDangerBg: '#fff1f1',
-    statusDangerBorder: '#c53532',
-    statusDangerText: '#d62f2f',
+    bgCriticalSubtle: '#fff1f1',
+    borderCritical: '#c53532',
+    fgCritical: '#d62f2f',
     statusDangerFg: '#d62f2f',
 
     // Status - Info
     statusInfo: '#1c5eb7',
-    statusInfoBg: '#eef4ff',
-    statusInfoBorder: '#1c5eb7',
-    statusInfoText: '#1c5eb7',
+    bgInfoSubtle: '#eef4ff',
+    borderInfo: '#1c5eb7',
+    fgInfo: '#1c5eb7',
     statusInfoFg: '#1c5eb7',
 
     // Interactive - Danger
@@ -204,18 +204,18 @@ function loadMdsPalette() {
 function getTokenDescription(name) {
   const descriptions = {
     brandPrimary: 'Midnight Blue — Primary brand color',
-    brandSecondary: 'Sky Blue — Secondary brand color',
-    statusSuccessBg: 'Success background (light green)',
-    statusSuccessBorder: 'Success border (medium green)',
+    bgSecondary: 'Sky Blue — Secondary brand color',
+    bgSuccessSubtle: 'Success background (light green)',
+    borderSuccess: 'Success border (medium green)',
     statusSuccessFg: 'Success text/icon (dark green)',
-    statusWarningBg: 'Warning background (light orange)',
-    statusWarningBorder: 'Warning border (medium orange)',
+    bgWarningSubtle: 'Warning background (light orange)',
+    borderWarning: 'Warning border (medium orange)',
     statusWarningFg: 'Warning text/icon (dark orange)',
-    statusDangerBg: 'Error background (light red)',
-    statusDangerBorder: 'Error border (medium red)',
+    bgCriticalSubtle: 'Error background (light red)',
+    borderCritical: 'Error border (medium red)',
     statusDangerFg: 'Error text/icon (dark red)',
-    statusInfoBg: 'Info background (light blue)',
-    statusInfoBorder: 'Info border (medium blue)',
+    bgInfoSubtle: 'Info background (light blue)',
+    borderInfo: 'Info border (medium blue)',
     statusInfoFg: 'Info text/icon (dark blue)',
   };
   return descriptions[name] || '';

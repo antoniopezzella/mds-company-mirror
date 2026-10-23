@@ -40,19 +40,19 @@ export const DSTextField = React.forwardRef<HTMLInputElement | HTMLTextAreaEleme
     const effectiveTone: InputTone = isError ? 'error' : tone;
 
     const helperColor = isError
-      ? 'var(--role-status-danger-fg)'
+      ? 'var(--role-fg-critical)'
       : tone === 'success'
-        ? 'var(--role-status-success-fg)'
+        ? 'var(--role-fg-success)'
         : tone === 'warning'
-          ? 'var(--role-status-warning-fg)'
-          : 'var(--role-text-secondary)';
+          ? 'var(--role-fg-warning)'
+          : 'var(--role-fg-neutral-subtle)';
 
     return (
       <div className={cn('inline-flex flex-col gap-1.5', fullWidth && 'w-full', className)}>
         {label && (
           <Label htmlFor={fieldId}>
             {label}
-            {rest.required && <span style={{ color: 'var(--role-status-danger-fg)' }}> *</span>}
+            {rest.required && <span style={{ color: 'var(--role-fg-critical)' }}> *</span>}
           </Label>
         )}
         {type === 'textarea' ? (

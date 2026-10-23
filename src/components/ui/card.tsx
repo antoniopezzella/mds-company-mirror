@@ -28,7 +28,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
       // disagree with — a card beside a grid had visibly different corners.
       className={cn('flex flex-col rounded-xl', border && 'border', className)}
       style={{
-        backgroundColor: 'var(--role-surface-default)',
+        backgroundColor: 'var(--role-bg-default)',
         borderColor: border ? 'var(--role-border-default)' : undefined,
         ...style,
       }}
@@ -76,7 +76,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
     <h3
       ref={ref}
       className={cn('font-sans-productive text-lg font-bold leading-tight', className)}
-      style={{ color: 'var(--role-text-primary)' }}
+      style={{ color: 'var(--role-fg-primary)' }}
       {...props}
     />
   )
@@ -88,7 +88,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
     <p
       ref={ref}
       className={cn('font-sans-productive text-sm', className)}
-      style={{ color: 'var(--role-text-secondary)' }}
+      style={{ color: 'var(--role-fg-neutral-subtle)' }}
       {...props}
     />
   )
@@ -156,7 +156,7 @@ export const ContentCard: React.FC<ContentCardProps> = ({
       )}
       <div className="flex flex-1 flex-col">
         {(category || date) && (
-          <div className="flex items-center gap-2 px-6 pt-6 text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+          <div className="flex items-center gap-2 px-6 pt-6 text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {category && <span className="font-semibold uppercase tracking-wide">{category}</span>}
             {category && date && <span>&middot;</span>}
             {date && <span>{date}</span>}

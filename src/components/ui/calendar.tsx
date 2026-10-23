@@ -43,7 +43,7 @@ function CalendarChevron({ className, orientation, disabled, ...props }: Chevron
   return (
     <Icon
       className={cn('h-4 w-4', disabled && 'opacity-50', className)}
-      style={{ color: 'var(--role-text-secondary)' }}
+      style={{ color: 'var(--role-fg-neutral-subtle)' }}
       {...props}
     />
   );
@@ -76,21 +76,21 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       style={
         {
           color: isSolidSelected
-            ? 'var(--role-text-onInteractive)'
+            ? 'var(--role-fg-on-interactive)'
             : isRangeMiddle
-              ? 'var(--role-text-primary)'
+              ? 'var(--role-fg-primary)'
               : modifiers.disabled
-                ? 'var(--role-text-disabled)'
-                : 'var(--role-text-primary)',
+                ? 'var(--role-fg-disabled)'
+                : 'var(--role-fg-primary)',
           backgroundColor: isSolidSelected
             ? 'var(--role-interactive-primary)'
             : isRangeMiddle
-              ? 'var(--role-surface-accent)'
+              ? 'var(--role-bg-neutral-subtle)'
               : 'transparent',
           opacity: modifiers.disabled ? 0.5 : modifiers.outside ? 0.6 : 1,
           boxShadow:
             modifiers.today && !modifiers.selected ? `inset 0 0 0 1px ${'var(--role-border-default)'}` : 'none',
-          '--tw-ring-color': 'var(--role-focus-ring)',
+          '--tw-ring-color': 'var(--role-border-focus)',
         } as React.CSSProperties
       }
       // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
@@ -100,7 +100,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: DayButtonPro
       {...props}
       onMouseEnter={(e) => {
         if (!modifiers.selected && !modifiers.disabled) {
-          (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-surface-subtle)';
+          (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--role-bg-neutral-subtle)';
         }
         props.onMouseEnter?.(e);
       }}
@@ -143,10 +143,10 @@ function Calendar({ className, classNames, showOutsideDays = true, components, .
         ...classNames,
       }}
       styles={{
-        [UI.CaptionLabel]: { color: 'var(--role-text-primary)' },
-        [UI.Weekday]: { color: 'var(--role-text-secondary)' },
-        [UI.PreviousMonthButton]: { color: 'var(--role-text-secondary)' },
-        [UI.NextMonthButton]: { color: 'var(--role-text-secondary)' },
+        [UI.CaptionLabel]: { color: 'var(--role-fg-primary)' },
+        [UI.Weekday]: { color: 'var(--role-fg-neutral-subtle)' },
+        [UI.PreviousMonthButton]: { color: 'var(--role-fg-neutral-subtle)' },
+        [UI.NextMonthButton]: { color: 'var(--role-fg-neutral-subtle)' },
       }}
       components={{
         Chevron: CalendarChevron,

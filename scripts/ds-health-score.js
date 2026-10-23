@@ -224,7 +224,15 @@ function measure(rev) {
 
   // Token-system size, counted from the source of truth rather than any doc.
   const primitives = count(read(rev, 'src/tokens.ts'), /^\s+[a-zA-Z][a-zA-Z0-9]*:\s*'/gm);
-  const semantics = count(read(rev, 'src/semantic-tokens.ts'), /^\s+[a-zA-Z][a-zA-Z0-9]*:\s*ref\(/gm);
+  // Quoted dotted keys ('fg.primary': …), not unquoted camelCase with ref().
+  // The 2026-10-21 rename dotted every semantic key, and this regex went blind
+  // overnight: it matched 10 of 188, counting only the camelCase base/* tier
+  // left behind. The metric then reported 86 points of "doc drift", 69 of them
+  // its own blindness — a measurement of something adjacent, scoring 0/100 and
+  // looking like a documentation problem. Match the key, whatever it aliases:
+  // some are ref(), some are tokens.*, some are literals.
+  const semantics = count(read(rev, 'src/semantic-tokens.ts'), /^\s+'[\w.-]+':/gm) ||
+    count(read(rev, 'src/semantic-tokens.ts'), /^\s+[a-zA-Z][a-zA-Z0-9]*:\s*ref\(/gm);
   const roles = count(read(rev, 'src/theme/roles.ts'), /^\s+\|\s*'[a-z]/gm);
 
   // ...and what the agent instructions CLAIM they are. The gap is the

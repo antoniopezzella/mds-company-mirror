@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
@@ -96,19 +96,22 @@ const DEFAULTS = {
   editAdvanced: 'Edit in advanced builder',
 };
 
-export function Filters({
-  fields,
-  query: controlled,
-  defaultQuery,
-  onQueryChange,
-  size = 'sm',
-  readOnly = false,
-  disabled = false,
-  className,
-  onEditAdvanced,
-  editors,
-  messages,
-}: FiltersProps) {
+export const Filters = React.forwardRef<HTMLDivElement, FiltersProps>(function Filters(
+  {
+    fields,
+    query: controlled,
+    defaultQuery,
+    onQueryChange,
+    size = 'sm',
+    readOnly = false,
+    disabled = false,
+    className,
+    onEditAdvanced,
+    editors,
+    messages,
+  },
+  ref
+) {
   const t = { ...DEFAULTS, ...messages };
   const [internal, setInternal] = React.useState<FilterQuery>(() => defaultQuery ?? createFilterQuery());
   const [adding, setAdding] = React.useState(false);
@@ -155,6 +158,7 @@ export function Filters({
 
   return (
     <div
+      ref={ref}
       data-slot="filters"
       className={cn('flex flex-wrap items-center gap-2', className)}
       // `role` is required for the label to exist at all: the implicit role
@@ -176,7 +180,7 @@ export function Filters({
 
       {!flat && (
         <>
-          <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="text-sm" style={{ color: roleVar('fg.neutral.subtle') }}>
             {/* §24's critical rule: rendering A AND (B OR C) as three chips
                 would read as A AND B AND C — a different query. Rather than
                 flatten and lie, say so and hand it to the advanced builder. */}
@@ -299,4 +303,5 @@ export function Filters({
       )}
     </div>
   );
-}
+});
+Filters.displayName = 'Filters';

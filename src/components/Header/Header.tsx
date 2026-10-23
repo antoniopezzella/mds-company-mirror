@@ -1,5 +1,6 @@
 import React from 'react';
 import DashboardHeader, { type DashboardHeaderProps } from './DashboardHeader/DashboardHeader';
+import LoggedOutHeader from './LoggedOutHeader/LoggedOutHeader';
 import WebsiteHeader, { type WebsiteHeaderProps, type WebsiteHeaderNavItem } from '../ui/website-header';
 
 export type HeaderProps =
@@ -19,5 +20,5 @@ const Header: React.FC<HeaderProps> = (props) => {
 };
 
 export default Header;
-export { Header, DashboardHeader, WebsiteHeader };
+export { Header, DashboardHeader, LoggedOutHeader, WebsiteHeader };
 export type { DashboardHeaderProps, WebsiteHeaderProps, WebsiteHeaderNavItem };

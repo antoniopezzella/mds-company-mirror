@@ -51,7 +51,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
             variant="h2"
             className="faq-section__title"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               textAlign: isBordered ? 'left' : 'center',
               mb: (theme) => theme.spacing(2),
             }}
@@ -63,7 +63,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
               variant="body1"
               className="faq-section__description"
               sx={{
-                color: getRoleColor('text.secondary'),
+                color: getRoleColor('fg.neutral.subtle'),
                 textAlign: isBordered ? 'left' : 'center',
               }}
             >
@@ -89,7 +89,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                 '&:before': { display: 'none' },
                 boxShadow: 'none',
               } : {
-                backgroundColor: getRoleColor('surface.subtle'),
+                backgroundColor: getRoleColor('bg.neutral.subtle'),
                 borderRadius: '8px !important',
                 mb: 2,
                 '&:before': { display: 'none' },
@@ -123,7 +123,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                 <Typography
                   variant="h6"
                   sx={{
-                    color: getRoleColor('text.primary'),
+                    color: getRoleColor('fg.primary'),
                     fontWeight: 600,
                   }}
                 >
@@ -134,7 +134,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                 <Typography
                   variant="body1"
                   sx={{
-                    color: getRoleColor('text.secondary'),
+                    color: getRoleColor('fg.neutral.subtle'),
                     lineHeight: 1.6,
                   }}
                 >

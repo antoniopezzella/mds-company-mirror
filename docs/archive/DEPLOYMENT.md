@@ -14,7 +14,7 @@ https://marsh-design-system.netlify.app
 
 **Vercel:**
 ```
-https://<company-storybook-host>
+https://marsh-design-system.vercel.app
 ```
 
 **GitHub Pages (Requires Pro):**
@@ -61,7 +61,7 @@ https://mmctech.github.io/MarshDesignSystem/
    - **Output Directory:** `storybook-static`
 5. Click "Deploy"
 
-**Your URL will be:** `https://<company-storybook-host>`
+**Your URL will be:** `https://marsh-design-system.vercel.app`
 
 **✅ Features:**
 - Zero-config deployment

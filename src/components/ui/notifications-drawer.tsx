@@ -49,12 +49,12 @@ const DEFAULT_NOTIFICATIONS: RiskNotification[] = [
 // The role system doesn't have a "watch"/"advisory" tier — approximated
 // against the closest severity in the existing status.* roles.
 const SEVERITY_CONFIG: Record<RiskNotification['severity'], { label: string; fg: RoleName; bg: RoleName }> = {
-  warning: { label: 'Warning', fg: 'status.danger.fg', bg: 'status.danger.bg' },
+  warning: { label: 'Warning', fg: 'fg.critical', bg: 'bg.critical.subtle' },
   // fg here is rendered as text; status.warning.fg on status.warning.bg is
   // 4.44:1. text.onLight (17.71:1) is the role intended for warning text.
-  watch: { label: 'Watch', fg: 'text.onLight', bg: 'status.warning.bg' },
-  advisory: { label: 'Advisory', fg: 'status.info.fg', bg: 'status.info.bg' },
-  action: { label: 'Action Required', fg: 'interactive.primary', bg: 'surface.accent' },
+  watch: { label: 'Watch', fg: 'fg.warning', bg: 'bg.warning.subtle' },
+  advisory: { label: 'Advisory', fg: 'fg.info', bg: 'bg.info.subtle' },
+  action: { label: 'Action Required', fg: 'interactive.primary', bg: 'bg.neutral.subtle' },
 };
 
 function highlightNumbers(text: string) {
@@ -68,17 +68,17 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
   const [filter, setFilter] = React.useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = React.useState<Record<string, boolean>>({});
 
-  const textPrimary = 'var(--role-text-primary)';
-  const textSecondary = 'var(--role-text-secondary)';
+  const fgPrimary = 'var(--role-fg-primary)';
+  const fgNeutralSubtle = 'var(--role-fg-neutral-subtle)';
   const borderDefault = 'var(--role-border-default)';
-  const surfaceSubtle = 'var(--role-surface-subtle)';
-  const surfaceDefault = 'var(--role-surface-default)';
+  const bgNeutralSubtle = 'var(--role-bg-neutral-subtle)';
+  const bgDefault = 'var(--role-bg-default)';
   const primaryBlue = 'var(--role-interactive-primary)';
   // `text.onInteractive`, NOT `text.onAccent`. interactive.primary LIGHTENS in
   // dark mode (#000f47 -> #95caff), so white-on-accent drops to 1.73:1 there —
   // a clear AA failure. text.onInteractive exists for exactly these surfaces
   // and resolves to #000f47 in dark, giving 10.50:1.
-  const textOnInteractive = 'var(--role-text-onInteractive)';
+  const fgOnInteractive = 'var(--role-fg-on-interactive)';
 
   const unreadCount = notifications.filter((n) => n.unread).length;
   const actionCount = notifications.filter((n) => n.actionRequired).length;
@@ -136,7 +136,7 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                 className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium leading-none transition-colors"
                 style={{
                   backgroundColor: active ? primaryBlue : 'transparent',
-                  color: active ? textOnInteractive : textPrimary,
+                  color: active ? fgOnInteractive : fgPrimary,
                   borderColor: active ? primaryBlue : borderDefault,
                 }}
               >
@@ -144,8 +144,8 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                 <span
                   className="flex h-5 min-w-[20px] items-center justify-center rounded-full px-1 text-[11px] font-bold"
                   style={{
-                    backgroundColor: active ? 'color-mix(in srgb, currentColor 18%, transparent)' : surfaceSubtle,
-                    color: active ? textOnInteractive : textSecondary,
+                    backgroundColor: active ? 'color-mix(in srgb, currentColor 18%, transparent)' : bgNeutralSubtle,
+                    color: active ? fgOnInteractive : fgNeutralSubtle,
                   }}
                 >
                   {count}
@@ -165,7 +165,7 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                 type="button"
                 onClick={() => toggleGroup(label)}
                 className="flex w-full items-center justify-between rounded-lg px-2 py-2.5 text-left transition-colors"
-                style={{ color: textSecondary }}
+                style={{ color: fgNeutralSubtle }}
               >
                 <span className="text-[13px] font-semibold uppercase tracking-wider">{label}</span>
                 {collapsedGroups[label] ? <ChevronDown className="h-[18px] w-[18px]" /> : <ChevronUp className="h-[18px] w-[18px]" />}
@@ -181,13 +181,13 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                         className="relative rounded-lg border p-3.5"
                         style={{
                           borderColor: borderDefault,
-                          backgroundColor: n.unread ? 'var(--role-surface-accent)' : surfaceDefault,
+                          backgroundColor: n.unread ? 'var(--role-bg-neutral-subtle)' : bgDefault,
                         }}
                       >
                         <div className="mb-1.5 flex items-start justify-between gap-2">
                           <div className="flex min-w-0 flex-1 items-center gap-2">
-                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--role-status-danger-fg)' }} />
-                            <span className="text-sm font-bold leading-tight" style={{ color: textPrimary }}>
+                            <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--role-fg-critical)' }} />
+                            <span className="text-sm font-bold leading-tight" style={{ color: fgPrimary }}>
                               {n.title}
                             </span>
                           </div>
@@ -202,11 +202,11 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                           </div>
                         </div>
 
-                        <p className="mb-1.5 text-[13px] leading-relaxed" style={{ color: textPrimary }}>
+                        <p className="mb-1.5 text-[13px] leading-relaxed" style={{ color: fgPrimary }}>
                           {highlightNumbers(n.description)}
                         </p>
 
-                        <p className="mb-2.5 text-xs" style={{ color: textSecondary }}>
+                        <p className="mb-2.5 text-xs" style={{ color: fgNeutralSubtle }}>
                           Area Affected: {n.area}
                         </p>
 
@@ -218,7 +218,7 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
                           >
                             View locations
                           </button>
-                          <span className="text-[11px]" style={{ color: textSecondary }}>
+                          <span className="text-[11px]" style={{ color: fgNeutralSubtle }}>
                             {n.timeAgo}
                           </span>
                         </div>
@@ -231,7 +231,7 @@ export const NotificationsDrawer = React.forwardRef<HTMLDivElement, Notification
           ))}
 
           {groups.length === 0 && (
-            <div className="flex h-[200px] flex-col items-center justify-center" style={{ color: textSecondary }}>
+            <div className="flex h-[200px] flex-col items-center justify-center" style={{ color: fgNeutralSubtle }}>
               <p className="text-sm">No notifications</p>
             </div>
           )}

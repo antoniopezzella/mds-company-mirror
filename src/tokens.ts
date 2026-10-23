@@ -17,6 +17,7 @@ export const tokens = {
   blue700:  '#1f60ff',   // interpolated
   blue750:  '#0b4bff',   // ★ Figma anchor — Active
   blue800:  '#093fda',   // interpolated
+  blue850:  '#0a3acc',   // ★ Figma anchor — base/status/info light
   blue900:  '#082d9e',   // ★ Figma anchor — corrected from interpolated #042791 (2026-09-15 Figma re-sync)
   blue950:  '#06206e',   // ★ Figma anchor — corrected from interpolated #021b6c (2026-09-15 Figma re-sync)
   blue975:  '#1a2759',   // ~white@10% blended over #000f47 (nav hover)
@@ -52,11 +53,11 @@ export const tokens = {
   green500:  '#b0dc92',   // ★ Figma anchor — corrected from #8dcc92 (2026-09-15 Figma re-sync)
   green600:  '#7cc664',   // interpolated
   green700:  '#6cc044',   // interpolated
-  green750:  '#64bc30',   // ★ Figma anchor
+  green750:  '#6abf30',   // ★ Figma anchor — corrected from #64bc30 (2026-10-20 V3 re-sync, base/accent/green)
   green800:  '#54a731',   // interpolated
   green900:  '#449631',   // interpolated
   green950:  '#3a8a32',   // interpolated
-  green1000: '#2f7d32',   // ★ Figma anchor
+  green1000: '#2f7500',   // ★ Figma anchor — corrected from #2f7d32 (2026-10-20 V3 re-sync, base/status/success)
 
   // ── RED (14 stops) ────────────────────────────────────────────────────────
   red50:   '#fffafa',   // interpolated
@@ -70,6 +71,7 @@ export const tokens = {
   red700:  '#ec4540',   // interpolated
   red750:  '#e53935',   // ★ Figma anchor
   red800:  '#d33330',   // interpolated
+  red850:  '#c63431',   // ★ Figma anchor — brand error red (base/status/critical light)
   red900:  '#af2625',   // interpolated
   red950:  '#9d201f',   // interpolated
   red1000: '#8b1a1a',   // ★ Figma anchor
@@ -95,22 +97,39 @@ export const tokens = {
   //    (surfaceAccent, surfaceAccentStrong, interactiveDisabled bg/fg) were
   //    repointed to the nearest neutral. See docs/tasks/token-authority-decision.md.
 
-  // ── NEUTRAL (14 stops — pure R=G=B scale) ─────────────────────────────────
-  neutral50:   '#f8f8f8',   // interpolated
-  neutral100:  '#eeeeee',   // interpolated
-  neutral200:  '#e3e3e3',   // Figma anchor
-  neutral250:  '#dadada',   // ★ brand anchor (= Figma 300)
-  neutral300:  '#c4c4c4',   // interpolated
-  neutral400:  '#a8a8a8',   // interpolated
-  neutral500:  '#878787',   // ★ brand anchor (= Figma 525)
-  neutral600:  '#767676',   // Figma anchor
-  neutral700:  '#595959',   // interpolated
-  neutral750:  '#4a4a4a',   // ★ brand anchor
-  neutral800:  '#3b3b3b',   // Figma anchor
-  neutral900:  '#252525',   // interpolated
-  neutral925:  '#1a1a1a',   // interpolated — dark panel lift, between 900 and 950
-  neutral950:  '#101010',   // Figma anchor
-  neutral1000: '#000000',   // ★ brand anchor — pure black
+  // ── NEUTRAL (25 warm stops — Figma color/neutral/0–1400, the authoritative ramp) ──
+  //    Renumbered 2026-10-20 to Figma's scale (Phase 1 of the V3 taxonomy adoption,
+  //    Option B). VALUE-PRESERVING re-key of the 2026-10-19 warm adoption: every
+  //    step that had a ref keeps its exact value under its new Figma number (old
+  //    refs were codemodded: neutral50→150, 500→700, 700→900, 950→1400, 1000→black,
+  //    etc.). The 10 new intermediate steps are additive — they exist so the
+  //    base/* emphasis tier (base/neutral/1–8) can alias steps 1:1. True black is
+  //    the `black` static token, NOT a neutral step (Figma's ramp bottoms at 1400).
+  neutral0:    '#ffffff',   // = white
+  neutral50:   '#fdfcfa',
+  neutral100:  '#fcfaf7',
+  neutral150:  '#faf7f4',   // base/neutral/1 — quiet background (background/neutral/subtle)
+  neutral200:  '#f9f5f1',
+  neutral250:  '#f7f3ee',   // page/application cream (background/page/application)
+  neutral300:  '#ebe7e2',   // base/neutral/2 — component background
+  neutral350:  '#dedbd6',   // base/neutral/3 — subtle line (border.subtle)
+  neutral400:  '#d2cec9',
+  neutral450:  '#c5c2bd',   // base/neutral/4 — decorative line
+  neutral500:  '#b9b6b1',
+  neutral550:  '#adaaa5',
+  neutral600:  '#a09e99',
+  neutral650:  '#94918c',
+  neutral700:  '#878580',   // base/neutral/5 — midpoint (border.default)
+  neutral750:  '#7b7974',
+  neutral800:  '#6f6d68',   // base/neutral/6 — low-contrast text, input border
+  neutral850:  '#62615c',
+  neutral900:  '#56544f',   // base/neutral/7 — secondary text
+  neutral950:  '#494843',
+  neutral1000: '#3d3c37',   // base/neutral/8 — primary text, bold fill
+  neutral1100: '#262522',   // warm dark — lifted surface
+  neutral1200: '#1f1e1b',   // warm dark — default surface
+  neutral1300: '#191816',   // warm dark — panel lift
+  neutral1400: '#131210',   // warm dark — page/application
 
   // ── STATIC ────────────────────────────────────────────────────────────────
   white: '#ffffff',
@@ -131,6 +150,10 @@ export const tokens = {
   focusCyan:      '#009de0',   // Figma MODE/Border/Focus (future-state)
   focusBlue:      '#3d7aff',   // Figma uWlcofRor5Dik8LBnJbIjo node 7582:7847 — Border/Focus (light, "On dark surface")
   focusBlueDark:  '#5e9aff',   // same node — Border/Focus (dark)
+
+  // ── V3 base-tier status primitives (added 2026-10-20, Option B Phase 1) ──────
+  orange400:      '#ffab4a',   // Figma color/orange/400 — base/status/warning (dark)
+  greenLegacy400: '#57c67a',   // Figma color/green-legacy/400 — base/status/success (dark)
 
   // ── SHADES — White (alpha) ────────────────────────────────────────────────
   shadesWhite90: 'rgba(255,255,255,0.90)',

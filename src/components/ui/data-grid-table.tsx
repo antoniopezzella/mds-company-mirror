@@ -179,24 +179,27 @@ export interface DataGridTableProps<TData extends RowData> {
  * recorded in the comments below survived the move deliberately; they are all
  * things that were got wrong once.
  */
-export function DataGridTable<TData extends RowData>({
-  loadingRowCount,
-  enableColumnReorder = false,
-  renderDetail,
-  enableVirtualization = false,
-  estimateRowSize = 44,
-  overscan = 8,
-  showFooter = false,
-  stickyFooter = false,
-  striped = false,
-  caption,
-  enableCellSelection = false,
-  enableFillHandle = false,
-  onCellsChange,
-  onRowClick,
-  onCellEdit,
-  className,
-}: DataGridTableProps<TData>) {
+function DataGridTableInner<TData extends RowData>(
+  {
+    loadingRowCount,
+    enableColumnReorder = false,
+    renderDetail,
+    enableVirtualization = false,
+    estimateRowSize = 44,
+    overscan = 8,
+    showFooter = false,
+    stickyFooter = false,
+    striped = false,
+    caption,
+    enableCellSelection = false,
+    enableFillHandle = false,
+    onCellsChange,
+    onRowClick,
+    onCellEdit,
+    className,
+  }: DataGridTableProps<TData>,
+  ref: React.ForwardedRef<HTMLTableElement>
+) {
   const {
     table,
     scrollElement,
@@ -248,13 +251,13 @@ export function DataGridTable<TData extends RowData>({
   // separating content the user is already inside. In dark it is translucent
   // white, so it composites over the row beneath rather than sitting on it.
   const borderColor = 'var(--role-border-subtle)';
-  const textColor = 'var(--role-text-primary)';
+  const textColor = 'var(--role-fg-primary)';
   const activeColor = 'var(--role-interactive-primary)';
-  const rowBg = 'var(--role-surface-raised)';
+  const rowBg = 'var(--role-bg-raised)';
   // Sky Blue in light (#ceecff), unchanged #252525 in dark. Its own role, not
   // surface.subtle, because stripeBg and headerBg below still want the neutral
   // lift and must NOT follow hover into brand blue.
-  const hoverBg = 'var(--role-surface-row-hover)';
+  const hoverBg = 'var(--role-bg-row-hover)';
   // surface.selected, not surface.accent: accent (#f7f8f8) is one unit from
   // surface.subtle (#f8f8f8) in light, so a selected row and a hovered row
   // were indistinguishable. surface.selected is the role whose own
@@ -264,7 +267,7 @@ export function DataGridTable<TData extends RowData>({
   // under AA, and green1000 is the darkest green there is. The lighter tint
   // restores that; the left accent bar below is what keeps selected
   // distinguishable from hovered, since no tint satisfies both.
-  const selectedBg = 'var(--role-surface-selected-subtle)';
+  const selectedBg = 'var(--role-bg-selected-subtle)';
   const selectedEdge = 'var(--role-interactive-primary)';
   // The header band. It used to equal the row background exactly, so the
   // column row floated with nothing anchoring it. surface.subtle is one step
@@ -272,9 +275,9 @@ export function DataGridTable<TData extends RowData>({
   //
   // This is also why surface.raised is NOT neutral900: surface.subtle already
   // is #252525 in dark, and a band the same colour as its panel is not a band.
-  const headerBg = 'var(--role-surface-subtle)';
-  const stripeBg = 'var(--role-surface-subtle)';
-  const selectionBg = 'var(--role-surface-selected-subtle)';
+  const headerBg = 'var(--role-bg-neutral-subtle)';
+  const stripeBg = 'var(--role-bg-neutral-subtle)';
+  const selectionBg = 'var(--role-bg-selected-subtle)';
 
   // Before anything is focused, TanStack reports tabIndex -1 for every cell —
   // correct for "there is no roving position yet", but it leaves the grid
@@ -845,7 +848,7 @@ export function DataGridTable<TData extends RowData>({
                             {
                               backgroundColor: selectionEdge,
                               zIndex: Z_INDEX.stickyRaised,
-                              '--tw-ring-color': 'var(--role-focus-ring)',
+                              '--tw-ring-color': 'var(--role-border-focus)',
                             } as React.CSSProperties
                           }
                         />
@@ -946,7 +949,7 @@ export function DataGridTable<TData extends RowData>({
                           }
                         }}
                         className="-mx-1 flex h-7 w-full items-center rounded-lg px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
-                        style={{ '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                        style={{ '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                         title="Double-click or press Enter to edit"
                       >
                         {renderCellContent(cell)}
@@ -985,6 +988,7 @@ export function DataGridTable<TData extends RowData>({
         {announcement}
       </span>
       <Table
+        ref={ref}
         className={cn('w-full border-collapse', className)}
         style={tableStyle}
         aria-busy={loading || undefined}
@@ -1006,7 +1010,7 @@ export function DataGridTable<TData extends RowData>({
             where an aria-label on a <table> is not, and it is visible, which
             helps everyone rather than only screen-reader users. */}
         {caption && (
-          <TableCaption className="p-2 text-left text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+          <TableCaption className="p-2 text-left text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {caption}
           </TableCaption>
         )}
@@ -1064,8 +1068,8 @@ export function DataGridTable<TData extends RowData>({
                             focus, no keyboard, no ARIA. */}
                         <button
                           type="button"
-                          className="-ml-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
-                          style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                          className="-ms-2 inline-flex h-8 max-w-full items-center gap-1.5 rounded-md px-2 font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2"
+                          style={{ color: textColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                           // Shift-click keeps its meaning as "add to the
                           // multi-sort" rather than opening the menu — Radix
                           // opens on pointerdown, so it has to be intercepted
@@ -1094,21 +1098,21 @@ export function DataGridTable<TData extends RowData>({
                         {canSort && (
                           <>
                             <DropdownMenuCheckboxItem checked={sortState === 'asc'} onCheckedChange={() => header.column.toggleSorting(false)}>
-                              <ChevronUp className="mr-2 h-4 w-4 opacity-60" /> Asc
+                              <ChevronUp className="me-2 h-4 w-4 opacity-60" /> Asc
                             </DropdownMenuCheckboxItem>
                             <DropdownMenuCheckboxItem checked={sortState === 'desc'} onCheckedChange={() => header.column.toggleSorting(true)}>
-                              <ChevronDown className="mr-2 h-4 w-4 opacity-60" /> Desc
+                              <ChevronDown className="me-2 h-4 w-4 opacity-60" /> Desc
                             </DropdownMenuCheckboxItem>
                             {sortState && (
                               <DropdownMenuItem onSelect={() => header.column.clearSorting()}>
-                                <X className="mr-2 h-4 w-4 opacity-60" /> Reset
+                                <X className="me-2 h-4 w-4 opacity-60" /> Reset
                               </DropdownMenuItem>
                             )}
                           </>
                         )}
                         {canHide && (
                           <DropdownMenuItem onSelect={() => header.column.toggleVisibility(false)}>
-                            <EyeOff className="mr-2 h-4 w-4 opacity-60" /> Hide
+                            <EyeOff className="me-2 h-4 w-4 opacity-60" /> Hide
                           </DropdownMenuItem>
                         )}
 
@@ -1120,17 +1124,17 @@ export function DataGridTable<TData extends RowData>({
                             <DropdownMenuSeparator />
                             {header.column.getIsPinned() !== 'start' && (
                               <DropdownMenuItem onSelect={() => header.column.pin('start')}>
-                                <ArrowLeftToLine className="mr-2 h-4 w-4 opacity-60" /> Pin to start
+                                <ArrowLeftToLine className="me-2 h-4 w-4 opacity-60" /> Pin to start
                               </DropdownMenuItem>
                             )}
                             {header.column.getIsPinned() !== 'end' && (
                               <DropdownMenuItem onSelect={() => header.column.pin('end')}>
-                                <ArrowRightToLine className="mr-2 h-4 w-4 opacity-60" /> Pin to end
+                                <ArrowRightToLine className="me-2 h-4 w-4 opacity-60" /> Pin to end
                               </DropdownMenuItem>
                             )}
                             {header.column.getIsPinned() && (
                               <DropdownMenuItem onSelect={() => header.column.pin(false)}>
-                                <PinOff className="mr-2 h-4 w-4 opacity-60" /> Unpin
+                                <PinOff className="me-2 h-4 w-4 opacity-60" /> Unpin
                               </DropdownMenuItem>
                             )}
                           </>
@@ -1149,13 +1153,13 @@ export function DataGridTable<TData extends RowData>({
                               disabled={!canMoveEarlier}
                               onSelect={() => moveColumn(header.column.id, -1)}
                             >
-                              <ChevronLeft className="mr-2 h-4 w-4 opacity-60" /> Move left
+                              <ChevronLeft className="me-2 h-4 w-4 opacity-60" /> Move left
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               disabled={!canMoveLater}
                               onSelect={() => moveColumn(header.column.id, 1)}
                             >
-                              <ChevronRight className="mr-2 h-4 w-4 opacity-60" /> Move right
+                              <ChevronRight className="me-2 h-4 w-4 opacity-60" /> Move right
                             </DropdownMenuItem>
                           </>
                         )}
@@ -1210,7 +1214,7 @@ export function DataGridTable<TData extends RowData>({
                       className="absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none select-none focus-visible:outline-hidden focus-visible:ring-2"
                       style={{
                         backgroundColor: header.column.getIsResizing() ? activeColor : 'transparent',
-                        '--tw-ring-color': 'var(--role-focus-ring)',
+                        '--tw-ring-color': 'var(--role-border-focus)',
                       } as React.CSSProperties}
                     />
                     /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
@@ -1331,5 +1335,19 @@ export function DataGridTable<TData extends RowData>({
     </>
   );
 }
+
+/**
+ * `forwardRef` + a generic component needs this double cast: `forwardRef`
+ * itself erases the type parameter, so the exported value is re-typed as the
+ * generic function callers actually need (`<DataGridTable<Policy> ... />`),
+ * while the real, ref-aware runtime object underneath keeps its
+ * `displayName`. Same shape as `DataTableDateFilter` / `DataTableSortList`.
+ */
+const DataGridTableImpl = React.forwardRef(DataGridTableInner);
+DataGridTableImpl.displayName = 'DataGridTable';
+
+export const DataGridTable = DataGridTableImpl as <TData extends RowData>(
+  props: DataGridTableProps<TData> & { ref?: React.ForwardedRef<HTMLTableElement> }
+) => ReturnType<typeof DataGridTableInner>;
 
 export default DataGridTable;

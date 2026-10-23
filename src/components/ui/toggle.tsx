@@ -65,8 +65,8 @@ const Toggle = React.forwardRef<React.ElementRef<typeof TogglePrimitive.Root>, T
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         style={{
-          backgroundColor: currentPressed ? 'var(--role-surface-accent)' : internalHover ? 'var(--role-surface-subtle)' : 'transparent',
-          color: 'var(--role-text-primary)',
+          backgroundColor: currentPressed ? 'var(--role-bg-neutral-subtle)' : internalHover ? 'var(--role-bg-neutral-subtle)' : 'transparent',
+          color: 'var(--role-fg-primary)',
           borderColor: variant === 'outline' ? 'var(--role-border-default)' : undefined,
           ...style,
         }}

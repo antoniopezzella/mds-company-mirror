@@ -34,8 +34,8 @@ the Read/Write/Edit call, which is too late to stop you creating the file.
 
 ```tsx
 // ❌ never                              ✅ always
-'#000f47' / tokens.blue1000             getRoleColor('text.primary')
-semanticColors.brandPrimary             getRoleColor('surface.accent')
+'#000f47' / tokens.blue1000             getRoleColor('fg.primary')
+semanticColors.brandPrimary             getRoleColor('bg.neutral.subtle')
 padding: '24px' / p-[16px]              p-4   (on the spacing scale)
 height: 40 on a control                 CONTROL_HEIGHT / useControlSize()
 <Button color="primary">                <Button variant="primary" tone="danger">

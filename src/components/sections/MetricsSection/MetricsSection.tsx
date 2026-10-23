@@ -27,7 +27,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
   title,
   description,
   metrics,
-  backgroundColor = getRoleColor('surface.subtle'),
+  backgroundColor = getRoleColor('bg.neutral.subtle'),
 }) => {
   return (
     <section className="metrics-section" style={{ backgroundColor }}>
@@ -37,7 +37,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
             variant="h2"
             className="metrics-section__title"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               mb: (theme) => theme.spacing(3),
             }}
           >
@@ -47,7 +47,7 @@ export const MetricsSection: React.FC<MetricsSectionProps> = ({
             variant="body1"
             className="metrics-section__description"
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
             }}
           >
             {description}

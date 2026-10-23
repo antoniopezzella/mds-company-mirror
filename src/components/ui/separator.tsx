@@ -65,7 +65,7 @@ export const Divider: React.FC<DividerProps> = ({
         )}
       >
         {(labelPosition === 'start' || labelPosition === 'center') && <div style={lineStyle} />}
-        <span className="whitespace-nowrap text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+        <span className="whitespace-nowrap text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
           {label}
         </span>
         {(labelPosition === 'end' || labelPosition === 'center') && <div style={lineStyle} />}
@@ -73,7 +73,7 @@ export const Divider: React.FC<DividerProps> = ({
     );
   }
 
-  const insetClass = variant === 'inset' ? (orientation === 'horizontal' ? 'ml-4' : 'mt-0') : '';
+  const insetClass = variant === 'inset' ? (orientation === 'horizontal' ? 'ms-4' : 'mt-0') : '';
   const middleClass = variant === 'middle' ? (orientation === 'horizontal' ? 'my-3' : 'mx-3') : '';
 
   // Rendered as a bordered (not background-filled) element so `dashed` can

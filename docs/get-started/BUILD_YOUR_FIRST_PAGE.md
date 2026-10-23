@@ -52,7 +52,7 @@ export default function HelloPage() {
     <div className="mx-auto max-w-container px-4 min-[576px]:px-6 min-[1200px]:px-12 py-12">
       <h1
         className="text-3xl font-semibold mb-6"
-        style={{ color: getRoleColor('text.primary') }}
+        style={{ color: getRoleColor('fg.primary') }}
       >
         Hello, MDS
       </h1>
@@ -99,7 +99,7 @@ What each piece is doing:
   `@/components/ui/*`, same as any other page.
 - **Color** — the one hardcoded-looking value here is `text-3xl
   font-semibold`, which is type scale and weight, not color. The heading's
-  actual color comes from `getRoleColor('text.primary')`, and `Card`/
+  actual color comes from `getRoleColor('fg.primary')`, and `Card`/
   `Button` already resolve their own colors internally — you never see a
   hex value in this file.
 

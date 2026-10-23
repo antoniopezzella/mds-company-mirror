@@ -12,11 +12,14 @@
     "src/components/ui",
     "src/theme/roles.ts",
     "src/lib-assets.d.ts",
+    "src/vite-env.d.ts",
     "src/theme/RoleVarsProvider.tsx",
     "src/theme/ThemeModeContext.tsx"
   ],
   "exclude": [
     "src/components/ui/**/*.stories.tsx",
-    "src/components/ui/**/*.test.tsx"
+    "src/components/ui/**/*.stories.ts",
+    "src/components/ui/**/*.test.tsx",
+    "src/components/ui/**/*.test.ts"
   ]
 }

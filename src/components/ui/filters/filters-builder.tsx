@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Button } from '@/components/ui/button';
 import { FiltersGroup, type FiltersGroupMessages } from './filters-group';
 import type { FiltersRuleProps } from './filters-rule';
@@ -85,19 +85,22 @@ const DEFAULTS = {
   builder: 'Advanced filters',
 };
 
-export function FiltersBuilder({
-  fields,
-  query: controlled,
-  defaultQuery,
-  onQueryChange,
-  maxDepth = 3,
-  editors,
-  size = 'sm',
-  readOnly = false,
-  disabled = false,
-  className,
-  messages,
-}: FiltersBuilderProps) {
+export const FiltersBuilder = React.forwardRef<HTMLDivElement, FiltersBuilderProps>(function FiltersBuilder(
+  {
+    fields,
+    query: controlled,
+    defaultQuery,
+    onQueryChange,
+    maxDepth = 3,
+    editors,
+    size = 'sm',
+    readOnly = false,
+    disabled = false,
+    className,
+    messages,
+  },
+  ref
+) {
   const t = { ...DEFAULTS, ...messages };
   const [internal, setInternal] = React.useState<FilterQuery>(
     () => defaultQuery ?? createFilterQuery()
@@ -218,6 +221,7 @@ export function FiltersBuilder({
 
   return (
     <div
+      ref={ref}
       data-slot="filters-builder"
       className={cn('flex flex-col gap-3', className)}
       // `role` is required for the label to exist at all: the implicit role
@@ -252,7 +256,7 @@ export function FiltersBuilder({
 
       {count > 0 && (
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+          <p className="text-sm" style={{ color: roleVar('fg.neutral.subtle') }}>
             {/* Counts executable RULES, not groups: the group is structure,
                 and a user who set three conditions expects to be told 3 (§25). */}
             {count === 1 ? t.summaryOne : t.summaryMany.replace('{count}', String(count))}
@@ -275,7 +279,8 @@ export function FiltersBuilder({
       )}
     </div>
   );
-}
+});
+FiltersBuilder.displayName = 'FiltersBuilder';
 
 /** The field path of one rule, wherever it sits in the tree. */
 function findRulePath(query: FilterQuery, id: string): string[] | undefined {

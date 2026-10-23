@@ -49,20 +49,21 @@ const errorStateVariants = cva('flex min-w-0 flex-col items-center text-center t
   defaultVariants: { variant: 'block' },
 });
 
-function ErrorState({
-  className,
-  variant,
-  ...props
-}: React.ComponentProps<'div'> & VariantProps<typeof errorStateVariants>) {
+const ErrorState = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<'div'> & VariantProps<typeof errorStateVariants>
+>(({ className, variant, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       data-slot="error-state"
       role="alert"
       className={cn(errorStateVariants({ variant, className }))}
       {...props}
     />
   );
-}
+});
+ErrorState.displayName = "ErrorState";
 
 function ErrorStateHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -101,11 +102,11 @@ function ErrorStateMedia({
       style={
         variant === 'icon'
           ? {
-              backgroundColor: 'var(--role-status-danger-bg)',
-              color: 'var(--role-status-danger-fg)',
+              backgroundColor: 'var(--role-bg-critical-subtle)',
+              color: 'var(--role-fg-critical)',
               ...style,
             }
-          : { color: 'var(--role-status-danger-fg)', ...style }
+          : { color: 'var(--role-fg-critical)', ...style }
       }
       {...props}
     />
@@ -117,7 +118,7 @@ function ErrorStateTitle({ className, style, ...props }: React.ComponentProps<'d
     <div
       data-slot="error-state-title"
       className={cn('text-lg font-medium tracking-tight', className)}
-      style={{ color: 'var(--role-text-primary)', ...style }}
+      style={{ color: 'var(--role-fg-primary)', ...style }}
       {...props}
     />
   );
@@ -128,7 +129,7 @@ function ErrorStateDescription({ className, style, ...props }: React.ComponentPr
     <div
       data-slot="error-state-description"
       className={cn('text-sm/relaxed', className)}
-      style={{ color: 'var(--role-text-secondary)', ...style }}
+      style={{ color: 'var(--role-fg-neutral-subtle)', ...style }}
       {...props}
     />
   );
@@ -197,7 +198,7 @@ function DataError({
             </Button>
           )}
           {detail && (
-            <span className="font-mono text-xs" style={{ color: 'var(--role-text-secondary)' }}>
+            <span className="font-mono text-xs" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
               {detail}
             </span>
           )}

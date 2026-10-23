@@ -17,7 +17,6 @@
     "composite": true,
 
     /* Path Aliases for shadcn/ui */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },

@@ -19,11 +19,11 @@ export type InputTone = 'default' | 'error' | 'success' | 'warning';
 function getToneBorderRole(tone: InputTone): RoleName | null {
   switch (tone) {
     case 'error':
-      return 'status.danger.fg';
+      return 'fg.critical';
     case 'success':
-      return 'status.success.fg';
+      return 'fg.success';
     case 'warning':
-      return 'status.warning.fg';
+      return 'fg.warning';
     default:
       return null;
   }
@@ -76,9 +76,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         style={
           {
             borderColor: toneRole ? roleVar(toneRole) : 'var(--role-border-default)',
-            color: 'var(--role-text-primary)',
-            backgroundColor: 'var(--role-surface-default)',
-            '--tw-ring-color': toneRole ? roleVar(toneRole) : 'var(--role-focus-ring)',
+            color: 'var(--role-fg-primary)',
+            backgroundColor: 'var(--role-bg-default)',
+            '--tw-ring-color': toneRole ? roleVar(toneRole) : 'var(--role-border-focus)',
             ...style,
           } as React.CSSProperties
         }

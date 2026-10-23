@@ -28,14 +28,14 @@ const DropdownMenuSubTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden data-[state=open]:bg-[var(--dropdown-hover-bg)]',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
-    style={{ color: 'var(--role-text-primary)', '--dropdown-hover-bg': 'var(--role-surface-subtle)' } as React.CSSProperties}
+    style={{ color: 'var(--role-fg-primary)', '--dropdown-hover-bg': 'var(--role-bg-neutral-subtle)' } as React.CSSProperties}
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <ChevronRight className="ms-auto h-4 w-4" />
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
@@ -50,7 +50,7 @@ const DropdownMenuSubContent = React.forwardRef<
       'z-[1500] min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
       className
     )}
-    style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
+    style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)' }}
     {...props}
   />
 ));
@@ -68,7 +68,7 @@ const DropdownMenuContent = React.forwardRef<
         'z-[1500] min-w-[10rem] overflow-hidden rounded-lg border p-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className
       )}
-      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)' }}
+      style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)' }}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
@@ -91,10 +91,10 @@ const DropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      inset && 'pl-8',
+      inset && 'ps-8',
       className
     )}
-    style={{ color: roleVar(tone === 'danger' ? 'status.danger.fg' : 'text.primary') }}
+    style={{ color: roleVar(tone === 'danger' ? 'fg.critical' : 'fg.primary') }}
     // `{...props}` FIRST, deliberately. JSX later-wins, so when this spread
     // came last a consumer passing their own handler REPLACED the one below
     // and the highlight never fired — while the `props.on*?.(e)` chain-call
@@ -102,7 +102,7 @@ const DropdownMenuItem = React.forwardRef<
     {...props}
     onFocus={(e) => {
       (e.currentTarget as HTMLElement).style.backgroundColor = roleVar(
-        tone === 'danger' ? 'status.danger.bg' : 'surface.subtle'
+        tone === 'danger' ? 'bg.critical.subtle' : 'bg.neutral.subtle'
       );
       props.onFocus?.(e);
     }}
@@ -121,14 +121,14 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     checked={checked}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
         <Check className="h-4 w-4" style={{ color: 'var(--role-interactive-primary)' }} />
       </DropdownMenuPrimitive.ItemIndicator>
@@ -145,13 +145,13 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
-    style={{ color: 'var(--role-text-primary)' }}
+    style={{ color: 'var(--role-fg-primary)' }}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
         <Circle className="h-2 w-2 fill-current" style={{ color: 'var(--role-interactive-primary)' }} />
       </DropdownMenuPrimitive.ItemIndicator>
@@ -167,8 +167,8 @@ const DropdownMenuLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'pl-8', className)}
-    style={{ color: 'var(--role-text-secondary)' }}
+    className={cn('px-2 py-1.5 text-xs font-semibold', inset && 'ps-8', className)}
+    style={{ color: 'var(--role-fg-neutral-subtle)' }}
     {...props}
   />
 ));
@@ -189,7 +189,7 @@ DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
   <span
-    className={cn('ml-auto text-xs tracking-widest opacity-60', className)}
+    className={cn('ms-auto text-xs tracking-widest opacity-60', className)}
     {...props}
   />
 );

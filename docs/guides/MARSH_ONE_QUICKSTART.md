@@ -92,11 +92,11 @@ All components use your design system's role-based colors:
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `getRoleColor('surface.hero')` | Midnight-1000 (#000F47) | Dark backgrounds, hero overlay |
+| `getRoleColor('bg.primary')` | Midnight-1000 (#000F47) | Dark backgrounds, hero overlay |
 | `getRoleColor('interactive.primary')` | Gold-750 (#FFBF00) | Search button, star badges, stats |
-| `getRoleColor('surface.default')` | White/Light | Section backgrounds |
-| `getRoleColor('text.primary')` | Midnight-1000 | Headlines, body text |
-| `getRoleColor('text.secondary')` | Neutral-600 | Supporting text |
+| `getRoleColor('bg.default')` | White/Light | Section backgrounds |
+| `getRoleColor('fg.primary')` | Midnight-1000 | Headlines, body text |
+| `getRoleColor('fg.neutral.subtle')` | Neutral-600 | Supporting text |
 
 ## 🔄 Next Steps
 

@@ -94,9 +94,9 @@ describe('ButtonGroupText', () => {
     // hardcoding colour instead of consuming the role layer.
     // `.style.*`, not toHaveStyle: jsdom cannot match a `var()` inline value.
     const ts = (text as HTMLElement).style;
-    expect(ts.backgroundColor).toBe('var(--role-surface-subtle)');
+    expect(ts.backgroundColor).toBe('var(--role-bg-neutral-subtle)');
     expect(ts.borderColor).toBe('var(--role-border-default)');
-    expect(ts.color).toBe('var(--role-text-primary)');
+    expect(ts.color).toBe('var(--role-fg-primary)');
     // It is a label, not a control — it must not be announced as one.
     expect(screen.queryByRole('button', { name: 'https://' })).not.toBeInTheDocument();
   });

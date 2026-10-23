@@ -30,7 +30,7 @@ const meta = {
         <Box sx={{ width: 280, height: '100%', borderRight: '1px solid', borderColor: 'divider' }}>
           <Story />
         </Box>
-        <Box sx={{ flex: 1, p: 2, color: 'text.secondary' }}>Canvas area</Box>
+        <Box sx={{ flex: 1, p: 2, color: 'fg.neutral.subtle' }}>Canvas area</Box>
       </Box>
     ),
   ],

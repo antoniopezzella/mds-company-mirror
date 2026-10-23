@@ -41,13 +41,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const getBackgroundColor = () => {
     switch (variant) {
       case 'dark':
-        return getRoleColor('surface.hero');
+        return getRoleColor('bg.primary');
       case 'light':
-        return getRoleColor('surface.default');
+        return getRoleColor('bg.default');
       case 'blue':
         return '#E3F2FD'; // Light blue from previous design
       default:
-        return getRoleColor('surface.hero');
+        return getRoleColor('bg.primary');
     }
   };
 
@@ -86,7 +86,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 variant="h1"
                 className="hero-section__title"
                 sx={{
-                  color: variant === 'dark' ? getRoleColor('text.inverse') : getRoleColor('text.primary'),
+                  color: variant === 'dark' ? getRoleColor('fg.on-dark') : getRoleColor('fg.primary'),
                   mb: (theme) => theme.spacing(3),
                 }}
               >
@@ -96,7 +96,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 variant="h4"
                 className="hero-section__description"
                 sx={{
-                  color: variant === 'dark' ? getRoleColor('text.inverse') : getRoleColor('text.secondary'),
+                  color: variant === 'dark' ? getRoleColor('fg.on-dark') : getRoleColor('fg.neutral.subtle'),
                   mb: cta ? (theme) => theme.spacing(4) : 0,
                 }}
               >

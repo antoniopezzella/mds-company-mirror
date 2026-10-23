@@ -44,7 +44,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
             variant="h5"
             className="business-card__title"
             sx={{
-              color: getRoleColor('text.primary'),
+              color: getRoleColor('fg.primary'),
               mb: (theme) => theme.spacing(2),
             }}
           >
@@ -55,7 +55,7 @@ export const BusinessCard: React.FC<BusinessCardProps> = ({
             variant="body1"
             className="business-card__description"
             sx={{
-              color: getRoleColor('text.secondary'),
+              color: getRoleColor('fg.neutral.subtle'),
             }}
           >
             {description}

@@ -8,12 +8,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
   stories: [
     '../src/docs/**/*.mdx',
-    '../src/components/**/*.docs.mdx',
     '../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/projects/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/blocks/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/_health/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/stories/generated/**/*.stories.@(js|jsx|mjs|ts|tsx)'
   ,
     '../src/stories/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   ],
@@ -72,15 +70,6 @@ const config: StorybookConfig = {
         ...config.resolve?.alias,
         '@': path.resolve(__dirname, '../src'),
       },
-    };
-
-    // Story UI: Exclude from dependency optimization to handle CSS imports correctly
-    config.optimizeDeps = {
-      ...config.optimizeDeps,
-      exclude: [
-        ...(config.optimizeDeps?.exclude || []),
-        '@tpitre/story-ui'
-      ]
     };
     return config;
   },

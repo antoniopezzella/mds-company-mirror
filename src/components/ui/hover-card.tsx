@@ -38,7 +38,7 @@ const HoverCardContent = React.forwardRef<
         'z-[1500] w-64 rounded-lg border p-4 shadow-[0_8px_24px_rgba(0,0,0,0.12)] outline-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         className
       )}
-      style={{ backgroundColor: 'var(--role-surface-default)', borderColor: 'var(--role-border-default)', color: 'var(--role-text-primary)' }}
+      style={{ backgroundColor: 'var(--role-bg-default)', borderColor: 'var(--role-border-default)', color: 'var(--role-fg-primary)' }}
       {...props}
     />
   </HoverCardPrimitive.Portal>

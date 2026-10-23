@@ -85,9 +85,9 @@ belongs on which fill.
   foreground does not.
 - `status.*` uses `.bg`/`.fg` pairing; `interactive.*`, `surface.*` and
   `brand.*` do not. Pairings in those families are the ones to check by hand.
-- Known traps: `text.onAccent` and `text.inverse` are fixed near-whites and
-  fail on anything that lightens in dark. `text.onHero` does **not** flip.
-  `text.primary` is body text, not a pairing role — `text.onPrimary` is.
+- Known traps: `fg.on-accent` and `fg.on-dark` are fixed near-whites and
+  fail on anything that lightens in dark. `fg.on-primary` does **not** flip.
+  `fg.primary` is body text, not a pairing role — `text.onPrimary` is.
 
 ### 4. The gates themselves
 

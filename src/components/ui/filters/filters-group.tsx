@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ChevronDown, FolderPlus, MoreVertical, Plus } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
@@ -116,20 +116,23 @@ export interface FiltersGroupProps extends FiltersGroupHandlers {
   messages?: Partial<FiltersGroupMessages & NonNullable<FiltersRuleProps['messages']>>;
 }
 
-export function FiltersGroup({
-  group,
-  fields,
-  addRef,
-  depth,
-  maxDepth,
-  isRoot = false,
-  editors,
-  size = 'sm',
-  readOnly = false,
-  disabled = false,
-  messages,
-  ...h
-}: FiltersGroupProps) {
+export const FiltersGroup = React.forwardRef<HTMLDivElement, FiltersGroupProps>(function FiltersGroupInner(
+  {
+    group,
+    fields,
+    addRef,
+    depth,
+    maxDepth,
+    isRoot = false,
+    editors,
+    size = 'sm',
+    readOnly = false,
+    disabled = false,
+    messages,
+    ...h
+  },
+  ref
+) {
   const t = { ...FILTERS_GROUP_MESSAGES, ...messages };
   const [addingTo, setAddingTo] = React.useState(false);
   const pickerRef = React.useRef<FieldPickerHandle | null>(null);
@@ -163,6 +166,7 @@ export function FiltersGroup({
 
   return (
     <div
+      ref={ref}
       data-slot="filters-group"
       data-combinator={group.combinator}
       data-depth={depth}
@@ -179,23 +183,23 @@ export function FiltersGroup({
           ? undefined
           : {
               borderColor: group.negated
-                ? getRoleColor('status.danger.border')
-                : getRoleColor('border.subtle'),
-              backgroundColor: getRoleColor('surface.subtle'),
+                ? roleVar('border.critical')
+                : roleVar('border.subtle'),
+              backgroundColor: roleVar('bg.neutral.subtle'),
             }
       }
     >
       {group.negated && !isRoot && (
         <p
           className="text-xs font-semibold tracking-wide"
-          style={{ color: getRoleColor('status.danger.fg') }}
+          style={{ color: roleVar('fg.critical') }}
         >
           {t.not}
         </p>
       )}
 
       {group.rules.length === 0 && (
-        <p className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+        <p className="text-sm" style={{ color: roleVar('fg.neutral.subtle') }}>
           {t.empty}
         </p>
       )}
@@ -207,7 +211,7 @@ export function FiltersGroup({
               harder to read than the nesting itself does. */}
           <div className="w-20 shrink-0 pt-1">
             {index === 0 ? (
-              <span className="text-sm" style={{ color: getRoleColor('text.secondary') }}>
+              <span className="text-sm" style={{ color: roleVar('fg.neutral.subtle') }}>
                 {t.where}
               </span>
             ) : index === 1 && !inert ? (
@@ -224,7 +228,7 @@ export function FiltersGroup({
               // same value would imply three independent choices.
               <span
                 className="text-sm"
-                style={{ color: getRoleColor('text.secondary') }}
+                style={{ color: roleVar('fg.neutral.subtle') }}
                 aria-hidden="true"
               >
                 {word}
@@ -356,7 +360,7 @@ export function FiltersGroup({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onSelect={() => h.onRemoveNode(group.id)}
-                  style={{ color: getRoleColor('status.danger.fg') }}
+                  style={{ color: roleVar('fg.critical') }}
                 >
                   {t.removeGroup}
                 </DropdownMenuItem>
@@ -367,7 +371,8 @@ export function FiltersGroup({
       )}
     </div>
   );
-}
+});
+FiltersGroup.displayName = 'FiltersGroup';
 
 /**
  * And / Or for one group.

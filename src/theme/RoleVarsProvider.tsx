@@ -5,7 +5,7 @@ import { getRoleColor, listRoles, roleVarName } from './roles';
  * RoleVarsProvider
  *
  * The one official CSS-custom-property bridge for role tokens — mounted once
- * in src/main.tsx around <Router>, so `var(--role-text-primary)` etc. is
+ * in src/main.tsx around <Router>, so `var(--role-fg-primary)` etc. is
  * available anywhere in the tree. This exists for contexts that can't call
  * getRoleColor() directly (.module.scss files, styled-in-CSS selectors like
  * :hover/:active/::before) — see src/projects/ClinicalTrials/ClinicalTrialsPage.scss

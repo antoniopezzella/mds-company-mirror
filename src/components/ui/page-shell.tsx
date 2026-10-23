@@ -75,7 +75,7 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
       ref={ref}
       data-slot="page-shell"
       className={cn('mds-dashboard grid min-h-screen grid-rows-[auto_1fr]', className)}
-      style={{ backgroundColor: 'var(--role-surface-default)', ...style }}
+      style={{ backgroundColor: 'var(--role-bg-default)', ...style }}
       {...props}
     >
       {/*
@@ -88,9 +88,9 @@ export const PageShell = React.forwardRef<HTMLDivElement, PageShellProps>(
           href={`#${mainId}`}
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[1700] focus:rounded-md focus:px-4 focus:py-2 focus:outline-hidden focus:ring-2"
           style={{
-            backgroundColor: 'var(--role-surface-default)',
-            color: 'var(--role-text-primary)',
-            ['--tw-ring-color' as string]: 'var(--role-focus-ring)',
+            backgroundColor: 'var(--role-bg-default)',
+            color: 'var(--role-fg-primary)',
+            ['--tw-ring-color' as string]: 'var(--role-border-focus)',
           } as React.CSSProperties}
         >
           Skip to main content
@@ -177,12 +177,12 @@ export const PageHeading = React.forwardRef<HTMLDivElement, PageHeadingProps>(
         */}
         <h1
           className="font-sans-productive text-2xl font-bold"
-          style={{ color: 'var(--role-text-primary)' }}
+          style={{ color: 'var(--role-fg-primary)' }}
         >
           {title}
         </h1>
         {description && (
-          <p className="text-sm" style={{ color: 'var(--role-text-secondary)' }}>
+          <p className="text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
             {description}
           </p>
         )}

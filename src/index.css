@@ -3,6 +3,20 @@
    them. @import must come before any other rule, hence its position here. */
 @import './styles/token-variables.css';
 
+/* The GENERATED Figma token layer (--mds-color-*), light / dark / inverse.
+   Figma owns these values; scripts/tokens/generate-token-css.mjs writes the
+   file from src/tokens/figma/mds-color.tokens.json. Sits BEFORE the
+   hand-written layers deliberately: while both exist the hand-written values
+   still win, so adding this import changes nothing visually — it only makes
+   the MDS variables and utilities available. See
+   docs/tasks/token-pipeline-migration.md.
+
+   NOT imported by styles.package.css yet, deliberately: there the variables
+   are pure dead weight until the flip (every one is overridden), and they put
+   the published stylesheet at 23.0 kB gzip against a 22.5 kB budget. It joins
+   the package entry in step 3, when the hand-written values it replaces go. */
+@import './styles/generated/mds-tokens.css';
+
 /* The role tier as static CSS. The app also mounts RoleVarsProvider, which
    sets the same properties inline and therefore wins — these are the floor,
    so anything rendered before the provider's effect runs (or outside it)
@@ -16,6 +30,16 @@
    is a separate change, and doing both at once would make this diff
    unreviewable. */
 @import "tailwindcss";
+
+/* The GENERATED MDS colour utilities (bg-primary, text-critical, ring-focus …)
+   plus the shadcn adapter. Generated, same source as above. MUST sit above
+   @config with the other @imports. The 20 adapter classes are SHADOWED by
+   tailwind.config.js `theme.extend.colors` for now — Tailwind merges both
+   declarations into one rule and the config's `hsl(var(--…))` is emitted last,
+   so it wins. Removing those config colours is the flip (step 3 of the
+   migration doc) and is where values actually change. */
+@import './styles/generated/tailwind.tokens.css';
+
 /* Radix overlay animations. tailwindcss-animate was v3-only (JS plugin API);
    tw-animate-css is the v4-compatible replacement and keeps the same
    animate-in/animate-out class names shadcn components already use.

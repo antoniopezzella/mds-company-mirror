@@ -1,0 +1,2669 @@
+{
+  "$description": "GENERATED from Figma variables. Do not edit by hand: re-export from Figma (scripts/tokens/figma-pull.mjs or the plugin export) and regenerate.",
+  "$extensions": {
+    "com.marsh.mds": {
+      "source": {
+        "collection": "COLOR",
+        "primitives": "COLOR PRIMITIVES",
+        "fileKey": "EWYkndq17wpDP3pwcz1zM4",
+        "exportedAt": "2026-10-23",
+        "via": "Figma REST API"
+      },
+      "modes": {
+        "light": "Light",
+        "dark": "Dark",
+        "inverse": "Inverse (On dark surface)"
+      },
+      "tokenCount": 92
+    }
+  },
+  "primitive": {
+    "blue": {
+      "100": {
+        "$type": "color",
+        "$value": "#ebf7ff"
+      },
+      "250": {
+        "$type": "color",
+        "$value": "#ceecff"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#bbe1ff"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#95caff"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#5e9aff"
+      },
+      "650": {
+        "$type": "color",
+        "$value": "#3d7aff"
+      },
+      "750": {
+        "$type": "color",
+        "$value": "#0b4bff"
+      },
+      "850": {
+        "$type": "color",
+        "$value": "#0a3acc"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#082d9e"
+      },
+      "950": {
+        "$type": "color",
+        "$value": "#06206e"
+      },
+      "1000": {
+        "$type": "color",
+        "$value": "#000f47"
+      },
+      "dark-tint": {
+        "$type": "color",
+        "$value": "#263854"
+      }
+    },
+    "neutral": {
+      "0": {
+        "$type": "color",
+        "$value": "#ffffff"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#fdfcfa"
+      },
+      "150": {
+        "$type": "color",
+        "$value": "#faf7f4"
+      },
+      "250": {
+        "$type": "color",
+        "$value": "#f7f3ee"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#ebe7e2"
+      },
+      "350": {
+        "$type": "color",
+        "$value": "#dedbd6"
+      },
+      "450": {
+        "$type": "color",
+        "$value": "#c5c2bd"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#b9b6b1"
+      },
+      "550": {
+        "$type": "color",
+        "$value": "#adaaa5"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#a09e99"
+      },
+      "650": {
+        "$type": "color",
+        "$value": "#94918c"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#878580"
+      },
+      "750": {
+        "$type": "color",
+        "$value": "#7b7974"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#6f6d68"
+      },
+      "850": {
+        "$type": "color",
+        "$value": "#62615c"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#56544f"
+      },
+      "950": {
+        "$type": "color",
+        "$value": "#494843"
+      },
+      "1000": {
+        "$type": "color",
+        "$value": "#3d3c37"
+      },
+      "1100": {
+        "$type": "color",
+        "$value": "#262522"
+      },
+      "1200": {
+        "$type": "color",
+        "$value": "#1f1e1b"
+      },
+      "1300": {
+        "$type": "color",
+        "$value": "#191816"
+      },
+      "1400": {
+        "$type": "color",
+        "$value": "#131210"
+      }
+    },
+    "gold": {
+      "500": {
+        "$type": "color",
+        "$value": "#ffd98a"
+      },
+      "750": {
+        "$type": "color",
+        "$value": "#ffbf00"
+      },
+      "850": {
+        "$type": "color",
+        "$value": "#eaa501"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#e09802"
+      },
+      "950": {
+        "$type": "color",
+        "$value": "#d58b02"
+      }
+    },
+    "red": {
+      "250": {
+        "$type": "color",
+        "$value": "#ffe8e8"
+      },
+      "300": {
+        "$type": "color",
+        "$value": "#ffcfcf"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#ff9d9d"
+      },
+      "500": {
+        "$type": "color",
+        "$value": "#ff6b6b"
+      },
+      "700": {
+        "$type": "color",
+        "$value": "#ec4540"
+      },
+      "850": {
+        "$type": "color",
+        "$value": "#c63431"
+      },
+      "900": {
+        "$type": "color",
+        "$value": "#af2625"
+      },
+      "950": {
+        "$type": "color",
+        "$value": "#9d201f"
+      },
+      "1000": {
+        "$type": "color",
+        "$value": "#8b1a1a"
+      },
+      "dark-tint": {
+        "$type": "color",
+        "$value": "#472625"
+      }
+    },
+    "green": {
+      "100": {
+        "$type": "color",
+        "$value": "#f0f6ed"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#c3e3ae"
+      },
+      "1000": {
+        "$type": "color",
+        "$value": "#2f7500"
+      }
+    },
+    "green-legacy": {
+      "400": {
+        "$type": "color",
+        "$value": "#57c67a"
+      },
+      "dark-tint": {
+        "$type": "color",
+        "$value": "#294030"
+      }
+    },
+    "orange": {
+      "100": {
+        "$type": "color",
+        "$value": "#f8ebe0"
+      },
+      "400": {
+        "$type": "color",
+        "$value": "#ffab4a"
+      },
+      "600": {
+        "$type": "color",
+        "$value": "#c25600"
+      },
+      "800": {
+        "$type": "color",
+        "$value": "#8f5400"
+      },
+      "dark-tint": {
+        "$type": "color",
+        "$value": "#4b3a27"
+      }
+    },
+    "alpha": {
+      "black": {
+        "0": {
+          "$type": "color",
+          "$value": "#00000000"
+        },
+        "5": {
+          "$type": "color",
+          "$value": "#0000000d"
+        },
+        "8": {
+          "$type": "color",
+          "$value": "#00000014"
+        },
+        "12": {
+          "$type": "color",
+          "$value": "#0000001f"
+        },
+        "30": {
+          "$type": "color",
+          "$value": "#0000004d"
+        },
+        "45": {
+          "$type": "color",
+          "$value": "#00000073"
+        },
+        "55": {
+          "$type": "color",
+          "$value": "#0000008c"
+        },
+        "60": {
+          "$type": "color",
+          "$value": "#00000099"
+        }
+      },
+      "white": {
+        "0": {
+          "$type": "color",
+          "$value": "#ffffff00"
+        },
+        "5": {
+          "$type": "color",
+          "$value": "#ffffff0d"
+        },
+        "10": {
+          "$type": "color",
+          "$value": "#ffffff1a"
+        },
+        "15": {
+          "$type": "color",
+          "$value": "#ffffff26"
+        },
+        "20": {
+          "$type": "color",
+          "$value": "#ffffff33"
+        },
+        "30": {
+          "$type": "color",
+          "$value": "#ffffff4d"
+        },
+        "80": {
+          "$type": "color",
+          "$value": "#ffffffcc"
+        }
+      },
+      "blue-750": {
+        "10": {
+          "$type": "color",
+          "$value": "#0b4bff1a"
+        },
+        "20": {
+          "$type": "color",
+          "$value": "#0b4bff33"
+        }
+      },
+      "blue-1000": {
+        "70": {
+          "$type": "color",
+          "$value": "#000f47b2"
+        }
+      }
+    },
+    "purple": {
+      "500": {
+        "$type": "color",
+        "$value": "#deb1ff"
+      },
+      "750": {
+        "$type": "color",
+        "$value": "#8f20de"
+      }
+    }
+  },
+  "color": {
+    "background": {
+      "primary": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Brand primary fill: primary buttons, checkbox, key highlights.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3134:2081",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-primary-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.blue.650}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.blue.900}",
+          "$description": "Primary fill on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3125:650",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-primary-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.900}",
+                "dark": "{primitive.blue.600}",
+                "inverse": "{primitive.blue.100}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.blue.750}",
+          "$description": "Primary fill while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3125:649",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-primary-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.750}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        }
+      },
+      "secondary": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.250}",
+          "$description": "Brand secondary fill (Sky): secondary highlights and badges.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:16992:59",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-secondary-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.250}",
+                "dark": "{primitive.blue.600}",
+                "inverse": "{primitive.blue.600}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.blue.250}",
+          "$description": "Soft brand surface for large areas: promo banners, Sky header bars, quotes, covers.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17124:51",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-secondary-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.250}",
+                "dark": "{primitive.blue.950}",
+                "inverse": "{primitive.blue.950}"
+              }
+            }
+          }
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.neutral.50}",
+        "$description": "Default surface: cards, panels, modals, popovers.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:9695:933",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-default)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.50}",
+              "dark": "{primitive.neutral.1200}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.gold.750}",
+          "$description": "Brand accent fill (gold): accent buttons and highlights.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5162:34591",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-accent-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.gold.750}",
+                "dark": "{primitive.gold.750}",
+                "inverse": "{primitive.gold.750}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.gold.850}",
+          "$description": "Accent fill on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:999",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-accent-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.gold.850}",
+                "dark": "{primitive.gold.500}",
+                "inverse": "{primitive.gold.500}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.gold.950}",
+          "$description": "Accent fill while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:998",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-accent-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.gold.950}",
+                "dark": "{primitive.gold.900}",
+                "inverse": "{primitive.gold.900}"
+              }
+            }
+          }
+        }
+      },
+      "interactive": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.750}",
+          "$description": "Interactive fill (Active blue): selected and active states of controls.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:934",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-interactive-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.750}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        }
+      },
+      "neutral": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.neutral.300}",
+          "$description": "Neutral component fill at rest: chips, tags, segmented controls, progress tracks.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5142:34592",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-neutral-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.300}",
+                "dark": "{primitive.neutral.1000}",
+                "inverse": "{primitive.neutral.850}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.neutral.150}",
+          "$description": "Lowest-emphasis neutral fill: section backgrounds, skeletons, quiet panels.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5142:34591",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-neutral-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.150}",
+                "dark": "{primitive.neutral.1300}",
+                "inverse": "{primitive.neutral.950}"
+              }
+            }
+          }
+        },
+        "bold": {
+          "$type": "color",
+          "$value": "{primitive.neutral.1000}",
+          "$description": "Highest-emphasis neutral fill (charcoal in Light): dark badges and bars.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3221:39",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-neutral-bold)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.1000}",
+                "dark": "{primitive.neutral.250}",
+                "inverse": "{primitive.neutral.250}"
+              }
+            }
+          }
+        }
+      },
+      "disabled": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.neutral.300}",
+          "$description": "Fill of disabled controls.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3201:2484",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-disabled-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.300}",
+                "dark": "{primitive.neutral.1000}",
+                "inverse": "{primitive.neutral.850}"
+              }
+            }
+          }
+        },
+        "bold": {
+          "$type": "color",
+          "$value": "{primitive.neutral.750}",
+          "$description": "Stronger disabled fill for selected-but-disabled states (checked checkbox, switch on).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5294:34593",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-disabled-bold)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.750}",
+                "dark": "{primitive.neutral.650}",
+                "inverse": "{primitive.neutral.650}"
+              }
+            }
+          }
+        }
+      },
+      "critical": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.red.850}",
+          "$description": "Solid critical fill: destructive buttons, error badges.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5116:34639",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-critical-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.850}",
+                "dark": "{primitive.red.700}",
+                "inverse": "{primitive.red.700}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.red.950}",
+          "$description": "Critical (destructive) fill on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:979",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-critical-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.950}",
+                "dark": "{primitive.red.500}",
+                "inverse": "{primitive.red.500}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.red.1000}",
+          "$description": "Critical (destructive) fill while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:978",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-critical-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.1000}",
+                "dark": "{primitive.red.300}",
+                "inverse": "{primitive.red.300}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.red.250}",
+          "$description": "Soft error background: error alerts and banners (used by Alert).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:16997:55",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-critical-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.250}",
+                "dark": "{primitive.red.dark-tint}",
+                "inverse": "{primitive.red.dark-tint}"
+              }
+            }
+          }
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.green.1000}",
+          "$description": "Solid success fill: success badges and indicators.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5116:34640",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-success-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.green.1000}",
+                "dark": "{primitive.green-legacy.400}",
+                "inverse": "{primitive.green-legacy.400}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.green.100}",
+          "$description": "Soft success background: success alerts and banners (used by Alert).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:16997:53",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-success-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.green.100}",
+                "dark": "{primitive.green-legacy.dark-tint}",
+                "inverse": "{primitive.green-legacy.dark-tint}"
+              }
+            }
+          }
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.orange.600}",
+          "$description": "Solid warning fill: warning badges and indicators.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5116:34641",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-warning-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.orange.600}",
+                "dark": "{primitive.orange.400}",
+                "inverse": "{primitive.orange.400}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.orange.100}",
+          "$description": "Soft warning background: warning alerts and banners (used by Alert).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:16997:54",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-warning-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.orange.100}",
+                "dark": "{primitive.orange.dark-tint}",
+                "inverse": "{primitive.orange.dark-tint}"
+              }
+            }
+          }
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.850}",
+          "$description": "Solid info fill: info badges and indicators.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17028:53224",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-info-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.850}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.blue.100}",
+          "$description": "Soft info background: info alerts and banners (used by Alert).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17028:53225",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-info-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.100}",
+                "dark": "{primitive.blue.dark-tint}",
+                "inverse": "{primitive.blue.dark-tint}"
+              }
+            }
+          }
+        }
+      },
+      "stripe": {
+        "$type": "color",
+        "$value": "{primitive.alpha.black.5}",
+        "$description": "Alternating row stripe for zebra tables.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:9695:939",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-stripe)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.alpha.black.5}",
+              "dark": "{primitive.alpha.white.5}",
+              "inverse": "{primitive.alpha.white.5}"
+            }
+          }
+        }
+      },
+      "transparent": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.0}",
+          "$description": "Transparent fill for ghost and tertiary controls at rest.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3127:636",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-transparent-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.0}",
+                "dark": "{primitive.alpha.white.0}",
+                "inverse": "{primitive.alpha.white.0}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.neutral.150}",
+          "$description": "Ghost or tertiary control on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:11158:19466",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-transparent-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.150}",
+                "dark": "{primitive.alpha.white.20}",
+                "inverse": "{primitive.alpha.white.20}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.neutral.300}",
+          "$description": "Ghost or tertiary control while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:11158:19467",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-transparent-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.300}",
+                "dark": "{primitive.alpha.white.30}",
+                "inverse": "{primitive.alpha.white.30}"
+              }
+            }
+          }
+        }
+      },
+      "input": {
+        "disabled": {
+          "$type": "color",
+          "$value": "{primitive.neutral.300}",
+          "$description": "Fill of a disabled form field.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:944",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-input-disabled)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.300}",
+                "dark": "{primitive.neutral.1100}",
+                "inverse": "{primitive.neutral.300}"
+              }
+            }
+          }
+        },
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.neutral.0}",
+          "$description": "Fill of form fields and controls: input, dropdown, checkbox, radio, chat compose.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17009:51",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-input-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.0}",
+                "dark": "{primitive.neutral.1300}",
+                "inverse": "{primitive.neutral.0}"
+              }
+            }
+          }
+        }
+      },
+      "page": {
+        "$type": "color",
+        "$value": "{primitive.neutral.250}",
+        "$description": "Page canvas behind all content, on marketing and application pages.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:7232:39",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-page)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.250}",
+              "dark": "{primitive.neutral.1400}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{primitive.blue.1000}",
+        "$description": "GLOBAL HEADER, UTILITY BAR AND FOOTER ONLY (follows the page theme).",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17189:9106",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-brand)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.1000}",
+              "dark": "{primitive.neutral.1200}",
+              "inverse": "{primitive.blue.250}"
+            }
+          }
+        }
+      },
+      "avatar": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Avatar fill (initials avatars).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17303:51",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-avatar-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.neutral.600}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        }
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "{primitive.blue.250}",
+        "$description": "Selected state for rows, list items and cards.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17305:129207",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-selected)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.250}",
+              "dark": "{primitive.neutral.1100}",
+              "inverse": "{primitive.alpha.white.10}"
+            }
+          }
+        }
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{primitive.blue.100}",
+        "$description": "Hover surface for rows and list items.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17305:129208",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-background-hover)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.100}",
+              "dark": "{primitive.alpha.white.5}",
+              "inverse": "{primitive.alpha.white.20}"
+            }
+          }
+        }
+      },
+      "section": {
+        "accent": {
+          "$type": "color",
+          "$value": "{primitive.blue.250}",
+          "$description": "Accent page section (marketing bands, hero panels, CTA bands).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17428:51",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-background-section-accent)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.250}",
+                "dark": "{primitive.neutral.1100}",
+                "inverse": "{primitive.blue.950}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "foreground": {
+      "primary": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "COMPONENT TEXT — labels and UI text inside components (buttons, inputs, tables).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:111:127",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-primary-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.blue.250}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.blue.900}",
+          "$description": "Brand-colour text or icon on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3125:648",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-primary-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.900}",
+                "dark": "{primitive.blue.100}",
+                "inverse": "{primitive.blue.100}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.blue.750}",
+          "$description": "Brand-colour text or icon while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3125:647",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-primary-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.750}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        }
+      },
+      "neutral": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.neutral.1000}",
+          "$description": "COMPONENT TEXT — UI text inside components.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:111:129",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-neutral-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.1000}",
+                "dark": "{primitive.neutral.250}",
+                "inverse": "{primitive.neutral.250}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.neutral.900}",
+          "$description": "Secondary text: descriptions, metadata, captions.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5231:3",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-neutral-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.900}",
+                "dark": "{primitive.neutral.450}",
+                "inverse": "{primitive.neutral.350}"
+              }
+            }
+          }
+        },
+        "subtler": {
+          "$type": "color",
+          "$value": "{primitive.neutral.850}",
+          "$description": "Lowest-emphasis readable text: helper text, timestamps.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5445:18",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-neutral-subtler)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.850}",
+                "dark": "{primitive.neutral.550}",
+                "inverse": "{primitive.neutral.500}"
+              }
+            }
+          }
+        }
+      },
+      "on-primary": {
+        "$type": "color",
+        "$value": "{primitive.blue.250}",
+        "$description": "Text and icons on the primary fill: Sky on Midnight in light, Midnight on Sky in Inverse (14.72:1 both).",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:3098:45",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-primary)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.250}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "link": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.750}",
+          "$description": "Hyperlink text and icons.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3134:2084",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-link-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.750}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        },
+        "visited": {
+          "$type": "color",
+          "$value": "{primitive.purple.750}",
+          "$description": "Visited hyperlink (:visited).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:15770:51",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-link-visited)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.purple.750}",
+                "dark": "{primitive.purple.500}",
+                "inverse": "{primitive.purple.500}"
+              }
+            }
+          }
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.850}",
+          "$description": "Info text and icons: info messages and info alert content.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17028:53226",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-info-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.850}",
+                "dark": "{primitive.blue.300}",
+                "inverse": "{primitive.blue.300}"
+              }
+            }
+          }
+        }
+      },
+      "critical": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.red.900}",
+          "$description": "Error text and icons: validation messages and critical alert content.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3111:39",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-critical-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.900}",
+                "dark": "{primitive.red.400}",
+                "inverse": "{primitive.red.400}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.red.950}",
+          "$description": "Critical text or icon on hover.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:973",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-critical-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.950}",
+                "dark": "{primitive.red.500}",
+                "inverse": "{primitive.red.500}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.red.1000}",
+          "$description": "Critical text or icon while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:972",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-critical-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.1000}",
+                "dark": "{primitive.red.300}",
+                "inverse": "{primitive.red.300}"
+              }
+            }
+          }
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.green.1000}",
+          "$description": "Success text and icons: confirmation messages and success alert content.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3113:42",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-success-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.green.1000}",
+                "dark": "{primitive.green.400}",
+                "inverse": "{primitive.green.400}"
+              }
+            }
+          }
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.orange.800}",
+          "$description": "Warning text and icons: warning messages and warning alert content.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5153:34676",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-warning-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.orange.800}",
+                "dark": "{primitive.gold.500}",
+                "inverse": "{primitive.gold.500}"
+              }
+            }
+          }
+        }
+      },
+      "on-media": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on images and video: video controls, time labels, labels on the media overlay.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:9695:945",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-media)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.neutral.0}",
+              "inverse": "{primitive.neutral.0}"
+            }
+          }
+        }
+      },
+      "input": {
+        "placeholder": {
+          "$type": "color",
+          "$value": "{primitive.neutral.800}",
+          "$description": "Placeholder text inside a form field.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:10046:21384",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-input-placeholder)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.800}",
+                "dark": "{primitive.neutral.550}",
+                "inverse": "{primitive.neutral.800}"
+              }
+            }
+          }
+        },
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Entered text and icons inside a form field.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17009:52",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-input-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.neutral.250}",
+                "inverse": "{primitive.blue.1000}"
+              }
+            }
+          }
+        }
+      },
+      "on-secondary": {
+        "$type": "color",
+        "$value": "{primitive.blue.1000}",
+        "$description": "Text and icons on the secondary (Sky) fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:60",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-secondary)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.1000}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-accent": {
+        "$type": "color",
+        "$value": "{primitive.blue.1000}",
+        "$description": "Text and icons on the accent (gold) fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:61",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-accent)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.1000}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-critical": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on the solid critical fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:62",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-critical)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-success": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on the solid success fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:63",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-success)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-warning": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on the solid warning fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:64",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-warning)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-neutral": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on the bold neutral (charcoal) fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:16992:65",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-neutral)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.neutral.1400}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-info": {
+        "$type": "color",
+        "$value": "{primitive.neutral.0}",
+        "$description": "Text and icons on the solid info fill.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17028:53228",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-info)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.0}",
+              "dark": "{primitive.blue.1000}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-brand": {
+        "$type": "color",
+        "$value": "{primitive.blue.250}",
+        "$description": "GLOBAL HEADER, UTILITY BAR AND FOOTER ONLY.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17189:9107",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-brand)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.250}",
+              "dark": "{primitive.blue.250}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "on-avatar": {
+        "$type": "color",
+        "$value": "{primitive.blue.250}",
+        "$description": "Initials and icons on background/avatar/default.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:17303:52",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-on-avatar)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.blue.250}",
+              "dark": "{primitive.neutral.1400}",
+              "inverse": "{primitive.blue.1000}"
+            }
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.700}",
+        "$description": "Text and icons in disabled controls.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:99:1338",
+            "scopes": [
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-foreground-disabled)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.700}",
+              "dark": "{primitive.neutral.750}",
+              "inverse": "{primitive.neutral.700}"
+            }
+          }
+        }
+      },
+      "body": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "CONTENT TEXT — paragraphs.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17429:154071",
+              "scopes": [
+                "TEXT_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-body-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.neutral.250}",
+                "inverse": "{primitive.neutral.0}"
+              }
+            }
+          }
+        },
+        "on-shell": {
+          "$type": "color",
+          "$value": "{primitive.neutral.0}",
+          "$description": "Paragraph / body copy on shell and brand bands (background/shell).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17429:154072",
+              "scopes": [
+                "TEXT_FILL"
+              ],
+              "codeSyntax": {}
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.0}",
+                "dark": "{primitive.neutral.250}",
+                "inverse": "{primitive.blue.1000}"
+              }
+            }
+          }
+        }
+      },
+      "heading": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "CONTENT TEXT — headings and display text.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17432:1558",
+              "scopes": [
+                "TEXT_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-foreground-heading-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.blue.250}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "border": {
+      "translucent": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.45}",
+          "$description": "Translucent default border for use on images or tinted fills.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5353:19",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-translucent-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.45}",
+                "dark": "{primitive.alpha.white.80}",
+                "inverse": "{primitive.alpha.white.80}"
+              }
+            }
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.12}",
+          "$description": "Translucent subtle border for use on images or tinted fills.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:12750:21490",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-translucent-subtle)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.12}",
+                "dark": "{primitive.alpha.white.15}",
+                "inverse": "{primitive.alpha.white.15}"
+              }
+            }
+          }
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{primitive.neutral.750}",
+        "$description": "Default component border: outlined controls at rest, cards and dividers that need presence.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:7204:143",
+            "scopes": [
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-border-default)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.750}",
+              "dark": "{primitive.neutral.650}",
+              "inverse": "{primitive.neutral.650}"
+            }
+          }
+        }
+      },
+      "primary": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Brand border: secondary buttons, selected cards.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3134:2533",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-primary-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.neutral.750}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        }
+      },
+      "interactive": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.750}",
+          "$description": "Interactive border (Active blue): selected and active controls.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5057:38247",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-interactive-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.750}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.gold.750}",
+          "$description": "Gold border for accent elements.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:957",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-accent-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.gold.750}",
+                "dark": "{primitive.gold.750}",
+                "inverse": "{primitive.gold.750}"
+              }
+            }
+          }
+        }
+      },
+      "input": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.neutral.850}",
+          "$description": "Form field border at rest.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:1243:410",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-input-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.neutral.850}",
+                "dark": "{primitive.neutral.550}",
+                "inverse": "{primitive.neutral.850}"
+              }
+            }
+          }
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Form field border on hover and while typing.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17009:53",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-input-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.blue.250}",
+                "inverse": "{primitive.blue.1000}"
+              }
+            }
+          }
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{primitive.neutral.350}",
+        "$description": "Border of disabled controls.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:7313:39",
+            "scopes": [
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-border-disabled)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.350}",
+              "dark": "{primitive.neutral.950}",
+              "inverse": "{primitive.neutral.850}"
+            }
+          }
+        }
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{primitive.neutral.350}",
+        "$description": "Low-emphasis divider and card outline.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:872:65",
+            "scopes": [
+              "STROKE_COLOR"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-border-subtle)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.neutral.350}",
+              "dark": "{primitive.neutral.950}",
+              "inverse": "{primitive.neutral.850}"
+            }
+          }
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.850}",
+          "$description": "Info border: info alerts and cards.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:17028:53227",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-info-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.850}",
+                "dark": "{primitive.blue.400}",
+                "inverse": "{primitive.blue.400}"
+              }
+            }
+          }
+        }
+      },
+      "critical": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.red.850}",
+          "$description": "Error border: invalid fields, error alerts and cards.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:7002:824",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-critical-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.red.850}",
+                "dark": "{primitive.red.700}",
+                "inverse": "{primitive.red.700}"
+              }
+            }
+          }
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.green.1000}",
+          "$description": "Success border: success alerts and cards.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5120:34649",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-success-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.green.1000}",
+                "dark": "{primitive.green-legacy.400}",
+                "inverse": "{primitive.green-legacy.400}"
+              }
+            }
+          }
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.orange.600}",
+          "$description": "Warning border: warning alerts and cards.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5120:34648",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-warning-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.orange.600}",
+                "dark": "{primitive.orange.400}",
+                "inverse": "{primitive.orange.400}"
+              }
+            }
+          }
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.blue.650}",
+          "$description": "Focus ring for keyboard focus.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:7195:49",
+              "scopes": [
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-border-focus-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.650}",
+                "dark": "{primitive.blue.600}",
+                "inverse": "{primitive.blue.600}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "overlay": {
+      "neutral": {
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.8}",
+          "$description": "State layer on hover over neutral surfaces (list rows, ghost buttons).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3161:1812",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-neutral-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.8}",
+                "dark": "{primitive.alpha.white.10}",
+                "inverse": "{primitive.alpha.white.10}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.12}",
+          "$description": "State layer while pressed over neutral surfaces.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:3161:1813",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-neutral-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.12}",
+                "dark": "{primitive.alpha.white.15}",
+                "inverse": "{primitive.alpha.white.15}"
+              }
+            }
+          }
+        }
+      },
+      "interactive": {
+        "hover": {
+          "$type": "color",
+          "$value": "{primitive.alpha.blue-750.10}",
+          "$description": "Active-blue state layer on hover over interactive items.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5067:38255",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-interactive-hover)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.blue-750.10}",
+                "dark": "{primitive.alpha.white.20}",
+                "inverse": "{primitive.alpha.white.20}"
+              }
+            }
+          }
+        },
+        "pressed": {
+          "$type": "color",
+          "$value": "{primitive.alpha.blue-750.20}",
+          "$description": "Active-blue state layer while pressed.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:5067:38259",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-interactive-pressed)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.blue-750.20}",
+                "dark": "{primitive.alpha.white.30}",
+                "inverse": "{primitive.alpha.white.30}"
+              }
+            }
+          }
+        }
+      },
+      "media": {
+        "brand": {
+          "$type": "color",
+          "$value": "{primitive.alpha.blue-1000.70}",
+          "$description": "Strong Midnight-tinted layer over brand imagery (hero images).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:7076:78",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-media-brand)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.blue-1000.70}",
+                "dark": "{primitive.alpha.blue-1000.70}",
+                "inverse": "{primitive.alpha.blue-1000.70}"
+              }
+            }
+          }
+        },
+        "default": {
+          "$type": "color",
+          "$value": "{primitive.alpha.black.55}",
+          "$description": "Dark translucent layer over images and video so content on top stays readable (captions, video controls, cover labels).",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:7076:77",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-overlay-media-default)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.alpha.black.55}",
+                "dark": "{primitive.alpha.black.55}",
+                "inverse": "{primitive.alpha.black.55}"
+              }
+            }
+          }
+        }
+      },
+      "scrim": {
+        "$type": "color",
+        "$value": "{primitive.alpha.black.30}",
+        "$description": "Scrim behind modals and drawers.",
+        "$extensions": {
+          "com.figma": {
+            "variableId": "VariableID:7163:65",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL"
+            ],
+            "codeSyntax": {
+              "WEB": "var(--mds-color-overlay-scrim)"
+            }
+          },
+          "com.marsh.mds": {
+            "modes": {
+              "light": "{primitive.alpha.black.30}",
+              "dark": "{primitive.alpha.black.60}",
+              "inverse": "{primitive.alpha.black.60}"
+            }
+          }
+        }
+      }
+    },
+    "static": {
+      "brand": {
+        "midnight": {
+          "$type": "color",
+          "$value": "{primitive.blue.1000}",
+          "$description": "Fixed Midnight in every mode.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:9695:952",
+              "scopes": [
+                "SHAPE_FILL",
+                "TEXT_FILL",
+                "STROKE_COLOR"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-static-brand-midnight)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.1000}",
+                "dark": "{primitive.blue.1000}",
+                "inverse": "{primitive.blue.1000}"
+              }
+            }
+          }
+        },
+        "sky": {
+          "$type": "color",
+          "$value": "{primitive.blue.250}",
+          "$description": "Fixed Sky in every mode.",
+          "$extensions": {
+            "com.figma": {
+              "variableId": "VariableID:12744:11343",
+              "scopes": [
+                "FRAME_FILL",
+                "SHAPE_FILL"
+              ],
+              "codeSyntax": {
+                "WEB": "var(--mds-color-static-brand-sky)"
+              }
+            },
+            "com.marsh.mds": {
+              "modes": {
+                "light": "{primitive.blue.250}",
+                "dark": "{primitive.blue.250}",
+                "inverse": "{primitive.blue.250}"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

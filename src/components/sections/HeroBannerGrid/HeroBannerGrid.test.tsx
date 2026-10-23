@@ -42,7 +42,7 @@ const vimeoPlayerMock = {
   destroy: vi.fn(() => Promise.resolve()),
 };
 vi.mock('@vimeo/player', () => ({
-  default: vi.fn(() => vimeoPlayerMock),
+  default: vi.fn(function () { return vimeoPlayerMock; }),
 }));
 
 // jsdom doesn't implement real media playback — silence the "not

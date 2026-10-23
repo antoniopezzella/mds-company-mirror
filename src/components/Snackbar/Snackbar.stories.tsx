@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import DSSnackbar from './Snackbar';
 import { Button, Stack } from '@mui/material';
+import { getRoleColor } from '../../theme/roles';
 
 const meta = {
   title: 'Legacy (MUI)/Snackbar',
@@ -134,7 +135,19 @@ export const InteractiveExample: Story = {
         <Button variant="contained" color="error" onClick={() => showError('An error occurred!')}>
           Show Error
         </Button>
-        <Button variant="contained" color="warning" onClick={() => showWarning('Warning message!')}>
+        {/* MUI's default `color="warning"` is white on #ed6c02 = 3.98:1 (fails AA).
+            White on the DS warning (#c25600) is still only 4.29:1, so warning takes
+            the system's dark-text-on-pale pattern instead — the same treatment the
+            Snackbar itself uses for the warning severity. */}
+        <Button
+          variant="contained"
+          onClick={() => showWarning('Warning message!')}
+          sx={{
+            backgroundColor: getRoleColor('bg.warning.subtle'),
+            color: getRoleColor('fg.on-light'),
+            '&:hover': { backgroundColor: getRoleColor('bg.warning.subtle') },
+          }}
+        >
           Show Warning
         </Button>
         <Button variant="contained" color="info" onClick={() => showInfo('Information message!')}>

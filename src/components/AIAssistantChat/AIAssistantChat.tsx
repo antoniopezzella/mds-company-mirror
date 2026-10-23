@@ -202,13 +202,13 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
 
   const primaryBlue   = getRoleColor('interactive.primary');
   const primaryHover  = getRoleColor('interactive.primary.hover');
-  const surfaceDefault = getRoleColor('surface.default');
-  const surfaceSubtle  = getRoleColor('surface.subtle');
-  const surfaceAccent  = getRoleColor('surface.accent');
-  const textPrimary    = getRoleColor('text.primary');
-  const textSecondary  = getRoleColor('text.secondary');
+  const bgDefault = getRoleColor('bg.default');
+  const bgNeutralSubtle  = getRoleColor('bg.neutral.subtle');
+  const bgNeutral  = getRoleColor('bg.neutral.subtle');
+  const fgPrimary    = getRoleColor('fg.primary');
+  const fgNeutralSubtle  = getRoleColor('fg.neutral.subtle');
   const borderDefault  = getRoleColor('border.default');
-  const textOnAccent   = getRoleColor('text.onAccent');
+  const fgOnAccent   = getRoleColor('fg.on-accent');
 
   return (
     <Box
@@ -224,7 +224,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
         borderRadius: '12px',
         overflow: 'hidden',
         zIndex: 99999,
-        bgcolor: surfaceDefault,
+        bgcolor: bgDefault,
         border: `1px solid ${borderDefault}`,
         boxShadow: '0 12px 40px rgba(0,0,0,0.18)',
       }}
@@ -243,7 +243,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
       >
         <Box>
           <Typography
-            sx={{ fontSize: 14, fontWeight: 600, color: textOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
+            sx={{ fontSize: 14, fontWeight: 600, color: fgOnAccent, lineHeight: 1.25, fontFamily: 'Noto Sans, sans-serif' }}
           >
             Marsh AI Assistant
           </Typography>
@@ -262,7 +262,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
               onClick={clearChat}
               sx={{
                 color: 'rgba(255,255,255,0.72)',
-                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                '&:hover': { color: fgOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
                 borderRadius: '6px',
               }}
             >
@@ -275,7 +275,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
               onClick={onClose}
               sx={{
                 color: 'rgba(255,255,255,0.72)',
-                '&:hover': { color: textOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
+                '&:hover': { color: fgOnAccent, bgcolor: 'rgba(255,255,255,0.12)' },
                 borderRadius: '6px',
               }}
             >
@@ -287,7 +287,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
 
       {/* ── Messages ── */}
       <MessageScrollerProvider autoScroll defaultScrollPosition="end">
-      <MessageScroller className="min-h-0 flex-1" style={{ backgroundColor: surfaceSubtle }}>
+      <MessageScroller className="min-h-0 flex-1" style={{ backgroundColor: bgNeutralSubtle }}>
         {messages.length === 0 ? (
           /* Empty state — plain scroll, no scroller items to manage. Opens
              on a centered greeting alone; focusing the composer below
@@ -305,10 +305,10 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
                 pb: hasInteracted ? '4px' : 0,
               }}
             >
-              <Typography sx={{ fontSize: hasInteracted ? 16 : 20, fontWeight: 700, color: textPrimary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>
+              <Typography sx={{ fontSize: hasInteracted ? 16 : 20, fontWeight: 700, color: fgPrimary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>
                 {visitorType === 'prospect' ? 'Hi, welcome to Marsh' : 'Hi, how can I help?'}
               </Typography>
-              <Typography sx={{ fontSize: 13, color: textSecondary, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif', maxWidth: hasInteracted ? 'none' : 260 }}>
+              <Typography sx={{ fontSize: 13, color: fgNeutralSubtle, lineHeight: 1.55, fontFamily: 'Noto Sans, sans-serif', maxWidth: hasInteracted ? 'none' : 260 }}>
                 {visitorType === 'prospect'
                   ? 'Ask about Marsh products, coverage, or risk trends — or press send to start.'
                   : 'Ask about your policies, risk exposure, or market trends — or press send to start.'}
@@ -333,7 +333,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
               <Message align={msg.role === 'user' ? 'end' : 'start'} className="items-end animate-[slideIn_0.2s_ease-out]">
                 {msg.role === 'assistant' && (
                   <MessageAvatar style={{ width: 26, height: 26, minWidth: 26, backgroundColor: primaryBlue, marginBottom: 18 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: textOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: fgOnAccent, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1 }}>
                       M
                     </span>
                   </MessageAvatar>
@@ -345,7 +345,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
                       {isStreamingThis && text === '' ? (
                         <Box sx={{ display: 'flex', gap: '4px', alignItems: 'center', py: '2px' }}>
                           {[0, 1, 2].map(i => (
-                            <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: textSecondary, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
+                            <Box key={i} sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: fgNeutralSubtle, animation: 'typingDot 1.3s ease-in-out infinite', animationDelay: `${i * 0.18}s` }} />
                           ))}
                         </Box>
                       ) : (
@@ -369,11 +369,11 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
 
                       {citations.length > 0 && (
                         <Box sx={{ mt: '10px', pt: '10px', borderTop: `1px solid ${borderDefault}` }}>
-                          <Typography sx={{ fontSize: 10, color: textSecondary, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
+                          <Typography sx={{ fontSize: 10, color: fgNeutralSubtle, mb: '6px', fontFamily: 'Noto Sans, sans-serif' }}>Sources</Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                             {citations.map((c, i) => (
                               <Chip key={i} label={c.title} size="small" component="a" href={c.url} clickable
-                                sx={{ fontSize: 10, height: 20, bgcolor: surfaceAccent, color: primaryBlue, border: `1px solid ${borderDefault}` }}
+                                sx={{ fontSize: 10, height: 20, bgcolor: bgNeutral, color: primaryBlue, border: `1px solid ${borderDefault}` }}
                               />
                             ))}
                           </Box>
@@ -389,7 +389,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
                         <IconButton size="small" onClick={() => copyMessage(msg.id, text)} sx={{ p: '2px', ml: '4px' }}>
                           {copiedId === msg.id
                             ? <CheckIcon sx={{ fontSize: 11, color: '#4caf50' }} />
-                            : <ContentCopyIcon sx={{ fontSize: 11, color: textSecondary }} />
+                            : <ContentCopyIcon sx={{ fontSize: 11, color: fgNeutralSubtle }} />
                           }
                         </IconButton>
                       </Tooltip>
@@ -437,7 +437,7 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
         sx={{
           px: '16px',
           py: '12px',
-          bgcolor: surfaceDefault,
+          bgcolor: bgDefault,
           display: 'flex',
           alignItems: 'flex-end',
           gap: '8px',
@@ -465,15 +465,15 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
             '& .MuiOutlinedInput-root': {
               borderRadius: '8px',
               fontSize: 13,
-              bgcolor: surfaceSubtle,
+              bgcolor: bgNeutralSubtle,
               fontFamily: 'Noto Sans, sans-serif',
               '& fieldset': { borderColor: borderDefault },
               '&:hover fieldset': { borderColor: primaryBlue },
               '&.Mui-focused fieldset': { borderColor: primaryBlue, borderWidth: 1.5 },
             },
             '& .MuiInputBase-input': {
-              color: textPrimary,
-              '&::placeholder': { color: textSecondary, opacity: 1 },
+              color: fgPrimary,
+              '&::placeholder': { color: fgNeutralSubtle, opacity: 1 },
             },
           }}
         />
@@ -487,10 +487,10 @@ export default function AIAssistantChat({ isOpen = true, onClose, apiEndpoint, i
             flexShrink: 0,
             borderRadius: '8px',
             bgcolor: primaryBlue,
-            color: textOnAccent,
+            color: fgOnAccent,
             transition: 'background-color 0.15s',
             '&:hover': { bgcolor: primaryHover },
-            '&.Mui-disabled': { bgcolor: surfaceAccent, color: textSecondary },
+            '&.Mui-disabled': { bgcolor: bgNeutral, color: fgNeutralSubtle },
           }}
         >
           {isBusy

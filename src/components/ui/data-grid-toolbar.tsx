@@ -76,26 +76,34 @@ export interface DataGridToolbarProps {
  * empty state also needs it (to tell "no data" from "no results"), and two
  * places naming the same column independently is how they drift apart.
  */
-export function DataGridToolbar<TData extends RowData>({
-  filters,
-  fields,
-  facetedFilters,
-  dateFilters,
-  searchPlaceholder = 'Search...',
-  enableSortList = false,
-  enableDensityToggle = false,
-  enableColumnVisibility = false,
-  enableExport = false,
-  exportFilename = 'export',
-  children,
-  className,
-}: DataGridToolbarProps) {
-  const { table, density, setDensity, searchKey } = useDataGrid<TData>();
+export const DataGridToolbar = React.forwardRef<HTMLDivElement, DataGridToolbarProps>(
+  function DataGridToolbar(
+    {
+      filters,
+      fields,
+      facetedFilters,
+      dateFilters,
+      searchPlaceholder = 'Search...',
+      enableSortList = false,
+      enableDensityToggle = false,
+      enableColumnVisibility = false,
+      enableExport = false,
+      exportFilename = 'export',
+      children,
+      className,
+    },
+    ref
+  ) {
+  // `TData` was a dead generic here too (see data-grid-pagination.tsx's note)
+  // — never present in `DataGridToolbarProps`, only used to call
+  // `useDataGrid<TData>()`, which nothing could ever supply a real type
+  // argument for. `useDataGrid<RowData>()` is what it already resolved to.
+  const { table, density, setDensity, searchKey } = useDataGrid<RowData>();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
 
   const columnFilters = table.state.columnFilters;
   const searchValue = searchKey ? ((table.getColumn(searchKey)?.getFilterValue() as string) ?? '') : '';
-  const textColor = 'var(--role-text-secondary)';
+  const textColor = 'var(--role-fg-neutral-subtle)';
 
   const exportableColumns = React.useMemo(
     () => table.getAllLeafColumns().filter((c) => c.getCanHide()),
@@ -123,18 +131,18 @@ export function DataGridToolbar<TData extends RowData>({
     // data-slot, as the other grid parts carry: the toolbar's controls share
     // names with the column headers they filter ("Status", "Bound"), so both
     // tests and consumers need a way to say which one they mean.
-    <div data-slot="data-grid-toolbar" className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
+    <div ref={ref} data-slot="data-grid-toolbar" className={cn('flex flex-wrap items-center justify-between gap-2', className)}>
       <div className="flex flex-wrap items-center gap-2">
         {searchKey && (
           // Input has no adornment slot, so the clear control is positioned
-          // over it; `pr-8` keeps typed text from running underneath.
+          // over it; `pe-8` keeps typed text from running underneath.
           <div className="relative w-56">
             <Input
               ref={searchInputRef}
               placeholder={searchPlaceholder}
               value={searchValue}
               onChange={(e) => table.getColumn(searchKey)?.setFilterValue(e.target.value)}
-              className="h-8 w-full pr-8"
+              className="h-8 w-full pe-8"
             />
             {searchValue && (
               <button
@@ -147,8 +155,8 @@ export function DataGridToolbar<TData extends RowData>({
                   table.getColumn(searchKey)?.setFilterValue('');
                   searchInputRef.current?.focus();
                 }}
-                className="absolute right-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-                style={{ color: textColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                className="absolute end-1 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
+                style={{ color: textColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -251,6 +259,8 @@ export function DataGridToolbar<TData extends RowData>({
       </div>
     </div>
   );
-}
+  }
+);
+DataGridToolbar.displayName = 'DataGridToolbar';
 
 export default DataGridToolbar;

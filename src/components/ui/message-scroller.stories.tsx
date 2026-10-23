@@ -238,7 +238,7 @@ function CompleteDemo() {
             <InputGroupButton variant="primary" aria-label="Send" icon={<ArrowUpIcon className="h-4 w-4" />} />
           </InputGroupAddon>
         </InputGroup>
-        <p className="text-center text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <p className="text-center text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           Streaming is simulated. <code>autoScroll</code> is enabled.
         </p>
       </CardFooter>
@@ -309,7 +309,7 @@ function NewChatDemo() {
             <InputGroupButton variant="primary" aria-label="Send" icon={<ArrowUpIcon className="h-4 w-4" />} />
           </InputGroupAddon>
         </InputGroup>
-        <p className="text-center text-xs" style={{ color: getRoleColor('text.secondary') }}>
+        <p className="text-center text-xs" style={{ color: getRoleColor('fg.neutral.subtle') }}>
           Demo is read-only — MessageScrollerProvider's <code>defaultScrollPosition=&quot;last-anchor&quot;</code> is what
           reopens a saved thread scrolled to the right spot.
         </p>
@@ -397,7 +397,7 @@ function ScrollStatusReadout() {
   return (
     <div
       className="flex items-center justify-between gap-2 border-t px-4 py-2 text-xs"
-      style={{ borderColor: getRoleColor('border.default'), color: getRoleColor('text.secondary') }}
+      style={{ borderColor: getRoleColor('border.default'), color: getRoleColor('fg.neutral.subtle') }}
     >
       <span>
         {visibleMessageIds.length} of {THREAD.length} messages visible

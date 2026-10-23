@@ -7,7 +7,7 @@ import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
  *
  * Why this file exists
  * --------------------
- * `surfaceHero` is the brand surface. Its dark override was repointed to
+ * `bgPrimary` is the brand surface. Its dark override was repointed to
  * `gray950` (#3e4944) as collateral damage from removing the blueGray
  * palette, so Marsh's hero rendered SAGE GREEN in dark mode on every page
  * that used it. It survived because it broke no existing rule:
@@ -15,7 +15,7 @@ import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
  *   - the role -> semantic -> primitive chain was structurally valid;
  *   - `text.onHero` on it measured 7.61:1, comfortably past WCAG AA;
  *   - plenty of other semantics legitimately change colour family between
- *     modes (`surfaceNavigation` blue -> neutral950, `textPrimary` blue ->
+ *     modes (`bgShell` blue -> neutral950, `fgPrimary` blue ->
  *     white), so it did not stand out as anomalous either.
  *
  * Two broader gates were prototyped and REJECTED as too noisy, which is why
@@ -46,7 +46,7 @@ import { semanticColors, semanticDarkOverrides } from '../semantic-tokens';
  * on it at 1.40:1.
  */
 const BRAND_SURFACE_PINS = {
-  surfaceHero: 'blue1000',
+  'bg.primary': 'blue1000',
 } as const satisfies Record<string, keyof typeof tokens>;
 
 /**
@@ -55,11 +55,11 @@ const BRAND_SURFACE_PINS = {
  * if a surface is neither pinned above nor excused here, the final test fails.
  */
 const INTENTIONALLY_MODE_SHIFTED: Record<string, string> = {
-  surfaceNavigation:
+  'bg.shell':
     'the nav chrome goes neutral in dark so it recedes behind content rather than competing with it',
-  surfaceNavigationHover: 'follows surfaceNavigation',
-  surfaceNavigationActive: 'follows surfaceNavigation',
-  surfaceRowHover: 'sky-blue row hover would glare on a dark grid; neutral900 is the dark equivalent',
+  'bg.shell.hover': 'follows bgShell',
+  'bg.shell.active': 'follows bgShell',
+  'bg.row-hover': 'sky-blue row hover would glare on a dark grid; neutral900 is the dark equivalent',
 };
 
 describe('brand surfaces', () => {
@@ -118,7 +118,7 @@ describe('brand surfaces', () => {
     expect(
       undeclared,
       'A brand-coloured surface drops to a neutral ramp in dark mode. That is how ' +
-        'surfaceHero became sage green. If it is deliberate, add it to ' +
+        'bgPrimary became sage green. If it is deliberate, add it to ' +
         'INTENTIONALLY_MODE_SHIFTED with the reason; if not, repoint it to the ' +
         'brand primitive.'
     ).toEqual([]);

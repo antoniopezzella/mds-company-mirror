@@ -54,11 +54,11 @@ const triggerClass =
  * Forwards to the Radix root `<nav>`, so a consumer can measure it.
  */
 export const MegaMenu = React.forwardRef<HTMLElement, MegaMenuProps>(({ items, className }, ref) => {
-  const textColor = 'var(--role-text-primary)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const textColor = 'var(--role-fg-primary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
   const linkColor = 'var(--role-interactive-primary)';
   const borderColor = 'var(--role-border-default)';
-  const focusRing = 'var(--role-focus-ring)';
+  const focusRing = 'var(--role-border-focus)';
 
   return (
     <NavigationMenuPrimitive.Root ref={ref} className={cn('relative z-40', className)}>
@@ -77,7 +77,7 @@ export const MegaMenu = React.forwardRef<HTMLElement, MegaMenuProps>(({ items, c
             >
               <div
                 className="w-[min(90vw,900px)] rounded-lg border p-6 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
-                style={{ backgroundColor: 'var(--role-surface-default)', borderColor }}
+                style={{ backgroundColor: 'var(--role-bg-default)', borderColor }}
               >
                 {item.description && (
                   <p className="mb-4 text-sm" style={{ color: mutedColor }}>
@@ -114,7 +114,7 @@ export const MegaMenu = React.forwardRef<HTMLElement, MegaMenuProps>(({ items, c
                                 {link.badge && (
                                   <span
                                     className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-                                    style={{ backgroundColor: 'var(--role-surface-accent)', color: 'var(--role-text-primary)' }}
+                                    style={{ backgroundColor: 'var(--role-bg-neutral-subtle)', color: 'var(--role-fg-primary)' }}
                                   >
                                     {link.badge}
                                   </span>
@@ -132,7 +132,7 @@ export const MegaMenu = React.forwardRef<HTMLElement, MegaMenuProps>(({ items, c
           </NavigationMenuPrimitive.Item>
         ))}
         <NavigationMenuPrimitive.Indicator className="top-full z-10 flex h-2 items-end justify-center overflow-hidden transition-[width,transform_250ms_ease] data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out data-[state=visible]:fade-in">
-          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-lg" style={{ backgroundColor: 'var(--role-surface-default)', border: `1px solid ${borderColor}` }} />
+          <div className="relative top-[60%] h-2.5 w-2.5 rotate-45 rounded-tl-lg" style={{ backgroundColor: 'var(--role-bg-default)', border: `1px solid ${borderColor}` }} />
         </NavigationMenuPrimitive.Indicator>
       </NavigationMenuPrimitive.List>
       <div className="absolute left-0 top-full flex justify-center">

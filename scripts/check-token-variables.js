@@ -239,11 +239,11 @@ if (fs.existsSync(THEME)) {
   // Dark inherits every role it does not override.
   const roleHexDark = new Map([...roleHexLight, ...mapOf(themeDark)]);
 
-  // The role projection itself (`--role-text-primary`, `--role-chart-1`). The
+  // The role projection itself (`--role-fg-primary`, `--role-data-1`). The
   // `--color-*` map above resolves a role by its SEMANTIC's kebab name, which
   // only works when role-dashed === semantic-kebab. That coincidence breaks for
   // roles whose name carries a digit (`chart.1`..`chart.5`, whose semantic is
-  // `chartSeries1`) or preserves camelCase (`text.onInteractive`) — but every
+  // `data1`) or preserves camelCase (`text.onInteractive`) — but every
   // role has a `--role-*` var, so this is the authoritative fallback. Keys are
   // case-PRESERVED (dots→dashes only), matching roleVarName in roles.ts.
   const roleMapOf = (css) => {
@@ -267,7 +267,7 @@ if (fs.existsSync(THEME)) {
     if (!m) return;
     const [, name, statedHex, role] = m;
 
-    // 'text.primary' -> 'text-primary'
+    // 'fg.primary' -> 'text-primary'
     const key = role.replace(/\./g, '-').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
     let actual = (inDark ? roleHexDark : roleHexLight).get(key);
     // Fall back to the role projection for roles the semantic-kebab lookup

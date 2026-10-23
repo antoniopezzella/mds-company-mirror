@@ -250,13 +250,13 @@ jobs:
 // scripts/check-contrast.js validates these pairs
 const ENFORCED_PAIRS = [
   // Text on surfaces (WCAG AA: 4.5:1)
-  { fg: 'text.primary', bg: 'surface.default', min: 4.5 },
-  { fg: 'text.secondary', bg: 'surface.default', min: 4.5 },
-  { fg: 'text.onAccent', bg: 'interactive.primary', min: 4.5 },
+  { fg: 'fg.primary', bg: 'bg.default', min: 4.5 },
+  { fg: 'fg.neutral.subtle', bg: 'bg.default', min: 4.5 },
+  { fg: 'fg.on-accent', bg: 'interactive.primary', min: 4.5 },
   
   // Interactive elements (WCAG AA: 3:1)
-  { fg: 'border.default', bg: 'surface.default', min: 3.0 },
-  { fg: 'status.success.fg', bg: 'status.success.bg', min: 4.5 },
+  { fg: 'border.default', bg: 'bg.default', min: 3.0 },
+  { fg: 'fg.success', bg: 'bg.success.subtle', min: 4.5 },
 ];
 ```
 

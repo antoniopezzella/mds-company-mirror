@@ -32,18 +32,18 @@ function contrast(hex1:string, hex2:string) {
 
 // Threshold map (could expand later)
 const REQUIREMENTS: Record<string, number> = {
-  textPrimary: 4.5,
-  textSecondary: 3.0,
-  interactivePrimary: 3.0,
-  focusRing: 3.0,
-  statusSuccessText: 3.0,
-  statusWarningText: 3.0,
-  statusDangerText: 3.0,
+  'fg.primary': 4.5,
+  'fg.neutral.subtle': 3.0,
+  'interactive.primary': 3.0,
+  'border.focus': 3.0,
+  'fg.success': 3.0,
+  'fg.warning': 3.0,
+  'fg.critical': 3.0,
 };
 
 describe('dark mode semantic contrast guard', () => {
-  test('required semantic roles meet minimum contrast vs dark surfaceDefault', () => {
-    const surface = darkSemantic.surfaceDefault;
+  test('required semantic roles meet minimum contrast vs dark bgDefault', () => {
+    const surface = darkSemantic['bg.default'];
     expect(surface).toBeDefined();
     const failures: { token: string; ratio: number; required: number }[] = [];
     for (const [token, required] of Object.entries(REQUIREMENTS)) {

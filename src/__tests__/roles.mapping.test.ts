@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { getRoleColor, listRoles } from '../theme/roles';
 
 // Basic contract tests for role resolution
@@ -29,5 +29,55 @@ describe('roles mapping', () => {
         }
       }
     }
+  });
+});
+
+/**
+ * getRoleColor() with no explicit mode reads the mode off <html>. Two
+ * mechanisms are live during the token-pipeline migration — the `dark` class
+ * and `data-theme` — and the attribute is checked first, because a surface can
+ * carry `data-theme`/`data-surface` WITHOUT the page-level class (a light card
+ * inside a navy band). Reading the class there would resolve the card's inline
+ * colours against the page mode instead of its own. See
+ * docs/tasks/token-pipeline-migration.md step 2.
+ */
+describe('DOM mode fallback', () => {
+  afterEach(() => {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.removeAttribute('data-theme');
+  });
+
+  const probe = 'fg.primary' as const;
+  const light = getRoleColor(probe, { mode: 'light' });
+  const dark = getRoleColor(probe, { mode: 'dark' });
+
+  it('the probe role actually differs between modes (or this suite proves nothing)', () => {
+    expect(light).not.toBe(dark);
+  });
+
+  it('a bare document resolves light', () => {
+    expect(getRoleColor(probe)).toBe(light);
+  });
+
+  it('data-theme="dark" alone resolves dark', () => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    expect(getRoleColor(probe)).toBe(dark);
+  });
+
+  it('the dark class alone still resolves dark (consumers setting only the class)', () => {
+    document.documentElement.classList.add('dark');
+    expect(getRoleColor(probe)).toBe(dark);
+  });
+
+  it('data-theme wins over a conflicting class', () => {
+    document.documentElement.classList.add('dark');
+    document.documentElement.setAttribute('data-theme', 'light');
+    expect(getRoleColor(probe)).toBe(light);
+  });
+
+  it('an unrecognised data-theme falls back to the class', () => {
+    document.documentElement.setAttribute('data-theme', 'sepia');
+    document.documentElement.classList.add('dark');
+    expect(getRoleColor(probe)).toBe(dark);
   });
 });

@@ -230,7 +230,7 @@ export {
 
 // Example usage (for testing in browser console or Node):
 /*
-const color1 = [248, 252, 247]; // statusSuccessBg
+const color1 = [248, 252, 247]; // bgSuccessSubtle
 const color2 = [248, 252, 246]; // Very similar
 const color3 = [255, 0, 0];     // Red (very different)
 
@@ -239,12 +239,12 @@ console.log('Very similar:', colorDistance(color1, color2));      // ~0.3
 console.log('Very different:', colorDistance(color1, color3));    // ~86
 
 const palette = [
-  { name: 'statusSuccessBg', rgb: [248, 252, 247], hex: '#f8fcf7' },
-  { name: 'statusWarningBg', rgb: [255, 250, 238], hex: '#fffaee' },
-  { name: 'statusDangerBg', rgb: [255, 241, 241], hex: '#fff1f1' },
+  { name: 'bgSuccessSubtle', rgb: [248, 252, 247], hex: '#f8fcf7' },
+  { name: 'bgWarningSubtle', rgb: [255, 250, 238], hex: '#fffaee' },
+  { name: 'bgCriticalSubtle', rgb: [255, 241, 241], hex: '#fff1f1' },
 ];
 
 const result = findClosestColor([248, 252, 246], palette);
 console.log('Closest match:', result);
-// { match: { name: 'statusSuccessBg', ... }, deltaE: 0.3, confidence: 0.97, quality: 'excellent' }
+// { match: { name: 'bgSuccessSubtle', ... }, deltaE: 0.3, confidence: 0.97, quality: 'excellent' }
 */

@@ -329,7 +329,7 @@ const METRICS = [
   {
     id: 'token_doc_accuracy',
     dir: 'up',
-    up: () => patch('.claude/rules/tokens.md', '**Count:** 79 semantic tokens', '**Count:** 999 semantic tokens'),
+    up: () => patch('.claude/rules/tokens.md', '**Count:** 188 semantic tokens', '**Count:** 999 semantic tokens'),
     flatWhy: 'no plausible wrong-reason satisfaction — it is a numeric diff against source',
   },
   {

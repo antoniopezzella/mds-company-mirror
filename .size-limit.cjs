@@ -23,6 +23,17 @@
  * (JS 208.16 kB -> 235 kB; CSS 19.89 kB -> 22.5 kB) so the gate catches real
  * growth, not gzip noise. Re-measure and re-baseline when a genuine addition
  * pushes past the limit; do not nudge the limit up to clear a surprise.
+ *
+ * CSS RE-BASELINED 2026-10-22: 20.52 -> 22.80 kB gzip, limit 22.5 -> 25.5 kB.
+ * Not a surprise and not drift — step 3 of docs/tasks/token-pipeline-migration.md
+ * moved the shipped colours onto the generated Figma layer, so the stylesheet
+ * now carries 252 `--mds-color-*` declarations (84 tokens x Light/Dark/Inverse)
+ * that are load-bearing: with the hand-written shadcn colours gone from
+ * tailwind.config.js, every `bg-card`/`text-muted-foreground` on a shipped
+ * component resolves through them. The old hand-written variables they replace
+ * are still in token-variables.css for ~190 direct `var(--border)`-style
+ * references (mostly the dev-only StoryUI panel); deleting those is the next
+ * cleanup and should take this number back down.
  */
 module.exports = [
   {
@@ -35,6 +46,6 @@ module.exports = [
     name: 'Package CSS (gzip)',
     path: 'dist-pkg/styles.css',
     gzip: true,
-    limit: '22.5 KB',
+    limit: '25.5 KB',
   },
 ];

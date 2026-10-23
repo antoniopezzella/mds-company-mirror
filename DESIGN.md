@@ -551,23 +551,23 @@ const createText = async (variant, content) => {
 - `statusSuccessBg` → `green50`
 
 **Role Tokens** (use in components):
-- `text.primary` → `textPrimary`
-- `surface.default` → `surfaceDefault`
+- `fg.primary` → `textPrimary`
+- `bg.default` → `surfaceDefault`
 - `interactive.primary` → `interactivePrimary`
 - `interactive.primary.hover` → `interactivePrimaryHover`
-- `status.success.bg` → `statusSuccessBg`
+- `bg.success.subtle` → `statusSuccessBg`
 
 ### Brand Mark on Coloured Grounds
 
-The logo does **not** follow `--ink` / `text.primary`. It has a colour of its own,
+The logo does **not** follow `--ink` / `fg.primary`. It has a colour of its own,
 because on the Primary ground it is Secondary while the copy beside it is white.
 
 | Ground | Token | Logo colour |
 |---|---|---|
-| White | `surface.default` | Midnight Blue `#000F47` |
-| Neutral `#F7F3EE` | `surface.accent` | Midnight Blue `#000F47` |
-| Secondary `#CEECFF` | `surface.secondary` | Midnight Blue `#000F47` |
-| **Primary `#000F47`** | `surface.primary` | **Secondary `#CEECFF`** — never white |
+| White | `bg.default` | Midnight Blue `#000F47` |
+| Neutral `#F7F3EE` | `bg.neutral.subtle` | Midnight Blue `#000F47` |
+| Secondary `#CEECFF` | `bg.secondary` | Midnight Blue `#000F47` |
+| **Primary `#000F47`** | `bg.primary` | **Secondary `#CEECFF`** — never white |
 
 Bind the mark to `brand.mark`, never to a text token and never to a literal:
 

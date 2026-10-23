@@ -138,7 +138,7 @@ export const WebsiteHeader = React.forwardRef<HTMLElement, WebsiteHeaderProps>((
     if (contactHref) window.location.href = contactHref;
   };
 
-  const onHero: React.CSSProperties = { color: 'var(--role-text-onHero)' };
+  const onHero: React.CSSProperties = { color: 'var(--role-fg-on-primary)' };
 
   return (
     <>
@@ -276,7 +276,7 @@ export const WebsiteHeader = React.forwardRef<HTMLElement, WebsiteHeaderProps>((
                 href={item.href ?? '#'}
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-between rounded-md px-2 py-3 text-sm font-medium"
-                style={{ color: 'var(--role-text-primary)' }}
+                style={{ color: 'var(--role-fg-primary)' }}
               >
                 {item.label}
                 {item.hasMenu && <ChevronDown className="h-4 w-4" aria-hidden />}

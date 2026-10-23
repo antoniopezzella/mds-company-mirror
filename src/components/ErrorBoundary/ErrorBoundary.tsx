@@ -90,7 +90,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <Typography
             variant="body1"
             sx={{
-              color: 'text.secondary',
+              color: 'fg.neutral.subtle',
               mb: 4,
               maxWidth: '600px',
             }}

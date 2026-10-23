@@ -106,7 +106,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ value, label, countUpDel
         ref={valueRef}
         className="metric-card__value"
         sx={{
-          color: getRoleColor('text.primary'),
+          color: getRoleColor('fg.primary'),
           fontSize: { xs: '64px', md: '96px', lg: '112px' },
           fontWeight: 700,
           lineHeight: 1,
@@ -119,7 +119,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ value, label, countUpDel
         variant="h6"
         className="metric-card__label"
         sx={{
-          color: getRoleColor('text.secondary'),
+          color: getRoleColor('fg.neutral.subtle'),
           textAlign: 'center',
           mt: (theme) => theme.spacing(2),
         }}

@@ -23,6 +23,6 @@ export function getFocusRingSx(theme: Theme) {
   const mode = theme.palette.mode;
   return {
     outline: 'none',
-    boxShadow: `0 0 0 2px #ffffff, 0 0 0 4px ${getRoleColor('focus.ring', { mode })}`,
+    boxShadow: `0 0 0 2px #ffffff, 0 0 0 4px ${getRoleColor('border.focus', { mode })}`,
   } as const;
 }

@@ -11,7 +11,7 @@ const markerVariants = cva(
       variant: {
         default: "",
         separator:
-          "before:mr-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ml-1 after:h-px after:min-w-0 after:flex-1 after:bg-border",
+          "before:me-1 before:h-px before:min-w-0 before:flex-1 before:bg-border after:ms-1 after:h-px after:min-w-0 after:flex-1 after:bg-border",
         border: "border-b border-border pb-2",
       },
     },
@@ -27,23 +27,22 @@ export interface MarkerProps
   asChild?: boolean
 }
 
-function Marker({
-  className,
-  variant = "default",
-  asChild = false,
-  ...props
-}: MarkerProps) {
-  const Comp = asChild ? Slot : "div"
+const Marker = React.forwardRef<HTMLDivElement, MarkerProps>(
+  ({ className, variant = "default", asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div"
 
-  return (
-    <Comp
-      data-slot="marker"
-      data-variant={variant}
-      className={cn(markerVariants({ variant, className }))}
-      {...props}
-    />
-  )
-}
+    return (
+      <Comp
+        ref={ref}
+        data-slot="marker"
+        data-variant={variant}
+        className={cn(markerVariants({ variant, className }))}
+        {...props}
+      />
+    )
+  }
+)
+Marker.displayName = "Marker"
 
 function MarkerIcon({ className, ...props }: React.ComponentProps<"span">) {
   return (

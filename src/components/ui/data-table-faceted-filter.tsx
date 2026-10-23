@@ -33,7 +33,10 @@ export interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
   options?: FacetOption[];
 }
 
-export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, title, options }: DataTableFacetedFilterProps<TData, TValue>) {
+function DataTableFacetedFilterInner<TData extends RowData, TValue>(
+  { column, title, options }: DataTableFacetedFilterProps<TData, TValue>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const [open, setOpen] = React.useState(false);
 
   const filterValue = column?.getFilterValue();
@@ -62,7 +65,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
 
   const reset = () => column?.setFilterValue(undefined);
 
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -82,6 +85,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
           the trigger grows rightward instead of reflowing internally.
         */}
         <Button
+          ref={ref}
           variant="outline"
           size="sm"
           className="gap-1.5 border-dashed px-2 text-xs font-normal"
@@ -119,11 +123,11 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
                 return (
                   <CommandItem key={option.value} onSelect={() => toggle(option.value)}>
                     <span
-                      className={cn('mr-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
+                      className={cn('me-2 flex size-4 shrink-0 items-center justify-center rounded-md border')}
                       style={{
                         borderColor: 'var(--role-interactive-primary)',
                         backgroundColor: isSelected ? 'var(--role-interactive-primary)' : 'transparent',
-                        color: 'var(--role-text-onInteractive)',
+                        color: 'var(--role-fg-on-interactive)',
                       }}
                     >
                       <Check className={cn('h-3 w-3', !isSelected && 'invisible')} />
@@ -154,5 +158,14 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({ column, 
     </Popover>
   );
 }
+
+/** See `DataGridTable`'s note on this pattern — `forwardRef` + a generic
+ * component needs the double cast. */
+const DataTableFacetedFilterImpl = React.forwardRef(DataTableFacetedFilterInner);
+DataTableFacetedFilterImpl.displayName = 'DataTableFacetedFilter';
+
+export const DataTableFacetedFilter = DataTableFacetedFilterImpl as <TData extends RowData, TValue>(
+  props: DataTableFacetedFilterProps<TData, TValue> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+) => ReturnType<typeof DataTableFacetedFilterInner>;
 
 export default DataTableFacetedFilter;

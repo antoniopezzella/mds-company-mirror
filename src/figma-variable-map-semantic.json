@@ -5,27 +5,216 @@
   "methodologyNote": "The MCP's resolvedValuesByMode flattens incorrectly for any variable whose Light and 'On dark surface' mode slots reference the SAME intermediate alias variable (a common Figma authoring pattern in this file) — it echoes one mode's value for both instead of cascading the alias's own per-mode value. Of the 141 transcribed variables, 44 (31%) needed manual correction for this. See docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md for the full methodology and worked examples (e.g. V3/Text & icon/Primary was reported as #000F47 for both modes; the corrected dark value, cascading through V3/BASE/Brand/Primary, is #CEECFF).",
   "mappingScope": "This pass maps the 21 highest-confidence conceptual matches (brand identity, core text/surface/border, primary/secondary interactive base states, status colors) rather than force-mapping all 67 semanticColors keys — MDS's granular hover/active/visited/disabled states and Figma's richer Interaction taxonomy (~30 variables) don't have a clean 1:1 naming correspondence without design input. See the report's 'Not yet mapped' section for what's excluded and why.",
   "semantics": [
-    { "mdsToken": "brandPrimary", "figmaVariable": "V3/BASE/Brand/Primary", "mdsLight": "#000F47", "figmaLight": "#000F47", "mdsDark": "#FFFFFF", "figmaDark": "#CEECFF", "status": "value-drift", "note": "Light in sync. Dark: MDS inverts to pure white; Figma inverts to Sky Blue (#CEECFF)." },
-    { "mdsToken": "brandSecondary", "figmaVariable": "V3/BASE/Brand/Primary inverted", "mdsLight": "#CEECFF", "figmaLight": "#CEECFF", "mdsDark": "#95CAFF", "figmaDark": "#000F47", "status": "semantic-divergence", "note": "Root finding. Figma has no 'Brand/Secondary'-as-Sky-Blue concept — Sky Blue is Primary's inverted companion. See finding #1." },
-    { "mdsToken": "brandAccent", "figmaVariable": "V3/BASE/Brand/Secondary", "mdsLight": "#FFBF00", "figmaLight": "#FFBF00", "mdsDark": "#FFBF00", "figmaDark": "#FFBF00", "status": "in-sync", "note": "Value matches exactly — but Figma calls this color 'Secondary', MDS calls it 'Accent'. Naming, not value, mismatch." },
-    { "mdsToken": "textPrimary", "figmaVariable": "V3/Text & icon/Primary", "mdsLight": "#000F47", "figmaLight": "#000F47", "mdsDark": "#FFFFFF", "figmaDark": "#CEECFF", "status": "value-drift", "note": "Same light/dark pattern as brandPrimary." },
-    { "mdsToken": "textSecondary", "figmaVariable": "V3/Text & icon/Tertiary", "mdsLight": "#595959", "figmaLight": "#3D3C37", "mdsDark": "#DADADA", "figmaDark": "#F7F3EE", "status": "semantic-divergence", "note": "Root finding. Figma's real 'Text & icon/Secondary' is #FFBF00 (Gold) — a different concept entirely. Value-closest Figma match to MDS's muted-gray intent is Tertiary, not Secondary. See finding #2." },
-    { "mdsToken": "textTertiary", "figmaVariable": "V3/Text & icon/Placeholder", "mdsLight": "#767676", "figmaLight": "#6F6D68", "mdsDark": "#C4C4C4", "figmaDark": "#B9B6B1", "status": "value-drift", "note": "Close but not exact — likely palette refresh drift, not a naming issue." },
-    { "mdsToken": "textOnAccent", "figmaVariable": "V3/Text & icon/Primary inverted", "mdsLight": "#FFFFFF", "figmaLight": "#CEECFF", "mdsDark": "#FFFFFF", "figmaDark": "#000F47", "status": "value-drift", "note": "MDS keeps this a fixed white; Figma's equivalent flips between Sky Blue and Midnight." },
-    { "mdsToken": "textDisabled", "figmaVariable": "V3/Text & icon/Disabled", "mdsLight": "#767676", "figmaLight": "#878580", "mdsDark": "#878787", "figmaDark": "#878580", "status": "value-drift", "note": "Figma's Disabled is mode-invariant (#878580 both modes); MDS's flips between two different grays." },
-    { "mdsToken": "surfaceDefault", "figmaVariable": "V3/Surface/Static/White", "mdsLight": "#FFFFFF", "figmaLight": "#FFFFFF", "mdsDark": "#101010", "figmaDark": "#FFFFFF", "status": "value-drift", "note": "Low-confidence mapping — 'Static/White' is mode-invariant by design (not really Figma's dark-mode page background), so this comparison mostly demonstrates MDS's dark surfaces run much darker (#101010) than any neutral value found in the Figma dark-mode set (darkest neutral seen: #3D3C37, Gray/1000). See finding #4." },
-    { "mdsToken": "surfaceAccent", "figmaVariable": "V3/Background (page only)/Application platform", "mdsLight": "#F7F8F8", "figmaLight": "#F7F3EE", "mdsDark": "#6A6E6B", "figmaDark": "#F7F3EE", "status": "value-drift", "note": "Figma's app background is mode-invariant cream; MDS's flips to a mid-gray in dark mode." },
-    { "mdsToken": "surfaceNavigation", "figmaVariable": "V3/Surface/Primary", "mdsLight": "#000F47", "figmaLight": "#000F47", "mdsDark": "#000F47", "figmaDark": "#CEECFF", "status": "value-drift", "note": "MDS deliberately keeps the header Midnight in both modes; Figma's Surface/Primary inverts to Sky Blue in dark mode." },
-    { "mdsToken": "surfaceDisabled", "figmaVariable": "V3/Surface/Disabled", "mdsLight": "#E3E3E3", "figmaLight": "#EBE7E2", "mdsDark": "#3B3B3B", "figmaDark": "#56544F", "status": "value-drift", "note": "Close but not exact both modes — palette refresh drift." },
-    { "mdsToken": "borderSubtle", "figmaVariable": "V3/BASE/Neutral/Low", "mdsLight": "#DADADA", "figmaLight": "#DEDBD6", "mdsDark": "#595959", "figmaDark": "#62615C", "status": "value-drift", "note": "Close but not exact both modes — palette refresh drift." },
-    { "mdsToken": "borderDefault", "figmaVariable": "V3/Border/Default (solid)", "mdsLight": "#878787", "figmaLight": "#94918C", "mdsDark": "#878787", "figmaDark": "#94918C", "status": "value-drift", "note": "MDS keeps this mode-invariant (matches Figma's own mode-invariance pattern) but the shared value itself has drifted slightly." },
-    { "mdsToken": "borderFocus", "figmaVariable": "V3/Border/Focus", "mdsLight": "#3D7AFF", "figmaLight": "#3D7AFF", "mdsDark": "#5E9AFF", "figmaDark": "#5E9AFF", "status": "in-sync", "note": "Exact match both modes — a genuinely healthy token, confirms the methodology works both ways." },
-    { "mdsToken": "interactivePrimary", "figmaVariable": "V3/Interaction/Surface/Active", "mdsLight": "#000F47", "figmaLight": "#0B4BFF", "mdsDark": "#95CAFF", "figmaDark": "#95CAFF", "status": "value-drift", "note": "Dark in sync. Light: MDS's primary interactive resting state is Midnight; Figma's 'Interaction/Surface/Active' (closest candidate) is Active Blue — likely comparing MDS's resting state against Figma's active/pressed state; needs a design-confirmed 1:1 mapping, flagged not asserted." },
-    { "mdsToken": "interactiveSecondary", "figmaVariable": "V3/Interaction/Surface/Active", "mdsLight": "#0B4BFF", "figmaLight": "#0B4BFF", "mdsDark": "#95CAFF", "figmaDark": "#95CAFF", "status": "in-sync", "note": "Exact match both modes." },
-    { "mdsToken": "interactiveSecondaryVisited", "figmaVariable": "V3/Interaction/Text, icon & border/Hyperlink visited", "mdsLight": "#8F37C6", "figmaLight": "#8F20DE", "mdsDark": "#8F37C6", "figmaDark": "#DEB1FF", "status": "value-drift", "note": "MDS keeps visited-link color mode-invariant; Figma's lightens for dark mode. Light values also drifted slightly." },
-    { "mdsToken": "statusSuccess", "figmaVariable": "V3/BASE/Utility/Success", "mdsLight": "#14853D", "figmaLight": "#14853D", "mdsDark": "#8DCC92", "figmaDark": "#57C67A", "status": "value-drift", "note": "Light in sync. Dark: two different greens (both plausible design choices, needs confirmation)." },
-    { "mdsToken": "statusWarning", "figmaVariable": "V3/BASE/Utility/Warning", "mdsLight": "#CB7E03", "figmaLight": "#CB7E03", "mdsDark": "#FF994A", "figmaDark": "#FFAB4A", "status": "value-drift", "note": "Light in sync. Dark: close but not exact." },
-    { "mdsToken": "statusDanger", "figmaVariable": "V3/BASE/Utility/Critical", "mdsLight": "#C53532", "figmaLight": "#C53532", "mdsDark": "#FF6B6B", "figmaDark": "#EF4E45", "status": "value-drift", "note": "Light in sync. Dark: two different reds (both plausible, needs confirmation)." }
+    {
+      "mdsToken": "brand.primary",
+      "figmaVariable": "V3/BASE/Brand/Primary",
+      "mdsLight": "#000F47",
+      "figmaLight": "#000F47",
+      "mdsDark": "#FFFFFF",
+      "figmaDark": "#CEECFF",
+      "status": "value-drift",
+      "note": "Light in sync. Dark: MDS inverts to pure white; Figma inverts to Sky Blue (#CEECFF)."
+    },
+    {
+      "mdsToken": "bg.secondary",
+      "figmaVariable": "V3/BASE/Brand/Primary inverted",
+      "mdsLight": "#CEECFF",
+      "figmaLight": "#CEECFF",
+      "mdsDark": "#95CAFF",
+      "figmaDark": "#000F47",
+      "status": "semantic-divergence",
+      "note": "Root finding. Figma has no 'Brand/Secondary'-as-Sky-Blue concept — Sky Blue is Primary's inverted companion. See finding #1."
+    },
+    {
+      "mdsToken": "bg.accent",
+      "figmaVariable": "V3/BASE/Brand/Secondary",
+      "mdsLight": "#FFBF00",
+      "figmaLight": "#FFBF00",
+      "mdsDark": "#FFBF00",
+      "figmaDark": "#FFBF00",
+      "status": "in-sync",
+      "note": "Value matches exactly — but Figma calls this color 'Secondary', MDS calls it 'Accent'. Naming, not value, mismatch."
+    },
+    {
+      "mdsToken": "fg.primary",
+      "figmaVariable": "V3/Text & icon/Primary",
+      "mdsLight": "#000F47",
+      "figmaLight": "#000F47",
+      "mdsDark": "#FFFFFF",
+      "figmaDark": "#CEECFF",
+      "status": "value-drift",
+      "note": "Same light/dark pattern as brandPrimary."
+    },
+    {
+      "mdsToken": "fg.neutral.subtle",
+      "figmaVariable": "V3/Text & icon/Tertiary",
+      "mdsLight": "#595959",
+      "figmaLight": "#3D3C37",
+      "mdsDark": "#DADADA",
+      "figmaDark": "#F7F3EE",
+      "status": "semantic-divergence",
+      "note": "Root finding. Figma's real 'Text & icon/Secondary' is #FFBF00 (Gold) — a different concept entirely. Value-closest Figma match to MDS's muted-gray intent is Tertiary, not Secondary. See finding #2."
+    },
+    {
+      "mdsToken": "fg.input.placeholder",
+      "figmaVariable": "V3/Text & icon/Placeholder",
+      "mdsLight": "#767676",
+      "figmaLight": "#6F6D68",
+      "mdsDark": "#C4C4C4",
+      "figmaDark": "#B9B6B1",
+      "status": "value-drift",
+      "note": "Close but not exact — likely palette refresh drift, not a naming issue."
+    },
+    {
+      "mdsToken": "fg.on-accent",
+      "figmaVariable": "V3/Text & icon/Primary inverted",
+      "mdsLight": "#FFFFFF",
+      "figmaLight": "#CEECFF",
+      "mdsDark": "#FFFFFF",
+      "figmaDark": "#000F47",
+      "status": "value-drift",
+      "note": "MDS keeps this a fixed white; Figma's equivalent flips between Sky Blue and Midnight."
+    },
+    {
+      "mdsToken": "fg.disabled",
+      "figmaVariable": "V3/Text & icon/Disabled",
+      "mdsLight": "#767676",
+      "figmaLight": "#878580",
+      "mdsDark": "#878787",
+      "figmaDark": "#878580",
+      "status": "value-drift",
+      "note": "Figma's Disabled is mode-invariant (#878580 both modes); MDS's flips between two different grays."
+    },
+    {
+      "mdsToken": "bg.default",
+      "figmaVariable": "V3/Surface/Static/White",
+      "mdsLight": "#FFFFFF",
+      "figmaLight": "#FFFFFF",
+      "mdsDark": "#101010",
+      "figmaDark": "#FFFFFF",
+      "status": "value-drift",
+      "note": "Low-confidence mapping — 'Static/White' is mode-invariant by design (not really Figma's dark-mode page background), so this comparison mostly demonstrates MDS's dark surfaces run much darker (#101010) than any neutral value found in the Figma dark-mode set (darkest neutral seen: #3D3C37, Gray/1000). See finding #4."
+    },
+    {
+      "mdsToken": "bg.neutral",
+      "figmaVariable": "V3/Background (page only)/Application platform",
+      "mdsLight": "#F7F8F8",
+      "figmaLight": "#F7F3EE",
+      "mdsDark": "#6A6E6B",
+      "figmaDark": "#F7F3EE",
+      "status": "value-drift",
+      "note": "Figma's app background is mode-invariant cream; MDS's flips to a mid-gray in dark mode."
+    },
+    {
+      "mdsToken": "bg.shell",
+      "figmaVariable": "V3/Surface/Primary",
+      "mdsLight": "#000F47",
+      "figmaLight": "#000F47",
+      "mdsDark": "#000F47",
+      "figmaDark": "#CEECFF",
+      "status": "value-drift",
+      "note": "MDS deliberately keeps the header Midnight in both modes; Figma's Surface/Primary inverts to Sky Blue in dark mode."
+    },
+    {
+      "mdsToken": "bg.disabled",
+      "figmaVariable": "V3/Surface/Disabled",
+      "mdsLight": "#E3E3E3",
+      "figmaLight": "#EBE7E2",
+      "mdsDark": "#3B3B3B",
+      "figmaDark": "#56544F",
+      "status": "value-drift",
+      "note": "Close but not exact both modes — palette refresh drift."
+    },
+    {
+      "mdsToken": "border.subtle",
+      "figmaVariable": "V3/BASE/Neutral/Low",
+      "mdsLight": "#DADADA",
+      "figmaLight": "#DEDBD6",
+      "mdsDark": "#595959",
+      "figmaDark": "#62615C",
+      "status": "value-drift",
+      "note": "Close but not exact both modes — palette refresh drift."
+    },
+    {
+      "mdsToken": "border.default",
+      "figmaVariable": "V3/Border/Default (solid)",
+      "mdsLight": "#878787",
+      "figmaLight": "#94918C",
+      "mdsDark": "#878787",
+      "figmaDark": "#94918C",
+      "status": "value-drift",
+      "note": "MDS keeps this mode-invariant (matches Figma's own mode-invariance pattern) but the shared value itself has drifted slightly."
+    },
+    {
+      "mdsToken": "borderFocus",
+      "figmaVariable": "V3/Border/Focus",
+      "mdsLight": "#3D7AFF",
+      "figmaLight": "#3D7AFF",
+      "mdsDark": "#5E9AFF",
+      "figmaDark": "#5E9AFF",
+      "status": "in-sync",
+      "note": "Exact match both modes — a genuinely healthy token, confirms the methodology works both ways."
+    },
+    {
+      "mdsToken": "interactive.primary",
+      "figmaVariable": "V3/Interaction/Surface/Active",
+      "mdsLight": "#000F47",
+      "figmaLight": "#0B4BFF",
+      "mdsDark": "#95CAFF",
+      "figmaDark": "#95CAFF",
+      "status": "value-drift",
+      "note": "Dark in sync. Light: MDS's primary interactive resting state is Midnight; Figma's 'Interaction/Surface/Active' (closest candidate) is Active Blue — likely comparing MDS's resting state against Figma's active/pressed state; needs a design-confirmed 1:1 mapping, flagged not asserted."
+    },
+    {
+      "mdsToken": "interactive.secondary",
+      "figmaVariable": "V3/Interaction/Surface/Active",
+      "mdsLight": "#0B4BFF",
+      "figmaLight": "#0B4BFF",
+      "mdsDark": "#95CAFF",
+      "figmaDark": "#95CAFF",
+      "status": "in-sync",
+      "note": "Exact match both modes."
+    },
+    {
+      "mdsToken": "interactive.secondary.visited",
+      "figmaVariable": "V3/Interaction/Text, icon & border/Hyperlink visited",
+      "mdsLight": "#8F37C6",
+      "figmaLight": "#8F20DE",
+      "mdsDark": "#8F37C6",
+      "figmaDark": "#DEB1FF",
+      "status": "value-drift",
+      "note": "MDS keeps visited-link color mode-invariant; Figma's lightens for dark mode. Light values also drifted slightly."
+    },
+    {
+      "mdsToken": "status.success",
+      "figmaVariable": "V3/BASE/Utility/Success",
+      "mdsLight": "#14853D",
+      "figmaLight": "#14853D",
+      "mdsDark": "#8DCC92",
+      "figmaDark": "#57C67A",
+      "status": "value-drift",
+      "note": "Light in sync. Dark: two different greens (both plausible design choices, needs confirmation)."
+    },
+    {
+      "mdsToken": "status.warning",
+      "figmaVariable": "V3/BASE/Utility/Warning",
+      "mdsLight": "#CB7E03",
+      "figmaLight": "#CB7E03",
+      "mdsDark": "#FF994A",
+      "figmaDark": "#FFAB4A",
+      "status": "value-drift",
+      "note": "Light in sync. Dark: close but not exact."
+    },
+    {
+      "mdsToken": "status.danger",
+      "figmaVariable": "V3/BASE/Utility/Critical",
+      "mdsLight": "#C53532",
+      "figmaLight": "#C53532",
+      "mdsDark": "#FF6B6B",
+      "figmaDark": "#EF4E45",
+      "status": "value-drift",
+      "note": "Light in sync. Dark: two different reds (both plausible, needs confirmation)."
+    }
   ],
   "figmaOnlyFamilies": {
     "note": "Figma variable families with no MDS semantic-token counterpart at all, grouped rather than itemized — see docs/FIGMA_SEMANTIC_TOKEN_ASSESSMENT.md finding #4 for detail.",

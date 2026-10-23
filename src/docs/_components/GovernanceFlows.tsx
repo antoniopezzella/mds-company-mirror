@@ -19,12 +19,12 @@ import { getRoleColor, type RoleName } from '../../theme/roles';
 type Tone = 'neutral' | 'brand' | 'success' | 'danger' | 'warning' | 'info';
 
 const TONE_ROLES: Record<Tone, { bg: RoleName; border: RoleName; fg: RoleName }> = {
-  neutral: { bg: 'surface.subtle', border: 'border.default', fg: 'text.primary' },
-  brand: { bg: 'surface.hero', border: 'border.strong', fg: 'text.onHero' },
-  success: { bg: 'status.success.bg', border: 'status.success.border', fg: 'status.success.fg' },
-  danger: { bg: 'status.danger.bg', border: 'status.danger.border', fg: 'status.danger.fg' },
-  warning: { bg: 'status.warning.bg', border: 'status.warning.border', fg: 'status.warning.fg' },
-  info: { bg: 'status.info.bg', border: 'status.info.border', fg: 'status.info.fg' },
+  neutral: { bg: 'bg.neutral.subtle', border: 'border.default', fg: 'fg.primary' },
+  brand: { bg: 'bg.primary', border: 'border.strong', fg: 'fg.on-primary' },
+  success: { bg: 'bg.success.subtle', border: 'border.success', fg: 'fg.success' },
+  danger: { bg: 'bg.critical.subtle', border: 'border.critical', fg: 'fg.critical' },
+  warning: { bg: 'bg.warning.subtle', border: 'border.warning', fg: 'fg.warning' },
+  info: { bg: 'bg.info.subtle', border: 'border.info', fg: 'fg.info' },
 };
 
 const FlowModeContext = createContext<'light' | 'dark'>('light');
@@ -104,7 +104,7 @@ export const FlowArrow: React.FC<FlowArrowProps> = ({ label, direction = 'down' 
         alignItems: 'center',
         justifyContent: 'center',
         gap: 4,
-        color: getRoleColor('text.secondary', { mode }),
+        color: getRoleColor('fg.neutral.subtle', { mode }),
         flexShrink: 0,
         padding: isDown ? '2px 0' : '0 4px',
       }}
@@ -171,8 +171,8 @@ const ToggleButton: React.FC<{ mode: 'light' | 'dark'; onToggle: () => void }> =
       gap: 6,
       border: `1px solid ${getRoleColor('border.default', { mode })}`,
       borderRadius: 999,
-      background: getRoleColor('surface.subtle', { mode }),
-      color: getRoleColor('text.secondary', { mode }),
+      background: getRoleColor('bg.neutral.subtle', { mode }),
+      color: getRoleColor('fg.neutral.subtle', { mode }),
       fontSize: 11.5,
       fontWeight: 600,
       padding: '5px 12px',
@@ -193,7 +193,7 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     border: `1px solid ${getRoleColor('border.default', { mode })}`,
     borderRadius: 14,
     padding: '28px 20px',
-    background: getRoleColor('surface.default', { mode }),
+    background: getRoleColor('bg.default', { mode }),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -242,9 +242,9 @@ export const TokenGovernanceFlow: React.FC = () => (
       <FlowArrow direction="right" />
       <FlowStep title="Semantic" detail={`src/semantic-tokens.ts\ntextPrimary: ref('blue1000')`} tone="neutral" width={210} />
       <FlowArrow direction="right" />
-      <FlowStep title="Role" detail={`src/theme/roles.ts\n'text.primary' → textPrimary`} tone="neutral" width={190} />
+      <FlowStep title="Role" detail={`src/theme/roles.ts\n'fg.primary' → fgPrimary`} tone="neutral" width={190} />
       <FlowArrow direction="right" />
-      <FlowStep title="Component" detail={`getRoleColor('text.primary')`} tone="info" width={190} />
+      <FlowStep title="Component" detail={`getRoleColor('fg.primary')`} tone="info" width={190} />
     </FlowBranches>
 
     <div style={{ height: 24 }} />

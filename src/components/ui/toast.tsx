@@ -55,15 +55,15 @@ const toastVariants = cva(
 function getToneRoles(tone: ToastTone): { bg: RoleName; border: RoleName; accent: RoleName; text: RoleName } {
   switch (tone) {
     case 'success':
-      return { bg: 'status.success.bg', border: 'status.success.border', accent: 'status.success.fg', text: 'status.success.fg' };
+      return { bg: 'bg.success.subtle', border: 'border.success', accent: 'fg.success', text: 'fg.success' };
     case 'warning':
-      return { bg: 'status.warning.bg', border: 'status.warning.border', accent: 'status.warning.fg', text: 'text.onLight' };
+      return { bg: 'bg.warning.subtle', border: 'border.warning', accent: 'fg.warning', text: 'fg.warning' };
     case 'danger':
-      return { bg: 'status.danger.bg', border: 'status.danger.border', accent: 'status.danger.fg', text: 'status.danger.fg' };
+      return { bg: 'bg.critical.subtle', border: 'border.critical', accent: 'fg.critical', text: 'fg.critical' };
     case 'info':
-      return { bg: 'status.info.bg', border: 'status.info.border', accent: 'status.info.fg', text: 'text.primary' };
+      return { bg: 'bg.info.subtle', border: 'border.info', accent: 'fg.info', text: 'fg.primary' };
     default:
-      return { bg: 'surface.subtle', border: 'border.default', accent: 'text.primary', text: 'text.primary' };
+      return { bg: 'bg.neutral.subtle', border: 'border.default', accent: 'fg.primary', text: 'fg.primary' };
   }
 }
 
@@ -129,6 +129,9 @@ const ToastClose = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitive.Close
     ref={ref}
+    // The close glyph is aria-hidden, so the button has no text of its own —
+    // without a name it fails axe `button-name`. Default here, overridable.
+    aria-label="Close"
     className={cn(
       'absolute right-2 top-2 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus:opacity-100 focus:outline-hidden focus:ring-2',
       className

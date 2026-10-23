@@ -49,7 +49,7 @@ const tokens = (await import(path.join(tmpOut, 'tokens.js'))).tokens;
 const spacing = (await import(path.join(tmpOut, 'spacing.js'))).spacing;
 const shadows = (await import(path.join(tmpOut, 'shadows.js'))).shadows;
 const { semanticColors, semanticDarkOverrides } = await import(path.join(tmpOut, 'semantic-tokens.js'));
-const { __ROLE_MAP: roleMap } = await import(path.join(tmpOut, 'theme', 'roles.js'));
+const { __ROLE_MAP: roleMap, getRoleColor } = await import(path.join(tmpOut, 'theme', 'roles.js'));
 
 // ─── Serialize a genuine DTCG-format token source ────────────────────────────
 // Transient/derived — nothing else reads this, so it's gitignored rather than
@@ -170,15 +170,15 @@ writeFileSync(path.join(dtcgOut, 'shadow.tokens.json'), JSON.stringify({ shadow:
 // on the affected tokens below, and the meta.deprecated block further down.
 const deprecatedTokens = {
   statusWarning: {
-    replaceWith: ['statusWarningBg', 'statusWarningText'],
+    replaceWith: ['bgWarningSubtle', 'fgWarning'],
     rationale: 'Use background + text pair for accessible warning states.'
   },
   statusSuccess: {
-    replaceWith: ['statusSuccessBg', 'statusSuccessText'],
+    replaceWith: ['bgSuccessSubtle', 'fgSuccess'],
     rationale: 'Adopt background/text pattern for consistency.'
   },
   statusDanger: {
-    replaceWith: ['statusDangerBg', 'statusDangerText'],
+    replaceWith: ['bgCriticalSubtle', 'fgCritical'],
     rationale: 'Adopt background/text pattern for consistency.'
   }
 };
@@ -188,15 +188,22 @@ function withDeprecated(key, entry) {
   return { ...entry, $deprecated: `Use ${d.replaceWith.join(' + ')} instead — ${d.rationale}` };
 }
 
+// Semantic TS keys are dotted (Figma grammar, e.g. 'fg.primary') since the
+// 2026-10-21 rename, but DTCG reserves '.' as the group-path separator, so a
+// flat dotted token name is illegal and would also emit a dotted CSS var
+// (--color-fg.primary). Sanitize to kebab for the token-name / var layer only;
+// the TS source keeps its dotted identity. Must be applied to BOTH the token
+// names and the role→semantic alias references so they still resolve.
+const sanitizeTokenName = (k) => k.replaceAll('.', '-');
 const semanticColorTokens = {};
-for (const [k, v] of Object.entries(semanticColors)) semanticColorTokens[k] = withDeprecated(k, semanticColorEntry(v));
+for (const [k, v] of Object.entries(semanticColors)) semanticColorTokens[sanitizeTokenName(k)] = withDeprecated(k, semanticColorEntry(v));
 writeFileSync(
   path.join(dtcgOut, 'semantic-color.tokens.json'),
   JSON.stringify({ semantic: { color: semanticColorTokens } }, null, 2),
 );
 
 const semanticColorDarkTokens = {};
-for (const [k, v] of Object.entries(semanticDarkOverrides)) semanticColorDarkTokens[k] = withDeprecated(k, semanticColorEntry(v));
+for (const [k, v] of Object.entries(semanticDarkOverrides)) semanticColorDarkTokens[sanitizeTokenName(k)] = withDeprecated(k, semanticColorEntry(v));
 writeFileSync(
   path.join(dtcgOut, 'semantic-color-dark.tokens.json'),
   JSON.stringify({ semanticDark: { color: semanticColorDarkTokens } }, null, 2),
@@ -236,7 +243,7 @@ function buildRoleGroup(darkMode) {
     const semanticKey = entry.semantic;
     const hasDarkOverride = darkMode && Object.prototype.hasOwnProperty.call(semanticDarkOverrides, semanticKey);
     const aliasGroup = hasDarkOverride ? 'semanticDark' : 'semantic';
-    setNested(root, roleName, { $type: 'color', $value: `{${aliasGroup}.color.${semanticKey}}` });
+    setNested(root, roleName, { $type: 'color', $value: `{${aliasGroup}.color.${sanitizeTokenName(semanticKey)}}` });
   }
   return root;
 }
@@ -324,7 +331,7 @@ StyleDictionary.registerFormat(legacyThemeCssFormat);
 // never reached the CSS emitter, which is why `--role-*` existed in no
 // stylesheet and the published package shipped Button classes referencing
 // variables nothing defined. See legacy-theme-css.mjs.
-const originalValues = { tokens, spacing, shadows, semanticColors, semanticDarkOverrides, roleMap, meta };
+const originalValues = { tokens, spacing, shadows, semanticColors, semanticDarkOverrides, roleMap, getRoleColor, meta };
 const sd = new StyleDictionary(buildConfig(originalValues));
 await sd.hasInitialized;
 await sd.buildAllPlatforms();
@@ -384,13 +391,21 @@ writeFileSync(path.join(root, 'dist', 'tokens.tokens.json'), JSON.stringify(dtcg
 // without first running the token build.
 const roleCssPath = path.join(root, 'src', 'styles', 'roles.generated.css');
 const roleVarName = (role) => `--role-${role.replaceAll('.', '-')}`;
-const roleDeclarations = (palette) =>
-  Object.entries(roleMap)
-    .map(([role, entry]) => `  ${roleVarName(role)}: ${palette[entry.semantic]};`)
+// Resolve through roles.ts's own getRoleColor rather than re-implementing the
+// lookup here. It used to index the semantic palette directly, which was a
+// second copy of the resolution rules — and once roles could be pinned to a
+// Figma token (step 4 of the token-pipeline migration) that copy would have
+// emitted the semantic value into CSS while getRoleColor returned the token
+// value to inline styles: the same role, two colours, depending on which path
+// a component happened to take. Passing an explicit mode keeps this pure (no
+// DOM read), so the CSS and the JS agree by construction.
+const roleDeclarations = (mode) =>
+  Object.keys(roleMap)
+    .map((role) => `  ${roleVarName(role)}: ${getRoleColor(role, { mode })};`)
     .join('\n');
 
-const lightRoles = roleDeclarations(semanticColors);
-const darkRoles = roleDeclarations({ ...semanticColors, ...semanticDarkOverrides });
+const lightRoles = roleDeclarations('light');
+const darkRoles = roleDeclarations('dark');
 
 writeFileSync(
   roleCssPath,

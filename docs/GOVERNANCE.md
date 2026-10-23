@@ -30,8 +30,8 @@ flowchart LR
 ```mermaid
 flowchart TD
     P["Primitive<br/>src/tokens.ts<br/>blue1000: '#000f47'"] --> S["Semantic<br/>src/semantic-tokens.ts<br/>textPrimary: ref('blue1000')"]
-    S --> R["Role<br/>src/theme/roles.ts<br/>'text.primary' maps to textPrimary"]
-    R --> C["Component<br/>getRoleColor('text.primary')"]
+    S --> R["Role<br/>src/theme/roles.ts<br/>'fg.primary' maps to textPrimary"]
+    R --> C["Component<br/>getRoleColor('fg.primary')"]
 
     C -.->|"someone writes a<br/>raw hex color instead"| V["Direct hex/primitive<br/>reference"]
     V --> Check{"npm run roles:check --strict"}

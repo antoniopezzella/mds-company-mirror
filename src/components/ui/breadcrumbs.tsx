@@ -36,8 +36,8 @@ export const Breadcrumbs = React.forwardRef<HTMLElement, BreadcrumbsProps>(({
   ariaLabel = 'Breadcrumbs',
 }, ref) => {
   const linkColor = 'var(--role-interactive-primary)';
-  const textColor = 'var(--role-text-primary)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const textColor = 'var(--role-fg-primary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const displayItems: (BreadcrumbItem | 'ellipsis')[] =
     items.length > maxItems && maxItems >= 2

@@ -133,6 +133,14 @@ export function ThemeModeProvider({ children }: { children: ReactNode }) {
   // index.html carries the equivalent fix for the very first paint.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', mode === 'dark');
+    // `data-theme` is the mechanism the generated token layer keys off
+    // (`[data-theme="dark"]` in src/styles/generated/mds-tokens.css) and the
+    // one that survives this migration — an attribute, so a nested band can
+    // override it with `data-surface` without a second class system. Both are
+    // written during the transition: the class still drives Tailwind's
+    // `dark:` variant, `darkMode: ['class']`, and currentDomMode()'s
+    // fallback. See docs/tasks/token-pipeline-migration.md step 2.
+    document.documentElement.dataset.theme = mode;
   }, [mode]);
 
   const toggleMode = useCallback(() => {
@@ -142,6 +150,7 @@ export function ThemeModeProvider({ children }: { children: ReactNode }) {
     // re-renders in response to this same store update, so getRoleColor's
     // DOM-read fallback already sees the correct class on that render.
     document.documentElement.classList.toggle('dark', next === 'dark');
+    document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {

@@ -20,7 +20,7 @@ Our design system uses a 3-layer token hierarchy. When designing, try to think i
 
 1.  **Primitives**: The raw palette (e.g., `Blue 500`).
 2.  **Semantics**: The intent (e.g., `Primary Action`).
-3.  **Roles**: The specific usage (e.g., `interactive.primary.default`).
+3.  **Roles**: The specific usage (e.g., `interactive.primary`).
 
 ### Spacing
 We use a **4px grid system**.
@@ -37,7 +37,7 @@ Before requesting a new token, search existing tokens in Figma:
 1. **Open Variables panel** (Figma menu → Variables)
 2. **Filter by collection**:
    - `Primitives` — Raw colors like `Blue 500`, `Neutral 100`
-   - `Semantic` — Intent names like `surface.default`, `text.primary`
+   - `Semantic` — Intent names like `bg.default`, `fg.primary`
 3. **Search by name**: Type keywords like "primary", "card", "border"
 4. **Check both modes**: Toggle between Light and Dark to see values
 
@@ -135,7 +135,7 @@ Quick links to token request templates:
 
 #### ✅ Good Example: Semantic Token Request
 
-> **Request:** "I need `surface.card.elevated` for cards with shadows. Currently using `surface.default`, but it doesn't convey elevation. Will be used in Dashboard cards (6 instances), Report cards (4 instances), and Profile page (2 instances)."
+> **Request:** "I need `bg.raised` for cards with shadows. Currently using `bg.default`, but it doesn't convey elevation. Will be used in Dashboard cards (6 instances), Report cards (4 instances), and Profile page (2 instances)."
 >
 > **Why good:** Clear use case, multiple components, explains why existing tokens don't work.
 

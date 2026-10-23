@@ -56,7 +56,7 @@ const checkboxLabelVariants = cva(
    plus the 12px gap — so the helper text lines up under the label rather than
    under the box. It tracks the checkbox, not the spacing scale. */
 const checkboxHelperVariants = cva(
-  'ml-7 flex min-h-5 items-start gap-1 font-sans-productive text-sm font-normal leading-5 tracking-normal' // spacing-allow
+  'ms-7 flex min-h-5 items-start gap-1 font-sans-productive text-sm font-normal leading-5 tracking-normal' // spacing-allow
 );
 
 const checkboxHelperIconVariants = cva('mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center');
@@ -86,8 +86,8 @@ function getControlStyle({
 }): React.CSSProperties {
   const checkedVisual = isCheckedLike(checked);
   const focusVars = {
-    '--checkbox-focus-ring': 'var(--role-focus-ring)',
-    '--checkbox-focus-inner-ring': 'var(--role-surface-default)',
+    '--checkbox-focus-ring': 'var(--role-border-focus)',
+    '--checkbox-focus-inner-ring': 'var(--role-bg-default)',
   } as React.CSSProperties;
 
   if (disabled) {
@@ -100,17 +100,17 @@ function getControlStyle({
       return {
         ...style,
         ...focusVars,
-        backgroundColor: 'var(--role-text-disabled)',
-        borderColor: 'var(--role-text-disabled)',
-        color: 'var(--role-surface-default)',
+        backgroundColor: 'var(--role-fg-disabled)',
+        borderColor: 'var(--role-fg-disabled)',
+        color: 'var(--role-bg-default)',
       };
     }
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-disabled)',
+      backgroundColor: 'var(--role-bg-disabled)',
       borderColor: 'var(--role-border-default)',
-      color: 'var(--role-text-disabled)',
+      color: 'var(--role-fg-disabled)',
     };
   }
 
@@ -124,13 +124,13 @@ function getControlStyle({
     // mode's danger case needed a background fix too (interactiveDanger's
     // old red750 was too mid-toned for any text color to clear 4.5:1 —
     // now red800, passes at 4.90:1 with white). See semantic-tokens.ts's
-    // textOnInteractive/interactiveDanger comments.
+    // fgOnInteractive/interactiveDanger comments.
     return {
       ...style,
       ...focusVars,
       backgroundColor: roleVar(role),
       borderColor: roleVar(role),
-      color: 'var(--role-text-onInteractive)',
+      color: 'var(--role-fg-on-interactive)',
     };
   }
 
@@ -142,23 +142,23 @@ function getControlStyle({
   // verified — extrapolated from the non-invalid pattern, same as the MUI
   // version this ports from).
   if (interaction === 'default') {
-    const borderRole: RoleName = invalid ? 'status.danger.border' : 'border.default';
+    const borderRole: RoleName = invalid ? 'border.critical' : 'border.default';
     return {
       ...style,
       ...focusVars,
-      backgroundColor: 'var(--role-surface-default)',
+      backgroundColor: 'var(--role-bg-default)',
       borderColor: roleVar(borderRole),
       color: roleVar(invalid ? 'interactive.danger' : 'interactive.primary'),
     };
   }
 
-  const uncheckedInteractiveColor = invalid ? 'var(--role-status-danger-border)' : 'var(--role-interactive-secondary)';
+  const uncheckedInteractiveColor = invalid ? 'var(--role-border-critical)' : 'var(--role-interactive-secondary)';
   const washPercent = interaction === 'active' ? 20 : 10; // Figma: ~#..1a (10%) hover, ~#..33 (20%) active
 
   return {
     ...style,
     ...focusVars,
-    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${'var(--role-surface-default)'} ${100 - washPercent}%)`,
+    backgroundColor: `color-mix(in srgb, ${uncheckedInteractiveColor} ${washPercent}%, ${'var(--role-bg-default)'} ${100 - washPercent}%)`,
     borderColor: uncheckedInteractiveColor,
     color: uncheckedInteractiveColor,
   };
@@ -306,9 +306,9 @@ const DSCheckbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Ro
       onCheckedChange?.(nextChecked);
     };
 
-    const labelColor = roleVar(disabled ? 'text.disabled' : 'text.primary');
+    const labelColor = roleVar(disabled ? 'fg.disabled' : 'fg.primary');
     const helperColor = roleVar(
-      disabled ? 'text.disabled' : invalid ? 'status.danger.fg' : 'text.primary'
+      disabled ? 'fg.disabled' : invalid ? 'fg.critical' : 'fg.primary'
     );
     const controlStyle = getControlStyle({
       checked: currentChecked,

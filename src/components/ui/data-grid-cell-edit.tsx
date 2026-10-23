@@ -33,25 +33,30 @@ export interface DataGridCellEditorProps {
  * `parse`, which it already has. Adding `<input type="number">` would also
  * quietly reject the paste-friendly formats people actually type ("1,200").
  */
-export function DataGridCellEditor({
-  value,
-  control = 'text',
-  ariaLabel,
-  onCommit,
-  onCancel,
-  invalid = false,
-}: DataGridCellEditorProps) {
+export const DataGridCellEditor = React.forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  DataGridCellEditorProps
+>(function DataGridCellEditor(
+  { value, control = 'text', ariaLabel, onCommit, onCancel, invalid = false },
+  forwardedRef
+) {
   const [draft, setDraft] = React.useState(value);
 
   // Focus on mount via ref rather than autoFocus: entering edit mode has to
   // move focus or a keyboard user is stranded, but autoFocus is the blunt
   // version jsx-a11y rightly rejects. Guarded so re-renders while typing do
   // not re-steal focus or reset the caret.
+  //
+  // Merged with the forwarded ref: a consumer (e.g. a cell wrapper that wants
+  // to measure the editor, or scroll it into view) needs the same node this
+  // effect already focuses, not a second, disconnected one.
   const focusOnMount = (el: HTMLInputElement | HTMLTextAreaElement | null) => {
     if (el && document.activeElement !== el) {
       el.focus();
       el.select?.();
     }
+    if (typeof forwardedRef === 'function') forwardedRef(el);
+    else if (forwardedRef) forwardedRef.current = el;
   };
 
   const keyDown = (e: React.KeyboardEvent) => {
@@ -78,7 +83,7 @@ export function DataGridCellEditor({
     onBlur: () => onCommit(draft),
     className: cn('w-full', invalid && 'ring-2'),
     style: invalid
-      ? ({ '--tw-ring-color': 'var(--role-status-danger-fg)' } as React.CSSProperties)
+      ? ({ '--tw-ring-color': 'var(--role-fg-critical)' } as React.CSSProperties)
       : undefined,
   };
 
@@ -101,6 +106,7 @@ export function DataGridCellEditor({
       className={cn('h-8', shared.className)}
     />
   );
-}
+});
+DataGridCellEditor.displayName = 'DataGridCellEditor';
 
 export default DataGridCellEditor;

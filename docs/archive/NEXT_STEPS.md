@@ -177,7 +177,7 @@ If starting now (April 25, 2026), aim to complete by **May 2**:
 
 ```bash
 # 1. Make sure you're on latest main
-cd /path/to/MarshDesignSystem
+cd <repo root>
 git checkout main
 git pull
 

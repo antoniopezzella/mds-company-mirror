@@ -32,14 +32,18 @@ export interface DataGridPaginationProps {
  * a prop here: the table instance already knows, and asking the consumer to
  * say it twice is how the two get out of step.
  */
-export function DataGridPagination<TData extends RowData>({
-  showSelectedCount = false,
-  pageSizeOptions,
-  onPaginationChange,
-  rowsLabel = 'Rows per page:',
-  className,
-}: DataGridPaginationProps) {
-  const { table, recordCount } = useDataGrid<TData>();
+export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPaginationProps>(
+  function DataGridPagination(
+    { showSelectedCount = false, pageSizeOptions, onPaginationChange, rowsLabel = 'Rows per page:', className },
+    ref
+  ) {
+  // `TData` was a dead generic here — nothing in `DataGridPaginationProps`
+  // ever supplied it, so a caller could never have set it to anything but
+  // its own constraint. `useDataGrid<RowData>()` is exactly what that
+  // resolved to; naming it explicitly is what let this become a plain
+  // (non-generic) forwardRef component, which a generic function component
+  // cannot be without a cast.
+  const { table, recordCount } = useDataGrid<RowData>();
 
   const { pageIndex, pageSize } = table.state.pagination;
   const manual = !!table.options.manualPagination;
@@ -50,7 +54,7 @@ export function DataGridPagination<TData extends RowData>({
   const totalItems = manual ? recordCount : filteredCount;
 
   const borderColor = 'var(--role-border-default)';
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
 
   const handlePageChange = (page: number) => {
     table.setPageIndex(page - 1);
@@ -68,6 +72,7 @@ export function DataGridPagination<TData extends RowData>({
     // width and overflowed past the table, cascading into page-wide horizontal
     // scroll for any consumer without its own fix upstream.
     <div
+      ref={ref}
       className={cn('flex flex-wrap items-center justify-between gap-4 border-t px-3 py-2', className)}
       style={{ borderColor }}
     >
@@ -97,6 +102,8 @@ export function DataGridPagination<TData extends RowData>({
       />
     </div>
   );
-}
+  }
+);
+DataGridPagination.displayName = 'DataGridPagination';
 
 export default DataGridPagination;

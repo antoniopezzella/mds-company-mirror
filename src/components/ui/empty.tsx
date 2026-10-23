@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils"
  * set for things like "no messages yet". Fully self-contained, no new deps.
  */
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
-  return (
+const Empty = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
+  ({ className, ...props }, ref) => (
     <div
+      ref={ref}
       data-slot="empty"
       className={cn(
         "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12",
@@ -21,7 +22,8 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
       {...props}
     />
   )
-}
+)
+Empty.displayName = "Empty"
 
 function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (

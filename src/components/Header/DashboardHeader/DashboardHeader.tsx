@@ -47,16 +47,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
     // which also means this header and the shadcn ui/header finally agree.
     if (variant === 'primary') {
       return {
-        backgroundColor: getRoleColor('surface.navigation', { mode: systemMode }),
-        color: getRoleColor('text.onHero', { mode: systemMode })
+        backgroundColor: getRoleColor('bg.shell', { mode: systemMode }),
+        color: getRoleColor('fg.on-primary', { mode: systemMode })
       };
     }
     return {
-      backgroundColor: getRoleColor('surface.secondary', { mode: systemMode }),
+      backgroundColor: getRoleColor('bg.secondary', { mode: systemMode }),
       // text.onLight, not text.primary. surface.secondary is Sky, which stays
       // light in both modes, but text.primary FLIPS to white in dark → 1.73:1.
       // onLight is the mode-invariant Midnight for exactly this case: 14.72/10.50.
-      color: getRoleColor('text.onLight', { mode: systemMode })
+      color: getRoleColor('fg.on-light', { mode: systemMode })
     };
   };
 
@@ -86,21 +86,21 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
 
   const getHoverColor = () => {
     if (systemMode === 'dark') {
-      return getRoleColor('surface.default', { mode: 'dark' });
+      return getRoleColor('bg.default', { mode: 'dark' });
     }
-    return getRoleColor('surface.navigation.hover');
+    return getRoleColor('bg.shell.hover');
   };
 
   const getAvatarColors = () => {
     if (systemMode === 'dark') {
       return {
-        bgcolor: getRoleColor('surface.default', { mode: 'dark' }),
-        color: getRoleColor('text.primary', { mode: 'dark' })
+        bgcolor: getRoleColor('bg.default', { mode: 'dark' }),
+        color: getRoleColor('fg.primary', { mode: 'dark' })
       };
     }
     return {
-      bgcolor: getRoleColor('surface.navigation'),
-      color: getRoleColor('text.onHero')
+      bgcolor: getRoleColor('bg.shell'),
+      color: getRoleColor('fg.on-primary')
     };
   };
 
@@ -204,7 +204,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                     width: 280,
                     borderRadius: '10px',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                    bgcolor: getRoleColor('surface.default', { mode: systemMode }),
+                    bgcolor: getRoleColor('bg.default', { mode: systemMode }),
                     border: `1px solid ${getRoleColor('border.default', { mode: systemMode })}`,
                     overflow: 'hidden',
                   },
@@ -214,13 +214,13 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                 <Box sx={{ px: '16px', py: '14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Avatar sx={{ width: 42, height: 42, fontWeight: 700, bgcolor: getRoleColor('interactive.primary', { mode: systemMode }), color: '#fff', fontSize: 15 }}>TA</Avatar>
                   <Box>
-                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: getRoleColor('text.primary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.3 }}>
+                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: getRoleColor('fg.primary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.3 }}>
                       Tolu Adesina
                     </Typography>
-                    <Typography sx={{ fontSize: 12, color: getRoleColor('text.secondary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif' }}>
+                    <Typography sx={{ fontSize: 12, color: getRoleColor('fg.neutral.subtle', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif' }}>
                       Chief Risk Officer
                     </Typography>
-                    <Typography sx={{ fontSize: 11, color: getRoleColor('text.secondary', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', mt: '2px' }}>
+                    <Typography sx={{ fontSize: 11, color: getRoleColor('fg.neutral.subtle', { mode: systemMode }), fontFamily: 'Noto Sans, sans-serif', mt: '2px' }}>
                       Beacon Capital Partners
                     </Typography>
                   </Box>
@@ -240,15 +240,15 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                     onClick={() => setProfileAnchor(null)}
                     sx={{
                       px: '16px', py: '10px', gap: '12px', alignItems: 'flex-start',
-                      '&:hover': { bgcolor: getRoleColor('surface.subtle', { mode: systemMode }) },
+                      '&:hover': { bgcolor: getRoleColor('bg.neutral.subtle', { mode: systemMode }) },
                     }}
                   >
-                    <ListItemIcon sx={{ color: getRoleColor('text.secondary', { mode: systemMode }), minWidth: 0, mt: '2px' }}>{icon}</ListItemIcon>
+                    <ListItemIcon sx={{ color: getRoleColor('fg.neutral.subtle', { mode: systemMode }), minWidth: 0, mt: '2px' }}>{icon}</ListItemIcon>
                     <ListItemText
                       primary={label}
                       secondary={sub}
-                      primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.primary', { mode: systemMode }) }}
-                      secondaryTypographyProps={{ fontSize: 11, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.secondary', { mode: systemMode }) }}
+                      primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('fg.primary', { mode: systemMode }) }}
+                      secondaryTypographyProps={{ fontSize: 11, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('fg.neutral.subtle', { mode: systemMode }) }}
                     />
                   </MenuItem>
                 ))}
@@ -266,15 +266,15 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                     onClick={() => setProfileAnchor(null)}
                     sx={{
                       px: '16px', py: '9px', gap: '12px',
-                      '&:hover': { bgcolor: getRoleColor('surface.subtle', { mode: systemMode }) },
+                      '&:hover': { bgcolor: getRoleColor('bg.neutral.subtle', { mode: systemMode }) },
                     }}
                   >
-                    <ListItemIcon sx={{ color: getRoleColor('text.secondary', { mode: systemMode }), minWidth: 0 }}>{icon}</ListItemIcon>
+                    <ListItemIcon sx={{ color: getRoleColor('fg.neutral.subtle', { mode: systemMode }), minWidth: 0 }}>{icon}</ListItemIcon>
                     <ListItemText
                       primary={label}
-                      primaryTypographyProps={{ fontSize: 13, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('text.primary', { mode: systemMode }) }}
+                      primaryTypographyProps={{ fontSize: 13, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('fg.primary', { mode: systemMode }) }}
                     />
-                    {external && <OpenInNewIcon sx={{ fontSize: 13, color: getRoleColor('text.secondary', { mode: systemMode }), ml: 'auto' }} />}
+                    {external && <OpenInNewIcon sx={{ fontSize: 13, color: getRoleColor('fg.neutral.subtle', { mode: systemMode }), ml: 'auto' }} />}
                   </MenuItem>
                 ))}
 
@@ -285,15 +285,15 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ sidebarOpen, onToggle
                   onClick={() => setProfileAnchor(null)}
                   sx={{
                     px: '16px', py: '10px', gap: '12px', mb: '4px',
-                    '&:hover': { bgcolor: getRoleColor('status.danger.bg', { mode: systemMode }) },
+                    '&:hover': { bgcolor: getRoleColor('bg.critical.subtle', { mode: systemMode }) },
                   }}
                 >
-                  <ListItemIcon sx={{ color: getRoleColor('status.danger.fg', { mode: systemMode }), minWidth: 0 }}>
+                  <ListItemIcon sx={{ color: getRoleColor('fg.critical', { mode: systemMode }), minWidth: 0 }}>
                     <LogoutIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText
                     primary="Sign Out"
-                    primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('status.danger.fg', { mode: systemMode }) }}
+                    primaryTypographyProps={{ fontSize: 13, fontWeight: 500, fontFamily: 'Noto Sans, sans-serif', color: getRoleColor('fg.critical', { mode: systemMode }) }}
                   />
                 </MenuItem>
               </Popover>

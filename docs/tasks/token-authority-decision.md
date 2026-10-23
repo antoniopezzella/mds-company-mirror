@@ -215,3 +215,39 @@ orthogonal axis lands** (surface-inverse, white-label, or Figma binding via
 Tokens Studio). For a single theme axis, `semanticDarkOverrides` is simpler;
 a resolver then is over-engineering. It's a living, unversioned draft — early
 adoption is churn risk.
+
+## Decision 2026-10-19 — warm `neutral` adopted, pure `gray` dropped
+
+**Context reversed.** The 2026-10-09 call removed the warm gray family in favour
+of a *pure* R=G=B `neutral` ramp. Figma V3 re-introduces the warm neutrals as
+the authoritative primitive (`color/neutral/*`, 24 steps) and demotes pure grey
+to a separate `color/gray/*` ramp annotated *"Pure grey… for dark mode. Warm
+greys stay in color/neutral/*."* Design authority confirmed: **warm `neutral`
+is the right ramp; pure grey is deprecated and dropped entirely** — warm is the
+only neutral ramp in BOTH modes (no `gray*` ramp retained in code).
+
+**What changed.** `src/tokens.ts` `neutral50–950` re-pointed pure → warm at the
+nearest lightness (so existing contrast relationships hold; verified —
+`tokens:contrast:all` stays green). The dark end now uses Figma's warm dark
+steps (`color/neutral/1100–1400`: `#262522`/`#1f1e1b`/`#191816`/`#131210`), so
+dark mode warms automatically (primitives are mode-invariant;
+`semanticDarkOverrides` reference the same names). `neutral1000` stays `#000000`
+— true black is a retained anchor, not part of the grey ramp. `borderSubtle`
+re-pointed `neutral200 → neutral250` (`#dedbd6`) to match Figma `border/subtle`
+(`base/neutral/3`).
+
+**Verified in sync (live, against branch `EWYkndq17wpDP3pwcz1zM4`):**
+`border.default` `#878580` and `border.subtle` (light) `#dedbd6` now match Figma
+exactly.
+
+**One intentional divergence (do NOT "fix"):** dark `border.subtle` stays
+`rgba(255,255,255,0.10)` (a translucent overlay divider). Figma's `border/subtle`
+has **no dark override** (`#DEDBD6` both modes) — a bright warm line on a dark
+page. The code's alpha treatment is the better dark behaviour; **Figma should add
+the dark override**, not the code adopt Figma's value here.
+
+**Follow-ups:** per-semantic Figma-exact alignment beyond borders (surfaces,
+text) is left to the live drift gate (`check-figma-drift` v2) rather than
+hand-tuned; the stale hex-in-comment annotations in `semantic-tokens.ts`'s dark
+block (`// #101010`, `// #252525`, "de-warmed from gray…") now contradict the
+warm values and should be regenerated.

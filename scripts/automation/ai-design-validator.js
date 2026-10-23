@@ -74,12 +74,12 @@ const WCAG_CONTRAST = {
  * MDS Semantic Token Categories
  */
 const TOKEN_CATEGORIES = {
-  brand: ['brandPrimary', 'brandPrimaryDark', 'brandSecondary', 'brandAccent'],
-  text: ['textPrimary', 'textSecondary', 'textTertiary', 'textOnAccent', 'textOnHero', 'textDisabled'],
-  surface: ['surfaceDefault', 'surfaceSubtle', 'surfaceMuted', 'surfaceAccent', 'surfaceNavigation'],
+  brand: ['brandPrimary', 'brandPrimaryDark', 'bgSecondary', 'bgAccent'],
+  text: ['fgPrimary', 'fgNeutralSubtle', 'fgInputPlaceholder', 'fgOnAccent', 'fgOnPrimary', 'fgDisabled'],
+  surface: ['bgDefault', 'bgNeutralSubtle', 'surfaceMuted', 'surfaceAccent', 'bgShell'],
   border: ['borderDefault', 'borderMuted', 'borderStrong', 'borderAccent'],
   interactive: ['interactivePrimary', 'interactivePrimaryHover', 'interactivePrimaryActive'],
-  status: ['statusSuccess', 'statusSuccessBg', 'statusSuccessText', 'statusWarning', 'statusDanger', 'statusInfo']
+  status: ['statusSuccess', 'bgSuccessSubtle', 'fgSuccess', 'statusWarning', 'statusDanger', 'statusInfo']
 };
 
 // ============================================================================
@@ -241,12 +241,12 @@ function validateAccessibility(colorData, palette) {
   
   // Check for common status color pairings
   const statusPairings = [
-    { fg: 'statusSuccessText', bg: 'statusSuccessBg', min: WCAG_CONTRAST.AA_NORMAL },
-    { fg: 'statusWarning', bg: 'statusWarningBg', min: WCAG_CONTRAST.AA_NORMAL },
-    { fg: 'statusDangerText', bg: 'statusDangerBg', min: WCAG_CONTRAST.AA_NORMAL },
-    { fg: 'statusInfo', bg: 'statusInfoBg', min: WCAG_CONTRAST.AA_NORMAL },
-    { fg: 'textPrimary', bg: 'surfaceDefault', min: WCAG_CONTRAST.AA_NORMAL },
-    { fg: 'textSecondary', bg: 'surfaceDefault', min: WCAG_CONTRAST.AA_NORMAL }
+    { fg: 'fgSuccess', bg: 'bgSuccessSubtle', min: WCAG_CONTRAST.AA_NORMAL },
+    { fg: 'statusWarning', bg: 'bgWarningSubtle', min: WCAG_CONTRAST.AA_NORMAL },
+    { fg: 'fgCritical', bg: 'bgCriticalSubtle', min: WCAG_CONTRAST.AA_NORMAL },
+    { fg: 'statusInfo', bg: 'bgInfoSubtle', min: WCAG_CONTRAST.AA_NORMAL },
+    { fg: 'fgPrimary', bg: 'bgDefault', min: WCAG_CONTRAST.AA_NORMAL },
+    { fg: 'fgNeutralSubtle', bg: 'bgDefault', min: WCAG_CONTRAST.AA_NORMAL }
   ];
   
   // This would calculate actual contrast ratios from component colors
@@ -566,14 +566,14 @@ function loadMdsPalette() {
   
   const semanticTokens = {
     // Status tokens
-    statusSuccessBg: '#f8fcf7',
+    bgSuccessSubtle: '#f8fcf7',
     statusSuccess: '#14853d',
-    statusSuccessText: '#2f7d32',
-    statusWarningBg: '#fffaee',
+    fgSuccess: '#2f7d32',
+    bgWarningSubtle: '#fffaee',
     statusWarning: '#ed9400',
-    statusDangerBg: '#fff1f1',
-    statusDangerText: '#d62f2f',
-    statusInfoBg: '#eef4ff',
+    bgCriticalSubtle: '#fff1f1',
+    fgCritical: '#d62f2f',
+    bgInfoSubtle: '#eef4ff',
     statusInfo: '#1c5eb7',
     // Add more tokens as needed
   };

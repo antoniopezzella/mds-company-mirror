@@ -184,7 +184,7 @@ Never hardcode a colour. Two mechanisms, and the difference matters:
 
 ```tsx
 // Role token — resolved at render, returns a hex string.
-style={{ color: getRoleColor('text.primary') }}
+style={{ color: getRoleColor('fg.primary') }}
 
 // Semantic Tailwind class — resolves through a CSS variable.
 className="bg-primary text-primary-foreground"

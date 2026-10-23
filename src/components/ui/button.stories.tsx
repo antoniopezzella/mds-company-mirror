@@ -443,10 +443,10 @@ export const FigmaMapping: Story = {
       <h3 style={{ marginBottom: '16px', fontWeight: 'bold' }}>
         Figma V3 Button Variants — Exact Color Match
       </h3>
-      <p style={{ marginBottom: '16px', color: '#595959' }}>
+      <p className="text-muted-foreground" style={{ marginBottom: '16px' }}>
         These buttons match Figma V3 button component specifications exactly:
       </p>
-      <ul style={{ marginLeft: '24px', marginBottom: '24px', color: '#595959' }}>
+      <ul className="text-muted-foreground" style={{ marginLeft: '24px', marginBottom: '24px' }}>
         <li><strong>Primary</strong>: Midnight Blue (#000f47) fill, sky blue (#ceecff) text</li>
         <li><strong>Primary Alt</strong>: Gold (#ffbf00) fill, midnight blue (#000f47) text</li>
         <li><strong>Secondary</strong>: Transparent, 2px midnight blue border, fills on hover</li>
@@ -490,16 +490,17 @@ export const FigmaMapping: Story = {
 export const MUIComparison: Story = {
   render: () => (
     <div style={{ padding: '24px' }}>
-      <div style={{ 
-        backgroundColor: '#f7f8f8', 
-        padding: '16px', 
-        borderRadius: '4px',
-        marginBottom: '24px',
-        border: '1px solid #dadada'
-      }}>
+      <div
+        className="bg-muted border border-border"
+        style={{
+          padding: '16px',
+          borderRadius: '4px',
+          marginBottom: '24px',
+        }}
+      >
         <h3 style={{ marginBottom: '12px', fontWeight: 'bold' }}>✅ API Parity Achieved</h3>
         <p style={{ marginBottom: '8px' }}>The Button now has <strong>exact API match</strong> with MUI Button:</p>
-        <ul style={{ marginLeft: '24px', color: '#595959' }}>
+        <ul className="text-muted-foreground" style={{ marginLeft: '24px' }}>
           <li>✅ All variants: primary, primaryAlt, secondary, tertiary</li>
           <li>✅ All sizes: sm/small (32px), md/medium (48px), lg/large (56px)</li>
           <li>✅ Destructive state (turns any variant red)</li>
@@ -528,7 +529,7 @@ export const MUIComparison: Story = {
         <Button variant="tertiary" iconOnly icon={<X className="h-4 w-4" />} aria-label="Close" />
       </div>
 
-      <p style={{ marginTop: '24px', color: '#595959', fontStyle: 'italic' }}>
+      <p className="text-muted-foreground" style={{ marginTop: '24px', fontStyle: 'italic' }}>
         💡 <strong>Migration Path:</strong> Replace <code>import &#123; Button &#125; from '@/components/Button'</code> with <code>import &#123; Button &#125; from '@/components/ui/button'</code> — no prop changes needed!
       </p>
     </div>

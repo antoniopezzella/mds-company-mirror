@@ -39,14 +39,16 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
  * Design System Skeleton — shadcn/ui counterpart for the MDS Skeleton.
  * Same `variant`/`width`/`height`/`animation` API as the MUI twin.
  */
-export const Skeleton: React.FC<SkeletonProps> = ({ variant = 'text', animation = 'pulse', width, height, className, style, ...props }) => {
+export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
+  ({ variant = 'text', animation = 'pulse', width, height, className, style, ...props }, ref) => {
   const defaultHeight = variant === 'text' ? '1em' : variant === 'circular' ? 40 : 20;
   return (
     <div
+      ref={ref}
       data-slot="skeleton"
       className={cn(skeletonVariants({ variant, animation: animation === false ? 'none' : animation }), className)}
       style={{
-        backgroundColor: 'var(--role-surface-subtle)',
+        backgroundColor: 'var(--role-bg-neutral-subtle)',
         width: width ?? (variant === 'circular' ? 40 : '100%'),
         height: height ?? defaultHeight,
         ...style,
@@ -54,6 +56,8 @@ export const Skeleton: React.FC<SkeletonProps> = ({ variant = 'text', animation 
       {...props}
     />
   );
-};
+  }
+);
+Skeleton.displayName = 'Skeleton';
 
 export default Skeleton;

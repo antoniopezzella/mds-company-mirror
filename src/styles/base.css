@@ -48,7 +48,7 @@
      on dark mode's #101010 page measured **1.1:1**. The same argument that
      justified the font-family line applies verbatim to colour, and only half
      of it was done the first time. */
-  color: var(--role-text-primary, #000f47);
+  color: var(--role-fg-primary, #000f47);
 }
 
 /* Written as two rules, not one selector list. Lightning CSS (`--minify`)

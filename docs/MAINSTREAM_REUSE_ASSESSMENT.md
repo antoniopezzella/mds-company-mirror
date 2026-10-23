@@ -14,7 +14,7 @@ MDS is a real, structurally sound design system with genuine CI governance — b
 | Component migration (MUI → shadcn/Radix) | **Updated 2026-08-27:** 17/20 overlapping components resolved; the remaining 3 (Button, Checkbox, Chip) are an intentional exception — MUI kept for side-by-side comparison, their real fixes ported into shadcn rather than the migration being blocked. Zero remaining feature-parity gaps — see status doc |
 | Token system | Real 3-tier system (167 primitives → 62 semantics → 42 roles), actively maintained. Tiers 1–2 already output framework-agnostic artifacts: `dist/tokens.json`, `dist/theme.css` |
 | Governance CI | **Updated 2026-08-27:** `npm run roles:check` now finds 2 live violations (`AIAgentBot.tsx`, out of scope for the component-readiness pass), down from 5 — the `ui/button.tsx` flag was a script false positive (regex matched a comment), now fixed |
-| Packaging | Published to GitHub Packages under a personal account (`marsh-mds`) — explicitly a stopgap pending a move to an MMC/Marsh org. **Still open** — the MUI-vs-shadcn bundling question (below) is now more concrete since Button/Checkbox/Chip stay dual-shipped by design |
+| Packaging | Published to GitHub Packages under a personal account (`@mmctech/MarshDesignSystem`) — explicitly a stopgap pending a move to an MMC/Marsh org. **Still open** — the MUI-vs-shadcn bundling question (below) is now more concrete since Button/Checkbox/Chip stay dual-shipped by design |
 | Figma Code Connect | **Updated 2026-08-27:** all 8 previously-gap/blocked components (Select, Stepper, Header, Badge, Card, Button, Checkbox, Chip) now point at the right real component with real props — several were previously pointing at the wrong component entirely (e.g. Card's mapping targeted MUI's unrelated stat-grid Card for a node that was always the content-card shape). Other Code Connect files unaudited |
 | Test coverage | **Updated 2026-08-27:** added 8 new `.test.tsx` files (Select, Stepper, WebsiteHeader, Checkbox, Chip, Button, BadgeAnchor, ContentCard) covering the components touched in this pass. Broader component-behavior coverage across the rest of `ui/*` remains thin |
 
@@ -56,7 +56,7 @@ it:
 
 Those are Tailwind utility classes and CSS custom properties. Neither exists in a
 consumer's app unless they independently: run Tailwind with content globs
-covering `node_modules/marsh-mds`, define every
+covering `node_modules/@mmctech/MarshDesignSystem`, define every
 `--role-*` / `--background` / `--border` variable, **and** mount
 `RoleVarsProvider`. None of that is documented as a complete setup, and the
 first two aren't documented at all.

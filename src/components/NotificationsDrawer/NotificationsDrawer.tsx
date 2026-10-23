@@ -135,11 +135,11 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
   const [filter, setFilter] = useState<'unread' | 'all' | 'action'>('unread');
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
-  const surfaceDefault = getRoleColor('surface.default', { mode });
-  const textPrimary    = getRoleColor('text.primary', { mode });
-  const textSecondary  = getRoleColor('text.secondary', { mode });
+  const bgDefault = getRoleColor('bg.default', { mode });
+  const fgPrimary    = getRoleColor('fg.primary', { mode });
+  const fgNeutralSubtle  = getRoleColor('fg.neutral.subtle', { mode });
   const borderDefault  = getRoleColor('border.default', { mode });
-  const surfaceSubtle  = getRoleColor('surface.subtle', { mode });
+  const bgNeutralSubtle  = getRoleColor('bg.neutral.subtle', { mode });
   const primaryBlue    = getRoleColor('interactive.primary', { mode });
 
   const unreadCount  = NOTIFICATIONS.filter(n => n.unread).length;
@@ -175,7 +175,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
       PaperProps={{
         sx: {
           width: { xs: '100vw', sm: 440 },
-          bgcolor: surfaceDefault,
+          bgcolor: bgDefault,
           top: 64,
           height: 'calc(100% - 64px)',
           boxShadow: '-4px 0 24px rgba(0,0,0,0.10)',
@@ -187,10 +187,10 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
     >
       {/* Header */}
       <Box sx={{ px: '24px', pt: '20px', pb: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-        <Typography sx={{ fontSize: 20, fontWeight: 700, color: textPrimary, fontFamily: 'var(--typo-display-font-family)' }}>
+        <Typography sx={{ fontSize: 20, fontWeight: 700, color: fgPrimary, fontFamily: 'var(--typo-display-font-family)' }}>
           Notifications
         </Typography>
-        <IconButton onClick={onClose} size="small" aria-label="Close notifications" sx={{ color: textSecondary }}>
+        <IconButton onClick={onClose} size="small" aria-label="Close notifications" sx={{ color: fgNeutralSubtle }}>
           <CloseIcon />
         </IconButton>
       </Box>
@@ -213,7 +213,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
               sx={{
                 ...pillBase,
                 bgcolor: active ? primaryBlue : 'transparent',
-                color: active ? '#fff' : textPrimary,
+                color: active ? '#fff' : fgPrimary,
                 borderColor: active ? primaryBlue : borderDefault,
                 '&:hover': { borderColor: primaryBlue, color: active ? '#fff' : primaryBlue },
               }}
@@ -221,8 +221,8 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
               {label}
               <Box component="span" sx={{
                 minWidth: 20, height: 20, borderRadius: '10px', px: '5px',
-                bgcolor: active ? 'rgba(255,255,255,0.25)' : surfaceSubtle,
-                color: active ? '#fff' : textSecondary,
+                bgcolor: active ? 'rgba(255,255,255,0.25)' : bgNeutralSubtle,
+                color: active ? '#fff' : fgNeutralSubtle,
                 fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {count}
@@ -244,15 +244,15 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
               sx={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 py: '10px', px: '8px', cursor: 'pointer', borderRadius: 1,
-                '&:hover': { bgcolor: surfaceSubtle },
+                '&:hover': { bgcolor: bgNeutralSubtle },
               }}
             >
-              <Typography sx={{ fontSize: 13, fontWeight: 600, color: textSecondary, fontFamily: 'Noto Sans, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 600, color: fgNeutralSubtle, fontFamily: 'Noto Sans, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {label}
               </Typography>
               {collapsedGroups[label]
-                ? <ExpandMoreIcon sx={{ fontSize: 18, color: textSecondary }} />
-                : <ExpandLessIcon sx={{ fontSize: 18, color: textSecondary }} />
+                ? <ExpandMoreIcon sx={{ fontSize: 18, color: fgNeutralSubtle }} />
+                : <ExpandLessIcon sx={{ fontSize: 18, color: fgNeutralSubtle }} />
               }
             </Box>
 
@@ -267,7 +267,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
                         border: `1px solid ${borderDefault}`,
                         borderRadius: '8px',
                         p: '14px',
-                        bgcolor: n.unread ? (mode === 'dark' ? 'rgba(255,255,255,0.03)' : '#fafbff') : surfaceDefault,
+                        bgcolor: n.unread ? (mode === 'dark' ? 'rgba(255,255,255,0.03)' : '#fafbff') : bgDefault,
                         position: 'relative',
                       }}
                     >
@@ -275,7 +275,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
                       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px', mb: '6px' }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
                           <ErrorIcon sx={{ fontSize: 20, color: '#c62828', flexShrink: 0 }} />
-                          <Typography sx={{ fontSize: 14, fontWeight: 700, color: textPrimary, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.3 }}>
+                          <Typography sx={{ fontSize: 14, fontWeight: 700, color: fgPrimary, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.3 }}>
                             {n.title}
                           </Typography>
                         </Box>
@@ -295,12 +295,12 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
 
                       {/* Description */}
                       <Typography
-                        sx={{ fontSize: 13, color: textPrimary, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.55, mb: '6px', '& strong': { fontWeight: 600 } }}
+                        sx={{ fontSize: 13, color: fgPrimary, fontFamily: 'Noto Sans, sans-serif', lineHeight: 1.55, mb: '6px', '& strong': { fontWeight: 600 } }}
                         dangerouslySetInnerHTML={{ __html: highlightNumbers(n.description) }}
                       />
 
                       {/* Area */}
-                      <Typography sx={{ fontSize: 12, color: textSecondary, fontFamily: 'Noto Sans, sans-serif', mb: '10px' }}>
+                      <Typography sx={{ fontSize: 12, color: fgNeutralSubtle, fontFamily: 'Noto Sans, sans-serif', mb: '10px' }}>
                         Area Affected: {n.area}
                       </Typography>
 
@@ -314,7 +314,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
                         >
                           View locations
                         </Typography>
-                        <Typography sx={{ fontSize: 11, color: textSecondary, fontFamily: 'Noto Sans, sans-serif' }}>
+                        <Typography sx={{ fontSize: 11, color: fgNeutralSubtle, fontFamily: 'Noto Sans, sans-serif' }}>
                           {n.timeAgo}
                         </Typography>
                       </Box>
@@ -327,7 +327,7 @@ export default function NotificationsDrawer({ open, onClose }: NotificationsDraw
         ))}
 
         {groups.length === 0 && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, color: textSecondary }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 200, color: fgNeutralSubtle }}>
             <Typography sx={{ fontFamily: 'Noto Sans, sans-serif', fontSize: 14 }}>No notifications</Typography>
           </Box>
         )}

@@ -1,0 +1,90 @@
+# tokens-sync: Figma variables -> DTCG export -> generated CSS -> pull request.
+# Docs: docs/tasks/token-pipeline-migration.md (section "Automation").
+#
+# Triggers
+#   - workflow_dispatch: run by hand from the Actions tab (start here).
+#   - repository_dispatch "figma-library-publish": sent by the webhook relay
+#     when the Figma library is published (see the doc; needs api/figma-webhook.ts).
+#   - schedule: weekday safety net. Commented out until the first manual runs are clean.
+# Secrets / variables
+#   - secrets.FIGMA_TOKEN  (file_variables:read; Figma Enterprise plan). CI only.
+#   - vars.FIGMA_FILE_KEY  (the library file key).
+# If your Actions mirror (Artifactory) pins versions, replace the action tags below.
+# On the COMPANY repo (mmctech/MarshDesignSystem, self-hosted runner) `npm ci`
+# installs from the internal JFrog registry, which needs the .npmrc + token
+# wiring that deploy-storybook.yml already carries — copy it here before the
+# first run there, and expect the Xray policy gate to apply to this job too.
+name: tokens-sync
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [figma-library-publish]
+  # schedule:
+  #   - cron: '17 6 * * 1-5'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: tokens-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      # Scratch goes in RUNNER_TEMP, never .tmp-token-build: `tokens:build`
+      # deletes that directory outright (build-tokens.js rmSync), which would
+      # take the PR body with it.
+      - name: Keep the current export for the diff
+        run: cp src/tokens/figma/mds-color.tokens.json "$RUNNER_TEMP/before.json"
+
+      - name: Pull variables from Figma
+        run: node scripts/tokens/figma-pull.mjs --out src/tokens/figma/mds-color.tokens.json
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ vars.FIGMA_FILE_KEY }}
+
+      - name: Prove the generator rules still hold
+        run: node scripts/tokens/generate-token-css.mjs --selftest
+
+      - name: Summarise the change and record renames (fails on removals without a rename)
+        run: node scripts/tokens/diff-dtcg.mjs "$RUNNER_TEMP/before.json" src/tokens/figma/mds-color.tokens.json --md "$RUNNER_TEMP/token-diff.md" --strict --write-aliases src/tokens/figma/aliases.json
+
+      - name: Generate CSS, Tailwind utilities and the TS values module (including rename aliases)
+        run: node scripts/tokens/generate-token-css.mjs
+
+      # The role tier is PINNED to this export (step 4): 28 roles resolve out of
+      # mds-color-values.generated.ts, and src/styles/roles.generated.css — a
+      # COMMITTED file — is emitted from it. Skip this and the PR lands a new
+      # export with a role stylesheet still carrying the old values, which
+      # pins:check below would (correctly) reject.
+      - name: Rebuild the token artifacts the export feeds (roles.generated.css, theme.css, tokens.json)
+        run: npm run tokens:build
+
+      - name: Existing token gates
+        run: npm run tokens:check
+
+      - name: Generated output is not stale, and the pinned roles still agree with it
+        run: npm run tokens:figma:check && npm run pins:check && npm run pins:selftest
+
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          branch: tokens/figma-sync
+          title: 'tokens: sync from Figma'
+          commit-message: 'chore(tokens): sync from Figma variables'
+          body-path: ${{ runner.temp }}/token-diff.md
+          labels: tokens
+          add-paths: |
+            src/tokens/figma/**
+            src/styles/generated/**
+            src/styles/roles.generated.css

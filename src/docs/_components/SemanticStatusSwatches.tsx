@@ -2,12 +2,12 @@ import React from 'react';
 import { semanticColors } from '../../semantic-tokens';
 
 const statusKeys = [
-  { bg: 'statusSuccessBg', text: 'statusSuccessText', label: 'Success (Bg/Text)' },
-  { bg: 'statusSuccess', label: 'Success (Legacy)', text: 'statusSuccess' },
-  { bg: 'statusWarningBg', text: 'statusWarningText', label: 'Warning (Bg/Text)' },
-  { bg: 'statusWarning', label: 'Warning (Legacy Single)', text: 'statusWarning' },
-  { bg: 'statusDangerBg', text: 'statusDangerText', label: 'Danger (Bg/Text)' },
-  { bg: 'statusDanger', label: 'Danger (Legacy)', text: 'statusDanger' },
+  { bg: 'bg.success.subtle', text: 'fg.success', label: 'Success (Bg/Text)' },
+  { bg: 'status.success', label: 'Success (Legacy)', text: 'status.success' },
+  { bg: 'bg.warning.subtle', text: 'fg.warning', label: 'Warning (Bg/Text)' },
+  { bg: 'status.warning', label: 'Warning (Legacy Single)', text: 'status.warning' },
+  { bg: 'bg.critical.subtle', text: 'fg.critical', label: 'Danger (Bg/Text)' },
+  { bg: 'status.danger', label: 'Danger (Legacy)', text: 'status.danger' },
 ];
 
 export const SemanticStatusSwatches: React.FC = () => {

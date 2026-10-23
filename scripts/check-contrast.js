@@ -81,50 +81,50 @@ function contrast(hex1, hex2) {
 
 // Define pairs (same set assessed in both modes)
 const PAIRS = [
-  { name: 'textPrimary on surfaceDefault', fg: 'textPrimary', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
+  { name: 'fgPrimary on bgDefault', fg: 'fg.primary', bg: 'bg.default', required: 4.5, warn: 4.5 },
   // Selected row/list item. Enforced in both modes because the obvious-looking
   // choice (light mode's Sky Blue) is near-white and fails against dark mode's
-  // white textPrimary at 1.73:1 — exactly the regression this pair catches.
-  { name: 'textPrimary on surfaceSubtle', fg: 'textPrimary', bg: 'surfaceSubtle', required: 4.5, warn: 4.5 },
-  { name: 'textPrimary on surfaceSelected', fg: 'textPrimary', bg: 'surfaceSelected', required: 4.5, warn: 4.5 },
+  // white fgPrimary at 1.73:1 — exactly the regression this pair catches.
+  { name: 'fgPrimary on bgNeutralSubtle', fg: 'fg.primary', bg: 'bg.neutral.subtle', required: 4.5, warn: 4.5 },
+  { name: 'fgPrimary on bgSelected', fg: 'fg.primary', bg: 'bg.selected', required: 4.5, warn: 4.5 },
   // A selected ROW is a backdrop for everything in it — status badges above
   // all. These were never checked, and the omission shipped a real AA failure:
-  // statusSuccessText measured 4.16:1 once the grid's selected row moved to
+  // fgSuccess measured 4.16:1 once the grid's selected row moved to
   // Sky Blue. green1000 is the darkest green in the ramp, so the fix had to be
-  // a lighter fill (surfaceSelectedSubtle) with a left accent bar carrying the
+  // a lighter fill (bgSelectedSubtle) with a left accent bar carrying the
   // state instead.
-  { name: 'textPrimary on surfaceSelectedSubtle', fg: 'textPrimary', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
-  { name: 'statusSuccessText on surfaceSelectedSubtle', fg: 'statusSuccessText', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
-  { name: 'statusDangerText on surfaceSelectedSubtle', fg: 'statusDangerText', bg: 'surfaceSelectedSubtle', required: 4.5, warn: 4.5 },
+  { name: 'fgPrimary on bgSelectedSubtle', fg: 'fg.primary', bg: 'bg.selected.subtle', required: 4.5, warn: 4.5 },
+  { name: 'fgSuccess on bgSelectedSubtle', fg: 'fg.success', bg: 'bg.selected.subtle', required: 4.5, warn: 4.5 },
+  { name: 'fgCritical on bgSelectedSubtle', fg: 'fg.critical', bg: 'bg.selected.subtle', required: 4.5, warn: 4.5 },
   // The raised panel (grid shell, card) must hold body text as well as the
   // page does — it is a reading surface, not decoration.
-  { name: 'textPrimary on surfaceRaised', fg: 'textPrimary', bg: 'surfaceRaised', required: 4.5, warn: 4.5 },
+  { name: 'fgPrimary on bgRaised', fg: 'fg.primary', bg: 'bg.raised', required: 4.5, warn: 4.5 },
   // borderSubtle is a decorative separator, not a UI boundary, so WCAG 1.4.11
   // does not apply and this is NOT gated at 3:1 — that is borderDefault's job.
   // It is tracked because the failure mode is the opposite one: a hairline that
   // drifts too FAINT stops separating anything. Dark is translucent white, so
   // this also exercises the compositing path above.
-  { name: 'borderSubtle vs surfaceRaised', fg: 'borderSubtle', bg: 'surfaceRaised', required: 1.1, warn: 1.2, informational: true },
-  { name: 'textSecondary on surfaceDefault', fg: 'textSecondary', bg: 'surfaceDefault', required: 3.0, warn: 4.5 },
-  { name: 'textOnInteractive on interactivePrimary', fg: 'textOnInteractive', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
-  { name: 'textOnInteractive on interactiveDanger', fg: 'textOnInteractive', bg: 'interactiveDanger', required: 4.5, warn: 4.5 },
+  { name: 'borderSubtle vs bgRaised', fg: 'border.subtle', bg: 'bg.raised', required: 1.1, warn: 1.2, informational: true },
+  { name: 'fgNeutralSubtle on bgDefault', fg: 'fg.neutral.subtle', bg: 'bg.default', required: 3.0, warn: 4.5 },
+  { name: 'fgOnInteractive on interactivePrimary', fg: 'fg.on-interactive', bg: 'interactive.primary', required: 4.5, warn: 4.5 },
+  { name: 'fgOnInteractive on interactiveDanger', fg: 'fg.on-interactive', bg: 'interactive.danger', required: 4.5, warn: 4.5 },
   // Badge's "solid" tone fills (bg reuses the *Border semantic as a solid
   // fill — see badge.tsx's own TODO about no dedicated solid-fill role yet).
-  { name: 'textOnInteractive on statusSuccessBorder', fg: 'textOnInteractive', bg: 'statusSuccessBorder', required: 4.5, warn: 4.5 },
-  { name: 'textOnInteractive on statusDangerBorder', fg: 'textOnInteractive', bg: 'statusDangerBorder', required: 4.5, warn: 4.5 },
+  { name: 'fgOnInteractive on borderSuccess', fg: 'fg.on-interactive', bg: 'border.success', required: 4.5, warn: 4.5 },
+  { name: 'fgOnInteractive on borderCritical', fg: 'fg.on-interactive', bg: 'border.critical', required: 4.5, warn: 4.5 },
   // Warning's solid fill, same shape as success/danger above now that V3's
-  // warning is a dark burnt orange (#c25600): textOnWarning flips white
+  // warning is a dark burnt orange (#c25600): fgOnWarning flips white
   // (light, 4.54:1 on #c25600) → Midnight (dark, 13.41:1 on gold500). It was the
-  // textOnLight exception only while warning was pale gold where white failed.
-  { name: 'textOnWarning on statusWarningBorder', fg: 'textOnWarning', bg: 'statusWarningBorder', required: 4.5, warn: 4.5 },
-  { name: 'textOnLight on statusWarningBg', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
+  // fgOnLight exception only while warning was pale gold where white failed.
+  { name: 'fgOnWarning on borderWarning', fg: 'fg.on-warning', bg: 'border.warning', required: 4.5, warn: 4.5 },
+  { name: 'fgOnLight on bgWarningSubtle', fg: 'fg.on-light', bg: 'bg.warning.subtle', required: 4.5, warn: 4.5 },
   // Informational only unless explicitly included (white on white scenario)
-  { name: 'textOnAccent on surfaceDefault', fg: 'textOnAccent', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
+  { name: 'fgOnAccent on bgDefault', fg: 'fg.on-accent', bg: 'bg.default', required: 4.5, warn: 4.5, informational: true },
   // Informational: WCAG 1.4.3 exempts disabled/inactive controls from
   // contrast requirements, so this isn't a hard gate — tracked because it
   // currently passes (4.54/5.30) but light mode is close enough to the 4.5
   // line that a future token nudge could silently regress it.
-  { name: 'textDisabled on surfaceDefault', fg: 'textDisabled', bg: 'surfaceDefault', required: 4.5, warn: 4.5, informational: true },
+  { name: 'fgDisabled on bgDefault', fg: 'fg.disabled', bg: 'bg.default', required: 4.5, warn: 4.5, informational: true },
   // ── Button's interaction states ───────────────────────────────────────────
   // Added 2026-09-30, when these stopped being hardcoded hex in button.tsx and
   // became roles. While they were literals no gate could see them at all, so
@@ -132,64 +132,64 @@ const PAIRS = [
   // anchors for months) with every check green.
   //
   // interactivePrimaryHover/Active carry the button's own text, which is
-  // Sky in light and Midnight in dark. textOnHero is #ceecff in BOTH modes,
+  // Sky in light and Midnight in dark. fgOnPrimary is #ceecff in BOTH modes,
   // so it is the right fg to test the light side against; the dark side is
-  // covered by textOnInteractive on interactivePrimary above.
+  // covered by fgOnInteractive on interactivePrimary above.
   // The label on a primary button, in both modes. This is the pair that had
   // no token at all until 2026-09-30 — Button hardcoded it — so nothing could
   // check it. textOnPrimary flips with the fill beneath it, which is the
-  // whole reason it exists separately from textOnHero.
-  { name: 'textOnPrimary on interactivePrimary', fg: 'textOnPrimary', bg: 'interactivePrimary', required: 4.5, warn: 4.5 },
-  // And the fixed one: textOnDanger was white in both modes while every
+  // whole reason it exists separately from fgOnPrimary.
+  { name: 'textOnPrimary on interactivePrimary', fg: 'text.onPrimary', bg: 'interactive.primary', required: 4.5, warn: 4.5 },
+  // And the fixed one: fgOnCritical was white in both modes while every
   // danger surface flips light in dark, so Stepper's error glyph rendered at
   // 1.17:1 — invisible. Gated now so it cannot silently return.
-  { name: 'textOnDanger on statusDangerText', fg: 'textOnDanger', bg: 'statusDangerText', required: 4.5, warn: 4.5 },
-  // textOnPrimary, NOT textOnHero. These were briefly written against
-  // textOnHero, which does not flip: in dark it put #ceecff on the #bbe1ff
+  { name: 'fgOnCritical on fgCritical', fg: 'fg.on-critical', bg: 'fg.critical', required: 4.5, warn: 4.5 },
+  // textOnPrimary, NOT fgOnPrimary. These were briefly written against
+  // fgOnPrimary, which does not flip: in dark it put #ceecff on the #bbe1ff
   // hover fill at 1.11:1. The gate caught it. The fg here has to be the same
   // role the component actually uses, or the pair tests a combination that
   // never renders.
-  { name: 'textOnPrimary on interactivePrimaryHover', fg: 'textOnPrimary', bg: 'interactivePrimaryHover', required: 4.5, warn: 4.5 },
-  { name: 'textOnPrimary on interactivePrimaryActive', fg: 'textOnPrimary', bg: 'interactivePrimaryActive', required: 4.5, warn: 4.5 },
-  { name: 'textOnInteractive on interactiveDangerHover', fg: 'textOnInteractive', bg: 'interactiveDangerHover', required: 4.5, warn: 4.5 },
-  { name: 'textOnInteractive on interactiveDangerActive', fg: 'textOnInteractive', bg: 'interactiveDangerActive', required: 4.5, warn: 4.5 },
-  // Informational, same WCAG 1.4.3 exemption as textDisabled above: this pair
+  { name: 'textOnPrimary on interactivePrimaryHover', fg: 'text.onPrimary', bg: 'interactive.primary.hover', required: 4.5, warn: 4.5 },
+  { name: 'textOnPrimary on interactivePrimaryActive', fg: 'text.onPrimary', bg: 'interactive.primary.active', required: 4.5, warn: 4.5 },
+  { name: 'fgOnInteractive on interactiveDangerHover', fg: 'fg.on-interactive', bg: 'interactive.danger.hover', required: 4.5, warn: 4.5 },
+  { name: 'fgOnInteractive on interactiveDangerActive', fg: 'fg.on-interactive', bg: 'interactive.danger.active', required: 4.5, warn: 4.5 },
+  // Informational, same WCAG 1.4.3 exemption as fgDisabled above: this pair
   // measures ~2.99:1 light and is MEANT to read as unavailable. Tracked so the
   // number is visible rather than unknown, not gated.
-  { name: 'interactiveDisabledFg on interactiveDisabledBg', fg: 'interactiveDisabledFg', bg: 'interactiveDisabledBg', required: 4.5, warn: 4.5, informational: true },
-  { name: 'borderFocus outline vs surfaceDefault', fg: 'borderFocus', bg: 'surfaceDefault', required: 3.0, warn: 3.0 },
+  { name: 'interactiveDisabledFg on interactiveDisabledBg', fg: 'interactive.disabled.fg', bg: 'interactive.disabled.bg', required: 4.5, warn: 4.5, informational: true },
+  { name: 'borderFocus outline vs bgDefault', fg: 'border.focus', bg: 'bg.default', required: 3.0, warn: 3.0 },
   // Raised 3.0 -> 4.5: Badge's `outline` variant renders these as small text
   // directly on the page, so AA for text applies, not the 3:1 non-text floor.
-  { name: 'statusSuccessText vs surfaceDefault', fg: 'statusSuccessText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
-  // Raised 3.0 -> 4.5 (2026-10-10): statusWarningText is now the #c25600 accent
+  { name: 'fgSuccess vs bgDefault', fg: 'fg.success', bg: 'bg.default', required: 4.5, warn: 4.5 },
+  // Raised 3.0 -> 4.5 (2026-10-10): fgWarning is now the #c25600 accent
   // at 4.54:1 on white, so Badge's warning OUTLINE renders it as 12px text —
   // AA for text applies. The old gold1000 managed only 3.41 and forced that
   // variant to text.primary; the burnt orange clears the bar, barely, so the
   // gate guards it against a regressive nudge.
-  { name: 'statusWarningText vs surfaceDefault', fg: 'statusWarningText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
-  { name: 'statusDangerText vs surfaceDefault', fg: 'statusDangerText', bg: 'surfaceDefault', required: 4.5, warn: 4.5 },
+  { name: 'fgWarning vs bgDefault', fg: 'fg.warning', bg: 'bg.default', required: 4.5, warn: 4.5 },
+  { name: 'fgCritical vs bgDefault', fg: 'fg.critical', bg: 'bg.default', required: 4.5, warn: 4.5 },
 
   // Status text on its OWN background — the pairing components actually render
   // (Alert, Badge, Chip, Snackbar, StatusCard, Toast all put status text on the
   // matching status surface). Until 2026-09-22 this gate only checked status
-  // text against surfaceDefault (white), which every status passes easily, so
+  // text against bgDefault (white), which every status passes easily, so
   // the combination that ships was never validated. axe found what this file
-  // was structurally blind to: statusWarningText on statusWarningBg measures
+  // was structurally blind to: fgWarning on bgWarningSubtle measures
   // 3.34:1 — gold1000 is the darkest gold and fails even on pure white — and
-  // it had reached 8 components. Those now use textOnLight for text and keep
+  // it had reached 8 components. Those now use fgOnLight for text and keep
   // gold as the 3:1 accent; the warning row below therefore checks the pair
   // that is genuinely rendered.
-  { name: 'statusSuccessText on statusSuccessBg', fg: 'statusSuccessText', bg: 'statusSuccessBg', required: 4.5, warn: 4.5 },
-  { name: 'statusDangerText on statusDangerBg', fg: 'statusDangerText', bg: 'statusDangerBg', required: 4.5, warn: 4.5 },
-  { name: 'textOnLight on statusWarningBg (warning text)', fg: 'textOnLight', bg: 'statusWarningBg', required: 4.5, warn: 4.5 },
+  { name: 'fgSuccess on bgSuccessSubtle', fg: 'fg.success', bg: 'bg.success.subtle', required: 4.5, warn: 4.5 },
+  { name: 'fgCritical on bgCriticalSubtle', fg: 'fg.critical', bg: 'bg.critical.subtle', required: 4.5, warn: 4.5 },
+  { name: 'fgOnLight on bgWarningSubtle (warning text)', fg: 'fg.on-light', bg: 'bg.warning.subtle', required: 4.5, warn: 4.5 },
   // The #c25600 accent on the pale warning fill — icon and outline: 4.44:1,
   // comfortably over the 3:1 non-text floor (the old gold managed 3.34 here).
-  { name: 'statusWarningText as accent on statusWarningBg', fg: 'statusWarningText', bg: 'statusWarningBg', required: 3.0, warn: 3.0 },
+  { name: 'fgWarning as accent on bgWarningSubtle', fg: 'fg.warning', bg: 'bg.warning.subtle', required: 3.0, warn: 3.0 },
 
   // ── Chart series vs the chart surface ──────────────────────────────────────
   // Series marks (bars, lines, slices) are graphical objects, so the WCAG
   // floor is 1.4.11 Non-text Contrast: 3:1 against the surface. The chart
-  // surface is surfaceDefault (white light / #101010 dark — the surface the
+  // surface is bgDefault (white light / #101010 dark — the surface the
   // dark palette was explicitly re-validated against, see token-variables.css).
   //
   // INFORMATIONAL, not enforced, and this is deliberate rather than a dodge.
@@ -203,11 +203,11 @@ const PAIRS = [
   // silently. Same category as the WCAG-1.4.3-exempt interactiveDisabledFg pair
   // above: tracked so the ratio is visible and a regression is caught by eye,
   // not hard-gated. `--include-informational` surfaces the two sub-3:1 values.
-  { name: 'chartSeries1 on surfaceDefault', fg: 'chartSeries1', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
-  { name: 'chartSeries2 on surfaceDefault', fg: 'chartSeries2', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
-  { name: 'chartSeries3 on surfaceDefault', fg: 'chartSeries3', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
-  { name: 'chartSeries4 on surfaceDefault', fg: 'chartSeries4', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true },
-  { name: 'chartSeries5 on surfaceDefault', fg: 'chartSeries5', bg: 'surfaceDefault', required: 3.0, warn: 3.0, informational: true }
+  { name: 'data1 on bgDefault', fg: 'data.1', bg: 'bg.default', required: 3.0, warn: 3.0, informational: true },
+  { name: 'data2 on bgDefault', fg: 'data.2', bg: 'bg.default', required: 3.0, warn: 3.0, informational: true },
+  { name: 'data3 on bgDefault', fg: 'data.3', bg: 'bg.default', required: 3.0, warn: 3.0, informational: true },
+  { name: 'data4 on bgDefault', fg: 'data.4', bg: 'bg.default', required: 3.0, warn: 3.0, informational: true },
+  { name: 'data5 on bgDefault', fg: 'data.5', bg: 'bg.default', required: 3.0, warn: 3.0, informational: true }
 ];
 
 /**
@@ -252,11 +252,11 @@ if (process.argv.includes('--selftest')) {
     console.error(`✗ self-test: the LIVE token set already fails ${liveLight + liveDark} enforced pair(s) in light/dark — fix those first.`);
     process.exit(1);
   }
-  const probePair = PAIRS.find((p) => p.fg === 'textPrimary' && p.bg === 'surfaceDefault');
+  const probePair = PAIRS.find((p) => p.fg === 'fg.primary' && p.bg === 'bg.default');
   // Collapse text onto its own background — white-on-white, the exact shape
-  // of the regression `textOnDanger`/`textOnHero` caused for real (see the
+  // of the regression `fgOnCritical`/`fgOnPrimary` caused for real (see the
   // comments on the pairs above).
-  const brokenLight = { ...baseSem, textPrimary: baseSem[probePair.bg] };
+  const brokenLight = { ...baseSem, 'fg.primary': baseSem[probePair.bg] };
   const brokenResult = evaluateMap(brokenLight, [probePair], false);
   if (brokenResult.failed < 1) {
     console.error(`✗ self-test: forced '${probePair.fg}' = '${probePair.bg}' (same colour) and the gate did NOT flag '${probePair.name}' — the gate is broken.`);

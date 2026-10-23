@@ -20,7 +20,10 @@ export interface DataTableSortListProps<TData extends RowData> {
   table: DataGridTableInstance<TData>;
 }
 
-export function DataTableSortList<TData extends RowData>({ table }: DataTableSortListProps<TData>) {
+function DataTableSortListInner<TData extends RowData>(
+  { table }: DataTableSortListProps<TData>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const [open, setOpen] = React.useState(false);
   const sorting = table.state.sorting;
 
@@ -32,7 +35,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
     return typeof header === 'string' ? header : id;
   };
 
-  const mutedColor = 'var(--role-text-secondary)';
+  const mutedColor = 'var(--role-fg-neutral-subtle)';
   const borderColor = 'var(--role-border-default)';
 
   return (
@@ -40,7 +43,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
       <PopoverTrigger asChild>
         {/* Compact to match the faceted-filter triggers — see the note in
             data-table-faceted-filter.tsx. Height stays on the control scale. */}
-        <Button variant="outline" size="sm" className="gap-1.5 px-2 text-xs font-normal">
+        <Button ref={ref} variant="outline" size="sm" className="gap-1.5 px-2 text-xs font-normal">
           <ArrowDownUp className="size-3.5 shrink-0 opacity-70" aria-hidden="true" />
           Sort
           {sorting.length > 0 && (
@@ -67,7 +70,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
                     table.setSorting(next);
                   }}
                   className="flex-1 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                 >
                   {[s.id, ...unsorted.map((c) => c.id)].map((id) => (
                     <option key={id} value={id}>
@@ -80,7 +83,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
                   value={s.desc ? 'desc' : 'asc'}
                   onChange={(e) => table.setSorting(sorting.map((x) => (x.id === s.id ? { ...x, desc: e.target.value === 'desc' } : x)))}
                   className="w-24 rounded-md border px-2 py-1 text-sm focus-visible:outline-hidden focus-visible:ring-2"
-                  style={{ borderColor, '--tw-ring-color': 'var(--role-focus-ring)' } as React.CSSProperties}
+                  style={{ borderColor, '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
                 >
                   <option value="asc">Asc</option>
                   <option value="desc">Desc</option>
@@ -104,7 +107,7 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
               disabled={unsorted.length === 0}
               onClick={() => table.setSorting([...sorting, { id: unsorted[0].id, desc: false }])}
             >
-              <Plus className="mr-1.5 h-4 w-4" /> Add sort
+              <Plus className="me-1.5 h-4 w-4" /> Add sort
             </Button>
             {sorting.length > 0 && (
               <Button variant="ghost" size="sm" onClick={() => table.resetSorting()}>
@@ -117,5 +120,14 @@ export function DataTableSortList<TData extends RowData>({ table }: DataTableSor
     </Popover>
   );
 }
+
+/** See `DataGridTable`'s note on this pattern — `forwardRef` + a generic
+ * component needs the double cast. */
+const DataTableSortListImpl = React.forwardRef(DataTableSortListInner);
+DataTableSortListImpl.displayName = 'DataTableSortList';
+
+export const DataTableSortList = DataTableSortListImpl as <TData extends RowData>(
+  props: DataTableSortListProps<TData> & { ref?: React.ForwardedRef<HTMLButtonElement> }
+) => ReturnType<typeof DataTableSortListInner>;
 
 export default DataTableSortList;

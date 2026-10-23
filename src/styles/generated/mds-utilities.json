@@ -1,0 +1,1206 @@
+[
+  {
+    "class": "bg-accent",
+    "property": "background-color",
+    "token": "color.background.accent.default",
+    "cssVar": "--mds-color-background-accent-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-accent-hover",
+    "property": "background-color",
+    "token": "color.background.accent.hover",
+    "cssVar": "--mds-color-background-accent-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-accent-pressed",
+    "property": "background-color",
+    "token": "color.background.accent.pressed",
+    "cssVar": "--mds-color-background-accent-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-avatar",
+    "property": "background-color",
+    "token": "color.background.avatar.default",
+    "cssVar": "--mds-color-background-avatar-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-background",
+    "property": "background-color",
+    "token": "color.background.default",
+    "cssVar": "--mds-color-background-default",
+    "adapter": true
+  },
+  {
+    "class": "bg-border",
+    "property": "background-color",
+    "token": "color.border.default",
+    "cssVar": "--mds-color-border-default",
+    "adapter": true
+  },
+  {
+    "class": "bg-brand",
+    "property": "background-color",
+    "token": "color.background.brand",
+    "cssVar": "--mds-color-background-brand",
+    "adapter": false
+  },
+  {
+    "class": "bg-card",
+    "property": "background-color",
+    "token": "color.background.default",
+    "cssVar": "--mds-color-background-default",
+    "adapter": true
+  },
+  {
+    "class": "bg-critical",
+    "property": "background-color",
+    "token": "color.background.critical.default",
+    "cssVar": "--mds-color-background-critical-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-critical-hover",
+    "property": "background-color",
+    "token": "color.background.critical.hover",
+    "cssVar": "--mds-color-background-critical-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-critical-pressed",
+    "property": "background-color",
+    "token": "color.background.critical.pressed",
+    "cssVar": "--mds-color-background-critical-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-critical-subtle",
+    "property": "background-color",
+    "token": "color.background.critical.subtle",
+    "cssVar": "--mds-color-background-critical-subtle",
+    "adapter": false
+  },
+  {
+    "class": "bg-default",
+    "property": "background-color",
+    "token": "color.background.default",
+    "cssVar": "--mds-color-background-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-destructive",
+    "property": "background-color",
+    "token": "color.background.critical.default",
+    "cssVar": "--mds-color-background-critical-default",
+    "adapter": true
+  },
+  {
+    "class": "bg-disabled",
+    "property": "background-color",
+    "token": "color.background.disabled.default",
+    "cssVar": "--mds-color-background-disabled-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-disabled-bold",
+    "property": "background-color",
+    "token": "color.background.disabled.bold",
+    "cssVar": "--mds-color-background-disabled-bold",
+    "adapter": false
+  },
+  {
+    "class": "bg-hover",
+    "property": "background-color",
+    "token": "color.background.hover",
+    "cssVar": "--mds-color-background-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-info",
+    "property": "background-color",
+    "token": "color.background.info.default",
+    "cssVar": "--mds-color-background-info-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-info-subtle",
+    "property": "background-color",
+    "token": "color.background.info.subtle",
+    "cssVar": "--mds-color-background-info-subtle",
+    "adapter": false
+  },
+  {
+    "class": "bg-input",
+    "property": "background-color",
+    "token": "color.background.input.default",
+    "cssVar": "--mds-color-background-input-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-input-disabled",
+    "property": "background-color",
+    "token": "color.background.input.disabled",
+    "cssVar": "--mds-color-background-input-disabled",
+    "adapter": false
+  },
+  {
+    "class": "bg-interactive",
+    "property": "background-color",
+    "token": "color.background.interactive.default",
+    "cssVar": "--mds-color-background-interactive-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-muted",
+    "property": "background-color",
+    "token": "color.background.neutral.subtle",
+    "cssVar": "--mds-color-background-neutral-subtle",
+    "adapter": true
+  },
+  {
+    "class": "bg-neutral",
+    "property": "background-color",
+    "token": "color.background.neutral.default",
+    "cssVar": "--mds-color-background-neutral-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-neutral-bold",
+    "property": "background-color",
+    "token": "color.background.neutral.bold",
+    "cssVar": "--mds-color-background-neutral-bold",
+    "adapter": false
+  },
+  {
+    "class": "bg-neutral-subtle",
+    "property": "background-color",
+    "token": "color.background.neutral.subtle",
+    "cssVar": "--mds-color-background-neutral-subtle",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-interactive-hover",
+    "property": "background-color",
+    "token": "color.overlay.interactive.hover",
+    "cssVar": "--mds-color-overlay-interactive-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-interactive-pressed",
+    "property": "background-color",
+    "token": "color.overlay.interactive.pressed",
+    "cssVar": "--mds-color-overlay-interactive-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-media",
+    "property": "background-color",
+    "token": "color.overlay.media.default",
+    "cssVar": "--mds-color-overlay-media-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-media-brand",
+    "property": "background-color",
+    "token": "color.overlay.media.brand",
+    "cssVar": "--mds-color-overlay-media-brand",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-neutral-hover",
+    "property": "background-color",
+    "token": "color.overlay.neutral.hover",
+    "cssVar": "--mds-color-overlay-neutral-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-neutral-pressed",
+    "property": "background-color",
+    "token": "color.overlay.neutral.pressed",
+    "cssVar": "--mds-color-overlay-neutral-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-overlay-scrim",
+    "property": "background-color",
+    "token": "color.overlay.scrim",
+    "cssVar": "--mds-color-overlay-scrim",
+    "adapter": false
+  },
+  {
+    "class": "bg-page",
+    "property": "background-color",
+    "token": "color.background.page",
+    "cssVar": "--mds-color-background-page",
+    "adapter": false
+  },
+  {
+    "class": "bg-popover",
+    "property": "background-color",
+    "token": "color.background.default",
+    "cssVar": "--mds-color-background-default",
+    "adapter": true
+  },
+  {
+    "class": "bg-primary",
+    "property": "background-color",
+    "token": "color.background.primary.default",
+    "cssVar": "--mds-color-background-primary-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-primary-hover",
+    "property": "background-color",
+    "token": "color.background.primary.hover",
+    "cssVar": "--mds-color-background-primary-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-primary-pressed",
+    "property": "background-color",
+    "token": "color.background.primary.pressed",
+    "cssVar": "--mds-color-background-primary-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-secondary",
+    "property": "background-color",
+    "token": "color.background.secondary.default",
+    "cssVar": "--mds-color-background-secondary-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-secondary-subtle",
+    "property": "background-color",
+    "token": "color.background.secondary.subtle",
+    "cssVar": "--mds-color-background-secondary-subtle",
+    "adapter": false
+  },
+  {
+    "class": "bg-section-accent",
+    "property": "background-color",
+    "token": "color.background.section.accent",
+    "cssVar": "--mds-color-background-section-accent",
+    "adapter": false
+  },
+  {
+    "class": "bg-selected",
+    "property": "background-color",
+    "token": "color.background.selected",
+    "cssVar": "--mds-color-background-selected",
+    "adapter": false
+  },
+  {
+    "class": "bg-static-brand-sky",
+    "property": "background-color",
+    "token": "color.static.brand.sky",
+    "cssVar": "--mds-color-static-brand-sky",
+    "adapter": false
+  },
+  {
+    "class": "bg-stripe",
+    "property": "background-color",
+    "token": "color.background.stripe",
+    "cssVar": "--mds-color-background-stripe",
+    "adapter": false
+  },
+  {
+    "class": "bg-success",
+    "property": "background-color",
+    "token": "color.background.success.default",
+    "cssVar": "--mds-color-background-success-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-success-subtle",
+    "property": "background-color",
+    "token": "color.background.success.subtle",
+    "cssVar": "--mds-color-background-success-subtle",
+    "adapter": false
+  },
+  {
+    "class": "bg-transparent-hover",
+    "property": "background-color",
+    "token": "color.background.transparent.hover",
+    "cssVar": "--mds-color-background-transparent-hover",
+    "adapter": false
+  },
+  {
+    "class": "bg-transparent-pressed",
+    "property": "background-color",
+    "token": "color.background.transparent.pressed",
+    "cssVar": "--mds-color-background-transparent-pressed",
+    "adapter": false
+  },
+  {
+    "class": "bg-warning",
+    "property": "background-color",
+    "token": "color.background.warning.default",
+    "cssVar": "--mds-color-background-warning-default",
+    "adapter": false
+  },
+  {
+    "class": "bg-warning-subtle",
+    "property": "background-color",
+    "token": "color.background.warning.subtle",
+    "cssVar": "--mds-color-background-warning-subtle",
+    "adapter": false
+  },
+  {
+    "class": "border-accent",
+    "property": "border-color",
+    "token": "color.border.accent.default",
+    "cssVar": "--mds-color-border-accent-default",
+    "adapter": false
+  },
+  {
+    "class": "border-border",
+    "property": "border-color",
+    "token": "color.border.default",
+    "cssVar": "--mds-color-border-default",
+    "adapter": true
+  },
+  {
+    "class": "border-critical",
+    "property": "border-color",
+    "token": "color.border.critical.default",
+    "cssVar": "--mds-color-border-critical-default",
+    "adapter": false
+  },
+  {
+    "class": "border-default",
+    "property": "border-color",
+    "token": "color.border.default",
+    "cssVar": "--mds-color-border-default",
+    "adapter": false
+  },
+  {
+    "class": "border-destructive",
+    "property": "border-color",
+    "token": "color.border.critical.default",
+    "cssVar": "--mds-color-border-critical-default",
+    "adapter": true
+  },
+  {
+    "class": "border-disabled",
+    "property": "border-color",
+    "token": "color.border.disabled",
+    "cssVar": "--mds-color-border-disabled",
+    "adapter": false
+  },
+  {
+    "class": "border-focus",
+    "property": "border-color",
+    "token": "color.border.focus.default",
+    "cssVar": "--mds-color-border-focus-default",
+    "adapter": false
+  },
+  {
+    "class": "border-info",
+    "property": "border-color",
+    "token": "color.border.info.default",
+    "cssVar": "--mds-color-border-info-default",
+    "adapter": false
+  },
+  {
+    "class": "border-input",
+    "property": "border-color",
+    "token": "color.border.input.default",
+    "cssVar": "--mds-color-border-input-default",
+    "adapter": false
+  },
+  {
+    "class": "border-input-hover",
+    "property": "border-color",
+    "token": "color.border.input.hover",
+    "cssVar": "--mds-color-border-input-hover",
+    "adapter": false
+  },
+  {
+    "class": "border-interactive",
+    "property": "border-color",
+    "token": "color.border.interactive.default",
+    "cssVar": "--mds-color-border-interactive-default",
+    "adapter": false
+  },
+  {
+    "class": "border-primary",
+    "property": "border-color",
+    "token": "color.border.primary.default",
+    "cssVar": "--mds-color-border-primary-default",
+    "adapter": false
+  },
+  {
+    "class": "border-ring",
+    "property": "border-color",
+    "token": "color.border.focus.default",
+    "cssVar": "--mds-color-border-focus-default",
+    "adapter": true
+  },
+  {
+    "class": "border-subtle",
+    "property": "border-color",
+    "token": "color.border.subtle",
+    "cssVar": "--mds-color-border-subtle",
+    "adapter": false
+  },
+  {
+    "class": "border-success",
+    "property": "border-color",
+    "token": "color.border.success.default",
+    "cssVar": "--mds-color-border-success-default",
+    "adapter": false
+  },
+  {
+    "class": "border-translucent",
+    "property": "border-color",
+    "token": "color.border.translucent.default",
+    "cssVar": "--mds-color-border-translucent-default",
+    "adapter": false
+  },
+  {
+    "class": "border-translucent-subtle",
+    "property": "border-color",
+    "token": "color.border.translucent.subtle",
+    "cssVar": "--mds-color-border-translucent-subtle",
+    "adapter": false
+  },
+  {
+    "class": "border-warning",
+    "property": "border-color",
+    "token": "color.border.warning.default",
+    "cssVar": "--mds-color-border-warning-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-critical",
+    "property": "fill",
+    "token": "color.foreground.critical.default",
+    "cssVar": "--mds-color-foreground-critical-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-critical-hover",
+    "property": "fill",
+    "token": "color.foreground.critical.hover",
+    "cssVar": "--mds-color-foreground-critical-hover",
+    "adapter": false
+  },
+  {
+    "class": "fill-critical-pressed",
+    "property": "fill",
+    "token": "color.foreground.critical.pressed",
+    "cssVar": "--mds-color-foreground-critical-pressed",
+    "adapter": false
+  },
+  {
+    "class": "fill-disabled",
+    "property": "fill",
+    "token": "color.foreground.disabled",
+    "cssVar": "--mds-color-foreground-disabled",
+    "adapter": false
+  },
+  {
+    "class": "fill-info",
+    "property": "fill",
+    "token": "color.foreground.info.default",
+    "cssVar": "--mds-color-foreground-info-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-input",
+    "property": "fill",
+    "token": "color.foreground.input.default",
+    "cssVar": "--mds-color-foreground-input-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-input-placeholder",
+    "property": "fill",
+    "token": "color.foreground.input.placeholder",
+    "cssVar": "--mds-color-foreground-input-placeholder",
+    "adapter": false
+  },
+  {
+    "class": "fill-link",
+    "property": "fill",
+    "token": "color.foreground.link.default",
+    "cssVar": "--mds-color-foreground-link-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-link-visited",
+    "property": "fill",
+    "token": "color.foreground.link.visited",
+    "cssVar": "--mds-color-foreground-link-visited",
+    "adapter": false
+  },
+  {
+    "class": "fill-neutral",
+    "property": "fill",
+    "token": "color.foreground.neutral.default",
+    "cssVar": "--mds-color-foreground-neutral-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-neutral-subtle",
+    "property": "fill",
+    "token": "color.foreground.neutral.subtle",
+    "cssVar": "--mds-color-foreground-neutral-subtle",
+    "adapter": false
+  },
+  {
+    "class": "fill-neutral-subtler",
+    "property": "fill",
+    "token": "color.foreground.neutral.subtler",
+    "cssVar": "--mds-color-foreground-neutral-subtler",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-accent",
+    "property": "fill",
+    "token": "color.foreground.on-accent",
+    "cssVar": "--mds-color-foreground-on-accent",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-avatar",
+    "property": "fill",
+    "token": "color.foreground.on-avatar",
+    "cssVar": "--mds-color-foreground-on-avatar",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-brand",
+    "property": "fill",
+    "token": "color.foreground.on-brand",
+    "cssVar": "--mds-color-foreground-on-brand",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-critical",
+    "property": "fill",
+    "token": "color.foreground.on-critical",
+    "cssVar": "--mds-color-foreground-on-critical",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-info",
+    "property": "fill",
+    "token": "color.foreground.on-info",
+    "cssVar": "--mds-color-foreground-on-info",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-media",
+    "property": "fill",
+    "token": "color.foreground.on-media",
+    "cssVar": "--mds-color-foreground-on-media",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-neutral",
+    "property": "fill",
+    "token": "color.foreground.on-neutral",
+    "cssVar": "--mds-color-foreground-on-neutral",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-primary",
+    "property": "fill",
+    "token": "color.foreground.on-primary",
+    "cssVar": "--mds-color-foreground-on-primary",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-secondary",
+    "property": "fill",
+    "token": "color.foreground.on-secondary",
+    "cssVar": "--mds-color-foreground-on-secondary",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-success",
+    "property": "fill",
+    "token": "color.foreground.on-success",
+    "cssVar": "--mds-color-foreground-on-success",
+    "adapter": false
+  },
+  {
+    "class": "fill-on-warning",
+    "property": "fill",
+    "token": "color.foreground.on-warning",
+    "cssVar": "--mds-color-foreground-on-warning",
+    "adapter": false
+  },
+  {
+    "class": "fill-primary",
+    "property": "fill",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-primary-hover",
+    "property": "fill",
+    "token": "color.foreground.primary.hover",
+    "cssVar": "--mds-color-foreground-primary-hover",
+    "adapter": false
+  },
+  {
+    "class": "fill-primary-pressed",
+    "property": "fill",
+    "token": "color.foreground.primary.pressed",
+    "cssVar": "--mds-color-foreground-primary-pressed",
+    "adapter": false
+  },
+  {
+    "class": "fill-static-brand-midnight",
+    "property": "fill",
+    "token": "color.static.brand.midnight",
+    "cssVar": "--mds-color-static-brand-midnight",
+    "adapter": false
+  },
+  {
+    "class": "fill-static-brand-sky",
+    "property": "fill",
+    "token": "color.static.brand.sky",
+    "cssVar": "--mds-color-static-brand-sky",
+    "adapter": false
+  },
+  {
+    "class": "fill-success",
+    "property": "fill",
+    "token": "color.foreground.success.default",
+    "cssVar": "--mds-color-foreground-success-default",
+    "adapter": false
+  },
+  {
+    "class": "fill-warning",
+    "property": "fill",
+    "token": "color.foreground.warning.default",
+    "cssVar": "--mds-color-foreground-warning-default",
+    "adapter": false
+  },
+  {
+    "class": "outline-focus",
+    "property": "outline-color",
+    "token": "color.border.focus.default",
+    "cssVar": "--mds-color-border-focus-default",
+    "adapter": false
+  },
+  {
+    "class": "ring-card",
+    "property": "--tw-ring-color",
+    "token": "color.background.default",
+    "cssVar": "--mds-color-background-default",
+    "adapter": true
+  },
+  {
+    "class": "ring-focus",
+    "property": "--tw-ring-color",
+    "token": "color.border.focus.default",
+    "cssVar": "--mds-color-border-focus-default",
+    "adapter": false
+  },
+  {
+    "class": "ring-ring",
+    "property": "--tw-ring-color",
+    "token": "color.border.focus.default",
+    "cssVar": "--mds-color-border-focus-default",
+    "adapter": true
+  },
+  {
+    "class": "stroke-critical",
+    "property": "stroke",
+    "token": "color.foreground.critical.default",
+    "cssVar": "--mds-color-foreground-critical-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-critical-hover",
+    "property": "stroke",
+    "token": "color.foreground.critical.hover",
+    "cssVar": "--mds-color-foreground-critical-hover",
+    "adapter": false
+  },
+  {
+    "class": "stroke-critical-pressed",
+    "property": "stroke",
+    "token": "color.foreground.critical.pressed",
+    "cssVar": "--mds-color-foreground-critical-pressed",
+    "adapter": false
+  },
+  {
+    "class": "stroke-disabled",
+    "property": "stroke",
+    "token": "color.foreground.disabled",
+    "cssVar": "--mds-color-foreground-disabled",
+    "adapter": false
+  },
+  {
+    "class": "stroke-info",
+    "property": "stroke",
+    "token": "color.foreground.info.default",
+    "cssVar": "--mds-color-foreground-info-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-input",
+    "property": "stroke",
+    "token": "color.foreground.input.default",
+    "cssVar": "--mds-color-foreground-input-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-input-placeholder",
+    "property": "stroke",
+    "token": "color.foreground.input.placeholder",
+    "cssVar": "--mds-color-foreground-input-placeholder",
+    "adapter": false
+  },
+  {
+    "class": "stroke-link",
+    "property": "stroke",
+    "token": "color.foreground.link.default",
+    "cssVar": "--mds-color-foreground-link-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-link-visited",
+    "property": "stroke",
+    "token": "color.foreground.link.visited",
+    "cssVar": "--mds-color-foreground-link-visited",
+    "adapter": false
+  },
+  {
+    "class": "stroke-neutral",
+    "property": "stroke",
+    "token": "color.foreground.neutral.default",
+    "cssVar": "--mds-color-foreground-neutral-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-neutral-subtle",
+    "property": "stroke",
+    "token": "color.foreground.neutral.subtle",
+    "cssVar": "--mds-color-foreground-neutral-subtle",
+    "adapter": false
+  },
+  {
+    "class": "stroke-neutral-subtler",
+    "property": "stroke",
+    "token": "color.foreground.neutral.subtler",
+    "cssVar": "--mds-color-foreground-neutral-subtler",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-accent",
+    "property": "stroke",
+    "token": "color.foreground.on-accent",
+    "cssVar": "--mds-color-foreground-on-accent",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-avatar",
+    "property": "stroke",
+    "token": "color.foreground.on-avatar",
+    "cssVar": "--mds-color-foreground-on-avatar",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-brand",
+    "property": "stroke",
+    "token": "color.foreground.on-brand",
+    "cssVar": "--mds-color-foreground-on-brand",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-critical",
+    "property": "stroke",
+    "token": "color.foreground.on-critical",
+    "cssVar": "--mds-color-foreground-on-critical",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-info",
+    "property": "stroke",
+    "token": "color.foreground.on-info",
+    "cssVar": "--mds-color-foreground-on-info",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-media",
+    "property": "stroke",
+    "token": "color.foreground.on-media",
+    "cssVar": "--mds-color-foreground-on-media",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-neutral",
+    "property": "stroke",
+    "token": "color.foreground.on-neutral",
+    "cssVar": "--mds-color-foreground-on-neutral",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-primary",
+    "property": "stroke",
+    "token": "color.foreground.on-primary",
+    "cssVar": "--mds-color-foreground-on-primary",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-secondary",
+    "property": "stroke",
+    "token": "color.foreground.on-secondary",
+    "cssVar": "--mds-color-foreground-on-secondary",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-success",
+    "property": "stroke",
+    "token": "color.foreground.on-success",
+    "cssVar": "--mds-color-foreground-on-success",
+    "adapter": false
+  },
+  {
+    "class": "stroke-on-warning",
+    "property": "stroke",
+    "token": "color.foreground.on-warning",
+    "cssVar": "--mds-color-foreground-on-warning",
+    "adapter": false
+  },
+  {
+    "class": "stroke-primary",
+    "property": "stroke",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-primary-hover",
+    "property": "stroke",
+    "token": "color.foreground.primary.hover",
+    "cssVar": "--mds-color-foreground-primary-hover",
+    "adapter": false
+  },
+  {
+    "class": "stroke-primary-pressed",
+    "property": "stroke",
+    "token": "color.foreground.primary.pressed",
+    "cssVar": "--mds-color-foreground-primary-pressed",
+    "adapter": false
+  },
+  {
+    "class": "stroke-static-brand-midnight",
+    "property": "stroke",
+    "token": "color.static.brand.midnight",
+    "cssVar": "--mds-color-static-brand-midnight",
+    "adapter": false
+  },
+  {
+    "class": "stroke-success",
+    "property": "stroke",
+    "token": "color.foreground.success.default",
+    "cssVar": "--mds-color-foreground-success-default",
+    "adapter": false
+  },
+  {
+    "class": "stroke-warning",
+    "property": "stroke",
+    "token": "color.foreground.warning.default",
+    "cssVar": "--mds-color-foreground-warning-default",
+    "adapter": false
+  },
+  {
+    "class": "text-accent-foreground",
+    "property": "color",
+    "token": "color.foreground.on-accent",
+    "cssVar": "--mds-color-foreground-on-accent",
+    "adapter": true
+  },
+  {
+    "class": "text-body",
+    "property": "color",
+    "token": "color.foreground.body.default",
+    "cssVar": "--mds-color-foreground-body-default",
+    "adapter": false
+  },
+  {
+    "class": "text-body-on-shell",
+    "property": "color",
+    "token": "color.foreground.body.on-shell",
+    "cssVar": "--mds-color-foreground-body-on-shell",
+    "adapter": false
+  },
+  {
+    "class": "text-card-foreground",
+    "property": "color",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": true
+  },
+  {
+    "class": "text-critical",
+    "property": "color",
+    "token": "color.foreground.critical.default",
+    "cssVar": "--mds-color-foreground-critical-default",
+    "adapter": false
+  },
+  {
+    "class": "text-critical-hover",
+    "property": "color",
+    "token": "color.foreground.critical.hover",
+    "cssVar": "--mds-color-foreground-critical-hover",
+    "adapter": false
+  },
+  {
+    "class": "text-critical-pressed",
+    "property": "color",
+    "token": "color.foreground.critical.pressed",
+    "cssVar": "--mds-color-foreground-critical-pressed",
+    "adapter": false
+  },
+  {
+    "class": "text-destructive",
+    "property": "color",
+    "token": "color.foreground.critical.default",
+    "cssVar": "--mds-color-foreground-critical-default",
+    "adapter": true
+  },
+  {
+    "class": "text-destructive-foreground",
+    "property": "color",
+    "token": "color.foreground.on-critical",
+    "cssVar": "--mds-color-foreground-on-critical",
+    "adapter": true
+  },
+  {
+    "class": "text-disabled",
+    "property": "color",
+    "token": "color.foreground.disabled",
+    "cssVar": "--mds-color-foreground-disabled",
+    "adapter": false
+  },
+  {
+    "class": "text-foreground",
+    "property": "color",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": true
+  },
+  {
+    "class": "text-heading",
+    "property": "color",
+    "token": "color.foreground.heading.default",
+    "cssVar": "--mds-color-foreground-heading-default",
+    "adapter": false
+  },
+  {
+    "class": "text-info",
+    "property": "color",
+    "token": "color.foreground.info.default",
+    "cssVar": "--mds-color-foreground-info-default",
+    "adapter": false
+  },
+  {
+    "class": "text-input",
+    "property": "color",
+    "token": "color.foreground.input.default",
+    "cssVar": "--mds-color-foreground-input-default",
+    "adapter": false
+  },
+  {
+    "class": "text-input-placeholder",
+    "property": "color",
+    "token": "color.foreground.input.placeholder",
+    "cssVar": "--mds-color-foreground-input-placeholder",
+    "adapter": false
+  },
+  {
+    "class": "text-link",
+    "property": "color",
+    "token": "color.foreground.link.default",
+    "cssVar": "--mds-color-foreground-link-default",
+    "adapter": false
+  },
+  {
+    "class": "text-link-visited",
+    "property": "color",
+    "token": "color.foreground.link.visited",
+    "cssVar": "--mds-color-foreground-link-visited",
+    "adapter": false
+  },
+  {
+    "class": "text-muted-foreground",
+    "property": "color",
+    "token": "color.foreground.neutral.subtle",
+    "cssVar": "--mds-color-foreground-neutral-subtle",
+    "adapter": true
+  },
+  {
+    "class": "text-neutral",
+    "property": "color",
+    "token": "color.foreground.neutral.default",
+    "cssVar": "--mds-color-foreground-neutral-default",
+    "adapter": false
+  },
+  {
+    "class": "text-neutral-subtle",
+    "property": "color",
+    "token": "color.foreground.neutral.subtle",
+    "cssVar": "--mds-color-foreground-neutral-subtle",
+    "adapter": false
+  },
+  {
+    "class": "text-neutral-subtler",
+    "property": "color",
+    "token": "color.foreground.neutral.subtler",
+    "cssVar": "--mds-color-foreground-neutral-subtler",
+    "adapter": false
+  },
+  {
+    "class": "text-on-accent",
+    "property": "color",
+    "token": "color.foreground.on-accent",
+    "cssVar": "--mds-color-foreground-on-accent",
+    "adapter": false
+  },
+  {
+    "class": "text-on-avatar",
+    "property": "color",
+    "token": "color.foreground.on-avatar",
+    "cssVar": "--mds-color-foreground-on-avatar",
+    "adapter": false
+  },
+  {
+    "class": "text-on-brand",
+    "property": "color",
+    "token": "color.foreground.on-brand",
+    "cssVar": "--mds-color-foreground-on-brand",
+    "adapter": false
+  },
+  {
+    "class": "text-on-critical",
+    "property": "color",
+    "token": "color.foreground.on-critical",
+    "cssVar": "--mds-color-foreground-on-critical",
+    "adapter": false
+  },
+  {
+    "class": "text-on-info",
+    "property": "color",
+    "token": "color.foreground.on-info",
+    "cssVar": "--mds-color-foreground-on-info",
+    "adapter": false
+  },
+  {
+    "class": "text-on-media",
+    "property": "color",
+    "token": "color.foreground.on-media",
+    "cssVar": "--mds-color-foreground-on-media",
+    "adapter": false
+  },
+  {
+    "class": "text-on-neutral",
+    "property": "color",
+    "token": "color.foreground.on-neutral",
+    "cssVar": "--mds-color-foreground-on-neutral",
+    "adapter": false
+  },
+  {
+    "class": "text-on-primary",
+    "property": "color",
+    "token": "color.foreground.on-primary",
+    "cssVar": "--mds-color-foreground-on-primary",
+    "adapter": false
+  },
+  {
+    "class": "text-on-secondary",
+    "property": "color",
+    "token": "color.foreground.on-secondary",
+    "cssVar": "--mds-color-foreground-on-secondary",
+    "adapter": false
+  },
+  {
+    "class": "text-on-success",
+    "property": "color",
+    "token": "color.foreground.on-success",
+    "cssVar": "--mds-color-foreground-on-success",
+    "adapter": false
+  },
+  {
+    "class": "text-on-warning",
+    "property": "color",
+    "token": "color.foreground.on-warning",
+    "cssVar": "--mds-color-foreground-on-warning",
+    "adapter": false
+  },
+  {
+    "class": "text-popover-foreground",
+    "property": "color",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": true
+  },
+  {
+    "class": "text-primary",
+    "property": "color",
+    "token": "color.foreground.primary.default",
+    "cssVar": "--mds-color-foreground-primary-default",
+    "adapter": false
+  },
+  {
+    "class": "text-primary-foreground",
+    "property": "color",
+    "token": "color.foreground.on-primary",
+    "cssVar": "--mds-color-foreground-on-primary",
+    "adapter": true
+  },
+  {
+    "class": "text-primary-hover",
+    "property": "color",
+    "token": "color.foreground.primary.hover",
+    "cssVar": "--mds-color-foreground-primary-hover",
+    "adapter": false
+  },
+  {
+    "class": "text-primary-pressed",
+    "property": "color",
+    "token": "color.foreground.primary.pressed",
+    "cssVar": "--mds-color-foreground-primary-pressed",
+    "adapter": false
+  },
+  {
+    "class": "text-secondary-foreground",
+    "property": "color",
+    "token": "color.foreground.on-secondary",
+    "cssVar": "--mds-color-foreground-on-secondary",
+    "adapter": true
+  },
+  {
+    "class": "text-static-brand-midnight",
+    "property": "color",
+    "token": "color.static.brand.midnight",
+    "cssVar": "--mds-color-static-brand-midnight",
+    "adapter": false
+  },
+  {
+    "class": "text-success",
+    "property": "color",
+    "token": "color.foreground.success.default",
+    "cssVar": "--mds-color-foreground-success-default",
+    "adapter": false
+  },
+  {
+    "class": "text-warning",
+    "property": "color",
+    "token": "color.foreground.warning.default",
+    "cssVar": "--mds-color-foreground-warning-default",
+    "adapter": false
+  }
+]

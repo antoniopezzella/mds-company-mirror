@@ -25,18 +25,25 @@ export type AlertSeverity = 'error' | 'warning' | 'info' | 'success';
  * their own `fg` passes on their own background (4.94:1 and 8.77:1). (A warning
  * Alert is always the pale-surface form — the dark-orange SOLID fill, where
  * white text works, is Badge's `solid` variant via text.onWarning.)
+ *
+ * ~~Warning is the exception: its own fg cannot carry text~~ — Resolved
+ * 2026-10-22. That was true of #c25600 (4.44:1 here). fg.warning is now pinned
+ * to Figma's foreground/warning/default — #8f5400 light, #ffd98a dark — giving
+ * 5.22:1 on this surface and 8.04:1 in Dark, so warning now uses its own tone
+ * as text and the fg.on-light exception is gone. See
+ * docs/tasks/token-pipeline-migration.md step 4.
  */
 function getSeverityRoles(severity: AlertSeverity): { fg: RoleName; bg: RoleName; border: RoleName; text: RoleName } {
   switch (severity) {
     case 'success':
-      return { fg: 'status.success.fg', bg: 'status.success.bg', border: 'status.success.border', text: 'status.success.fg' };
+      return { fg: 'fg.success', bg: 'bg.success.subtle', border: 'border.success', text: 'fg.success' };
     case 'warning':
-      return { fg: 'status.warning.fg', bg: 'status.warning.bg', border: 'status.warning.border', text: 'text.onLight' };
+      return { fg: 'fg.warning', bg: 'bg.warning.subtle', border: 'border.warning', text: 'fg.warning' };
     case 'error':
-      return { fg: 'status.danger.fg', bg: 'status.danger.bg', border: 'status.danger.border', text: 'status.danger.fg' };
+      return { fg: 'fg.critical', bg: 'bg.critical.subtle', border: 'border.critical', text: 'fg.critical' };
     case 'info':
     default:
-      return { fg: 'status.info.fg', bg: 'status.info.bg', border: 'status.info.border', text: 'text.primary' };
+      return { fg: 'fg.info', bg: 'bg.info.subtle', border: 'border.info', text: 'fg.primary' };
   }
 }
 
@@ -73,6 +80,15 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
 export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ severity, title, timestamp, outlined = false, onClose, hideIcon = false, children, className, style, ...rest }, ref) => {
     const { fg, bg, border, text } = getSeverityRoles(severity);
+    // The per-severity `text` role (e.g. warning's `text.onLight`) is tuned for
+    // the pale status FILL, which stays light in dark mode. The outlined variant
+    // drops that fill, so the body copy sits on the PAGE surface, which flips per
+    // mode — `text.onLight` (#000f47) would then be midnight-on-#101010 (1.05:1)
+    // in dark. `text.primary` flips with the page (Midnight in light, white in
+    // dark) and is identical to the current value in light mode, so it fixes dark
+    // without touching the light rendering. The status accent still reads on the
+    // border and icon (`fg`).
+    const bodyText: RoleName = outlined ? 'fg.primary' : text;
     const iconName = SEVERITY_ICON[severity];
 
     return (
@@ -84,9 +100,9 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         // (DEV-6; 6px meanwhile).
         className={cn('flex items-start gap-3 rounded-md border p-4', className)}
         style={{
-          // Body copy uses `text` (4.5:1); the icon keeps `fg` as the accent,
-          // which only needs 3:1. See getSeverityRoles.
-          color: roleVar(text),
+          // Body copy uses `bodyText` (4.5:1); the icon keeps `fg` as the accent,
+          // which only needs 3:1. See getSeverityRoles and the bodyText note above.
+          color: roleVar(bodyText),
           backgroundColor: outlined ? 'transparent' : roleVar(bg),
           borderColor: roleVar(border),
           ...style,
@@ -112,7 +128,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-mr-1 -mt-1 shrink-0 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
+            className="-me-1 -mt-1 shrink-0 rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
             style={{ color: 'inherit' }}
           >
             <Icon name="close" size={16} />

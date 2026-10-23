@@ -9,11 +9,11 @@ import { parseChangelog } from './changelog-parse';
 
 /** Section name -> role used for its accent. Unlisted sections fall back to neutral. */
 const SECTION_TONE: Record<string, RoleName> = {
-  Features: 'status.success.fg',
-  'Bug Fixes': 'status.danger.fg',
-  Performance: 'status.info.fg',
-  Refactoring: 'status.warning.fg',
-  Documentation: 'text.secondary',
+  Features: 'fg.success',
+  'Bug Fixes': 'fg.critical',
+  Performance: 'fg.info',
+  Refactoring: 'fg.warning',
+  Documentation: 'fg.neutral.subtle',
 };
 
 const monoStack = 'ui-monospace, SFMono-Regular, Menlo, monospace';
@@ -21,10 +21,10 @@ const monoStack = 'ui-monospace, SFMono-Regular, Menlo, monospace';
 export const Changelog: React.FC<{ source?: string }> = ({ source = changelogSource }) => {
   const releases = React.useMemo(() => parseChangelog(source), [source]);
 
-  const text = getRoleColor('text.primary');
-  const muted = getRoleColor('text.secondary');
+  const text = getRoleColor('fg.primary');
+  const muted = getRoleColor('fg.neutral.subtle');
   const border = getRoleColor('border.default');
-  const subtle = getRoleColor('surface.subtle');
+  const subtle = getRoleColor('bg.neutral.subtle');
   const link = getRoleColor('interactive.primary');
 
   if (!releases.length) {
@@ -52,7 +52,7 @@ export const Changelog: React.FC<{ source?: string }> = ({ source = changelogSou
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   letterSpacing: '0.04em',
-                  color: getRoleColor('text.onInteractive'),
+                  color: getRoleColor('fg.on-interactive'),
                   backgroundColor: link,
                   borderRadius: 999,
                   padding: '2px 8px',
@@ -77,7 +77,7 @@ export const Changelog: React.FC<{ source?: string }> = ({ source = changelogSou
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.06em',
-                    color: getRoleColor(SECTION_TONE[s.title] ?? 'text.secondary'),
+                    color: getRoleColor(SECTION_TONE[s.title] ?? 'fg.neutral.subtle'),
                   }}
                 >
                   {s.title}

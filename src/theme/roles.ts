@@ -47,56 +47,57 @@
  */
 
 import { semanticColors, semanticDarkOverrides, type SemanticColorName } from '../semantic-tokens.js';
+import { mdsColor, type MdsColorToken } from '../tokens/figma/mds-color-values.generated.js';
 
 export type RoleName =
-  | 'text.primary'
-  | 'text.secondary'
-  | 'text.inverse'
-  | 'text.onAccent'
-  | 'text.onInteractive'
-  | 'text.onHero'
-  // ⚠️ `text.onPrimary` is NOT `text.primary`. One is the label ON a primary
-  // fill (Sky, flipping to Midnight); the other is body text (Midnight).
-  // Writing `text.primary` on a primary button gives navy on navy at 1.00:1
-  // and no gate catches it, because both are valid role names.
+  | 'fg.primary'
+  | 'fg.neutral.subtle'
+  | 'fg.on-dark'
+  | 'fg.disabled'
+  | 'fg.input.placeholder'
+  | 'fg.on-accent'
+  | 'fg.on-interactive'
+  | 'fg.on-primary'
+  | 'fg.on-success'
+  | 'fg.on-warning'
+  | 'fg.on-critical'
+  | 'fg.on-light'
+  | 'fg.success'
+  | 'fg.warning'
+  | 'fg.critical'
+  | 'fg.info'
+  | 'bg.default'
+  | 'bg.neutral.subtle'
+  | 'bg.disabled'
+  | 'bg.raised'
+  | 'bg.secondary'
+  | 'bg.secondary.hover'
+  | 'bg.selected.subtle'
+  | 'bg.row-hover'
+  | 'bg.selected'
+  | 'bg.shell'
+  | 'bg.shell.hover'
+  | 'bg.shell.active'
+  | 'bg.primary'
+  | 'bg.accent'
+  | 'bg.success.subtle'
+  | 'bg.warning.subtle'
+  | 'bg.critical.subtle'
+  | 'bg.info.subtle'
+  | 'border.focus'
+  | 'border.success'
+  | 'border.warning'
+  | 'border.critical'
+  | 'border.info'
+  | 'data.1'
+  | 'data.2'
+  | 'data.3'
+  | 'data.4'
+  | 'data.5'
   | 'text.onPrimary'
-  | 'text.onDanger'
-  | 'text.onSuccess'
-  | 'text.onWarning'
-  | 'text.onLight'
-  | 'text.disabled'
-  | 'text.placeholder'
-  | 'surface.default'
-  | 'surface.subtle'
-  | 'surface.disabled'
-  | 'surface.accent'
-  | 'surface.raised'
-  | 'surface.secondary'
-  | 'surface.secondary.hover'
-  | 'surface.row.hover'
-  | 'surface.selected'
-  | 'surface.selected.subtle'
-  | 'surface.navigation'
-  | 'surface.navigation.hover'
-  | 'surface.navigation.active'
-  | 'surface.hero'
   | 'border.default'
   | 'border.subtle'
   | 'border.strong'
-  | 'focus.ring'
-  | 'status.success.fg'
-  | 'status.success.bg'
-  | 'status.success.border'
-  | 'status.warning.fg'
-  | 'status.warning.bg'
-  | 'status.warning.border'
-  | 'status.danger.fg'
-  | 'status.danger.bg'
-  | 'status.danger.border'
-  | 'status.info.fg'
-  | 'status.info.bg'
-  | 'status.info.border'
-  | 'brand.accent'
   | 'interactive.accent.hover'
   | 'interactive.accent.active'
   | 'interactive.primary'
@@ -107,134 +108,139 @@ export type RoleName =
   | 'interactive.secondary.active'
   | 'interactive.danger'
   | 'interactive.danger.hover'
-  | 'interactive.danger.active'
-  | 'interactive.disabled.bg'
-  | 'interactive.disabled.fg'
-  // Categorical chart series. Consumed by recharts/chart.tsx via the
-  // `--chart-1..5` Tailwind vars, which annotate `MDS: chart.N` so varsync
-  // tracks them. Order is CVD-safe and load-bearing — see chart.tsx.
-  | 'chart.1'
-  | 'chart.2'
-  | 'chart.3'
-  | 'chart.4'
-  | 'chart.5';
+  | 'interactive.danger.active';
 
 interface RoleMapEntry {
   semantic: SemanticColorName;
   description: string;
+  /**
+   * The Figma token this role is PINNED to. When present it wins over
+   * `semantic`, in both resolution paths — getRoleColor() and the
+   * roles.generated.css that build-tokens.js emits — so the hex in an inline
+   * style and the value behind `var(--role-…)` cannot disagree.
+   *
+   * 31 of 59 roles are pinned. The other 28 have no token of that meaning in
+   * the Figma export and still resolve through `semantic`: the `interactive.*`
+   * family (a code-specific button layer), `bg.shell*`/`bg.row-hover`/
+   * `bg.raised`/`bg.selected.subtle`/`bg.secondary.hover`, `border.strong`,
+   * `fg.on-dark`/`fg.on-light`/`fg.on-interactive`, `data.1-5` (no data tokens
+   * in this export) and the legacy `text.onPrimary`. Closing that gap means
+   * adding tokens in Figma, not inventing them here — see
+   * docs/tasks/token-pipeline-migration.md step 4.
+   */
+  token?: MdsColorToken;
 }
 
 // Base mapping to semantic keys (light mode). Dark mode resolution merges overrides.
 // NOTE: Keep each entry on its own line with the quoted role key first – tooling
 // (e.g., governance report parser) relies on a simple regex to extract `role -> semantic`.
 const ROLE_MAP: Record<RoleName, RoleMapEntry> = {
-  'text.primary': { semantic: 'textPrimary', description: 'Primary body & UI text' },
-  'text.secondary': { semantic: 'textSecondary', description: 'Secondary / muted text' },
+
+  // ── QUARANTINED: three roles deliberately NOT pinned (2026-10-22) ─────────
+  // Each has a same-named Figma token, and each one FAILED a measured gate
+  // when pinned. Recorded here rather than silently skipped, because the
+  // obvious reading — "the names match, so pin it" — is the wrong one:
+  //
+  //   fg.on-accent
+  //     Figma's foreground/on-accent means text ON THE GOLD ACCENT (#000f47
+  //     navy). This role is used as "text on a dark surface" (white) — 5
+  //     getRoleColor + 2 var() call sites, incl. the MUI side navigation.
+  //     Pinning it put #000f47 on #333f6b: 1.78:1, and broke 6 stories. The
+  //     names collide; the meanings do not.
+  //
+  //   fg.on-primary
+  //     Only coherent together with bg.primary, which is quarantined below:
+  //     Figma flips the pair in Dark (surface #000f47 -> #3d7aff, text
+  //     #ceecff -> #000f47). Pinning one half gives navy text on navy, 1.0:1.
+  //
+  //   bg.primary
+  //     Figma's Dark value #3d7aff against border.focus #5e9aff is 1.39:1
+  //     where the enforced pair needs 3.0 ('border.focus' on 'bg.primary',
+  //     roles.contrast.test.ts:44). A focus ring that cannot be seen on the
+  //     surface it rings.
+  //
+  //
+  //
+  // All four are value disagreements with Figma, not code defects: resolving
+  // them means a decision in Figma (or a mode-aware pairing in the component),
+  // not a different mapping here. Until then they resolve through `semantic`.
+  // ──────────────────────────────────────────────────────────────────────────
+  // ── Figma-aligned Phase-3 aliases ──
+  'fg.primary': { semantic: 'fg.primary', token: 'color.foreground.primary.default', description: 'Figma-aligned (Phase 3) — alias of text.primary.' },
+  'fg.neutral.subtle': { semantic: 'fg.neutral.subtle', token: 'color.foreground.neutral.subtle', description: 'Figma-aligned (Phase 3) — alias of text.secondary.' },
+  'fg.on-dark': { semantic: 'fg.on-accent', description: 'Figma-aligned (Phase 3) — alias of text.inverse.' },
+  'fg.disabled': { semantic: 'fg.disabled', token: 'color.foreground.disabled', description: 'Figma-aligned (Phase 3) — alias of text.disabled.' },
+  'fg.input.placeholder': { semantic: 'fg.input.placeholder', token: 'color.foreground.input.placeholder', description: 'Figma-aligned (Phase 3) — alias of text.placeholder.' },
+  'fg.on-accent': { semantic: 'fg.on-accent', description: 'Figma-aligned (Phase 3) — alias of text.onAccent.' },
+  'fg.on-interactive': { semantic: 'fg.on-interactive', description: 'Figma-aligned (Phase 3) — alias of text.onInteractive.' },
+  'fg.on-primary': { semantic: 'fg.on-primary', description: 'Figma-aligned (Phase 3) — alias of text.onHero.' },
+  'fg.on-success': { semantic: 'fg.on-success', token: 'color.foreground.on-success', description: 'Figma-aligned (Phase 3) — alias of text.onSuccess.' },
+  'fg.on-warning': { semantic: 'fg.on-warning', token: 'color.foreground.on-warning', description: 'Figma-aligned (Phase 3) — alias of text.onWarning.' },
+  'fg.on-critical': { semantic: 'fg.on-critical', token: 'color.foreground.on-critical', description: 'Figma-aligned (Phase 3) — alias of text.onDanger.' },
+  'fg.on-light': { semantic: 'fg.on-light', description: 'Figma-aligned (Phase 3) — alias of text.onLight.' },
+  'fg.success': { semantic: 'fg.success', token: 'color.foreground.success.default', description: 'Figma-aligned (Phase 3) — alias of status.success.fg.' },
+  'fg.warning': { semantic: 'fg.warning', token: 'color.foreground.warning.default', description: 'Figma-aligned (Phase 3) — alias of status.warning.fg.' },
+  'fg.critical': { semantic: 'fg.critical', token: 'color.foreground.critical.default', description: 'Figma-aligned (Phase 3) — alias of status.danger.fg.' },
+  'fg.info': { semantic: 'fg.info', token: 'color.foreground.info.default', description: 'Figma-aligned (Phase 3) — alias of status.info.fg.' },
+  'bg.default': { semantic: 'bg.default', token: 'color.background.default', description: 'Figma-aligned (Phase 3) — alias of surface.default.' },
+  'bg.neutral.subtle': { semantic: 'bg.neutral.subtle', token: 'color.background.neutral.subtle', description: 'Figma-aligned (Phase 3) — alias of surface.subtle.' },
+  'bg.disabled': { semantic: 'bg.disabled', token: 'color.background.disabled.default', description: 'Figma-aligned (Phase 3) — alias of surface.disabled.' },
+  'bg.raised': { semantic: 'bg.raised', description: 'Figma-aligned (Phase 3) — alias of surface.raised.' },
+  'bg.secondary': { semantic: 'bg.secondary', token: 'color.background.secondary.default', description: 'Figma-aligned (Phase 3) — alias of surface.secondary.' },
+  'bg.secondary.hover': { semantic: 'bg.secondary.hover', description: 'Figma-aligned (Phase 3) — alias of surface.secondary-hover.' },
+  'bg.selected.subtle': { semantic: 'bg.selected.subtle', description: 'Figma-aligned (Phase 3) — alias of surface.selected-subtle.' },
+  'bg.row-hover': { semantic: 'bg.row-hover', description: 'Figma-aligned (Phase 3) — alias of surface.row-hover.' },
+  'bg.selected': { semantic: 'bg.selected', token: 'color.background.selected', description: 'Figma-aligned (Phase 3) — alias of surface.selected.' },
+  'bg.shell': { semantic: 'bg.shell', description: 'Figma-aligned (Phase 3) — alias of surface.navigation.' },
+  'bg.shell.hover': { semantic: 'bg.shell.hover', description: 'Figma-aligned (Phase 3) — alias of surface.navigation-hover.' },
+  'bg.shell.active': { semantic: 'bg.shell.active', description: 'Figma-aligned (Phase 3) — alias of surface.navigation-active.' },
+  'bg.primary': { semantic: 'bg.primary', description: 'Figma-aligned (Phase 3) — alias of surface.hero.' },
+  'bg.accent': { semantic: 'bg.accent', token: 'color.background.accent.default', description: 'Figma-aligned (Phase 3) — alias of brand.accent.' },
+  'bg.success.subtle': { semantic: 'bg.success.subtle', token: 'color.background.success.subtle', description: 'Figma-aligned (Phase 3) — alias of status.success.bg.' },
+  'bg.warning.subtle': { semantic: 'bg.warning.subtle', token: 'color.background.warning.subtle', description: 'Figma-aligned (Phase 3) — alias of status.warning.bg.' },
+  'bg.critical.subtle': { semantic: 'bg.critical.subtle', token: 'color.background.critical.subtle', description: 'Figma-aligned (Phase 3) — alias of status.danger.bg.' },
+  'bg.info.subtle': { semantic: 'bg.info.subtle', token: 'color.background.info.subtle', description: 'Figma-aligned (Phase 3) — alias of status.info.bg.' },
+  'border.focus': { semantic: 'border.focus', token: 'color.border.focus.default', description: 'Figma-aligned (Phase 3) — alias of focus.ring.' },
+  'border.success': { semantic: 'border.success', token: 'color.border.success.default', description: 'Figma-aligned (Phase 3) — alias of status.success.border.' },
+  'border.warning': { semantic: 'border.warning', token: 'color.border.warning.default', description: 'Figma-aligned (Phase 3) — alias of status.warning.border.' },
+  'border.critical': { semantic: 'border.critical', token: 'color.border.critical.default', description: 'Figma-aligned (Phase 3) — alias of status.danger.border.' },
+  'border.info': { semantic: 'border.info', token: 'color.border.info.default', description: 'Figma-aligned (Phase 3) — alias of status.info.border.' },
+  'data.1': { semantic: 'data.1', description: 'Figma-aligned (Phase 3) — alias of chart.1.' },
+  'data.2': { semantic: 'data.2', description: 'Figma-aligned (Phase 3) — alias of chart.2.' },
+  'data.3': { semantic: 'data.3', description: 'Figma-aligned (Phase 3) — alias of chart.3.' },
+  'data.4': { semantic: 'data.4', description: 'Figma-aligned (Phase 3) — alias of chart.4.' },
+  'data.5': { semantic: 'data.5', description: 'Figma-aligned (Phase 3) — alias of chart.5.' },
   /**
    * @deprecated since 0.8.0; remove after 0.9.0 / 2027-01-09. Use `text.onAccent`.
-   * Redundant alias of textOnAccent with a vague "inverse" meaning and zero
+   * Redundant alias of fgOnAccent with a vague "inverse" meaning and zero
    * consumers. Content on an inverted/brand surface is the on-* pairing
    * (surface.primary + text.onPrimary), never an "inverse" token — see
    * docs/tasks/token-authority-decision.md.
    */
-  'text.inverse': { semantic: 'textOnAccent', description: 'DEPRECATED — use text.onAccent' },
-  'text.onAccent': { semantic: 'textOnAccent', description: 'Explicit readable text over accent surfaces' },
-  'text.onInteractive': { semantic: 'textOnInteractive', description: 'Text/icons on interactive.primary|secondary|danger surfaces specifically — those lighten in dark mode instead of staying dark, so this differs from text.onAccent there' },
-  'text.onHero': { semantic: 'textOnHero', description: 'Readable text over hero brand surface — mode-INVARIANT Sky, because hero surfaces stay dark in both modes. For a label on interactive.primary, which does flip, use text.onPrimary' },
   'text.onPrimary': {
-    semantic: 'textOnPrimary',
+    token: 'color.foreground.on-primary',
+    semantic: 'text.onPrimary',
     description:
       'Label on interactive.primary — Sky in light, Midnight in dark, flipping with the fill beneath it (14.72:1 / 10.50:1). NOT text.primary, which is body text',
   },
-  'text.onDanger': { semantic: 'textOnDanger', description: 'Readable text over destructive surfaces' },
-  'text.onSuccess': { semantic: 'textOnSuccess', description: 'Readable text over solid success surfaces (white light / Midnight dark)' },
-  'text.onWarning': { semantic: 'textOnWarning', description: 'Readable text over SOLID warning surfaces — white in light (on #c25600), Midnight in dark (on gold500), flipping like text.onSuccess/onDanger. Pale/soft warning surfaces use text.onLight instead.' },
-  'text.onLight': { semantic: 'textOnLight', description: 'Mode-invariant dark text — for surfaces that stay light/mid-toned in both light and dark mode (e.g. warning gold), unlike text.onInteractive which flips per mode' },
-  'text.disabled': { semantic: 'textDisabled', description: 'Disabled text/icon' },
-  'text.placeholder': {
-    semantic: 'textTertiary',
-    description:
-      'Placeholder text in empty inputs. Distinct from text.disabled — a placeholder ' +
-      'sits in an ENABLED field and must stay legible; disabled text is deliberately ' +
-      'de-emphasised and is WCAG 1.4.3-exempt. Also distinct from text.secondary, ' +
-      'which is real content.\n\n' +
-      'Promotes `textTertiary`, which has existed since the Figma sync (bound to ' +
-      '"V3/Text & icon/Placeholder" in figma-variable-map-semantic.json) but was ' +
-      'reachable from no role. Because of that, input.tsx, textarea.tsx, command.tsx ' +
-      'and input-group.tsx each faked it with `placeholder:opacity-70` or `-60` — ' +
-      'three different values, none of them the token, each dimming whatever colour ' +
-      'happened to be inherited rather than using the specified placeholder colour.',
-  },
-  'surface.default': { semantic: 'surfaceDefault', description: 'Default page / card background' },
-  'surface.subtle': { semantic: 'surfaceSubtle', description: 'Subtle background blocks' },
-  'surface.disabled': { semantic: 'surfaceDisabled', description: 'Disabled surface' },
-  'surface.accent': { semantic: 'surfaceAccent', description: 'Accent background surfaces' },
-  'surface.raised': {
-    semantic: 'surfaceRaised',
-    description: 'A panel sitting above the page. Same as default in light; lifted in dark',
-  },
-  'surface.secondary': { semantic: 'brandSecondary', description: 'Secondary brand surface - e.g. Sky Blue' },
-  'surface.secondary.hover': { semantic: 'surfaceSecondaryHover', description: 'Lighter sky tint — hover overlay on sky-surface cards' },
-  'surface.selected.subtle': {
-    semantic: 'surfaceSelectedSubtle',
-    description: 'Selected row/list-item fill — lighter than surface.selected so in-row content keeps its contrast',
-  },
-  'surface.row.hover': {
-    semantic: 'surfaceRowHover',
-    description:
-      'Hovered table row — Sky Blue in light, unchanged neutral in dark. Status badges inside a row must set variant="soft"/"solid": the default outline badge is transparent and a success badge measures 4.16:1 on Sky, under AA',
-  },
-  'surface.selected': { semantic: 'surfaceSelected', description: 'Selected row/list item on a default surface — brand tint. Row hover is surface.row.hover (also Sky), so the two are told apart by the selected row\'s left accent bar, not by hue' },
-  'surface.navigation': { semantic: 'surfaceNavigation', description: 'Header and sidebar navigation background - distinct from action buttons' },
-  'surface.navigation.hover': { semantic: 'surfaceNavigationHover', description: 'Hover state for navigation items' },
-  'surface.navigation.active': { semantic: 'surfaceNavigationActive', description: 'Active/selected state for navigation items' },
-  'surface.hero': { semantic: 'surfaceHero', description: 'Hero brand background surface' },
-  'border.default': { semantic: 'borderDefault', description: 'Standard divider / outline' },
+  'border.default': { semantic: 'border.default', token: 'color.border.default', description: 'Standard divider / outline' },
   'border.subtle': {
-    semantic: 'borderSubtle',
+    token: 'color.border.subtle',
+    semantic: 'border.subtle',
     description: 'Hairline rules inside a dense surface — table rows, list dividers, grid shells',
   },
-  'border.strong': { semantic: 'borderStrong', description: 'Emphasized divider / outline' },
-  'focus.ring': { semantic: 'focusRing', description: 'Focus outline / ring' },
-  'brand.accent': { semantic: 'brandAccent', description: 'Brand gold accent - eyebrow dashes, decorative elements' },
-  'interactive.accent.hover': { semantic: 'interactiveAccentHover', description: 'Gold accent hover (Button primaryAlt variant)' },
-  'interactive.accent.active': { semantic: 'interactiveAccentActive', description: 'Gold accent active (Button primaryAlt variant)' },
-  'status.success.fg': { semantic: 'statusSuccessText', description: 'Success text/icon color' },
-  'status.success.bg': { semantic: 'statusSuccessBg', description: 'Success background' },
-  'status.success.border': { semantic: 'statusSuccessBorder', description: 'Success border color' },
-  'status.warning.fg': { semantic: 'statusWarningText', description: 'Warning text/icon color' },
-  'status.warning.bg': { semantic: 'statusWarningBg', description: 'Warning background' },
-  'status.warning.border': { semantic: 'statusWarningBorder', description: 'Warning border color' },
-  'status.danger.fg': { semantic: 'statusDangerText', description: 'Danger text/icon color' },
-  'status.danger.bg': { semantic: 'statusDangerBg', description: 'Danger background' },
-  'status.danger.border': { semantic: 'statusDangerBorder', description: 'Danger border color' },
-  'status.info.fg': { semantic: 'statusInfoText', description: 'Informational text/icon color' },
-  'status.info.bg': { semantic: 'statusInfoBg', description: 'Informational background' },
-  'status.info.border': { semantic: 'statusInfoBorder', description: 'Informational border color' },
-  'interactive.primary': { semantic: 'interactivePrimary', description: 'Primary interactive base' },
-  'interactive.primary.hover': { semantic: 'interactivePrimaryHover', description: 'Primary interactive hover' },
-  'interactive.primary.active': { semantic: 'interactivePrimaryActive', description: 'Primary interactive active' },
-  'interactive.secondary': { semantic: 'interactiveSecondary', description: 'Secondary interactive base (Active Blue)' },
-  'interactive.secondary.hover': { semantic: 'interactiveSecondaryHover', description: 'Secondary interactive hover' },
-  'interactive.secondary.active': { semantic: 'interactiveSecondaryActive', description: 'Secondary interactive active' },
-  'interactive.danger': { semantic: 'interactiveDanger', description: 'Destructive interactive base' },
-  'interactive.danger.hover': { semantic: 'interactiveDangerHover', description: 'Destructive hover' },
-  'interactive.danger.active': { semantic: 'interactiveDangerActive', description: 'Destructive active' },
-  'interactive.disabled.bg': {
-    semantic: 'interactiveDisabledBg',
-    description:
-      "Disabled fill for interactive controls. Separate from surface.disabled, which is the general disabled surface — this one is Figma's Neutral/Gray/300 and is what every Button variant uses",
-  },
-  'interactive.disabled.fg': {
-    semantic: 'interactiveDisabledFg',
-    description:
-      'Disabled label/icon on interactive.disabled.bg. Separate from text.disabled for the same reason. The pair measures below 4.5:1 by design — WCAG 1.4.3 exempts inactive controls',
-  },
-  'chart.1': { semantic: 'chartSeries1', description: 'Categorical chart series 1 — green. Order is CVD-safe and load-bearing; pair with legend + direct labels (chart.tsx)' },
-  'chart.2': { semantic: 'chartSeries2', description: 'Categorical chart series 2 — blue' },
-  'chart.3': { semantic: 'chartSeries3', description: 'Categorical chart series 3 — gold. Below 3:1 on the light surface by design — legible via legend + direct labels, never colour-alone' },
-  'chart.4': { semantic: 'chartSeries4', description: 'Categorical chart series 4 — purple. Below 3:1 on the dark surface by design — legible via legend + direct labels, never colour-alone' },
-  'chart.5': { semantic: 'chartSeries5', description: 'Categorical chart series 5 — red' }
+  'border.strong': { semantic: 'border.strong', description: 'Emphasized divider / outline' },
+  'interactive.accent.hover': { semantic: 'interactive.accent.hover', description: 'Gold accent hover (Button primaryAlt variant)' },
+  'interactive.accent.active': { semantic: 'interactive.accent.active', description: 'Gold accent active (Button primaryAlt variant)' },
+  'interactive.primary': { semantic: 'interactive.primary', description: 'Primary interactive base' },
+  'interactive.primary.hover': { semantic: 'interactive.primary.hover', description: 'Primary interactive hover' },
+  'interactive.primary.active': { semantic: 'interactive.primary.active', description: 'Primary interactive active' },
+  'interactive.secondary': { semantic: 'interactive.secondary', description: 'Secondary interactive base (Active Blue)' },
+  'interactive.secondary.hover': { semantic: 'interactive.secondary.hover', description: 'Secondary interactive hover' },
+  'interactive.secondary.active': { semantic: 'interactive.secondary.active', description: 'Secondary interactive active' },
+  'interactive.danger': { semantic: 'interactive.danger', description: 'Destructive interactive base' },
+  'interactive.danger.hover': { semantic: 'interactive.danger.hover', description: 'Destructive hover' },
+  'interactive.danger.active': { semantic: 'interactive.danger.active', description: 'Destructive active' },
 };
 
 export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }
@@ -248,6 +254,15 @@ export interface ResolveRoleOptions { mode?: 'light' | 'dark'; }
  */
 function currentDomMode(): 'light' | 'dark' {
   if (typeof document === 'undefined') return 'light';
+  // `data-theme` first: it is the mechanism the generated token layer uses and
+  // the one that outlives the class (see docs/tasks/token-pipeline-migration.md
+  // step 2). Both are written today, so this only matters for a surface that
+  // sets the attribute WITHOUT the class — a nested light card inside a navy
+  // band — where reading the class would report the page mode and colour the
+  // card's inline styles wrongly. Falls back to the class so anything setting
+  // only the class (a consumer app, an old story decorator) still works.
+  const attr = document.documentElement.dataset.theme;
+  if (attr === 'dark' || attr === 'light') return attr;
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
@@ -261,6 +276,9 @@ export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): 
   // is what makes dark mode work across the library without having to
   // thread `mode` through every one of those call sites individually.
   const mode = options.mode || currentDomMode();
+  // Pinned to a Figma token → that is the answer, for every mode. No semantic
+  // lookup, no dark-override merge: the export already carries all three modes.
+  if (entry.token) return mdsColor(entry.token, mode);
   const base = semanticColors[entry.semantic];
   if (mode === 'dark' && entry.semantic in semanticDarkOverrides) {
     return semanticDarkOverrides[entry.semantic as SemanticColorName] || base;
@@ -280,8 +298,8 @@ export function getRoleColor(role: RoleName, options: ResolveRoleOptions = {}): 
  * genuinely need the resolved hex at call time (a canvas fill, a computed
  * contrast check, or a mode explicitly forced via its options).
  *
- * The name mapping (dots → dashes, camelCase segments preserved: `text.primary`
- * → `--role-text-primary`, `text.onInteractive` → `--role-text-onInteractive`)
+ * The name mapping (dots → dashes, camelCase segments preserved: `interactive.primary`
+ * → `--role-interactive-primary`, `text.onPrimary` → `--role-text-onPrimary`)
  * lives HERE and only here. It was previously duplicated in
  * RoleVarsProvider.tsx's `roleNameToVar` and again in its test; both now import
  * this, so the transform has a single source of truth and cannot drift.

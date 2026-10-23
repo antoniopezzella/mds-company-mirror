@@ -265,7 +265,7 @@ export const Primary: Story = {
         >
           {iconOnly ? null : children}
         </DSButton>
-        <Typography variant="caption" component="div" data-testid="click-count" sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>
+        <Typography variant="caption" component="div" data-testid="click-count" sx={{ fontFamily: 'monospace', color: 'fg.neutral.subtle' }}>
           Clicks: {count}
         </Typography>
       </div>
@@ -490,7 +490,7 @@ export const AllTones: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, maxWidth: 800 }}>
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>Default Tone</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>Default Tone</Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <DSButton variant="primary" tone="default">Primary</DSButton>
           <DSButton variant="secondary" tone="default">Secondary</DSButton>
@@ -500,7 +500,7 @@ export const AllTones: Story = {
       </Box>
       <Divider />
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>Danger Tone</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>Danger Tone</Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <DSButton variant="primary" tone="danger">Primary</DSButton>
           <DSButton variant="secondary" tone="danger">Secondary</DSButton>
@@ -510,7 +510,7 @@ export const AllTones: Story = {
       </Box>
       <Divider />
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>Success Tone</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>Success Tone</Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <DSButton variant="primary" tone="success">Primary</DSButton>
           <DSButton variant="secondary" tone="success">Secondary</DSButton>
@@ -568,7 +568,7 @@ export const AllStates: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, maxWidth: 800 }}>
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>Normal State</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>Normal State</Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <DSButton variant="primary">Primary</DSButton>
           <DSButton variant="secondary">Secondary</DSButton>
@@ -578,7 +578,7 @@ export const AllStates: Story = {
       </Box>
       <Divider />
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>Disabled State</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>Disabled State</Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <DSButton variant="primary" disabled>Primary</DSButton>
           <DSButton variant="secondary" disabled>Secondary</DSButton>
@@ -873,7 +873,7 @@ export const ButtonGroup: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, maxWidth: 600 }}>
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>
           Save Dialog
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
@@ -883,7 +883,7 @@ export const ButtonGroup: Story = {
       </Box>
       <Divider />
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>
           Delete Confirmation
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
@@ -893,7 +893,7 @@ export const ButtonGroup: Story = {
       </Box>
       <Divider />
       <Box>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, fontWeight: 600, color: 'fg.neutral.subtle' }}>
           Multi-Step Form
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between' }}>
@@ -929,7 +929,7 @@ export const PolicyActions: Story = {
         backgroundColor: 'background.paper'
       }}>
         <Typography variant="h6" sx={{ mb: 1 }}>Policy #POL-2024-001</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mb: 3 }}>
           Commercial Property Insurance - Acme Corporation
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -947,7 +947,7 @@ export const PolicyActions: Story = {
         backgroundColor: 'background.paper'
       }}>
         <Typography variant="h6" sx={{ mb: 1 }}>Claim Review</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+        <Typography variant="body2" color="fg.neutral.subtle" sx={{ mb: 3 }}>
           CLM-2024-1234 - $45,000 - Under Review
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}>
@@ -1001,7 +1001,7 @@ export const Responsive: Story = {
   },
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="caption" color="fg.neutral.subtle" sx={{ mb: 1 }}>
         Resize your browser to see size changes
       </Typography>
       {/*

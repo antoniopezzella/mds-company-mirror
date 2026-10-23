@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ChevronRight, Search } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { getRoleColor } from '@/theme/roles';
+import { roleVar } from '@/theme/roles';
 import { Input } from '@/components/ui/input';
 import {
   fieldsAtPath,
@@ -60,14 +60,18 @@ export interface FiltersFieldPickerProps {
   className?: string;
 }
 
-export function FiltersFieldPicker({
-  fields,
-  onSelect,
-  handleRef,
-  searchPlaceholder: searchPlaceholderProp,
-  emptyLabel = (t) => `No filters found for “${t}”`,
-  className,
-}: FiltersFieldPickerProps) {
+export const FiltersFieldPicker = React.forwardRef<HTMLDivElement, FiltersFieldPickerProps>(
+  function FiltersFieldPicker(
+    {
+      fields,
+      onSelect,
+      handleRef,
+      searchPlaceholder: searchPlaceholderProp,
+      emptyLabel = (t) => `No filters found for “${t}”`,
+      className,
+    },
+    ref
+  ) {
   // Defaulted here rather than in the signature so a parent may forward an
   // undefined `messages.searchPlaceholder` without blanking the label.
   const searchPlaceholder = searchPlaceholderProp ?? 'Search filters…';
@@ -171,10 +175,10 @@ export function FiltersFieldPicker({
     // levels per keypress.
   };
 
-  const muted = getRoleColor('text.secondary');
+  const muted = roleVar('fg.neutral.subtle');
 
   return (
-    <div className={cn('flex w-72 flex-col gap-1', className)}>
+    <div ref={ref} className={cn('flex w-72 flex-col gap-1', className)}>
       <div className="relative">
         <Search
           className="pointer-events-none absolute start-2 top-1/2 size-3.5 -translate-y-1/2"
@@ -260,7 +264,9 @@ export function FiltersFieldPicker({
       </div>
     </div>
   );
-}
+  }
+);
+FiltersFieldPicker.displayName = 'FiltersFieldPicker';
 
 function Option({
   id,
@@ -300,13 +306,13 @@ function Option({
         disabled && 'cursor-not-allowed opacity-50'
       )}
       style={{
-        backgroundColor: active ? getRoleColor('surface.subtle') : undefined,
-        color: getRoleColor('text.primary'),
+        backgroundColor: active ? roleVar('bg.neutral.subtle') : undefined,
+        color: roleVar('fg.primary'),
       }}
     >
       <span className="min-w-0 flex-1 truncate">
         {context && (
-          <span className="mr-1 text-xs" style={{ color: getRoleColor('text.secondary') }}>
+          <span className="mr-1 text-xs" style={{ color: roleVar('fg.neutral.subtle') }}>
             {context} ›
           </span>
         )}
@@ -328,7 +334,7 @@ function Highlight({ text, ranges }: { text: string; ranges: Array<[number, numb
           round — the match is marked by weight and colour alone. */}
       <mark
         className="bg-transparent font-semibold"
-        style={{ color: getRoleColor('interactive.primary') }}
+        style={{ color: roleVar('interactive.primary') }}
       >
         {text.slice(start, end)}
       </mark>

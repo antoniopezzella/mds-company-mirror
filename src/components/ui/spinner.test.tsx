@@ -3,28 +3,31 @@ import '@testing-library/jest-dom/vitest';
 import { Spinner } from './spinner';
 
 describe('Spinner', () => {
-  // The a11y contract is the whole point of this component: it is a purely
-  // decorative icon that must still announce itself to assistive tech, since
-  // it is the only indication that something is in flight.
-  it('exposes itself as a status with an accessible name', () => {
+  it('exposes a status role and an accessible name', () => {
     render(<Spinner />);
-    expect(screen.getByRole('status')).toHaveAccessibleName('Loading');
+    const el = screen.getByRole('status');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('aria-label', 'Loading');
   });
 
-  it('animates by default', () => {
+  it('animates and defaults to size-4', () => {
     render(<Spinner />);
-    expect(screen.getByRole('status').getAttribute('class')).toContain('animate-spin');
+    const el = screen.getByRole('status');
+    expect(el).toHaveClass('animate-spin');
+    expect(el).toHaveClass('size-4');
   });
 
-  it('merges a caller className without dropping the animation', () => {
+  it('a custom size class wins via twMerge, keeping animate-spin', () => {
     render(<Spinner className="size-8" />);
-    const cls = screen.getByRole('status').getAttribute('class') ?? '';
-    expect(cls).toContain('size-8');
-    expect(cls).toContain('animate-spin');
+    const el = screen.getByRole('status');
+    expect(el).toHaveClass('size-8');
+    expect(el).toHaveClass('animate-spin');
+    // twMerge drops the conflicting default rather than emitting both.
+    expect(el).not.toHaveClass('size-4');
   });
 
-  it('allows the accessible name to be overridden for context', () => {
-    render(<Spinner aria-label="Saving changes" />);
-    expect(screen.getByRole('status')).toHaveAccessibleName('Saving changes');
+  it('spreads arbitrary svg props onto the element', () => {
+    render(<Spinner data-testid="spin" />);
+    expect(screen.getByTestId('spin')).toBe(screen.getByRole('status'));
   });
 });

@@ -131,7 +131,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
 
               <Box className={styles.aiSolutionTop}>
                  <Box className={styles.aiHeaderTop}>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: getRoleColor('text.primary') }}>What right solution</Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: getRoleColor('fg.primary') }}>What right solution</Typography>
                     <Box className={styles.aiLogoCircleSmall}>
                       <img src={MARSH_M_LOGO} alt="M" className={styles.aiLogoSmall} />
                     </Box>
@@ -189,11 +189,11 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ isOpen, onClose, offsetTop }
                 <div className="mds-legacy-col-12 mds-legacy-col-md-6">
                   <Box className={styles.bannerCta}>
                     <Box className={styles.bannerContent}>
-                      <Typography variant="h6" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), mb: 1 }}>Headline</Typography>
-                      <Typography variant="body2" sx={{ color: getRoleColor('text.primary'), mb: 2, maxWidth: '200px', fontSize: '13px' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: getRoleColor('fg.primary'), mb: 1 }}>Headline</Typography>
+                      <Typography variant="body2" sx={{ color: getRoleColor('fg.primary'), mb: 2, maxWidth: '200px', fontSize: '13px' }}>
                         Lorem ipsum dolor sit amet consectetur. Viverra nunc pellentesque morbi curabitur purus senectus.
                       </Typography>
-                      <Typography variant="button" sx={{ fontWeight: 800, color: getRoleColor('text.primary'), cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
+                      <Typography variant="button" sx={{ fontWeight: 800, color: getRoleColor('fg.primary'), cursor: 'pointer', borderBottom: '1px solid currentColor' }}>
                         [Banner CTA]
                       </Typography>
                     </Box>

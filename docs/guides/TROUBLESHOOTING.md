@@ -18,7 +18,7 @@ color: tokens.blue1000
 
 // ✅ After
 import { getRoleColor } from '@/theme/roles';
-color: getRoleColor('text.primary')
+color: getRoleColor('fg.primary')
 ```
 
 ### Issue: Governance check fails with "Direct token usage detected"

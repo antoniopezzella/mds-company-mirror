@@ -55,26 +55,26 @@ type Mode = 'light' | 'dark';
 
 const sectionBg = (surface: CarouselSectionProps['surface'], mode: Mode) => {
   switch (surface) {
-    case 'accent':     return getRoleColor('surface.accent',     { mode });
-    case 'secondary':  return getRoleColor('surface.secondary',  { mode });
-    case 'hero':       return getRoleColor('surface.hero',       { mode });
+    case 'accent':     return getRoleColor('bg.neutral.subtle',     { mode });
+    case 'secondary':  return getRoleColor('bg.secondary',  { mode });
+    case 'hero':       return getRoleColor('bg.primary',       { mode });
     // surface/tertiary-pale (#f9f5f1) — not yet a synced DS token; matches the
     // exact Figma value. Same hardcoding precedent as IntroLoader.tsx and
     // InsightFeatureSection.tsx (both already use this exact hex with an
     // identical "not yet tokenized" comment).
     case 'tertiary':   return '#f9f5f1';
-    default:           return getRoleColor('surface.default',    { mode });
+    default:           return getRoleColor('bg.default',    { mode });
   }
 };
 
 const sectionText = (surface: CarouselSectionProps['surface'], mode: Mode) =>
   surface === 'hero'
-    ? getRoleColor('text.onHero',  { mode })
-    : getRoleColor('text.primary', { mode });
+    ? getRoleColor('fg.on-primary',  { mode })
+    : getRoleColor('fg.primary', { mode });
 
 const eyebrowColor = (surface: CarouselSectionProps['surface'], mode: Mode) =>
   surface === 'hero'
-    ? getRoleColor('text.onHero',           { mode })
+    ? getRoleColor('fg.on-primary',           { mode })
     : getRoleColor('interactive.secondary', { mode });
 
 // ─── Component ────────────────────────────────────────────────────────────────

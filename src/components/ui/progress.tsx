@@ -13,7 +13,7 @@ function getToneColor(tone: ProgressTone): RoleName {
     case 'danger':
       return 'interactive.danger';
     case 'success':
-      return 'status.success.fg';
+      return 'fg.success';
     default:
       return 'interactive.primary';
   }
@@ -111,7 +111,7 @@ export const LinearProgress: React.FC<LinearProgressProps> = ({
   return (
     <ProgressPrimitive.Root
       className={cn('relative h-2 w-full overflow-hidden rounded-full', className)}
-      style={{ backgroundColor: 'var(--role-surface-subtle)' }}
+      style={{ backgroundColor: 'var(--role-bg-neutral-subtle)' }}
       value={variant === 'determinate' ? clamped : undefined}
       aria-label={ariaLabelledBy ? undefined : (ariaLabel ?? 'Loading')}
       aria-labelledby={ariaLabelledBy}
