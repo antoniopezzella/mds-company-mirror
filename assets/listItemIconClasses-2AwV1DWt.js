@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{a as t,i as n,o as r,r as i}from"./composeClasses-CYflYE6t.js";function a(e){return t(`MuiListItemIcon`,e)}var o;function s(){return(s=e((()=>{n(),r(),o=i(`MuiListItemIcon`,[`root`,`alignItemsFlexStart`])})))()}export{s as n,o as r,a as t};

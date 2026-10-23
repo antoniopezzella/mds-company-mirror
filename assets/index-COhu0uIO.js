@@ -1,1 +1,0 @@
-import{a5 as t}from"./iframe-CPBTUrEW.js";var o=Object.defineProperty,n=(e,r)=>o(e,"name",{value:r,configurable:!0}),a=t.createContext(void 0);function i(e){const r=t.useContext(a);return e||r||"ltr"}n(i,"useDirection");export{i as u};

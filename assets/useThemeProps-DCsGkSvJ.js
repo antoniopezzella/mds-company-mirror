@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{T as t,w as n}from"./DefaultPropsProvider-DpSsnPPL.js";import{n as r,t as i}from"./getThemeProps-CfoPIKdS.js";function a({props:e,name:n,defaultTheme:r,themeId:a}){let o=t(r);return a&&(o=o[a]||o),i({theme:o,name:n,props:e})}function o(){return(o=e((()=>{r(),n()})))()}export{a as n,o as t};

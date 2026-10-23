@@ -1,0 +1,95 @@
+import{a as e,n as t}from"./rolldown-runtime-sJBDdmOt.js";import{t as n}from"./react-DWVlIg87.js";import{t as r}from"./jsx-runtime-MKhVqBIO.js";import{i,n as a}from"./roles-DNqHlq35.js";import{n as o,t as s}from"./utils-BGgJixJd.js";import{o as c,s as l}from"./dist-rOPzl3gD.js";import{n as u,t as d}from"./check-D0zZFjjg.js";import{n as f,t as p}from"./chevron-right-D_G3GZnD.js";import{n as m,t as ee}from"./circle-BSUjF2Fn.js";import{n as te,t as ne}from"./dist-rCLRbfw0.js";import{n as re,t as h}from"./dist-CWbjiT1z.js";import{n as ie,t as ae}from"./dist-B8vl3dwJ.js";import{r as oe,t as se}from"./dist-DFd1iIkj.js";import{n as ce,t as le}from"./dist-CHBBT1k3.js";import{n as ue,t as de}from"./dist-sLixEi_T.js";import{n as fe,t as pe}from"./dist-Dvxkw1YI.js";import{i as me,n as he,r as ge,t as _e}from"./dist-BFJXkRpt.js";import{a as ve,c as ye,d as be,f as xe,g as Se,h as Ce,i as we,l as Te,m as Ee,n as De,o as Oe,p as ke,r as Ae,s as je,t as Me,u as Ne}from"./dist-pYVWAeIw.js";function Pe(e,t){return e.map((n,r)=>e[(t+r)%e.length])}var g,_,Fe,v,y,b,Ie,Le,x,Re,S,C,ze,w,Be,T,Ve,E,He,D,Ue,We,O,Ge,Ke,qe,Je,Ye,Xe,Ze,Qe,$e,et,tt,nt,k,rt,A,it,j,M,N,P,at,F,I,ot,st,ct,lt;function ut(){return(ut=t((()=>{g=e(n(),1),ue(),pe(),re(),c(),te(),le(),Se(),me(),oe(),ae(),_=r(),Fe=Object.defineProperty,v=(e,t)=>Fe(e,`name`,{value:t,configurable:!0}),y=`Menubar`,[b,Ie,Le]=de(y),[x,Re]=ne(y,[Le,ge]),S=Ce(),C=ge(),[ze,w]=x(y),Be=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,value:r,onValueChange:i,defaultValue:a,loop:o=!0,dir:s,...c}=e,l=fe(s),u=C(n),[d,f]=ie({prop:r,onChange:i,defaultProp:a??``,caller:y}),[p,m]=g.useState(null);return(0,_.jsx)(ze,{scope:n,value:d,onMenuOpen:g.useCallback(e=>{f(e),m(e)},[f]),onMenuClose:g.useCallback(()=>f(``),[f]),onMenuToggle:g.useCallback(e=>{f(t=>t?``:e),m(e)},[f]),dir:l,loop:o,children:(0,_.jsx)(b.Provider,{scope:n,children:(0,_.jsx)(b.Slot,{scope:n,children:(0,_.jsx)(he,{asChild:!0,...u,orientation:`horizontal`,loop:o,dir:l,currentTabStopId:p,onCurrentTabStopIdChange:m,children:(0,_.jsx)(se.div,{role:`menubar`,...c,ref:t})})})})})},`Menubar`)),T=`MenubarMenu`,[Ve,E]=x(T),He=v(e=>{let{__scopeMenubar:t,value:n,...r}=e,i=ce(),a=n||i||`LEGACY_REACT_AUTO_VALUE`,o=w(T,t),s=S(t),c=g.useRef(null),l=g.useRef(!1),u=o.value===a;return g.useEffect(()=>{u||(l.current=!1)},[u]),(0,_.jsx)(Ve,{scope:t,value:a,triggerId:ce(),triggerRef:c,contentId:ce(),wasKeyboardTriggerOpenRef:l,children:(0,_.jsx)(Ne,{...s,open:u,onOpenChange:e=>{e||o.onMenuClose()},modal:!1,dir:o.dir,...r})})},`MenubarMenu`),D=`MenubarTrigger`,Ue=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,disabled:r=!1,...i}=e,a=C(n),o=S(n),s=w(D,n),c=E(D,n),u=g.useRef(null),d=l(t,u,c.triggerRef),[f,p]=g.useState(!1),m=s.value===c.value;return(0,_.jsx)(b.ItemSlot,{scope:n,value:c.value,disabled:r,children:(0,_.jsx)(_e,{asChild:!0,...a,focusable:!r,tabStopId:c.value,children:(0,_.jsx)(Me,{asChild:!0,...o,children:(0,_.jsx)(se.button,{type:`button`,role:`menuitem`,id:c.triggerId,"aria-haspopup":`menu`,"aria-expanded":m,"aria-controls":m?c.contentId:void 0,"data-highlighted":f?``:void 0,"data-state":m?`open`:`closed`,"data-disabled":r?``:void 0,disabled:r,...i,ref:d,onPointerDown:h(e.onPointerDown,e=>{!r&&e.button===0&&e.ctrlKey===!1&&(s.onMenuOpen(c.value),m||e.preventDefault())}),onPointerEnter:h(e.onPointerEnter,()=>{s.value&&!m&&(s.onMenuOpen(c.value),u.current?.focus())}),onKeyDown:h(e.onKeyDown,e=>{r||([`Enter`,` `].includes(e.key)&&s.onMenuToggle(c.value),e.key===`ArrowDown`&&s.onMenuOpen(c.value),[`Enter`,` `,`ArrowDown`].includes(e.key)&&(c.wasKeyboardTriggerOpenRef.current=!0,e.preventDefault()))}),onFocus:h(e.onFocus,()=>p(!0)),onBlur:h(e.onBlur,()=>p(!1))})})})})},`MenubarTrigger`)),We=v(e=>{let{__scopeMenubar:t,...n}=e,r=S(t);return(0,_.jsx)(je,{...r,...n})},`MenubarPortal`),O=`MenubarContent`,Ge=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,align:r=`start`,...i}=e,a=S(n),o=w(O,n),s=E(O,n),c=Ie(n),l=g.useRef(!1);return(0,_.jsx)(Ae,{id:s.contentId,"aria-labelledby":s.triggerId,"data-radix-menubar-content":``,...a,...i,ref:t,align:r,onCloseAutoFocus:h(e.onCloseAutoFocus,e=>{!o.value&&!l.current&&s.triggerRef.current?.focus(),l.current=!1,e.preventDefault()}),onFocusOutside:h(e.onFocusOutside,e=>{let t=e.target;c().some(e=>e.ref.current?.contains(t))&&e.preventDefault()}),onInteractOutside:h(e.onInteractOutside,()=>{l.current=!0}),onEntryFocus:e=>{s.wasKeyboardTriggerOpenRef.current||e.preventDefault()},onKeyDown:h(e.onKeyDown,e=>{if([`ArrowRight`,`ArrowLeft`].includes(e.key)){let t=e.target,n=t.hasAttribute(`data-radix-menubar-subtrigger`),r=t.closest(`[data-radix-menubar-content]`)!==e.currentTarget,i=(o.dir===`rtl`?`ArrowRight`:`ArrowLeft`)===e.key;if(!i&&n||r&&i)return;let a=c().filter(e=>!e.disabled).map(e=>e.value);i&&a.reverse();let l=a.indexOf(s.value);a=o.loop?Pe(a,l+1):a.slice(l+1);let[u]=a;u&&o.onMenuOpen(u)}},{checkForDefaultPrevented:!1}),style:{...e.style,"--radix-menubar-content-transform-origin":`var(--radix-popper-transform-origin)`,"--radix-menubar-content-available-width":`var(--radix-popper-available-width)`,"--radix-menubar-content-available-height":`var(--radix-popper-available-height)`,"--radix-menubar-trigger-width":`var(--radix-popper-anchor-width)`,"--radix-menubar-trigger-height":`var(--radix-popper-anchor-height)`}})},`MenubarContent`)),Ke=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(Oe,{...i,...r,ref:t})},`MenubarLabel`)),qe=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(we,{...i,...r,ref:t})},`MenubarItem`)),Je=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(De,{...i,...r,ref:t})},`MenubarCheckboxItem`)),Ye=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(ye,{...i,...r,ref:t})},`MenubarRadioGroup`)),Xe=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(Te,{...i,...r,ref:t})},`MenubarRadioItem`)),Ze=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(ve,{...i,...r,ref:t})},`MenubarItemIndicator`)),Qe=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(be,{...i,...r,ref:t})},`MenubarSeparator`)),$e=`MenubarSub`,et=v(e=>{let{__scopeMenubar:t,children:n,open:r,onOpenChange:i,defaultOpen:a}=e,o=S(t),[s,c]=ie({prop:r,defaultProp:a??!1,onChange:i,caller:$e});return(0,_.jsx)(xe,{...o,open:s,onOpenChange:c,children:n})},`MenubarSub`),tt=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(Ee,{"data-radix-menubar-subtrigger":``,...i,...r,ref:t})},`MenubarSubTrigger`)),nt=g.forwardRef(v(function(e,t){let{__scopeMenubar:n,...r}=e,i=S(n);return(0,_.jsx)(ke,{...i,"data-radix-menubar-content":``,...r,ref:t,style:{...e.style,"--radix-menubar-content-transform-origin":`var(--radix-popper-transform-origin)`,"--radix-menubar-content-available-width":`var(--radix-popper-available-width)`,"--radix-menubar-content-available-height":`var(--radix-popper-available-height)`,"--radix-menubar-trigger-width":`var(--radix-popper-anchor-width)`,"--radix-menubar-trigger-height":`var(--radix-popper-anchor-height)`}})},`MenubarSubContent`)),v(Pe,`wrapArray`),k=Be,rt=He,A=Ue,it=We,j=Ge,M=Ke,N=qe,P=Je,at=Ye,F=Xe,I=Ze,ot=Qe,st=et,ct=tt,lt=nt})))()}var L,R,z,B,dt,ft,V,H,U,W,G,K,q,J,Y,X;function pt(){return(pt=t((()=>{L=e(n(),1),ut(),u(),f(),m(),o(),a(),R=r(),z=L.forwardRef(({className:e,...t},n)=>(0,R.jsx)(k,{ref:n,className:s(`flex items-center gap-1 rounded-md border p-1`,e),style:{backgroundColor:`var(--role-bg-default)`,borderColor:`var(--role-border-default)`},...t})),z.displayName=k.displayName,B=rt,dt=st,ft=at,V=L.forwardRef(({className:e,...t},n)=>(0,R.jsx)(A,{ref:n,className:s(`flex cursor-pointer select-none items-center rounded-md px-3 py-1.5 text-sm font-medium outline-hidden data-[state=open]:bg-[var(--menubar-trigger-active-bg)]`,e),style:{color:`var(--role-fg-primary)`,"--menubar-trigger-active-bg":`var(--role-bg-neutral-subtle)`},...t})),V.displayName=A.displayName,H=L.forwardRef(({className:e,inset:t,children:n,...r},i)=>(0,R.jsxs)(ct,{ref:i,className:s(`flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden data-[state=open]:bg-[var(--menubar-hover-bg)]`,t&&`ps-8`,e),style:{color:`var(--role-fg-primary)`,"--menubar-hover-bg":`var(--role-bg-neutral-subtle)`},...r,children:[n,(0,R.jsx)(p,{className:`ms-auto h-4 w-4`})]})),H.displayName=ct.displayName,U=L.forwardRef(({className:e,...t},n)=>(0,R.jsx)(lt,{ref:n,className:s(`z-[1500] min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95`,e),style:{backgroundColor:`var(--role-bg-default)`,borderColor:`var(--role-border-default)`},...t})),U.displayName=lt.displayName,W=L.forwardRef(({className:e,align:t=`start`,alignOffset:n=-4,sideOffset:r=8,...i},a)=>(0,R.jsx)(it,{children:(0,R.jsx)(j,{ref:a,align:t,alignOffset:n,sideOffset:r,className:s(`z-[1500] min-w-[12rem] overflow-hidden rounded-lg border p-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95`,e),style:{backgroundColor:`var(--role-bg-default)`,borderColor:`var(--role-border-default)`},...i})})),W.displayName=j.displayName,G=L.forwardRef(({className:e,inset:t,tone:n=`default`,...r},a)=>(0,R.jsx)(N,{ref:a,className:s(`relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50`,t&&`ps-8`,e),style:{color:i(n===`danger`?`fg.critical`:`fg.primary`)},...r,onFocus:e=>{e.currentTarget.style.backgroundColor=i(n===`danger`?`bg.critical.subtle`:`bg.neutral.subtle`),r.onFocus?.(e)},onBlur:e=>{e.currentTarget.style.backgroundColor=`transparent`,r.onBlur?.(e)}})),G.displayName=N.displayName,K=L.forwardRef(({className:e,children:t,checked:n,...r},i)=>(0,R.jsxs)(P,{ref:i,className:s(`relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50`,e),style:{color:`var(--role-fg-primary)`},checked:n,...r,children:[(0,R.jsx)(`span`,{className:`absolute start-2 flex h-3.5 w-3.5 items-center justify-center`,children:(0,R.jsx)(I,{children:(0,R.jsx)(d,{className:`h-4 w-4`,style:{color:`var(--role-interactive-primary)`}})})}),t]})),K.displayName=P.displayName,q=L.forwardRef(({className:e,children:t,...n},r)=>(0,R.jsxs)(F,{ref:r,className:s(`relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 ps-8 pe-2 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50`,e),style:{color:`var(--role-fg-primary)`},...n,children:[(0,R.jsx)(`span`,{className:`absolute start-2 flex h-3.5 w-3.5 items-center justify-center`,children:(0,R.jsx)(I,{children:(0,R.jsx)(ee,{className:`h-2 w-2 fill-current`,style:{color:`var(--role-interactive-primary)`}})})}),t]})),q.displayName=F.displayName,J=L.forwardRef(({className:e,inset:t,...n},r)=>(0,R.jsx)(M,{ref:r,className:s(`px-2 py-1.5 text-xs font-semibold`,t&&`ps-8`,e),style:{color:`var(--role-fg-neutral-subtle)`},...n})),J.displayName=M.displayName,Y=L.forwardRef(({className:e,...t},n)=>(0,R.jsx)(ot,{ref:n,className:s(`-mx-1 my-1 h-px`,e),style:{backgroundColor:`var(--role-border-default)`},...t})),Y.displayName=ot.displayName,X=({className:e,...t})=>(0,R.jsx)(`span`,{className:s(`ms-auto text-xs tracking-widest opacity-60`,e),...t}),X.displayName=`MenubarShortcut`,z.__docgenInfo={description:``,methods:[]},V.__docgenInfo={description:``,methods:[]},W.__docgenInfo={description:``,methods:[],props:{align:{defaultValue:{value:`'start'`,computed:!1},required:!1},alignOffset:{defaultValue:{value:`-4`,computed:!1},required:!1},sideOffset:{defaultValue:{value:`8`,computed:!1},required:!1}}},G.__docgenInfo={description:``,methods:[],props:{inset:{required:!1,tsType:{name:`boolean`},description:``},tone:{required:!1,tsType:{name:`union`,raw:`'default' | 'danger'`,elements:[{name:`literal`,value:`'default'`},{name:`literal`,value:`'danger'`}]},description:``,defaultValue:{value:`'default'`,computed:!1}}}},K.__docgenInfo={description:``,methods:[]},q.__docgenInfo={description:``,methods:[]},J.__docgenInfo={description:``,methods:[],props:{inset:{required:!1,tsType:{name:`boolean`},description:``}}},Y.__docgenInfo={description:``,methods:[]},X.__docgenInfo={description:``,methods:[],displayName:`MenubarShortcut`},U.__docgenInfo={description:``,methods:[]},H.__docgenInfo={description:``,methods:[],props:{inset:{required:!1,tsType:{name:`boolean`},description:`Adds a fixed left-aligned indent so this item's label lines up with sibling items that carry a checkmark or icon.`}}}})))()}var Z,mt,ht,gt,_t,vt,Q,$,yt;function bt(){return(bt=t((()=>{pt(),Z=r(),{expect:mt,screen:ht,userEvent:gt,within:_t}=__STORYBOOK_MODULE_TEST__,vt={title:`Components/Menubar`,tags:[`autodocs`],parameters:{layout:`centered`,docs:{description:{component:`# Menubar
+
+Radix-based horizontal application menu bar — File/Edit/View style — with
+the same real menu semantics as \`DropdownMenu\` (roving tabindex, arrow-key
+navigation between top-level menus, submenu support), just laid out as a
+row of menus instead of a single trigger.`}}}},Q={render:()=>(0,Z.jsxs)(z,{children:[(0,Z.jsxs)(B,{children:[(0,Z.jsx)(V,{children:`File`}),(0,Z.jsxs)(W,{children:[(0,Z.jsxs)(G,{children:[`New Tab `,(0,Z.jsx)(X,{children:`⌘T`})]}),(0,Z.jsxs)(G,{children:[`New Window `,(0,Z.jsx)(X,{children:`⌘N`})]}),(0,Z.jsx)(Y,{}),(0,Z.jsx)(G,{children:`Share`}),(0,Z.jsx)(Y,{}),(0,Z.jsxs)(G,{tone:`danger`,children:[`Close Window `,(0,Z.jsx)(X,{children:`⌘W`})]})]})]}),(0,Z.jsxs)(B,{children:[(0,Z.jsx)(V,{children:`Edit`}),(0,Z.jsxs)(W,{children:[(0,Z.jsxs)(G,{children:[`Undo `,(0,Z.jsx)(X,{children:`⌘Z`})]}),(0,Z.jsxs)(G,{children:[`Redo `,(0,Z.jsx)(X,{children:`⇧⌘Z`})]}),(0,Z.jsx)(Y,{}),(0,Z.jsx)(G,{children:`Cut`}),(0,Z.jsx)(G,{children:`Copy`}),(0,Z.jsx)(G,{children:`Paste`})]})]}),(0,Z.jsxs)(B,{children:[(0,Z.jsx)(V,{children:`View`}),(0,Z.jsxs)(W,{children:[(0,Z.jsx)(K,{checked:!0,children:`Show Bookmarks Bar`}),(0,Z.jsx)(K,{children:`Show Full URLs`}),(0,Z.jsx)(Y,{}),(0,Z.jsx)(G,{disabled:!0,children:`Toggle Fullscreen`})]})]})]}),play:async({canvasElement:e,step:t})=>{let n=_t(e);await t(`open the File menu`,async()=>{await gt.click(n.getByRole(`menuitem`,{name:`File`}))}),await t(`its items render`,async()=>{let e=await ht.findByRole(`menu`);await mt(_t(e).getAllByRole(`menuitem`).length).toBeGreaterThan(0)})}},$={render:()=>(0,Z.jsx)(z,{children:(0,Z.jsxs)(B,{children:[(0,Z.jsx)(V,{children:`Profiles`}),(0,Z.jsxs)(W,{children:[(0,Z.jsx)(J,{children:`Workspace`}),(0,Z.jsx)(Y,{}),(0,Z.jsxs)(ft,{value:`benedict`,children:[(0,Z.jsx)(q,{value:`andy`,children:`Andy`}),(0,Z.jsx)(q,{value:`benedict`,children:`Benedict`}),(0,Z.jsx)(q,{value:`luis`,children:`Luis`})]}),(0,Z.jsx)(Y,{}),(0,Z.jsxs)(dt,{children:[(0,Z.jsx)(H,{children:`More Tools`}),(0,Z.jsxs)(U,{children:[(0,Z.jsx)(G,{children:`Save Page As…`}),(0,Z.jsx)(G,{children:`Create Shortcut…`}),(0,Z.jsx)(G,{children:`Name Window…`})]})]})]})]})})},yt=[`Default`,`WithSubmenuAndRadioGroup`],Q.parameters={...Q.parameters,docs:{...Q.parameters?.docs,source:{originalSource:`{
+  render: () => <Menubar>
+      <MenubarMenu>
+        <MenubarTrigger>File</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>
+            New Window <MenubarShortcut>⌘N</MenubarShortcut>
+          </MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Share</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem tone="danger">
+            Close Window <MenubarShortcut>⌘W</MenubarShortcut>
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>Edit</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>
+            Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+          </MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Cut</MenubarItem>
+          <MenubarItem>Copy</MenubarItem>
+          <MenubarItem>Paste</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>View</MenubarTrigger>
+        <MenubarContent>
+          <MenubarCheckboxItem checked>Show Bookmarks Bar</MenubarCheckboxItem>
+          <MenubarCheckboxItem>Show Full URLs</MenubarCheckboxItem>
+          <MenubarSeparator />
+          <MenubarItem disabled>Toggle Fullscreen</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>,
+  /*
+  * OPENS a menu. Without this the story rendered only the bar of triggers,
+  * so the component measured 50% statements and 0% FUNCTIONS — no item,
+  * separator, shortcut or submenu was ever executed, and axe only ever saw
+  * the closed state.
+  */
+  play: async ({
+    canvasElement,
+    step
+  }) => {
+    const canvas = within(canvasElement);
+    await step('open the File menu', async () => {
+      await userEvent.click(canvas.getByRole('menuitem', {
+        name: 'File'
+      }));
+    });
+    await step('its items render', async () => {
+      const open = await screen.findByRole('menu');
+      await expect(within(open).getAllByRole('menuitem').length).toBeGreaterThan(0);
+    });
+  }
+}`,...Q.parameters?.docs?.source}}},$.parameters={...$.parameters,docs:{...$.parameters?.docs,source:{originalSource:`{
+  render: () => <Menubar>
+      <MenubarMenu>
+        <MenubarTrigger>Profiles</MenubarTrigger>
+        <MenubarContent>
+          <MenubarLabel>Workspace</MenubarLabel>
+          <MenubarSeparator />
+          <MenubarRadioGroup value="benedict">
+            <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
+            <MenubarRadioItem value="benedict">Benedict</MenubarRadioItem>
+            <MenubarRadioItem value="luis">Luis</MenubarRadioItem>
+          </MenubarRadioGroup>
+          <MenubarSeparator />
+          <MenubarSub>
+            <MenubarSubTrigger>More Tools</MenubarSubTrigger>
+            <MenubarSubContent>
+              <MenubarItem>Save Page As…</MenubarItem>
+              <MenubarItem>Create Shortcut…</MenubarItem>
+              <MenubarItem>Name Window…</MenubarItem>
+            </MenubarSubContent>
+          </MenubarSub>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
+}`,...$.parameters?.docs?.source}}}})))()}bt();export{Q as Default,$ as WithSubmenuAndRadioGroup,yt as __namedExportsOrder,vt as default};

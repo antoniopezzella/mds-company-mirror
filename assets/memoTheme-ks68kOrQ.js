@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{b as t,x as n}from"./DefaultPropsProvider-DpSsnPPL.js";function r(e){let t,r;return function(a){let o=t;return(o===void 0||a.theme!==r)&&(i.theme=a.theme,o=n(e(i)),t=o,r=a.theme),o}}var i;function a(){return(a=e((()=>{t(),i={theme:void 0}})))()}var o;function s(){return(s=e((()=>{a(),o=r})))()}export{o as n,s as t};

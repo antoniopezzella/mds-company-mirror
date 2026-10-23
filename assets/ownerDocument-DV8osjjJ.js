@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{n as t}from"./ownerDocument-Dm77yscz.js";function n(e,t=166){let n;function r(...r){clearTimeout(n),n=setTimeout(()=>{e.apply(this,r)},t)}return r.clear=()=>{clearTimeout(n)},r}function r(){return(r=e((()=>{})))()}var i;function a(){return(a=e((()=>{i=t})))()}export{r as i,i as n,n as r,a as t};

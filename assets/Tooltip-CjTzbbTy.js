@@ -1,0 +1,3 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{t}from"./jsx-runtime-MKhVqBIO.js";import{n,r}from"./lib-D94nruS1.js";import{n as i,t as a}from"./Button-BlA5xY0Z.js";import{n as o,t as s}from"./Tooltip-CLkHQTqw.js";function c(){return(0,d.jsx)(s,{title:`Add`,children:(0,d.jsx)(a,{children:`Hover me`})})}function l(e){let t={h1:`h1`,...r(),...e.components};return(0,d.jsxs)(d.Fragment,{children:[(0,d.jsx)(t.h1,{id:`tooltip`,children:`Tooltip`}),`
+`,`
+`,(0,d.jsx)(c,{})]})}function u(e={}){let{wrapper:t}={...r(),...e.components};return t?(0,d.jsx)(t,{...e,children:(0,d.jsx)(l,{...e})}):l(e)}var d,f;function p(){return(p=e((()=>{d=t(),n(),o(),i(),f={title:`MUI Reference/Data Display/Tooltip`}})))()}p();export{c as Demo,u as default,f as meta};

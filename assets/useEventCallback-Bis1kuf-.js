@@ -1,0 +1,1 @@
+import{a as e,n as t}from"./rolldown-runtime-sJBDdmOt.js";import{t as n}from"./react-DWVlIg87.js";import{n as r,t as i}from"./useEnhancedEffect-CaCyXyIt.js";function a(e){let t=o.useRef(e);return r(()=>{t.current=e}),o.useRef((...e)=>(0,t.current)(...e)).current}var o;function s(){return(s=t((()=>{o=e(n()),i()})))()}export{a as n,s as t};

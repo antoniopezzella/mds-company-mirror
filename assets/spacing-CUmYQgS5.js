@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";var t;function n(){return(n=e((()=>{t=[4,8,12,16,20,24,32,40,48,56,64,80,96,112,128],Object.fromEntries(t.map(e=>[String(e),e]))})))()}export{t as n,n as t};

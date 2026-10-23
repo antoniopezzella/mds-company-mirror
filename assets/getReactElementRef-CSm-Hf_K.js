@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{t}from"./react-DWVlIg87.js";function n(e){return e?.props?.ref||null}function r(){return(r=e((()=>{t()})))()}export{r as n,n as t};

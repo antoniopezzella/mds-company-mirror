@@ -1,0 +1,28 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{t}from"./react-DWVlIg87.js";import{t as n}from"./jsx-runtime-MKhVqBIO.js";import{n as r,t as i}from"./Box-BD9Vi1Pp.js";import{n as a,t as o}from"./Container-C3qt7Ns3.js";import{n as s,t as c}from"./roles-DNqHlq35.js";import{n as l,t as u}from"./Typography-anuSUXG9.js";var d;function f(){return(f=e((()=>{d={"wireframe-slide":`_wireframe-slide_1kvnd_1`,"wireframe-slide__content":`_wireframe-slide__content_1kvnd_12`,"wireframe-slide__title":`_wireframe-slide__title_1kvnd_17`,"wireframe-slide__description":`_wireframe-slide__description_1kvnd_20`,"wireframe-slide__visual-container":`_wireframe-slide__visual-container_1kvnd_23`,"wireframe-slide__placeholder":`_wireframe-slide__placeholder_1kvnd_31`,"wireframe-slide--hero":`_wireframe-slide--hero_1kvnd_44`}})))()}var p,m;function h(){return(h=e((()=>{t(),l(),r(),a(),s(),f(),p=n(),m=({title:e,description:t,placeholders:n=[`Wireframe Visual 1`,`Wireframe Visual 2`],variant:r=`light`,backgroundColor:a})=>{let s=()=>{if(a)return a;switch(r){case`dark`:return c(`bg.secondary`);case`hero`:return c(`bg.primary`);default:return c(`bg.default`)}},l=r===`hero`,f=()=>c(l?`fg.on-dark`:`fg.primary`),m=()=>c(l?`fg.on-accent`:`fg.neutral.subtle`),h=d[`wireframe-slide--${r}`]??``;return(0,p.jsx)(i,{component:`section`,className:`${d[`wireframe-slide`]} ${h}`,sx:{backgroundColor:s(),color:f()},children:(0,p.jsx)(o,{maxWidth:`lg`,children:(0,p.jsxs)(i,{className:d[`wireframe-slide__content`],children:[(0,p.jsx)(u,{variant:`h2`,component:`h2`,className:d[`wireframe-slide__title`],sx:{fontWeight:`bold`},children:e}),(0,p.jsx)(u,{variant:`h5`,component:`p`,className:d[`wireframe-slide__description`],sx:{color:m()},children:t}),(0,p.jsx)(i,{className:d[`wireframe-slide__visual-container`],children:n.map((e,t)=>(0,p.jsx)(i,{className:d[`wireframe-slide__placeholder`],children:(0,p.jsx)(u,{variant:`body2`,children:e})},t))})]})})})},m.__docgenInfo={description:`WireframeSlide Component
+A layout section designed for conceptual wireframe presentations with text and visual placeholders.
+Adheres to MDS-Platform role-based styling and grid system.`,methods:[],displayName:`WireframeSlide`,props:{title:{required:!0,tsType:{name:`string`},description:`Main title for the wireframe slide`},description:{required:!0,tsType:{name:`string`},description:`Description or key points`},placeholders:{required:!1,tsType:{name:`Array`,elements:[{name:`string`}],raw:`string[]`},description:`Optional visual placeholders (icons, small wireframe snippets, etc.)`,defaultValue:{value:`['Wireframe Visual 1', 'Wireframe Visual 2']`,computed:!1}},variant:{required:!1,tsType:{name:`union`,raw:`'light' | 'dark' | 'hero'`,elements:[{name:`literal`,value:`'light'`},{name:`literal`,value:`'dark'`},{name:`literal`,value:`'hero'`}]},description:`Theme variant: 'light' | 'dark' | 'hero'`,defaultValue:{value:`'light'`,computed:!1}},backgroundColor:{required:!1,tsType:{name:`string`},description:`Custom background color (overrides variant default)`}}}})))()}var g,_,v,y,b,x;function S(){return(S=e((()=>{h(),g={title:`Sections/WireframeSlide`,component:m,tags:[`autodocs`],argTypes:{variant:{control:`select`,options:[`light`,`dark`,`hero`]},backgroundColor:{control:`color`}}},_={args:{title:`Wireframe Presentation Slide`,description:`This layout is designed to present conceptual wireframes alongside supporting text details.`,variant:`light`}},v={args:{title:`Dark Mode Concept`,description:`Experience the same structured information in our optimized dark UI role-set.`,variant:`dark`}},y={args:{title:`Strategic Vision Wireframe`,description:`A higher-impact hero-style layout for strategic conceptual presentations.`,variant:`hero`}},b={args:{title:`Dashboard MVP B2B`,description:`Property Risk Management - Data completeness and CAT Modeling insights.`,placeholders:[`Property Inventory Overview`,`CAT Modeling Insights`,`Renewal Readiness Evaluation`,`Market Readiness assessment`],variant:`light`}},x=[`Default`,`Dark`,`Hero`,`CustomContent`],_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{
+  args: {
+    title: 'Wireframe Presentation Slide',
+    description: 'This layout is designed to present conceptual wireframes alongside supporting text details.',
+    variant: 'light'
+  }
+}`,..._.parameters?.docs?.source}}},v.parameters={...v.parameters,docs:{...v.parameters?.docs,source:{originalSource:`{
+  args: {
+    title: 'Dark Mode Concept',
+    description: 'Experience the same structured information in our optimized dark UI role-set.',
+    variant: 'dark'
+  }
+}`,...v.parameters?.docs?.source}}},y.parameters={...y.parameters,docs:{...y.parameters?.docs,source:{originalSource:`{
+  args: {
+    title: 'Strategic Vision Wireframe',
+    description: 'A higher-impact hero-style layout for strategic conceptual presentations.',
+    variant: 'hero'
+  }
+}`,...y.parameters?.docs?.source}}},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{
+  args: {
+    title: 'Dashboard MVP B2B',
+    description: 'Property Risk Management - Data completeness and CAT Modeling insights.',
+    placeholders: ['Property Inventory Overview', 'CAT Modeling Insights', 'Renewal Readiness Evaluation', 'Market Readiness assessment'],
+    variant: 'light'
+  }
+}`,...b.parameters?.docs?.source}}}})))()}S();export{b as CustomContent,v as Dark,_ as Default,y as Hero,x as __namedExportsOrder,g as default};

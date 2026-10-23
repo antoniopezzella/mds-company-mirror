@@ -1,1 +1,0 @@
-import{g as s}from"./getThemeProps-D9sgPYYa.js";import{at as p}from"./iframe-CPBTUrEW.js";function f({props:o,name:t,defaultTheme:m,themeId:r}){let e=p(m);return r&&(e=e[r]||e),s({theme:e,name:t,props:o})}export{f as u};

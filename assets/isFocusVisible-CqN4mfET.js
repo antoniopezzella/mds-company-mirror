@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";function t(e){try{return e.matches(`:focus-visible`)}catch{}return!1}function n(){return(n=e((()=>{})))()}export{t as n,n as t};

@@ -1,0 +1,4 @@
+import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{t}from"./jsx-runtime-MKhVqBIO.js";import{n,r}from"./lib-D94nruS1.js";import{n as i,t as a}from"./Stack-DKSlLpCQ.js";import{n as o,t as s}from"./Button-BlA5xY0Z.js";function c(){return(0,d.jsxs)(a,{direction:`row`,spacing:2,children:[(0,d.jsx)(s,{variant:`text`,children:`Text`}),(0,d.jsx)(s,{variant:`contained`,children:`Contained`}),(0,d.jsx)(s,{variant:`outlined`,children:`Outlined`})]})}function l(e){let t={h1:`h1`,p:`p`,...r(),...e.components};return(0,d.jsxs)(d.Fragment,{children:[(0,d.jsx)(t.h1,{id:`button`,children:`Button`}),`
+`,(0,d.jsx)(t.p,{children:`Basic MUI buttons.`}),`
+`,`
+`,(0,d.jsx)(c,{})]})}function u(e={}){let{wrapper:t}={...r(),...e.components};return t?(0,d.jsx)(t,{...e,children:(0,d.jsx)(l,{...e})}):l(e)}var d,f;function p(){return(p=e((()=>{d=t(),n(),i(),o(),f={title:`MUI Reference/Inputs/Button`}})))()}p();export{c as Demo,u as default,f as meta};
