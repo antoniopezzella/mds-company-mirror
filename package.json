@@ -249,7 +249,7 @@
     "@types/testing-library__jest-dom": "^5.14.9",
     "@vimeo/player": "^2.30.4",
     "@vitejs/plugin-react": "^6.1.2",
-    "@vitest/browser": "4.1.11",
+    "@vitest/browser": "5.0.5",
     "@vitest/coverage-v8": "4.1.11",
     "ai": "^7.0.68",
     "autoprefixer": "^10.5.0",
