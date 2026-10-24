@@ -6,9 +6,16 @@ on:
   push:
     # No branch filter — see ci.yml for why.
 
+# One shared MMC runner serves every repo, so a newer push cancels the
+# superseded run on the same ref instead of queueing behind it.
+concurrency:
+  group: governance-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   governance-check:
-    runs-on: ubuntu-latest
+    # MMC has no GitHub-hosted runners; ubuntu-latest never starts here.
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,9 +23,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+
+      # Same registry wiring as deploy-storybook.yml — the runner cannot reach
+      # public npm, so installs go through the internal Artifactory repo.
+      - name: Configure npm for the internal Artifactory registry
+        env:
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+        run: |
+          if [ -z "$ARTIFACTORY_NPM_TOKEN" ]; then
+            echo "::error::ARTIFACTORY_NPM_TOKEN is not set — this runner cannot reach public npm."
+            exit 1
+          fi
+          {
+            echo 'registry=https://mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/'
+            echo '//mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/:_authToken=${ARTIFACTORY_NPM_TOKEN}'
+            echo 'always-auth=true'
+          } > .npmrc
+          cp .npmrc "$HOME/.npmrc"
+
       - name: Install deps
-        run: npm ci
+        env:
+          HUSKY: '0'
+          ARTIFACTORY_NPM_TOKEN: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+        run: |
+          # $HOME is reused across jobs on this runner — see deploy-storybook.yml.
+          rm -rf "$HOME/.npm/_cacache" "$HOME/.npm/_logs" || true
+          npm ci --no-audit --no-fund
+
       - name: Governance Report (strict)
         run: npm run governance:ci
       - name: Upload governance JSON artifact
