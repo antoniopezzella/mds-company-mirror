@@ -4,9 +4,8 @@ import * as React from 'react';
 import type { RowData } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { shadows } from '@/shadows';
 import { resolveDataStatus, type DataStatus } from './data-state';
-import type { DataGridTableInstance } from './data-grid-features';
+import type { DataGridCellError, DataGridTableInstance } from './data-grid-features';
 
 /**
  * DataGrid — the composable grid.
@@ -37,10 +36,78 @@ import type { DataGridTableInstance } from './data-grid-features';
 
 export type DataGridDensity = 'compact' | 'standard' | 'comfortable';
 
+/**
+ * @deprecated since 0.9.0; remove after 0.10.0 / 2027-01-28.
+ *             Use `DENSITY_VARS` — the grid no longer pads rows to a height;
+ *             row and header heights are fixed per density.
+ */
 export const DENSITY_PADDING: Record<DataGridDensity, string> = {
   compact: 'py-1',
   standard: 'py-2.5',
   comfortable: 'py-4',
+};
+
+/**
+ * Figma's `DENSITY` collection (MDS V3), as CSS custom properties.
+ *
+ * Emitted under the names Figma Dev Mode shows (`--mds-size-table-*`,
+ * `--mds-space-table-*`), so a value copied from Dev Mode resolves in the
+ * browser. The short `--dt-*` names the table's classes use are aliases of
+ * them. Every value aliases a `Space-N` primitive and sits on the spacing
+ * scale. Set on the grid root so the toolbar, header, rows and footer all read
+ * the same mode.
+ *
+ *   --mds-size-table-row-height       --dt-row-h        (a minimum: a <td>'s height never clips)
+ *   --mds-size-table-header-height    --dt-header-h
+ *   --mds-space-table-cell-inset-x    --dt-inset-x      (cells AND the bars' sides)
+ *   --mds-space-table-cell-inset-y    --dt-inset-y
+ *   --mds-space-table-cell-gap        --dt-gap
+ *   --mds-space-table-cell-gap-sm     --dt-gap-sm
+ *   --mds-space-table-bar-inset-y     --dt-bar-inset-y  (toolbar / footer top+bottom)
+ */
+const DENSITY_TOKENS = {
+  compact: { row: 40, header: 32, insetX: 12, insetY: 4, gap: 8, gapSm: 4, barInsetY: 4 },
+  standard: { row: 48, header: 40, insetX: 16, insetY: 4, gap: 8, gapSm: 4, barInsetY: 8 },
+  comfortable: { row: 64, header: 48, insetX: 20, insetY: 12, gap: 12, gapSm: 4, barInsetY: 12 },
+} satisfies Record<DataGridDensity, Record<string, number>>;
+
+function densityVars(t: (typeof DENSITY_TOKENS)[DataGridDensity]): Record<`--${string}`, string> {
+  return {
+    '--mds-size-table-row-height': `${t.row}px`,
+    '--mds-size-table-header-height': `${t.header}px`,
+    '--mds-space-table-cell-inset-x': `${t.insetX}px`,
+    '--mds-space-table-cell-inset-y': `${t.insetY}px`,
+    '--mds-space-table-cell-gap': `${t.gap}px`,
+    '--mds-space-table-cell-gap-sm': `${t.gapSm}px`,
+    '--mds-space-table-bar-inset-y': `${t.barInsetY}px`,
+    '--dt-row-h': 'var(--mds-size-table-row-height)',
+    '--dt-header-h': 'var(--mds-size-table-header-height)',
+    '--dt-inset-x': 'var(--mds-space-table-cell-inset-x)',
+    '--dt-inset-y': 'var(--mds-space-table-cell-inset-y)',
+    '--dt-gap': 'var(--mds-space-table-cell-gap)',
+    '--dt-gap-sm': 'var(--mds-space-table-cell-gap-sm)',
+    '--dt-bar-inset-y': 'var(--mds-space-table-bar-inset-y)',
+  };
+}
+
+export const DENSITY_VARS: Record<DataGridDensity, Record<`--${string}`, string>> = {
+  compact: densityVars(DENSITY_TOKENS.compact),
+  standard: densityVars(DENSITY_TOKENS.standard),
+  comfortable: densityVars(DENSITY_TOKENS.comfortable),
+};
+
+/** Row height in px per density (the minimum) — the virtualiser's row estimate. */
+export const DENSITY_ROW_HEIGHT: Record<DataGridDensity, number> = {
+  compact: DENSITY_TOKENS.compact.row,
+  standard: DENSITY_TOKENS.standard.row,
+  comfortable: DENSITY_TOKENS.comfortable.row,
+};
+
+/** Header height in px per density — for offsets that must be numbers (sticky top). */
+export const DENSITY_HEADER_HEIGHT: Record<DataGridDensity, number> = {
+  compact: DENSITY_TOKENS.compact.header,
+  standard: DENSITY_TOKENS.standard.header,
+  comfortable: DENSITY_TOKENS.comfortable.header,
 };
 
 export const DENSITY_LABEL: Record<DataGridDensity, string> = {
@@ -58,6 +125,12 @@ export interface DataGridContextValue<TData extends RowData = RowData> {
   recordCount: number;
   status: DataStatus;
   loading: boolean;
+  /**
+   * A refetch is in flight while the current rows stay on screen (hand-off
+   * 5b#26): the body dims to 60% and the table is `aria-busy`, but nothing is
+   * swapped for skeletons. Ignored while `loading`.
+   */
+  fetching: boolean;
   loadError?: React.ReactNode | Error | boolean | null;
   onRetry?: () => void;
   emptyState?: React.ReactNode;
@@ -65,6 +138,8 @@ export interface DataGridContextValue<TData extends RowData = RowData> {
   isFilteredEmpty: boolean;
   density: DataGridDensity;
   setDensity: (d: DataGridDensity) => void;
+  /** The density the grid started at — what the settings menu's "Reset table" returns to. */
+  defaultDensity: DataGridDensity;
   /** Bounds the scroll area and makes the header sticky within it. */
   maxHeight?: string | number;
   /** Column id the toolbar search filters, if any. */
@@ -81,6 +156,24 @@ export interface DataGridContextValue<TData extends RowData = RowData> {
    */
   scrollElement: HTMLDivElement | null;
   setScrollElement: (el: HTMLDivElement | null) => void;
+  /**
+   * Cells holding rejected text (hand-off §5c). Lives here, not in the table,
+   * because the toolbar's Notice slot summarises them — two parts reading one
+   * list, rather than each keeping its own.
+   */
+  cellErrors: DataGridCellError[];
+  setCellErrors: React.Dispatch<React.SetStateAction<DataGridCellError[]>>;
+  /**
+   * Hand-off §5c moment 3, "on save OR bulk edit": a paste / fill / cut that
+   * leaves cells holding rejected text raises the Notice summary on its own —
+   * no consumer wiring — and DataGridToolbar renders
+   * `<DataGridValidationSummary />` while this is true and the consumer has
+   * not passed a `notice` of its own. Clears itself when the last error is
+   * fixed, and on the summary's close button. A single typed edit does not
+   * raise it: moment 1's tooltip already says what is wrong, in place.
+   */
+  validationSummaryOpen: boolean;
+  setValidationSummaryOpen: (open: boolean) => void;
 }
 
 // Deliberately not defaulted: a sub-component rendered outside DataGrid is a
@@ -105,6 +198,12 @@ export interface DataGridProps<TData extends RowData> {
   /** Data has not arrived — the table renders skeleton rows. */
   loading?: boolean;
   /**
+   * New data is being fetched for rows already shown (server paging, sorting,
+   * filtering). Keeps the current rows, dims the body to 60% and sets
+   * `aria-busy` — use it instead of `loading` once a first page has arrived.
+   */
+  fetching?: boolean;
+  /**
    * The fetch failed. Named `loadError`, not `error`, to stay clearly separate
    * from form validation's `error`/`invalid` — see data-state.tsx.
    */
@@ -116,6 +215,15 @@ export interface DataGridProps<TData extends RowData> {
   defaultDensity?: DataGridDensity;
   maxHeight?: string | number;
   searchKey?: string;
+  /**
+   * Cells whose text was rejected (hand-off §5c validation flow). Controlled
+   * when given — pass the errors a server save returned; omit it and the grid
+   * keeps its own list, seeded from `defaultCellErrors`.
+   */
+  cellErrors?: DataGridCellError[];
+  defaultCellErrors?: DataGridCellError[];
+  /** Every change to the list: a rejected edit or paste adds; a valid value clears. */
+  onCellErrorsChange?: (errors: DataGridCellError[]) => void;
   className?: string;
   children?: React.ReactNode;
 }
@@ -124,17 +232,46 @@ export function DataGrid<TData extends RowData>({
   table,
   recordCount,
   loading = false,
+  fetching = false,
   loadError,
   onRetry,
   emptyState,
   defaultDensity = 'standard',
   maxHeight,
   searchKey,
+  cellErrors: cellErrorsProp,
+  defaultCellErrors,
+  onCellErrorsChange,
   className,
   children,
 }: DataGridProps<TData>) {
   const [density, setDensity] = React.useState<DataGridDensity>(defaultDensity);
   const [scrollElement, setScrollElement] = React.useState<HTMLDivElement | null>(null);
+  const [ownCellErrors, setOwnCellErrors] = React.useState<DataGridCellError[]>(defaultCellErrors ?? []);
+  const cellErrors = cellErrorsProp ?? ownCellErrors;
+  const [validationSummaryRequested, setValidationSummaryOpen] = React.useState(false);
+  // Derived, not reset in an effect: once every cell is fixed the summary is
+  // gone, and the next single typed error must not bring it back.
+  const validationSummaryOpen = validationSummaryRequested && cellErrors.length > 0;
+  if (validationSummaryRequested && cellErrors.length === 0) setValidationSummaryOpen(false);
+  // Read through refs so the setter keeps one identity: it is called from
+  // event handlers, and a fresh function each render would re-memo the
+  // whole context value.
+  const cellErrorsRef = React.useRef(cellErrors);
+  cellErrorsRef.current = cellErrors;
+  const onCellErrorsChangeRef = React.useRef(onCellErrorsChange);
+  onCellErrorsChangeRef.current = onCellErrorsChange;
+  const controlled = cellErrorsProp !== undefined;
+  const setCellErrors = React.useCallback<React.Dispatch<React.SetStateAction<DataGridCellError[]>>>(
+    (update) => {
+      const next = typeof update === 'function' ? update(cellErrorsRef.current) : update;
+      if (next === cellErrorsRef.current) return;
+      cellErrorsRef.current = next;
+      if (!controlled) setOwnCellErrors(next);
+      onCellErrorsChangeRef.current?.(next);
+    },
+    [controlled]
+  );
 
   const rows = table.getRowModel().rows;
   const columnFilters = table.state.columnFilters;
@@ -156,23 +293,36 @@ export function DataGrid<TData extends RowData>({
       recordCount,
       status,
       loading,
+      fetching: fetching && !loading,
       loadError,
       onRetry,
       emptyState,
       isFilteredEmpty,
       density,
       setDensity,
+      defaultDensity,
       maxHeight,
       searchKey,
       scrollElement,
       setScrollElement,
+      cellErrors,
+      setCellErrors,
+      validationSummaryOpen,
+      setValidationSummaryOpen,
     }),
-    [table, recordCount, status, loading, loadError, onRetry, emptyState, isFilteredEmpty, density, maxHeight, searchKey, scrollElement]
+    [table, recordCount, status, loading, fetching, loadError, onRetry, emptyState, isFilteredEmpty, density, defaultDensity, maxHeight, searchKey, scrollElement, cellErrors, setCellErrors, validationSummaryOpen]
   );
 
   return (
     <DataGridContext.Provider value={value as unknown as DataGridContextValue<never>}>
-      <div className={cn('flex flex-col gap-3', className)}>{children}</div>
+      <div
+        data-slot="data-grid"
+        data-density={density}
+        className={cn('flex flex-col gap-3', className)}
+        style={DENSITY_VARS[density] as React.CSSProperties}
+      >
+        {children}
+      </div>
     </DataGridContext.Provider>
   );
 }
@@ -185,36 +335,30 @@ export interface DataGridContainerProps {
 }
 
 /**
- * The bordered, rounded shell around the table and its footer.
+ * The bordered, rounded shell — Figma `Data table`. Title bar, toolbar, grid
+ * and footer all sit INSIDE it, as one surface.
  *
  * `overflow-hidden` here is what clips the table's top corners to the shell's
  * radius. The scroll container is DataGridScrollArea *inside* this, so sticky
  * headers and pinned columns resolve against that and are unaffected — a
- * scrolling ancestor here would break both.
+ * scrolling ancestor here would break both. Menus and dialogs portal out, so
+ * the clip never cuts them.
  */
 export function DataGridContainer({ children, border = true, className }: DataGridContainerProps) {
   return (
     <div
-      // rounded-xl (12px), matching Card — the two disagreed before, so a grid
-      // and a card sitting side by side had visibly different corners.
-      className={cn('overflow-hidden rounded-xl', border && 'border', className)}
+      data-slot="data-grid-container"
+      // Figma V3/Large = 8px. Was rounded-xl (12) to match Card; the V3 table
+      // is a flatter surface than a card and the design says 8.
+      className={cn('overflow-hidden rounded-lg', border && 'border', className)}
       style={{
-        // border.subtle, not border.default. This is the edge of a surface the
-        // user reads inside, not the outline of a control they operate; the
-        // mid-grey #878787 drew a cage around the data. In dark it is
-        // translucent white, so it composites over the panel rather than
-        // sitting on it as a hard grey line.
-        borderColor: border ? 'var(--role-border-subtle)' : undefined,
-        // surface.raised: identical to the page in light (the border does the
-        // work), genuinely lighter in dark, so the grid reads as a panel on
-        // the page instead of a hole cut into it.
-        backgroundColor: 'var(--role-bg-raised)',
-        // Level 1 only, and only a hint. shadows.ts is fixed black alpha with
-        // no dark variant — a black shadow on a near-black page is invisible
-        // rather than wrong, so dark leans on the border and the surface lift
-        // instead. Deliberately not a deeper level: this is a panel, not a
-        // dialog.
-        boxShadow: border ? shadows[1].value : undefined,
+        // border/subtle: the edge of a surface the user reads inside, not the
+        // outline of a control they operate.
+        borderColor: border ? 'var(--mds-color-border-subtle)' : undefined,
+        // background/default — the same surface the rows paint, so a short
+        // table has no seam between the last row and the footer. No shadow:
+        // the V3 table is flat, the border carries the edge in both themes.
+        backgroundColor: 'var(--mds-color-background-default)',
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import type { DataGridColumnDef } from './data-grid-features';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 
 import { DataTable, createSelectColumn } from './data-table';
@@ -48,19 +48,22 @@ describe('DataTable', () => {
     expect(screen.getByText(/Page 1 of 2/)).toBeInTheDocument();
   });
 
-  it('filters rows by the search key', () => {
+  // The search applies after a 250 ms debounce (hand-off §5), so these wait
+  // for the filter rather than asserting on the same tick as the keystroke.
+  it('filters rows by the search key', async () => {
     render(<DataTable columns={columns} data={data} searchKey="name" pageSize={10} />);
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Cyber' } });
+    await waitFor(() => expect(bodyRows()).toHaveLength(1));
     const rows = bodyRows();
     expect(rows).toHaveLength(1);
     expect(rows[0]).toHaveTextContent('Cyber Liability');
   });
 
-  it('clears the search from inside the field and restores every row', () => {
+  it('clears the search from inside the field and restores every row', async () => {
     render(<DataTable columns={columns} data={data} searchKey="name" pageSize={10} />);
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'Cyber' } });
-    expect(bodyRows()).toHaveLength(1);
+    await waitFor(() => expect(bodyRows()).toHaveLength(1));
 
     fireEvent.click(screen.getByRole('button', { name: 'Clear search field' }));
     expect(bodyRows()).toHaveLength(data.length);
@@ -76,11 +79,11 @@ describe('DataTable', () => {
       expect(screen.queryByRole('button', { name: /clear search/i })).not.toBeInTheDocument();
     });
 
-    it('distinguishes "the search matched nothing" and offers to clear it', () => {
+    it('distinguishes "the search matched nothing" and offers to clear it', async () => {
       render(<DataTable columns={columns} data={data} searchKey="name" pageSize={5} />);
       fireEvent.change(screen.getByRole('textbox'), { target: { value: 'zzzzz' } });
 
-      expect(screen.getByText('No matching results')).toBeInTheDocument();
+      expect(await screen.findByText('No matching results')).toBeInTheDocument();
       // "Clear filters", not "Clear search": DataTable now renders the shared
       // empty state from data-state.tsx, so every data surface offers the same
       // recovery action with the same words. The action is unchanged —
@@ -122,7 +125,7 @@ describe('DataTable', () => {
 
       const trigger = within(within(bodyRows()[0]).getAllByRole('cell')[0]).getByRole('button');
       fireEvent.doubleClick(trigger);
-      const input = screen.getByRole('textbox', { name: /edit name/i });
+      const input = screen.getByRole('textbox', { name: 'Edit Policy, Commercial Auto' });
       fireEvent.change(input, { target: { value: 'Renamed' } });
       fireEvent.keyDown(input, { key: 'Enter' });
 
@@ -141,7 +144,7 @@ describe('DataTable', () => {
 
       const trigger = within(within(bodyRows()[0]).getAllByRole('cell')[0]).getByRole('button');
       fireEvent.doubleClick(trigger);
-      const input = screen.getByRole('textbox', { name: /edit name/i });
+      const input = screen.getByRole('textbox', { name: 'Edit Policy, Commercial Auto' });
       fireEvent.change(input, { target: { value: 'Discarded' } });
       fireEvent.keyDown(input, { key: 'Escape' });
 
@@ -154,7 +157,7 @@ describe('DataTable', () => {
 
       const trigger = within(within(bodyRows()[0]).getAllByRole('cell')[0]).getByRole('button');
       fireEvent.doubleClick(trigger);
-      fireEvent.blur(screen.getByRole('textbox', { name: /edit name/i }));
+      fireEvent.blur(screen.getByRole('textbox', { name: 'Edit Policy, Commercial Auto' }));
 
       expect(onCellEdit).not.toHaveBeenCalled();
     });

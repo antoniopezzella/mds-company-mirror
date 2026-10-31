@@ -7,13 +7,19 @@ import {
   type ColumnOrderState,
   type ColumnPinningState,
   type ColumnVisibilityState,
+  type GroupingState,
   type Row,
   type RowData,
   type RowSelectionState,
   type SortingState,
 } from '@tanstack/react-table';
 
-import { dataGridFeatures, type DataGridColumnDef, type DataGridTableInstance } from './data-grid-features';
+import {
+  dataGridFeatures,
+  type DataGridColumnDef,
+  type DataGridRowState,
+  type DataGridTableInstance,
+} from './data-grid-features';
 
 /**
  * Builds a table instance with this system's defaults.
@@ -76,6 +82,38 @@ export interface UseDataGridTableOptions<TData extends RowData, TValue = unknown
   canExpandRow?: (row: TData) => boolean;
   /** Present when the grid renders detail panels, so every row can expand. */
   hasDetailPanel?: boolean;
+  /**
+   * A stable id per record. Without it rows are keyed by INDEX, so selection
+   * and row pinning point at whatever record moves into that slot once a
+   * filter changes `data` — pass it whenever `data` is filtered upstream.
+   */
+  getRowId?: (row: TData, index: number) => string;
+  /**
+   * Figma Row State from the record: `'error'` paints the row
+   * `background/critical/subtle`; `'disabled'` greys its text, disables its
+   * controls and makes it unselectable — the checkbox is disabled and
+   * select-all skips it (hand-off §4.5).
+   */
+  getRowState?: (row: TData) => DataGridRowState | undefined;
+  /**
+   * The row's human name, used where a label must say which row — the cell
+   * editor is "Edit {column}, {row}" (hand-off §9). Defaults to the row's
+   * first text column.
+   */
+  getRowLabel?: (row: TData) => string;
+  /**
+   * Column ids to group by, outermost first (hand-off §5b#21, T8). Pass
+   * `data` FLAT: each group becomes a row (`row.getIsGrouped()`) whose
+   * numeric cells aggregate its leaves through the column's `aggregationFn`
+   * (default `'auto'` = `sum` for numbers). Grouping runs after filtering, so
+   * subtotals follow the search.
+   *
+   * Initial, like `initialSorting`; a change to the ids re-seeds it. A
+   * column's `getGroupingValue` groups by something other than its cell
+   * value — e.g. group a "Line item" column by `row.group`, so the label
+   * column holds both the group label and the line items.
+   */
+  grouping?: GroupingState;
 }
 
 export function useDataGridTable<TData extends RowData, TValue = unknown>({
@@ -96,11 +134,21 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
   getSubRows,
   canExpandRow,
   hasDetailPanel = false,
+  getRowId,
+  getRowState,
+  getRowLabel,
+  grouping: initialGrouping,
 }: UseDataGridTableOptions<TData, TValue>): DataGridTableInstance<TData> {
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting ?? []);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [grouping, setGrouping] = React.useState<GroupingState>(initialGrouping ?? []);
+  const groupingKey = initialGrouping?.join(',') ?? '';
+  React.useEffect(() => {
+    setGrouping((prev) => (prev.join(',') === groupingKey ? prev : groupingKey ? groupingKey.split(',') : []));
+  }, [groupingKey]);
+  const isGrouped = grouping.length > 0;
 
   // Faceted filters set an array of selected values and date filters set a
   // {from,to} object; the default string matcher would match nothing for
@@ -164,9 +212,27 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onColumnPinningChange: setColumnPinning,
     onColumnOrderChange: setColumnOrder,
+    onGroupingChange: setGrouping,
+    // TanStack collapses every group whenever the grouped input changes —
+    // i.e. on every keystroke in the search. A user who opened "Cash" and
+    // types to narrow it must still see what they opened.
+    autoResetExpanded: isGrouped ? false : undefined,
     manualPagination,
     pageCount: manualPagination ? pageCount : undefined,
-    enableRowSelection,
+    // A disabled row cannot be selected — by click, by select-all, or by the
+    // "select all N results" escalation built on select-all. TanStack honours
+    // the predicate on every selection path.
+    enableRowSelection:
+      enableRowSelection && getRowState
+        ? (row: Row<typeof dataGridFeatures, TData>) => getRowState(row.original) !== 'disabled'
+        : enableRowSelection,
+    meta:
+      getRowState || getRowLabel
+        ? {
+            getRowState: getRowState as ((row: unknown) => DataGridRowState | undefined) | undefined,
+            getRowLabel: getRowLabel as ((row: unknown) => string) | undefined,
+          }
+        : undefined,
     enableMultiSort: true,
     enableColumnResizing,
     enableColumnPinning,
@@ -174,6 +240,7 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
     enableCellSelection,
     enableCellRangeSelection: enableCellSelection,
     getSubRows,
+    getRowId,
     // Without this, a detail panel is unreachable: `getCanExpand()` is
     // "row has subRows" by default, so the toggle never renders for flat data.
     getRowCanExpand: canExpandRow
@@ -182,7 +249,7 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
         ? () => true
         : undefined,
     columnResizeMode: 'onChange',
-    state: { sorting, columnFilters, columnVisibility, rowSelection, columnPinning, columnOrder },
+    state: { sorting, columnFilters, columnVisibility, rowSelection, columnPinning, columnOrder, grouping },
     // v9's PaginationState is required whole; v8 accepted a partial.
     initialState: { pagination: { pageIndex: 0, pageSize } },
   }) as DataGridTableInstance<TData>;

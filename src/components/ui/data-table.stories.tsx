@@ -405,7 +405,7 @@ export const FullToolbar: StoryObj = {
     docs: {
       description: {
         story:
-          'The tablecn toolbar shape: search plus per-column filters on the left, Sort / Density / Export / Columns and any page actions on the right. Every trigger shares one compact dashed shape at `text-xs`, half a step tighter than a stock `sm` button — a row of filters should read as filters, not as a row of buttons — while keeping the `h-8` control height so it still lines up with the search field. Selecting a value only appends a chip: the leading icon never changes and there is no separator, so the first click does not shove the rest of the row sideways. **Status** is a faceted multi-select with per-value counts derived from the column itself, collapsing to a count past two selections. **Renewal** is a date range — a facet would list every distinct date in the data, which stops being usable the moment there are more than a handful. Reset appears whenever any filter is active and clears all of them.',
+          'Every toolbar option turned on: search plus per-column filters on the left; on the right the optional Sort list (multi-column sort — off by default, since headers sort on click), the gear (**Table settings**: columns, arrange, density, reset), Export and page actions. Every trigger shares one compact dashed shape at `text-xs`, half a step tighter than a stock `sm` button — a row of filters should read as filters, not as a row of buttons — while keeping the `h-8` control height so it still lines up with the search field. Selecting a value only appends a chip: the leading icon never changes and there is no separator, so the first click does not shove the rest of the row sideways. **Status** is a faceted multi-select with per-value counts derived from the column itself, collapsing to a count past two selections. **Renewal** is a date range — a facet would list every distinct date in the data, which stops being usable the moment there are more than a handful. Reset appears whenever any filter is active and clears all of them.',
       },
     },
   },
@@ -548,18 +548,24 @@ function ServerSidePaginationDemo() {
   const [rows, setRows] = useState<Policy[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  // After the first page, a page change keeps the current rows on screen and
+  // dims them (`fetching`) rather than swapping them for skeletons (hand-off
+  // 5b#26) — the layout does not jump while the next page is in flight.
+  const [fetching, setFetching] = useState(false);
 
-  const fetchPage = (nextPageIndex: number, nextPageSize: number) => {
-    setLoading(true);
+  const fetchPage = (nextPageIndex: number, nextPageSize: number, first = false) => {
+    if (first) setLoading(true);
+    else setFetching(true);
     fakeFetchPage(nextPageIndex, nextPageSize).then(({ rows: newRows, rowCount: newRowCount }) => {
       setRows(newRows);
       setRowCount(newRowCount);
       setLoading(false);
+      setFetching(false);
     });
   };
 
   useEffect(() => {
-    fetchPage(0, SERVER_PAGE_SIZE);
+    fetchPage(0, SERVER_PAGE_SIZE, true);
   }, []);
 
   return (
@@ -567,6 +573,7 @@ function ServerSidePaginationDemo() {
       columns={baseColumns}
       data={rows}
       loading={loading}
+      fetching={fetching}
       pageSize={pageSize}
       manualPagination
       pageCount={Math.ceil(rowCount / pageSize)}
@@ -584,7 +591,7 @@ export const ServerSidePagination: StoryObj = {
     docs: {
       description: {
         story:
-          'DataTable wired to a simulated server API — `data` is only ever the current page (87 total rows, fetched 10 at a time with a 400ms delay standing in for the network round-trip). `manualPagination` + `pageCount` + `rowCount` tell DataTable to trust the server\'s page count rather than slicing `data` itself; `onPaginationChange` is where a real app would call its API.',
+          'DataTable wired to a simulated server API — `data` is only ever the current page (87 total rows, fetched 10 at a time with a 400ms delay standing in for the network round-trip). The first page loads with skeletons (`loading`); every later page keeps the current rows dimmed to 60% while it fetches (`fetching`), and focus moves to the new page\'s first row. `manualPagination` + `pageCount` + `rowCount` tell DataTable to trust the server\'s page count rather than slicing `data` itself; `onPaginationChange` is where a real app would call its API.',
       },
     },
   },

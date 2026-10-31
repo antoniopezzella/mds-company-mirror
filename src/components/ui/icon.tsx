@@ -36,15 +36,23 @@ export interface IconProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, '
   fill?: boolean;
   /** Accessible name. Provide for a meaningful icon; omit for a decorative one. */
   'aria-label'?: string;
+  /**
+   * Draw the ligature from a CSS `::before` instead of a text node, so the
+   * icon adds NOTHING to the DOM's text: `textContent`, copy-paste of a table
+   * row and find-in-page see only the real content, not "unfold_more". Same
+   * glyph, same box. Default false.
+   */
+  pseudo?: boolean;
 }
 
 const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
-  ({ name, size = 20, fill = false, className, style, 'aria-label': ariaLabel, ...rest }, ref) => {
+  ({ name, size = 20, fill = false, pseudo = false, className, style, 'aria-label': ariaLabel, ...rest }, ref) => {
     const decorative = ariaLabel == null;
     return (
       <span
         ref={ref}
-        className={cn('material-symbols-outlined', className)}
+        className={cn('material-symbols-outlined', pseudo && 'before:content-[attr(data-glyph)]', className)}
+        data-glyph={pseudo ? name : undefined}
         aria-hidden={decorative || undefined}
         role={decorative ? undefined : 'img'}
         aria-label={ariaLabel}
@@ -55,7 +63,7 @@ const Icon = React.forwardRef<HTMLSpanElement, IconProps>(
         }}
         {...rest}
       >
-        {name}
+        {pseudo ? null : name}
       </span>
     );
   }

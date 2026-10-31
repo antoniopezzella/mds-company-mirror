@@ -1,4 +1,4 @@
-import { render, screen, within, fireEvent } from '@testing-library/react';
+import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 
@@ -128,7 +128,7 @@ describe('footer aggregates', () => {
     expect(within(foot).getByText('600')).toBeInTheDocument();
   });
 
-  it('follows the filters rather than totalling hidden rows', () => {
+  it('follows the filters rather than totalling hidden rows', async () => {
     const { container } = render(
       <DataTable
         columns={withFooter}
@@ -142,7 +142,8 @@ describe('footer aggregates', () => {
     // Matches "Policy 1" only.
     fireEvent.change(input, { target: { value: 'Policy 1' } });
 
-    expect(within(container.querySelector('tfoot')!).getByText('100')).toBeInTheDocument();
+    // The search is debounced 250 ms (hand-off §5).
+    await waitFor(() => expect(within(container.querySelector('tfoot')!).getByText('100')).toBeInTheDocument());
   });
 
   it('does not render a footer while loading or erroring', () => {

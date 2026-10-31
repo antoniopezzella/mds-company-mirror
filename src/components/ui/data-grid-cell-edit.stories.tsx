@@ -12,9 +12,11 @@ import { Stack } from './stack';
  * and "is this actually a change?" all belong to the caller, which is the only
  * thing that knows the column's type.
  *
- * Only `text` and `textarea` exist, matching the `cellEdit.control` contract.
- * A number or date column does not need a different *control* — it needs a
- * different *parse* on commit, which is the caller's job.
+ * `text`, `textarea` and `select` (Figma `Content/Editable` Dropdown — an
+ * editable combobox with a listbox under the cell) exist, matching the
+ * `cellEdit.control` contract. A number or date column does not need a
+ * different *control* — it needs a different *parse* on commit, which is the
+ * caller's job. The select in a real grid: Templates → EditableGrid.
  *
  * Exported so a consumer can build a custom grid cell with the same keyboard
  * contract. Inside `DataGrid` you never render it directly.

@@ -19,6 +19,7 @@ quietly builds something that was cut on purpose.
 | 4 | Rows — expansion, sub-rows, detail panels, row pinning | **done** |
 | 5 | Scale — virtualization, footer aggregates | **done** |
 | 6 | Spreadsheet — selection, clipboard, fill, keyboard nav, typed editors | **done bar the fill handle** — see §1 |
+| 7 | MDS V3 Figma alignment — density model, in-shell title bar + toolbar, selection-mode toolbar, cell content | **in progress** — see [`data-table-v3.md`](data-table-v3.md) |
 
 `DataTable` is now a ~330-line preset over the composable parts. Its 19 tests
 run unmodified and are the regression harness for the layer beneath — **do not

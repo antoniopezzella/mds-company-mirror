@@ -165,9 +165,9 @@ export function DataGridSelectionBanner({
       aria-live="polite"
       className={cn('flex flex-wrap items-center gap-3 rounded-lg px-3 py-2 text-sm', className)}
       style={{
-        backgroundColor: 'var(--role-bg-neutral-subtle)',
-        color: 'var(--role-fg-primary)',
-        border: `1px solid ${'var(--role-border-subtle)'}`,
+        backgroundColor: 'var(--mds-color-background-neutral-subtle)',
+        color: 'var(--mds-color-foreground-primary-default)',
+        border: `1px solid ${'var(--mds-color-border-subtle)'}`,
       }}
     >
       {allFilteredRowsSelected ? (

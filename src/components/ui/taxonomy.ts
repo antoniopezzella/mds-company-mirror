@@ -144,6 +144,15 @@ export const TAXONOMY: Record<string, Tier> = {
   'data-grid-selection': 'molecule',
   'data-grid-table': 'organism',
   'data-grid-toolbar': 'organism',
+  // Toolbar button / group / segment / search — single controls and the
+  // joined group that holds them; no composition of their own.
+  'data-grid-toolbar-parts': 'molecule',
+  // Two-line cell content (text, link, entity, date) — single elements, no
+  // composition of other components.
+  'data-grid-cells': 'atom',
+  // A slot-based card (header / content / footer) holding cells and card
+  // parts — composes other components, so not an atom.
+  'data-grid-detail-card': 'molecule',
   'data-table-date-filter': 'organism',
   'data-table-faceted-filter': 'organism',
   'data-table-sort-list': 'organism',
@@ -971,6 +980,9 @@ export const MATURITY_OVERRIDES: Record<string, Exclude<Maturity, 'stable'>> = {
   'data-grid-selection': 'beta',
   'data-grid-table': 'beta',
   'data-grid-toolbar': 'beta',
+  'data-grid-toolbar-parts': 'beta',
+  'data-grid-cells': 'beta',
+  'data-grid-detail-card': 'beta',
 
   // The data-table faceted/date/sort filter internals (added 2026-09).
   'data-table-date-filter': 'beta',
@@ -1058,6 +1070,7 @@ export const CODE_ONLY: Record<string, string> = {
   'data-grid-selection': 'Internal part of `data-grid`.',
   'data-grid-table': 'Internal part of `data-grid`.',
   'data-grid-toolbar': 'Internal part of `data-grid`.',
+  'data-grid-toolbar-parts': 'Internal part of `data-grid`.',
   // data-table internals — the public surface is `data-table`.
   'data-table-date-filter': 'Internal filter part of `data-table`.',
   'data-table-faceted-filter': 'Internal filter part of `data-table`.',

@@ -5,15 +5,21 @@ import type { RowData, SortingState } from '@tanstack/react-table';
 
 import { Checkbox } from './checkbox';
 import type { FacetOption } from './data-table-faceted-filter';
-import type { DataGridColumnDef, DataGridTableInstance } from './data-grid-features';
-import { DataGrid, DataGridContainer, DataGridScrollArea, type DataGridDensity } from './data-grid';
+import type {
+  DataGridCellError,
+  DataGridColumnDef,
+  DataGridRowState,
+  DataGridTableInstance,
+  DataGridTableMeta,
+} from './data-grid-features';
+import { DataGrid, DataGridContainer, DataGridScrollArea, useDataGrid, type DataGridDensity } from './data-grid';
 import { useDataGridTable } from './use-data-grid-table';
 import { DataGridSelectionBanner, useSelectionScope, type SelectionState } from './data-grid-selection';
 import type { BulkAction } from './data-grid-bulk-actions';
 import type { FilterField } from './filter-schema';
 import { DataGridTable, type CellEditParams, type DataGridTableProps } from './data-grid-table';
-import { DataGridToolbar } from './data-grid-toolbar';
-import { DataGridPagination } from './data-grid-pagination';
+import { DataGridTitleBar, DataGridToolbar, DataGridValidationSummary } from './data-grid-toolbar';
+import { DataGridFooter, DataGridPagination } from './data-grid-pagination';
 
 // Re-exported so the preset stays a single import site for its own payload
 // type, even though the editor now lives in data-grid-table.tsx.
@@ -83,9 +89,14 @@ export function createSelectColumn<TData extends RowData>(
         aria-label="Select all rows on this page"
       />
     ),
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        // Figma Row State=Disabled: the row cannot be selected. Read from the
+        // row state, not `getCanSelect()` — that is false for EVERY row when
+        // selection is off, which would grey out a select column used for
+        // display.
+        disabled={(table.options.meta as DataGridTableMeta | undefined)?.getRowState?.(row.original) === 'disabled'}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label={
           getRowLabel
@@ -96,6 +107,9 @@ export function createSelectColumn<TData extends RowData>(
     ),
     enableSorting: false,
     enableHiding: false,
+    // The checkbox's own width; the grid adds the cell inset (leading column).
+    size: 20,
+    meta: { leading: true },
   };
 }
 
@@ -174,6 +188,7 @@ export interface DataTableProps<TData extends RowData, TValue> {
    * hold `A AND (B OR C)`. The value model behind `filterFields` cannot.
    */
   filters?: React.ReactNode;
+  /** Adds the column checklist and Arrange (move, pin) to the toolbar's Table settings (gear) menu. Off by default. */
   enableColumnVisibility?: boolean;
   pageSize?: number;
   /**
@@ -187,7 +202,7 @@ export interface DataTableProps<TData extends RowData, TValue> {
    * instead of the 15/page its source screen specifies.
    */
   pageSizeOptions?: number[];
-  /** Label before the page-size picker. Defaults to `Rows per page:`. */
+  /** Label before the page-size picker. Defaults to `Rows per page`. */
   rowsLabel?: string;
   /**
    * The sort the table opens with. Replaces `Table`'s `defaultSortColumn` /
@@ -197,8 +212,15 @@ export interface DataTableProps<TData extends RowData, TValue> {
   className?: string;
   /** Data hasn't arrived yet — renders skeleton rows matching the column count instead of `data`. */
   loading?: boolean;
-  /** How many skeleton rows to show while `loading`. Defaults to `pageSize`. */
+  /** How many skeleton rows to show while `loading`. Defaults to `pageSize`, at most 10. */
   loadingRowCount?: number;
+  /**
+   * A refetch is in flight for rows already on screen (server paging, sort or
+   * filter): the rows stay, the body dims to 60% and the table is
+   * `aria-busy`. Use `loading` only for the first load, when there is nothing
+   * to keep (hand-off 5b#26).
+   */
+  fetching?: boolean;
   /**
    * Pins the leading column (the select checkbox column when
    * `enableRowSelection` is on, otherwise the first entry in `columns`) so
@@ -220,7 +242,7 @@ export interface DataTableProps<TData extends RowData, TValue> {
   enableExport?: boolean;
   /** Filename for the CSV export (without extension). */
   exportFilename?: string;
-  /** Adds a Density control (compact/standard/comfortable row height) to the toolbar row. Off by default. */
+  /** Adds Density (compact/standard/comfortable row height) to the toolbar's Table settings (gear) menu. Off by default. */
   enableDensityToggle?: boolean;
   /**
    * Initial row density. `DataGrid` has always had this; the preset never
@@ -271,12 +293,72 @@ export interface DataTableProps<TData extends RowData, TValue> {
   dateFilters?: { columnId: string; title: string }[];
   /**
    * Page-level actions for the right of the toolbar — Refresh, New, and the
-   * like. They sit with Sort/Density/Export/Columns rather than in a separate
+   * like. They sit after Table settings and Export rather than in a separate
    * row above the table, which is the shape this repo kept hand-rolling: four
    * different pages each grew their own filter strip that shared nothing with
    * the table it controlled, and could drift out of sync with it.
    */
   toolbarActions?: React.ReactNode;
+  /**
+   * Toolbar controls placed BEFORE the built-in Columns/Export buttons —
+   * table-state controls such as "Unpin all | 2 pinned" or Clear, as opposed
+   * to `toolbarActions`, the page actions that come last.
+   */
+  toolbarControls?: React.ReactNode;
+  /**
+   * Figma Toolbar `Has notice`: one inline `Alert` under the toolbar bar,
+   * inside the shell, above the header — load error, validation summary,
+   * bulk partial failure or stale data, in that priority (hand-off §4.10 E).
+   * One message at a time: pass the most important one.
+   */
+  notice?: React.ReactNode;
+  /**
+   * Figma Row State from the record: `'error'` → background/critical/subtle;
+   * `'disabled'` → text in foreground/disabled, checkbox disabled, left out
+   * of select-all. Ignored when you pass `table` — give it to
+   * `useDataGridTable({ getRowState })` instead.
+   */
+  getRowState?: (row: TData) => DataGridRowState | undefined;
+  /**
+   * The row's human name for labels that must say which row — the cell
+   * editor reads "Edit {column}, {row}". Defaults to the first text column.
+   * Ignored when you pass `table`; give it to `useDataGridTable` instead.
+   */
+  getRowLabel?: (row: TData) => string;
+  /**
+   * Cells whose text was rejected — the validation flow of hand-off §5c.
+   * Controlled when given (e.g. the errors a server save returned); omit it
+   * and the grid keeps its own list. Summarise it in the `notice` slot with
+   * `<DataGridValidationSummary />`.
+   */
+  cellErrors?: DataGridCellError[];
+  defaultCellErrors?: DataGridCellError[];
+  onCellErrorsChange?: (errors: DataGridCellError[]) => void;
+  /**
+   * Figma `Has footer` + the Footer slot. Omit for the default (rows per page
+   * + pagination); pass content to replace it — a summary line, say — inside
+   * the same footer bar; pass `false` for no footer.
+   *
+   * Not `showFooter`, which is the `<tfoot>` of column totals INSIDE the grid.
+   * Without pagination controls the rows are still paged by `pageSize`, so
+   * set it at least as large as the data (sub-rows included).
+   */
+  footer?: React.ReactNode | false;
+  /**
+   * The table's own title (Figma `Data table/Title bar`), drawn inside the
+   * shell above the toolbar. Omit it when the page heading already names the
+   * table.
+   */
+  title?: React.ReactNode;
+  /** One line under the title — "48 open • 2 unassigned • 6 near SLA". */
+  meta?: React.ReactNode;
+  /** Actions on the title row (right-aligned), separate from the toolbar's. */
+  titleActions?: React.ReactNode;
+  /**
+   * Footer navigation: `compact` (range + first/prev/next/last, the default)
+   * or `pages` (range + numbered pages).
+   */
+  paginationVariant?: 'compact' | 'pages' | 'jump';
   /** Adds a Sort control listing active sorts, with add/remove/direction. */
   enableSortList?: boolean;
   /**
@@ -359,6 +441,24 @@ type DataTableViewProps<TData extends RowData, TValue> = DataTableProps<TData, T
 };
 
 /**
+ * Renders the toolbar when the table asked for one. When it did not, but a
+ * bulk edit left invalid cells, renders the Notice slot alone — the summary
+ * (hand-off §5c moment 3) still needs its place under the title, and an empty
+ * 48px bar above it would be chrome with nothing in it. With no bar above,
+ * the slot takes the bar's vertical inset on both sides.
+ */
+function ToolbarGate({ show, children }: { show: boolean; children: React.ReactNode }) {
+  const { validationSummaryOpen, setValidationSummaryOpen } = useDataGrid();
+  if (show) return <>{children}</>;
+  if (!validationSummaryOpen) return null;
+  return (
+    <div data-slot="data-grid-toolbar-notice" className="px-[var(--dt-inset-x)] py-[var(--dt-bar-inset-y)]">
+      <DataGridValidationSummary onClose={() => setValidationSummaryOpen(false)} />
+    </div>
+  );
+}
+
+/**
  * The preset arrangement: toolbar, selection banner, shell, table, footer.
  *
  * Split out so the instance can come from either direction without a
@@ -381,6 +481,7 @@ function DataTableView<TData extends RowData, TValue>({
   className,
   loading = false,
   loadingRowCount,
+  fetching = false,
   maxHeight,
   enableExport = false,
   exportFilename = 'export',
@@ -396,6 +497,16 @@ function DataTableView<TData extends RowData, TValue>({
   facetedFilters,
   dateFilters,
   toolbarActions,
+  toolbarControls,
+  notice,
+  cellErrors,
+  defaultCellErrors,
+  onCellErrorsChange,
+  footer,
+  title,
+  meta,
+  titleActions,
+  paginationVariant,
   enableSortList = false,
   enableColumnReorder = false,
   renderDetail,
@@ -446,56 +557,79 @@ function DataTableView<TData extends RowData, TValue>({
     // effect does not refire on every render from a fresh array identity.
   }, [selectionKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const toolbarShown = Boolean(
+    searchKey ||
+    filters ||
+    filterFields?.length ||
+    enableColumnVisibility ||
+    enableExport ||
+    enableDensityToggle ||
+    facetedFilters?.length ||
+    dateFilters?.length ||
+    toolbarActions ||
+    toolbarControls ||
+    notice ||
+    enableSortList ||
+    (enableRowSelection && bulkActions?.length)
+  );
+
   return (
     <DataGrid
       table={table}
       recordCount={recordCount}
       loading={loading}
+      fetching={fetching}
       loadError={loadError}
       onRetry={onRetry}
       emptyState={emptyState}
       maxHeight={maxHeight}
       defaultDensity={defaultDensity}
       searchKey={searchKey}
+      cellErrors={cellErrors}
+      defaultCellErrors={defaultCellErrors}
+      onCellErrorsChange={onCellErrorsChange}
       className={className}
     >
-      {(searchKey ||
-        filters ||
-        filterFields?.length ||
-        enableColumnVisibility ||
-        enableExport ||
-        enableDensityToggle ||
-        facetedFilters?.length ||
-        dateFilters?.length ||
-        toolbarActions ||
-        enableSortList) && (
-        <DataGridToolbar
-          filters={filters}
-          fields={filterFields}
-          facetedFilters={facetedFilters}
-          dateFilters={dateFilters}
-          searchPlaceholder={searchPlaceholder}
-          enableSortList={enableSortList}
-          enableDensityToggle={enableDensityToggle}
-          enableColumnVisibility={enableColumnVisibility}
-          enableExport={enableExport}
-          exportFilename={exportFilename}
-        >
-          {toolbarActions}
-        </DataGridToolbar>
-      )}
-
-      {enableRowSelection && <DataGridSelectionBanner
+      {/* Whenever there is a toolbar it carries the selection (Figma
+          Toolbar Mode=Selection, hand-off §9 "3 selected"), with or without
+          bulk actions — its "Select all N" offers the same escalation. The
+          banner stays only for a selectable table with NO toolbar, rendered
+          outside the shell, as before. */}
+      {enableRowSelection && !toolbarShown && (
+        <DataGridSelectionBanner
           {...selection}
           itemNoun={selectionNoun}
           itemNounPlural={selectionNounPlural}
-          actions={bulkActions}
-        />}
+        />
+      )}
 
-      {/* Table and footer share one bordered, rounded shell so the footer
-          reads as part of the grid (MUI DataGrid's treatment) rather than a
-          detached row floating beneath it. */}
+      {/* Figma `Data table`: title bar, toolbar, grid and footer share ONE
+          bordered shell, so the controls read as part of the table they
+          drive rather than a strip floating above it. */}
       <DataGridContainer>
+        {title != null && <DataGridTitleBar title={title} meta={meta} actions={titleActions} />}
+        <ToolbarGate show={toolbarShown}>
+          <DataGridToolbar
+            filters={filters}
+            fields={filterFields}
+            facetedFilters={facetedFilters}
+            dateFilters={dateFilters}
+            searchPlaceholder={searchPlaceholder}
+            enableSortList={enableSortList}
+            enableDensityToggle={enableDensityToggle}
+            enableColumnVisibility={enableColumnVisibility}
+            enableExport={enableExport}
+            exportFilename={exportFilename}
+            selection={enableRowSelection ? selection : undefined}
+            bulkActions={bulkActions}
+            itemNoun={selectionNoun}
+            itemNounPlural={selectionNounPlural}
+            controls={toolbarControls}
+            notice={notice}
+          >
+            {toolbarActions}
+          </DataGridToolbar>
+        </ToolbarGate>
         <DataGridScrollArea>
           <DataGridTable
             loadingRowCount={loadingRowCount}
@@ -514,12 +648,17 @@ function DataTableView<TData extends RowData, TValue>({
             onCellEdit={onCellEdit}
           />
         </DataGridScrollArea>
-        <DataGridPagination
-          showSelectedCount={enableRowSelection}
-          pageSizeOptions={pageSizeOptions}
-          {...(rowsLabel === undefined ? {} : { rowsLabel })}
-          onPaginationChange={onPaginationChange}
-        />
+        {footer === undefined ? (
+          <DataGridPagination
+            showSelectedCount={enableRowSelection && !bulkActions?.length}
+            pageSizeOptions={pageSizeOptions}
+            variant={paginationVariant}
+            {...(rowsLabel === undefined ? {} : { rowsLabel })}
+            onPaginationChange={onPaginationChange}
+          />
+        ) : footer === false || footer === null ? null : (
+          <DataGridFooter>{footer}</DataGridFooter>
+        )}
       </DataGridContainer>
     </DataGrid>
   );
@@ -574,6 +713,8 @@ function DataTableSelfManaged<TData extends RowData, TValue>(
     getSubRows: props.getSubRows,
     canExpandRow: props.canExpandRow,
     hasDetailPanel: !!props.renderDetail,
+    getRowState: props.getRowState,
+    getRowLabel: props.getRowLabel,
   });
   return <DataTableView<TData, TValue> {...props} table={table} />;
 }

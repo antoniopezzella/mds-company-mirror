@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## Unreleased
+
+### Features
+
+* **data-table:** align `DataGrid`/`DataTable` with the Figma V3 data table (hand-off `docs/handoff/DATA_TABLE_HANDOFF.md`, evidence in `docs/tasks/data-table-v3.md`): Figma `--mds-color-*` colours (no `--role-*` left in `data-grid*`), density variables under their Dev Mode names (`--mds-size-table-*`, `--mds-space-table-*`; rows 40/48/64, headers 32/40/48), and rows that grow past the minimum height instead of clipping
+* **data-table:** title bar, toolbar with Default/Selection modes, joined toolbar groups, count badges, a query-builder toolbar filter, and one **Table settings** menu (columns, arrange, density, reset)
+* **data-table:** new cell parts — `DataGridCellAlerts`, `DataGridCellTags` (+N overflow), `DataGridDoneCheck`, `DataGridCellMessage`, `DataGridCellTree` (24px per level), progress, trend, date and number formats; detail rows and `DataGridDetailCard` parts
+* **data-table:** cell states Editing/Error/Success and row states Error/Disabled; the validation flow (tooltip while typing, on revisit, and a summary notice with "Go to first error")
+* **data-table:** row grouping with aggregated subtotals and a grand total that follow the active filters (`useDataGridTable({ grouping })`)
+* **data-table:** template stories — Work queue, Release reviews with detail, Directory, Grouped summary, Task list, Client portfolio and Editable grid
+* **data-table:** table icons move from lucide to Material Symbols (`<Icon>`), and `Avatar` gains an optional ring switch (on by default)
+
+### Bug Fixes
+
+* **data-table:** pinned columns draw their edge only at the pinned boundary, the detail row no longer splits a half pixel into the next row, and editor and resize-handle names use the column label instead of its id
+
 ## [0.8.0](https://github.com/mmctech/MarshDesignSystemOfficial/compare/v0.7.0...v0.8.0) (2026-10-08)
 
 ### Features

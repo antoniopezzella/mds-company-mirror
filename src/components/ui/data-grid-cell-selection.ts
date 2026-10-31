@@ -1,7 +1,7 @@
 import type { RowData } from '@tanstack/react-table';
 
 import { serializeTsv, parseTsv, tileToFit } from './data-grid-clipboard';
-import type { DataGridTableInstance } from './data-grid-features';
+import type { DataGridCellEditOption, DataGridTableInstance } from './data-grid-features';
 
 /**
  * The spreadsheet layer's logic, kept out of the renderer.
@@ -50,10 +50,35 @@ type Meta = {
     parse?: (raw: string, row: unknown) => unknown;
     format?: (value: unknown, row: unknown) => string;
     clearValue?: unknown;
-    control?: 'text' | 'textarea';
+    control?: 'text' | 'textarea' | 'select';
+    options?: ReadonlyArray<DataGridCellEditOption>;
+    invalidMessage?: string | ((raw: string) => string);
   };
   editable?: boolean;
 };
+
+/** A `select` option as `{ value, label }`. */
+export function normalizeOption(option: DataGridCellEditOption): { value: unknown; label: string } {
+  return typeof option === 'string' ? { value: option, label: option } : option;
+}
+
+/** The column's `select` options, normalised; empty for other controls. */
+export function selectOptionsFor(column: { columnDef: { meta?: unknown } }): { value: unknown; label: string }[] {
+  const edit = metaOf(column).cellEdit;
+  return edit?.control === 'select' ? (edit.options ?? []).map(normalizeOption) : [];
+}
+
+const DEFAULT_INVALID_MESSAGE = 'Enter a valid value';
+/** Figma 17245:97636's copy for a dropdown cell holding text that is not an option. */
+const SELECT_INVALID_MESSAGE = 'Choose a value from the list.';
+
+/** The Error tooltip's text for a rejected `raw` in this column. */
+export function invalidMessageFor(column: { columnDef: { meta?: unknown } }, raw: string): string {
+  const edit = metaOf(column).cellEdit;
+  const msg = edit?.invalidMessage;
+  const custom = typeof msg === 'function' ? msg(raw) : msg;
+  return custom ?? (edit?.control === 'select' ? SELECT_INVALID_MESSAGE : DEFAULT_INVALID_MESSAGE);
+}
 
 function metaOf(column: { columnDef: { meta?: unknown } }): Meta {
   return (column.columnDef.meta ?? {}) as Meta;
@@ -75,6 +100,9 @@ export function formatCellValue(
 ): string {
   const format = metaOf(column).cellEdit?.format;
   if (format) return format(value, row);
+  // A select shows its option's LABEL, which is also what parse accepts back.
+  const option = selectOptionsFor(column).find((o) => o.value === value);
+  if (option) return option.label;
   return value === null || value === undefined ? '' : String(value);
 }
 
@@ -90,7 +118,19 @@ export function parseCellValue(
   row: unknown
 ): { ok: true; value: unknown } | { ok: false } {
   const parse = metaOf(column).cellEdit?.parse;
-  if (!parse) return { ok: true, value: raw };
+  if (!parse) {
+    // A select without its own parse accepts exactly its options (label or
+    // value, case- and space-insensitive) — the same rule for a typed edit
+    // and a paste. Anything else is reported, not written.
+    if (metaOf(column).cellEdit?.control === 'select') {
+      const key = raw.trim().toLowerCase();
+      const hit = selectOptionsFor(column).find(
+        (o) => o.label.toLowerCase() === key || String(o.value).toLowerCase() === key
+      );
+      return hit ? { ok: true, value: hit.value } : { ok: false };
+    }
+    return { ok: true, value: raw };
+  }
   const parsed = parse(raw, row);
   return parsed === undefined ? { ok: false } : { ok: true, value: parsed };
 }

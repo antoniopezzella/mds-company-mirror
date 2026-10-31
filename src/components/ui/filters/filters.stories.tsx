@@ -10,6 +10,7 @@ import { useFilterQuery } from './use-filter-query';
 import { getRoleColor } from '@/theme/roles';
 import type { FilterField } from './filters-schema';
 import type { FilterQuery } from './filters-types';
+import { UserRound } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Stack } from '@/components/ui/stack';
@@ -392,6 +393,90 @@ export const InTheDataTableToolbar: StoryObj = {
       await userEvent.click(canvas.getByRole('button', { name: /Add filter/ }));
       await userEvent.click(await screen.findByRole('option', { name: 'Status' }));
       await waitFor(() => expect(canvas.getByRole('group')).toBeInTheDocument());
+    });
+  },
+};
+
+// ── The data table's Figma toolbar ─────────────────────────────────────────
+
+interface Contact {
+  name: string;
+  company: string;
+  role: string;
+  city: string;
+}
+
+const CONTACTS: Contact[] = [
+  { name: 'Ava Thompson', company: 'Northwind Freight', role: 'Risk manager', city: 'Boston' },
+  { name: 'Lukas Becker', company: 'Fabrikam Marine', role: 'CFO', city: 'Hamburg' },
+  { name: 'Sofia García', company: 'Tailspin Air', role: 'Head of procurement', city: 'Madrid' },
+  { name: 'Aisyah Rahman', company: 'Wingtip Logistics', role: 'Operations lead', city: 'Kuala Lumpur' },
+  { name: 'Daniel Brooks', company: 'Contoso Health', role: 'General counsel', city: 'Chicago' },
+  { name: 'Mia Fischer', company: 'Adatum Energy', role: 'Treasury analyst', city: 'Berlin' },
+];
+
+const CONTACT_FIELDS: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text', icon: <UserRound aria-hidden="true" /> },
+  { id: 'company', label: 'Company', type: 'text' },
+  {
+    id: 'city',
+    label: 'Location',
+    type: 'select',
+    options: ['Berlin', 'Boston', 'Chicago', 'Hamburg', 'Kuala Lumpur', 'Madrid'].map((c) => ({ value: c, label: c })),
+  },
+  { id: 'role', label: 'Role', type: 'text' },
+];
+
+const contactColumns: DataGridColumnDef<Contact>[] = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'company', header: 'Company' },
+  { accessorKey: 'role', header: 'Role' },
+  { accessorKey: 'city', header: 'Location' },
+];
+
+/**
+ * `appearance="toolbar"` — the data table's Figma toolbar (Directory
+ * template, `17992:15767`): one query group always on show, typed into
+ * directly, then `Filters` with the count of the other conditions.
+ *
+ * The query group starts as a draft on the first field ("Name contains") and
+ * becomes a real condition at the first letter. Remove is in its ⋮ menu.
+ */
+export const TableToolbar: StoryObj = {
+  render: function Render() {
+    const { query, setQuery, rows } = useFilterQuery(CONTACTS, { fields: CONTACT_FIELDS });
+    return (
+      <div style={{ width: 960 }}>
+        <DataTable
+          title="Contacts"
+          meta={`${rows.length} contacts`}
+          columns={contactColumns}
+          data={rows}
+          pageSize={10}
+          pinFirstColumn={false}
+          filters={<Filters appearance="toolbar" fields={CONTACT_FIELDS} query={query} onQueryChange={setQuery} />}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step('the table opens with a search query, not an empty bar', async () => {
+      await expect(canvas.getByRole('button', { name: 'Field: Name' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'Condition: contains' })).toBeInTheDocument();
+      await expect(canvas.getByRole('button', { name: 'Filters' })).toBeInTheDocument();
+    });
+    await step('typing filters the rows', async () => {
+      await userEvent.type(canvas.getByRole('textbox', { name: 'Value for Name' }), 'ia{Enter}');
+      // Sofia García, Mia Fischer.
+      await waitFor(() => expect(canvas.getAllByRole('row')).toHaveLength(1 + 2));
+    });
+    await step('a condition added from Filters counts on the button, not in the query group', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: 'Filters' }));
+      await userEvent.click(await screen.findByRole('button', { name: 'Add filter' }));
+      await userEvent.click(await screen.findByRole('option', { name: 'Location' }));
+      await waitFor(() => expect(screen.getByRole('group', { name: /^Location/ })).toBeInTheDocument());
+      await expect(canvas.getByRole('textbox', { name: 'Value for Name' })).toHaveValue('ia');
     });
   },
 };

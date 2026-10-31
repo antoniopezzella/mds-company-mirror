@@ -150,7 +150,8 @@ describe('keyboard column resize', () => {
     { accessorKey: 'status', header: 'Status' },
   ];
 
-  const handle = () => screen.getByRole('separator', { name: /Resize column name/ });
+  // Named after the column's LABEL ("Policy"), not its id (hand-off §5).
+  const handle = () => screen.getByRole('separator', { name: 'Resize column Policy' });
 
   it('publishes its bounds on the separator', () => {
     render(<DataTable columns={sized} data={data} enableColumnResizing />);

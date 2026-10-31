@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { Modal } from './dialog';
 import { Spinner } from './spinner';
+import { DataGridToolbarSegment } from './data-grid-toolbar-parts';
 import type { SelectionState } from './data-grid-selection';
 
 /**
@@ -88,6 +89,13 @@ export interface DataGridBulkActionsProps {
   /** Noun for the records. Used to build confirmation copy. */
   itemNoun?: string;
   itemNounPlural?: string;
+  /**
+   * `buttons` (default): separate outline buttons, as in the selection banner.
+   * `segments`: joined segments for a `DataGridToolbarGroup` — the toolbar's
+   * selection mode. Same confirm/report flow either way; only the drawing
+   * differs.
+   */
+  appearance?: 'buttons' | 'segments';
   className?: string;
 }
 
@@ -98,7 +106,10 @@ type RunState =
   | { phase: 'reported'; action: BulkAction; result: BulkActionResult };
 
 export const DataGridBulkActions = React.forwardRef<HTMLDivElement, DataGridBulkActionsProps>(
-  function DataGridBulkActions({ actions, selection, itemNoun = 'row', itemNounPlural, className }, ref) {
+  function DataGridBulkActions(
+    { actions, selection, itemNoun = 'row', itemNounPlural, appearance = 'buttons', className },
+    ref
+  ) {
   const [state, setState] = React.useState<RunState>({ phase: 'idle' });
 
   const many = itemNounPlural ?? `${itemNoun}s`;
@@ -150,12 +161,28 @@ export const DataGridBulkActions = React.forwardRef<HTMLDivElement, DataGridBulk
       <div
         ref={ref}
         data-slot="data-grid-bulk-actions"
-        className={cn('flex flex-wrap items-center gap-2', className)}
+        // `contents` in segment mode: the segments must be the group's own
+        // children so its dividers and clipping apply to them.
+        className={cn(appearance === 'segments' ? 'contents' : 'flex flex-wrap items-center gap-2', className)}
       >
         {actions.map((action) => {
           const isDisabled =
             typeof action.disabled === 'function' ? action.disabled(selection) : !!action.disabled;
           const isRunning = running?.id === action.id;
+          if (appearance === 'segments') {
+            return (
+              <DataGridToolbarSegment
+                key={action.id}
+                destructive={action.destructive}
+                icon={isRunning ? <Spinner className="size-4" aria-hidden="true" /> : action.icon}
+                disabled={isDisabled || !!running}
+                title={isDisabled ? action.disabledReason : undefined}
+                onClick={() => activate(action)}
+              >
+                {isRunning ? 'Working…' : action.label}
+              </DataGridToolbarSegment>
+            );
+          }
           return (
             <Button
               key={action.id}
@@ -228,10 +255,10 @@ export const DataGridBulkActions = React.forwardRef<HTMLDivElement, DataGridBulk
             </Button>
           }
         >
-          <ul className="max-h-48 overflow-auto text-sm" style={{ color: 'var(--role-fg-neutral-subtle)' }}>
+          <ul className="max-h-48 overflow-auto text-sm" style={{ color: 'var(--mds-color-foreground-neutral-subtle)' }}>
             {state.result.failed?.map((f) => (
               <li key={f.id} className="flex gap-2 py-0.5">
-                <span className="font-medium" style={{ color: 'var(--role-fg-primary)' }}>
+                <span className="font-medium" style={{ color: 'var(--mds-color-foreground-primary-default)' }}>
                   {f.id}
                 </span>
                 <span>{f.reason}</span>

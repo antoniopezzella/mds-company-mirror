@@ -256,7 +256,12 @@ describe('the controls actually render something', () => {
       />
     );
     const trigger = screen.getByRole('button', { name: 'More actions for Commercial Auto' });
-    expect(trigger.querySelector('svg')).toBeInTheDocument();
+    // The glyph is a Material Symbols ligature (Figma's Marsh `more_horiz`),
+    // not an <svg> since 2026-10-30 — what matters is that SOMETHING visible
+    // renders, so assert the glyph itself rather than its element type.
+    const glyph = trigger.querySelector('.material-symbols-outlined');
+    expect(glyph).toBeInTheDocument();
+    expect(glyph).toHaveTextContent('more_horiz');
   });
 
   it('renders an icon-only primary action as an icon, with the name intact', () => {

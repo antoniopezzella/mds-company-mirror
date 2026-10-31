@@ -12,7 +12,8 @@ import { normalizeSize } from './prop-compat';
  * Canonical size scale. The `small|medium|large|xlarge` spellings still work but
  * are deprecated — see `prop-compat.ts` for the compatibility contract.
  */
-export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+/** `xs` (24px) is Figma V3 Avatar Size=XSmall — card meta lines and dense lists. */
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 /** @deprecated since 0.6.0; remove after 0.7.0 / 2026-12-23.
    *  Use {@link AvatarSize} (`sm`/`md`/`lg`/`xl`). */
@@ -38,10 +39,16 @@ export interface AvatarProps {
   status?: AvatarStatus;
   /** Arbitrary content pinned to the top-right corner, e.g. a notification count — rendered above the avatar, not inside it. */
   badge?: React.ReactNode;
+  /**
+   * Figma `Has border`: the 2px surface ring + 1px outline. On by default
+   * (the existing look); the V3 data table draws its avatars without it.
+   */
+  bordered?: boolean;
   className?: string;
 }
 
 const SIZE_PX: Record<AvatarSize, number> = {
+  xs: 24,
   sm: 32,
   md: 40,
   lg: 56,
@@ -49,6 +56,7 @@ const SIZE_PX: Record<AvatarSize, number> = {
 };
 
 const FONT_SIZE: Record<AvatarSize, string> = {
+  xs: '0.625rem',
   sm: '0.75rem',
   md: '1rem',
   lg: '1.25rem',
@@ -56,6 +64,7 @@ const FONT_SIZE: Record<AvatarSize, string> = {
 };
 
 const STATUS_SIZE: Record<AvatarSize, number> = {
+  xs: 6,
   sm: 8,
   md: 12,
   lg: 14,
@@ -136,6 +145,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(({
   onClick,
   status,
   badge,
+  bordered = true,
   className,
 }, ref) => {
   const resolvedSize = normalizeSize(size, 'Avatar') as AvatarSize;
@@ -168,8 +178,9 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(({
           height: sizePx,
           borderRadius: RADIUS[variant],
           fontSize: FONT_SIZE[resolvedSize],
-          border: `2px solid ${'var(--role-bg-default)'}`,
-          boxShadow: `0 0 0 1px ${'var(--role-border-default)'}`,
+          ...(bordered
+            ? { border: `2px solid ${'var(--role-bg-default)'}`, boxShadow: `0 0 0 1px ${'var(--role-border-default)'}` }
+            : {}),
         }}
       >
         {src && <AvatarPrimitive.Image src={src} alt={alt} className="h-full w-full object-cover" />}

@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import type { RowData } from '@tanstack/react-table';
-import { MoreVertical } from 'lucide-react';
 
 import { Button } from './button';
+import { Icon } from './icon';
 import { Modal } from './dialog';
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './dropdown-menu';
-import type { DataGridColumnDef } from './data-grid-features';
+import type { DataGridColumnDef, DataGridTableMeta } from './data-grid-features';
 
 /**
  * Per-row actions — §11.
@@ -95,6 +95,13 @@ export interface ActionsColumnOptions<TData> {
    * action, not five.
    */
   primary?: Omit<RowAction<TData>, 'id'> & { id?: string };
+  /**
+   * Figma `Content/Actions` (17227:2388): up to TWO promoted actions — Action 1
+   * and Action 2, 32px tertiary icon buttons 4px apart — before More. Extras
+   * beyond two are ignored (put them in `actions`). `primary` is the
+   * one-action spelling and is treated as `inline[0]` when both are given.
+   */
+  inline?: (Omit<RowAction<TData>, 'id'> & { id?: string })[];
   /** Everything else, behind the overflow menu. */
   actions?: RowAction<TData>[];
   /** Column header text. Empty by default — a header over icon buttons is noise. */
@@ -156,20 +163,25 @@ function ActionConfirm<TData>({
 
 function RowActionsCell<TData>({
   row,
-  primary,
+  promoted,
   actions,
   getRowLabel,
+  rowDisabled = false,
 }: {
   row: TData;
-  primary?: ActionsColumnOptions<TData>['primary'];
+  promoted: ActionsColumnOptions<TData>['primary'][];
   actions: RowAction<TData>[];
   getRowLabel?: (row: TData) => string;
+  /** Figma Row State=Disabled: every control in the row is disabled. */
+  rowDisabled?: boolean;
 }) {
   const [confirming, setConfirming] = React.useState<RowAction<TData> | null>(null);
   const label = getRowLabel?.(row) ?? 'this row';
 
   const visible = actions.filter((a) => !a.hidden?.(row));
-  const primaryAction = primary ? ({ id: 'primary', ...primary } as RowAction<TData>) : undefined;
+  const promotedActions = promoted
+    .filter((p): p is NonNullable<typeof p> => !!p && !p.hidden?.(row))
+    .map((p, i) => ({ id: i === 0 ? 'primary' : `inline-${i}`, ...p }) as RowAction<TData>);
 
   const activate = (action: RowAction<TData>) => {
     if (action.destructive || action.confirm) setConfirming(action);
@@ -180,11 +192,12 @@ function RowActionsCell<TData>({
     <>
       {/* justify-end: actions belong at the row's trailing edge (§6). */}
       <div className="flex items-center justify-end gap-1">
-        {primaryAction && (
+        {promotedActions.map((primaryAction) => (
           <Button
+            key={primaryAction.id}
             variant="ghost"
             size="sm"
-            disabled={isDisabled(primaryAction, row)}
+            disabled={rowDisabled || isDisabled(primaryAction, row)}
             title={isDisabled(primaryAction, row) ? primaryAction.disabledReason : undefined}
             // Named for the record, not just the verb: forty buttons called
             // "View" tell a screen-reader user nothing about which one.
@@ -193,7 +206,7 @@ function RowActionsCell<TData>({
             // Destructive gets the danger colour whether or not it is
             // icon-only — the confirmation is the safeguard, the colour is
             // the warning that one is coming.
-            style={primaryAction.destructive ? { color: 'var(--role-fg-critical)' } : undefined}
+            style={primaryAction.destructive ? { color: 'var(--mds-color-foreground-critical-default)' } : undefined}
             {...(primaryAction.iconOnly
               ? { iconOnly: true, icon: primaryAction.icon }
               : {})}
@@ -205,7 +218,7 @@ function RowActionsCell<TData>({
               </>
             )}
           </Button>
-        )}
+        ))}
 
         {visible.length > 0 && (
           <DropdownMenu>
@@ -220,8 +233,11 @@ function RowActionsCell<TData>({
                 // rendered an empty 32x32 button with no error — every
                 // overflow menu in every DataTable had an invisible trigger,
                 // which is indistinguishable from the feature being absent.
-                icon={<MoreVertical className="size-4" aria-hidden="true" />}
+                // Figma V3 `Content/Actions`: horizontal more, 20px, in a 32px
+                // tertiary icon button.
+                icon={<Icon name="more_horiz" />}
                 aria-label={`More actions for ${label}`}
+                disabled={rowDisabled}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
@@ -238,7 +254,7 @@ function RowActionsCell<TData>({
                       disabled={disabled}
                       title={disabled ? action.disabledReason : undefined}
                       onSelect={() => activate(action)}
-                      style={action.destructive ? { color: 'var(--role-fg-critical)' } : undefined}
+                      style={action.destructive ? { color: 'var(--mds-color-foreground-critical-default)' } : undefined}
                     >
                       {action.icon}
                       {action.label}
@@ -266,6 +282,7 @@ function RowActionsCell<TData>({
 export function createActionsColumn<TData extends RowData>({
   getRowLabel,
   primary,
+  inline,
   actions = [],
   header = '',
 }: ActionsColumnOptions<TData>): DataGridColumnDef<TData> {
@@ -280,12 +297,13 @@ export function createActionsColumn<TData extends RowData>({
     enableSorting: false,
     enableHiding: false,
     enableResizing: false,
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <RowActionsCell
         row={row.original as TData}
-        primary={primary}
+        promoted={(primary ? [primary, ...(inline ?? [])] : (inline ?? [])).slice(0, 2)}
         actions={actions}
         getRowLabel={getRowLabel}
+        rowDisabled={(table.options.meta as DataGridTableMeta | undefined)?.getRowState?.(row.original) === 'disabled'}
       />
     ),
   };

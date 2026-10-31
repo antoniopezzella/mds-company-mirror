@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import type { Row, RowData } from '@tanstack/react-table';
-import { ChevronRight, Pin, PinOff } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { Icon } from './icon';
 import type { DataGridColumnDef, DataGridFeatures } from './data-grid-features';
 
 /**
@@ -16,7 +16,10 @@ import type { DataGridColumnDef, DataGridFeatures } from './data-grid-features';
  */
 
 export interface ExpandColumnOptions {
-  /** Indent per nesting level, in px. Only affects sub-rows. */
+  /**
+   * Indent per nesting level, in px. Only affects sub-rows. Defaults to 32 —
+   * Figma `Content/Tree`: each level is a 24px step plus the 8px gap.
+   */
   indent?: number;
   /** Accessible label for the toggle. `{row}` is replaced with the row index. */
   label?: string;
@@ -32,6 +35,13 @@ export interface ExpandColumnOptions {
 }
 
 /**
+ * Set by `DataGridTable` when it renders detail panels (`renderDetail`): the
+ * id it gives each row's detail `<tr>`, so the expand toggle can point
+ * `aria-controls` at it. Null for sub-rows only.
+ */
+export const DataGridDetailContext = React.createContext<{ detailIdFor: (rowId: string) => string } | null>(null);
+
+/**
  * Expand/collapse toggle column.
  *
  * Serves both shapes of expansion:
@@ -40,12 +50,15 @@ export interface ExpandColumnOptions {
  *  - **detail panels** (`renderDetail` on DataGridTable) render as one extra
  *    row beneath.
  *
- * `aria-expanded` goes on the button and `aria-controls` is deliberately NOT
- * set: for sub-rows the controlled content is several sibling `<tr>`s with no
- * single id to point at, and a broken idref is worse than none.
+ * `aria-expanded` goes on the button. `aria-controls` is set for detail
+ * panels only, and only while expanded — the one moment the detail `<tr>`
+ * exists to point at. For sub-rows the controlled content is several sibling
+ * `<tr>`s with no single id, and a broken idref is worse than none.
+ *
+ * Keys (hand-off §5): Enter/Space toggle, → expands, ← collapses.
  */
 export function createExpandColumn<TData extends RowData>({
-  indent = 20,
+  indent = 32,
   label = 'Toggle row {row}',
   headerLabel = 'Expand',
 }: ExpandColumnOptions = {}): DataGridColumnDef<TData> {
@@ -58,32 +71,69 @@ export function createExpandColumn<TData extends RowData>({
         // width so leaf rows line up with expandable ones.
         return <span style={{ paddingLeft: row.depth * indent }} aria-hidden="true" />;
       }
-      const expanded = row.getIsExpanded();
-      return (
-        <button
-          type="button"
-          onClick={row.getToggleExpandedHandler()}
-          aria-expanded={expanded}
-          aria-label={label.replace('{row}', String(row.index + 1))}
-          className="flex size-6 items-center justify-center rounded-md transition-transform focus-visible:outline-hidden focus-visible:ring-2"
-          style={
-            {
-              marginLeft: row.depth * indent,
-              '--tw-ring-color': 'var(--role-border-focus)',
-            } as React.CSSProperties
-          }
-        >
-          <ChevronRight
-            className={cn('size-4 opacity-70 transition-transform', expanded && 'rotate-90')}
-            aria-hidden="true"
-          />
-        </button>
-      );
+      return <ExpandToggle row={row} indent={indent} label={label} />;
     },
     enableSorting: false,
     enableHiding: false,
-    size: 40,
+    // The control's own width; as a `leading` column the grid adds the cell
+    // inset and joins it to the next cell — the toggle sits INSIDE the first
+    // cell in Figma, 8px before the label.
+    size: 24,
+    meta: { leading: true, mergeHeader: true },
   };
+}
+
+function ExpandToggle<TData extends RowData>({
+  row,
+  indent,
+  label,
+}: {
+  row: Row<DataGridFeatures, TData>;
+  indent: number;
+  label: string;
+}) {
+  const detail = React.useContext(DataGridDetailContext);
+  const expanded = row.getIsExpanded();
+  return (
+        <button
+          type="button"
+          onClick={row.getToggleExpandedHandler()}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowRight' && !expanded) {
+              e.preventDefault();
+              e.stopPropagation();
+              row.toggleExpanded(true);
+            } else if (e.key === 'ArrowLeft' && expanded) {
+              e.preventDefault();
+              e.stopPropagation();
+              row.toggleExpanded(false);
+            }
+          }}
+          aria-expanded={expanded}
+          aria-controls={detail && expanded ? detail.detailIdFor(row.id) : undefined}
+          aria-label={label.replace('{row}', String(row.index + 1))}
+          // Figma `Control/Expand`: 24px, 16px chevron in neutral/subtle,
+          // right when collapsed and down when expanded; 2px focus ring
+          // outside the control.
+          className={cn(
+            'flex size-6 items-center justify-center rounded-sm text-[var(--mds-color-foreground-neutral-subtle)]',
+            'hover:bg-[var(--mds-color-overlay-neutral-hover)]',
+            'focus-visible:outline-hidden focus-visible:shadow-[0_0_0_2px_var(--mds-color-border-focus-default)]'
+          )}
+          style={{ marginLeft: row.depth * indent }}
+        >
+          {/* Figma Control/Expand: a 16px Marsh chevron in a 24px target. */}
+          {/* Hand-off §5 Motion: rotate 90° in 150 ms ease-out. */}
+          <Icon
+            name="chevron_right"
+            size={16}
+            className={cn(
+              'transition-transform duration-150 ease-out motion-reduce:transition-none motion-reduce:duration-0',
+              expanded && 'rotate-90'
+            )}
+          />
+        </button>
+  );
 }
 
 export interface PinColumnOptions {
@@ -118,10 +168,11 @@ export function createRowPinColumn<TData extends RowData>({
           onClick={() => row.pin(pinned ? false : 'top')}
           aria-pressed={!!pinned}
           aria-label={(pinned ? unpinLabel : pinLabel).replace('{row}', n)}
-          className="flex size-6 items-center justify-center rounded-md opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
-          style={{ '--tw-ring-color': 'var(--role-border-focus)' } as React.CSSProperties}
+          className="flex size-6 items-center justify-center rounded-md opacity-60 transition-opacity motion-reduce:transition-none hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2"
+          style={{ '--tw-ring-color': 'var(--mds-color-border-focus-default)' } as React.CSSProperties}
         >
-          {pinned ? <PinOff className="size-4" aria-hidden="true" /> : <Pin className="size-4" aria-hidden="true" />}
+          {/* Material keep / keep_off — the set Figma's pin icons use. */}
+          <Icon pseudo name={pinned ? 'keep_off' : 'keep'} size={16} />
         </button>
       );
     },
@@ -134,6 +185,10 @@ export function createRowPinColumn<TData extends RowData>({
 export interface DataGridDetailPanelProps {
   /** The expanded row's detail content — usually a `renderDetail` result passed straight through. */
   children: React.ReactNode;
+  /** Figma Detail row header: a bold title… */
+  title?: React.ReactNode;
+  /** …and a muted summary after it — "3 of 5 items • 3 open • +2 more". */
+  summary?: React.ReactNode;
   className?: string;
 }
 
@@ -146,13 +201,28 @@ export interface DataGridDetailPanelProps {
  * never mount a DOM root to attach a ref to.
  */
 export const DataGridDetailPanel = React.forwardRef<HTMLDivElement, DataGridDetailPanelProps>(
-  function DataGridDetailPanel({ children, className }, ref) {
+  function DataGridDetailPanel({ children, title, summary, className }, ref) {
+  // Figma `Data table/Detail row`: insets and the header-to-content gap are
+  // the density's cell inset (16 standard); the surface is the row's own, so
+  // the expansion reads as part of the row it opened rather than a well.
   return (
     <div
       ref={ref}
-      className={cn('px-6 py-4 text-sm', className)}
-      style={{ backgroundColor: 'var(--role-bg-neutral-subtle)', color: 'var(--role-fg-primary)' }}
+      data-slot="data-grid-detail-panel"
+      className={cn(
+        'flex flex-col gap-[var(--dt-inset-x,1rem)] p-[var(--dt-inset-x,1rem)] text-sm',
+        'text-[var(--mds-color-foreground-primary-default)]',
+        className
+      )}
     >
+      {(title != null || summary != null) && (
+        <div className="flex flex-wrap items-center gap-[var(--dt-gap,0.5rem)]">
+          {title != null && <span className="font-bold">{title}</span>}
+          {summary != null && (
+            <span className="text-[var(--mds-color-foreground-neutral-subtle)]">{summary}</span>
+          )}
+        </div>
+      )}
       {children}
     </div>
   );

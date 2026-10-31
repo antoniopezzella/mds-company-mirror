@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from 'react';
-import { ChevronDown, MoreVertical, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { roleVar } from '@/theme/roles';
 import { Button } from '@/components/ui/button';
+import { Icon } from '@/components/ui/icon';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
@@ -15,6 +15,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  DataGridToolbarGroup,
+  DataGridToolbarSearch,
+  DataGridToolbarSegment,
+} from '@/components/ui/data-grid-toolbar-parts';
 import { FiltersFieldPicker, type FieldPickerHandle } from './filters-field-picker';
 import { FiltersValueEditor, type FiltersValueEditorProps } from './filters-value-editor';
 import { findOperator, operatorsFor } from './filters-operators';
@@ -62,6 +67,19 @@ export interface FiltersRuleProps {
    */
   editors?: Record<string, React.ComponentType<FiltersValueEditorProps>>;
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * `default`: outline buttons in a `ButtonGroup`. `toolbar`: the data
+   * table's Figma query group (`Data table/Toolbar group` + segments) —
+   *
+   *     [ 👤 Name │ contains │ 🔍 Search…        │ ⋮ ]
+   *
+   * the field with its icon, the operator as plain text, a text value typed
+   * straight into the group (no popover), and Remove inside the ⋮ menu.
+   * Always 32px, whatever `size` says — the table's toolbar does not scale.
+   */
+  appearance?: 'default' | 'toolbar';
+  /** Placeholder for the toolbar appearance's inline text value. */
+  valuePlaceholder?: string;
   readOnly?: boolean;
   disabled?: boolean;
   /** Copy (§53). */
@@ -101,6 +119,8 @@ export function FiltersRule({
   onGroup,
   editors,
   size = 'sm',
+  appearance = 'default',
+  valuePlaceholder = 'Search…',
   readOnly = false,
   disabled = false,
   messages,
@@ -127,6 +147,137 @@ export function FiltersRule({
   ]
     .filter(Boolean)
     .join(' ');
+
+  if (appearance === 'toolbar') {
+    // A text value is typed in place — the Figma group's Input segment. Every
+    // other type (select, date, number, range) keeps its editor popover,
+    // behind a segment that shows the current value.
+    const inlineText =
+      field?.type === 'text' && !!operatorDef && !operatorDef.supportsMultiple && !operatorDef.isRange;
+    const subtle = 'text-[var(--mds-color-foreground-neutral-subtle)]';
+    return (
+      <DataGridToolbarGroup
+        dividers="inset"
+        aria-label={summary}
+        data-slot="filters-rule"
+        data-appearance="toolbar"
+        data-incomplete={!operatorDef || (needsValue && rule.value === undefined) || undefined}
+        className={cn(inert && 'opacity-70')}
+      >
+        {rule.negated && (
+          <DataGridToolbarSegment destructive disabled={inert} onClick={onNegate} aria-label={`${t.negate} ${label}`}>
+            {t.not}
+          </DataGridToolbarSegment>
+        )}
+
+        {/* FIELD — Figma Type=Field: icon + name. */}
+        <Popover open={fieldOpen} onOpenChange={setFieldOpen}>
+          <PopoverTrigger asChild disabled={inert}>
+            <DataGridToolbarSegment icon={field?.icon} aria-label={`Field: ${label}`}>
+              {label}
+            </DataGridToolbarSegment>
+          </PopoverTrigger>
+          <PopoverContent
+            align="start"
+            className="w-auto p-2"
+            aria-label="Choose a field"
+            onEscapeKeyDown={(e) => {
+              if (pickerRef.current?.handleEscape()) e.preventDefault();
+            }}
+          >
+            <FiltersFieldPicker
+              fields={fields}
+              handleRef={pickerRef}
+              searchPlaceholder={messages?.searchPlaceholder}
+              onSelect={(path) => {
+                onChangeField(path);
+                setFieldOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+
+        {/* OPERATOR — Figma Type=Text: muted, no chevron; still a menu. */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={inert || !field}>
+            <DataGridToolbarSegment
+              aria-label={operatorDef ? `Condition: ${operatorDef.label}` : t.selectCondition}
+              className={subtle}
+            >
+              {operatorDef?.label ?? t.selectCondition}
+            </DataGridToolbarSegment>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="min-w-44">
+            {operators.map((op) => (
+              <DropdownMenuItem key={op.value} onSelect={() => onChangeOperator(op.value)}>
+                {op.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* VALUE */}
+        {needsValue && field && inlineText && (
+          <InlineTextValue
+            value={typeof rule.value === 'string' ? rule.value : ''}
+            onCommit={(v) => onChangeValue(v === '' ? undefined : v)}
+            placeholder={field.placeholder ?? valuePlaceholder}
+            aria-label={`Value for ${label}`}
+            disabled={inert}
+          />
+        )}
+        {needsValue && field && !inlineText && (
+          <Popover open={valueOpen} onOpenChange={setValueOpen}>
+            <PopoverTrigger asChild disabled={inert}>
+              <DataGridToolbarSegment
+                aria-label={rule.value === undefined ? t.selectValue : `Value: ${describeRuleValue(rule, field)}`}
+                className={cn('max-w-48', rule.value === undefined && subtle)}
+              >
+                <span className="truncate">
+                  {rule.value === undefined ? t.selectValue : describeRuleValue(rule, field)}
+                </span>
+              </DataGridToolbarSegment>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-auto p-2" aria-label={`Value for ${label}`}>
+              <FiltersValueEditor
+                field={field}
+                operator={operatorDef}
+                editors={editors}
+                value={rule.value}
+                onChange={(v) => onChangeValue(v)}
+                onDone={() => setValueOpen(false)}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
+
+        {/* MENU — Figma Type=Menu. Remove lives here: the group has no ×. */}
+        {!inert && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <DataGridToolbarSegment
+                aria-label={`${t.more} for ${label}`}
+                className="w-8 justify-center px-0"
+                icon={<Icon pseudo name="more_vert" size={16} />}
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-36">
+              {onDuplicate && <DropdownMenuItem onSelect={onDuplicate}>{t.duplicate}</DropdownMenuItem>}
+              {onNegate && <DropdownMenuItem onSelect={onNegate}>{t.negate}</DropdownMenuItem>}
+              {onGroup && <DropdownMenuItem onSelect={onGroup}>{t.group}</DropdownMenuItem>}
+              {(onDuplicate || onNegate || onGroup) && <DropdownMenuSeparator />}
+              <DropdownMenuItem
+                onSelect={onRemove}
+                style={{ color: 'var(--mds-color-foreground-critical-default)' }}
+              >
+                {`${t.remove} filter`}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </DataGridToolbarGroup>
+    );
+  }
 
   return (
     <ButtonGroup
@@ -155,7 +306,7 @@ export function FiltersRule({
         <PopoverTrigger asChild disabled={inert}>
           <Button variant="outline" aria-label={`Field: ${label}`}>
             {label}
-            <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
+            <Icon pseudo name="keyboard_arrow_down" size={12} className="opacity-60" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -191,7 +342,7 @@ export function FiltersRule({
             style={operatorDef ? undefined : { color: roleVar('fg.neutral.subtle') }}
           >
             {operatorDef?.label ?? t.selectCondition}
-            <ChevronDown className="size-3 opacity-60" aria-hidden="true" />
+            <Icon pseudo name="keyboard_arrow_down" size={12} className="opacity-60" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="min-w-44">
@@ -218,7 +369,7 @@ export function FiltersRule({
               <span className="truncate">
                 {rule.value === undefined ? t.selectValue : describeRuleValue(rule, field)}
               </span>
-              <ChevronDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
+              <Icon pseudo name="keyboard_arrow_down" size={12} className="shrink-0 opacity-60" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-auto p-2" aria-label={`Value for ${label}`}>
@@ -244,7 +395,7 @@ export function FiltersRule({
             <Button
               variant="outline"
               iconOnly
-              icon={<MoreVertical className="size-3.5" aria-hidden="true" />}
+              icon={<Icon pseudo name="more_vert" size={14} />}
               aria-label={`${t.more} for ${label}`}
             />
           </DropdownMenuTrigger>
@@ -264,7 +415,7 @@ export function FiltersRule({
         <Button
           variant="outline"
           iconOnly
-          icon={<X className="size-3.5" aria-hidden="true" />}
+          icon={<Icon pseudo name="close" size={14} />}
           onClick={onRemove}
           // Named for the condition it clears — eight buttons all called
           // "Remove" tell a screen-reader user nothing (§47.3).
@@ -272,5 +423,66 @@ export function FiltersRule({
         />
       )}
     </ButtonGroup>
+  );
+}
+
+/**
+ * The toolbar appearance's Input segment: a text value typed in place.
+ *
+ * Commits 250ms after typing stops (hand-off §5), or at once on Enter or blur,
+ * so a fast typist filters once rather than once per key. Holds its own text
+ * while typing; follows the rule when it changes from outside (Clear all).
+ */
+function InlineTextValue({
+  value,
+  onCommit,
+  placeholder,
+  disabled,
+  'aria-label': ariaLabel,
+}: {
+  value: string;
+  onCommit: (value: string) => void;
+  placeholder: string;
+  disabled?: boolean;
+  'aria-label': string;
+}) {
+  const [text, setText] = React.useState(value);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const committed = React.useRef(value);
+
+  React.useEffect(() => {
+    // An outside change (Clear all, a URL) wins over what is on screen.
+    if (value !== committed.current) {
+      committed.current = value;
+      setText(value);
+    }
+  }, [value]);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+
+  const flush = (next: string) => {
+    clearTimeout(timer.current);
+    if (next === committed.current) return;
+    committed.current = next;
+    onCommit(next);
+  };
+
+  return (
+    <DataGridToolbarSearch
+      icon={<Icon name="search" size={16} />}
+      value={text}
+      placeholder={placeholder}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      onChange={(e) => {
+        const next = e.target.value;
+        setText(next);
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => flush(next), 250);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') flush(text);
+      }}
+      onBlur={() => flush(text)}
+    />
   );
 }

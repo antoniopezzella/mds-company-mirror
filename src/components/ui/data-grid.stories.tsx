@@ -1,17 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { expect } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useTable, type SortingState } from '@tanstack/react-table';
 
 import { DataGrid, DataGridContainer, DataGridScrollArea } from './data-grid';
 import { DataGridTable } from './data-grid-table';
-import { DataGridToolbar } from './data-grid-toolbar';
+import { DataGridTitleBar, DataGridToolbar } from './data-grid-toolbar';
 import { DataGridPagination } from './data-grid-pagination';
-import { dataGridFeatures, type DataGridColumnDef } from './data-grid-features';
+import { dataGridFeatures, type DataGridColumnDef, type DataGridTableInstance } from './data-grid-features';
 import { useDataGridTable } from './use-data-grid-table';
 import { createExpandColumn, createRowPinColumn, DataGridDetailPanel } from './data-grid-rows';
+import { createActionsColumn } from './data-grid-row-actions';
 import { Badge } from './badge';
 import { Button } from './button';
+import { Alert } from './alert';
+import { DataTable, createSelectColumn } from './data-table';
 
 /**
  * # DataGrid
@@ -94,27 +98,68 @@ const columns: DataGridColumnDef<Policy>[] = [
 ];
 
 function Composed({ data = policies, loading = false }: { data?: Policy[]; loading?: boolean }) {
+  // Row pinning reads the TABLE, which does not exist when the columns are
+  // declared — the row menu reaches it through this ref.
+  const tableRef = useRef<DataGridTableInstance<Policy> | null>(null);
+  const withActions = useMemo<DataGridColumnDef<Policy>[]>(() => {
+    const row = (p: Policy) => tableRef.current?.getRow(String(p.id), true);
+    return [
+      ...columns,
+      createActionsColumn<Policy>({
+        getRowLabel: (p) => p.name,
+        actions: [
+          { id: 'pin', label: 'Pin to top', hidden: (p) => !!row(p)?.getIsPinned(), onAction: (p) => row(p)?.pin('top') },
+          { id: 'unpin', label: 'Unpin', hidden: (p) => !row(p)?.getIsPinned(), onAction: (p) => row(p)?.pin(false) },
+        ],
+      }),
+    ];
+  }, []);
+
   // The same setup DataTable uses. Before this hook existed, choosing
   // composition meant hand-rolling the state wiring — which is how a
   // hand-built grid ends up subtly different from the preset.
-  const table = useDataGridTable({ columns, data, pageSize: 5, pinFirstColumn: false });
+  // Figma Directory pinning: the first column pinned (edge + header unpin
+  // icon), rows pinnable from the row menu, keyed by record so a search does
+  // not move a pin onto another policy.
+  const table = useDataGridTable({
+    columns: withActions,
+    data,
+    pageSize: 5,
+    enableColumnPinning: true,
+    enableRowPinning: true,
+    getRowId: (p) => String(p.id),
+  });
+  tableRef.current = table;
+  useEffect(() => {
+    table.setRowPinning({ top: ['4'], bottom: [] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <DataGrid table={table} recordCount={data.length} loading={loading} searchKey="name">
-      <DataGridToolbar
-        searchPlaceholder="Search policies..."
-        facetedFilters={[{ columnId: 'status', title: 'Status' }]}
-        enableSortList
-        enableDensityToggle
-        enableColumnVisibility
-        enableExport
-        exportFilename="policies"
-      >
-        <Button variant="outline" size="sm" className="px-2 text-xs font-normal">
-          New policy
-        </Button>
-      </DataGridToolbar>
+      {/* Figma `Data table`: title bar, toolbar, grid and footer in ONE shell.
+          Sort lives on the headers and density in the gear's Table settings
+          menu, so the right side is only settings, export and the primary
+          action — no separate Sort or Density buttons. */}
       <DataGridContainer>
+        <DataGridTitleBar
+          title="Policies"
+          meta={`${data.length} policies • ${data.filter((p) => p.status === 'Active').length} active • ${table.getTopRows().length} pinned`}
+        />
+        <DataGridToolbar
+          searchPlaceholder="Search policies..."
+          facetedFilters={[{ columnId: 'status', title: 'Status' }]}
+          enableDensityToggle
+          enableColumnVisibility
+          enableExport
+          exportFilename="policies"
+          itemNoun="policy"
+          itemNounPlural="policies"
+        >
+          <Button variant="primary" size="sm" icon={<Plus aria-hidden="true" />}>
+            New policy
+          </Button>
+        </DataGridToolbar>
         <DataGridScrollArea>
           <DataGridTable />
         </DataGridScrollArea>
@@ -129,7 +174,7 @@ export const Default: StoryObj = {
     docs: {
       description: {
         story:
-          'The full composition. Note the toolbar, table and footer are siblings — nothing is nested inside a single component, so any of them can be omitted, reordered, or replaced.',
+          'The full composition, in the Figma shape: title bar, toolbar, table and footer inside one `DataGridContainer`. They are siblings — none is nested inside another component — so any of them can be omitted, reordered, or replaced. The gear opens **Table settings**: show/hide, arrange and pin columns, density, and Reset table. Policy is pinned (edge + unpin icon in its header); Property opens pinned to the top, the row menu pins and unpins any row, and the toolbar shows "Unpin all | 1 policy pinned" while any row is pinned.',
       },
     },
   },
@@ -513,4 +558,117 @@ export const TypedColumnFormatting: StoryObj = {
     // The custom-cell Status column is untouched.
     await expect(table.textContent).toContain('Active');
   },
+};
+
+// ── V3 component parts (Figma component sets 17224:2211) ───────────────────
+
+/**
+ * Figma `Data table/Row` State=Error (17234:5179) and State=Disabled
+ * (17234:5185), from `getRowState`. Error: background/critical/subtle, hover
+ * layer kept. Disabled: text in foreground/disabled, checkbox and row actions
+ * disabled, skipped by select-all.
+ */
+export const RowStates: StoryObj = {
+  render: () => (
+    <div style={{ width: 760 }}>
+      <DataTable<Policy, unknown>
+        columns={[
+          createSelectColumn<Policy>({ getRowLabel: (p) => p.name }),
+          ...columns,
+          createActionsColumn<Policy>({
+            getRowLabel: (p) => p.name,
+            actions: [{ id: 'archive', label: 'Archive', onAction: () => {} }],
+          }),
+        ]}
+        data={policies.slice(0, 5)}
+        pinFirstColumn={false}
+        enableRowSelection
+        footer={false}
+        title="Policies"
+        getRowState={(p) => (p.id === 3 ? 'error' : p.id === 5 ? 'disabled' : undefined)}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const rows = canvasElement.querySelectorAll('tbody tr');
+    await expect(rows[2]).toHaveAttribute('data-row-state', 'error');
+    await expect(rows[4]).toHaveAttribute('aria-disabled', 'true');
+  },
+};
+
+const manyPolicies: Policy[] = Array.from({ length: 250 }, (_, i) => ({
+  ...policies[i % policies.length],
+  id: i + 1,
+  name: `${policies[i % policies.length].name} ${i + 1}`,
+}));
+
+/**
+ * Figma `Data table/Pagination` Type=Jump (17278:10901): range, "Page
+ * [56px input] of N", then First / Previous / Next / Last. For more than 50
+ * pages; Enter jumps, a number outside 1–N shows "Enter 1–N".
+ */
+export const JumpPagination: StoryObj = {
+  render: () => (
+    <div style={{ width: 860 }}>
+      <DataTable<Policy, unknown>
+        columns={columns}
+        data={manyPolicies}
+        pageSize={10}
+        pinFirstColumn={false}
+        paginationVariant="jump"
+      />
+    </div>
+  ),
+};
+
+/**
+ * Figma `Data table/Toolbar` `Has notice` (17279:11510): an inline critical
+ * Alert under the toolbar bar, inside the shell — padding 0/16/8/16.
+ */
+export const ToolbarNotice: StoryObj = {
+  render: () => (
+    <div style={{ width: 860 }}>
+      <DataTable<Policy, unknown>
+        columns={columns}
+        data={policies}
+        pinFirstColumn={false}
+        searchKey="name"
+        searchPlaceholder="Search policies..."
+        footer={false}
+        notice={
+          <Alert severity="error" title="Couldn't load the latest policies">
+            Showing data from 09:42. Try again in a moment.
+          </Alert>
+        }
+      />
+    </div>
+  ),
+};
+
+/**
+ * Figma `Header cell` (17228:2623) parts: click the label to sort, the
+ * more_vert menu (hover / focus), the pinned column's keep_off as a flex item
+ * that truncates a narrow label instead of covering it, the 2×16 resize grip
+ * on hover, and the column divider (on by default when resizable).
+ */
+export const HeaderParts: StoryObj = {
+  render: () => (
+    // 620 = the four authored widths, so the 120px pinned column stays 120
+    // (a resizable table stretches to fill a wider container).
+    <div style={{ width: 622 }}>
+      <DataTable<Policy, unknown>
+        columns={[
+          { accessorKey: 'name', header: 'Policy name and line of business', size: 120 },
+          { accessorKey: 'status', header: 'Status', size: 160 },
+          { accessorKey: 'premium', header: 'Premium', size: 160, meta: { align: 'right' } },
+          { accessorKey: 'renewalDate', header: 'Renewal Date', size: 180 },
+        ]}
+        data={policies}
+        enableColumnPinning
+        enableColumnResizing
+        enableColumnReorder
+        footer={false}
+      />
+    </div>
+  ),
 };

@@ -36,6 +36,13 @@ export interface SparklineProps extends Omit<React.ComponentProps<'svg'>, 'child
   height?: number;
   /** Explicit stroke colour, overriding `sentiment`. */
   color?: string;
+  /**
+   * The value range the line is scaled to, as `[min, max]`. Defaults to the
+   * series' own min and max, which stretches ANY wobble to the full height —
+   * so a near-flat series draws as a zigzag. Pass a wider range to keep a
+   * small change small (Figma's neutral "flat" trend is a low ripple).
+   */
+  domain?: [number, number];
 }
 
 const SENTIMENT_ROLE = {
@@ -45,12 +52,12 @@ const SENTIMENT_ROLE = {
 } as const;
 
 export const Sparkline = React.forwardRef<SVGSVGElement, SparklineProps>(
-  ({ data, sentiment = 'neutral', height = 40, color, className, ...props }, ref) => {
+  ({ data, sentiment = 'neutral', height = 40, color, domain, className, ...props }, ref) => {
     const points = React.useMemo(() => {
       if (!data || data.length < 2) return null;
 
-      const min = Math.min(...data);
-      const max = Math.max(...data);
+      const min = domain ? domain[0] : Math.min(...data);
+      const max = domain ? domain[1] : Math.max(...data);
       const span = max - min;
 
       // A flat series has zero span; dividing by it yields NaN and the path
@@ -63,7 +70,8 @@ export const Sparkline = React.forwardRef<SVGSVGElement, SparklineProps>(
           return `${x},${y}`;
         })
         .join(' ');
-    }, [data]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- the tuple's values, not its identity
+    }, [data, domain?.[0], domain?.[1]]);
 
     if (!points) return null;
 
