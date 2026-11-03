@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 
 import { DataTable } from './data-table';
+import { createActionsColumn } from './data-grid-row-actions';
 import type { DataGridColumnDef } from './data-grid-features';
 
 /**
@@ -52,7 +53,7 @@ describe('column pinning', () => {
   it('offers no pin controls unless enabled', () => {
     render(<DataTable columns={columns} data={data} />);
     const menu = openColumnMenu('Status');
-    expect(within(menu).queryByText('Pin to start')).not.toBeInTheDocument();
+    expect(within(menu).queryByText('Pin column')).not.toBeInTheDocument();
     expect(within(menu).queryByText('Pin to end')).not.toBeInTheDocument();
   });
 
@@ -61,7 +62,7 @@ describe('column pinning', () => {
 
     let menu = openColumnMenu('Status');
     expect(within(menu).queryByText('Unpin')).not.toBeInTheDocument();
-    fireEvent.click(within(menu).getByText('Pin to start'));
+    fireEvent.click(within(menu).getByText('Pin column'));
 
     // A pinned cell paints its own background and sticks — it cannot inherit
     // the row's, because it detaches from it during scroll.
@@ -78,13 +79,31 @@ describe('column pinning', () => {
   it('pins to the END too — the direction the original could not express', () => {
     // The old implementation derived pinning from a memo that only ever pinned
     // columns[0] to the left, so `end` had no code path at all.
-    render(<DataTable columns={columns} data={data} enableColumnPinning pinFirstColumn={false} />);
-    const menu = openColumnMenu('Policy');
-    fireEvent.click(within(menu).getByText('Pin to end'));
+    // Hand-off 5b#2: the end is for the Actions column only, so a data column
+    // is never offered it, and the Actions column's "Pin column" pins it there.
+    const withActions: DataGridColumnDef<Row>[] = [
+      ...columns,
+      createActionsColumn<Row>({
+        getRowLabel: (r) => r.name,
+        actions: [{ id: 'open', label: 'Open', onAction: () => undefined }],
+      }),
+    ];
+    const first = render(<DataTable columns={withActions} data={data} enableColumnPinning pinFirstColumn={false} />);
+    expect(within(openColumnMenu('Policy')).queryByText('Pin to end')).not.toBeInTheDocument();
+    first.unmount();
 
-    const cells = within(screen.getByRole('table')).getAllByRole('cell');
-    const pinned = cells.find((c) => c.textContent === 'Commercial Auto');
-    expect(pinned).toHaveStyle({ position: 'sticky' });
+    render(<DataTable columns={withActions} data={data} enableColumnPinning pinFirstColumn={false} />);
+
+    // The header is a function (an sr-only "Actions"); meta.label names the menu.
+    const menu = openColumnMenu('Column options for Actions');
+    fireEvent.click(within(menu).getByText('Pin column'));
+
+    const actionsCell = within(screen.getByRole('table'))
+      .getAllByRole('cell')
+      .find((c) => within(c).queryByRole('button', { name: /Commercial Auto/ }));
+    expect(actionsCell).toHaveStyle({ position: 'sticky' });
+    // The END side: its edge sits on the left (`right` anchors the sticky).
+    expect(actionsCell?.style.right).not.toBe('');
   });
 });
 

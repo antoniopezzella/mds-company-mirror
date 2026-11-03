@@ -98,8 +98,13 @@ describe('cell states (Figma Data table/Cell, Cell state)', () => {
     expect(td.style.boxShadow).toContain('var(--mds-color-border-success-default)');
     expect(td.querySelector('[data-glyph="check_circle"]')).toBeInTheDocument();
 
-    act(() => vi.advanceTimersByTime(SUCCESS_MS));
+    // Literal times, not SUCCESS_MS: the claim is "about 2 s", so a constant
+    // changed to 20 s must fail here rather than move the goalposts with it.
+    act(() => vi.advanceTimersByTime(1900));
+    expect(gridCell(0, 1)).toHaveAttribute('data-cell-state', 'success');
+    act(() => vi.advanceTimersByTime(100));
     expect(gridCell(0, 1)).not.toHaveAttribute('data-cell-state');
+    expect(SUCCESS_MS).toBe(2000);
   });
 });
 
@@ -113,6 +118,17 @@ describe('row states (Figma Data table/Row, State)', () => {
     render(<DataTable columns={columns} data={data} enableRowSelection getRowState={getRowState} pinFirstColumn={false} />);
     expect(bodyRows()[0]).toHaveAttribute('data-row-state', 'error');
     expect(bodyRows()[0].style.backgroundColor).toBe('var(--mds-color-background-critical-subtle)');
+  });
+
+  it('keeps an Error row red when it is selected (Error wins over Selected)', () => {
+    render(<DataTable columns={columns} data={data} enableRowSelection getRowState={getRowState} pinFirstColumn={false} />);
+    const [errorRow, , plainRow] = bodyRows();
+    fireEvent.click(within(errorRow).getByRole('checkbox'));
+    fireEvent.click(within(plainRow).getByRole('checkbox'));
+    expect(within(errorRow).getByRole('checkbox')).toHaveAttribute('data-state', 'checked');
+    expect(bodyRows()[0].style.backgroundColor).toBe('var(--mds-color-background-critical-subtle)');
+    // ...while an ordinary selected row does take the selected fill.
+    expect(bodyRows()[2].style.backgroundColor).toBe('var(--mds-color-background-selected)');
   });
 
   it('greys a Disabled row, disables its checkbox and leaves it out of select-all', () => {
@@ -151,8 +167,11 @@ describe('header cell: sort label and a separate menu', () => {
     const th = within(screen.getByRole('table')).getAllByRole('columnheader')[0];
     const label = within(th).getByRole('button', { name: 'Name' });
     expect(label).not.toHaveAttribute('aria-haspopup');
+    // Figma Sort None / Ascending (17228:2591, 17228:2623).
+    expect(th.querySelector('[data-glyph="unfold_more"]')).toBeInTheDocument();
     fireEvent.click(label);
     expect(th).toHaveAttribute('aria-sort', 'ascending');
+    expect(th.querySelector('[data-glyph="arrow_upward"]')).toBeInTheDocument();
     fireEvent.click(label);
     expect(th).toHaveAttribute('aria-sort', 'descending');
     expect(th.querySelector('[data-glyph="arrow_downward"]')).toBeInTheDocument();
@@ -167,6 +186,78 @@ describe('header cell: sort label and a separate menu', () => {
     expect(within(menu).getByRole('menuitemcheckbox', { name: 'Sort ascending' })).toBeInTheDocument();
     expect(within(menu).getByRole('menuitemcheckbox', { name: 'Sort descending' })).toBeInTheDocument();
     expect(within(menu).getByRole('menuitem', { name: 'Hide column' })).toBeInTheDocument();
+  });
+
+  it('a resizable table uses fixed layout, so an authored width can undercut its label', () => {
+    render(
+      <DataTable
+        columns={[{ accessorKey: 'name', header: 'A very long header label that would not fit', size: 120 }]}
+        data={data}
+        pinFirstColumn={false}
+        enableColumnResizing
+      />
+    );
+    expect(screen.getByRole('table').style.tableLayout).toBe('fixed');
+  });
+
+  it('the menu never takes space at rest, on pinned columns too (it floats before keep_off)', () => {
+    render(
+      <DataTable
+        columns={[
+          { accessorKey: 'name', header: 'Policy name and line of business', size: 120 },
+          { accessorKey: 'qty', header: 'Qty', size: 120 },
+        ]}
+        data={data}
+        enableColumnPinning
+        enableColumnResizing
+      />
+    );
+    const [pinnedTh, plainTh] = within(screen.getByRole('table')).getAllByRole('columnheader');
+    expect(within(pinnedTh).getByRole('button', { name: 'Unpin Policy name and line of business' })).toBeInTheDocument();
+    for (const th of [pinnedTh, plainTh]) {
+      const menu = th.querySelector('[data-slot="data-grid-header-menu"]') as HTMLElement;
+      // Out of flow: an in-flow 24px invisible slot cut a 120px label to "P…".
+      expect(menu.className).toMatch(/(^|\s)absolute(\s|$)/);
+    }
+    // On the pinned column it sits before keep_off, not on top of it.
+    const pinnedMenu = pinnedTh.querySelector('[data-slot="data-grid-header-menu"]') as HTMLElement;
+    expect(pinnedMenu.className).toContain('end-[calc(var(--dt-inset-x)+1rem+var(--dt-gap))]');
+  });
+
+  // Floating must not mean covering (2026-11-02: on hover/focus the menu sat
+  // over a pinned column's sort arrow and a click there opened the menu).
+  // jsdom has no layout; the measured check is the HeaderParts story's play
+  // function (real Chromium). This one guards what the play function cannot
+  // drive: that HOVER, not only focus, makes the label give way.
+  it('the label group gives up the menu slot whenever the menu shows', () => {
+    render(
+      <DataTable
+        columns={[
+          { accessorKey: 'name', header: 'Policy name and line of business', size: 120 },
+          { accessorKey: 'qty', header: 'Qty', size: 120, meta: { align: 'right' } },
+          { accessorKey: 'notes', header: 'Notes', size: 120 },
+        ]}
+        data={data}
+        enableColumnPinning
+        enableColumnResizing
+      />
+    );
+    const [pinnedTh, rightTh, plainTh] = within(screen.getByRole('table')).getAllByRole('columnheader');
+    for (const th of [pinnedTh, rightTh, plainTh]) {
+      for (const when of ['hover', 'focus-within', 'pointer-coarse', 'has-[[data-slot=data-grid-header-menu][data-state=open]]']) {
+        expect(th.className).toContain(`${when}:[--dt-menu-reserve:var(--dt-menu-slot)]`);
+      }
+      const content = th.querySelector('[data-slot="data-grid-header-sort"]')!.parentElement!;
+      expect(content.className).toContain('max-w-[calc(100%-var(--dt-menu-reserve,0px))]');
+    }
+    // Pinned: the slot covers the menu AND keep_off; otherwise the menu only.
+    expect(pinnedTh.className).toContain('[--dt-menu-slot:calc(2rem+2*var(--dt-gap))]');
+    expect(plainTh.className).toContain('[--dt-menu-slot:calc(1rem+var(--dt-gap))]');
+    // End-aligned: the menu floats at the leading edge, the label stays on
+    // the trailing one.
+    const rightMenu = rightTh.querySelector('[data-slot="data-grid-header-menu"]') as HTMLElement;
+    expect(rightMenu.className).toContain('start-[var(--dt-inset-x)]');
+    expect(rightTh.querySelector('[data-slot="data-grid-header-sort"]')!.parentElement!.parentElement).toHaveClass('justify-end');
   });
 
   it('draws the header icons without adding text to the cell', () => {
@@ -192,6 +283,24 @@ describe('column divider', () => {
     expect(firstBody[0].style.boxShadow).toContain(rule);
     expect(firstBody[1].style.boxShadow).not.toContain(rule);
     expect(screen.getByText('Total').style.boxShadow).toContain(rule);
+  });
+
+  it('is on by default for a resizable table, without meta.columnDivider', () => {
+    const columns: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'name', header: 'Name', size: 160 },
+      { accessorKey: 'qty', header: 'Qty', size: 120 },
+    ];
+    render(<DataTable columns={columns} data={data} pinFirstColumn={false} enableColumnResizing />);
+    const rule = 'inset -1px 0 0 0 var(--mds-color-border-subtle)';
+    for (const th of within(screen.getByRole('table')).getAllByRole('columnheader')) {
+      expect(th.style.boxShadow).toContain(rule);
+    }
+  });
+
+  it('...and off by default when the table is not resizable', () => {
+    render(<DataTable columns={[{ accessorKey: 'name', header: 'Name' }]} data={data} pinFirstColumn={false} />);
+    const th = within(screen.getByRole('table')).getAllByRole('columnheader')[0];
+    expect(th.style.boxShadow ?? '').not.toContain('var(--mds-color-border-subtle)');
   });
 
   it('gives way to the pinned edge on a pinned column', () => {

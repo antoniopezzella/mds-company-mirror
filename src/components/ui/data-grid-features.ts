@@ -58,6 +58,12 @@ import { dateRangeFilterFn } from './data-grid-filter-fns';
  * reads `meta.type` through this type rather than re-declaring it.
  */
 export interface DataGridColumnMeta {
+  /**
+   * The column's name where the grid must say it in words — the header menu
+   * button ("Column options for …"), the settings menu and announcements.
+   * Needed when `header` is a function; a string header is used as is.
+   */
+  label?: string;
   /** Opts a column into inline editing. Requires `onCellEdit` on the table. */
   editable?: boolean;
   /**

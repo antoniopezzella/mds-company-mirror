@@ -1,7 +1,8 @@
-import type { DataGridColumnDef } from './data-grid-features';
-import { useEffect, useState } from 'react';
+import type { DataGridColumnDef, DataGridTableInstance } from './data-grid-features';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDataGridTable } from './use-data-grid-table';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 import { DataTable, createSelectColumn } from './data-table';
 import { createActionsColumn } from './data-grid-row-actions';
@@ -324,19 +325,185 @@ export const WithColumnVisibility: StoryObj = {
   ),
 };
 
-export const FullFeatured: StoryObj = {
-  render: () => (
+function FullFeaturedDemo() {
+  // The row menu pins through the table instance, so the story owns it
+  // (`table` prop) — every other prop keeps working on an owned table.
+  const tableRef = useRef<DataGridTableInstance<Policy> | null>(null);
+  const columns = useMemo<DataGridColumnDef<Policy>[]>(() => {
+    const rowOf = (p: Policy) => tableRef.current?.getRow(String(p.id), true);
+    return [
+      createSelectColumn<Policy>({ getRowLabel: (p) => p.name }),
+      ...baseColumns,
+      createActionsColumn<Policy>({
+        getRowLabel: (p) => p.name,
+        actions: [
+          { id: 'open', label: 'Open policy', onAction: () => undefined },
+          // Hand-off 5b#3: "Pin to top" from the row menu.
+          { id: 'pin', label: 'Pin to top', hidden: (p) => !!rowOf(p)?.getIsPinned(), onAction: (p) => rowOf(p)?.pin('top') },
+          { id: 'unpin', label: 'Unpin', hidden: (p) => !rowOf(p)?.getIsPinned(), onAction: (p) => rowOf(p)?.pin(false) },
+        ],
+      }),
+    ];
+  }, []);
+  const table = useDataGridTable<Policy>({
+    columns,
+    data: largePolicyData,
+    facetedColumnIds: ['status'],
+    dateColumnIds: ['renewalDate'],
+    enableRowSelection: true,
+    enableColumnPinning: true,
+    enableRowPinning: true,
+    pageSize: 8,
+    getRowId: (p) => String(p.id),
+  });
+  tableRef.current = table;
+  useEffect(() => {
+    // Policy opens pinned (edge + keep_off in its header) and one row opens
+    // pinned, so the Banded pinned region and its rule show.
+    table.setColumnPinning({ start: ['select', 'name'], end: [] });
+    table.setRowPinning({ top: ['4'], bottom: [] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
     <DataTable
-      columns={[createSelectColumn<Policy>(), ...baseColumns]}
-      data={policyData}
+      table={table}
+      columns={columns}
+      data={largePolicyData}
       searchKey="name"
       searchPlaceholder="Search policies..."
       enableRowSelection
+      selectionNoun="policy"
+      selectionNounPlural="policies"
+      bulkActions={[
+        { id: 'assign', label: 'Assign', onAction: async (sel) => ({ succeeded: sel.selectedRowIds.length }) },
+        { id: 'delete', label: 'Delete', destructive: true, onAction: async (sel) => ({ succeeded: sel.selectedRowIds.length }) },
+      ]}
+      facetedFilters={[{ columnId: 'status', title: 'Status' }]}
+      dateFilters={[{ columnId: 'renewalDate', title: 'Renewal' }]}
+      enableSortList
       enableColumnVisibility
-      pageSize={5}
+      enableColumnPinning
+      enableRowPinning
+      enableDensityToggle
+      enableExport
+      exportFilename="policies"
+      pageSize={8}
+      pageSizeOptions={[8, 25, 50]}
+      maxHeight={480}
     />
-  ),
+  );
+}
+
+export const FullFeatured: StoryObj = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Hand-off T10: every 5b feature on at once — column pinning (Policy pinned; the header menu offers **Pin column** / Unpin, the end side only for Actions), row pinning (the row menu\'s **Pin to top**; pinned rows take the Banded fill above a 1px `border/default` rule), the Table settings gear (columns + density), Export, the Sort list, the Status facet and Renewal date filter, the select-all-filtered scope ("Select all 150") and bulk actions. The play function walks the controls with **Tab only** and checks each one shows a focus ring.',
+      },
+    },
+  },
+  render: () => <FullFeaturedDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('button', { name: 'More actions for Property #4' });
+    const nameOf = (el: Element) =>
+      el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.textContent?.trim() || '';
+    /** Tabs once round the page, recording each stop's name and whether it shows a ring. */
+    const walk = async () => {
+      (document.activeElement as HTMLElement | null)?.blur();
+      const stops = new Map<string, boolean>();
+      for (let i = 0; i < 80; i++) {
+        await userEvent.tab();
+        const el = document.activeElement;
+        if (!el || el === document.body || !canvasElement.contains(el)) break;
+        const name = nameOf(el);
+        if (stops.has(name)) break;
+        // Rings that fade in (transition-shadow) start transparent: give
+        // them up to 300 ms before calling one missing.
+        let ring = focusRingVisible(el);
+        for (let t = 0; !ring && t < 6; t++) {
+          await new Promise((r) => setTimeout(r, 50));
+          ring = focusRingVisible(el);
+        }
+        stops.set(name, ring);
+      }
+      return stops;
+    };
+
+    await step('Tab alone reaches every feature control, each with a visible focus ring', async () => {
+      const stops = await walk();
+      for (const name of [
+        'Search policies',
+        'Filter by Status',
+        'Filter by Renewal',
+        'Unpin all',
+        'Sort',
+        'Table settings',
+        'Export CSV',
+        'Select all rows on this page',
+        'Policy',
+        'Unpin Policy',
+        'Column options for Policy',
+        'Column options for Premium',
+        'Select Property #4',
+        'More actions for Property #4',
+        'Next page',
+      ]) {
+        await expect(stops.has(name), `reached "${name}" — stops: ${[...stops.keys()].join(' | ')}`).toBe(true);
+        await expect(stops.get(name), `focus ring on "${name}"`).toBe(true);
+      }
+    });
+
+    await step('the ring check can fail: an unfocused control has none', async () => {
+      await expect(focusRingVisible(canvas.getByRole('button', { name: 'Export CSV' }))).toBe(false);
+    });
+
+    await step('Space selects the page; the select-all-filtered scope and bulk actions follow by Tab', async () => {
+      const selectAll = canvas.getByRole('checkbox', { name: 'Select all rows on this page' });
+      selectAll.focus();
+      await userEvent.keyboard(' ');
+      await canvas.findByRole('button', { name: /^Select all \d+$/ });
+      const stops = await walk();
+      const escalate = [...stops.keys()].find((n) => /^Select all \d+$/.test(n));
+      await expect(escalate, 'reached Select all N').toBeDefined();
+      await expect(stops.get(escalate!)).toBe(true);
+      for (const name of ['Assign', 'Delete', 'Clear selection']) {
+        await expect(stops.has(name), `reached "${name}" — stops: ${[...stops.keys()].join(' | ')}`).toBe(true);
+        await expect(stops.get(name), `focus ring on "${name}"`).toBe(true);
+      }
+    });
+
+    await step('the row menu offers Pin to top from the keyboard', async () => {
+      const more = canvas.getByRole('button', { name: 'More actions for Commercial Auto #1' });
+      more.focus();
+      await userEvent.keyboard('{Enter}');
+      const menu = await within(document.body).findByRole('menu');
+      await expect(within(menu).getByRole('menuitem', { name: 'Pin to top' })).toBeInTheDocument();
+      await userEvent.keyboard('{Escape}');
+      // Closed before axe runs: an open Radix menu aria-hides the rest.
+      await waitFor(() => expect(within(document.body).queryByRole('menu')).toBeNull());
+      await expect(more).toHaveFocus();
+    });
+  },
 };
+
+/**
+ * True when `el` paints a focus indicator: an outline, a non-transparent box
+ * shadow, or the 2px `::after` frame the grid's header buttons draw. The
+ * search field's ring is on its wrapping label (`focus-within`).
+ */
+function focusRingVisible(el: Element): boolean {
+  const host = el.closest('[data-slot="data-grid-toolbar-search"]') ?? el;
+  const cs = getComputedStyle(host);
+  const after = getComputedStyle(el, '::after');
+  const outline = cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0;
+  const shadow =
+    cs.boxShadow !== 'none' &&
+    cs.boxShadow.split(/,(?![^(]*\))/).some((part) => !/rgba\([^)]*,\s*0\)/.test(part));
+  const frame = after.content !== 'none' && after.display !== 'none' && parseFloat(after.borderTopWidth) > 0;
+  return outline || shadow || frame;
+}
 
 export const Loading: StoryObj = {
   parameters: {

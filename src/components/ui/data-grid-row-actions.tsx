@@ -274,6 +274,13 @@ function RowActionsCell<TData>({
   );
 }
 
+// DECISION: D6 — row drag reorder (hand-off §12 D6, 5b#24). Figma has a
+// `Control/Drag handle`, but no drag handle is rendered here, and none may be
+// added, until D6 is decided AND a keyboard alternative ships with it: "Move
+// up" / "Move down" in this row menu plus a polite live-region announcement.
+// A pointer-only drag is a WCAG 2.1.1 failure that axe cannot detect (same
+// reasoning as the header's keyboard-first column reorder).
+
 /**
  * An actions column, mirroring `createSelectColumn`.
  *
@@ -293,7 +300,7 @@ export function createActionsColumn<TData extends RowData>({
     // name without rendering one. Learnt from the control columns the grid
     // already has.
     header: () => (header ? header : <span className="sr-only">Actions</span>),
-    meta: { align: 'right' },
+    meta: { align: 'right', label: header || 'Actions' },
     enableSorting: false,
     enableHiding: false,
     enableResizing: false,

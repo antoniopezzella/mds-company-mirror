@@ -546,7 +546,8 @@ export function DataGridSettingsMenu({
   const arrangeable = listed.filter((c) => c.getIsVisible());
   // Pinning lists every VISIBLE text column that may pin; a hidden column has
   // nothing on screen to pin. Checked = pinned to the start (Figma has no end
-  // pinning; the header menu still offers "Pin to end" where it is wanted).
+  // pinning; hand-off 5b#2 allows the end for the Actions column only, which
+  // its header menu's "Pin column" does).
   const pinnable = table.options.enableColumnPinning ? arrangeable.filter((c) => c.getCanPin()) : [];
   const pinnedCount = pinnable.filter((c) => c.getIsPinned()).length;
 

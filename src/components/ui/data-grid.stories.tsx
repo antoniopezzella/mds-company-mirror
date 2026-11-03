@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { expect } from 'storybook/test';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useTable, type SortingState } from '@tanstack/react-table';
 
@@ -274,7 +274,7 @@ export const ColumnControls: StoryObj = {
     docs: {
       description: {
         story:
-          'Every column menu carries Pin to start / Pin to end / Unpin and Move left / Move right, plus the existing sort and hide items. **Reorder is keyboard-first on purpose**: a drag-only implementation passes axe — it cannot tell whether a div with `onPointerDown` is reachable by keyboard — and fails WCAG 2.1.1. Moves stay inside a column\'s own pinned region, because a start-pinned column renders before the centre ones regardless of column order; allowing the move would reorder the array, change nothing on screen, and announce success. The resize handle is a focusable `role="separator"` with `aria-valuemin`/`max` from the column\'s own bounds.',
+          'Every column menu carries Pin column / Unpin (hand-off 5b#1/#2: data columns pin to the start; only the Actions column pins to the end) and Move left / Move right, plus the existing sort and hide items. **Reorder is keyboard-first on purpose**: a drag-only implementation passes axe — it cannot tell whether a div with `onPointerDown` is reachable by keyboard — and fails WCAG 2.1.1. Moves stay inside a column\'s own pinned region, because a start-pinned column renders before the centre ones regardless of column order; allowing the move would reorder the array, change nothing on screen, and announce success. The resize handle is a focusable `role="separator"` with `aria-valuemin`/`max` from the column\'s own bounds.',
       },
     },
   },
@@ -671,4 +671,82 @@ export const HeaderParts: StoryObj = {
       />
     </div>
   ),
+  // Geometry the jsdom suite cannot see — this runs in real Chromium. Each
+  // check measures the rendered part, so a class change that keeps the
+  // behaviour's name but not its shape (a 3×12 grip, a missing focus ring,
+  // a menu floating over the sort arrow) fails here.
+  play: async ({ canvasElement, step }) => {
+    const sortButtons = () =>
+      [...canvasElement.querySelectorAll<HTMLButtonElement>('thead [data-slot="data-grid-header-sort"]')].filter(
+        (b) => b.getBoundingClientRect().width > 0
+      );
+    const sortFor = (label: string) => sortButtons().find((b) => b.textContent?.startsWith(label))!;
+    const thOf = (el: Element) => el.closest('th')!;
+    const handle = (label: string) => within(canvasElement).getByRole('separator', { name: `Resize column ${label}` });
+
+    await step('focus ring: Figma inset double ring on the whole cell (17312:132)', async () => {
+      const sort = sortFor('Status');
+      sort.focus();
+      // Guard: without :focus-visible the ring is legitimately hidden and
+      // the checks below would measure nothing.
+      await expect(sort.matches(':focus-visible')).toBe(true);
+      const ring = getComputedStyle(sort, '::after');
+      await expect(ring.display).toBe('block');
+      await expect(ring.position).toBe('absolute');
+      await expect(ring.top).toBe('2px');
+      await expect(ring.left).toBe('2px');
+      await expect(ring.borderTopWidth).toBe('2px');
+      await expect(ring.borderTopStyle).toBe('solid');
+      await expect(ring.boxShadow).toContain('inset');
+      // Drawn against the <th>: the button itself must not be positioned.
+      await expect(getComputedStyle(sort).position).toBe('static');
+      sort.blur();
+      await expect(getComputedStyle(sort, '::after').display).toBe('none');
+    });
+
+    await step('resize grip: 2×16, 1px in from the cell edge, shown on focus', async () => {
+      const h = handle('Status');
+      const grip = h.querySelector('[data-slot="data-grid-resize-grip"]') as HTMLElement;
+      await expect(getComputedStyle(grip).display).toBe('none');
+      h.focus();
+      await expect(h.matches(':focus-visible')).toBe(true);
+      await expect(getComputedStyle(grip).display).toBe('block');
+      const r = grip.getBoundingClientRect();
+      await expect(r.width).toBe(2);
+      await expect(r.height).toBe(16);
+      await expect(thOf(sortFor('Status')).getBoundingClientRect().right - r.right).toBeCloseTo(1, 0);
+      h.blur();
+    });
+
+    await step('the menu never covers the sort icon while it shows', async () => {
+      // Narrow an unpinned start-aligned and an end-aligned column until
+      // their labels truncate — the case where the label group reaches the
+      // edge the menu floats on. The pinned 120px column truncates already.
+      for (const label of ['Status', 'Premium']) {
+        for (let i = 0; i < 5; i++) fireEvent.keyDown(handle(label), { key: 'ArrowLeft', shiftKey: true });
+      }
+      for (const label of ['Policy name and line of business', 'Status', 'Premium', 'Renewal Date']) {
+        const sort = sortFor(label);
+        sort.click(); // sorted: arrow_upward in the primary colour
+        sort.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        sort.focus(); // focus-within shows the menu, as hover does
+        const th = thOf(sort);
+        const menu = th.querySelector('[data-slot="data-grid-header-menu"]') as HTMLElement;
+        await waitFor(() => expect(getComputedStyle(menu).opacity).toBe('1'));
+        const icon = sort.querySelector('[data-glyph]')!.getBoundingClientRect();
+        const glyph = menu.querySelector('[data-glyph]')!.getBoundingClientRect();
+        const apart = icon.right <= glyph.left || icon.left >= glyph.right;
+        await expect({ label, apart }).toEqual({ label, apart: true });
+        // A click where the arrow is sorts; it must not open the menu.
+        const hit = document.elementFromPoint(icon.left + icon.width / 2, icon.top + icon.height / 2);
+        await expect({ label, hitSort: !!hit?.closest('[data-slot="data-grid-header-sort"]') }).toEqual({ label, hitSort: true });
+        sort.blur();
+      }
+      // Guard: the truncating case really ran (it is the one that broke).
+      const label = (l: string) => sortFor(l).querySelector('.truncate') as HTMLElement;
+      for (const l of ['Policy name and line of business', 'Status', 'Premium']) {
+        await expect({ l, truncates: label(l).scrollWidth > label(l).clientWidth }).toEqual({ l, truncates: true });
+      }
+    });
+  },
 };

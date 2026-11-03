@@ -51,9 +51,21 @@ import { DataGridDetailContext } from './data-grid-rows';
 /** Payload for an inline cell edit. */
 
 /** A column's human name: its string header, else its id. */
-export function columnLabel(column: { id: string; columnDef: { header?: unknown } }): string {
+export function columnLabel(column: {
+  id: string;
+  columnDef: { header?: unknown; meta?: { label?: string } };
+}): string {
   const header = column.columnDef.header;
-  return typeof header === 'string' ? header : column.id;
+  return typeof header === 'string' ? header : (column.columnDef.meta?.label ?? column.id);
+}
+
+/**
+ * Which side the header menu's "Pin column" pins to. Hand-off 5b#1/#2: data
+ * columns pin to the start; the end is for the Actions column only
+ * (`createActionsColumn`'s id), with its edge on the left.
+ */
+function pinSideFor(column: { id: string }): 'start' | 'end' {
+  return column.id === 'actions' ? 'end' : 'start';
 }
 
 /**
@@ -655,6 +667,9 @@ function DataGridTableInner<TData extends RowData>(
   const hasPinnedRows = topRows.length > 0 || bottomRows.length > 0;
   const centerRows = hasPinnedRows ? table.getCenterRows() : rows;
   const visibleColumnCount = table.getVisibleLeafColumns().length;
+  // Header rows come first in aria-rowindex / aria-rowcount (grouped headers
+  // are two rows, not one).
+  const headerRowCount = table.getHeaderGroups().length;
 
   // Called in the render body, never memoised: getRoleColor reads the `dark`
   // class off documentElement at call time, so a value cached in a useMemo
@@ -1168,16 +1183,46 @@ function DataGridTableInner<TData extends RowData>(
     target instanceof Element &&
     !!target.closest('button, a, input, select, textarea, [role="button"], [role="checkbox"]');
 
-  const renderRow = (row: (typeof rows)[number], index?: number): React.ReactNode => {
+  /**
+   * `position` is the row's 0-based place in the WHOLE body — top-pinned,
+   * then centre, then bottom-pinned — so `aria-rowindex` stays unique and in
+   * reading order across the three <tbody>s. `region` marks a pinned row.
+   */
+  const renderRow = (
+    row: (typeof rows)[number],
+    position?: number,
+    region?: 'top' | 'bottom'
+  ): React.ReactNode => {
     // Striping sits below hover and selection: those are states the user
     // caused, and they have to win over decoration.
     const rowState: DataGridRowState | undefined = getRowState?.(row.original);
     const disabledRow = rowState === 'disabled';
+    // DECISION: pinned rows take the Banded fill — hand-off 5b#3 ("Pinned rows
+    // use the Banded fill"). The Figma Directory frame (17992-15767) draws its
+    // pinned contacts WITHOUT the band; the hand-off was followed. To overrule,
+    // drop `region ? stripeBg :` below — nothing else depends on it.
+    const pinnedBand = region ? stripeBg : undefined;
     // Figma Row State=Error: background/critical/subtle replaces the row's
     // surface (and the band), and WINS over Selected — a failed row has to
     // stay visible while it is selected; the checkbox still shows selection.
     const stripe =
-      rowState === 'error' ? errorRowBg : striped && row.index % 2 === 1 ? stripeBg : rowBg;
+      rowState === 'error'
+        ? errorRowBg
+        : (pinnedBand ?? (striped && row.index % 2 === 1 ? stripeBg : rowBg));
+    // Hand-off 5b#3: a 1px border/default rule separates pinned rows from the
+    // scrolling ones — under the last top-pinned row, over the first
+    // bottom-pinned row. The last centre row drops its own divider when a
+    // bottom region follows, so at rest the two never stack into 2px.
+    const lastTop = region === 'top' && topRows[topRows.length - 1]?.id === row.id;
+    const firstBottom = region === 'bottom' && bottomRows[0]?.id === row.id;
+    const lastCentreBeforeBottom =
+      !region && bottomRows.length > 0 && centerRows[centerRows.length - 1]?.id === row.id;
+    const rowDivider = lastTop
+      ? `inset 0 -1px 0 0 ${pinnedEdgeColor}`
+      : lastCentreBeforeBottom
+        ? undefined
+        : cellDivider;
+    const pinnedTopRule = firstBottom ? `inset 0 1px 0 0 ${pinnedEdgeColor}` : undefined;
     // Figma Row states: Error > Selected > Hover > Banded > Default. Hover is
     // a layer over the row's own surface, so a hovered banded (or error) row
     // keeps its fill. A disabled row takes no hover — nothing in it responds.
@@ -1197,8 +1242,11 @@ function DataGridTableInner<TData extends RowData>(
               // means the DOM holds ~30 rows of a much larger set — without it
               // a screen reader announces the rendered count as the total.
               aria-rowindex={
-                (enableVirtualization || enableCellSelection) && index !== undefined ? index + 2 : undefined
+                (enableVirtualization || enableCellSelection) && position !== undefined
+                  ? headerRowCount + position + 1
+                  : undefined
               }
+              data-pinned-row={region}
               onMouseEnter={() => setHoveredRow(row.id)}
               onMouseLeave={() => {
                 setHoverTrail(row.id);
@@ -1423,7 +1471,8 @@ function DataGridTableInner<TData extends RowData>(
                       // state's 1px inside stroke REPLACES the divider: Figma
                       // draws the divider in the stroke's colour.
                       boxShadow: [
-                        statePaint ? `inset 0 0 0 1px ${statePaint.stroke}` : cellDivider,
+                        statePaint ? `inset 0 0 0 1px ${statePaint.stroke}` : rowDivider,
+                        pinnedTopRule,
                         getPinnedCellStyle(cell.column, rowPaint).boxShadow ?? columnDividerFor(cell.column),
                         enableCellSelection && !statePaint ? selectionOutline(cell).boxShadow : undefined,
                       ]
@@ -1699,7 +1748,9 @@ function DataGridTableInner<TData extends RowData>(
         role={enableCellSelection ? 'grid' : undefined}
         aria-multiselectable={enableCellSelection ? true : undefined}
         aria-rowcount={
-          enableVirtualization || enableCellSelection ? centerRows.length + 1 : undefined
+          enableVirtualization || enableCellSelection
+            ? headerRowCount + topRows.length + centerRows.length + bottomRows.length
+            : undefined
         }
         aria-colcount={
           enableVirtualization || enableCellSelection ? visibleColumnCount : undefined
@@ -1745,8 +1796,13 @@ function DataGridTableInner<TData extends RowData>(
               const canMoveLater = !header.column.getIsLastColumn(pinnedRegion || 'center');
               const showUnpin =
                 enableColumnPinning && !!pinnedRegion && !headerMeta?.leading && header.column.getCanPin();
+              // A leading control column (the select checkbox) has no menu:
+              // nothing in it sorts, hides or moves, it is pinned by
+              // `pinFirstColumn`, and with column pinning on the floating
+              // more_vert landed ON the select-all checkbox and took its clicks.
               const hasMenu =
-                canSort || canHide || (enableColumnPinning && header.column.getCanPin()) || enableColumnReorder;
+                !headerMeta?.leading &&
+                (canSort || canHide || (enableColumnPinning && header.column.getCanPin()) || enableColumnReorder);
               return (
                 <TableHead
                   key={header.id}
@@ -1760,6 +1816,19 @@ function DataGridTableInner<TData extends RowData>(
                     // `relative` is the grid's own: the resize handle is
                     // absolutely positioned against this cell.
                     'group/th relative h-[var(--dt-header-h)] px-[var(--dt-inset-x)] py-[var(--dt-inset-y)] font-bold',
+                    // While the floating menu shows (hover, focus inside the
+                    // cell, menu open, touch), the label group gives up the
+                    // menu's slot — Figma lays Content → Pin → Menu out in
+                    // flow, so the label and sort icon never sit under it.
+                    // See the content wrapper's max-width below.
+                    hasMenu && [
+                      showUnpin
+                        ? '[--dt-menu-slot:calc(2rem+2*var(--dt-gap))]'
+                        : '[--dt-menu-slot:calc(1rem+var(--dt-gap))]',
+                      'hover:[--dt-menu-reserve:var(--dt-menu-slot)] focus-within:[--dt-menu-reserve:var(--dt-menu-slot)]',
+                      'has-[[data-slot=data-grid-header-menu][data-state=open]]:[--dt-menu-reserve:var(--dt-menu-slot)]',
+                      'pointer-coarse:[--dt-menu-reserve:var(--dt-menu-slot)]',
+                    ],
                     // Hover is an overlay on the band (Figma State=Hover).
                     'hover:[background-image:linear-gradient(var(--mds-color-overlay-neutral-hover),var(--mds-color-overlay-neutral-hover))]',
                     spansLeading ? undefined : insetFor(header.column),
@@ -1789,10 +1858,23 @@ function DataGridTableInner<TData extends RowData>(
                     // → Pin icon 16 → Menu icon 16, 8 apart. The label
                     // truncates before the trailing icons — they take space,
                     // they do not sit on top of it.
-                    <div className="flex min-w-0 items-center gap-[var(--dt-gap)]">
+                    // `justify-end` for an end-aligned column keeps its label
+                    // on the trailing edge when the content gives up the
+                    // menu's slot at the leading edge.
+                    <div
+                      className={cn(
+                        'flex min-w-0 items-center gap-[var(--dt-gap)]',
+                        resolveAlign(header.column) === 'right' && 'justify-end'
+                      )}
+                    >
                       <div
                         className={cn(
-                          'flex min-w-0 flex-1 items-center',
+                          // The reserve is a PERCENTAGE max-width on purpose:
+                          // a cyclic percentage does not count towards the
+                          // cell's intrinsic width, so an auto-layout column
+                          // does not widen on hover — the label truncates
+                          // instead. At rest the reserve is 0 (no-op).
+                          'flex min-w-0 max-w-[calc(100%-var(--dt-menu-reserve,0px))] flex-1 items-center',
                           resolveAlign(header.column) === 'right'
                             ? 'justify-end'
                             : resolveAlign(header.column) === 'center'
@@ -1880,21 +1962,30 @@ function DataGridTableInner<TData extends RowData>(
                                 over the cell's trailing edge on the band
                                 colour (the leading edge for an
                                 end-aligned column, whose label sits at the
-                                trailing edge). Beside a pinned column's
-                                keep_off it stays in flow, in Figma's order. */}
+                                trailing edge). On a pinned column it
+                                floats too, just before keep_off (16px slot
+                                + the gap), so keep_off stays reachable —
+                                in flow it reserved an invisible 24px slot
+                                that cut a 120px pinned label to "P…".
+                                Floating must not mean covering: while it
+                                shows, the <th> sets --dt-menu-reserve and
+                                the label group shrinks out of its way
+                                (2026-11-02: it covered a pinned column's
+                                sort arrow on hover/focus, and a click on
+                                the arrow opened the menu). */}
                             <button
                               type="button"
                               data-slot="data-grid-header-menu"
                               aria-label={`Column options for ${columnLabel(header.column)}`}
                               className={cn(
                                 headerIconButton,
-                                !showUnpin && [
-                                  'absolute top-1/2 m-0 -translate-y-1/2',
-                                  resolveAlign(header.column) === 'right'
-                                    ? 'start-[var(--dt-inset-x)] -ms-1'
+                                'absolute top-1/2 m-0 -translate-y-1/2',
+                                resolveAlign(header.column) === 'right'
+                                  ? 'start-[var(--dt-inset-x)] -ms-1'
+                                  : showUnpin
+                                    ? 'end-[calc(var(--dt-inset-x)+1rem+var(--dt-gap))] -me-1'
                                     : 'end-[var(--dt-inset-x)] -me-1',
-                                  'bg-[var(--mds-color-background-neutral-subtle)] [background-image:linear-gradient(var(--mds-color-overlay-neutral-hover),var(--mds-color-overlay-neutral-hover))]',
-                                ],
+                                'bg-[var(--mds-color-background-neutral-subtle)] [background-image:linear-gradient(var(--mds-color-overlay-neutral-hover),var(--mds-color-overlay-neutral-hover))]',
                                 'opacity-0 group-hover/th:opacity-100 group-focus-within/th:opacity-100 data-[state=open]:opacity-100',
                                 'pointer-coarse:opacity-100'
                               )}
@@ -1919,20 +2010,19 @@ function DataGridTableInner<TData extends RowData>(
                               </>
                             )}
 
-                            {/* Pinning. v9 renamed the positions left/right ->
-                                start/end, which is also the right vocabulary
-                                for an RTL-capable system. */}
+                            {/* Pinning — hand-off 4.10 D / 5b#10: "Pin
+                                column / Unpin". One item, not a start/end
+                                pair: 5b#1 pins data columns to the START
+                                only, and 5b#2 allows the END for the Actions
+                                column only, so the side follows from the
+                                column. Glyphs are Material keep / keep_off
+                                (5b#1). */}
                             {enableColumnPinning && header.column.getCanPin() && (
                               <>
                                 {canSort && <DropdownMenuSeparator />}
-                                {header.column.getIsPinned() !== 'start' && (
-                                  <DropdownMenuItem onSelect={() => header.column.pin('start')}>
-                                    <Icon pseudo name="keep" size={16} className="me-2 opacity-60" /> Pin to start
-                                  </DropdownMenuItem>
-                                )}
-                                {header.column.getIsPinned() !== 'end' && (
-                                  <DropdownMenuItem onSelect={() => header.column.pin('end')}>
-                                    <Icon pseudo name="keep" size={16} className="me-2 opacity-60" /> Pin to end
+                                {!header.column.getIsPinned() && (
+                                  <DropdownMenuItem onSelect={() => header.column.pin(pinSideFor(header.column))}>
+                                    <Icon pseudo name="keep" size={16} className="me-2 opacity-60" /> Pin column
                                   </DropdownMenuItem>
                                 )}
                                 {header.column.getIsPinned() && (
@@ -2077,7 +2167,7 @@ function DataGridTableInner<TData extends RowData>(
           data-pinned="top"
           style={maxHeight ? { position: 'sticky', top: headerHeight, zIndex: Z_INDEX.sticky } : undefined}
         >
-          {topRows.map(renderRow)}
+          {topRows.map((row, i) => renderRow(row, i, 'top'))}
         </TableBody>
       )}
       <TableBody
@@ -2126,7 +2216,7 @@ function DataGridTableInner<TData extends RowData>(
                   <TableCell colSpan={visibleColumnCount} className="p-0" />
                 </TableRow>
               )}
-              {virtualItems.map((vi) => renderRow(centerRows[vi.index], vi.index))}
+              {virtualItems.map((vi) => renderRow(centerRows[vi.index], topRows.length + vi.index))}
               {padBottom > 0 && (
                 <TableRow aria-hidden="true" style={{ height: padBottom }}>
                   <TableCell colSpan={visibleColumnCount} className="p-0" />
@@ -2134,7 +2224,7 @@ function DataGridTableInner<TData extends RowData>(
               )}
             </>
           ) : (
-            centerRows.map((row, i) => renderRow(row, i))
+            centerRows.map((row, i) => renderRow(row, topRows.length + i))
           )
         )}
         </TableBody>
@@ -2177,7 +2267,7 @@ function DataGridTableInner<TData extends RowData>(
           data-pinned="bottom"
           style={maxHeight ? { position: 'sticky', bottom: 0, zIndex: Z_INDEX.sticky } : undefined}
         >
-          {bottomRows.map(renderRow)}
+          {bottomRows.map((row, i) => renderRow(row, topRows.length + centerRows.length + i, 'bottom'))}
         </TableBody>
       )}
       </Table>

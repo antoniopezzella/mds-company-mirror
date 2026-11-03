@@ -1,8 +1,10 @@
+import * as React from 'react';
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 
 import { DataTable } from './data-table';
+import { useDataGridTable } from './use-data-grid-table';
 import type { DataGridColumnDef } from './data-grid-features';
 
 /**
@@ -97,6 +99,65 @@ describe('virtualization', () => {
       const transform = (el as HTMLElement).style.transform;
       expect(transform === '' || transform === 'none').toBe(true);
     }
+  });
+});
+
+describe('pinned rows in the aria row sequence (hand-off 5b#3, §9)', () => {
+  const rows = many.slice(0, 6);
+
+  function PinnedGrid() {
+    const table = useDataGridTable<Row>({
+      columns,
+      data: rows,
+      enableRowPinning: true,
+      enableCellSelection: true,
+      pageSize: 10,
+      getRowId: (r) => String(r.id),
+    });
+    React.useEffect(() => {
+      table.setRowPinning({ top: ['2', '5'], bottom: ['6'] });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    return <DataTable table={table} columns={columns} data={rows} enableRowPinning enableCellSelection pageSize={10} />;
+  }
+
+  it('gives every row a unique aria-rowindex and counts header + top + centre + bottom', async () => {
+    // Before: top/bottom rows took their map index, so the first pinned row
+    // and the first centre row both claimed aria-rowindex 2, and the count
+    // (centre + 1) left the pinned rows out entirely.
+    const { container } = render(<PinnedGrid />);
+    const table = container.querySelector('table')!;
+    await waitFor(() => expect(container.querySelector('tbody[data-pinned="top"]')).toBeInTheDocument());
+
+    // 1 header + 2 top + 3 centre + 1 bottom.
+    expect(table).toHaveAttribute('aria-rowcount', '7');
+    const indices = Array.from(container.querySelectorAll('tbody tr[aria-rowindex]')).map((tr) =>
+      Number(tr.getAttribute('aria-rowindex'))
+    );
+    // Unique, and in DOM (reading) order: top 2–3, centre 4–6, bottom 7.
+    expect(indices).toEqual([2, 3, 4, 5, 6, 7]);
+    const top = container.querySelectorAll('tbody[data-pinned="top"] tr');
+    expect(Array.from(top).map((tr) => tr.getAttribute('aria-rowindex'))).toEqual(['2', '3']);
+    expect(container.querySelector('tbody[data-pinned="bottom"] tr')).toHaveAttribute('aria-rowindex', '7');
+  });
+
+  it('paints pinned rows Banded and rules them off from the scrolling rows in border/default', async () => {
+    const { container } = render(<PinnedGrid />);
+    await waitFor(() => expect(container.querySelector('tbody[data-pinned="top"]')).toBeInTheDocument());
+    const top = container.querySelectorAll<HTMLElement>('tbody[data-pinned="top"] tr');
+    const bottom = container.querySelector<HTMLElement>('tbody[data-pinned="bottom"] tr')!;
+    for (const tr of [...top, bottom]) {
+      expect(tr.style.backgroundColor).toBe('var(--mds-color-background-neutral-subtle)');
+    }
+    const cellShadow = (tr: Element) => (tr.querySelector('td') as HTMLElement).style.boxShadow;
+    // First top row: the ordinary subtle divider; last top row: border/default.
+    expect(cellShadow(top[0])).toContain('var(--mds-color-border-subtle)');
+    expect(cellShadow(top[1])).toContain('inset 0 -1px 0 0 var(--mds-color-border-default)');
+    // First bottom row: the rule on its TOP edge.
+    expect(cellShadow(bottom)).toContain('inset 0 1px 0 0 var(--mds-color-border-default)');
+    // Centre rows keep the default surface.
+    const centre = container.querySelectorAll<HTMLElement>('tbody:not([data-pinned]) tr[aria-rowindex]');
+    expect(centre[0].style.backgroundColor).toBe('var(--mds-color-background-default)');
   });
 });
 

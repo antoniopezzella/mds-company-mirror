@@ -21,13 +21,17 @@ import '../src/styles/_typography.scss';
 export const globalTypes = {
   colorMode: {
     name: 'Color Mode',
-    description: 'Light or Dark theme',
+    description: 'Light, Dark, or Light with the story on an Inverse surface',
     defaultValue: 'light',
     toolbar: {
       icon: 'mirror',
       items: [
         { value: 'light', title: 'Light' },
         { value: 'dark', title: 'Dark' },
+        // Not a third theme: the page stays Light and the story sits on an
+        // ancestor `data-surface="inverse"`, which is how the generated token
+        // layer (mds-tokens.css) scopes Inverse. Data table hand-off T5.
+        { value: 'inverse', title: 'Inverse surface' },
       ],
       dynamicTitle: true,
     },
@@ -41,6 +45,7 @@ export const decorators = [
     const mode: ThemeMode = context.globals?.colorMode === 'dark' ? 'dark' : 'light';
     const activeTheme = mode === 'dark' ? darkTheme : theme;
     const layout = context.parameters?.layout || 'padded';
+    const inverse = context.globals?.colorMode === 'inverse';
 
     // The toolbar toggle used to only drive MUI's ThemeProvider. Every
     // shadcn/ui component in the library is invisible to that: Tailwind's
@@ -74,7 +79,10 @@ export const decorators = [
     // - centered: Minimal padding, no minHeight (fits component)
     // - padded: Standard padding with auto height
     const containerStyle: React.CSSProperties = {
-      background: activeTheme.palette.background.default,
+      // On Inverse the canvas takes the surface's own background, so the
+      // story is checked against the colour it will really sit on.
+      background: inverse ? 'var(--mds-color-background-default)' : activeTheme.palette.background.default,
+      color: inverse ? 'var(--mds-color-foreground-primary-default)' : undefined,
       minHeight: layout === 'fullscreen' ? '100vh' : undefined,
       padding: layout === 'centered' ? 0 : 24,
     };
@@ -83,7 +91,7 @@ export const decorators = [
       <ThemeProvider theme={activeTheme}>
         <CssBaseline />
         <ThemeModeContext.Provider value={{ mode, toggleMode: () => {} }}>
-          <div style={containerStyle}>
+          <div style={containerStyle} data-surface={inverse ? 'inverse' : undefined}>
             <RoleVarsProvider mode={mode}>
               <Story />
             </RoleVarsProvider>
