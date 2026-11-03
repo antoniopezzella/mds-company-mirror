@@ -375,11 +375,19 @@ export interface DataGridScrollAreaProps {
  * The scroll container. Bounded by the grid's `maxHeight`, which is also what
  * gives `position: sticky` on the header something to stick within — without a
  * bounded height the page scrolls instead of the table.
+ *
+ * `relative` makes it the containing block for the cells' absolutely
+ * positioned descendants (`sr-only` labels, header buttons). Without it they
+ * resolve against an ancestor outside the overflow, escape the clip, and on a
+ * narrow screen push the PAGE sideways (~370px at 390 wide, 2026-11-03).
+ *
+ * It is also an inline-size container: pinned columns cap their width in
+ * `cqw` of it (see `widthFor` in data-grid-table.tsx).
  */
 export function DataGridScrollArea({ children, className }: DataGridScrollAreaProps) {
   const { maxHeight, setScrollElement } = useDataGrid();
   return (
-    <div ref={setScrollElement} className={cn('overflow-auto', className)} style={{ maxHeight }}>
+    <div ref={setScrollElement} className={cn('relative overflow-auto [container-type:inline-size]', className)} style={{ maxHeight }}>
       {children}
     </div>
   );

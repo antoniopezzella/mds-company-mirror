@@ -173,7 +173,19 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
     // literal each render does not rebuild every column definition.
   }, [columns, facetKey, dateKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const firstColumnId = columns[0]?.id ?? (columns[0] as { accessorKey?: string })?.accessorKey;
+  // The "first column" is the first DATA column plus any leading control
+  // columns in front of it (row checkbox, expand toggle). Figma draws those
+  // controls inside the first cell and hand-off 5b#1 pins the selection column
+  // WITH the primary column — pinning the checkbox alone put the pinned edge
+  // between it and the name, and let the name scroll away under it.
+  const leadIds: string[] = [];
+  for (const c of columns) {
+    const id = c.id ?? (c as { accessorKey?: string }).accessorKey;
+    if (!id) break;
+    leadIds.push(id);
+    if (!(c.meta as { leading?: boolean } | undefined)?.leading) break;
+  }
+  const leadKey = leadIds.join('\u0000');
 
   // Real state, not a derived memo.
   //
@@ -184,7 +196,7 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
   // control silently does nothing. Same for column order, which was not in
   // state at all.
   const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>(() => ({
-    start: pinFirstColumn && firstColumnId ? [firstColumnId] : [],
+    start: pinFirstColumn ? leadIds : [],
     end: [],
   }));
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([]);
@@ -194,9 +206,11 @@ export function useDataGridTable<TData extends RowData, TValue = unknown>({
   React.useEffect(() => {
     setColumnPinning((prev) => ({
       ...prev,
-      start: pinFirstColumn && firstColumnId ? [firstColumnId] : prev.start.filter((id) => id !== firstColumnId),
+      start: pinFirstColumn
+        ? [...leadIds, ...prev.start.filter((id) => !leadIds.includes(id))]
+        : prev.start.filter((id) => !leadIds.includes(id)),
     }));
-  }, [pinFirstColumn, firstColumnId]);
+  }, [pinFirstColumn, leadKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return useTable({
     features: dataGridFeatures,

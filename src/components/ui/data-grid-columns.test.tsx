@@ -1,8 +1,9 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, renderHook, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 
-import { DataTable } from './data-table';
+import { DataTable, createSelectColumn } from './data-table';
+import { useDataGridTable } from './use-data-grid-table';
 import { createActionsColumn } from './data-grid-row-actions';
 import type { DataGridColumnDef } from './data-grid-features';
 
@@ -50,6 +51,48 @@ const headerOrder = () =>
     .map((th) => th.textContent?.replace(/\s+/g, ' ').trim() ?? '');
 
 describe('column pinning', () => {
+  it('pinFirstColumn pins the checkbox column WITH the first data column (hand-off 5b#1)', () => {
+    // Pinning the checkbox alone drew the pinned edge between it and Policy.
+    const withSelect = [createSelectColumn<Row>({ getRowLabel: (r) => r.name }), ...columns];
+    const { result } = renderHook(() => useDataGridTable({ columns: withSelect, data, enableRowSelection: true }));
+    expect(result.current.state.columnPinning.start).toEqual(['select', 'name']);
+
+    const plain = renderHook(() => useDataGridTable({ columns, data }));
+    expect(plain.result.current.state.columnPinning.start).toEqual(['name']);
+  });
+
+  it('sticks a pinned column at the RENDERED width of the columns before it, not TanStack\'s size', () => {
+    // The checkbox cell draws inset + 20px; TanStack's getStart() reports 20,
+    // so the pinned Policy stuck at left:20 and slid over the checkbox on
+    // every horizontal scroll (2026-11-03).
+    render(
+      <DataTable
+        columns={[createSelectColumn<Row>({ getRowLabel: (r) => r.name }), ...columns]}
+        data={data}
+        enableRowSelection
+      />
+    );
+    const [checkbox, policy] = within(screen.getAllByRole('row')[1]).getAllByRole('cell');
+    expect(checkbox.style.left).toBe('0px');
+    expect(policy.style.left).toContain('var(--dt-inset-x)');
+    expect(policy.style.left).not.toBe('20px');
+  });
+
+  it('caps a pinned column to a share of the visible width, so others can scroll under it', () => {
+    render(<DataTable columns={columns} data={data} />);
+    const policy = within(screen.getAllByRole('row')[1]).getAllByRole('cell')[0];
+    // The `min(<width>, 50cqw)` value itself can't be asserted here — jsdom
+    // drops `min()`/`cqw` from inline styles — so the cap is verified in a
+    // real browser (Directory at 390px: Name 244 → 154). What CAN be checked
+    // is the wrapper that stops the content's own width overriding it.
+    expect(policy.querySelector('[data-slot="data-grid-pinned-clamp"]')).not.toBeNull();
+    // The cap resolves against the scroll area, which must be an inline-size
+    // container — and positioned, so sr-only text can't escape its clip.
+    const scroller = screen.getByRole('table').closest('.overflow-auto') as HTMLElement;
+    expect(scroller.className).toContain('[container-type:inline-size]');
+    expect(scroller.className).toContain('relative');
+  });
+
   it('offers no pin controls unless enabled', () => {
     render(<DataTable columns={columns} data={data} />);
     const menu = openColumnMenu('Status');

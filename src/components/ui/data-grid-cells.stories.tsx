@@ -221,7 +221,7 @@ function TreeTable({ indent }: { indent: 'aligned' | 'compact' }) {
  */
 export const TreeAligned: Story = {
   render: () => (
-    <div style={{ width: 620 }}>
+    <div style={{ width: '100%', maxWidth: 620 }}>
       <TreeTable indent="aligned" />
     </div>
   ),
@@ -230,7 +230,7 @@ export const TreeAligned: Story = {
 /** Figma `Content/Tree`, Indent = Compact: no reserved toggle space on leaves. */
 export const TreeCompact: Story = {
   render: () => (
-    <div style={{ width: 620 }}>
+    <div style={{ width: '100%', maxWidth: 620 }}>
       <TreeTable indent="compact" />
     </div>
   ),
@@ -299,7 +299,7 @@ export const RowGrowth: Story = {
       },
     ];
     return (
-      <div style={{ width: 640 }}>
+      <div style={{ width: '100%', maxWidth: 640 }}>
         <DataTable columns={columns} data={POLICIES} />
       </div>
     );

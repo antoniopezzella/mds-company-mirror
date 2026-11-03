@@ -570,7 +570,7 @@ export const TypedColumnFormatting: StoryObj = {
  */
 export const RowStates: StoryObj = {
   render: () => (
-    <div style={{ width: 760 }}>
+    <div style={{ width: '100%', maxWidth: 760 }}>
       <DataTable<Policy, unknown>
         columns={[
           createSelectColumn<Policy>({ getRowLabel: (p) => p.name }),
@@ -609,7 +609,7 @@ const manyPolicies: Policy[] = Array.from({ length: 250 }, (_, i) => ({
  */
 export const JumpPagination: StoryObj = {
   render: () => (
-    <div style={{ width: 860 }}>
+    <div style={{ width: '100%', maxWidth: 860 }}>
       <DataTable<Policy, unknown>
         columns={columns}
         data={manyPolicies}
@@ -627,7 +627,7 @@ export const JumpPagination: StoryObj = {
  */
 export const ToolbarNotice: StoryObj = {
   render: () => (
-    <div style={{ width: 860 }}>
+    <div style={{ width: '100%', maxWidth: 860 }}>
       <DataTable<Policy, unknown>
         columns={columns}
         data={policies}
@@ -655,7 +655,7 @@ export const HeaderParts: StoryObj = {
   render: () => (
     // 620 = the four authored widths, so the 120px pinned column stays 120
     // (a resizable table stretches to fill a wider container).
-    <div style={{ width: 622 }}>
+    <div style={{ width: '100%', maxWidth: 622 }}>
       <DataTable<Policy, unknown>
         columns={[
           { accessorKey: 'name', header: 'Policy name and line of business', size: 120 },

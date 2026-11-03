@@ -164,6 +164,13 @@ export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPagin
 
   const mutedText = 'text-[var(--mds-color-foreground-neutral-subtle)]';
 
+  // The current size is always a choice: a `pageSize` outside the options
+  // (DataTable `pageSize={3}` with the default 10/25/50/100) would otherwise
+  // leave the select blank, since a Select shows nothing for an unknown value.
+  const sizeOptions = pageSizeOptions.includes(pageSize)
+    ? pageSizeOptions
+    : [...pageSizeOptions, pageSize].sort((a, b) => a - b);
+
   // Jump: the typed page, re-seeded whenever the page changes from elsewhere.
   const [jumpDraft, setJumpDraft] = React.useState(String(currentPage));
   const [jumpInvalid, setJumpInvalid] = React.useState(false);
@@ -213,7 +220,7 @@ export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPagin
           size="sm"
           className="w-20"
           aria-labelledby={labelId}
-          options={pageSizeOptions.map((n) => ({ value: n, label: String(n) }))}
+          options={sizeOptions.map((n) => ({ value: n, label: String(n) }))}
           value={pageSize}
           onChange={(v) => handlePageSizeChange(Number(v))}
         />
@@ -226,7 +233,7 @@ export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPagin
       {/* Not a <nav> landmark: the controls belong to THIS table, and two
           tables on one page would expose two identical "Pagination"
           landmarks (axe landmark-unique). Each button carries its own name. */}
-      <div className="flex items-center gap-[var(--dt-gap)]">
+      <div className="flex flex-wrap items-center gap-[var(--dt-gap)]">
         {/* Figma Range: "1–15 of 48". aria-live so a page change is heard.
             The range alone does not say WHICH page — "Page X of Y" is the
             position contract DataTable's tests hold the footer to, kept for
@@ -238,7 +245,7 @@ export const DataGridPagination = React.forwardRef<HTMLDivElement, DataGridPagin
             Page {currentPage} of {totalPages}
           </span>
         </span>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           {variant === 'jump' && (
             // Figma Pagination Type=Jump (17278:10901): "Page" + Input Small
             // (56 × 32) + "of 25", 8 apart, between the range and the arrows.

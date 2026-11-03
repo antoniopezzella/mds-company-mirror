@@ -14,18 +14,20 @@ import { Button } from './button';
 /**
  * # DataTable
  *
- * No MDS/Figma spec exists for this component — built matching the standard TanStack-Table-based recipe (`@tanstack/react-table`), reusing
- * this repo's own `Checkbox`/`Pagination`/`Input`/`DropdownMenu` atoms
- * rather than duplicating them.
+ * The docs page is `src/docs/46-DataTable.mdx` (attached to this file with
+ * `<Meta of>`), so this meta carries no `autodocs` tag — the two would
+ * collide on the same Docs entry.
  *
- * This is a separate, more powerful sibling to `table.tsx`'s hand-rolled
- * `Table` — reach for `Table` for the common case, `DataTable` when you
- * need column filtering/visibility toggling on top of sorting/selection/
- * pagination.
+ * ~~"No MDS/Figma spec exists … reach for `Table` for the common case"~~ —
+ * said until 2026-11-03. Neither was true by then: DataTable is built to the
+ * MDS V3 Figma table, and `Table` is deprecated (see Choosing a table).
  */
 const meta: Meta = {
   title: 'Components/DataTable',
-  tags: ['autodocs'],
+  // For the Docs page's Controls block (prop names, types and JSDoc from
+  // docgen). Every story but Playground has its own `render`, so this does
+  // not change what they show.
+  component: DataTable,
   parameters: {
     layout: 'padded',
     docs: { description: { component: [
@@ -96,6 +98,43 @@ const baseColumns: DataGridColumnDef<Policy>[] = [
 
 export const Default: StoryObj = {
   render: () => <DataTable columns={baseColumns} data={policyData} searchKey="name" searchPlaceholder="Search policies..." pageSize={5} />,
+};
+
+/**
+ * Every control below drives this table live. Columns and data are fixed —
+ * see the Columns section of the Docs page for how to declare your own.
+ */
+export const Playground: StoryObj<typeof DataTable<Policy, unknown>> = {
+  // Shown once, in the Docs page's Playground section — not again in Examples.
+  tags: ['!autodocs'],
+  args: {
+    title: 'Policies',
+    meta: '5 policies • 2 renewing this quarter',
+    searchKey: 'name',
+    searchPlaceholder: 'Search policies...',
+    pageSize: 5,
+    paginationVariant: 'compact',
+    striped: false,
+    defaultDensity: 'standard',
+    enableColumnVisibility: true,
+    enableDensityToggle: true,
+    enableExport: false,
+    enableSortList: false,
+    enableColumnResizing: false,
+    enableColumnPinning: false,
+    enableColumnReorder: false,
+    pinFirstColumn: true,
+    loading: false,
+    fetching: false,
+  },
+  argTypes: {
+    columns: { control: false },
+    data: { control: false },
+    table: { control: false },
+    paginationVariant: { control: 'inline-radio', options: ['compact', 'pages', 'jump'] },
+    defaultDensity: { control: 'inline-radio', options: ['compact', 'standard', 'comfortable'] },
+  },
+  render: (args) => <DataTable {...args} columns={baseColumns} data={policyData} />,
 };
 
 export const WithRowSelection: StoryObj = {

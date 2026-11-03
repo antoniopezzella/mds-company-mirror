@@ -126,6 +126,11 @@ export interface DataGridToolbarGroupProps extends React.HTMLAttributes<HTMLDivE
 /**
  * Figma `Data table/Toolbar group`: one 32px frame holding joined segments,
  * clipped so a segment's hover fill follows the frame's corners.
+ *
+ * Never wider than the bar: on a narrow screen a group that outgrows it
+ * scrolls sideways inside its own frame (scrollbar hidden — it is one row of
+ * buttons, and focus scrolls the next one into view) rather than being cut
+ * off at the card edge with its last actions unreachable.
  */
 export const DataGridToolbarGroup = React.forwardRef<HTMLDivElement, DataGridToolbarGroupProps>(
   function DataGridToolbarGroup({ className, role = 'group', dividers = 'full', ...props }, ref) {
@@ -136,7 +141,7 @@ export const DataGridToolbarGroup = React.forwardRef<HTMLDivElement, DataGridToo
         data-slot="data-grid-toolbar-group"
         data-dividers={dividers}
         className={cn(
-          'group/tb inline-flex h-8 shrink-0 items-stretch overflow-hidden border',
+          'group/tb inline-flex h-8 max-w-full shrink-0 items-stretch overflow-x-auto overflow-y-hidden border [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
           'border-[var(--mds-color-border-default)] bg-[var(--mds-color-background-default)]',
           CONTROL_RADIUS,
           className
@@ -248,7 +253,9 @@ export const DataGridToolbarSearch = React.forwardRef<HTMLInputElement, DataGrid
         className={cn(
           segmentBase,
           segmentDivider,
-          'w-40 cursor-text text-[var(--mds-color-foreground-neutral-subtle)]',
+          // Shrinks (to 6rem) before its group overflows: on a narrow bar the
+          // search gives up width first, the fixed segments beside it don't.
+          'w-40 min-w-24 shrink cursor-text text-[var(--mds-color-foreground-neutral-subtle)]',
           // The segment rings as a whole when its input has focus, so the
           // ring follows the frame rather than hugging the bare text.
           'focus-within:shadow-[inset_0_0_0_2px_var(--mds-color-border-focus-default),inset_0_0_0_4px_var(--mds-color-background-default)]',

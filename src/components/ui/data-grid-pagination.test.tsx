@@ -107,4 +107,14 @@ describe('rows per page', () => {
     expect(body).toHaveLength(5);
     expect(screen.getByText(/1–5 of 7/)).toBeInTheDocument();
   });
+
+  it('shows a page size that is not among the options instead of a blank select', () => {
+    // Default options are 10/25/50/100; 3 used to leave the trigger empty.
+    render(<DataTable columns={base} data={data} pageSize={3} />);
+    const trigger = screen.getByRole('combobox', { name: /rows per page/i });
+    expect(trigger).toHaveTextContent('3');
+
+    fireEvent.keyDown(trigger, { key: 'Enter' });
+    expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['3', '10', '25', '50', '100']);
+  });
 });

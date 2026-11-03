@@ -26,35 +26,23 @@ import { DataGridFooter, DataGridPagination } from './data-grid-pagination';
 export type { CellEditParams };
 
 /**
- * DataTable — no MDS/Figma spec exists for this yet; built matching real
- * shadcn/ui's TanStack-Table-based recipe, reusing this repo's own atoms
- * (`Checkbox`, `Pagination`, `Input`, `DropdownMenu`, `Skeleton`) rather
- * than duplicating them. This is a separate, more powerful sibling to
- * `table.tsx`'s hand-rolled `Table` — reach for `Table` for the common
- * case, `DataTable` when you need column filtering/visibility toggling on
- * top of sorting/selection/pagination.
+ * DataTable — the props-level preset over DataGrid, built to the MDS V3 Figma
+ * table. Usage, setup, every feature prop and the templates are documented in
+ * `src/docs/46-DataTable.mdx` (Storybook: Components → DataTable → Docs).
  *
- * Responsive strategy (deliberate choice, not MUI DataGrid's default):
- * horizontal scroll with the leading column(s) pinned via TanStack Table's
- * native column-pinning API, not a hardcoded "position: sticky on column
- * index 0" hack — that would break the moment row-selection adds its own
- * checkbox column in front. `pinFirstColumn` (on by default) pins the
- * select column when present, otherwise the first real data column.
+ * Responsive strategy: horizontal scroll inside the table's own frame, with
+ * the leading column(s) pinned through TanStack's column-pinning API — not a
+ * hardcoded "sticky on column 0", which would break as soon as row selection
+ * adds its checkbox column in front. `pinFirstColumn` (on by default) pins the
+ * select column together with the first data column.
  *
- * Row virtualization is deliberately NOT included here — react-virtual's
- * absolute-positioned rows don't compose cleanly with a semantic <table>;
- * doing it properly means moving to a div/grid layout, which is a bigger,
- * separate change. Current real usage (client-paginated, 10-100 rows/page)
- * doesn't need it yet; scope it as its own pass if/when a consumer
- * genuinely needs thousands of unpaginated rows.
- *
- * Feature parity pass vs. MUI X DataGrid (Community edition — Pro/Premium
- * features like row grouping aren't a fair comparison target): column
- * resizing, multi-column sort (shift-click, same as MUI), sticky header,
- * CSV export, and a density toggle are all opt-in props below, defaulting
- * to off so the one real consumer (DashboardDemo.tsx) is unaffected.
- * Manual/server-side pagination is a genuine new capability, not just a
- * story — previously DataTable could only ever slice `data` client-side.
+ * Corrected 2026-11-03 — this comment claimed until then:
+ * - ~~"no MDS/Figma spec exists"~~: it is built to the V3 Figma frames.
+ * - ~~"reach for `Table` for the common case"~~: `Table` is deprecated.
+ * - ~~"row virtualization is deliberately NOT included"~~: it is,
+ *   `enableVirtualization` (needs `maxHeight`).
+ * - ~~"row grouping isn't a fair comparison target"~~: grouping ships, via
+ *   `useDataGridTable({ grouping })`.
  */
 
 /** Ready-made row-selection column — drop into a `columns` array. */

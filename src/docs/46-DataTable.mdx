@@ -1,0 +1,317 @@
+import { Meta, Canvas, Controls, Stories } from '@storybook/addon-docs/blocks';
+import * as DataTableStories from '../components/ui/data-table.stories';
+import * as Templates from '../components/ui/data-table.templates.stories';
+
+<Meta of={DataTableStories} name="Docs" />
+
+# DataTable
+
+**The default table for data screens.** Pass `columns` and `data`, switch features on
+with props, and put your own components into its slots. It is built to the MDS V3
+table in Figma (*Table New Component*), and every template below reproduces one Figma
+frame.
+
+`DataTable` is a preset over [`DataGrid`](?path=/docs/components-datagrid--docs): the
+same engine, the same capabilities. Reach for `DataGrid` only when something
+**outside** the table must read or drive its state, or when you need to rearrange its
+parts. See [Choosing a table](?path=/docs/foundations-choosing-a-table--docs).
+
+<Canvas of={DataTableStories.Default} />
+
+## Setup
+
+Install the package and import its stylesheet once, at your app root. You do not
+need Tailwind; the stylesheet is pre-compiled.
+
+```bash
+npm install @mmctech/MarshDesignSystemOfficial
+```
+
+```tsx
+import '@mmctech/MarshDesignSystemOfficial/styles.css';
+
+export function App() {
+  // mds-root supplies the design system's font, colour and box-sizing.
+  return <div className="mds-root">{/* your routes */}</div>;
+}
+```
+
+Fonts are not bundled: self-host Noto Sans (see `README.package.md`). Everything on
+this page is imported from the package root:
+
+```tsx
+import {
+  DataTable,
+  createSelectColumn,
+  createActionsColumn,
+  type DataGridColumnDef,
+} from '@mmctech/MarshDesignSystemOfficial';
+```
+
+## Quick start
+
+```tsx
+interface Policy {
+  id: string;
+  name: string;
+  status: string;
+  premium: number;
+}
+
+const columns: DataGridColumnDef<Policy>[] = [
+  { accessorKey: 'name', header: 'Policy', enableSorting: true },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'premium', header: 'Premium', meta: { type: 'currency' } },
+];
+
+<DataTable columns={columns} data={policies} searchKey="name" pageSize={10} />;
+```
+
+That is a sortable, searchable, paginated table. `premium` renders as `$12,400` and
+aligns right, because its column declares `type: 'currency'`.
+
+## Columns
+
+A column is a TanStack column def (`DataGridColumnDef<Row>`) plus MDS `meta`.
+
+| Field | What it does |
+| --- | --- |
+| `accessorKey` / `accessorFn` | Where the value comes from. Sorting, search, filters and CSV export use this value, not the rendered cell. |
+| `header` | A string, or a function. If it is a function, also set `meta.label` so menus and announcements can name the column. |
+| `cell` | The **cell slot**: render anything. See [Cell parts](#cell-parts). |
+| `size` | The Figma width in px. When **every** column has one, the table lays out fixed and matches the design exactly. |
+| `enableSorting`, `enableHiding` | Per-column opt-outs. |
+| `footer` | Content for the totals row when `showFooter` is on. |
+| `meta.type` | `text`, `number`, `currency`, `percent`, `date`, `status` or `boolean`. Formats the value (when there is no custom `cell`) and sets the alignment. |
+| `meta.align` | `left`, `center` or `right`. Overrides everything else. |
+| `meta.label` | The column's name in words, for function headers. |
+| `meta.editable` | Simple inline editing. Needs `onCellEdit`. |
+| `meta.cellEdit` | Spreadsheet editing: `parse`, `format`, `control` (`text`, `textarea`, `select` with `options`) and the error message. |
+| `meta.columnDivider` | A 1px rule on the column's right edge. |
+
+### Alignment
+
+Numbers and amounts align **right**, in tabular figures so their digits line up. The
+header follows its column. You do not need to declare it. A column aligns right when:
+
+1. `meta.align` says so (this wins over everything), or
+2. `meta.type` is `number`, `currency` or `percent`, or
+3. its values are numbers, or formatted quantities like `$12,400`, `62.5%`, `(1,200)`,
+   `−3.5`, `€1.2M` or `45 bps`.
+
+Numbers that **label** rather than measure stay left: IDs and plain digit strings
+(`4821`), years (`2026`), dates, phone numbers and policy references. Nobody compares
+those by size. If a plain-digit column really is a quantity, declare
+`meta.type: 'number'`.
+
+### Formatting
+
+`meta.type` formats through the shared formatter, so locale and currency come from one
+place:
+
+```tsx
+import { FormatProvider } from '@mmctech/MarshDesignSystemOfficial';
+
+<FormatProvider locale="en-GB" currency="GBP">
+  <DataTable columns={columns} data={rows} />
+</FormatProvider>;
+```
+
+A custom `cell` takes over the rendering, but `meta.type` still drives alignment.
+
+## Cell parts
+
+The `cell` slot takes any component. These parts match the Figma cell content types,
+so reach for them before writing your own. Each one is under
+[Cell parts](?path=/story/components-datatable-cell-parts--number-part).
+
+| Part | Use for |
+| --- | --- |
+| `DataGridCellText` | Text with a tone: `default`, `strong`, `muted`, `done`, `success`, `warning`, `critical`. |
+| `DataGridCellEntity` | A person, company or location: `leading` avatar or logo, primary text, `secondary` line. |
+| `DataGridCellLogo` | The square logo used inside an entity. |
+| `DataGridCellLink` | A link that fits a cell. |
+| `DataGridCellNumber` | An amount with an optional `caption` above and `trend` below; `strong` for totals. |
+| `DataGridCellTrend` | A change with its direction: `up`, `down` or `neutral`. |
+| `DataGridCellDate` | A date with an optional `relative` line ("2d ago") and calendar icon. |
+| `DataGridCellProgress` | Progress as a `ring` or a `bar`, with a tone. |
+| `DataGridCellTags` | A list of tags, truncated to `max` with a "+N". |
+| `DataGridCellAlerts` | Critical and warning counts, or "None". |
+| `DataGridCellMessage` | An inline critical or success message under a cell's value. |
+| `DataGridDoneCheck` | The task-list done toggle. |
+| `DataGridCellTree` | Indented tree rows with their expand toggle. |
+| `DataGridGroupCell` | The label cell of a grouped row. |
+| `DataGridCount` | A muted count, as in "48 open". |
+
+Any other component works too: a `Badge`, an `Avatar`, a sparkline. Keep interactive
+controls keyboard-reachable and give them an accessible name.
+
+## Features
+
+Everything is off by default except pagination, search (when you pass `searchKey`) and
+pinning the first column.
+
+### Title bar and toolbar
+
+| Prop | Adds |
+| --- | --- |
+| `title`, `meta`, `titleActions` | The table's own title bar, with a meta line ("48 open • 2 unassigned") and title-row actions. |
+| `searchKey`, `searchPlaceholder` | The search field. |
+| `filters` | A filter surface on the left of the toolbar, normally `Filters` with `useFilterQuery`. See [Filters](?path=/docs/components-filters--docs). |
+| `facetedFilters` | Multi-select filters per column; options and counts are derived if you omit them. |
+| `dateFilters` | Date-range filters per column. |
+| `toolbarControls` | Table-state controls before the built-in ones, such as Clear. |
+| `toolbarActions` | Page actions at the end: Refresh, New. |
+| `enableColumnVisibility` | The column checklist and Arrange in the Table settings (gear) menu. |
+| `enableDensityToggle`, `defaultDensity` | Compact, standard or comfortable rows. |
+| `enableSortList` | A Sort control listing the active sorts. |
+| `enableExport`, `exportFilename` | CSV export of every filtered row. |
+| `notice` | One inline alert under the toolbar: load error, validation summary, stale data. |
+
+### Selection and actions
+
+| Prop | Adds |
+| --- | --- |
+| `enableRowSelection` + `createSelectColumn({ getRowLabel })` | Row checkboxes. `getRowLabel` names each checkbox "Select" plus the record's name; always pass it. |
+| `onSelectionChange` | Reports the selection **and** its scope. If `allFilteredRowsSelected` is true, the user picked every match: send your filters to the bulk endpoint, not the ids. |
+| `bulkActions` | Actions on the selection. The toolbar switches to "3 selected / Assign / Delete" mode. Each action can confirm, be disabled with a reason, and report partial failure. |
+| `selectionNoun`, `selectionNounPlural` | The words in the selection banner ("policy", "policies"). |
+| `createActionsColumn({ inline, actions })` | Row actions: up to two inline icon buttons plus a More menu. |
+| `onRowClick` | Row activation by click, Enter or Space. |
+
+### Pagination and footer
+
+| Prop | Adds |
+| --- | --- |
+| `pageSize`, `pageSizeOptions`, `rowsLabel` | Rows per page. A `pageSize` missing from the options is added to them. |
+| `paginationVariant` | `compact` (first, previous, next, last), `pages` (numbered) or `jump` (go to page). |
+| `manualPagination`, `pageCount`, `rowCount`, `onPaginationChange` | Server-side paging: `data` is the current page only. |
+| `footer` | Replace the footer bar's content (a summary line, say), or pass `false` for no footer. |
+| `showFooter`, `stickyFooter` | A totals row from each column's `footer`, optionally stuck to the bottom. |
+
+### Layout, pinning and size
+
+| Prop | Adds |
+| --- | --- |
+| `pinFirstColumn` | **On by default.** Keeps the identity column visible while the rest scroll sideways. With row selection it pins the checkbox **with** the first data column. |
+| `enableColumnPinning` | "Pin column" in each column menu. The actions column pins to the end. |
+| `enableColumnReorder` | Move left and right in each column menu, by keyboard too. |
+| `enableColumnResizing` | Drag or keyboard column resizing. |
+| `enableRowPinning` + `createRowPinColumn()` | Pin rows to the top. The toolbar shows "Unpin all / 2 pinned". |
+| `maxHeight` | Bounds the table and makes the header sticky. |
+| `enableVirtualization`, `estimateRowSize` | Renders only the rows in view. Needs `maxHeight`. Use it past about a thousand unpaginated rows. |
+| `striped` | Zebra rows. |
+| `caption` | A visible caption that is also the table's accessible name. |
+
+### Rows: detail, nesting and grouping
+
+| Prop | Adds |
+| --- | --- |
+| `renderDetail` + `createExpandColumn()` | A master-detail panel under an expanded row. `canExpandRow` limits which rows expand. |
+| `getSubRows` | Nested rows (a tree). |
+| `grouping` on `useDataGridTable` | Groups flat rows by column ids. Group rows sum their leaves through each column's `aggregationFn`. See *Grouped Summary*. |
+| `getRowState` | `error` paints the row critical; `disabled` greys it out and excludes it from select-all. |
+
+### Editing
+
+| Prop | Adds |
+| --- | --- |
+| `meta.editable` + `onCellEdit` | Edit a cell in place. Enter or blur commits, Escape cancels. You persist the change; DataTable keeps no copy of your data. |
+| `enableCellSelection` + `meta.cellEdit` + `onCellsChange` | Spreadsheet mode: cell and range selection, arrow-key navigation, copy, paste, fill down and right. |
+| `enableFillHandle` | The draggable fill square. |
+| `cellErrors`, `defaultCellErrors`, `onCellErrorsChange` | Rejected cells stay red with a tooltip. Summarise them in `notice` with `DataGridValidationSummary` and its "Go to first error" button. |
+| `getRowLabel` | The row's name in labels: "Edit Premium, Commercial Auto". |
+
+### States
+
+| Prop | Shows |
+| --- | --- |
+| `loading`, `loadingRowCount` | Skeleton rows for the first load. |
+| `fetching` | A refetch: rows stay on screen, dimmed, and the table is `aria-busy`. |
+| `loadError`, `onRetry` | An error state with "Try again", instead of a misleading "No data". |
+| `emptyState` | Replaces the built-in empty state. The default already tells "no data" apart from "nothing matched your search". |
+
+## Owning the table state
+
+Pass your own instance when something outside the table needs its state: a saved view,
+a URL, a side panel. Every other prop keeps working.
+
+```tsx
+import { useDataGridTable } from '@mmctech/MarshDesignSystemOfficial';
+
+const table = useDataGridTable({ columns, data, enableRowSelection: true, getRowId: (r) => r.id });
+
+// Read or drive it from anywhere:
+const selected = table.getSelectedRowModel().rows;
+
+<DataTable table={table} columns={columns} data={data} enableExport />;
+```
+
+Build the instance with `useDataGridTable`, not a bare TanStack `useTable`: it carries
+this system's filter functions and pinning defaults. Options that shape rows
+(`getRowState`, `getRowLabel`, `grouping`, `pageSize`) then go to the hook, not to
+`DataTable`. Pass `getRowId` whenever `data` can be filtered or reordered, or selection
+and pins will move onto other records.
+
+## Responsive behaviour
+
+- The table never widens the page. When columns do not fit, the table scrolls
+  sideways inside its own frame.
+- Pinned columns stay put, and the other columns **scroll underneath them**.
+- On a narrow table, pinned columns together take at most **half** of its visible
+  width, so there is always room to scroll. Their content truncates with an ellipsis.
+  On desktop the Figma widths apply unchanged.
+- Toolbar groups that do not fit scroll inside their own frame; the search field
+  shrinks first. The pagination row wraps.
+
+Give wide tables a `size` on every column, so the layout is exact at every width.
+
+## Templates
+
+Each template reproduces one Figma frame from the MDS V3 file. Open one, read its
+source panel, and copy the pattern. They are composed only from the props and parts on
+this page.
+
+| Template | Shows |
+| --- | --- |
+| [Work Queue](?path=/story/components-datatable-templates--work-queue) | Title bar with meta line, search, filters, page actions, status badges, row actions. |
+| [Work Queue Selection](?path=/story/components-datatable-templates--work-queue-selection) | The same queue in selection mode: bulk actions and Clear selection. |
+| [Review List With Detail](?path=/story/components-datatable-templates--review-list-with-detail) | Expandable rows with a detail panel of cards. |
+| [Detail Cards](?path=/story/components-datatable-templates--detail-cards) | The detail card's slots at three densities. |
+| [Directory](?path=/story/components-datatable-templates--directory) | People with avatars, query filters, pinned columns and pinned rows, tags. |
+| [Grouped Summary](?path=/story/components-datatable-templates--grouped-summary) | Grouping with subtotals, a summary row stuck to the bottom, a footer summary instead of pagination. |
+| [Task List](?path=/story/components-datatable-templates--task-list) | A task tree with done checks, no toolbar and no footer. |
+| [Client Portfolio](?path=/story/components-datatable-templates--client-portfolio) | Every content type in one row: entities, number with trend, badge, progress, sparkline. |
+| [Client Portfolio With Title And Footer](?path=/story/components-datatable-templates--client-portfolio-with-title-and-footer) | The same table with its title bar and footer on. |
+| [Editable Grid](?path=/story/components-datatable-templates--editable-grid) | Spreadsheet editing with a select editor: saved and rejected cells. |
+| [Editable Grid After Leaving](?path=/story/components-datatable-templates--editable-grid-after-leaving) | A rejected cell after focus leaves it. |
+| [Editable Grid On Save](?path=/story/components-datatable-templates--editable-grid-on-save) | The validation summary in the toolbar notice, with Go to first error. |
+| [Editable Grid After Paste](?path=/story/components-datatable-templates--editable-grid-after-paste) | The same summary after a bulk paste, with no Save button. |
+
+<Canvas of={Templates.WorkQueue} />
+
+<Canvas of={Templates.GroupedSummary} />
+
+## Accessibility
+
+- Give every table a name: a `title`, a `caption`, or a page heading it sits under.
+- Pass `getRowLabel` to `createSelectColumn` and `createActionsColumn`, so controls
+  read "Select Commercial Auto", not "Select row 3". Row position changes under
+  sorting; a record's name does not.
+- A header that is a function needs `meta.label`.
+- Spreadsheet mode switches the table's role to `grid`, with arrow-key navigation.
+  Leave it off for read-only tables: a plain table is easier to read with a screen
+  reader.
+- Prefer pagination to virtualization below about a thousand rows. Infinite lists
+  leave keyboard users stranded above a footer they cannot reach.
+
+## Playground and props
+
+Every control drives the table above it. The list below it is every prop, with its
+type and description.
+
+<Canvas of={DataTableStories.Playground} />
+
+<Controls of={DataTableStories.Playground} />
+
+<Stories title="Examples" includePrimary={false} />

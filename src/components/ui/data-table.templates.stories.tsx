@@ -264,7 +264,7 @@ const GRID_HEIGHT = 325;
 /** Figma `Support queue — Toolbar Mode=Default` (17282:11238). */
 export const WorkQueue: Story = {
   render: () => (
-    <div style={{ width: FRAME_WIDTH }}>
+    <div style={{ width: '100%', maxWidth: FRAME_WIDTH }}>
       <DataTable
         title="Support queue"
         meta="48 open • 2 unassigned • 6 near SLA"
@@ -310,7 +310,7 @@ export const WorkQueueSelection: Story = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-      <div style={{ width: FRAME_WIDTH }}>
+      <div style={{ width: '100%', maxWidth: FRAME_WIDTH }}>
         <DataTable
           table={table}
           title="Support queue"
@@ -561,7 +561,7 @@ export const ReviewListWithDetail: Story = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-      <div style={{ width: 1256 }}>
+      <div style={{ width: '100%', maxWidth: 1256 }}>
         <DataTable
           table={table}
           title="Release reviews"
@@ -883,7 +883,7 @@ export const Directory: Story = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
-      <div style={{ width: 1268 }}>
+      <div style={{ width: '100%', maxWidth: 1268 }}>
         <DataTable
           table={table}
           title="Contacts"
@@ -1107,7 +1107,7 @@ export const GroupedSummary: Story = {
     const groupCount = table.getGroupedRowModel().rows.length;
     const itemCount = table.getFilteredRowModel().rows.length;
     return (
-      <div style={{ width: 1082 }}>
+      <div style={{ width: '100%', maxWidth: 1082 }}>
         <DataTable
           table={table}
           title="Treasury Waterfall"
@@ -1373,7 +1373,7 @@ function TaskListTable() {
  */
 export const TaskList: Story = {
   render: () => (
-    <div style={{ width: 1146 }}>
+    <div style={{ width: '100%', maxWidth: 1146 }}>
       <TaskListTable />
     </div>
   ),
@@ -1523,7 +1523,7 @@ const clientColumns: DataGridColumnDef<Client>[] = [
  */
 export const ClientPortfolio: Story = {
   render: () => (
-    <div style={{ width: 1384 }}>
+    <div style={{ width: '100%', maxWidth: 1384 }}>
       <DataTable
         columns={clientColumns}
         data={CLIENTS}
@@ -1539,7 +1539,7 @@ export const ClientPortfolio: Story = {
 /** The same table with the title bar and footer switched on (hand-off §10.1). */
 export const ClientPortfolioWithTitleAndFooter: Story = {
   render: () => (
-    <div style={{ width: 1384 }}>
+    <div style={{ width: '100%', maxWidth: 1384 }}>
       <DataTable
         title="Client portfolio"
         meta="4 clients • 2 active"
@@ -1622,7 +1622,7 @@ function PropertySchedule({
     );
   return (
     // 642 = the three authored widths (260 + 220 + 160) + the 1px shell border.
-    <div style={{ width: 642 }}>
+    <div style={{ width: '100%', maxWidth: 642 }}>
       <DataTable
         title={title}
         meta={title ? `${rows.length} assets` : undefined}

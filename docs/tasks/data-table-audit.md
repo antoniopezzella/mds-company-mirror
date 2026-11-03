@@ -88,7 +88,7 @@ Legend: **✅ complete** · **◐ partial** · **✗ missing** · **⊘ delibera
 | Toolbar | ✅ | `DataGridToolbar` |
 | Header / column header | ✅ | incl. grouped headers with correct `colspan` |
 | Row / cell | ✅ | |
-| **Numeric alignment** (§6) | ✅ | **2026-09-25** — numbers right-align automatically from `meta.type` or the value type; explicit `meta.align` still wins |
+| **Numeric alignment** (§6) | ✅ | **2026-09-25** — numbers right-align automatically from `meta.type` or the value type; explicit `meta.align` still wins. ~~"the value type"~~ — Corrected 2026-11-03: only a raw JS `number` counted, so a pre-formatted `"$12,400"` aligned LEFT (9 DataGrid stories), an editable number sat left inside its flex edit button, and no plain cell used tabular figures. Now: formatted quantities (currency, %, grouped/decimal/signed, k/M/bn) align right, bare digit strings (IDs, years) and dates stay left, right-aligned columns get `tabular-nums`. |
 | Footer | ✅ | `showFooter` renders `<tfoot>` from column `footer` |
 | Pagination | ✅ | `DataGridPagination` |
 

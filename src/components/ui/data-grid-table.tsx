@@ -448,7 +448,27 @@ function CellStateFrame({
 const idSafe = (value: string) => value.replace(/[^\w-]/g, '_');
 
 /** Hand-off §6 Loading: skeleton rows follow the page size, up to this many. */
+/**
+ * A pre-formatted quantity: money, a percentage, a signed or grouped or
+ * decimal number, optionally abbreviated — "$12,400", "€1.2M", "62.5%",
+ * "−3", "1,024", "0.75", "(1,200)". It needs at least ONE such marker; a bare
+ * run of digits is not enough (see `resolveAlign`).
+ */
+const QUANTITY = /^\(?[-+−]?\s?(?:[$€£¥₹]|USD|EUR|GBP)?\s?[-+−]?(?:\d{1,3}(?:[,\s.\u202f]\d{3})+|\d+)(?:[.,]\d+)?\s?(?:[kKmMbB]|bn|%|pp|bps|pts)?\s?(?:USD|EUR|GBP)?\)?$/;
+const QUANTITY_MARKER = /[$€£¥₹%,.()+\-−]|USD|EUR|GBP|\d[kKmMbB]$|bn$|pp$|bps$|pts$/;
+function looksLikeQuantity(value: string) {
+  const v = value.trim();
+  return QUANTITY.test(v) && QUANTITY_MARKER.test(v) && !/^\d{4}-\d{2}/.test(v);
+}
+
 export const MAX_SKELETON_ROWS = 10;
+
+/**
+ * The most of the table's visible width (in `cqw`) that a region's pinned data
+ * columns may take together. Below that the scrolling columns would have no
+ * room to pass under them on a phone.
+ */
+const PINNED_MAX_SHARE = 50;
 
 /**
  * The row hover layer's colour, as a registered `<color>` custom property so
@@ -755,9 +775,10 @@ function DataGridTableInner<TData extends RowData>(
   // hovered row stays one colour across the pinned edge.
   const getPinnedCellStyle = (
     column: {
+      id: string;
+      columnDef: { size?: number; meta?: unknown };
+      getSize: () => number;
       getIsPinned: () => false | 'start' | 'end';
-      getStart: (side: 'start') => number;
-      getAfter: (side: 'end') => number;
       getIsLastColumn?: (position?: 'start' | 'end' | 'center') => boolean;
       getIsFirstColumn?: (position?: 'start' | 'end' | 'center') => boolean;
     },
@@ -773,11 +794,15 @@ function DataGridTableInner<TData extends RowData>(
     // (Directory 17992:15767 — the only vertical rule is after Name).
     const atStartEdge = column.getIsLastColumn?.('start') ?? true;
     const atEndEdge = column.getIsFirstColumn?.('end') ?? true;
+    // `width` on a cell is only a hint to auto layout; min AND max pin it, so
+    // the offsets built from it (`pinnedOffset`) match what is drawn.
+    const w = widthFor(column);
     return {
       position: 'sticky',
+      ...(w != null ? { minWidth: w, maxWidth: w } : null),
       ...(pinned === 'start'
-        ? { left: column.getStart('start'), ...(atStartEdge ? { boxShadow: `inset -1px 0 0 0 ${pinnedEdgeColor}` } : null) }
-        : { right: column.getAfter('end'), ...(atEndEdge ? { boxShadow: `inset 1px 0 0 0 ${pinnedEdgeColor}` } : null) }),
+        ? { left: pinnedOffset(column, 'start'), ...(atStartEdge ? { boxShadow: `inset -1px 0 0 0 ${pinnedEdgeColor}` } : null) }
+        : { right: pinnedOffset(column, 'end'), ...(atEndEdge ? { boxShadow: `inset 1px 0 0 0 ${pinnedEdgeColor}` } : null) }),
       zIndex: Z_INDEX.sticky,
       ...paint,
       ...extra,
@@ -973,23 +998,44 @@ function DataGridTableInner<TData extends RowData>(
    * then the actual value type in the first row. The last is what makes this
    * work for the tables that declare nothing at all.
    *
-   * Sampled from the first row rather than every row: a column is one type,
-   * and scanning the page on every render to re-learn that is wasted work.
+   * Sampled from the first value on the page rather than every row: a column
+   * is one type, and scanning the page on every render to re-learn that is
+   * wasted work. Group rows are skipped — they hold aggregates, not values.
+   *
+   * A pre-formatted STRING counts as a quantity too ("$12,400", "62.5%",
+   * "−1.2k"): until 2026-11-03 only a JS number did, so nine DataGrid stories
+   * whose data arrived formatted showed Premium left-aligned. A bare digit
+   * string ("4821", "2026") stays LEFT — it is as likely an ID, a year or a
+   * postal code, which every guideline keeps left because nobody compares
+   * them by magnitude. Declare `meta.type: 'number'` to say otherwise.
    */
   const NUMERIC_TYPES = new Set(['number', 'currency', 'percent']);
-  const sampleRow = rows[0];
+  const sampleRows = rows.filter((r) => !r.getIsGrouped?.()).slice(0, 5);
+  const sampleValue = (columnId: string) => {
+    for (const r of sampleRows) {
+      const v = r.getValue(columnId);
+      if (v != null && v !== '') return v;
+    }
+    return undefined;
+  };
   const resolveAlign = (column: { id: string; columnDef: { meta?: { align?: 'left' | 'center' | 'right'; type?: string } } }) => {
     const meta = column.columnDef.meta;
     if (meta?.align) return meta.align;
     if (meta?.type) return NUMERIC_TYPES.has(meta.type) ? 'right' : 'left';
-    if (sampleRow && typeof sampleRow.getValue(column.id) === 'number') return 'right';
+    const v = sampleValue(column.id);
+    if (typeof v === 'number' || typeof v === 'bigint') return 'right';
+    if (typeof v === 'string' && looksLikeQuantity(v)) return 'right';
     return 'left';
   };
 
   // Literal class strings, never `text-${align}`: Tailwind's scanner is plain
   // text, so an interpolated class generates no CSS at all.
+  //
+  // Right-aligned (numeric) columns also get tabular figures: Noto Sans digits
+  // are proportional by default, so "$11,750" over "$8,200" only lines up digit
+  // for digit with `tnum` on, right-aligned or not.
   const alignClass = (align?: 'left' | 'center' | 'right') =>
-    align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
+    align === 'right' ? 'text-right tabular-nums' : align === 'center' ? 'text-center' : 'text-left';
 
   /**
    * `meta.type` → the matching `formatValue` kind, for the types that have one.
@@ -1116,12 +1162,68 @@ function DataGridTableInner<TData extends RowData>(
   const authoredSize = (column: { columnDef: { size?: number } }) =>
     column.columnDef.size != null && column.columnDef.size !== defaultSize ? column.columnDef.size : undefined;
   // `size` on a leading column is the CONTROL's width (20 checkbox, 24 toggle).
-  const widthFor = (column: { columnDef: { size?: number; meta?: unknown }; getSize: () => number }) =>
-    (column.columnDef.meta as DataGridColumnMeta | undefined)?.leading
-      ? `calc(var(--dt-inset-x) + ${authoredSize(column) ?? 20}px)`
-      : enableColumnResizing
-        ? column.getSize()
-        : authoredSize(column);
+  //
+  // A PINNED column always gets a definite width: its neighbours' sticky
+  // offsets are built from it (`pinnedOffset`), so a content-sized pinned
+  // column would let the offset and the real width disagree.
+  //
+  // On a narrow table a pinned column is capped to a share of the VISIBLE
+  // width (`cqw` of the scroll area, a size container), so the scrolling
+  // columns always have room to pass under it: at 390px the Directory's
+  // pinned checkbox + Name took 280 of 308px. The share is split across the
+  // region's data columns so two pinned columns can't fill the screen
+  // between them. At desktop widths `min()` resolves to the authored width.
+  const pinnedShare = (side: 'start' | 'end') => {
+    const region = side === 'start' ? table.getStartVisibleLeafColumns() : table.getEndVisibleLeafColumns();
+    const data = region.filter((c) => !(c.columnDef.meta as DataGridColumnMeta | undefined)?.leading).length;
+    return Math.floor(PINNED_MAX_SHARE / Math.max(1, data));
+  };
+  const widthFor = (column: {
+    columnDef: { size?: number; meta?: unknown };
+    getSize: () => number;
+    getIsPinned: () => false | 'start' | 'end';
+  }): number | string | undefined => {
+    if ((column.columnDef.meta as DataGridColumnMeta | undefined)?.leading)
+      return `calc(var(--dt-inset-x) + ${authoredSize(column) ?? 20}px)`;
+    const pinned = column.getIsPinned();
+    if (pinned) {
+      const w = enableColumnResizing ? column.getSize() : (authoredSize(column) ?? column.getSize());
+      return `min(${w}px, ${pinnedShare(pinned)}cqw)`;
+    }
+    return enableColumnResizing ? column.getSize() : authoredSize(column);
+  };
+  // Under auto layout a cell's `width` is only a floor: an unbreakable email
+  // in the pinned Name held the column at 242px however narrow the cap. The
+  // wrapper's `contain: inline-size` drops the content's intrinsic width out
+  // of the column sizing, so the pinned width IS the width and the content
+  // wraps or truncates inside it. Leading (checkbox) columns are already exact.
+  const clampPinned = (
+    column: { getIsPinned: () => false | 'start' | 'end'; columnDef: { meta?: unknown } },
+    node: React.ReactNode
+  ) =>
+    column.getIsPinned() && !(column.columnDef.meta as DataGridColumnMeta | undefined)?.leading ? (
+      <div data-slot="data-grid-pinned-clamp" className="[contain:inline-size]">
+        {node}
+      </div>
+    ) : (
+      node
+    );
+  // A sticky offset is the sum of the RENDERED widths before the column in its
+  // region — the same `widthFor` values the cells are drawn with, summed in CSS.
+  // TanStack's `getStart()` sums its numeric sizes instead, which for a leading
+  // column is the bare control (20) while the cell is inset + 20 (36 at
+  // default density): the pinned Name stuck at left:20 and slid 16px over the
+  // checkbox on every horizontal scroll (2026-11-03, found at 390px wide).
+  const pinnedOffset = (column: { id: string }, side: 'start' | 'end') => {
+    const region = side === 'start' ? table.getStartVisibleLeafColumns() : [...table.getEndVisibleLeafColumns()].reverse();
+    const parts: string[] = [];
+    for (const c of region) {
+      if (c.id === column.id) break;
+      const w = widthFor(c);
+      parts.push(typeof w === 'number' ? `${w}px` : (w ?? `${c.getSize()}px`));
+    }
+    return parts.length === 0 ? 0 : `calc(${parts.join(' + ')})`;
+  };
   // When the author sized every column, lay the table out FIXED: the browser's
   // auto layout treats cell widths as hints and redistributes space by
   // content, so a design's 380/210/110 drifts by tens of pixels.
@@ -1673,7 +1775,7 @@ function DataGridTableInner<TData extends RowData>(
                           {renderCellContent(cell)}
                         </CellStateFrame>
                       ) : (
-                        renderCellContent(cell)
+                        clampPinned(cell.column, renderCellContent(cell))
                       )
                     ) : isEditable ? (
                       // Legacy path: a button, not a div with onDoubleClick,
@@ -1687,7 +1789,24 @@ function DataGridTableInner<TData extends RowData>(
                             beginEdit();
                           }
                         }}
-                        className="-mx-1 flex h-7 w-full items-center rounded-lg px-1 text-left focus-visible:outline-hidden focus-visible:ring-2"
+                        // A flex button ignores the cell's text-align, so the
+                        // column's alignment is restated as `justify-*` —
+                        // without it an editable Premium sat LEFT in a
+                        // right-aligned column (2026-11-03). Width is 100%
+                        // PLUS the two -mx-1 margins, so px-1 puts the text
+                        // box exactly on the cell's: at `w-full` it stopped
+                        // 4px short on the right, putting right-aligned text
+                        // 8px inside. (Not `box-content` — the unlayered
+                        // `.mds-root :where(*)` border-box reset outranks
+                        // every layered utility, so it never applies.)
+                        className={cn(
+                          '-mx-1 flex h-7 w-[calc(100%+--spacing(2))] items-center rounded-lg px-1 focus-visible:outline-hidden focus-visible:ring-2',
+                          resolveAlign(cell.column) === 'right'
+                            ? 'justify-end text-right'
+                            : resolveAlign(cell.column) === 'center'
+                              ? 'justify-center text-center'
+                              : 'text-left'
+                        )}
                         style={{ '--tw-ring-color': 'var(--mds-color-border-focus-default)' } as React.CSSProperties}
                         title="Double-click or press Enter to edit"
                       >
@@ -1698,7 +1817,7 @@ function DataGridTableInner<TData extends RowData>(
                         )}
                       </button>
                     ) : (
-                      renderCellContent(cell)
+                      clampPinned(cell.column, renderCellContent(cell))
                     )}
                   </TableCell>
                 );

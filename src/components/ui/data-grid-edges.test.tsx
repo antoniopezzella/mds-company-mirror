@@ -266,6 +266,48 @@ describe('capabilities ported from table.tsx', () => {
     expect(headers[1].className).toContain('text-right');
   });
 
+  it('right-aligns a PRE-FORMATTED quantity string, but leaves IDs, years and dates left', () => {
+    // Data often arrives already formatted. Until 2026-11-03 only a JS number
+    // counted, so nine DataGrid stories showed "$12,400" left-aligned.
+    // Numbers that LABEL rather than measure stay left — the research
+    // consensus (GOV.UK, Spectrum, Maersk): nobody compares IDs by size.
+    type F = { id: string; amount: string; pct: string; ref: string; year: string; date: string; neg: string };
+    const data: F[] = [
+      { id: 'a', amount: '$12,400', pct: '62.5%', ref: '4821', year: '2026', date: '2026-04-04', neg: '(1,200)' },
+      { id: 'b', amount: '$8,200', pct: '7%', ref: '4818', year: '2025', date: '2026-01-01', neg: '−3.5' },
+    ];
+    const cols: DataGridColumnDef<F>[] = ['amount', 'pct', 'neg', 'ref', 'year', 'date'].map((k) => ({
+      accessorKey: k as keyof F,
+      header: k,
+    }));
+    render(<DataTable columns={cols} data={data} pinFirstColumn={false} />);
+    const headers = within(screen.getByRole('table')).getAllByRole('columnheader');
+    const align = headers.map((h) => (h.className.includes('text-right') ? 'right' : 'left'));
+    expect(align).toEqual(['right', 'right', 'right', 'left', 'left', 'left']);
+  });
+
+  it('sets numeric columns in tabular figures, so digits line up', () => {
+    // Noto Sans digits are proportional: right-aligned or not, "$11,750" over
+    // "$8,200" only lines up digit for digit with tnum on.
+    render(<DataTable columns={aligned} data={rows.slice(0, 2)} pinFirstColumn={false} />);
+    const table = screen.getByRole('table');
+    const cells = within(within(table).getAllByRole('row')[1]).getAllByRole('cell');
+    expect(cells[1].className).toContain('tabular-nums');
+    expect(cells[0].className).not.toContain('tabular-nums');
+  });
+
+  it('keeps an EDITABLE number right-aligned — the edit button restates the alignment', () => {
+    // The legacy edit affordance is a flex button, which ignores text-align.
+    const editable: DataGridColumnDef<Row>[] = [
+      { accessorKey: 'name', header: 'Item', meta: { editable: true } },
+      { accessorKey: 'qty', header: 'Qty', meta: { editable: true } },
+    ];
+    render(<DataTable columns={editable} data={rows.slice(0, 2)} pinFirstColumn={false} onCellEdit={() => {}} />);
+    const [nameBtn, qtyBtn] = within(within(screen.getByRole('table')).getAllByRole('row')[1]).getAllByRole('button');
+    expect(qtyBtn.className).toContain('justify-end');
+    expect(nameBtn.className).not.toContain('justify-end');
+  });
+
   it('lets an explicit align override the numeric default', () => {
     const overridden: DataGridColumnDef<Row>[] = [
       { accessorKey: 'qty', header: 'Qty', meta: { align: 'center' } },

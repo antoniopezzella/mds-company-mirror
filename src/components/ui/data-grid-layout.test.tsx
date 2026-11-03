@@ -36,7 +36,11 @@ describe('DataGrid column layout', () => {
       { accessorKey: 'name', header: 'Policy' },
       { accessorKey: 'status', header: 'Status' },
     ];
-    const { container } = render(<DataTable columns={columns} data={data} />);
+    // Unpinned: a pinned column always gets a definite (capped) width, since
+    // its neighbours' sticky offsets are built from it. jsdom drops that
+    // `min(…, 50cqw)` value, so leaving the default pin on would pass this
+    // test for the wrong reason.
+    const { container } = render(<DataTable columns={columns} data={data} pinFirstColumn={false} />);
 
     expect(table(container).style.tableLayout).not.toBe('fixed');
     expect(table(container).querySelector('colgroup')).toBeNull();
@@ -51,7 +55,9 @@ describe('DataGrid column layout', () => {
       { accessorKey: 'name', header: 'Policy', size: 344 },
       { accessorKey: 'status', header: 'Status', size: 210 },
     ];
-    const { container } = render(<DataTable columns={columns} data={data} enableRowSelection />);
+    const { container } = render(
+      <DataTable columns={columns} data={data} enableRowSelection pinFirstColumn={false} />
+    );
 
     expect(table(container).style.tableLayout).toBe('fixed');
     const cols = [...table(container).querySelectorAll('col')].map((c) => (c as HTMLElement).style.width);
@@ -65,7 +71,11 @@ describe('DataGrid column layout', () => {
       { accessorKey: 'name', header: 'Policy', size: 344 },
       { accessorKey: 'status', header: 'Status' },
     ];
-    const { container } = render(<DataTable columns={columns} data={data} />);
+    // Unpinned: a pinned column always gets a definite (capped) width, since
+    // its neighbours' sticky offsets are built from it. jsdom drops that
+    // `min(…, 50cqw)` value, so leaving the default pin on would pass this
+    // test for the wrong reason.
+    const { container } = render(<DataTable columns={columns} data={data} pinFirstColumn={false} />);
 
     expect(table(container).style.tableLayout).not.toBe('fixed');
   });

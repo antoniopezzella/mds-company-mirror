@@ -278,7 +278,7 @@ export const Filters = React.forwardRef<HTMLDivElement, FiltersProps>(function F
         ref={ref}
         data-slot="filters"
         data-appearance="toolbar"
-        className={cn('flex flex-wrap items-center gap-2', className)}
+        className={cn('flex min-w-0 max-w-full flex-wrap items-center gap-2', className)}
         role="search"
         aria-label={t.filters}
       >
@@ -386,7 +386,7 @@ export const Filters = React.forwardRef<HTMLDivElement, FiltersProps>(function F
     <div
       ref={ref}
       data-slot="filters"
-      className={cn('flex flex-wrap items-center gap-2', className)}
+      className={cn('flex min-w-0 max-w-full flex-wrap items-center gap-2', className)}
       // `role` is required for the label to exist at all: the implicit role
       // of a bare div is `generic`, which prohibits naming, so assistive tech
       // skipped this region entirely and nothing announced that a filter area

@@ -50,7 +50,7 @@ So the question is never *“do I need more power?”*. It is:
 
 | | `DataTable` | `DataGrid` |
 | --- | --- | --- |
-| API | ~28 props | composed children |
+| API | ~70 props (~~"~28"~~ until 2026-11-03) | composed children |
 | Who owns the table instance | the component | **you** |
 | Read selection / filters / sorting directly | no — only via callbacks | yes |
 | Reorder, replace or omit parts | no | yes |
@@ -71,9 +71,13 @@ entire reason this API exists.
 Because the two share an engine, several stories necessarily look alike. What each
 set is *for*:
 
-- **`Components/DataTable`** — the preset. Props in, table out. This is where
-  capabilities are demonstrated: selection, column visibility, server pagination,
+- **`Components/DataTable`** — the preset. Props in, table out. Its
+  [Docs page](?path=/docs/components-datatable--docs) is the full guide: setup, columns,
+  every feature prop, cell parts, responsive behaviour and the templates. Its stories
+  demonstrate the capabilities: selection, column visibility, server pagination,
   inline editing, the state variants.
+- **`Components/DataTable/Templates`** — the MDS V3 Figma frames, rebuilt from those
+  props and parts. Start a new data screen from the closest one.
 - **`Components/DataGrid`** — composition. How the parts assemble, and what becomes
   possible once you hold the instance.
 - **`Components/Table`** — the simple table. Nothing here is unique to it.
