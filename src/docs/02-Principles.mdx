@@ -1,0 +1,131 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Foundations/Principles" />
+
+# Principles
+
+The Marsh Design System is for data-dense B2B dashboards: brokers and clients
+comparing policies, following claims and spotting risk, often for hours at a
+time. This page holds what we always require, and the principles we use when
+two good options compete.
+
+There are two sets of principles. **Product design principles** are for anyone
+designing a screen. **System principles** are for the people building MDS
+itself. Within each set, the principle higher on the list wins a conflict.
+
+Each principle names the reasonable option it turns down: *we choose X over
+Y*. A principle nobody could disagree with never settles anything.
+
+## Always required
+
+These are not trade-offs. A design that breaks one is not finished.
+
+- **Accessible to WCAG AA.** Every story is tested with axe, and colour pairs
+  are checked for contrast in light and dark themes. See
+  [Accessibility](?path=/docs/foundations-accessibility--docs) and
+  [Contrast](?path=/docs/foundations-contrast--docs).
+- **Colour only through roles.** Components use roles such as `fg.primary`,
+  never a hex value, so themes and brands can change in one place. See
+  [Roles](?path=/docs/foundations-roles--docs).
+
+## Product design principles
+
+### 1. Make the data easy to read
+
+People come to a dashboard to compare and decide. Density is a feature, not a
+flaw, as long as hierarchy and alignment keep it scannable.
+
+**We choose** density with clear hierarchy **over** generous white space that
+pushes the data below the fold.
+
+**In practice:** amounts align right with tabular figures, so digits line up
+down a column. Tables offer compact, standard and comfortable density. Pinned
+columns keep the row's label in view while the rest scroll. See
+[Choosing a table](?path=/docs/foundations-choosing-a-table--docs) and the
+[Data Table](?path=/docs/components-datatable--docs).
+
+### 2. Consistent, not identical
+
+The same job should get the same answer everywhere, so people learn a pattern
+once. Consistency is not uniformity: a marketing page and a dense dashboard
+share one system but may look different.
+
+**We choose** the same pattern for the same job **over** a fresh look for each
+product.
+
+**In practice:** one spacing scale, one set of control heights, one table for
+every data grid. The dashboard and marketing contexts swap typography through
+CSS variables, so a component never hard-codes a font. See
+[Spacing](?path=/docs/foundations-spacing--docs) and
+[Typography](?path=/docs/foundations-typography--docs).
+
+### 3. Polish is part of the job
+
+Craft is how we respect people's time. A screen is finished when every state
+is designed, not when the happy path works.
+
+**We choose** designing the loading, empty and error states **over** shipping
+only the success screen.
+
+**In practice:** tables have skeleton, empty, filtered-empty and error states
+built in, and the templates show each one. See the
+[Data Table](?path=/docs/components-datatable--docs) templates.
+
+## System principles
+
+### 1. Reuse before you build
+
+The most common mistake is not bad code. It is building something that
+already exists.
+
+**We choose** a new option on an existing component **over** a new component.
+
+**In practice:** work down the ladder and stop at the first step that works.
+Does it exist? Does a prop cover it? Can you compose it from existing parts?
+Build new only after that. See
+[Composition](?path=/docs/foundations-composition--docs).
+
+### 2. Design and code tell the same story
+
+A designer and a developer looking at the same component should see the same
+names, options and states, so hand-off becomes a check, not a translation.
+
+**We choose** naming code after Figma **over** names that suit only one side.
+
+**In practice:** component options are named after their Figma properties,
+tokens flow one way from the design source into code, and templates link to
+the Figma frame they reproduce. See
+[Theming](?path=/docs/foundations-theming--docs).
+
+### 3. Automate the rules
+
+People forget rules; checks don't. A check is only trusted once we have seen
+it fail. When a document turns out to be wrong, we correct it and record what
+it used to say, so the mistake isn't repeated.
+
+**We choose** a check that blocks the build **over** a guideline people have
+to remember.
+
+**In practice:** `npm run governance:ci` runs every gate before work is called
+done. Outdated claims are struck through and dated, not quietly deleted. See
+[Governance](?path=/docs/foundations-governance--docs) and
+[Testing](?path=/docs/foundations-testing--docs).
+
+## How we know it is working
+
+Measured on 2026-11-03 with `npm run ds:score`. Re-run it for current values;
+these numbers go stale.
+
+| Goal | Measure | 2026-11-03 |
+| --- | --- | --- |
+| Consistency | Hardcoded colours in components | 0 across 123 modules |
+| Quality | Modules with a dedicated test | 95 of 123 |
+| Quality | Checks proven able to fail | 19 of 21 |
+| Quality | Overall health score | 84 of 100 |
+| Collaboration | Components linked to Figma (Code Connect) | 47 of 74 |
+| Scalability | Spacing that works right-to-left | 68 of 76 |
+| Scalability | Brands supported | 1 |
+| Accessibility | Screen-reader test passes | Not done yet |
+| Efficiency | Time from request to shipped component | Not measurable yet: needs a request log |
+| Adoption | Products using MDS | Not measurable yet: the package is not published |
+| Satisfaction | Survey of designers and developers using MDS | Not started |

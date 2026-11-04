@@ -147,20 +147,42 @@ export const parameters: Preview['parameters'] = {
   options: {
     storySort: {
       order: [
+        // Reading order: why → building blocks → building with them →
+        // contributing. Titles must match each page's <Meta title> exactly;
+        // an unlisted page sorts after every listed one.
+        //
+        // This order was never applied until 2026-11-03: a one-line
+        // `preview.ts` re-exporting this file shadowed it, and Storybook reads
+        // storySort from the preview file's TEXT, so it found none and fell
+        // back to file order. Don't re-add a preview.ts.
         'Foundations',
         [
+          // Start here
           'Intro',
+          'Principles',
           'Accessibility',
+          // Building blocks
+          'Naming',
           'Colors',
-          'Typography',
           'Roles',
+          'Theming',
+          'Contrast',
+          'Typography',
           'Spacing',
           'Grid',
-          '⚠️ Grid Legacy',
           'Elevation',
-          // Note: titles must match MDX meta exactly
-          'Contrast',
+          'Icons',
+          // Building UI
+          'Composition',
+          'Choosing a table',
+          // Contributing
           'Documentation-Guidelines',
+          'Testing',
+          'Governance',
+          'Changelog',
+          // Kept for the legacy pages that still use it — last, so nobody
+          // picks it up by mistake.
+          '⚠️ Grid Legacy',
         ],
         // Components first — this is the product. Everything MUI sorts below
         // it, and both MUI groups are hidden from the sidebar entirely by

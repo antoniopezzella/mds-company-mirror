@@ -293,13 +293,26 @@ The package stylesheet is built by the **CLI**, not Vite — Vite's library mode
 forces `cssCodeSplit: false` and then rejects a CSS entry outright.
 
 After changing any `src/components/ui/` styling: `npm run build:package`
-(chains `build:css`). Current size **107.9 kB raw / 17.7 kB gzipped**.
+(chains `build:css`). Current size **140.2 kB raw / 21.8 kB gzipped**
+(2026-11-03; ~~107.9 kB / 17.7 kB~~ was an earlier build, before the 172
+generated MDS colour utilities shipped).
+
+**Scanning is explicit, not automatic.** The utilities import carries
+`source(none)`, so the package scans only `tailwind.package.config.js`'s
+`content` globs plus the `@source` lines in `styles.package.css` (including
+`styles/generated/mds-utilities.json`, so every generated class ships). Until
+2026-11-03 automatic detection also scanned all of `src/` — docs, pages,
+stories — which shipped 226 selectors no component used (161 kB) and once a
+rule for an undefined `--role-bg-danger` copied from an MDX example. If a
+class that a component uses goes missing, add its file to `content`; never
+remove `source(none)`.
 
 Size is the canary here, so know the numbers:
 
 | Size | Meaning |
 | --- | --- |
-| ~108 kB / 17.7 kB gz | correct |
+| ~140 kB / 21.8 kB gz | correct (2026-11-03) |
+| ~160 kB | `source(none)` removed: the whole of `src/` is being scanned again |
 | ~71 kB / 11.8 kB gz | **theme layer missing** — no spacing utilities |
 | ~50 kB | an `@import` was dropped by ordering (§3) |
 | much larger | content globs are catching something they shouldn't |

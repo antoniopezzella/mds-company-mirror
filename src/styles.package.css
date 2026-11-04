@@ -83,7 +83,7 @@
    If you ever see the package stylesheet drop sharply in size, check this
    first. */
 @import "tailwindcss/theme" layer(theme);
-@import "tailwindcss/utilities" layer(utilities);
+@import "tailwindcss/utilities" layer(utilities) source(none);
 
 /* The GENERATED colour utilities: 114 MDS classes (bg-primary, text-critical,
    ring-focus …) plus the 20-class shadcn adapter that keeps the existing
@@ -152,6 +152,15 @@
 @source inline("text-{h1,h2,h3,h4,h5,h6}");
 @source inline("text-{metric-value,metric-delta,data-header,data-numeric}");
 @source inline("font-{serif-expressive,sans-productive}");
+
+/* Every generated MDS colour class ships, used by a component or not — the
+   list is the contract consumers build against. Until 2026-11-03 these only
+   reached the package by accident: automatic source detection scanned all of
+   src/ (docs, pages, stories), which also leaked page-only classes and once
+   shipped a rule for an undefined --role-bg-danger read from an MDX example.
+   The utilities import now has source(none), so scanning is exactly the
+   config's content globs plus the sources named here. */
+@source "./styles/generated/mds-utilities.json";
 
 /* ===== Corner radius =====================================================
    There is deliberately NO radius configuration here. The repo uses

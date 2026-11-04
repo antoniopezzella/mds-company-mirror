@@ -21,6 +21,10 @@
  *   - No class is generated for a property the token is not meant for, so
  *     `bg-on-primary` or `text-page` cannot exist.
  *   - Two tokens mapping to one class is a build error.
+ *   - Every colour name follows the grammar on Foundations/Naming (NAMING
+ *     below): allowed words per position, state last, no retired words, and a
+ *     code name equal to var(--mds-<path>). A break is a build error unless it
+ *     is listed in NAMING_EXCEPTIONS with its open decision.
  *
  * MODES: light on :root, [data-theme="light"], [data-surface="light"];
  *        dark on [data-theme="dark"], [data-surface="dark"];
@@ -72,6 +76,77 @@ export const SHADCN_ADAPTER = {
   'ring-ring': 'color.border.focus.default',
 };
 
+// ── Naming grammar ─────────────────────────────────────────────────────────
+// The rules on Foundations/Naming (src/docs/03-Naming.mdx), as data. A colour
+// token is color/{property}/{role}/{state-or-emphasis}; the role is optional
+// (background/default, border/subtle) and the last word is optional
+// (foreground/on-primary). Keep these lists and that page in step — the page
+// lists the same words for people, this is what the build enforces.
+export const NAMING = {
+  property: ['background', 'foreground', 'border', 'overlay', 'static'],
+  role: ['primary', 'secondary', 'accent', 'neutral', 'interactive', 'link', 'input', 'brand', 'avatar',
+    'transparent', 'critical', 'success', 'warning', 'info', 'disabled', 'selected', 'hover', 'page', 'body',
+    'heading', 'focus', 'section', 'translucent', 'media', 'scrim'],
+  // `on-{role}` is a role too: the text that sits on that fill.
+  onRole: /^on-[a-z]+(-[a-z]+)*$/,
+  last: ['default', 'subtle', 'subtler', 'bold', 'hover', 'pressed', 'disabled', 'visited', 'placeholder'],
+  // static/* is the one exception the page documents: brand marks, named by mark.
+  staticBrand: ['midnight', 'sky'],
+  // Retired because each meant more than one thing, or split one idea across
+  // two words. A whole segment, or a word inside one (`primary-inverted`).
+  retired: { active: 'pressed, or a Selected / Current property', inverted: 'the Inverse mode', tertiary: 'neutral',
+    strong: 'bold', pale: 'subtle', soft: 'subtle or default', error: 'critical', danger: 'critical',
+    informational: 'info', alt: 'a role or leaf of its own', alpha: 'translucent' },
+};
+
+// Tokens in the live export that break the grammar, each waiting on a
+// designer decision. Listed rather than allowed, so the lists above stay the
+// rule. An entry here that no longer violates is itself an error: fix the
+// token, then delete its line. Added 2026-11-03.
+export const NAMING_EXCEPTIONS = {
+  'color.background.stripe': 'role "stripe" is not in the role list: add it, or rename (e.g. background/neutral/subtler)',
+  'color.background.section.accent': 'last word "accent" is a role, not a state or emphasis',
+  'color.overlay.media.brand': 'last word "brand" is a role, not a state or emphasis',
+  'color.foreground.body.on-shell': '"on-shell" is an on-{role} in the last position, "shell" is no role, and the token has no code name',
+};
+
+export function lintNames(tokens, exceptions = NAMING_EXCEPTIONS) {
+  const problems = [];
+  for (const { path: p, token } of tokens) {
+    const tp = p.join('.');
+    const found = [];
+    const [, property, ...rest] = p;
+    for (const seg of p.slice(1)) {
+      if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(seg)) found.push(`"${seg}" is not lowercase kebab-case`);
+      for (const w of seg.split('-')) if (NAMING.retired[w]) found.push(`retired word "${w}" (use ${NAMING.retired[w]})`);
+    }
+    if (!NAMING.property.includes(property)) found.push(`property "${property}" is not one of ${NAMING.property.join(', ')}`);
+    else if (rest.length < 1 || rest.length > 2) found.push(`expected {role}/{state-or-emphasis} after "${property}", got ${rest.length} segment(s)`);
+    else if (property === 'static') {
+      if (!(rest[0] === 'brand' && NAMING.staticBrand.includes(rest[1]))) found.push(`static/* is for brand marks only: static/brand/{${NAMING.staticBrand.join('|')}}`);
+    } else {
+      const isRole = (w) => NAMING.role.includes(w) || NAMING.onRole.test(w);
+      const [a, b] = rest;
+      // One segment: a role (foreground/on-primary) or a bare state/emphasis (background/default).
+      if (b === undefined) { if (!isRole(a) && !NAMING.last.includes(a)) found.push(`"${a}" is neither a role nor a state/emphasis word`); }
+      else {
+        if (!isRole(a)) found.push(`role "${a}" is not in the role list`);
+        if (!NAMING.last.includes(b)) found.push(`last word "${b}" is not a state or emphasis (${NAMING.last.join(', ')})`);
+      }
+    }
+    const web = token.$extensions?.['com.figma']?.codeSyntax?.WEB;
+    const expected = `var(--mds-${p.join('-')})`;
+    if (!web) found.push(`no code name (Figma codeSyntax WEB); expected ${expected}`);
+    else if (web !== expected) found.push(`code name ${web} does not match its path; expected ${expected}`);
+
+    if (found.length && !exceptions[tp]) problems.push(`Naming: ${tp}: ${found.join('; ')}`);
+    if (!found.length && exceptions[tp]) problems.push(`Naming: ${tp} is listed in NAMING_EXCEPTIONS but now follows the rules; delete its entry`);
+  }
+  const present = new Set(tokens.map(t => t.path.join('.')));
+  for (const tp of Object.keys(exceptions)) if (!present.has(tp)) problems.push(`Naming: NAMING_EXCEPTIONS lists ${tp}, which is not in the export; delete its entry`);
+  return problems;
+}
+
 const PROP = { bg: 'background-color', text: 'color', fill: 'fill', stroke: 'stroke', border: 'border-color', outline: 'outline-color', ring: '--tw-ring-color' };
 
 function walk(node, trail, out) {
@@ -94,12 +169,12 @@ function resolve(doc, ref, seen = new Set()) {
   return { value: r.value, via: r.via || key };
 }
 
-export function build(doc) {
+export function build(doc, { exceptions } = {}) {
   const tokens = walk(doc.color, ['color'], []);
   const vars = { light: [], dark: [], inverse: [] };
   const values = new Map(); // "color.foreground.primary.default" -> {cssVar, light, dark, inverse}
   const utilities = new Map(); // class -> {property, token, cssVar}
-  const errors = [];
+  const errors = lintNames(tokens, exceptions);
   const add = (cls, prop, tokenPath, cssVar) => {
     if (RESERVED.has(cls)) return;
     if (!/^[a-z][a-z0-9-]*[a-z0-9]$/.test(cls)) { errors.push(`Invalid utility name "${cls}" from ${tokenPath}`); return; }
@@ -279,6 +354,30 @@ function selftest() {
   ok(build(dup).errors.some(e => e.includes('bg-x-y')), 'two tokens on one class is an error');
   let threw = false; try { build({ primitive: {}, color: { background: { x: { $type: 'color', $value: '{primitive.nope}' } } } }); } catch { threw = true; }
   ok(threw, 'an unresolved alias fails the build');
+
+  // Naming grammar (Foundations/Naming). Each probe is one token with one
+  // fault; it must be reported and named. A well-formed token must not be.
+  const tok = (pathStr, web = `var(--mds-${pathStr.replace(/\//g, '-')})`) =>
+    ({ path: pathStr.split('/'), token: { $value: '#000', $extensions: { 'com.figma': web ? { codeSyntax: { WEB: web } } : {} } } });
+  const lint = (t, ex = {}) => lintNames([t], ex);
+  ok(lint(tok('color/background/primary/hover')).length === 0, 'naming: a well-formed token passes');
+  ok(lint(tok('color/background/default')).length === 0 && lint(tok('color/foreground/on-primary')).length === 0, 'naming: an optional role or last word passes');
+  ok(lint(tok('color/background/hover/primary')).some(e => e.includes('last word "primary"')), 'naming: a state in the middle is caught');
+  ok(lint(tok('color/background/danger/default')).some(e => e.includes('retired word "danger"')), 'naming: a retired word is caught');
+  ok(lint(tok('color/background/primary-inverted')).some(e => e.includes('retired word "inverted"')), 'naming: a retired word inside a segment is caught');
+  ok(lint(tok('color/background/red-light')).some(e => e.includes('"red-light"')), 'naming: a look name instead of a job is caught');
+  ok(lint(tok('color/background/Primary/default')).some(e => e.includes('kebab-case')), 'naming: an uppercase segment is caught');
+  ok(lint(tok('color/background/primary/default', null)).some(e => e.includes('no code name')), 'naming: a missing code name is caught');
+  ok(lint(tok('color/background/primary/default', 'var(--mds-bg-primary)')).some(e => e.includes('does not match its path')), 'naming: a code name that differs from the path is caught');
+  ok(lint(tok('color/static/brand/teal')).some(e => e.includes('brand marks only')), 'naming: a static token that is not a brand mark is caught');
+  ok(lint(tok('color/background/stripe'), { 'color.background.stripe': 'x' }).length === 0, 'naming: a listed exception is not reported');
+  ok(lint(tok('color/background/primary/hover'), { 'color.background.primary.hover': 'x' }).some(e => e.includes('now follows the rules')), 'naming: an exception that no longer violates is caught as stale');
+  ok(lintNames([], { 'color.gone': 'x' }).some(e => e.includes('not in the export')), 'naming: an exception for a token that no longer exists is caught');
+  const live = JSON.parse(fs.readFileSync(INPUT, 'utf8'));
+  const liveNaming = build(live).errors.filter(e => e.startsWith('Naming:'));
+  ok(liveNaming.length === 0, `naming: the live export passes with its ${Object.keys(NAMING_EXCEPTIONS).length} listed exceptions${liveNaming.length ? ` — ${liveNaming.join(' | ')}` : ''}`);
+  ok(build(live, { exceptions: {} }).errors.filter(e => e.startsWith('Naming:')).length === Object.keys(NAMING_EXCEPTIONS).length,
+    'naming: without the exception list, exactly the listed tokens fail');
   for (const [pass, msg] of checks) console.log(`${pass ? '✓' : '✗'} ${msg}`);
   const failed = checks.filter(c => !c[0]).length;
   if (failed) { console.error(`\nselftest FAILED (${failed})`); process.exit(1); }
