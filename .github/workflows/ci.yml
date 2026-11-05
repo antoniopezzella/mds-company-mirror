@@ -1,29 +1,40 @@
 name: CI
 
+# One workflow for build, tests and commit messages. It replaced ci.yml +
+# contrast.yml + commitlint.yml on 2026-11-05: MMC has one shared
+# self-hosted runner and no GitHub-hosted ones, so ubuntu-latest jobs never
+# started and three workflows would queue three installs behind each other.
+# Contrast is covered by tokens:check below (it runs check-contrast.js --all).
+# Governance gates live in governance.yml.
+#
+# Dropped from the old ci.yml: `npx shadcn@latest registry validate` — it
+# downloads an unpinned package at run time, which Artifactory's 2-day age
+# delay can refuse. registry:check (in governance.yml) covers completeness.
+
 on:
   pull_request:
     branches: [ main ]
   push:
-    # No branch filter: this repo does substantial work directly on
-    # feature branches (not just main) — restricting push to main meant
-    # active branches got zero CI signal until merge.
+    # No branch filter: substantial work happens on feature branches, and
+    # restricting push to main meant they got zero CI signal until merge.
+
+# The runner is shared, so a newer push cancels the superseded run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-validate:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+  build-and-test:
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node
-        uses: actions/setup-node@v4
+      - name: MMC setup (Node, Artifactory, install)
+        uses: ./.github/actions/mmc-setup
         with:
-          node-version: 22
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
+          artifactory-token: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
 
       - name: Lint docs structure
         run: npm run docs:lint
@@ -31,84 +42,94 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Token governance (build + diff policy)
+      - name: Token governance (build + diff policy + contrast)
         run: npm run tokens:check
-
-      - name: Token diff markdown (always generate)
-        run: |
-          npm run tokens:build >/dev/null 2>&1 || true
-          node scripts/diff-tokens.js --markdown > token-diff.md || true
-          echo "\n## Token Diff" >> $GITHUB_STEP_SUMMARY
-          cat token-diff.md >> $GITHUB_STEP_SUMMARY
-
-      # The Storybook project runs real browser tests, and Vite's dependency
-      # pre-bundling flakes on a cold cache under concurrent load. Persisting
-      # the cache keeps CI off that path; the retry in vitest.config.ts covers
-      # the first run on a cache miss.
-      - name: Cache Storybook/Vite pre-bundle
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules/.cache/storybook
-            node_modules/.vite
-          key: sb-prebundle-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: sb-prebundle-${{ runner.os }}-
-
-      - name: Unit & interaction tests
-        run: npm test
-
-      # Asserts the axe gate above is actually running. It silently checked
-      # nothing once (vitest.config.ts:120-128) and a green suite looked
-      # identical to a disabled one. Reuses the browser this job already has.
-      - name: Accessibility gate self-test
-        run: npm run a11y:gate:check
 
       - name: Build (type + bundle)
         run: npm run build
 
-      # Nothing here previously built or validated what actually ships. Two
-      # regressions reached main that way: the library's .d.ts stopped
-      # emitting for two exported providers (JS fine, every TS consumer
-      # broken), and registry.json kept pointing at a deleted component.
-      # Both are caught by these two steps.
+      # Builds and validates what actually ships: the .d.ts once stopped
+      # emitting for two exported providers with the JS still fine.
       - name: Build publishable package
         run: npm run build:package
 
-      # Bundle-size budget on what actually ships (dist-pkg). Runs right after
-      # the package is built so the artifacts it measures are the ones just
-      # produced. Limits live in .size-limit.cjs, set ~12% above the measured
-      # size — this catches the package growing unnoticed between releases.
       - name: Bundle-size budget
         run: npm run size
 
-      # `registry validate` only checks that the FILE is well-formed. It will
-      # happily pass a registry missing a quarter of the library — which is
-      # exactly what happened: 71 listed against 94 on disk. This second step
-      # checks it against the filesystem.
-      - name: Validate shadcn registry
-        run: npx -y shadcn@latest registry validate
+      # Unit tests run in jsdom and need no browser.
+      - name: Unit tests
+        run: npx vitest run --project unit
 
-      - name: Registry completeness
-        run: npm run registry:check
-
-      - name: Build Storybook (optional)
-        run: npm run build-storybook
-        if: ${{ github.event_name == 'pull_request' }}
-
-      - name: Upload Storybook static (PR artifact)
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: storybook-static
-          path: storybook-static
-          retention-days: 5
-
-      - name: Summary
-        if: always()
+      # The storybook test project (axe on every story) needs Chromium. The
+      # runner may not reach Playwright's browser CDN, so this probe never
+      # fails the job: it reports what the runner has and decides whether
+      # the browser steps run. Its log answers the platform-team question.
+      - name: Browser probe
+        id: browser
+        continue-on-error: true
         run: |
-          echo '## CI Summary' >> $GITHUB_STEP_SUMMARY
-          echo '* docs:lint ✅' >> $GITHUB_STEP_SUMMARY
-          echo '* lint ✅' >> $GITHUB_STEP_SUMMARY
-          echo '* tokens:check ✅ (fails only on changed/removed primitives)' >> $GITHUB_STEP_SUMMARY
-          echo '* tests ✅' >> $GITHUB_STEP_SUMMARY
-          echo '* build ✅' >> $GITHUB_STEP_SUMMARY
+          echo "--- system Chrome/Chromium"
+          for b in google-chrome google-chrome-stable chromium chromium-browser; do
+            command -v "$b" && "$b" --version || true
+          done
+          echo "--- Playwright CDN reachable?"
+          curl -sS -o /dev/null -w '%{http_code}\n' --max-time 15 https://cdn.playwright.dev/ || echo "unreachable"
+          echo "--- npx playwright install chromium"
+          if timeout 300 npx playwright install chromium; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Chromium could not be installed on this runner — story/axe tests skipped. Ask the platform team for a browser or an Artifactory mirror (PLAYWRIGHT_DOWNLOAD_HOST)."
+          fi
+
+      - name: Story + accessibility tests
+        if: steps.browser.outputs.ok == 'true'
+        run: npx vitest run --project storybook
+
+      # Proves the axe gate above actually ran checks; it once checked nothing
+      # while reporting green on every story.
+      - name: Accessibility gate self-test
+        if: steps.browser.outputs.ok == 'true'
+        run: npm run a11y:gate:check
+
+      - name: Build Storybook
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run build-storybook
+
+  commits:
+    name: Commit messages
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # --ignore-scripts: commitlint needs only its own packages.
+      - name: MMC setup (Node, Artifactory, install)
+        uses: ./.github/actions/mmc-setup
+        with:
+          artifactory-token: ${{ secrets.ARTIFACTORY_NPM_TOKEN }}
+          install-args: --ignore-scripts
+
+      # Runs the repo's own @commitlint/cli rather than a Docker-based
+      # marketplace action, which needs Docker and an image pull
+      # the runner may not allow. Merge commits
+      # (the VDI relay makes one each sync) are ignored by default.
+      - name: Commitlint
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            npx commitlint --from "$BASE" --to "$HEAD" --verbose
+            echo "$PR_TITLE" | npx commitlint --verbose
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE" 2>/dev/null; then
+            npx commitlint --from "$BEFORE" --to "$GITHUB_SHA" --verbose
+          else
+            npx commitlint --last --verbose
+          fi

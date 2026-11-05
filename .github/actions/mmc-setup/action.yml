@@ -1,0 +1,48 @@
+name: MMC runner setup
+description: >
+  Node + npm through the internal Artifactory registry, for the shared MMC
+  self-hosted runner. The runner cannot reach public npm, and its $HOME is
+  reused across jobs, so the npm cache is wiped before every install.
+  Run actions/checkout first — a local action only exists after checkout.
+
+inputs:
+  artifactory-token:
+    description: secrets.ARTIFACTORY_NPM_TOKEN
+    required: true
+  install-args:
+    description: Extra arguments for npm ci (e.g. --ignore-scripts)
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Configure npm for the internal Artifactory registry
+      shell: bash
+      env:
+        ARTIFACTORY_NPM_TOKEN: ${{ inputs.artifactory-token }}
+      run: |
+        if [ -z "$ARTIFACTORY_NPM_TOKEN" ]; then
+          echo "::error::ARTIFACTORY_NPM_TOKEN is not set — this runner cannot reach public npm."
+          exit 1
+        fi
+        {
+          echo 'registry=https://mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/'
+          echo '//mgti-dal-so-art.mrshmc.com/artifactory/api/npm/npm/:_authToken=${ARTIFACTORY_NPM_TOKEN}'
+          echo 'always-auth=true'
+        } > .npmrc
+        cp .npmrc "$HOME/.npmrc"
+
+    - name: Install dependencies
+      shell: bash
+      env:
+        HUSKY: '0'
+        ARTIFACTORY_NPM_TOKEN: ${{ inputs.artifactory-token }}
+      run: |
+        rm -rf "$HOME/.npm/_cacache" "$HOME/.npm/_logs" || true
+        npm ci --no-audit --no-fund ${{ inputs.install-args }}

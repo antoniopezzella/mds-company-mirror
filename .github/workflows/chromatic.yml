@@ -10,10 +10,11 @@ name: Chromatic (visual regression)
 # job skips itself rather than failing every PR. See
 # docs/guides/VISUAL_REGRESSION.md for the one-time setup.
 
+# MANUAL ONLY since 2026-11-05: Chromatic is an outside service not yet
+# approved at MMC, and ubuntu-latest never starts here. Restore the push /
+# pull_request triggers (and move to the self-hosted runner) once approved.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   chromatic:
